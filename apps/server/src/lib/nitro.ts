@@ -4,12 +4,18 @@ import {
   getQuery,
   getRequestHeader,
   type H3Event,
-  type MultiPartData,
   readBody,
   readMultipartFormData,
   setResponseHeader,
-} from "h3";
+} from "nitro/h3";
 import { fromError } from "zod-validation-error";
+
+interface MultiPartData {
+  name: string;
+  data: Uint8Array;
+  type?: string;
+  filename?: string;
+}
 
 export const getValidatedQueryZod = async <T, Event extends H3Event = H3Event>(
   event: Event,
@@ -34,7 +40,7 @@ export const readValidatedBodyZod = async <T, Event extends H3Event = H3Event>(
   event: Event,
   schema: z.ZodType<T>,
 ) => {
-  const body = await readBody(event, { strict: true });
+  const body = await readBody(event);
   const response = schema.safeParse(body);
 
   if (!response.success) {

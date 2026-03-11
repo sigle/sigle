@@ -1,5 +1,5 @@
-import { createError, defineEventHandler } from "h3";
-import { defineRouteMeta } from "nitropack/runtime";
+import { defineRouteMeta } from "nitro";
+import { createError, defineEventHandler } from "nitro/h3";
 import { z } from "zod";
 import { getValidatedQueryZod } from "~/lib/nitro";
 import { prisma } from "~/lib/prisma";

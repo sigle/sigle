@@ -1,13 +1,10 @@
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
 import { describe, expect, it, vi } from "vitest";
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("nitropack/runtime")>(
-  import("nitropack/runtime"),
-  () => ({
-    defineRouteMeta: vi.fn(),
-  }),
-);
+vi.mock<typeof import("nitro")>(import("nitro"), () => ({
+  defineRouteMeta: vi.fn(),
+}));
 
 const { default: handler } = await import("./health.get");
 

@@ -1,12 +1,12 @@
 import type { Payload } from "@hirosystems/chainhook-client";
-import { createError, defineEventHandler, readBody } from "h3";
+import { createError, defineEventHandler, readBody } from "nitro/h3";
 import { env } from "~/env";
 import { indexerJob } from "~/jobs/indexer/index";
 import { consola } from "~/lib/consola";
 import { sigleConfig } from "~/lib/sigle";
 
 export default defineEventHandler(async (event) => {
-  const chainhook = await readBody<Payload>(event);
+  const chainhook = (await readBody(event)) as Payload;
   const authorization = event.headers.get("authorization");
   const authorizationToken = authorization?.replace("Bearer ", "");
   if (authorizationToken !== env.CHAINHOOK_API_TOKEN) {

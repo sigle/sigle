@@ -1,5 +1,5 @@
-import { defineEventHandler } from "h3";
-import { defineRouteMeta } from "nitropack/runtime";
+import { defineRouteMeta } from "nitro";
+import { defineEventHandler } from "nitro/h3";
 import { z } from "zod";
 import { getValidatedQueryZod } from "~/lib/nitro";
 import {

@@ -11,13 +11,10 @@ import { createTestDatabase, type TestDatabase } from "~/test/database";
 import { createTestPost, createTestUser } from "~/test/helpers";
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("nitropack/runtime")>(
-  import("nitropack/runtime"),
-  () => ({
-    defineRouteMeta: vi.fn(),
-    defineCachedEventHandler: vi.fn((handler) => handler),
-  }),
-);
+vi.mock<typeof import("nitro")>(import("nitro"), () => ({
+  defineRouteMeta: vi.fn(),
+  defineCachedEventHandler: vi.fn((handler) => handler),
+}));
 
 const { default: handler } = await import("./trending.get");
 

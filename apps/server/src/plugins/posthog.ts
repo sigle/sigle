@@ -1,5 +1,5 @@
 // Inspired by https://www.lichter.io/articles/nuxt3-sentry-recipe/
-import { defineNitroPlugin } from "nitropack/runtime";
+import { definePlugin } from "nitro";
 import { PostHog } from "posthog-node";
 import { env } from "~/env";
 
@@ -11,8 +11,8 @@ const posthog = new PostHog(env.POSTHOG_API_KEY || "dev", {
 //   posthog.debug(true);
 // }
 
-export default defineNitroPlugin((nitroApp) => {
-  nitroApp.hooks.hook("request", (event) => {
+export default definePlugin((nitroApp: any) => {
+  nitroApp.hooks.hook("request", (event: any) => {
     event.context.$posthog = posthog;
   });
 

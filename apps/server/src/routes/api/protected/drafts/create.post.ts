@@ -1,6 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
-import { createError, defineEventHandler } from "h3";
-import { defineRouteMeta } from "nitropack/runtime";
+import { defineRouteMeta } from "nitro";
+import { createError, defineEventHandler } from "nitro/h3";
 import { prisma } from "~/lib/prisma";
 import { isUserWhitelisted } from "~/lib/users";
 

@@ -1,7 +1,7 @@
 import { create } from "@storacha/client";
 import * as Proof from "@storacha/client/proof";
 import * as Signer from "@ucanto/principal/ed25519";
-import { createError, type H3Event } from "h3";
+import { createError, type H3Event } from "nitro/h3";
 import { env } from "~/env";
 import { consola } from "./consola";
 

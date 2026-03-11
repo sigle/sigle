@@ -4,7 +4,7 @@ import {
   getRequestIP,
   type H3Event,
   setHeaders,
-} from "h3";
+} from "nitro/h3";
 import { RateLimiterPrisma, type RateLimiterRes } from "rate-limiter-flexible";
 import { addRoute, createRouter, findRoute } from "rou3";
 import { prisma } from "~/lib/prisma";

@@ -1,4 +1,4 @@
-import { defineEventHandler, toWebRequest } from "h3";
+import { defineEventHandler, toRequest } from "nitro/h3";
 import { auth } from "~/lib/auth";
 
 /**
@@ -6,5 +6,5 @@ import { auth } from "~/lib/auth";
  * It exposes all the required endpoints for authentication.
  */
 export default defineEventHandler((event) => {
-  return auth.handler(toWebRequest(event));
+  return auth.handler(toRequest(event) as any);
 });

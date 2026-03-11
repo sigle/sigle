@@ -1,19 +1,19 @@
-import { defineNitroConfig } from "nitropack/config";
+import { defineNitroConfig } from "nitro/config";
 
 export default defineNitroConfig({
   srcDir: "src",
   imports: false,
   compatibilityDate: "latest",
-  esbuild: {
-    options: {
-      target: "es2023",
-    },
-  },
   openAPI: {
     production: "runtime",
   },
   experimental: {
     openAPI: true,
     tasks: true,
+  },
+  routeRules: {
+    "/api/users/trending": {
+      swr: 60 * 5,
+    },
   },
 });

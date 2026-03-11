@@ -1,5 +1,5 @@
-import { createError, defineEventHandler, getRouterParam } from "h3";
-import { defineRouteMeta } from "nitropack/runtime";
+import { defineRouteMeta } from "nitro";
+import { createError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { prisma, SELECT_PUBLIC_USER_FIELDS } from "~/lib/prisma";
 import { sites } from "~/sites";
 

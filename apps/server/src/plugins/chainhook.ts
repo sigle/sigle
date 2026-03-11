@@ -1,4 +1,4 @@
-import { defineNitroPlugin } from "nitropack/runtime";
+import { definePlugin } from "nitro";
 import { env } from "~/env";
 import {
   createChainhook,
@@ -16,7 +16,7 @@ import {
 /**
  * Setup the required chainhook that are necessary for the app to run properly.
  */
-export default defineNitroPlugin(async () => {
+export default definePlugin(async () => {
   if (env.NODE_ENV === "development" && !env.HIRO_API_KEY) {
     consola.warn("HIRO_API_KEY is not set, chainhooks will not be registered");
   }
