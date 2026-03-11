@@ -21,6 +21,7 @@ vi.mock<typeof import("nitropack/runtime")>(
 
 const mockGetValidatedQueryZod = vi.fn();
 
+// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
   getValidatedQueryZod: (...args: unknown[]) =>
     mockGetValidatedQueryZod(...args),

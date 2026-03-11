@@ -48,6 +48,7 @@ const mockSites = {
   },
 };
 
+// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("~/sites")>(import("~/sites"), () => ({
   sites: mockSites,
 }));
