@@ -1,4 +1,5 @@
-import type { User, Profile, Post } from "~/__generated__/prisma/client";
+import type { H3Event } from "h3";
+import type { User, Profile, Post, Draft } from "~/__generated__/prisma/client";
 import type { UserFlag } from "~/__generated__/prisma/enums";
 import { prisma } from "~/lib/prisma";
 
@@ -74,4 +75,39 @@ export async function createTestPost(
       userId: options.userId,
     },
   });
+}
+
+interface CreateTestDraftOptions {
+  id?: string;
+  userId: string;
+  title?: string;
+  content?: string;
+}
+
+export async function createTestDraft(
+  options: CreateTestDraftOptions,
+): Promise<Draft> {
+  return prisma.draft.create({
+    data: {
+      id: options.id ?? `draft-${Date.now()}`,
+      title: options.title ?? "Test Draft",
+      content: options.content ?? "Test content",
+      userId: options.userId,
+    },
+  });
+}
+
+export function createMockEvent(
+  userId: string,
+  overrides: Partial<H3Event> = {},
+): H3Event {
+  return {
+    context: {
+      user: { id: userId },
+    },
+    path: "/api/protected/test",
+    method: "GET",
+    headers: {},
+    ...overrides,
+  } as unknown as H3Event;
 }
