@@ -3,7 +3,6 @@ import {
   defineEventHandler,
   getRequestIP,
   type H3Event,
-  setHeaders,
 } from "nitro/h3";
 import { RateLimiterPrisma, type RateLimiterRes } from "rate-limiter-flexible";
 import { addRoute, createRouter, findRoute } from "rou3";
@@ -118,23 +117,28 @@ export default defineEventHandler(async (event) => {
   try {
     const rateLimiterRes = await rateLimiter.consume(clientId);
 
-    setHeaders(event, {
-      "X-RateLimit-Limit": String(config.points),
-      "X-RateLimit-Remaining": String(rateLimiterRes.remainingPoints),
-      "X-RateLimit-Reset": String(rateLimiterRes.msBeforeNext),
-    });
+    event.req.headers.set("X-RateLimit-Limit", String(config.points));
+    event.req.headers.set(
+      "X-RateLimit-Remaining",
+      String(rateLimiterRes.remainingPoints),
+    );
+    event.req.headers.set(
+      "X-RateLimit-Reset",
+      String(rateLimiterRes.msBeforeNext),
+    );
   } catch (rateLimiterRes) {
     // Handle rate limit exceeded
     if (rateLimiterRes instanceof Error) throw rateLimiterRes;
 
     const res = rateLimiterRes as RateLimiterRes;
 
-    setHeaders(event, {
-      "X-RateLimit-Limit": String(config.points),
-      "X-RateLimit-Remaining": "0",
-      "X-RateLimit-Reset": String(res.msBeforeNext),
-      "Retry-After": String(Math.ceil(res.msBeforeNext / 1000)),
-    });
+    event.req.headers.set("X-RateLimit-Limit", String(config.points));
+    event.req.headers.set("X-RateLimit-Remaining", "0");
+    event.req.headers.set("X-RateLimit-Reset", String(res.msBeforeNext));
+    event.req.headers.set(
+      "Retry-After",
+      String(Math.ceil(res.msBeforeNext / 1000)),
+    );
 
     throw new HTTPError({
       statusCode: 429,
