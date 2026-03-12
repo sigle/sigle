@@ -13,6 +13,7 @@ const posthog = new PostHog(env.POSTHOG_API_KEY || "dev", {
 
 export default definePlugin((nitroApp) => {
   nitroApp.hooks.hook("request", (event) => {
+    // @ts-expect-error - context is not properly typed in hooks
     event.context.$posthog = posthog;
   });
 
