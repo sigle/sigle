@@ -76,7 +76,7 @@ export const betterAuthSiws = () =>
             }
 
             // Delete used nonce to prevent replay attacks
-            await ctx.context.internalAdapter.deleteVerificationValue(
+            await ctx.context.internalAdapter.deleteVerificationByIdentifier(
               verification.id,
             );
 
@@ -111,7 +111,6 @@ export const betterAuthSiws = () =>
 
             const session = await ctx.context.internalAdapter.createSession(
               user.id,
-              ctx,
             );
 
             if (!session) {
