@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { consola } from "~/lib/consola";
-import { prisma } from "~/lib/prisma";
+import { consola } from "@/lib/consola";
+import { prisma } from "@/lib/prisma";
 
 export const indexerMintSchema = z.object({
   action: z.literal("indexer-mint"),

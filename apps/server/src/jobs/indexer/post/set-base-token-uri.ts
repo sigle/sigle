@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { consola } from "~/lib/consola";
-import { prisma } from "~/lib/prisma";
+import { consola } from "@/lib/consola";
+import { prisma } from "@/lib/prisma";
 import { generateImageBlurhashJob } from "../../generate-image-blurhash";
 import { getMetadataFromUri } from "./new-post";
 

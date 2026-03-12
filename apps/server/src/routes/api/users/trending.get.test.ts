@@ -7,17 +7,18 @@ import {
   it,
   vi,
 } from "vitest";
-import { createTestDatabase, type TestDatabase } from "~/test/database";
-import { createTestPost, createTestUser } from "~/test/helpers";
+import { createTestDatabase, type TestDatabase } from "@/test/database";
+import { createTestPost, createTestUser } from "@/test/helpers";
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("nitropack/runtime")>(
-  import("nitropack/runtime"),
-  () => ({
-    defineRouteMeta: vi.fn(),
-    defineCachedEventHandler: vi.fn((handler) => handler),
-  }),
-);
+vi.mock<typeof import("nitro")>(import("nitro"), () => ({
+  defineRouteMeta: vi.fn(),
+}));
+
+// oxlint-disable-next-line consistent-type-imports
+vi.mock<typeof import("nitro/cache")>(import("nitro/cache"), () => ({
+  defineCachedHandler: vi.fn((handler) => handler),
+}));
 
 const { default: handler } = await import("./trending.get");
 
@@ -86,7 +87,10 @@ describe("api/users/trending.get", () => {
       headers: {},
     } as unknown as Parameters<typeof handler>[0];
 
-    const result = await handler(mockEvent);
+    const result = (await handler(mockEvent)) as unknown as {
+      id: string;
+      postsCount: number;
+    }[];
 
     expect(result).toHaveLength(1);
     expect(result[0]).toHaveProperty("postsCount", 2);

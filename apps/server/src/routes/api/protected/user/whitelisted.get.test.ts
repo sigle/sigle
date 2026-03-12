@@ -1,4 +1,4 @@
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
 import {
   afterAll,
   beforeAll,
@@ -8,20 +8,17 @@ import {
   it,
   vi,
 } from "vitest";
-import { isUserWhitelisted } from "~/lib/users";
-import { createTestDatabase, type TestDatabase } from "~/test/database";
-import { createTestUser } from "~/test/helpers";
+import { isUserWhitelisted } from "@/lib/users";
+import { createTestDatabase, type TestDatabase } from "@/test/database";
+import { createTestUser } from "@/test/helpers";
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("nitropack/runtime")>(
-  import("nitropack/runtime"),
-  () => ({
-    defineRouteMeta: vi.fn(),
-  }),
-);
+vi.mock<typeof import("nitro")>(import("nitro"), () => ({
+  defineRouteMeta: vi.fn(),
+}));
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("~/lib/users")>(import("~/lib/users"), () => ({
+vi.mock<typeof import("@/lib/users")>(import("@/lib/users"), () => ({
   isUserWhitelisted: vi.fn().mockReturnValue(true),
 }));
 

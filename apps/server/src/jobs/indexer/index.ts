@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { consola } from "~/lib/consola";
-import { defineJob } from "~/lib/jobs";
+import { consola } from "@/lib/consola";
+import { defineJob } from "@/lib/jobs";
 import {
   executeIndexerIndexPostsJob,
   indexerIndexPostsSchema,

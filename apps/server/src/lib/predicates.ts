@@ -1,6 +1,6 @@
 import type { Predicate } from "@hirosystems/chainhook-client";
 import { sigleConfig } from "@sigle/sdk";
-import { env } from "~/env";
+import { env } from "@/env";
 
 /**
  * Predicate listing for all contracts deployed on the network.

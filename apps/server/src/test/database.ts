@@ -2,7 +2,7 @@ import { PGlite } from "@electric-sql/pglite";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { PrismaPGlite } from "pglite-prisma-adapter";
-import { PrismaClient } from "~/__generated__/prisma/client.js";
+import { PrismaClient } from "@/__generated__/prisma/client.js";
 import { setPrismaClient } from "../lib/prisma.js";
 
 export interface TestDatabase {

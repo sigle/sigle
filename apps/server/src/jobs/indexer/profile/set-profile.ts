@@ -1,8 +1,8 @@
 import { ProfileMetadataSchema } from "@sigle/sdk";
 import { z } from "zod";
-import { env } from "~/env";
-import { consola } from "~/lib/consola";
-import { prisma } from "~/lib/prisma";
+import { env } from "@/env";
+import { consola } from "@/lib/consola";
+import { prisma } from "@/lib/prisma";
 import { generateImageBlurhashJob } from "../../generate-image-blurhash";
 
 export const indexerSetProfileSchema = z.object({

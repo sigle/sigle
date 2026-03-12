@@ -1,9 +1,9 @@
 import { cvToJSON, hexToCV } from "@stacks/transactions";
 import { z } from "zod";
-import { consola } from "~/lib/consola";
-import { prisma } from "~/lib/prisma";
-import { sigleConfig } from "~/lib/sigle";
-import { stacksApiClient } from "~/lib/stacks";
+import { consola } from "@/lib/consola";
+import { prisma } from "@/lib/prisma";
+import { sigleConfig } from "@/lib/sigle";
+import { stacksApiClient } from "@/lib/stacks";
 import { indexerJob } from ".";
 
 export const indexerIndexPostsSchema = z.object({

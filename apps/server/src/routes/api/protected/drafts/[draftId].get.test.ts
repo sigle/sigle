@@ -1,4 +1,4 @@
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
 import {
   afterAll,
   beforeAll,
@@ -8,36 +8,33 @@ import {
   it,
   vi,
 } from "vitest";
-import { createTestDatabase, type TestDatabase } from "~/test/database";
+import { createTestDatabase, type TestDatabase } from "@/test/database";
 import {
   createTestDraft,
   createTestPost,
   createTestUser,
-} from "~/test/helpers";
+} from "@/test/helpers";
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("nitropack/runtime")>(
-  import("nitropack/runtime"),
-  () => ({
-    defineRouteMeta: vi.fn(),
-  }),
-);
+vi.mock<typeof import("nitro")>(import("nitro"), () => ({
+  defineRouteMeta: vi.fn(),
+}));
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("~/lib/users")>(import("~/lib/users"), () => ({
+vi.mock<typeof import("@/lib/users")>(import("@/lib/users"), () => ({
   isUserWhitelisted: vi.fn().mockReturnValue(true),
 }));
 
-const mockGetRouterParam = vi.fn((event: H3Event, name: string) => {
+const mockGetRouterParam = vi.fn((event: unknown, name: string) => {
   if (name === "draftId") {
-    return (event as unknown as { draftId?: string }).draftId ?? undefined;
+    return (event as { draftId?: string }).draftId ?? undefined;
   }
   return undefined;
 });
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("h3")>(import("h3"), async () => {
-  const actual = await vi.importActual("h3");
+vi.mock<typeof import("nitro/h3")>(import("nitro/h3"), async () => {
+  const actual = await vi.importActual("nitro/h3");
   return {
     ...actual,
     getRouterParam: mockGetRouterParam,
@@ -79,7 +76,7 @@ describe("api/protected/drafts/[draftId].get", () => {
       path: "/api/protected/drafts/draft-1",
       method: "GET",
       headers: {},
-    } as unknown as H3Event;
+    } as unknown as H3Event<Request>;
 
     const result = await handler(mockEvent);
 
@@ -98,7 +95,7 @@ describe("api/protected/drafts/[draftId].get", () => {
       path: "/api/protected/drafts/",
       method: "GET",
       headers: {},
-    } as unknown as H3Event;
+    } as unknown as H3Event<Request>;
 
     await expect(handler(mockEvent)).rejects.toThrow("Bad Request");
   });
@@ -111,7 +108,7 @@ describe("api/protected/drafts/[draftId].get", () => {
       path: "/api/protected/drafts/non-existent",
       method: "GET",
       headers: {},
-    } as unknown as H3Event;
+    } as unknown as H3Event<Request>;
 
     await expect(handler(mockEvent)).rejects.toThrow("Not Found");
   });
@@ -131,7 +128,7 @@ describe("api/protected/drafts/[draftId].get", () => {
       path: "/api/protected/drafts/post-1",
       method: "GET",
       headers: {},
-    } as unknown as H3Event;
+    } as unknown as H3Event<Request>;
 
     const result = await handler(mockEvent);
 

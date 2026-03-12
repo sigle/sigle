@@ -1,6 +1,6 @@
-import { defineEventHandler } from "h3";
-import { defineRouteMeta } from "nitropack/runtime";
-import { isUserWhitelisted } from "~/lib/users";
+import { defineRouteMeta } from "nitro";
+import { defineEventHandler } from "nitro/h3";
+import { isUserWhitelisted } from "@/lib/users";
 
 defineRouteMeta({
   openAPI: {

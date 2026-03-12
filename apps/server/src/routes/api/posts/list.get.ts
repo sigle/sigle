@@ -1,12 +1,12 @@
-import { defineEventHandler } from "h3";
-import { defineRouteMeta } from "nitropack/runtime";
+import { defineRouteMeta } from "nitro";
+import { defineEventHandler } from "nitro/h3";
 import { z } from "zod";
-import { getValidatedQueryZod } from "~/lib/nitro";
+import { getValidatedQueryZod } from "@/lib/nitro";
 import {
   prisma,
   SELECT_PUBLIC_POST_FIELDS,
   SELECT_PUBLIC_USER_FIELDS,
-} from "~/lib/prisma";
+} from "@/lib/prisma";
 
 defineRouteMeta({
   openAPI: {

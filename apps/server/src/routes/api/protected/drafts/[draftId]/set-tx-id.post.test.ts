@@ -1,4 +1,4 @@
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
 import {
   afterAll,
   beforeAll,
@@ -8,47 +8,44 @@ import {
   it,
   vi,
 } from "vitest";
-import { createTestDatabase, type TestDatabase } from "~/test/database";
-import { createTestDraft, createTestUser } from "~/test/helpers";
+import { createTestDatabase, type TestDatabase } from "@/test/database";
+import { createTestDraft, createTestUser } from "@/test/helpers";
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("nitropack/runtime")>(
-  import("nitropack/runtime"),
-  () => ({
-    defineRouteMeta: vi.fn(),
-  }),
-);
+vi.mock<typeof import("nitro")>(import("nitro"), () => ({
+  defineRouteMeta: vi.fn(),
+}));
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("~/lib/stacks")>(
-  import("~/lib/stacks"),
+vi.mock<typeof import("@/lib/stacks")>(
+  import("@/lib/stacks"),
   () =>
     ({
       stacksApiClient: {
         GET: vi.fn().mockResolvedValue({ data: { tx_id: "0x123" } }),
       },
       // oxlint-disable-next-line consistent-type-imports
-    }) as unknown as typeof import("~/lib/stacks"),
+    }) as unknown as typeof import("@/lib/stacks"),
 );
 
 const mockReadValidatedBodyZod = vi.fn();
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
+vi.mock<typeof import("@/lib/nitro")>(import("@/lib/nitro"), () => ({
   readValidatedBodyZod: (...args: unknown[]) =>
     mockReadValidatedBodyZod(...args),
 }));
 
-const mockGetRouterParam = vi.fn((event: H3Event, name: string) => {
+const mockGetRouterParam = vi.fn((event: unknown, name: string) => {
   if (name === "draftId") {
-    return (event as unknown as { draftId?: string }).draftId ?? undefined;
+    return (event as { draftId?: string }).draftId ?? undefined;
   }
   return undefined;
 });
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("h3")>(import("h3"), async () => {
-  const actual = await vi.importActual("h3");
+vi.mock<typeof import("nitro/h3")>(import("nitro/h3"), async () => {
+  const actual = await vi.importActual("nitro/h3");
   return {
     ...actual,
     getRouterParam: mockGetRouterParam,

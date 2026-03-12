@@ -1,4 +1,4 @@
-import type { H3Event } from "h3";
+import type { H3Event } from "nitro/h3";
 import {
   afterAll,
   beforeAll,
@@ -8,21 +8,18 @@ import {
   it,
   vi,
 } from "vitest";
-import { createTestDatabase, type TestDatabase } from "~/test/database";
-import { createTestPost, createTestUser } from "~/test/helpers";
+import { createTestDatabase, type TestDatabase } from "@/test/database";
+import { createTestPost, createTestUser } from "@/test/helpers";
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("nitropack/runtime")>(
-  import("nitropack/runtime"),
-  () => ({
-    defineRouteMeta: vi.fn(),
-  }),
-);
+vi.mock<typeof import("nitro")>(import("nitro"), () => ({
+  defineRouteMeta: vi.fn(),
+}));
 
 const mockGetValidatedQueryZod = vi.fn();
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("~/lib/nitro")>(import("~/lib/nitro"), () => ({
+vi.mock<typeof import("@/lib/nitro")>(import("@/lib/nitro"), () => ({
   getValidatedQueryZod: (...args: unknown[]) =>
     mockGetValidatedQueryZod(...args),
 }));

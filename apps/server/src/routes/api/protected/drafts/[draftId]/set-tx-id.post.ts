@@ -1,10 +1,10 @@
-import { createError, defineEventHandler, getRouterParam } from "h3";
-import { defineRouteMeta } from "nitropack/runtime";
+import { defineRouteMeta } from "nitro";
+import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
-import { readValidatedBodyZod } from "~/lib/nitro";
-import { prisma } from "~/lib/prisma";
-import { stacksApiClient } from "~/lib/stacks";
-import { isUserWhitelisted } from "~/lib/users";
+import { readValidatedBodyZod } from "@/lib/nitro";
+import { prisma } from "@/lib/prisma";
+import { stacksApiClient } from "@/lib/stacks";
+import { isUserWhitelisted } from "@/lib/users";
 
 defineRouteMeta({
   openAPI: {
@@ -35,7 +35,7 @@ const updateDraftSchema = z.object({
 
 export default defineEventHandler(async (event) => {
   if (!isUserWhitelisted(event.context.user.id)) {
-    throw createError({
+    throw new HTTPError({
       status: 403,
       message: "User is not whitelisted.",
     });

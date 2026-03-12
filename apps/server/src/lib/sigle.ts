@@ -1,5 +1,5 @@
 import { createClient, sigleConfig } from "@sigle/sdk";
-import { env } from "~/env";
+import { env } from "@/env";
 import { stacksNetwork } from "./stacks";
 
 const networkSigleConfig = sigleConfig[env.STACKS_ENV];

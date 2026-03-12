@@ -5,7 +5,7 @@ import { APIError, createAuthEndpoint } from "better-auth/api";
 import { setSessionCookie } from "better-auth/cookies";
 import { generateSiwsNonce, verifySiwsMessage } from "sign-in-with-stacks";
 import { z } from "zod";
-import { env } from "~/env";
+import { env } from "@/env";
 import { prisma } from "./prisma";
 
 export const betterAuthSiws = () =>
