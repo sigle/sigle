@@ -82,13 +82,20 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  if (!type || typeof type !== "string") {
+    throw new HTTPError({
+      status: 400,
+      message: "Missing or invalid type field",
+    });
+  }
+
   const parsedFile = fileSchema.safeParse({
     file: {
       name: file.name,
       filename: file.name,
       type: file.type,
     },
-    type: type?.toString(),
+    type: type,
   });
   if (!parsedFile.success) {
     throw new HTTPError({
