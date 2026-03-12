@@ -17,9 +17,13 @@ enum UserFlag {
 // --
 
 model User {
-  id          String    @id @map("id")
-  lastLoginAt DateTime? @map("last_login_at")
-  flag        UserFlag  @default(NONE) @map("flag")
+  id            String    @id @map("id")
+  lastLoginAt   DateTime? @map("last_login_at")
+  flag          UserFlag  @default(NONE) @map("flag")
+  name          String?   @map("name")
+  email         String?   @map("email")
+  emailVerified Boolean   @default(false)
+  image         String?   @map("image")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -32,6 +36,7 @@ model User {
   sessions   Session[]
   accounts   Account[]
 
+  @@unique([email])
   @@map("user")
 }
 
@@ -47,6 +52,7 @@ model Session {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([token])
+  @@index([userId])
   @@map("session")
 }
 
@@ -66,6 +72,7 @@ model Account {
   createdAt             DateTime
   updatedAt             DateTime
 
+  @@index([userId])
   @@map("account")
 }
 
@@ -77,6 +84,7 @@ model Verification {
   createdAt  DateTime?
   updatedAt  DateTime?
 
+  @@index([identifier])
   @@map("verification")
 }
 
@@ -86,6 +94,7 @@ model Verification {
 
 // Model for the rate-limiter-flexible package
 // https://github.com/animir/node-rate-limiter-flexible/wiki/Prisma#schema-example
+
 model RateLimiterFlexible {
   key    String    @id @map("key")
   points Int       @map("points")
