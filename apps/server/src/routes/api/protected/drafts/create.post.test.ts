@@ -14,10 +14,6 @@ import { createTestUser } from "@/test/helpers";
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro")>(import("nitro"), () => ({
   defineRouteMeta: vi.fn(),
-}));
-
-// oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("@/lib/nitro")>(import("@/lib/nitro"), () => ({
   readValidatedBodyZod: vi.fn(),
 }));
 
