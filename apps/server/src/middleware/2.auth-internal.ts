@@ -6,12 +6,12 @@ import { env } from "@/env";
  */
 export default defineEventHandler(async (event) => {
   // Only apply middleware for /api/internal/** routes
-  const url = event.req.url;
-  if (!url || !url.startsWith("/api/internal")) {
+  const url = new URL(event.req.url);
+  if (!url.pathname.startsWith("/api/internal")) {
     return;
   }
 
-  const internalToken = event.headers
+  const internalToken = event.req.headers
     .get("authorization")
     ?.replace("Bearer ", "");
 

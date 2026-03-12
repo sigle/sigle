@@ -11,15 +11,13 @@ export interface AuthenticatedUser {
  */
 export default defineEventHandler(async (event) => {
   // Only apply middleware for /api/protected/** routes
-  const url = event.req.url;
-  if (!url || !url.startsWith("/api/protected")) {
+  const url = new URL(event.req.url);
+  if (!url.pathname.startsWith("/api/protected")) {
     return;
   }
 
-  const headers = event.headers;
-
   const session = await auth.api.getSession({
-    headers: headers,
+    headers: event.req.headers,
   });
   if (!session) {
     throw new HTTPError({
