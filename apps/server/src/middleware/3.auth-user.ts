@@ -11,7 +11,8 @@ export interface AuthenticatedUser {
  */
 export default defineEventHandler(async (event) => {
   // Only apply middleware for /api/protected/** routes
-  if (!event.path.startsWith("/api/protected")) {
+  const url = event.req.url;
+  if (!url || !url.startsWith("/api/protected")) {
     return;
   }
 

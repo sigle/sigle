@@ -6,7 +6,8 @@ import { env } from "@/env";
  */
 export default defineEventHandler(async (event) => {
   // Only apply middleware for /api/internal/** routes
-  if (!event.path.startsWith("/api/internal")) {
+  const url = event.req.url;
+  if (!url || !url.startsWith("/api/internal")) {
     return;
   }
 

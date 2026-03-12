@@ -99,8 +99,8 @@ function getClientIdentifier(event: H3Event): string {
 }
 
 export default defineEventHandler(async (event) => {
-  const path = event.path;
-  const method = event.method;
+  const path = event.req.url || "/";
+  const method = event.req.method || "GET";
 
   const match = findRoute<RouteConfig>(router, method, path);
 

@@ -239,8 +239,8 @@ importers:
         specifier: 7.2.0
         version: 7.2.0
       rou3:
-        specifier: 0.7.12
-        version: 0.7.12
+        specifier: 0.8.1
+        version: 0.8.1
       sharp:
         specifier: 0.34.5
         version: 0.34.5
@@ -22921,7 +22921,7 @@ snapshots:
     dependencies:
       '@adraffy/ens-normalize': 1.11.1
       '@noble/curves': 1.9.7
-      '@noble/hashes': 1.7.1
+      '@noble/hashes': 1.8.0
       '@scure/bip32': 1.7.0
       '@scure/bip39': 1.6.0
       abitype: 1.2.3(typescript@5.9.3)(zod@3.25.76)
