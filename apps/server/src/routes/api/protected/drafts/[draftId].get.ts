@@ -130,7 +130,7 @@ export default defineEventHandler<
   if (!draftId) {
     throw new HTTPError({
       status: 400,
-      statusMessage: "Bad Request",
+      message: "Bad Request",
     });
   }
 
@@ -186,7 +186,7 @@ export default defineEventHandler<
     if (!published) {
       throw new HTTPError({
         status: 404,
-        statusMessage: "Not Found",
+        message: "Not Found",
       });
     }
 
@@ -216,7 +216,7 @@ export default defineEventHandler<
   if (!draft) {
     throw new HTTPError({
       status: 404,
-      statusMessage: "Not Found",
+      message: "Not Found",
     });
   }
 

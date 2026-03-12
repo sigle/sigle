@@ -141,8 +141,7 @@ export default defineEventHandler(async (event) => {
     );
 
     throw new HTTPError({
-      statusCode: 429,
-      statusMessage: "Too Many Requests",
+      status: 429,
       message: `Rate limit exceeded. Please try again in ${Math.ceil(
         res.msBeforeNext / 1000,
       )} seconds.`,

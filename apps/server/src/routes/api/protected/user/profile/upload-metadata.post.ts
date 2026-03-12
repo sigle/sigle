@@ -1,6 +1,6 @@
 import { ProfileMetadataSchema } from "@sigle/sdk";
 import { defineRouteMeta } from "nitro";
-import { HTTPError, defineEventHandler, readBody } from "nitro/h3";
+import { HTTPError, defineEventHandler } from "nitro/h3";
 import { fromError } from "zod-validation-error";
 import { aerweaveUploadFile } from "@/lib/arweave";
 
@@ -57,7 +57,7 @@ defineRouteMeta({
 });
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody<{ metadata?: object }>(event);
+  const body = (await event.req.json()) as { metadata?: object };
 
   const parsedMetadata = ProfileMetadataSchema.safeParse(
     body ? body.metadata : {},

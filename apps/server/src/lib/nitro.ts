@@ -1,5 +1,5 @@
 import type { z } from "zod";
-import { HTTPError, getQuery, type H3Event, readBody } from "nitro/h3";
+import { HTTPError, getQuery, type H3Event } from "nitro/h3";
 import { fromError } from "zod-validation-error";
 
 interface MultiPartData {
@@ -19,7 +19,6 @@ export const getValidatedQueryZod = async <T, Event extends H3Event = H3Event>(
   if (!response.success) {
     throw new HTTPError({
       status: 400,
-      statusMessage: "Validation Error",
       message: fromError(response.error).toString(),
       data: response.error,
     });
@@ -32,13 +31,12 @@ export const readValidatedBodyZod = async <T, Event extends H3Event = H3Event>(
   event: Event,
   schema: z.ZodType<T>,
 ) => {
-  const body = await readBody(event);
+  const body = await event.req.json();
   const response = schema.safeParse(body);
 
   if (!response.success) {
     throw new HTTPError({
       status: 400,
-      statusMessage: "Validation Error",
       message: fromError(response.error).toString(),
       data: response.error,
     });

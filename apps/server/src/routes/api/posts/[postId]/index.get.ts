@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
   if (!postId) {
     throw new HTTPError({
       status: 400,
-      statusMessage: "Bad Request",
+      message: "Bad Request",
     });
   }
 

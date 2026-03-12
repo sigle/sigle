@@ -65,7 +65,7 @@ export default defineEventHandler(async (event) => {
   if (!domain) {
     throw new HTTPError({
       status: 400,
-      statusMessage: "Bad Request",
+      message: "Bad Request",
     });
   }
 
@@ -73,7 +73,7 @@ export default defineEventHandler(async (event) => {
   if (!site) {
     throw new HTTPError({
       status: 404,
-      statusMessage: "Site not found",
+      message: "Site not found",
     });
   }
 
@@ -86,7 +86,7 @@ export default defineEventHandler(async (event) => {
   if (!user) {
     throw new HTTPError({
       status: 404,
-      statusMessage: "User not found",
+      message: "User not found",
     });
   }
 
