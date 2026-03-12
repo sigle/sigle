@@ -3,11 +3,7 @@ import { HTTPError, defineEventHandler } from "nitro/h3";
 import { z } from "zod";
 import { allowedFormats, optimizeImage } from "@/lib/images";
 import { ipfsUploadFile } from "@/lib/ipfs-upload";
-import { readMultipartFormDataSafe } from "@/lib/nitro";
-
-function toBuffer(data: Uint8Array): Buffer {
-  return Buffer.from(data.buffer, data.byteOffset, data.byteLength);
-}
+import { readFormData } from "@/lib/nitro";
 
 defineRouteMeta({
   openAPI: {
@@ -68,17 +64,21 @@ const fileSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
-  const formData = await readMultipartFormDataSafe(event, "5mb");
+  const formData = await readFormData(event, "5mb");
 
-  const file = formData?.find((f) => f.name === "file");
-  if (!file) {
+  const file = formData.get("file");
+  if (!file || !(file instanceof File)) {
     throw new HTTPError({
       status: 400,
       message: "No file provided",
     });
   }
 
-  const parsedFile = fileSchema.safeParse(file);
+  const parsedFile = fileSchema.safeParse({
+    name: file.name,
+    filename: file.name,
+    type: file.type,
+  });
   if (!parsedFile.success) {
     throw new HTTPError({
       status: 400,
@@ -87,7 +87,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const optimizedBuffer = await optimizeImage({
-    buffer: toBuffer(file.data),
+    buffer: Buffer.from(await file.arrayBuffer()),
     contentType: parsedFile.data.type,
     quality: 75,
     width: 600,

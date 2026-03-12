@@ -3,13 +3,9 @@ import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
 import { allowedFormats, optimizeImage } from "@/lib/images";
 import { ipfsUploadFile } from "@/lib/ipfs-upload";
-import { readMultipartFormDataSafe } from "@/lib/nitro";
+import { readFormData } from "@/lib/nitro";
 import { prisma } from "@/lib/prisma";
 import { isUserWhitelisted } from "@/lib/users";
-
-function toBuffer(data: Uint8Array): Buffer {
-  return Buffer.from(data.buffer, data.byteOffset, data.byteLength);
-}
 
 defineRouteMeta({
   openAPI: {
@@ -75,11 +71,11 @@ export default defineEventHandler(async (event) => {
   }
 
   const draftId = getRouterParam(event, "draftId");
-  const formData = await readMultipartFormDataSafe(event, "5mb");
+  const formData = await readFormData(event, "5mb");
 
-  const file = formData?.find((f) => f.name === "file");
-  const type = formData?.find((f) => f.name === "type");
-  if (!file) {
+  const file = formData.get("file");
+  const type = formData.get("type");
+  if (!file || !(file instanceof File)) {
     throw new HTTPError({
       status: 400,
       message: "No file provided",
@@ -87,8 +83,12 @@ export default defineEventHandler(async (event) => {
   }
 
   const parsedFile = fileSchema.safeParse({
-    file,
-    type: type ? type.data.toString() : undefined,
+    file: {
+      name: file.name,
+      filename: file.name,
+      type: file.type,
+    },
+    type: type?.toString(),
   });
   if (!parsedFile.success) {
     throw new HTTPError({
@@ -125,7 +125,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const optimizedBuffer = await optimizeImage({
-    buffer: toBuffer(file.data),
+    buffer: Buffer.from(await file.arrayBuffer()),
     contentType: parsedFile.data.file.type,
     quality: 75,
     width: 500,
