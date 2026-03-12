@@ -1,4 +1,4 @@
-import type { H3Event } from "nitro";
+import type { H3Event } from "nitro/h3";
 import {
   afterAll,
   beforeAll,
