@@ -87,7 +87,10 @@ describe("api/users/trending.get", () => {
       headers: {},
     } as unknown as Parameters<typeof handler>[0];
 
-    const result = await handler(mockEvent);
+    const result = (await handler(mockEvent)) as unknown as {
+      id: string;
+      postsCount: number;
+    }[];
 
     expect(result).toHaveLength(1);
     expect(result[0]).toHaveProperty("postsCount", 2);
