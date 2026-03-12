@@ -24,7 +24,16 @@ export const readValidatedBodyZod = async <T, Event extends H3Event = H3Event>(
   event: Event,
   schema: z.ZodType<T>,
 ) => {
-  const body = await event.req.json();
+  let body: unknown;
+  try {
+    body = await event.req.json();
+  } catch (error) {
+    throw new HTTPError({
+      status: 400,
+      message: `Invalid JSON body: ${error instanceof Error ? error.message : "Unknown error"}`,
+    });
+  }
+
   const response = schema.safeParse(body);
 
   if (!response.success) {
