@@ -24,7 +24,7 @@ export const readValidatedBodyZod = async <T, Event extends H3Event = H3Event>(
   event: Event,
   schema: z.ZodType<T>,
 ) => {
-  let body: unknown;
+  let body: unknown = null;
   try {
     body = await event.req.json();
   } catch (error) {
@@ -62,7 +62,22 @@ export const readFormData = async (
   }
 
   const contentLength = event.req.headers.get("content-length");
-  if (contentLength && Number(contentLength) > maxSizeValue) {
+  if (!contentLength) {
+    throw new HTTPError({
+      status: 411,
+      message: "Content-Length header is required.",
+    });
+  }
+
+  const parsedContentLength = Number(contentLength);
+  if (!Number.isFinite(parsedContentLength) || parsedContentLength < 0) {
+    throw new HTTPError({
+      status: 400,
+      message: "Invalid Content-Length header.",
+    });
+  }
+
+  if (parsedContentLength > maxSizeValue) {
     throw new HTTPError({
       status: 413,
       message: `File too large. Maximum size is ${maxSize}.`,
