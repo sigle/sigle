@@ -1,7 +1,6 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { IconButton, Separator, Text } from "@radix-ui/themes";
 import {
   IconChevronDown,
   IconCircleCheck,
@@ -127,9 +126,9 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
           <div className="space-y-2">
             <div
               className="
-              flex items-center gap-2 text-xs font-medium tracking-wider
-              text-muted-foreground uppercase
-            "
+                flex items-center gap-2 text-xs font-medium tracking-wider
+                text-muted-foreground uppercase
+              "
             >
               <IconDatabase size={14} />
               <span>Content Metadata</span>
@@ -186,53 +185,76 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
             </div>
           </div>
 
-          <div>
-            <Text
-              as="p"
-              size="1"
-              color="gray"
-              weight="medium"
-              className="mb-2 flex items-center gap-2 uppercase"
+          {/* Stacks Transaction */}
+          <div className="space-y-2">
+            <div
+              className="
+                flex items-center gap-2 text-xs font-medium tracking-wider
+                text-muted-foreground uppercase
+              "
             >
               {/* TODO Stacks icon */}
-              <IconLayersIntersect size={14} /> Stacks Transaction
-            </Text>
-
-            <div className="flex items-center gap-2">
-              <Text as="p" className="flex-1 font-mono" size="2">
-                {truncateId(post.txId, 10, 8)}
-              </Text>
-              <div className="flex items-center gap-3">
-                <IconButton
+              <IconLayersIntersect size={14} />
+              <span>Stacks Transaction</span>
+            </div>
+            <div
+              className="
+                flex items-center justify-between rounded-lg bg-secondary/50
+                px-3 py-2.5
+              "
+            >
+              <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <span className="text-xs text-muted-foreground">
+                  {/* TODO block number */}
+                  Block #142,621
+                </span>
+                <span className="truncate font-mono text-sm text-foreground">
+                  {truncateId(post.txId, 10, 8)}
+                </span>
+              </div>
+              <div className="ml-3 flex items-center gap-1">
+                <Button
                   variant="ghost"
-                  color="gray"
-                  size="3"
+                  size="sm"
+                  className="
+                    size-8 p-0 text-muted-foreground
+                    hover:text-foreground
+                  "
                   onClick={(e) => {
                     e.stopPropagation();
                     copyToClipboard(post.txId);
                   }}
                 >
-                  <IconCopy size={16} />
-                </IconButton>
-                <IconButton variant="ghost" color="gray" size="3" asChild>
-                  <a
-                    href={explorerUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1"
-                  >
-                    <IconExternalLink size={16} />
-                  </a>
-                </IconButton>
+                  <IconCopy size={14} />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="
+                    size-8 p-0 text-muted-foreground
+                    hover:text-foreground
+                  "
+                  render={
+                    <a
+                      href={explorerUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  }
+                >
+                  <IconExternalLink size={14} />
+                  <span className="sr-only">View on {storageLabel}</span>
+                </Button>
               </div>
             </div>
           </div>
 
-          <Text as="p" size="1" className="mt-3 text-gray-10">
+          <p className="pt-1 text-xs/relaxed text-muted-foreground">
             This post&apos;s content is permanently stored on Arweave, with a
             reference transaction on the Stacks blockchain that proves
             authorship and publication time.
-          </Text>
+          </p>
         </div>
       </CollapsibleContent>
     </Collapsible>
