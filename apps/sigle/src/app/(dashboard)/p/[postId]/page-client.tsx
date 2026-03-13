@@ -8,6 +8,7 @@ import { use } from "react";
 import { PostCollectCard } from "@/components/Post/CollectCard";
 import { PostInfoCard } from "@/components/Post/InfoCard";
 import { PostMarkdownContent } from "@/components/Post/MarkdownContent";
+import { PostProvenanceCard } from "@/components/Post/ProvenanceCard";
 import { PostShareCard } from "@/components/Post/ShareCard";
 import { PostUserActions } from "@/components/Post/UserActions";
 import { PostUserInfoCard } from "@/components/Post/UserInfoCard";
@@ -93,7 +94,7 @@ export function PostClientPage(props: Props) {
 
         <Separator size="4" className="mt-10 mb-8" />
 
-        {/* TODO add provenance component */}
+        <PostProvenanceCard post={post} />
 
         <Separator size="4" className="my-8" />
 
