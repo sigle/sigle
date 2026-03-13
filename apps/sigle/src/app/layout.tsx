@@ -45,7 +45,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={cn(inter.className, "antialiased")}
+        className={cn(inter.className, "root antialiased")}
         suppressHydrationWarning
       >
         <Providers>{children}</Providers>
