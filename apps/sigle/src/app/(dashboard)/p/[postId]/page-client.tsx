@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Button, Container, Heading, Separator } from "@radix-ui/themes";
+import { Button, Container, Heading, Separator } from "@radix-ui/themes";
 import { IconArrowLeft } from "@tabler/icons-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -14,6 +14,7 @@ import { PostUserActions } from "@/components/Post/UserActions";
 import { PostUserInfoCard } from "@/components/Post/UserInfoCard";
 import { NextLink } from "@/components/Shared/NextLink";
 import { FadeSlideBottom } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
@@ -76,7 +77,7 @@ export function PostClientPage(props: Props) {
           {post.tags ? (
             <div className="flex flex-wrap items-center gap-2">
               {post.tags.map((tag) => (
-                <Badge key={tag} color="gray" highContrast>
+                <Badge key={tag} variant="secondary">
                   {tag}
                 </Badge>
               ))}
