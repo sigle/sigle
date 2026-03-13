@@ -20,6 +20,7 @@ import {
 import { env } from "@/env";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
 import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 
 interface PostProvenanceCardProps {
   post: paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"];
@@ -99,12 +100,12 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                 <IconCircleCheck size={18} className="text-orange-9" />
               </div>
               <div>
-                <Text as="p" size="2">
+                <p className="text-sm font-medium text-foreground">
                   Verified On-Chain
-                </Text>
-                <Text as="p" size="1" color="gray">
+                </p>
+                <p className="text-xs text-muted-foreground">
                   Published {format(new Date(post.createdAt), "MMM dd, yyyy")}
-                </Text>
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -122,48 +123,68 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
 
       <CollapsibleContent>
         <div className="space-y-4 rounded-lg border border-gray-6 p-4">
-          <div>
-            <Text
-              as="p"
-              size="1"
-              color="gray"
-              weight="medium"
-              className="mb-2 flex items-center gap-2 uppercase"
+          {/* Metadata Storage */}
+          <div className="space-y-2">
+            <div
+              className="
+              flex items-center gap-2 text-xs font-medium tracking-wider
+              text-muted-foreground uppercase
+            "
             >
-              <IconDatabase size={14} /> Content Metadata
-            </Text>
-
-            <div className="flex items-center gap-2">
-              <Text as="p" className="flex-1 font-mono" size="2">
-                {truncateId(metadataId, 12, 8)}
-              </Text>
-              <div className="flex items-center gap-3">
-                <IconButton
+              <IconDatabase size={14} />
+              <span>Content Metadata</span>
+            </div>
+            <div
+              className="
+                flex items-center justify-between rounded-lg bg-secondary/50
+                px-3 py-2.5
+              "
+            >
+              <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                <span className="text-xs text-muted-foreground">
+                  {storageLabel}
+                </span>
+                <span className="truncate font-mono text-sm text-foreground">
+                  {truncateId(metadataId, 12, 8)}
+                </span>
+              </div>
+              <div className="ml-3 flex items-center gap-1">
+                <Button
                   variant="ghost"
-                  color="gray"
-                  size="3"
+                  size="sm"
+                  className="
+                    size-8 p-0 text-muted-foreground
+                    hover:text-foreground
+                  "
                   onClick={(e) => {
                     e.stopPropagation();
                     copyToClipboard(metadataId);
                   }}
                 >
-                  <IconCopy size={16} />
-                </IconButton>
-                <IconButton variant="ghost" color="gray" size="3" asChild>
-                  <a
-                    href={metadataLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-1"
-                  >
-                    <IconExternalLink size={16} />
-                  </a>
-                </IconButton>
+                  <IconCopy size={14} />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="
+                    size-8 p-0 text-muted-foreground
+                    hover:text-foreground
+                  "
+                  render={
+                    <a
+                      href={metadataLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  }
+                >
+                  <IconExternalLink size={14} />
+                  <span className="sr-only">View on {storageLabel}</span>
+                </Button>
               </div>
             </div>
           </div>
-
-          <Separator size="2" />
 
           <div>
             <Text
