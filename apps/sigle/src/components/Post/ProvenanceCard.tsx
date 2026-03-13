@@ -2,7 +2,6 @@
 
 import type { paths } from "@sigle/sdk";
 import {
-  IconChevronDown,
   IconCircleCheck,
   IconCopy,
   IconDatabase,
@@ -11,11 +10,6 @@ import {
 } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/Collapsible";
 import { env } from "@/env";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
 import {
