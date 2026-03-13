@@ -1,0 +1,117 @@
+diff --git a/src/generate.ts b/src/generate.ts
+index d9b6ad4e00728cadeae9fa28ec2d9014eb5e060f..ea0bdbba6fa4648bd00ee28680edd73ce2fa50ea 100644
+--- a/src/generate.ts
++++ b/src/generate.ts
+@@ -105,7 +105,7 @@ ${
+   --leading-7: var(--line-height-7);
+   --leading-8: var(--line-height-8);
+   --leading-9: var(--line-height-9);
+-  
++
+   /* letter spacing */
+   --text-1--letter-spacing: var(--letter-spacing-1);
+   --text-2--letter-spacing: var(--letter-spacing-2);
+@@ -116,7 +116,7 @@ ${
+   --text-7--letter-spacing: var(--letter-spacing-7);
+   --text-8--letter-spacing: var(--letter-spacing-8);
+   --text-9--letter-spacing: var(--letter-spacing-9);
+-  
++
+   --tracking-1: var(--letter-spacing-1);
+   --tracking-2: var(--letter-spacing-2);
+   --tracking-3: var(--letter-spacing-3);
+@@ -131,8 +131,8 @@ ${
+   --font-weight-light: 300;
+   --font-weight-regular: 400;
+   --font-weight-normal: 400;
+-  --font-weight-normal: 500;
+-  --font-weight-medium: 700;
++  --font-weight-medium: 500;
++  --font-weight-bold: 700;
+ 
+   /* border radius */
+   --radius-1: var(--radius-1);
+diff --git a/src/index.css b/src/index.css
+index 137beffedadda1d7696387fa4aa276c41720429f..8df4ab0951f55d73544e68f4bdc0df6ca340d4b8 100644
+--- a/src/index.css
++++ b/src/index.css
+@@ -86,7 +86,7 @@
+   --leading-7: var(--line-height-7);
+   --leading-8: var(--line-height-8);
+   --leading-9: var(--line-height-9);
+-  
++
+   /* letter spacing */
+   --text-1--letter-spacing: var(--letter-spacing-1);
+   --text-2--letter-spacing: var(--letter-spacing-2);
+@@ -97,7 +97,7 @@
+   --text-7--letter-spacing: var(--letter-spacing-7);
+   --text-8--letter-spacing: var(--letter-spacing-8);
+   --text-9--letter-spacing: var(--letter-spacing-9);
+-  
++
+   --tracking-1: var(--letter-spacing-1);
+   --tracking-2: var(--letter-spacing-2);
+   --tracking-3: var(--letter-spacing-3);
+@@ -112,8 +112,8 @@
+   --font-weight-light: 300;
+   --font-weight-regular: 400;
+   --font-weight-normal: 400;
+-  --font-weight-normal: 500;
+-  --font-weight-medium: 700;
++  --font-weight-medium: 500;
++  --font-weight-bold: 700;
+ 
+   /* border radius */
+   --radius-1: var(--radius-1);
+@@ -135,7 +135,7 @@
+ 
+ 
+   /* colors - all */
+-  
++
+   --color-accent-1: var(--accent-1);
+   --color-accent-2: var(--accent-2);
+   --color-accent-3: var(--accent-3);
+diff --git a/src/theme.css b/src/theme.css
+index ec69ed3588bb6e037bd5851baef344c1ef2edd9c..e8dba8fbbe177d8acae4ec7dd278d9065aa651a6 100644
+--- a/src/theme.css
++++ b/src/theme.css
+@@ -81,7 +81,7 @@
+   --leading-7: var(--line-height-7);
+   --leading-8: var(--line-height-8);
+   --leading-9: var(--line-height-9);
+-  
++
+   /* letter spacing */
+   --text-1--letter-spacing: var(--letter-spacing-1);
+   --text-2--letter-spacing: var(--letter-spacing-2);
+@@ -92,7 +92,7 @@
+   --text-7--letter-spacing: var(--letter-spacing-7);
+   --text-8--letter-spacing: var(--letter-spacing-8);
+   --text-9--letter-spacing: var(--letter-spacing-9);
+-  
++
+   --tracking-1: var(--letter-spacing-1);
+   --tracking-2: var(--letter-spacing-2);
+   --tracking-3: var(--letter-spacing-3);
+@@ -107,8 +107,8 @@
+   --font-weight-light: 300;
+   --font-weight-regular: 400;
+   --font-weight-normal: 400;
+-  --font-weight-normal: 500;
+-  --font-weight-medium: 700;
++  --font-weight-medium: 500;
++  --font-weight-bold: 700;
+ 
+   /* border radius */
+   --radius-1: var(--radius-1);
+@@ -130,7 +130,7 @@
+ 
+ 
+   /* colors - all */
+-  
++
+   --color-accent-1: var(--accent-1);
+   --color-accent-2: var(--accent-2);
+   --color-accent-3: var(--accent-3);
