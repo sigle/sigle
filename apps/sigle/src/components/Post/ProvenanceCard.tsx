@@ -202,13 +202,13 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
               </div>
             </div>
           </div>
-        </div>
 
-        <Text as="p" size="1" className="mt-3 text-gray-10">
-          This post&apos;s content is permanently stored on Arweave, with a
-          reference transaction on the Stacks blockchain that proves authorship
-          and publication time.
-        </Text>
+          <Text as="p" size="1" className="mt-3 text-gray-10">
+            This post&apos;s content is permanently stored on Arweave, with a
+            reference transaction on the Stacks blockchain that proves
+            authorship and publication time.
+          </Text>
+        </div>
       </CollapsibleContent>
     </Collapsible>
   );
