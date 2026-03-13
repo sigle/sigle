@@ -18,8 +18,15 @@ import {
 } from "@/components/ui/Collapsible";
 import { env } from "@/env";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
 
 interface PostProvenanceCardProps {
   post: paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"];
@@ -79,184 +86,236 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
   };
 
   return (
-    <Collapsible>
-      <CollapsibleTrigger asChild>
-        <button
-          type="button"
-          className={`
-            flex w-full cursor-pointer items-center justify-between rounded-lg
-            border border-gray-6 px-4 py-3
-          `}
-        >
-          <div className="flex w-full items-center justify-between text-left">
-            <div className="flex items-center gap-3">
+    <Card>
+      <CardContent>
+        <Accordion>
+          <AccordionItem value="provenance">
+            <AccordionTrigger
+              className="
+              items-center
+              hover:no-underline
+            "
+            >
               <div
                 className="
-                  flex size-9 items-center justify-center rounded-lg
-                  bg-orange-9/10
+                  mr-2 flex w-full items-center justify-between text-left
                 "
               >
-                <IconCircleCheck size={18} className="text-orange-9" />
+                <div className="flex items-center gap-3">
+                  <div
+                    className="
+                      flex size-9 items-center justify-center rounded-lg
+                      bg-orange-9/10
+                    "
+                  >
+                    <IconCircleCheck size={18} className="text-orange-9" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-foreground">
+                      Verified On-Chain
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      Published{" "}
+                      {format(new Date(post.createdAt), "MMM dd, yyyy")}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Badge
+                    variant="secondary"
+                    className="text-xs font-medium capitalize"
+                  >
+                    {storageLabel}
+                  </Badge>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-medium text-foreground">
-                  Verified On-Chain
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Published {format(new Date(post.createdAt), "MMM dd, yyyy")}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge
-                variant="secondary"
-                className="text-xs font-medium capitalize"
-              >
-                {storageLabel}
-              </Badge>
-              <IconChevronDown size={18} className="text-gray-10" />
-            </div>
-          </div>
-        </button>
-      </CollapsibleTrigger>
-
-      <CollapsibleContent>
-        <div className="space-y-4 rounded-lg border border-gray-6 p-4">
-          {/* Metadata Storage */}
-          <div className="space-y-2">
-            <div
-              className="
-                flex items-center gap-2 text-xs font-medium tracking-wider
-                text-muted-foreground uppercase
-              "
-            >
-              <IconDatabase size={14} />
-              <span>Content Metadata</span>
-            </div>
-            <div
-              className="
-                flex items-center justify-between rounded-lg bg-secondary/50
-                px-3 py-2.5
-              "
-            >
-              <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                <span className="text-xs text-muted-foreground">
-                  {storageLabel}
-                </span>
-                <span className="truncate font-mono text-sm text-foreground">
-                  {truncateId(metadataId, 12, 8)}
-                </span>
-              </div>
-              <div className="ml-3 flex items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="
-                    size-8 p-0 text-muted-foreground
-                    hover:text-foreground
-                  "
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    copyToClipboard(metadataId);
-                  }}
-                >
-                  <IconCopy size={14} />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="
-                    size-8 p-0 text-muted-foreground
-                    hover:text-foreground
-                  "
-                  render={
-                    <a
-                      href={metadataLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  }
-                >
-                  <IconExternalLink size={14} />
-                  <span className="sr-only">View on {storageLabel}</span>
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          {/* Stacks Transaction */}
-          <div className="space-y-2">
-            <div
-              className="
-                flex items-center gap-2 text-xs font-medium tracking-wider
-                text-muted-foreground uppercase
-              "
-            >
-              {/* TODO Stacks icon */}
-              <IconLayersIntersect size={14} />
-              <span>Stacks Transaction</span>
-            </div>
-            <div
-              className="
-                flex items-center justify-between rounded-lg bg-secondary/50
-                px-3 py-2.5
-              "
-            >
-              <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                <span className="text-xs text-muted-foreground">
-                  {/* TODO block number */}
-                  Block #142,621
-                </span>
-                <span className="truncate font-mono text-sm text-foreground">
-                  {truncateId(post.txId, 10, 8)}
-                </span>
-              </div>
-              <div className="ml-3 flex items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="
-                    size-8 p-0 text-muted-foreground
-                    hover:text-foreground
-                  "
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    copyToClipboard(post.txId);
-                  }}
-                >
-                  <IconCopy size={14} />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="
-                    size-8 p-0 text-muted-foreground
-                    hover:text-foreground
-                  "
-                  render={
-                    <a
-                      href={explorerUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                  }
-                >
-                  <IconExternalLink size={14} />
-                  <span className="sr-only">View on {storageLabel}</span>
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          <p className="pt-1 text-xs/relaxed text-muted-foreground">
-            This post&apos;s content is permanently stored on Arweave, with a
-            reference transaction on the Stacks blockchain that proves
-            authorship and publication time.
-          </p>
-        </div>
-      </CollapsibleContent>
-    </Collapsible>
+            </AccordionTrigger>
+            <AccordionContent>TODO</AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </CardContent>
+    </Card>
   );
+
+  // return (
+  //   <Collapsible>
+  //     <CollapsibleTrigger asChild>
+  //       <button
+  //         type="button"
+  //         className={`
+  //           flex w-full cursor-pointer items-center justify-between rounded-lg
+  //           border border-gray-6 px-4 py-3
+  //         `}
+  //       >
+  //         <div className="flex w-full items-center justify-between text-left">
+  //           <div className="flex items-center gap-3">
+  //             <div
+  //               className="
+  //                 flex size-9 items-center justify-center rounded-lg
+  //                 bg-orange-9/10
+  //               "
+  //             >
+  //               <IconCircleCheck size={18} className="text-orange-9" />
+  //             </div>
+  //             <div>
+  //               <p className="text-sm font-medium text-foreground">
+  //                 Verified On-Chain
+  //               </p>
+  //               <p className="text-xs text-muted-foreground">
+  //                 Published {format(new Date(post.createdAt), "MMM dd, yyyy")}
+  //               </p>
+  //             </div>
+  //           </div>
+  //           <div className="flex items-center gap-2">
+  //             <Badge
+  //               variant="secondary"
+  //               className="text-xs font-medium capitalize"
+  //             >
+  //               {storageLabel}
+  //             </Badge>
+  //             <IconChevronDown size={18} className="text-gray-10" />
+  //           </div>
+  //         </div>
+  //       </button>
+  //     </CollapsibleTrigger>
+
+  //     <CollapsibleContent>
+  //       <div className="space-y-4 rounded-lg border border-gray-6 p-4">
+  //         {/* Metadata Storage */}
+  //         <div className="space-y-2">
+  //           <div
+  //             className="
+  //               flex items-center gap-2 text-xs font-medium tracking-wider
+  //               text-muted-foreground uppercase
+  //             "
+  //           >
+  //             <IconDatabase size={14} />
+  //             <span>Content Metadata</span>
+  //           </div>
+  //           <div
+  //             className="
+  //               flex items-center justify-between rounded-lg bg-secondary/50
+  //               px-3 py-2.5
+  //             "
+  //           >
+  //             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+  //               <span className="text-xs text-muted-foreground">
+  //                 {storageLabel}
+  //               </span>
+  //               <span className="truncate font-mono text-sm text-foreground">
+  //                 {truncateId(metadataId, 12, 8)}
+  //               </span>
+  //             </div>
+  //             <div className="ml-3 flex items-center gap-1">
+  //               <Button
+  //                 variant="ghost"
+  //                 size="sm"
+  //                 className="
+  //                   size-8 p-0 text-muted-foreground
+  //                   hover:text-foreground
+  //                 "
+  //                 onClick={(e) => {
+  //                   e.stopPropagation();
+  //                   copyToClipboard(metadataId);
+  //                 }}
+  //               >
+  //                 <IconCopy size={14} />
+  //               </Button>
+  //               <Button
+  //                 variant="ghost"
+  //                 size="sm"
+  //                 className="
+  //                   size-8 p-0 text-muted-foreground
+  //                   hover:text-foreground
+  //                 "
+  //                 render={
+  //                   <a
+  //                     href={metadataLink}
+  //                     target="_blank"
+  //                     rel="noopener noreferrer"
+  //                     onClick={(e) => e.stopPropagation()}
+  //                   />
+  //                 }
+  //               >
+  //                 <IconExternalLink size={14} />
+  //                 <span className="sr-only">View on {storageLabel}</span>
+  //               </Button>
+  //             </div>
+  //           </div>
+  //         </div>
+
+  //         {/* Stacks Transaction */}
+  //         <div className="space-y-2">
+  //           <div
+  //             className="
+  //               flex items-center gap-2 text-xs font-medium tracking-wider
+  //               text-muted-foreground uppercase
+  //             "
+  //           >
+  //             {/* TODO Stacks icon */}
+  //             <IconLayersIntersect size={14} />
+  //             <span>Stacks Transaction</span>
+  //           </div>
+  //           <div
+  //             className="
+  //               flex items-center justify-between rounded-lg bg-secondary/50
+  //               px-3 py-2.5
+  //             "
+  //           >
+  //             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+  //               <span className="text-xs text-muted-foreground">
+  //                 {/* TODO block number */}
+  //                 Block #142,621
+  //               </span>
+  //               <span className="truncate font-mono text-sm text-foreground">
+  //                 {truncateId(post.txId, 10, 8)}
+  //               </span>
+  //             </div>
+  //             <div className="ml-3 flex items-center gap-1">
+  //               <Button
+  //                 variant="ghost"
+  //                 size="sm"
+  //                 className="
+  //                   size-8 p-0 text-muted-foreground
+  //                   hover:text-foreground
+  //                 "
+  //                 onClick={(e) => {
+  //                   e.stopPropagation();
+  //                   copyToClipboard(post.txId);
+  //                 }}
+  //               >
+  //                 <IconCopy size={14} />
+  //               </Button>
+  //               <Button
+  //                 variant="ghost"
+  //                 size="sm"
+  //                 className="
+  //                   size-8 p-0 text-muted-foreground
+  //                   hover:text-foreground
+  //                 "
+  //                 render={
+  //                   <a
+  //                     href={explorerUrl}
+  //                     target="_blank"
+  //                     rel="noopener noreferrer"
+  //                     onClick={(e) => e.stopPropagation()}
+  //                   />
+  //                 }
+  //               >
+  //                 <IconExternalLink size={14} />
+  //                 <span className="sr-only">View on {storageLabel}</span>
+  //               </Button>
+  //             </div>
+  //           </div>
+  //         </div>
+
+  //         <p className="pt-1 text-xs/relaxed text-muted-foreground">
+  //           This post&apos;s content is permanently stored on Arweave, with a
+  //           reference transaction on the Stacks blockchain that proves
+  //           authorship and publication time.
+  //         </p>
+  //       </div>
+  //     </CollapsibleContent>
+  //   </Collapsible>
+  // );
 };
