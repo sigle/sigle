@@ -1,6 +1,7 @@
 "use client";
 
-import { Badge, Container, Heading, Separator } from "@radix-ui/themes";
+import { Badge, Button, Container, Heading, Separator } from "@radix-ui/themes";
+import { IconArrowLeft } from "@tabler/icons-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { use } from "react";
@@ -10,8 +11,10 @@ import { PostMarkdownContent } from "@/components/Post/MarkdownContent";
 import { PostShareCard } from "@/components/Post/ShareCard";
 import { PostUserActions } from "@/components/Post/UserActions";
 import { PostUserInfoCard } from "@/components/Post/UserInfoCard";
+import { NextLink } from "@/components/Shared/NextLink";
 import { FadeSlideBottom } from "@/components/ui";
 import { resolveImageUrl } from "@/lib/images";
+import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 
 interface Props {
@@ -39,12 +42,30 @@ export function PostClientPage(props: Props) {
 
   return (
     <FadeSlideBottom>
-      <Container size="2" className="my-20 px-4">
-        <Heading size="8" className="text-pretty">
-          {post.title}
-        </Heading>
+      <Container size="2" className="my-8 px-4 md:my-10">
+        <Button color="gray" variant="ghost" className="mb-6" asChild>
+          <NextLink href={Routes.explore()}>
+            <IconArrowLeft size={14} /> All articles
+          </NextLink>
+        </Button>
 
-        <PostUserActions post={post} />
+        <header className="flex flex-col gap-4">
+          {post.tags ? (
+            <div className="flex flex-wrap items-center gap-2">
+              {post.tags.map((tag) => (
+                <Badge key={tag} color="gray" highContrast>
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          ) : null}
+
+          <Heading as="h1" size="8" className="text-pretty">
+            {post.title}
+          </Heading>
+
+          <PostUserActions post={post} />
+        </header>
 
         {post.coverImage ? (
           <Image
@@ -59,16 +80,6 @@ export function PostClientPage(props: Props) {
         ) : null}
 
         {post.content ? <PostMarkdownContent content={post.content} /> : null}
-
-        {post.tags ? (
-          <div className="mt-5 flex gap-2">
-            {post.tags.map((tag) => (
-              <Badge key={tag} color="orange">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-        ) : null}
 
         <Separator size="4" className="my-10" />
 

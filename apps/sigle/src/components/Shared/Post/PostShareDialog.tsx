@@ -29,12 +29,11 @@ export const PostShareDialog = ({
 }: PostShareDialogProps) => {
   const [isCopied, setIsCopied] = useState(false);
   const { data: session } = useSession();
-  // const session = null;
   const postLink = `${env.NEXT_PUBLIC_APP_URL}${Routes.post(
     { postId: post.id },
     {
       search: {
-        referral: session ? session.user.id : undefined,
+        referral: post.collectible && session ? session.user.id : undefined,
       },
     },
   )}`;
@@ -61,21 +60,23 @@ export const PostShareDialog = ({
         </VisuallyHidden>
 
         <div className="space-y-8">
-          <Callout.Root variant="surface" size="1" color="gray">
-            <Callout.Icon>
-              <IconReceiptTax size={16} />
-            </Callout.Icon>
-            <Callout.Text>
-              Earn referrer rewards for each primary sale made through your
-              link.{" "}
-              <Link
-                href={`${appConfig.docsUrl}/monetization#fee-structure`}
-                target="_blank"
-              >
-                Learn more.
-              </Link>
-            </Callout.Text>
-          </Callout.Root>
+          {post.collectible ? (
+            <Callout.Root variant="surface" size="1" color="gray">
+              <Callout.Icon>
+                <IconReceiptTax size={16} />
+              </Callout.Icon>
+              <Callout.Text>
+                Earn referrer rewards for each primary sale made through your
+                link.{" "}
+                <Link
+                  href={`${appConfig.docsUrl}/monetization#fee-structure`}
+                  target="_blank"
+                >
+                  Learn more.
+                </Link>
+              </Callout.Text>
+            </Callout.Root>
+          ) : null}
 
           <div className="flex justify-center gap-5">
             <IconButton size="4" color="gray" highContrast asChild>
