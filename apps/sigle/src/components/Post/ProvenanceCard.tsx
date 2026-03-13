@@ -1,15 +1,17 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { Badge, Link, Separator, Text } from "@radix-ui/themes";
+import { Badge, IconButton, Separator, Text } from "@radix-ui/themes";
 import {
-  IconCheck,
   IconChevronDown,
   IconCircleCheck,
+  IconCopy,
+  IconDatabase,
   IconExternalLink,
-  IconLink,
+  IconLayersIntersect,
 } from "@tabler/icons-react";
 import { format } from "date-fns";
+import { toast } from "sonner";
 import {
   Collapsible,
   CollapsibleContent,
@@ -51,11 +53,29 @@ function getMetadataLink(metadataUri: string): string {
   return metadataUri;
 }
 
+function getMetadataId(metadataUri: string): string {
+  if (metadataUri.startsWith("ar://") || metadataUri.startsWith("ipfs://")) {
+    return metadataUri.split("://")[1];
+  }
+  return metadataUri;
+}
+
+function truncateId(id: string, startChars = 8, endChars = 6): string {
+  if (id.length <= startChars + endChars + 3) return id;
+  return `${id.slice(0, startChars)}...${id.slice(-endChars)}`;
+}
+
 export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
   const storageType = getStorageType(post.metadataUri);
   const storageLabel = getStorageLabel(storageType);
   const metadataLink = getMetadataLink(post.metadataUri);
+  const metadataId = getMetadataId(post.metadataUri);
   const explorerUrl = getExplorerTransactionUrl(post.txId);
+
+  const copyToClipboard = async (text: string) => {
+    await navigator.clipboard.writeText(text);
+    toast.success("Copied to clipboard");
+  };
 
   return (
     <Collapsible>
@@ -65,12 +85,16 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
           className={`
             flex w-full cursor-pointer items-center justify-between rounded-lg
             border border-gray-6 px-4 py-3
-            hover:bg-gray-4
           `}
         >
-          <div className="w-full flex items-center justify-between text-left">
+          <div className="flex w-full items-center justify-between text-left">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center size-9 rounded-lg bg-orange-9/10">
+              <div
+                className="
+                  flex size-9 items-center justify-center rounded-lg
+                  bg-orange-9/10
+                "
+              >
                 <IconCircleCheck size={18} className="text-orange-9" />
               </div>
               <div>
@@ -93,55 +117,89 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
       </CollapsibleTrigger>
 
       <CollapsibleContent>
-        <div className="mt-2 rounded-lg border border-gray-6 bg-gray-2 p-4">
-          <div className="space-y-4">
-            <div>
-              <Text
-                as="p"
-                size="1"
-                weight="medium"
-                className="mb-2 text-gray-11"
-              >
-                Content Metadata
+        <div className="space-y-4 rounded-lg border border-gray-6 p-4">
+          <div>
+            <Text
+              as="p"
+              size="1"
+              color="gray"
+              weight="medium"
+              className="mb-2 flex items-center gap-2 uppercase"
+            >
+              <IconDatabase size={14} /> Content Metadata
+            </Text>
+
+            <div className="flex items-center gap-2">
+              <Text as="p" className="flex-1 font-mono" size="2">
+                {truncateId(metadataId, 12, 8)}
               </Text>
-              <div className="flex items-center gap-2">
-                <IconLink size={14} className="text-gray-10" />
-                <Link
-                  size="2"
-                  highContrast
-                  href={metadataLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1"
+              <div className="flex items-center gap-3">
+                <IconButton
+                  variant="ghost"
+                  color="gray"
+                  size="3"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    copyToClipboard(metadataId);
+                  }}
                 >
-                  {post.metadataUri}
-                  <IconExternalLink size={12} />
-                </Link>
+                  <IconCopy size={16} />
+                </IconButton>
+                <IconButton variant="ghost" color="gray" size="3" asChild>
+                  <a
+                    href={metadataLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1"
+                  >
+                    <IconExternalLink size={16} />
+                  </a>
+                </IconButton>
               </div>
             </div>
+          </div>
 
-            <Separator size="2" />
+          <Separator size="2" />
 
-            <div>
-              <Text
-                as="p"
-                size="1"
-                weight="medium"
-                className="mb-2 text-gray-11"
-              >
-                Stacks Transaction
+          <div>
+            <Text
+              as="p"
+              size="1"
+              color="gray"
+              weight="medium"
+              className="mb-2 flex items-center gap-2 uppercase"
+            >
+              {/* TODO Stacks icon */}
+              <IconLayersIntersect size={14} /> Stacks Transaction
+            </Text>
+
+            <div className="flex items-center gap-2">
+              <Text as="p" className="flex-1 font-mono" size="2">
+                {truncateId(post.txId, 10, 8)}
               </Text>
-              <Link
-                size="2"
-                highContrast
-                href={explorerUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1"
-              >
-                {post.txId}
-                <IconExternalLink size={12} />
-              </Link>
+              <div className="flex items-center gap-3">
+                <IconButton
+                  variant="ghost"
+                  color="gray"
+                  size="3"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    copyToClipboard(post.txId);
+                  }}
+                >
+                  <IconCopy size={16} />
+                </IconButton>
+                <IconButton variant="ghost" color="gray" size="3" asChild>
+                  <a
+                    href={explorerUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1"
+                  >
+                    <IconExternalLink size={16} />
+                  </a>
+                </IconButton>
+              </div>
             </div>
           </div>
         </div>
