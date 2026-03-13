@@ -42,14 +42,34 @@ export function PostClientPage(props: Props) {
 
   return (
     <FadeSlideBottom>
-      <Container size="2" className="my-8 px-4 md:my-10">
+      {post.coverImage ? (
+        <Container size="2" className="mt-6 px-4">
+          <Image
+            src={resolveImageUrl(post.coverImage.id)}
+            alt="Cover post"
+            className="size-full rounded-2 object-cover"
+            placeholder={post.coverImage.blurhash ? "blur" : "empty"}
+            blurDataURL={post.coverImage.blurhash}
+            width={post.coverImage.width}
+            height={post.coverImage.height}
+          />
+        </Container>
+      ) : null}
+
+      <Container
+        size="2"
+        className="
+          my-8 px-4
+          md:my-10
+        "
+      >
         <Button color="gray" variant="ghost" className="mb-6" asChild>
           <NextLink href={Routes.explore()}>
             <IconArrowLeft size={14} /> All articles
           </NextLink>
         </Button>
 
-        <header className="flex flex-col gap-4">
+        <header className="mb-8 flex flex-col gap-4">
           {post.tags ? (
             <div className="flex flex-wrap items-center gap-2">
               {post.tags.map((tag) => (
@@ -67,21 +87,11 @@ export function PostClientPage(props: Props) {
           <PostUserActions post={post} />
         </header>
 
-        {post.coverImage ? (
-          <Image
-            src={resolveImageUrl(post.coverImage.id)}
-            alt="Cover post"
-            className="mt-10 size-full rounded-2 object-cover"
-            placeholder={post.coverImage.blurhash ? "blur" : "empty"}
-            blurDataURL={post.coverImage.blurhash}
-            width={post.coverImage.width}
-            height={post.coverImage.height}
-          />
-        ) : null}
+        <Separator size="4" className="mb-8" />
 
         {post.content ? <PostMarkdownContent content={post.content} /> : null}
 
-        <Separator size="4" className="my-10" />
+        <Separator size="4" className="mt-10 mb-8" />
 
         <PostCollectCard post={post} />
 

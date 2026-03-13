@@ -18,7 +18,7 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
   return (
     <div
       className={`
-        prose mt-10
+        prose
         lg:prose-lg
         dark:prose-invert
       `}
