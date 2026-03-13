@@ -41,10 +41,12 @@ export function PostClientPage(props: Props) {
     notFound();
   }
 
+  // TODO skeleton to match the new template while loading
+
   return (
     <FadeSlideBottom>
       {post.coverImage ? (
-        <Container size="2" className="mt-6 px-4">
+        <Container size="3" className="mt-6 px-4">
           <Image
             src={resolveImageUrl(post.coverImage.id)}
             alt="Cover post"
@@ -96,11 +98,12 @@ export function PostClientPage(props: Props) {
 
         <PostProvenanceCard post={post} />
 
-        <Separator size="4" className="my-8" />
-
-        <PostCollectCard post={post} />
-
-        <Separator size="4" className="my-8" />
+        {post.collectible ? (
+          <>
+            <Separator size="4" className="my-8" />
+            <PostCollectCard post={post} />
+          </>
+        ) : null}
 
         <div
           className={`
