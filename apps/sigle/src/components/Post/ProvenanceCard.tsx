@@ -92,7 +92,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
           <AccordionItem value="provenance">
             <AccordionTrigger
               className="
-                items-center
+                items-center py-0
                 hover:no-underline
               "
             >
@@ -131,7 +131,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
               </div>
             </AccordionTrigger>
             <AccordionContent>
-              <div className="space-y-4 border-t border-border pt-4">
+              <div className="mt-4 space-y-4 border-t border-border pt-4 ">
                 {/* Metadata Storage */}
                 <div className="space-y-2">
                   <div
@@ -153,11 +153,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                       <span className="text-xs text-muted-foreground">
                         {storageLabel}
                       </span>
-                      <span
-                        className="
-                        truncate font-mono text-sm text-foreground
-                      "
-                      >
+                      <span className="truncate font-mono text-sm text-foreground">
                         {truncateId(metadataId, 12, 8)}
                       </span>
                     </div>
@@ -222,11 +218,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                         {/* TODO block number */}
                         Block #142,621
                       </span>
-                      <span
-                        className="
-                        truncate font-mono text-sm text-foreground
-                      "
-                      >
+                      <span className="truncate font-mono text-sm text-foreground">
                         {truncateId(post.txId, 10, 8)}
                       </span>
                     </div>
