@@ -93,9 +93,13 @@ export function PostClientPage(props: Props) {
 
         <Separator size="4" className="mt-10 mb-8" />
 
+        {/* TODO add provenance component */}
+
+        <Separator size="4" className="my-8" />
+
         <PostCollectCard post={post} />
 
-        <Separator size="4" className="my-10" />
+        <Separator size="4" className="my-8" />
 
         <div
           className={`
