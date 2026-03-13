@@ -1,7 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { Badge, IconButton, Separator, Text } from "@radix-ui/themes";
+import { IconButton, Separator, Text } from "@radix-ui/themes";
 import {
   IconChevronDown,
   IconCircleCheck,
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/Collapsible";
 import { env } from "@/env";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
+import { Badge } from "../ui/badge";
 
 interface PostProvenanceCardProps {
   post: paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"];
@@ -107,7 +108,10 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Badge size="2" color="gray" highContrast>
+              <Badge
+                variant="secondary"
+                className="text-xs font-medium capitalize"
+              >
                 {storageLabel}
               </Badge>
               <IconChevronDown size={18} className="text-gray-10" />
