@@ -3,43 +3,18 @@ import { z } from "zod";
 import { consola } from "@/lib/consola";
 import { getMetadataFromUri } from "@/lib/metadata";
 import { prisma } from "@/lib/prisma";
-import { stacksApiClient } from "@/lib/stacks";
 import { generateImageBlurhashJob } from "../../generate-image-blurhash";
 
 export const indexerPublishPostSchema = z.object({
   action: z.literal("indexer-publish-post"),
   data: z.object({
     txId: z.string(),
+    blockHeight: z.number(),
     author: z.string(),
     uri: z.string(),
     createdAt: z.coerce.date(),
   }),
 });
-
-async function getBlockHeight(txId: string): Promise<number> {
-  const txResult = await stacksApiClient.GET("/extended/v1/tx/{tx_id}", {
-    params: {
-      path: {
-        tx_id: txId,
-      },
-      query: {
-        event_limit: 0,
-        exclude_function_args: true,
-      },
-    },
-  });
-
-  if (txResult.error || !txResult.data) {
-    throw new Error(`Failed to fetch tx ${txId}: ${txResult.error}`);
-  }
-  if (txResult.data.tx_status !== "success") {
-    throw new Error(
-      `Transaction ${txId} is not successful: status ${txResult.data.tx_status}`,
-    );
-  }
-
-  return txResult.data.block_height;
-}
 
 export const executePublishPostJob = async (
   data: z.TypeOf<typeof indexerPublishPostSchema>["data"],
@@ -61,8 +36,6 @@ export const executePublishPostJob = async (
     return;
   }
   const metadata = metadataResult.value;
-
-  const blockHeight = await getBlockHeight(data.txId);
 
   let shouldProcessImage = false;
   await prisma.$transaction(async (tx) => {
@@ -110,13 +83,13 @@ export const executePublishPostJob = async (
       update: {
         txId: data.txId,
         version: metadata.version,
-        blockHeight,
+        blockHeight: data.blockHeight,
       },
       create: {
         id: metadata.id,
         txId: data.txId,
         version: metadata.version,
-        blockHeight,
+        blockHeight: data.blockHeight,
         userId,
         createdAt: new Date(data.createdAt),
 
