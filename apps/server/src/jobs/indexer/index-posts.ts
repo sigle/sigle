@@ -113,6 +113,7 @@ export const executeIndexerIndexPostsJob = async (
             error: eventLog.error,
             value: eventValue,
           });
+          // oxlint-disable-next-line no-continue
           continue;
         }
 
@@ -122,6 +123,7 @@ export const executeIndexerIndexPostsJob = async (
             txId: event.tx_id,
             error: transaction.error,
           });
+          // oxlint-disable-next-line no-continue
           continue;
         }
         if (transaction.value.tx_status !== "success") {
@@ -129,6 +131,7 @@ export const executeIndexerIndexPostsJob = async (
             txId: event.tx_id,
             status: transaction.value.tx_status,
           });
+          // oxlint-disable-next-line no-continue
           continue;
         }
         const txTimestamp = new Date(transaction.value.burn_block_time * 1000);
