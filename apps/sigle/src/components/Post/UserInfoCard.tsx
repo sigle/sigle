@@ -15,7 +15,12 @@ export const PostUserInfoCard = ({ post }: PostUserInfoCardProps) => {
   return (
     <Card className="mt-8">
       <CardContent className="space-y-2">
-        <p className="text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+        <p
+          // oxlint-disable-next-line better-tailwindcss/enforce-consistent-line-wrapping
+          className="
+            text-xs font-semibold tracking-wider text-muted-foreground uppercase
+          "
+        >
           Written by
         </p>
         <div className="flex items-center justify-between">
