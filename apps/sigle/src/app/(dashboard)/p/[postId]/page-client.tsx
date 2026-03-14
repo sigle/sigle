@@ -6,10 +6,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { use } from "react";
 import { PostCollectCard } from "@/components/Post/CollectCard";
-import { PostInfoCard } from "@/components/Post/InfoCard";
 import { PostMarkdownContent } from "@/components/Post/MarkdownContent";
 import { PostProvenanceCard } from "@/components/Post/ProvenanceCard";
-import { PostShareCard } from "@/components/Post/ShareCard";
 import { PostUserActions } from "@/components/Post/UserActions";
 import { PostUserInfoCard } from "@/components/Post/UserInfoCard";
 import { NextLink } from "@/components/Shared/NextLink";
@@ -97,16 +95,6 @@ export function PostClientPage(props: Props) {
             <PostCollectCard post={post} />
           </>
         ) : null}
-
-        <div
-          className={`
-            mt-10 grid grid-cols-1 gap-10
-            md:grid-cols-3 md:items-center
-          `}
-        >
-          <PostInfoCard post={post} />
-          <PostShareCard post={post} />
-        </div>
 
         <PostUserInfoCard post={post} />
       </Container>
