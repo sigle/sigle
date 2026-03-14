@@ -21,6 +21,7 @@ import {
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
+import { IconStacksLogo } from "../ui/icons/IconStacksLogo";
 
 interface PostProvenanceCardProps {
   post: paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"];
@@ -142,7 +143,11 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                       <span className="text-xs text-muted-foreground">
                         {storageLabel}
                       </span>
-                      <span className="truncate font-mono text-sm text-foreground">
+                      <span
+                        className="
+                        truncate font-mono text-sm text-foreground
+                      "
+                      >
                         {truncateId(metadataId, 12, 8)}
                       </span>
                     </div>
@@ -193,8 +198,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                       text-muted-foreground uppercase
                     "
                   >
-                    {/* TODO Stacks icon */}
-                    <IconLayersIntersect size={14} />
+                    <IconStacksLogo size={14} />
                     <span>Stacks Transaction</span>
                   </div>
                   <div
