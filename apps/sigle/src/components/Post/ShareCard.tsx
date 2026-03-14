@@ -13,12 +13,7 @@ export const PostShareCard = ({ post }: PostShareCardProps) => {
   return (
     <>
       <div className="space-y-4">
-        <div
-          className={`
-            space-y-1 text-center
-            md:text-left
-          `}
-        >
+        <div className="space-y-1 text-center md:text-left">
           <Heading as="h4" size="3" weight="medium">
             Share & Earn
           </Heading>

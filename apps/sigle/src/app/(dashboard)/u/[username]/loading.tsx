@@ -6,12 +6,7 @@ export const PageProfileSkeleton = () => {
     <>
       {/* Banner */}
       <Skeleton>
-        <div
-          className={`
-            h-64
-            md:h-88
-          `}
-        />
+        <div className="h-64 md:h-88" />
       </Skeleton>
 
       <Container size="2" px="4">

@@ -133,12 +133,7 @@ export default async function Post({
         </div>
         <h1 className="mt-2 text-4xl font-bold">{post.title}</h1>
 
-        <div
-          className={`
-            mt-9 grid grid-cols-1 gap-14
-            md:grid-cols-[280px,1fr]
-          `}
-        >
+        <div className="mt-9 grid grid-cols-1 gap-14 md:grid-cols-[280px,1fr]">
           <div>
             <TableOfContents items={tableOfContent} post={post} />
           </div>
@@ -160,10 +155,7 @@ export default async function Post({
               </div>
             )}
             <div
-              className={`
-                prose
-                lg:prose-lg
-              `}
+              className="prose lg:prose-lg"
               // oxlint-disable-next-line no-danger: it's safe to use this as the html is sanitized
               dangerouslySetInnerHTML={{
                 __html: posthtml,
