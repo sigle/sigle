@@ -179,11 +179,13 @@ export const executeNewPostJob = async (
       update: {
         txId: data.txId,
         version: data.version,
+        blockHeight: data.blockHeight,
       },
       create: {
         id: metadata.id,
         txId: data.txId,
         version: data.version,
+        blockHeight: data.blockHeight,
         userId,
         createdAt: new Date(data.createdAt),
 

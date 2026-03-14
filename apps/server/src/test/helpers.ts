@@ -66,6 +66,7 @@ export async function createTestPost(
       id: options.id ?? `post-${Date.now()}`,
       version: options.version ?? "1.0.0",
       txId: options.txId ?? `0x${Math.random().toString(16).slice(2)}`,
+      blockHeight: 100,
       title: options.title ?? "Test Post",
       content: options.content ?? "Test content",
       excerpt: options.excerpt ?? "Test excerpt",

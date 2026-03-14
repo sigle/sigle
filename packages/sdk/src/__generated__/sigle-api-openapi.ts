@@ -1253,6 +1253,7 @@ export interface components {
       tags?: string[];
       canonicalUri?: string;
       txId: string;
+      blockHeight: number;
       collectorsCount?: number;
       metadataUri: string;
       createdAt: string;
