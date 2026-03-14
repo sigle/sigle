@@ -113,7 +113,7 @@ export const executeIndexerIndexPostsJob = async (
             error: eventLog.error,
             value: eventValue,
           });
-          break;
+          continue;
         }
 
         const transaction = await getStacksTransaction(event.tx_id);
@@ -122,14 +122,14 @@ export const executeIndexerIndexPostsJob = async (
             txId: event.tx_id,
             error: transaction.error,
           });
-          break;
+          continue;
         }
         if (transaction.value.tx_status !== "success") {
           consola.error("Transaction for event log is not successful", {
             txId: event.tx_id,
             status: transaction.value.tx_status,
           });
-          break;
+          continue;
         }
         const txTimestamp = new Date(transaction.value.burn_block_time * 1000);
         const txBlockHeight = transaction.value.block_height;
