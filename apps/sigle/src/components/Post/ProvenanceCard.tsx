@@ -11,6 +11,7 @@ import { format } from "date-fns";
 import { toast } from "sonner";
 import { env } from "@/env";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
+import { formatNumber } from "@/lib/utils";
 import {
   Accordion,
   AccordionContent,
@@ -205,8 +206,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                   >
                     <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                       <span className="text-xs text-muted-foreground">
-                        {/* TODO block number */}
-                        Block #142,621
+                        Block #{formatNumber(post.blockHeight)}
                       </span>
                       {/* oxlint-disable-next-line better-tailwindcss/enforce-consistent-line-wrapping */}
                       <span className="truncate font-mono text-sm text-foreground">

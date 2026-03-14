@@ -50,15 +50,15 @@ services:
     networks:
       - sigle-network
 
-  cloudflared:
-    image: cloudflare/cloudflared:2025.2.1
-    container_name: cloudflared
-    restart: unless-stopped
-    command: tunnel --url http://server:3001
-    depends_on:
-      - server
-    networks:
-      - sigle-network
+  # cloudflared:
+  #   image: cloudflare/cloudflared:2025.2.1
+  #   container_name: cloudflared
+  #   restart: unless-stopped
+  #   command: tunnel --url http://server:3001
+  #   depends_on:
+  #     - server
+  #   networks:
+  #     - sigle-network
 
 volumes:
   postgres_data:
