@@ -17,14 +17,16 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
   const [collectDialogOpen, setCollectDialogOpen] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
-  const canCollect =
-    post.collectible &&
-    (post.collectible.maxSupply === 0 ||
-      post.collectible.collected < post.collectible.maxSupply);
+  const canCollect = post.collectible
+    ? post.collectible.maxSupply === 0 ||
+      post.collectible.collected < post.collectible.maxSupply
+    : false;
+
+  // TODO add published time + read time under user name in the format "Mar 1, 2026 (clock icon) 6 min read"
 
   return (
     <>
-      <div className="mt-5 flex items-center justify-between">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <NextLink href={Routes.userProfile({ username: post.user.id })}>
             <ProfileAvatar user={post.user} size="2" />
@@ -43,24 +45,37 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <Tooltip content="Share">
-            <IconButton
+          {post.collectible ? (
+            <>
+              <Tooltip content="Share">
+                <IconButton
+                  variant="ghost"
+                  color="gray"
+                  size="2"
+                  onClick={() => setShareDialogOpen(true)}
+                >
+                  <IconShare size={16} />
+                </IconButton>
+              </Tooltip>
+              <Button
+                color="gray"
+                highContrast
+                disabled={!canCollect}
+                onClick={() => setCollectDialogOpen(true)}
+              >
+                Collect
+              </Button>
+            </>
+          ) : (
+            <Button
               variant="ghost"
               color="gray"
               size="2"
               onClick={() => setShareDialogOpen(true)}
             >
-              <IconShare size={16} />
-            </IconButton>
-          </Tooltip>
-          <Button
-            color="gray"
-            highContrast
-            disabled={!canCollect}
-            onClick={() => setCollectDialogOpen(true)}
-          >
-            Collect
-          </Button>
+              <IconShare size={16} /> Share
+            </Button>
+          )}
         </div>
       </div>
 
@@ -69,11 +84,13 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
         onOpenChange={setShareDialogOpen}
         post={post}
       />
-      <PostCollectDialog
-        post={post}
-        open={collectDialogOpen}
-        onOpenChange={setCollectDialogOpen}
-      />
+      {post.collectible ? (
+        <PostCollectDialog
+          post={post}
+          open={collectDialogOpen}
+          onOpenChange={setCollectDialogOpen}
+        />
+      ) : null}
     </>
   );
 };

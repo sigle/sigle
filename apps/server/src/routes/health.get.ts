@@ -125,6 +125,7 @@ defineRouteMeta({
             required: [
               "id",
               "txId",
+              "blockHeight",
               "title",
               "metadataUri",
               "createdAt",
@@ -179,6 +180,9 @@ defineRouteMeta({
               },
               txId: {
                 type: "string",
+              },
+              blockHeight: {
+                type: "number",
               },
               collectorsCount: {
                 type: "number",

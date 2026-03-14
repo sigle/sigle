@@ -1,52 +1,69 @@
-import { Container, Heading, Skeleton, Text } from "@radix-ui/themes";
+import {
+  Container,
+  Heading,
+  Separator,
+  Skeleton,
+  Text,
+} from "@radix-ui/themes";
 
 export const PagePostSkeleton = () => {
   return (
-    <Container size="2" className="mt-20 px-4 pb-10">
-      {/* Title */}
-      <Heading size="8">
-        <Skeleton>Lorem ipsum dolor sit amet</Skeleton>
-      </Heading>
+    <>
+      {/* Cover Image */}
+      <Container size="3" className="mt-6 px-4">
+        <Skeleton className="h-[350px] w-full rounded-2" />
+      </Container>
 
-      {/* Avatar */}
-      <div className="mt-5 flex items-center space-x-1">
-        <Skeleton className="size-12 rounded-3" />
-        <div className="space-y-2">
-          <Skeleton className="w-[160px]">
-            <Text as="div" size="1">
+      <Container size="2" className="my-8 px-4 md:my-10">
+        {/* Back Button */}
+        <Skeleton className="mb-6 h-9 w-28" />
+
+        {/* Header */}
+        <div className="mb-8 flex flex-col gap-4">
+          {/* Tags */}
+          <div className="flex flex-wrap gap-2">
+            <Skeleton className="h-5 w-16 rounded-full" />
+            <Skeleton className="h-5 w-20 rounded-full" />
+          </div>
+
+          {/* Title */}
+          <Heading as="h1" size="8" className="text-pretty">
+            <Skeleton>Lorem ipsum dolor sit amet</Skeleton>
+          </Heading>
+
+          {/* User Actions */}
+          <div className="flex gap-4">
+            <Skeleton className="h-9 w-24" />
+          </div>
+        </div>
+
+        <Separator size="4" className="mb-8" />
+
+        {/* Content */}
+        <div className="space-y-3">
+          <Skeleton className="w-full">
+            <Text as="div" size="2">
               &#8203;
             </Text>
           </Skeleton>
-          <Skeleton className="w-[80px]">
-            <Text as="div" size="1">
+          <Skeleton className="w-full">
+            <Text as="div" size="2">
+              &#8203;
+            </Text>
+          </Skeleton>
+          <Skeleton className="w-full">
+            <Text as="div" size="2">
+              &#8203;
+            </Text>
+          </Skeleton>
+          <Skeleton className="w-3/4">
+            <Text as="div" size="2">
               &#8203;
             </Text>
           </Skeleton>
         </div>
-      </div>
-
-      {/* Image */}
-      <Skeleton className="mt-10 h-[350px] w-full" />
-
-      {/* Text */}
-      <div className="mt-10 space-y-2">
-        <Skeleton className="w-full">
-          <Text as="div" size="1">
-            &#8203;
-          </Text>
-        </Skeleton>
-        <Skeleton className="w-full">
-          <Text as="div" size="1">
-            &#8203;
-          </Text>
-        </Skeleton>
-        <Skeleton className="w-full">
-          <Text as="div" size="1">
-            &#8203;
-          </Text>
-        </Skeleton>
-      </div>
-    </Container>
+      </Container>
+    </>
   );
 };
 
