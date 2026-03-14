@@ -6,7 +6,6 @@ import {
   IconCopy,
   IconDatabase,
   IconExternalLink,
-  IconLayersIntersect,
 } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -145,8 +144,11 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                       </span>
                       <span
                         className="
-                        truncate font-mono text-sm text-foreground
-                      "
+                          truncate
+                          font-mono
+                          text-sm
+                          text-foreground
+                        "
                       >
                         {truncateId(metadataId, 12, 8)}
                       </span>
@@ -198,7 +200,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                       text-muted-foreground uppercase
                     "
                   >
-                    <IconStacksLogo size={14} />
+                    <IconStacksLogo size={14} height={14} width={14} />
                     <span>Stacks Transaction</span>
                   </div>
                   <div
@@ -212,7 +214,14 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                         {/* TODO block number */}
                         Block #142,621
                       </span>
-                      <span className="truncate font-mono text-sm text-foreground">
+                      <span
+                        className="
+                          truncate
+                          font-mono
+                          text-sm
+                          text-foreground
+                        "
+                      >
                         {truncateId(post.txId, 10, 8)}
                       </span>
                     </div>
