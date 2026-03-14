@@ -84,12 +84,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
       <CardContent>
         <Accordion>
           <AccordionItem value="provenance">
-            <AccordionTrigger
-              className="
-                items-center py-0
-                hover:no-underline
-              "
-            >
+            <AccordionTrigger className="items-center py-0 hover:no-underline">
               <div
                 className="
                   mr-2 flex w-full items-center justify-between text-left

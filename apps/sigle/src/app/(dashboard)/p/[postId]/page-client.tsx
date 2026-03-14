@@ -60,13 +60,7 @@ export function PostClientPage(props: Props) {
         </Container>
       ) : null}
 
-      <Container
-        size="2"
-        className="
-          my-8 px-4
-          md:my-10
-        "
-      >
+      <Container size="2" className="my-8 px-4 md:my-10">
         <Button color="gray" variant="ghost" className="mb-6" asChild>
           <NextLink href={Routes.explore()}>
             <IconArrowLeft size={14} /> All articles
