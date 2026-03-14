@@ -3,7 +3,7 @@ import { z } from "zod";
 import { consola } from "@/lib/consola";
 import { prisma } from "@/lib/prisma";
 import { sigleConfig } from "@/lib/sigle";
-import { stacksApiClient } from "@/lib/stacks";
+import { getStacksTransaction, stacksApiClient } from "@/lib/stacks";
 import { indexerJob } from ".";
 
 export const indexerIndexPostsSchema = z.object({
@@ -27,32 +27,6 @@ const eventLogSchema = z.object({
   }),
 });
 
-async function getTxTimestamp(txId: string): Promise<Date> {
-  const txResult = await stacksApiClient.GET("/extended/v1/tx/{tx_id}", {
-    params: {
-      path: {
-        tx_id: txId,
-      },
-      // Used for faster queries
-      query: {
-        event_limit: 0,
-        exclude_function_args: true,
-      },
-    },
-  });
-
-  if (txResult.error || !txResult.data) {
-    throw new Error(`Failed to fetch tx ${txId}: ${txResult.error}`);
-  }
-  if (txResult.data.tx_status !== "success") {
-    throw new Error(
-      `Transaction ${txId} is not successful: status ${txResult.data.tx_status}`,
-    );
-  }
-
-  return new Date(txResult.data.burn_block_time * 1000);
-}
-
 export const executeIndexerIndexPostsJob = async (
   _data: z.TypeOf<typeof indexerIndexPostsSchema>["data"],
 ) => {
@@ -72,6 +46,7 @@ export const executeIndexerIndexPostsJob = async (
   let caughtUp = false;
   const posts: {
     txId: string;
+    blockHeight: number;
     author: string;
     uri: string;
     createdAt: Date;
@@ -138,14 +113,36 @@ export const executeIndexerIndexPostsJob = async (
             error: eventLog.error,
             value: eventValue,
           });
-          break;
+          // oxlint-disable-next-line no-continue
+          continue;
         }
+
+        const transaction = await getStacksTransaction(event.tx_id);
+        if (transaction.isErr()) {
+          consola.error("Failed to fetch transaction for event log", {
+            txId: event.tx_id,
+            error: transaction.error,
+          });
+          // oxlint-disable-next-line no-continue
+          continue;
+        }
+        if (transaction.value.tx_status !== "success") {
+          consola.error("Transaction for event log is not successful", {
+            txId: event.tx_id,
+            status: transaction.value.tx_status,
+          });
+          // oxlint-disable-next-line no-continue
+          continue;
+        }
+        const txTimestamp = new Date(transaction.value.burn_block_time * 1000);
+        const txBlockHeight = transaction.value.block_height;
 
         posts.push({
           txId: event.tx_id,
+          blockHeight: txBlockHeight,
           author: eventLog.data.value.author.value,
           uri: eventLog.data.value.uri.value,
-          createdAt: await getTxTimestamp(event.tx_id),
+          createdAt: txTimestamp,
         });
       }
     }

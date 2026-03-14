@@ -9,6 +9,7 @@ export const indexerPublishPostSchema = z.object({
   action: z.literal("indexer-publish-post"),
   data: z.object({
     txId: z.string(),
+    blockHeight: z.number(),
     author: z.string(),
     uri: z.string(),
     createdAt: z.coerce.date(),
@@ -82,11 +83,13 @@ export const executePublishPostJob = async (
       update: {
         txId: data.txId,
         version: metadata.version,
+        blockHeight: data.blockHeight,
       },
       create: {
         id: metadata.id,
         txId: data.txId,
         version: metadata.version,
+        blockHeight: data.blockHeight,
         userId,
         createdAt: new Date(data.createdAt),
 
