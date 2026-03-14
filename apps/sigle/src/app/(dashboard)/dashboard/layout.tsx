@@ -75,13 +75,7 @@ export default function DashboardLayout({
 
         {/* Mobile navigation */}
         <Select.Root value={pathname} onValueChange={handleNavigation}>
-          <Select.Trigger
-            variant="surface"
-            className={`
-              mt-5 w-full
-              lg:hidden
-            `}
-          />
+          <Select.Trigger variant="surface" className="mt-5 w-full lg:hidden" />
           <Select.Content>
             {navigationLinks.map((link) => (
               <Select.Item key={link.href} value={link.href}>

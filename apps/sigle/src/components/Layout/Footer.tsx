@@ -17,12 +17,7 @@ export const Footer = () => {
             md:flex-row
           `}
         >
-          <div
-            className={`
-              mb-4
-              md:mb-0
-            `}
-          >
+          <div className="mb-4 md:mb-0">
             <div className="flex items-center space-x-4">
               <Text size="2" color="gray">
                 © {new Date().getFullYear()} Sigle
@@ -57,12 +52,7 @@ export const Footer = () => {
             </div>
           </div>
 
-          <ul
-            className={`
-              grid grid-cols-2 gap-x-6 gap-y-2
-              md:grid-cols-4
-            `}
-          >
+          <ul className="grid grid-cols-2 gap-x-6 gap-y-2 md:grid-cols-4">
             <li>
               <Link
                 size="2"
