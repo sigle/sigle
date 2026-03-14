@@ -42,8 +42,6 @@ export function PostClientPage(props: Props) {
     notFound();
   }
 
-  // TODO skeleton to match the new template while loading
-
   return (
     <FadeSlideBottom>
       {post.coverImage ? (
