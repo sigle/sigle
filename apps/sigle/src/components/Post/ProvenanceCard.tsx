@@ -142,14 +142,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                       <span className="text-xs text-muted-foreground">
                         {storageLabel}
                       </span>
-                      <span
-                        className="
-                          truncate
-                          font-mono
-                          text-sm
-                          text-foreground
-                        "
-                      >
+                      <span className="truncate font-mono text-sm text-foreground">
                         {truncateId(metadataId, 12, 8)}
                       </span>
                     </div>
@@ -214,14 +207,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                         {/* TODO block number */}
                         Block #142,621
                       </span>
-                      <span
-                        className="
-                          truncate
-                          font-mono
-                          text-sm
-                          text-foreground
-                        "
-                      >
+                      <span className="truncate font-mono text-sm text-foreground">
                         {truncateId(post.txId, 10, 8)}
                       </span>
                     </div>
