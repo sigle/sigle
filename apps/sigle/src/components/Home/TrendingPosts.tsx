@@ -25,13 +25,7 @@ export const HomeTrendingPosts = () => {
   );
 
   return (
-    <Container
-      size="4"
-      className={`
-        mt-10 px-4
-        md:mt-20
-      `}
-    >
+    <Container size="4" className="mt-10 px-4 md:mt-20">
       <Heading as="h3" size="5">
         Trending
       </Heading>
@@ -44,13 +38,7 @@ export const HomeTrendingPosts = () => {
       >
         <CarouselContent>
           {posts.results.map((post) => (
-            <CarouselItem
-              key={post.id}
-              className={`
-                md:basis-1/2
-                lg:basis-1/4
-              `}
-            >
+            <CarouselItem key={post.id} className="md:basis-1/2 lg:basis-1/4">
               <PostCard post={post} />
             </CarouselItem>
           ))}

@@ -21,13 +21,7 @@ export const HomeTrendingUsers = () => {
   );
 
   return (
-    <Container
-      size="4"
-      className={`
-        mt-10 px-4
-        md:mt-20
-      `}
-    >
+    <Container size="4" className="mt-10 px-4 md:mt-20">
       <Heading as="h3" size="4">
         Discover
       </Heading>
@@ -42,11 +36,7 @@ export const HomeTrendingUsers = () => {
           {users.map((user) => (
             <CarouselItem
               key={user.id}
-              className={`
-                basis-1/2
-                md:basis-1/5
-                lg:basis-1/6
-              `}
+              className="basis-1/2 md:basis-1/5 lg:basis-1/6"
             >
               <Card
                 key={user.id}

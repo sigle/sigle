@@ -3,12 +3,7 @@ import { Container, Heading, Text } from "@radix-ui/themes";
 export const HomeFeatures = () => {
   return (
     <Container size="4" className="px-4">
-      <section
-        className={`
-          grid grid-cols-1 gap-x-6
-          md:grid-cols-3
-        `}
-      >
+      <section className="grid grid-cols-1 gap-x-6 md:grid-cols-3">
         <div
           className={`
             flex flex-col items-center gap-4 rounded-3 bg-gray-2 p-6 text-center

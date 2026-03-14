@@ -77,12 +77,7 @@ export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
   useIntersectionObserver(setActiveId as any);
 
   return (
-    <nav
-      className={`
-        overflow-auto
-        md:sticky md:top-20
-      `}
-    >
+    <nav className="overflow-auto md:sticky md:top-20">
       <p
         className={`
           text-[0.625rem] font-bold tracking-wide text-gray-500 uppercase

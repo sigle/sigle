@@ -64,14 +64,7 @@ export const PostCard = ({ post }: PostCardProps) => {
           </Heading>
         </NextLink>
         <NextLink href={Routes.post({ postId: post.id })} className="block">
-          <Text
-            as="p"
-            size="2"
-            className={`
-              line-clamp-1
-              md:line-clamp-2
-            `}
-          >
+          <Text as="p" size="2" className="line-clamp-1 md:line-clamp-2">
             {post.metaDescription || post.excerpt}
           </Text>
         </NextLink>

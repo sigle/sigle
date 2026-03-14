@@ -59,13 +59,7 @@ export const Header = ({ site }: HeaderProps) => {
         },
       )}
     >
-      <Link
-        href="/"
-        className={`
-          w-full
-          md:w-auto
-        `}
-      >
+      <Link href="/" className="w-full md:w-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="relative overflow-hidden rounded-sm object-cover">
@@ -88,10 +82,7 @@ export const Header = ({ site }: HeaderProps) => {
           <Sheet>
             <SheetTrigger asChild>
               <button
-                className={`
-                  p-2
-                  md:hidden
-                `}
+                className="p-2 md:hidden"
                 aria-label="Open mobile menu"
                 type="button"
               >
@@ -131,10 +122,7 @@ export const Header = ({ site }: HeaderProps) => {
                       <li key={href}>
                         <Link
                           href={href}
-                          className={`
-                            text-sm text-gray-800
-                            hover:text-gray-500
-                          `}
+                          className="text-sm text-gray-800 hover:text-gray-500"
                         >
                           {label}
                         </Link>
@@ -160,21 +148,13 @@ export const Header = ({ site }: HeaderProps) => {
         </div>
       </Link>
 
-      <nav
-        className={`
-          hidden
-          md:block
-        `}
-      >
+      <nav className="hidden md:block">
         <ul className="flex items-center gap-8">
           {site.links.map(({ href, label }) => (
             <li key={href}>
               <Link
                 href={href}
-                className={`
-                  text-sm text-gray-800
-                  hover:text-gray-500
-                `}
+                className="text-sm text-gray-800 hover:text-gray-500"
               >
                 {label}
               </Link>
