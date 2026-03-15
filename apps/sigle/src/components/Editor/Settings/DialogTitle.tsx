@@ -1,4 +1,4 @@
-import { Dialog, Flex, IconButton, VisuallyHidden } from "@radix-ui/themes";
+import { Dialog, IconButton, VisuallyHidden } from "@radix-ui/themes";
 import { IconChevronLeft, IconX } from "@tabler/icons-react";
 import { useEditorStore } from "../store";
 
@@ -9,7 +9,7 @@ interface DialogTitleProps {
 
 export const DialogTitle = ({ title, description }: DialogTitleProps) => {
   return (
-    <Flex justify="between" align="center" mb="5">
+    <div className="mb-5 flex items-center justify-between">
       <Dialog.Title mb="0">{title}</Dialog.Title>
       <VisuallyHidden>
         <Dialog.Description>{description}</Dialog.Description>
@@ -19,7 +19,7 @@ export const DialogTitle = ({ title, description }: DialogTitleProps) => {
           <IconX size={20} />
         </IconButton>
       </Dialog.Close>
-    </Flex>
+    </div>
   );
 };
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, IconButton } from "@radix-ui/themes";
+import { IconButton } from "@radix-ui/themes";
 import {
   IconArrowLeft,
   IconLayoutSidebarRightExpand,
@@ -58,8 +58,8 @@ export const EditorHeader = () => {
         },
       )}
     >
-      <Flex justify="between" align="center" className="flex-1">
-        <Flex align="center" gap="6">
+      <div className="flex flex-1 items-center justify-between">
+        <div className="flex items-center gap-6">
           <IconButton
             size="2"
             variant="ghost"
@@ -72,8 +72,8 @@ export const EditorHeader = () => {
             </NextLink>
           </IconButton>
           {type === "draft" ? <EditorSave /> : null}
-        </Flex>
-        <Flex align="center" gap="6">
+        </div>
+        <div className="flex items-center gap-6">
           <EditorPublish />
           <IconButton
             size="2"
@@ -84,8 +84,8 @@ export const EditorHeader = () => {
           >
             <IconLayoutSidebarRightExpand size={headerIconSize} />
           </IconButton>
-        </Flex>
-      </Flex>
+        </div>
+      </div>
     </header>
   );
 };

@@ -1,4 +1,4 @@
-import { Callout, Flex, Text } from "@radix-ui/themes";
+import { Callout, Text } from "@radix-ui/themes";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { Spinner } from "@/components/ui/spinner";
 import { useSession } from "@/lib/auth-hooks";
@@ -26,13 +26,13 @@ export const AuthProtect = ({ children }: AuthProtectProps) => {
   }
 
   return (
-    <Flex justify="center" py="7">
+    <div className="flex justify-center py-7">
       <Callout.Root color="gray">
         <Callout.Icon>
           <IconInfoCircle />
         </Callout.Icon>
         <Callout.Text>Please sign in to access this page.</Callout.Text>
       </Callout.Root>
-    </Flex>
+    </div>
   );
 };

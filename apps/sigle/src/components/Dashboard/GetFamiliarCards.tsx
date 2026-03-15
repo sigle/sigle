@@ -1,4 +1,4 @@
-import { Card, Grid, Text } from "@radix-ui/themes";
+import { Card, Text } from "@radix-ui/themes";
 import { appConfig } from "@/config";
 import { NextLink } from "../Shared/NextLink";
 
@@ -9,14 +9,7 @@ export const GetFamiliarCards = () => {
         Get familiar with Sigle
       </Text>
 
-      <Grid
-        columns={{
-          initial: "1",
-          md: "2",
-        }}
-        gap="4"
-        width="auto"
-      >
+      <div className="grid gap-4 md:grid-cols-2">
         <Card variant="surface" size="2" asChild>
           <NextLink href={appConfig.docsUrl} target="_blank">
             <Text as="div" size="3" weight="bold">
@@ -62,7 +55,7 @@ export const GetFamiliarCards = () => {
             </Text>
           </NextLink>
         </Card>
-      </Grid>
+      </div>
     </div>
   );
 };

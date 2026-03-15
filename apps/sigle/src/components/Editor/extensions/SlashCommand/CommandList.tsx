@@ -1,5 +1,5 @@
 import type { Icon } from "@tabler/icons-react";
-import { Flex, ScrollArea, Text } from "@radix-ui/themes";
+import { ScrollArea, Text } from "@radix-ui/themes";
 import {
   forwardRef,
   useEffect,
@@ -162,17 +162,17 @@ const CommandListItem = ({
       )}
       onClick={() => selectItem(index)}
     >
-      <Flex align="center">
+      <div className="flex items-center">
         <Icon width={30} height={30} />
-        <Flex direction="column" className="ml-2">
+        <div className="ml-2 flex flex-col">
           <Text size="2" color="gray" highContrast weight="medium">
             {title}
           </Text>
           <Text size="1" color="gray">
             {description}
           </Text>
-        </Flex>
-      </Flex>
+        </div>
+      </div>
     </div>
   );
 };

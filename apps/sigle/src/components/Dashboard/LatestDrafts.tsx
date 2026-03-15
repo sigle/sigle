@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { Button, Card, Heading, Text } from "@radix-ui/themes";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
@@ -24,26 +24,26 @@ export const LatestDrafts = () => {
 
   return (
     <div>
-      <Flex justify="between" align="center">
+      <div className="flex items-center justify-between">
         <Text size="2">Drafts</Text>
         <Button size="1" color="gray" variant="ghost">
           <NextLink href="/dashboard/drafts">View all</NextLink>
         </Button>
-      </Flex>
+      </div>
       <Card mt="2" size="2">
         {loadingDrafts ? (
-          <Flex justify="center" py="7">
+          <div className="flex justify-center py-7">
             <Spinner />
-          </Flex>
+          </div>
         ) : null}
 
         {errorDrafts ? (
-          <Flex justify="center" py="7">
+          <div className="flex justify-center py-7">
             <Text size="2" color="red">
               An error occurred, please try again later. Error:{" "}
               {errorDrafts.message}
             </Text>
-          </Flex>
+          </div>
         ) : null}
 
         {!loadingDrafts && drafts?.length === 0 ? (

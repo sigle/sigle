@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { Button, Card, Heading, Text } from "@radix-ui/themes";
 import { IconPencil } from "@tabler/icons-react";
 import { useState } from "react";
 import { ProfileAvatar } from "@/components/Shared/Profile/ProfileAvatar";
@@ -50,15 +50,15 @@ export const SettingsProfileMetadata = () => {
 
         {!editingProfileMetadata ? (
           <Card size="1">
-            <Flex gap="4" align="center">
+            <div className="flex items-center gap-4">
               <ProfileAvatar user={user} size="3" />
-              <Flex direction="column">
+              <div className="flex flex-col">
                 {user.profile?.displayName ? (
                   <Text weight="medium">{user.profile.displayName}</Text>
                 ) : null}
                 <Text color="gray">{user.id}</Text>
-              </Flex>
-            </Flex>
+              </div>
+            </div>
           </Card>
         ) : (
           <UpdateProfileMetadata

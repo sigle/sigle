@@ -1,4 +1,4 @@
-import { Flex, RadioCards, Text, TextField } from "@radix-ui/themes";
+import { RadioCards, Text, TextField } from "@radix-ui/themes";
 import { useFormContext, useFormState } from "react-hook-form";
 import type { EditorPostFormData } from "../../EditorFormProvider";
 
@@ -33,16 +33,16 @@ export const CollectEdition = () => {
         disabled={type === "published"}
       >
         <RadioCards.Item value="open">
-          <Flex direction="column" width="100%">
+          <div className="flex w-full flex-col">
             <Text weight="bold">Open edition</Text>
             <Text>∞</Text>
-          </Flex>
+          </div>
         </RadioCards.Item>
         <RadioCards.Item value="fixed">
-          <Flex direction="column" width="100%">
+          <div className="flex w-full flex-col">
             <Text weight="bold">Limited edition</Text>
             <Text>0/{watchCollectLimitLimit}</Text>
-          </Flex>
+          </div>
         </RadioCards.Item>
       </RadioCards.Root>
       {watchCollectLimitType === "fixed" ? (

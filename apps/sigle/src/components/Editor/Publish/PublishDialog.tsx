@@ -1,6 +1,6 @@
 "use client";
 
-import { Callout, Dialog, Flex, Text, VisuallyHidden } from "@radix-ui/themes";
+import { Callout, Dialog, Text, VisuallyHidden } from "@radix-ui/themes";
 import * as Sentry from "@sentry/nextjs";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
@@ -171,20 +171,14 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         {publishingLoading === false ? (
           <PublishReview onPublish={onSubmit} />
         ) : (
-          <Flex
-            justify="center"
-            align="center"
-            py="7"
-            direction="column"
-            className="space-y-2"
-          >
+          <div className="flex flex-col items-center justify-center gap-2 py-7">
             <div className="mb-2">
               <Spinner />
             </div>
             <Text as="div" size="2">
               Your post is being published...
             </Text>
-          </Flex>
+          </div>
         )}
         {publishingError ? (
           <Callout.Root color="red" role="alert" className="mt-4">

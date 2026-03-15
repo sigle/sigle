@@ -1,4 +1,4 @@
-import { Flex, Link, Text, TextArea, TextField } from "@radix-ui/themes";
+import { Link, Text, TextArea, TextField } from "@radix-ui/themes";
 import { IconHelpCircle } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import type { EditorPostFormData } from "../EditorFormProvider";
@@ -17,7 +17,7 @@ export const MetaSettings = () => {
         description="Edit your post SEO settings"
       />
 
-      <Flex direction="column" gap="3">
+      <div className="flex flex-col gap-3">
         <div>
           <Text as="p" size="2" mb="1">
             Meta title
@@ -79,7 +79,7 @@ export const MetaSettings = () => {
           />
         </div>
         <SeoPreview />
-      </Flex>
+      </div>
     </div>
   );
 };

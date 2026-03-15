@@ -1,4 +1,4 @@
-import { Button, Callout, Dialog, Flex, Grid, Text } from "@radix-ui/themes";
+import { Button, Callout, Dialog, Text } from "@radix-ui/themes";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -103,12 +103,14 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
         </Callout.Root>
       ) : null}
 
-      <Grid columns={isCollectEnabled ? "2" : "1"} gap="4" width="auto">
+      <div
+        className={`grid gap-4 ${isCollectEnabled ? "grid-cols-2" : "grid-cols-1"}`}
+      >
         <PublishReviewGeneral />
         <PublishReviewCollect />
-      </Grid>
+      </div>
 
-      <Flex gap="3" justify="end">
+      <div className="flex justify-end gap-3">
         <Dialog.Close>
           <Button variant="soft" color="gray" disabled={formState.isSubmitting}>
             Cancel
@@ -121,7 +123,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
         >
           {type === "draft" ? "Publish" : "Update"}
         </Button>
-      </Flex>
+      </div>
     </div>
   );
 };

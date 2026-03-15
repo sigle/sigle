@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { Button, Card, Heading, Text } from "@radix-ui/themes";
 import { format } from "date-fns";
 import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
@@ -25,9 +25,9 @@ export const LatestPost = () => {
 
   return (
     <div>
-      <Flex justify="between" align="center">
+      <div className="flex items-center justify-between">
         <Text size="2">Latest post</Text>
-      </Flex>
+      </div>
       <Card mt="2" size="2">
         {!post ? (
           <div className="flex flex-col items-center justify-center gap-4 py-7">
@@ -83,17 +83,12 @@ export const LatestPost = () => {
                   </Text>
                 </Text>
               </Flex> */}
-                <Flex
-                  gap="5"
-                  align="center"
-                  justify="between"
-                  className="border-b border-solid border-gray-6 py-5 last:border-b-0"
-                >
+                <div className="flex items-center justify-between gap-5 border-b border-solid border-gray-6 py-5 last:border-b-0">
                   <Text size="2">Collected</Text>
                   <Text size="2" weight="medium">
                     {post.collectible.collected}
                   </Text>
-                </Flex>
+                </div>
               </div>
             ) : null}
           </>

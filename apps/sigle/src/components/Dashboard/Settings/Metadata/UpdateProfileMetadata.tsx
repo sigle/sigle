@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
+import { Button, Text, TextArea, TextField } from "@radix-ui/themes";
 import {
   type paths,
   createProfileMetadata,
@@ -208,7 +208,7 @@ export const UpdateProfileMetadata = ({
         }
       />
 
-      <Flex gap="3" justify="end">
+      <div className="flex justify-end gap-3">
         <Button
           variant="soft"
           color="gray"
@@ -221,7 +221,7 @@ export const UpdateProfileMetadata = ({
         <Button type="submit" loading={isSubmitting}>
           Save
         </Button>
-      </Flex>
+      </div>
     </form>
   );
 };

@@ -1,4 +1,4 @@
-import { Flex, Link, RadioCards, Text, TextField } from "@radix-ui/themes";
+import { Link, RadioCards, Text, TextField } from "@radix-ui/themes";
 import { useFormContext, useFormState } from "react-hook-form";
 import { appConfig } from "@/config";
 import {
@@ -39,14 +39,14 @@ export const CollectPrice = () => {
             disabled={type === "published"}
           >
             <RadioCards.Item value="free">
-              <Flex direction="column" width="100%">
+              <div className="flex w-full flex-col">
                 <Text weight="bold">Free Mint</Text>
-              </Flex>
+              </div>
             </RadioCards.Item>
             <RadioCards.Item value="paid">
-              <Flex direction="column" width="100%">
+              <div className="flex w-full flex-col">
                 <Text weight="bold">Paid Mint</Text>
-              </Flex>
+              </div>
             </RadioCards.Item>
           </RadioCards.Root>
           <Text as="p" size="1" color="gray">
@@ -65,7 +65,7 @@ export const CollectPrice = () => {
             <Text as="p" size="2" weight="medium">
               Collection Price
             </Text>
-            <Flex gap="2">
+            <div className="flex gap-2">
               <TextField.Root
                 className="w-full"
                 placeholder="Free"
@@ -75,7 +75,7 @@ export const CollectPrice = () => {
               >
                 <TextField.Slot side="right">sBTC</TextField.Slot>
               </TextField.Root>
-            </Flex>
+            </div>
           </>
         ) : null}
         {currencyFiatPrice &&

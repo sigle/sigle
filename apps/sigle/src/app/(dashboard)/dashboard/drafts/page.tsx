@@ -5,7 +5,6 @@ import {
   Button,
   Card,
   DropdownMenu,
-  Flex,
   Heading,
   IconButton,
   Text,
@@ -40,34 +39,28 @@ export default function DashboardDrafts() {
       <Heading>Drafts</Heading>
       <Card mt="5" size="2">
         {loadingDrafts ? (
-          <Flex justify="center" py="7">
+          <div className="flex justify-center py-7">
             <Spinner />
-          </Flex>
+          </div>
         ) : null}
 
         {errorDrafts ? (
-          <Flex justify="center" py="7">
+          <div className="flex justify-center py-7">
             <Text size="2" color="red">
               An error occurred, please try again later. {errorDrafts.message}
             </Text>
-          </Flex>
+          </div>
         ) : null}
 
         {drafts?.length === 0 ? (
-          <Flex
-            justify="center"
-            align="center"
-            py="7"
-            gap="4"
-            direction="column"
-          >
+          <div className="flex flex-col items-center justify-center gap-4 py-7">
             <Text size="2" color="gray">
               No drafts yet
             </Text>
             <Button color="gray" highContrast asChild>
               <NextLink href="/p/new">Write a post</NextLink>
             </Button>
-          </Flex>
+          </div>
         ) : null}
 
         {drafts?.map((draft) => (
@@ -151,7 +144,7 @@ const Draft = ({
           {heading}
         </NextLink>
       )}
-      <Flex justify="between" align="center">
+      <div className="flex items-center justify-between">
         <Text as="p" mt="3" color="gray" size="1">
           Created {format(new Date(draft.createdAt), "MMM dd, yyyy")} • Last
           updated {format(new Date(draft.updatedAt), "MMM dd, yyyy h:mm a")}
@@ -179,7 +172,7 @@ const Draft = ({
             </DropdownMenu.Content>
           </DropdownMenu.Root>
         ) : null}
-      </Flex>
+      </div>
     </div>
   );
 };
