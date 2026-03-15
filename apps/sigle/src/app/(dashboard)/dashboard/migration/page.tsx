@@ -236,7 +236,7 @@ export default function MigrationPage() {
                 <Button
                   variant="outline"
                   onClick={() => handleMigrate(post.id)}
-                  loading={loadingPostId === post.id}
+                  disabled={loadingPostId === post.id}
                 >
                   Migrate
                 </Button>
