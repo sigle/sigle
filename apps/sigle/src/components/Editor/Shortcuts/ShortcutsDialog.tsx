@@ -196,7 +196,7 @@ export const ShortcutsDialog = ({
       <DialogDescription className="sr-only">
         Explore keyboard shortcuts and hints
       </DialogDescription>
-      <DialogContent>
+      <DialogContent className="md:max-w-lg">
         <Tabs defaultValue="shortcuts">
           <TabsList
             variant="line"
