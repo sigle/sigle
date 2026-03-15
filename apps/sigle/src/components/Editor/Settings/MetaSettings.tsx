@@ -28,6 +28,7 @@ export const MetaSettings = () => {
         <Field>
           <FieldLabel htmlFor="metaTitle">Meta title</FieldLabel>
           <Input
+            id="metaTitle"
             placeholder="Meta title"
             maxLength={100}
             {...register("metaTitle")}
@@ -43,6 +44,7 @@ export const MetaSettings = () => {
         <Field>
           <FieldLabel htmlFor="metaDescription">Meta description</FieldLabel>
           <Textarea
+            id="metaDescription"
             placeholder="Meta description"
             maxLength={250}
             rows={4}
@@ -70,6 +72,7 @@ export const MetaSettings = () => {
             </a>
           </FieldLabel>
           <Input
+            id="canonicalUri"
             placeholder="https://"
             maxLength={200}
             {...register("canonicalUri")}
