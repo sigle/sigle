@@ -17,9 +17,7 @@ export const PostUserInfoCard = ({ post }: PostUserInfoCardProps) => {
       <CardContent className="space-y-2">
         <p
           // oxlint-disable-next-line better-tailwindcss/enforce-consistent-line-wrapping
-          className="
-            text-xs font-semibold tracking-wider text-muted-foreground uppercase
-          "
+          className="text-xs font-semibold tracking-wider text-muted-foreground uppercase"
         >
           Written by
         </p>

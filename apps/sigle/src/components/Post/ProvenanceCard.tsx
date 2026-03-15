@@ -86,18 +86,9 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
         <Accordion>
           <AccordionItem value="provenance">
             <AccordionTrigger className="items-center py-0 hover:no-underline">
-              <div
-                className="
-                  mr-2 flex w-full items-center justify-between text-left
-                "
-              >
+              <div className="mr-2 flex w-full items-center justify-between text-left">
                 <div className="flex items-center gap-3">
-                  <div
-                    className="
-                      flex size-9 items-center justify-center rounded-lg
-                      bg-orange-9/10
-                    "
-                  >
+                  <div className="flex size-9 items-center justify-center rounded-lg bg-orange-9/10">
                     <IconCircleCheck size={18} className="text-orange-9" />
                   </div>
                   <div>
@@ -124,21 +115,11 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
               <div className="mt-4 space-y-4 border-t border-border pt-4">
                 {/* Metadata Storage */}
                 <div className="space-y-2">
-                  <div
-                    className="
-                      flex items-center gap-2 text-xs font-medium tracking-wider
-                      text-muted-foreground uppercase
-                    "
-                  >
+                  <div className="flex items-center gap-2 text-xs font-medium tracking-wider text-muted-foreground uppercase">
                     <IconDatabase size={14} />
                     <span>Content Metadata</span>
                   </div>
-                  <div
-                    className="
-                      flex items-center justify-between rounded-lg
-                      bg-secondary/50 px-3 py-2.5
-                    "
-                  >
+                  <div className="flex items-center justify-between rounded-lg bg-secondary/50 px-3 py-2.5">
                     <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                       <span className="text-xs text-muted-foreground">
                         {storageLabel}
@@ -152,10 +133,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="
-                          size-8 p-0 text-muted-foreground
-                          hover:text-foreground
-                        "
+                        className="size-8 p-0 text-muted-foreground hover:text-foreground"
                         onClick={(e) => {
                           e.stopPropagation();
                           copyToClipboard(metadataId);
@@ -167,10 +145,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                         nativeButton={false}
                         variant="ghost"
                         size="sm"
-                        className="
-                          size-8 p-0 text-muted-foreground
-                          hover:text-foreground
-                        "
+                        className="size-8 p-0 text-muted-foreground hover:text-foreground"
                         render={
                           <a
                             href={metadataLink}
@@ -189,21 +164,11 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
 
                 {/* Stacks Transaction */}
                 <div className="space-y-2">
-                  <div
-                    className="
-                      flex items-center gap-2 text-xs font-medium tracking-wider
-                      text-muted-foreground uppercase
-                    "
-                  >
+                  <div className="flex items-center gap-2 text-xs font-medium tracking-wider text-muted-foreground uppercase">
                     <IconStacksLogo size={14} height={14} width={14} />
                     <span>Stacks Transaction</span>
                   </div>
-                  <div
-                    className="
-                      flex items-center justify-between rounded-lg
-                      bg-secondary/50 px-3 py-2.5
-                    "
-                  >
+                  <div className="flex items-center justify-between rounded-lg bg-secondary/50 px-3 py-2.5">
                     <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                       <span className="text-xs text-muted-foreground">
                         Block #{formatNumber(post.blockHeight)}
@@ -217,10 +182,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="
-                          size-8 p-0 text-muted-foreground
-                          hover:text-foreground
-                        "
+                        className="size-8 p-0 text-muted-foreground hover:text-foreground"
                         onClick={(e) => {
                           e.stopPropagation();
                           copyToClipboard(post.txId);
@@ -232,10 +194,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                         nativeButton={false}
                         variant="ghost"
                         size="sm"
-                        className="
-                          size-8 p-0 text-muted-foreground
-                          hover:text-foreground
-                        "
+                        className="size-8 p-0 text-muted-foreground hover:text-foreground"
                         render={
                           <a
                             href={explorerUrl}

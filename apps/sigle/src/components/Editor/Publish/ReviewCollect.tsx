@@ -30,12 +30,7 @@ export const PublishReviewCollect = () => {
   return (
     <Card size="2">
       <Inset clip="padding-box" side="top" pb="current">
-        <div
-          className={`
-            flex items-center justify-between border-b border-solid
-            border-gray-4 bg-gray-2 p-4
-          `}
-        >
+        <div className="flex items-center justify-between border-b border-solid border-gray-4 bg-gray-2 p-4">
           <Text
             as="div"
             size="2"
@@ -70,11 +65,7 @@ export const PublishReviewCollect = () => {
             )}
           </Text>
         </div>
-        <div
-          className={`
-            flex justify-between border-t border-solid border-gray-4 py-3
-          `}
-        >
+        <div className="flex justify-between border-t border-solid border-gray-4 py-3">
           <Text size="2" color="gray">
             Price
           </Text>

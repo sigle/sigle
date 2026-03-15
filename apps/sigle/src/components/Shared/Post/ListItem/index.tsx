@@ -33,12 +33,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
   const isCurrentUser = session?.user.id === post.user.id;
 
   return (
-    <div
-      className={`
-        space-y-3 border-b border-solid border-gray-6 py-5
-        last:border-b-0
-      `}
-    >
+    <div className="space-y-3 border-b border-solid border-gray-6 py-5 last:border-b-0">
       <div>
         <Flex gap="5" align="center" justify="between">
           <div className="flex-1 space-y-2">

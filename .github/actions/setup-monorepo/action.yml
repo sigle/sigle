@@ -6,7 +6,7 @@ runs:
     - uses: actions/checkout@v6
 
     - name: Cache turbo build setup
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ github.workspace }}/.turbo
         key: ${{ runner.os }}-turbo-${{ github.sha }}
