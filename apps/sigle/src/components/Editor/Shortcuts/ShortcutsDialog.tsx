@@ -1,4 +1,10 @@
-import { Dialog, Kbd, Table, Tabs, VisuallyHidden } from "@radix-ui/themes";
+import { Kbd, Table, Tabs } from "@radix-ui/themes";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface ShortcutsDialogProps {
   open: boolean;
@@ -176,14 +182,12 @@ export const ShortcutsDialog = ({
   onOpenChange,
 }: ShortcutsDialogProps) => {
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <VisuallyHidden>
-        <Dialog.Title>Keyboard shortcuts</Dialog.Title>
-        <Dialog.Description>
-          Explore keyboard shortcuts and hints
-        </Dialog.Description>
-      </VisuallyHidden>
-      <Dialog.Content size="3">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTitle className="sr-only">Keyboard shortcuts</DialogTitle>
+      <DialogDescription className="sr-only">
+        Explore keyboard shortcuts and hints
+      </DialogDescription>
+      <DialogContent>
         <Tabs.Root defaultValue="shortcuts">
           <Tabs.List
             className="mb-4"
@@ -249,7 +253,7 @@ export const ShortcutsDialog = ({
             </Tabs.Root>
           </Tabs.Content>
         </Tabs.Root>
-      </Dialog.Content>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 };

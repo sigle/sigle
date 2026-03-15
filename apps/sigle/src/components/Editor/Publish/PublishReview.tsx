@@ -1,7 +1,10 @@
-import { Button, Callout, Dialog, Text } from "@radix-ui/themes";
-import { IconExclamationCircle } from "@tabler/icons-react";
+import { IconAlertCircle, IconExclamationCircle } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { PublishReviewCollect } from "./ReviewCollect";
 import { PublishReviewGeneral } from "./ReviewGeneral";
@@ -62,12 +65,10 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
   return (
     <div className="space-y-4">
       {isFormValid !== "loading" && !isFormValid.valid ? (
-        <Callout.Root color="red" role="alert">
-          <Callout.Icon>
-            <IconExclamationCircle />
-          </Callout.Icon>
-          <Callout.Text>Please fix all errors before publishing. </Callout.Text>
-          <Text as="div" size="2">
+        <Alert variant="destructive">
+          <IconAlertCircle size={16} />
+          <AlertTitle>Please fix all errors before publishing</AlertTitle>
+          <AlertDescription>
             <ul className="list-inside list-disc">
               {isFormValid.title ? <li>Title: {isFormValid.title}</li> : null}
               {isFormValid.content ? (
@@ -87,20 +88,19 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
               ) : null}
               {isFormValid.price ? <li>Price: {isFormValid.price}</li> : null}
             </ul>
-          </Text>
-        </Callout.Root>
+          </AlertDescription>
+        </Alert>
       ) : null}
 
       {type === "draft" && isCollectEnabled ? (
-        <Callout.Root color="orange" role="alert">
-          <Callout.Icon>
-            <IconExclamationCircle />
-          </Callout.Icon>
-          <Callout.Text>
+        <Alert>
+          <IconExclamationCircle />
+          <AlertTitle>Please fix all errors before publishing</AlertTitle>
+          <AlertDescription>
             Review your post before publishing. Once published, you won&apos;t
             be able to make any edits to the collect settings anymore.
-          </Callout.Text>
-        </Callout.Root>
+          </AlertDescription>
+        </Alert>
       ) : null}
 
       <div
@@ -110,20 +110,31 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
         <PublishReviewCollect />
       </div>
 
-      <div className="flex justify-end gap-3">
-        <Dialog.Close>
-          <Button variant="soft" color="gray" disabled={formState.isSubmitting}>
-            Cancel
-          </Button>
-        </Dialog.Close>
+      <DialogFooter>
+        <DialogClose
+          render={
+            <Button
+              type="button"
+              variant="outline"
+              disabled={formState.isSubmitting}
+            >
+              Cancel
+            </Button>
+          }
+        />
+
         <Button
-          disabled={isFormValid === "loading" || !isFormValid.valid}
-          loading={formState.isSubmitting}
+          disabled={
+            isFormValid === "loading" ||
+            !isFormValid.valid ||
+            formState.isSubmitting
+          }
           onClick={onPublish}
         >
+          {formState.isSubmitting ? <Spinner data-icon="inline-start" /> : null}
           {type === "draft" ? "Publish" : "Update"}
         </Button>
-      </div>
+      </DialogFooter>
     </div>
   );
 };

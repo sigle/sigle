@@ -1,13 +1,20 @@
 "use client";
 
-import { Callout, Dialog, Text, VisuallyHidden } from "@radix-ui/themes";
 import * as Sentry from "@sentry/nextjs";
-import { IconExclamationCircle } from "@tabler/icons-react";
+import { IconAlertCircle } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
 import { useContractCall } from "@/hooks/useContractCall";
 import { useSession } from "@/lib/auth-hooks";
@@ -162,12 +169,12 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   };
 
   return (
-    <Dialog.Root open={publishOpen} onOpenChange={onOpenChange}>
-      <VisuallyHidden>
-        <Dialog.Title>Publish</Dialog.Title>
-        <Dialog.Description>Publish your post</Dialog.Description>
-      </VisuallyHidden>
-      <Dialog.Content size="3" className="max-w-screen-xs">
+    <Dialog open={publishOpen} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader className="sr-only">
+          <DialogTitle>Publish</DialogTitle>
+          <DialogDescription>Publish your post</DialogDescription>
+        </DialogHeader>
         {publishingLoading === false ? (
           <PublishReview onPublish={onSubmit} />
         ) : (
@@ -175,20 +182,19 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             <div className="mb-2">
               <Spinner />
             </div>
-            <Text as="div" size="2">
-              Your post is being published...
-            </Text>
+            <div>Your post is being published...</div>
           </div>
         )}
         {publishingError ? (
-          <Callout.Root color="red" role="alert" className="mt-4">
-            <Callout.Icon>
-              <IconExclamationCircle />
-            </Callout.Icon>
-            <Callout.Text>Error publishing: {publishingError}</Callout.Text>
-          </Callout.Root>
+          <Alert variant="destructive">
+            <IconAlertCircle size={16} />
+            <AlertTitle>Publishing failed</AlertTitle>
+            <AlertDescription>
+              Error publishing: {publishingError}
+            </AlertDescription>
+          </Alert>
         ) : null}
-      </Dialog.Content>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 };
