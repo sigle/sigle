@@ -1,4 +1,4 @@
-import { Inset, Text } from "@radix-ui/themes";
+import { Text } from "@radix-ui/themes";
 import {
   IconCircleCheck,
   IconInfoCircle,

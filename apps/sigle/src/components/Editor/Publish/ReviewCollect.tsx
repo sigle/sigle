@@ -1,4 +1,4 @@
-import { IconButton, Inset, Text } from "@radix-ui/themes";
+import { IconButton, Text } from "@radix-ui/themes";
 import { IconCards, IconPencil } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
