@@ -86,7 +86,7 @@ export const CollectPrice = () => {
               <InputGroupAddon align="inline-end">sBTC</InputGroupAddon>
             </InputGroup>
             {currencyFiatPrice && watchCollectPrice ? (
-              <FieldDescription>
+              <FieldDescription className="text-xs">
                 ~
                 {formatUSDollar.format(
                   Number(watchCollectPrice) * Number(currencyFiatPrice),
