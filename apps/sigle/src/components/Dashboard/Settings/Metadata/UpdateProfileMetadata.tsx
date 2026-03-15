@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
 import {
   type paths,
   createProfileMetadata,
@@ -9,6 +8,22 @@ import { IconAt, IconBrandX } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { Spinner } from "@/components/ui/spinner";
+import { Textarea } from "@/components/ui/textarea";
 import { useContractCall } from "@/hooks/useContractCall";
 import { sigleApiClient, sigleClient } from "@/lib/sigle";
 import {
@@ -126,73 +141,67 @@ export const UpdateProfileMetadata = ({
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
-      <div className="space-y-3">
-        <div className="space-y-1">
-          <Text as="div" size="2">
-            Name
-          </Text>
-          <TextField.Root
+      <FieldGroup>
+        <Field>
+          <FieldLabel htmlFor="displayName">Name</FieldLabel>
+          <Input
+            aria-invalid={!!errors.displayName}
             placeholder="Your name"
             {...register("displayName")}
           />
-          {errors.displayName && (
-            <Text as="div" size="1" color="red" mt="1">
-              {errors.displayName.message}
-            </Text>
-          )}
-        </div>
+          {errors.displayName ? (
+            <FieldError>{errors.displayName.message}</FieldError>
+          ) : null}
+        </Field>
 
-        <div className="space-y-1">
-          <Text as="div" size="2">
-            Description - Markdown supported (limited to bold, italic, links)
-          </Text>
-          <TextArea
+        <Field>
+          <FieldLabel htmlFor="description">Description</FieldLabel>
+          <FieldDescription>
+            Markdown supported (limited to bold, italic, links)
+          </FieldDescription>
+          <Textarea
+            aria-invalid={!!errors.description}
             placeholder="Describe yourself in a few words (supports markdown)"
             rows={4}
             {...register("description")}
           />
-          {errors.description && (
-            <Text as="div" size="1" color="red" mt="1">
-              {errors.description.message}
-            </Text>
-          )}
-        </div>
+          {errors.description ? (
+            <FieldError>{errors.description.message}</FieldError>
+          ) : null}
+        </Field>
 
-        <div className="space-y-1">
-          <Text as="div" size="2">
-            Website
-          </Text>
-          <TextField.Root
+        <Field>
+          <FieldLabel htmlFor="name">Website</FieldLabel>
+          <Input
+            aria-invalid={!!errors.website}
             placeholder="https://my-website.com"
             {...register("website")}
           />
-          {errors.website && (
-            <Text as="div" size="1" color="red" mt="1">
-              {errors.website.message}
-            </Text>
-          )}
-        </div>
+          {errors.website ? (
+            <FieldError>{errors.website.message}</FieldError>
+          ) : null}
+        </Field>
 
-        <div className="space-y-1">
-          <Text as="div" size="2" className="flex items-center gap-1">
+        <Field>
+          <FieldLabel htmlFor="twitter">
             <IconBrandX height="16" width="16" /> (Twitter)
-          </Text>
-          <TextField.Root
-            placeholder="username"
-            {...register("twitter")}
-            onChange={handleXChange}
-          >
-            <TextField.Slot>
-              <IconAt height="16" width="16" />
-            </TextField.Slot>
-          </TextField.Root>
-          {errors.twitter && (
-            <Text as="div" size="1" color="red" mt="1">
-              {errors.twitter.message}
-            </Text>
-          )}
-        </div>
-      </div>
+          </FieldLabel>
+          <InputGroup>
+            <InputGroupInput
+              aria-invalid={!!errors.twitter}
+              placeholder="username"
+              {...register("twitter")}
+              onChange={handleXChange}
+            />
+            <InputGroupAddon align="inline-start">
+              <IconAt size={16} className="text-muted-foreground" />
+            </InputGroupAddon>
+          </InputGroup>
+          {errors.twitter ? (
+            <FieldError>{errors.twitter.message}</FieldError>
+          ) : null}
+        </Field>
+      </FieldGroup>
 
       <UploadProfilePicture
         picture={getValues("picture")}
@@ -208,20 +217,20 @@ export const UpdateProfileMetadata = ({
         }
       />
 
-      <Flex gap="3" justify="end">
+      <Field orientation="horizontal" className="justify-end">
         <Button
-          variant="soft"
-          color="gray"
+          variant="outline"
           type="button"
           disabled={isSubmitting}
           onClick={() => setEditingProfileMetadata(false)}
         >
           Cancel
         </Button>
-        <Button type="submit" loading={isSubmitting}>
-          Save
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? <Spinner data-icon="inline-start" /> : null}
+          Submit
         </Button>
-      </Flex>
+      </Field>
     </form>
   );
 };

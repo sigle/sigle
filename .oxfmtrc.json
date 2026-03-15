@@ -27,6 +27,7 @@
       "files": ["apps/sigle/**"],
       "options": {
         "sortTailwindcss": {
+          "functions": ["cn", "cva"],
           "stylesheet": "apps/sigle/src/app/globals.css"
         }
       }
