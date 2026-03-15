@@ -1,6 +1,7 @@
-import { Badge, Card, IconButton, Inset, Text } from "@radix-ui/themes";
+import { Card, IconButton, Inset, Text } from "@radix-ui/themes";
 import { IconCards, IconPencil } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
+import { Badge } from "@/components/ui/badge";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 
@@ -62,9 +63,7 @@ export const PublishReviewCollect = () => {
             {collectLimit ? (
               <>
                 Limited edition{" "}
-                <Badge color="gray" highContrast>
-                  {collectLimit}
-                </Badge>
+                <Badge variant="secondary">{collectLimit}</Badge>
               </>
             ) : (
               "Open edition"

@@ -1,6 +1,11 @@
-import { Badge, Card, Inset, Text, Tooltip } from "@radix-ui/themes";
-import { IconInfoCircle, IconPencil } from "@tabler/icons-react";
+import { Card, Inset, Text, Tooltip } from "@radix-ui/themes";
+import {
+  IconCircleCheck,
+  IconInfoCircle,
+  IconPencil,
+} from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
+import { Badge } from "@/components/ui/badge";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 
@@ -32,11 +37,13 @@ export const PublishReviewGeneral = () => {
             Meta SEO
           </Text>
           {isMetaConfigured ? (
-            <Badge color="indigo">configured</Badge>
+            <Badge>
+              configured <IconCircleCheck size={12} />
+            </Badge>
           ) : (
             <Badge
               className="cursor-pointer"
-              color="orange"
+              variant="outline"
               onClick={openMetaSettings}
             >
               not configured <IconPencil size={12} />
@@ -53,10 +60,12 @@ export const PublishReviewGeneral = () => {
           </Text>
           <Text size="2">
             {data.coverImage ? (
-              <Badge color="indigo">configured</Badge>
+              <Badge>
+                configured <IconCircleCheck size={12} />
+              </Badge>
             ) : (
               <Tooltip content="Publications with a cover image tend to perform better">
-                <Badge color="orange">
+                <Badge variant="outline">
                   not configured <IconInfoCircle size={12} />
                 </Badge>
               </Tooltip>

@@ -2,7 +2,6 @@
 
 import type { paths } from "@sigle/sdk";
 import {
-  Badge,
   Button,
   Card,
   DropdownMenu,
@@ -17,6 +16,7 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
 import { NextLink } from "@/components/Shared/NextLink";
+import { Badge } from "@/components/ui/badge";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
@@ -137,14 +137,17 @@ const Draft = ({
       `}
     >
       {draft.txStatus === "pending" && draft.txId && (
-        <Badge className="mb-2" asChild>
-          <a
-            href={getExplorerTransactionUrl(draft.txId)}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Publishing: Transaction pending
-          </a>
+        <Badge
+          className="mb-2"
+          render={
+            <a
+              href={getExplorerTransactionUrl(draft.txId)}
+              target="_blank"
+              rel="noreferrer"
+            />
+          }
+        >
+          Publishing: Transaction pending
         </Badge>
       )}
       {draft.txStatus === "pending" ? (
