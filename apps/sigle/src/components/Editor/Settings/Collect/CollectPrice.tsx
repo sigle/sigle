@@ -1,5 +1,16 @@
-import { Flex, Link, RadioCards, Text, TextField } from "@radix-ui/themes";
+import { Flex, Link, RadioCards, Text } from "@radix-ui/themes";
 import { useFormContext, useFormState } from "react-hook-form";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { appConfig } from "@/config";
 import {
   formatUSDollar,
@@ -60,39 +71,35 @@ export const CollectPrice = () => {
             .
           </Text>
         </div>
+
         {watchCollectType === "paid" ? (
-          <>
-            <Text as="p" size="2" weight="medium">
-              Collection Price
-            </Text>
-            <Flex gap="2">
-              <TextField.Root
+          <Field>
+            <FieldLabel>Collection Price</FieldLabel>
+            <InputGroup>
+              <InputGroupInput
                 className="w-full"
                 placeholder="Free"
                 type="number"
                 disabled={type === "published"}
                 {...register("collect.collectPrice.price")}
-              >
-                <TextField.Slot side="right">sBTC</TextField.Slot>
-              </TextField.Root>
-            </Flex>
-          </>
-        ) : null}
-        {currencyFiatPrice &&
-        watchCollectType === "paid" &&
-        watchCollectPrice ? (
-          <Text size="1" color="gray">
-            ~
-            {formatUSDollar.format(
-              Number(watchCollectPrice) * Number(currencyFiatPrice),
+              />
+              <InputGroupAddon align="inline-end">sBTC</InputGroupAddon>
+            </InputGroup>
+            {currencyFiatPrice && watchCollectPrice ? (
+              <FieldDescription>
+                ~
+                {formatUSDollar.format(
+                  Number(watchCollectPrice) * Number(currencyFiatPrice),
+                )}
+              </FieldDescription>
+            ) : null}
+            {errors?.collect?.collectPrice?.price && (
+              <FieldError>
+                {errors.collect.collectPrice.price.message}
+              </FieldError>
             )}
-          </Text>
+          </Field>
         ) : null}
-        {errors?.collect?.collectPrice?.price && (
-          <Text size="2" color="red">
-            {errors.collect.collectPrice.price.message}
-          </Text>
-        )}
       </div>
     </div>
   );
