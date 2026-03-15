@@ -231,7 +231,7 @@ export const UpdateProfileMetadata = ({
           </Button>
           <Button type="submit" disabled={isSubmitting}>
             {isSubmitting ? <Spinner data-icon="inline-start" /> : null}
-            Submit
+            Save
           </Button>
         </Field>
       </FieldGroup>
