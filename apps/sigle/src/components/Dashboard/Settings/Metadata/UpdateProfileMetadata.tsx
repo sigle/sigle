@@ -201,36 +201,36 @@ export const UpdateProfileMetadata = ({
             <FieldError>{errors.twitter.message}</FieldError>
           ) : null}
         </Field>
+
+        <UploadProfilePicture
+          picture={getValues("picture")}
+          setPicture={(value) =>
+            setValue("picture", value, { shouldValidate: true })
+          }
+        />
+
+        <UploadProfileCoverPicture
+          picture={getValues("coverPicture")}
+          setPicture={(value) =>
+            setValue("coverPicture", value, { shouldValidate: true })
+          }
+        />
+
+        <Field orientation="horizontal" className="justify-end">
+          <Button
+            variant="outline"
+            type="button"
+            disabled={isSubmitting}
+            onClick={() => setEditingProfileMetadata(false)}
+          >
+            Cancel
+          </Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? <Spinner data-icon="inline-start" /> : null}
+            Submit
+          </Button>
+        </Field>
       </FieldGroup>
-
-      <UploadProfilePicture
-        picture={getValues("picture")}
-        setPicture={(value) =>
-          setValue("picture", value, { shouldValidate: true })
-        }
-      />
-
-      <UploadProfileCoverPicture
-        picture={getValues("coverPicture")}
-        setPicture={(value) =>
-          setValue("coverPicture", value, { shouldValidate: true })
-        }
-      />
-
-      <Field orientation="horizontal" className="justify-end">
-        <Button
-          variant="outline"
-          type="button"
-          disabled={isSubmitting}
-          onClick={() => setEditingProfileMetadata(false)}
-        >
-          Cancel
-        </Button>
-        <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? <Spinner data-icon="inline-start" /> : null}
-          Submit
-        </Button>
-      </Field>
     </form>
   );
 };
