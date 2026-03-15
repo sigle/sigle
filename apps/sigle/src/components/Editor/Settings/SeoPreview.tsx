@@ -1,6 +1,7 @@
 import { AspectRatio, Card, Inset, Text, Tooltip } from "@radix-ui/themes";
 import { IconHelpCircle } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
 import { prettifyUrl } from "@/lib/urls";
@@ -21,15 +22,14 @@ export const SeoPreview = () => {
   const metaImage = watchCoverImage;
 
   return (
-    <div>
-      <Text as="div" size="2" mb="1" className="flex items-center gap-1">
-        Preview
-        <Text color="gray">
-          <Tooltip content="This is how the post will be displayed when sharing the link on social media">
-            <IconHelpCircle size={16} />
-          </Tooltip>
-        </Text>
-      </Text>
+    <Field>
+      <FieldLabel>
+        Preview{" "}
+        <Tooltip content="This is how the post will be displayed when sharing the link on social media">
+          <IconHelpCircle size={16} />
+        </Tooltip>
+      </FieldLabel>
+
       <Card size="1">
         {metaImage ? (
           <Inset
@@ -68,6 +68,6 @@ export const SeoPreview = () => {
           {prettifyUrl(env.NEXT_PUBLIC_APP_URL)}
         </Text>
       </Card>
-    </div>
+    </Field>
   );
 };

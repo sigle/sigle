@@ -1,9 +1,11 @@
-import { Avatar, Spinner, Text } from "@radix-ui/themes";
+import { Avatar } from "@radix-ui/themes";
 import { IconPencil } from "@tabler/icons-react";
 import { usePostHog } from "posthog-js/react";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiClient } from "@/lib/sigle";
@@ -63,10 +65,8 @@ export const UploadProfilePicture = ({
   const resolvedPicture = picture ? resolveImageUrl(picture) : undefined;
 
   return (
-    <div className="space-y-1">
-      <Text as="div" size="2">
-        Profile Picture
-      </Text>
+    <Field>
+      <FieldLabel>Profile Picture</FieldLabel>
 
       <div className="flex">
         <div className="relative cursor-pointer" {...getRootProps()}>
@@ -88,6 +88,6 @@ export const UploadProfilePicture = ({
           ) : null}
         </div>
       </div>
-    </div>
+    </Field>
   );
 };

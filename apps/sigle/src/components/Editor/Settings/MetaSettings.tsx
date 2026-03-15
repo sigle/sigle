@@ -1,6 +1,13 @@
-import { Flex, Link, Text, TextArea, TextField } from "@radix-ui/themes";
 import { IconHelpCircle } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { DialogTitleGoBack } from "./DialogTitle";
 import { SeoPreview } from "./SeoPreview";
@@ -17,69 +24,63 @@ export const MetaSettings = () => {
         description="Edit your post SEO settings"
       />
 
-      <Flex direction="column" gap="3">
-        <div>
-          <Text as="p" size="2" mb="1">
-            Meta title
-          </Text>
-          <TextField.Root
+      <FieldGroup>
+        <Field>
+          <FieldLabel htmlFor="metaTitle">Meta title</FieldLabel>
+          <Input
+            id="metaTitle"
             placeholder="Meta title"
             maxLength={100}
             {...register("metaTitle")}
           />
-          <Text as="p" mt="2" size="1" color="gray">
-            Recommended:{" "}
-            <Text color="gray" highContrast>
-              70
-            </Text>{" "}
+          <FieldDescription className="text-xs">
+            Recommended: <span className="font-medium">70</span> characters. You
+            have used{" "}
+            <span className="font-medium">{(watchMetaTitle || "").length}</span>{" "}
             characters.
-          </Text>
-          <Text as="p" size="1" color="gray">
-            You have used {(watchMetaTitle || "").length} characters.
-          </Text>
-        </div>
-        <div>
-          <Text as="p" size="2" mb="1">
-            Meta description
-          </Text>
-          <TextArea
+          </FieldDescription>
+        </Field>
+
+        <Field>
+          <FieldLabel htmlFor="metaDescription">Meta description</FieldLabel>
+          <Textarea
+            id="metaDescription"
             placeholder="Meta description"
             maxLength={250}
             rows={4}
             {...register("metaDescription")}
           />
-          <Text as="p" mt="2" size="1" color="gray">
-            Recommended:{" "}
-            <Text color="gray" highContrast>
-              156
-            </Text>{" "}
+          <FieldDescription className="text-xs">
+            Recommended: <span className="font-medium">156</span> characters.
+            You have used{" "}
+            <span className="font-medium">
+              {(watchMetaDescription || "").length}
+            </span>{" "}
             characters.
-          </Text>
-          <Text as="p" size="1" color="gray">
-            You have used {(watchMetaDescription || "").length} characters.
-          </Text>
-        </div>
-        <div>
-          <Text as="div" size="2" mb="1" className="flex items-center gap-1">
-            Canonical URI
-            <Text color="gray">
-              <Link
-                href="https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <IconHelpCircle size={16} />
-              </Link>
-            </Text>
-          </Text>
-          <TextField.Root
+          </FieldDescription>
+        </Field>
+
+        <Field>
+          <FieldLabel htmlFor="canonicalUri">
+            Canonical URI{" "}
+            <a
+              href="https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <IconHelpCircle size={16} />
+            </a>
+          </FieldLabel>
+          <Input
+            id="canonicalUri"
             placeholder="https://"
             maxLength={200}
             {...register("canonicalUri")}
           />
-        </div>
+        </Field>
+
         <SeoPreview />
-      </Flex>
+      </FieldGroup>
     </div>
   );
 };

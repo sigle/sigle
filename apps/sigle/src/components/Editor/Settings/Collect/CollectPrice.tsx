@@ -1,5 +1,19 @@
-import { Flex, Link, RadioCards, Text, TextField } from "@radix-ui/themes";
+import { Link } from "@radix-ui/themes";
 import { useFormContext, useFormState } from "react-hook-form";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+  FieldTitle,
+} from "@/components/ui/field";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { appConfig } from "@/config";
 import {
   formatUSDollar,
@@ -26,74 +40,69 @@ export const CollectPrice = () => {
   };
 
   return (
-    <div>
-      <div className="space-y-3">
-        <Text as="p" size="2" weight="medium">
-          Type
-        </Text>
-        <div className="space-y-2">
-          <RadioCards.Root
-            columns="2"
-            value={watchCollectType}
-            onValueChange={onSelectPriceChange}
-            disabled={type === "published"}
-          >
-            <RadioCards.Item value="free">
-              <Flex direction="column" width="100%">
-                <Text weight="bold">Free Mint</Text>
-              </Flex>
-            </RadioCards.Item>
-            <RadioCards.Item value="paid">
-              <Flex direction="column" width="100%">
-                <Text weight="bold">Paid Mint</Text>
-              </Flex>
-            </RadioCards.Item>
-          </RadioCards.Root>
-          <Text as="p" size="1" color="gray">
-            Earn protocol fees on each mint,{" "}
-            <Link
-              href={`${appConfig.docsUrl}/monetization#fee-structure`}
-              target="_blank"
-            >
-              learn more
-            </Link>
-            .
-          </Text>
-        </div>
-        {watchCollectType === "paid" ? (
-          <>
-            <Text as="p" size="2" weight="medium">
-              Collection Price
-            </Text>
-            <Flex gap="2">
-              <TextField.Root
-                className="w-full"
-                placeholder="Free"
-                type="number"
-                disabled={type === "published"}
-                {...register("collect.collectPrice.price")}
-              >
-                <TextField.Slot side="right">sBTC</TextField.Slot>
-              </TextField.Root>
-            </Flex>
-          </>
-        ) : null}
-        {currencyFiatPrice &&
-        watchCollectType === "paid" &&
-        watchCollectPrice ? (
-          <Text size="1" color="gray">
-            ~
-            {formatUSDollar.format(
-              Number(watchCollectPrice) * Number(currencyFiatPrice),
-            )}
-          </Text>
-        ) : null}
-        {errors?.collect?.collectPrice?.price && (
-          <Text size="2" color="red">
-            {errors.collect.collectPrice.price.message}
-          </Text>
-        )}
-      </div>
-    </div>
+    <Field>
+      <FieldLabel>Type</FieldLabel>
+      <RadioGroup
+        className="grid-cols-2"
+        value={watchCollectType}
+        onValueChange={onSelectPriceChange}
+        disabled={type === "published"}
+      >
+        <FieldLabel htmlFor="collect-free">
+          <Field orientation="horizontal">
+            <FieldContent>
+              <FieldTitle>Free Mint</FieldTitle>
+            </FieldContent>
+            <RadioGroupItem value="free" id="collect-free" />
+          </Field>
+        </FieldLabel>
+
+        <FieldLabel htmlFor="collect-paid">
+          <Field orientation="horizontal">
+            <FieldContent>
+              <FieldTitle>Paid Mint</FieldTitle>
+            </FieldContent>
+            <RadioGroupItem value="paid" id="collect-paid" />
+          </Field>
+        </FieldLabel>
+      </RadioGroup>
+      <FieldDescription className="text-xs">
+        Earn protocol fees on each mint,{" "}
+        <Link
+          href={`${appConfig.docsUrl}/monetization#fee-structure`}
+          target="_blank"
+        >
+          learn more
+        </Link>
+        .
+      </FieldDescription>
+
+      {watchCollectType === "paid" ? (
+        <Field>
+          <FieldLabel>Collection Price</FieldLabel>
+          <InputGroup>
+            <InputGroupInput
+              className="w-full"
+              placeholder="Free"
+              type="number"
+              disabled={type === "published"}
+              {...register("collect.collectPrice.price")}
+            />
+            <InputGroupAddon align="inline-end">sBTC</InputGroupAddon>
+          </InputGroup>
+          {currencyFiatPrice && watchCollectPrice ? (
+            <FieldDescription className="text-xs">
+              ~
+              {formatUSDollar.format(
+                Number(watchCollectPrice) * Number(currencyFiatPrice),
+              )}
+            </FieldDescription>
+          ) : null}
+          {errors?.collect?.collectPrice?.price && (
+            <FieldError>{errors.collect.collectPrice.price.message}</FieldError>
+          )}
+        </Field>
+      ) : null}
+    </Field>
   );
 };
