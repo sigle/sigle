@@ -33,12 +33,9 @@ export const MetaSettings = () => {
             {...register("metaTitle")}
           />
           <FieldDescription className="text-xs">
-            Recommended: <span className="font-medium">70</span> characters.
-            <br />
-            You have used{" "}
-            <span className="font-medium">
-              {(watchMetaTitle || "").length}
-            </span>{" "}
+            Recommended: <span className="font-medium">70</span> characters. You
+            have used{" "}
+            <span className="font-medium">{(watchMetaTitle || "").length}</span>{" "}
             characters.
           </FieldDescription>
         </Field>
@@ -53,7 +50,6 @@ export const MetaSettings = () => {
           />
           <FieldDescription className="text-xs">
             Recommended: <span className="font-medium">156</span> characters.
-            <br />
             You have used{" "}
             <span className="font-medium">
               {(watchMetaDescription || "").length}
