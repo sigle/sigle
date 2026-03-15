@@ -1,4 +1,4 @@
-import { Card, Inset, Text } from "@radix-ui/themes";
+import { Inset, Text } from "@radix-ui/themes";
 import {
   IconCircleCheck,
   IconInfoCircle,
@@ -6,6 +6,7 @@ import {
 } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
@@ -28,15 +29,11 @@ export const PublishReviewGeneral = () => {
   };
 
   return (
-    <Card size="2">
-      <Inset clip="padding-box" side="top" pb="current">
-        <div className="border-b border-solid border-gray-4 bg-gray-2 p-4">
-          <Text size="2" weight="medium">
-            General settings
-          </Text>
-        </div>
-      </Inset>
-      <div className="-my-3">
+    <Card>
+      <CardHeader className="border-b">
+        <CardTitle>General settings</CardTitle>
+      </CardHeader>
+      <CardContent className="-my-3">
         <div className="flex justify-between py-3">
           <Text size="2" color="gray">
             Meta SEO
@@ -80,7 +77,7 @@ export const PublishReviewGeneral = () => {
             )}
           </Text>
         </div>
-      </div>
+      </CardContent>
     </Card>
   );
 };

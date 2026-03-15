@@ -1,8 +1,9 @@
 "use client";
 
-import { Button, Card, Heading, Text } from "@radix-ui/themes";
+import { Button, Heading, Text } from "@radix-ui/themes";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
@@ -30,77 +31,79 @@ export const LatestDrafts = () => {
           <NextLink href="/dashboard/drafts">View all</NextLink>
         </Button>
       </div>
-      <Card mt="2" size="2">
-        {loadingDrafts ? (
-          <div className="flex justify-center py-7">
-            <Spinner />
-          </div>
-        ) : null}
+      <Card className="mt-2">
+        <CardContent>
+          {loadingDrafts ? (
+            <div className="flex justify-center py-7">
+              <Spinner />
+            </div>
+          ) : null}
 
-        {errorDrafts ? (
-          <div className="flex justify-center py-7">
-            <Text size="2" color="red">
-              An error occurred, please try again later. Error:{" "}
-              {errorDrafts.message}
-            </Text>
-          </div>
-        ) : null}
-
-        {!loadingDrafts && drafts?.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-4 py-7">
-            <Text size="2" color="gray">
-              No drafts yet
-            </Text>
-            <Button size="2" color="gray" highContrast>
-              <NextLink href="/p/new">Create a new draft</NextLink>
-            </Button>
-          </div>
-        ) : null}
-
-        {drafts?.map((draft) => {
-          const heading =
-            draft.metaTitle || draft.title ? (
-              <Heading as="h3" size="4" className="line-clamp-2">
-                {draft.metaTitle || draft.title}
-              </Heading>
-            ) : (
-              <Heading as="h3" size="4" className="line-clamp-2" color="gray">
-                No title
-              </Heading>
-            );
-
-          return (
-            <div
-              key={draft.id}
-              className="border-b border-solid border-gray-6 py-5 first:pt-0 last:border-b-0 last:pb-0"
-            >
-              {draft.txStatus === "pending" && draft.txId && (
-                <Badge
-                  className="mb-2"
-                  render={
-                    <a
-                      href={getExplorerTransactionUrl(draft.txId)}
-                      target="_blank"
-                      rel="noreferrer"
-                    />
-                  }
-                >
-                  Publishing: Transaction pending
-                </Badge>
-              )}
-              {draft.txStatus === "pending" ? (
-                heading
-              ) : (
-                <NextLink href={Routes.editPost({ postId: draft.id })}>
-                  {heading}
-                </NextLink>
-              )}
-              <Text as="p" mt="3" color="gray" size="1" className="uppercase">
-                {format(new Date(draft.createdAt), "MMM dd")}
+          {errorDrafts ? (
+            <div className="flex justify-center py-7">
+              <Text size="2" color="red">
+                An error occurred, please try again later. Error:{" "}
+                {errorDrafts.message}
               </Text>
             </div>
-          );
-        })}
+          ) : null}
+
+          {!loadingDrafts && drafts?.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-4 py-7">
+              <Text size="2" color="gray">
+                No drafts yet
+              </Text>
+              <Button size="2" color="gray" highContrast>
+                <NextLink href="/p/new">Create a new draft</NextLink>
+              </Button>
+            </div>
+          ) : null}
+
+          {drafts?.map((draft) => {
+            const heading =
+              draft.metaTitle || draft.title ? (
+                <Heading as="h3" size="4" className="line-clamp-2">
+                  {draft.metaTitle || draft.title}
+                </Heading>
+              ) : (
+                <Heading as="h3" size="4" className="line-clamp-2" color="gray">
+                  No title
+                </Heading>
+              );
+
+            return (
+              <div
+                key={draft.id}
+                className="border-b border-solid border-gray-6 py-5 first:pt-0 last:border-b-0 last:pb-0"
+              >
+                {draft.txStatus === "pending" && draft.txId && (
+                  <Badge
+                    className="mb-2"
+                    render={
+                      <a
+                        href={getExplorerTransactionUrl(draft.txId)}
+                        target="_blank"
+                        rel="noreferrer"
+                      />
+                    }
+                  >
+                    Publishing: Transaction pending
+                  </Badge>
+                )}
+                {draft.txStatus === "pending" ? (
+                  heading
+                ) : (
+                  <NextLink href={Routes.editPost({ postId: draft.id })}>
+                    {heading}
+                  </NextLink>
+                )}
+                <Text as="p" mt="3" color="gray" size="1" className="uppercase">
+                  {format(new Date(draft.createdAt), "MMM dd")}
+                </Text>
+              </div>
+            );
+          })}
+        </CardContent>
       </Card>
     </div>
   );

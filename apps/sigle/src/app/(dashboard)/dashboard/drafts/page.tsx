@@ -3,7 +3,6 @@
 import type { paths } from "@sigle/sdk";
 import {
   Button,
-  Card,
   DropdownMenu,
   Heading,
   IconButton,
@@ -15,6 +14,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { NextLink } from "@/components/Shared/NextLink";
 import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
@@ -37,35 +37,37 @@ export default function DashboardDrafts() {
   return (
     <div className="py-10">
       <Heading>Drafts</Heading>
-      <Card mt="5" size="2">
-        {loadingDrafts ? (
-          <div className="flex justify-center py-7">
-            <Spinner />
-          </div>
-        ) : null}
+      <Card className="mt-5">
+        <CardContent>
+          {loadingDrafts ? (
+            <div className="flex justify-center py-7">
+              <Spinner />
+            </div>
+          ) : null}
 
-        {errorDrafts ? (
-          <div className="flex justify-center py-7">
-            <Text size="2" color="red">
-              An error occurred, please try again later. {errorDrafts.message}
-            </Text>
-          </div>
-        ) : null}
+          {errorDrafts ? (
+            <div className="flex justify-center py-7">
+              <Text size="2" color="red">
+                An error occurred, please try again later. {errorDrafts.message}
+              </Text>
+            </div>
+          ) : null}
 
-        {drafts?.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-4 py-7">
-            <Text size="2" color="gray">
-              No drafts yet
-            </Text>
-            <Button color="gray" highContrast asChild>
-              <NextLink href="/p/new">Write a post</NextLink>
-            </Button>
-          </div>
-        ) : null}
+          {drafts?.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-4 py-7">
+              <Text size="2" color="gray">
+                No drafts yet
+              </Text>
+              <Button color="gray" highContrast asChild>
+                <NextLink href="/p/new">Write a post</NextLink>
+              </Button>
+            </div>
+          ) : null}
 
-        {drafts?.map((draft) => (
-          <Draft key={draft.id} draft={draft} refetchDrafts={refetchDrafts} />
-        ))}
+          {drafts?.map((draft) => (
+            <Draft key={draft.id} draft={draft} refetchDrafts={refetchDrafts} />
+          ))}
+        </CardContent>
       </Card>
     </div>
   );

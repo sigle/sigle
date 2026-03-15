@@ -1,9 +1,10 @@
 "use client";
 
-import { Button, Card, Heading, Text } from "@radix-ui/themes";
+import { Button, Heading, Text } from "@radix-ui/themes";
 import { IconPencil } from "@tabler/icons-react";
 import { useState } from "react";
 import { ProfileAvatar } from "@/components/Shared/Profile/ProfileAvatar";
+import { Card, CardContent } from "@/components/ui/card";
 import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient } from "@/lib/sigle";
 import { UpdateProfileMetadata } from "./UpdateProfileMetadata";
@@ -27,8 +28,8 @@ export const SettingsProfileMetadata = () => {
   }
 
   return (
-    <Card size="2">
-      <div className="space-y-4">
+    <Card>
+      <CardContent className="space-y-4">
         <div className="flex justify-between">
           <div>
             <Heading size="3">Profile</Heading>
@@ -49,8 +50,8 @@ export const SettingsProfileMetadata = () => {
         </div>
 
         {!editingProfileMetadata ? (
-          <Card size="1">
-            <div className="flex items-center gap-4">
+          <Card size="sm">
+            <CardContent className="flex items-center gap-4">
               <ProfileAvatar user={user} size="3" />
               <div className="flex flex-col">
                 {user.profile?.displayName ? (
@@ -58,7 +59,7 @@ export const SettingsProfileMetadata = () => {
                 ) : null}
                 <Text color="gray">{user.id}</Text>
               </div>
-            </div>
+            </CardContent>
           </Card>
         ) : (
           <UpdateProfileMetadata
@@ -66,7 +67,7 @@ export const SettingsProfileMetadata = () => {
             setEditingProfileMetadata={setEditingProfileMetadata}
           />
         )}
-      </div>
+      </CardContent>
     </Card>
   );
 };
