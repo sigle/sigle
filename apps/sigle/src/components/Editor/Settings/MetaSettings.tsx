@@ -1,4 +1,4 @@
-import { Link, Text, TextArea, TextField } from "@radix-ui/themes";
+import { Link, TextArea, TextField } from "@radix-ui/themes";
 import { IconHelpCircle } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import type { EditorPostFormData } from "../EditorFormProvider";
@@ -19,9 +19,7 @@ export const MetaSettings = () => {
 
       <div className="flex flex-col gap-3">
         <div>
-          <Text as="p" size="2" mb="1">
-            Meta title
-          </Text>
+          <p className="mb-1">Meta title</p>
           <TextField.Root
             placeholder="Meta title"
             maxLength={100}
@@ -39,9 +37,7 @@ export const MetaSettings = () => {
           </Text>
         </div>
         <div>
-          <Text as="p" size="2" mb="1">
-            Meta description
-          </Text>
+          <p className="mb-1">Meta description</p>
           <TextArea
             placeholder="Meta description"
             maxLength={250}
