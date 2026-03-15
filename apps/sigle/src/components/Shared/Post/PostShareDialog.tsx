@@ -1,16 +1,17 @@
 import type { paths } from "@sigle/sdk";
 import {
-  Button,
   Callout,
   Dialog,
   IconButton,
   Link,
-  TextField,
   VisuallyHidden,
 } from "@radix-ui/themes";
 import { IconReceiptTax } from "@tabler/icons-react";
 import Image from "next/image";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import { appConfig } from "@/config";
 import { env } from "@/env";
 import { useSession } from "@/lib/auth-hooks";
@@ -132,24 +133,16 @@ export const PostShareDialog = ({
             </IconButton>
           </div>
 
-          <div className="flex gap-2">
-            <TextField.Root
-              size="3"
-              className="grow"
-              variant="soft"
+          <Field orientation="horizontal">
+            <Input
+              className="disabled:opacity-100"
               disabled
               defaultValue={postLink}
             />
-            <Button
-              size="3"
-              color="gray"
-              highContrast
-              disabled={isCopied}
-              onClick={onCopy}
-            >
+            <Button disabled={isCopied} onClick={onCopy}>
               {isCopied ? "Copied" : "Copy"}
             </Button>
-          </div>
+          </Field>
         </div>
       </Dialog.Content>
     </Dialog.Root>
