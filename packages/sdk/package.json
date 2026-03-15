@@ -22,7 +22,7 @@
     "zod-validation-error": "5.0.0"
   },
   "devDependencies": {
-    "@stacks/connect": "8.2.5",
+    "@stacks/connect": "8.2.6",
     "@stacks/network": "7.3.1",
     "@stacks/transactions": "7.3.1",
     "@tsconfig/recommended": "1.0.13",
