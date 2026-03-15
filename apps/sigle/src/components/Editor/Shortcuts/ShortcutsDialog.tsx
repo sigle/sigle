@@ -1,10 +1,18 @@
-import { Kbd, Table, Tabs } from "@radix-ui/themes";
+import { Kbd, Tabs } from "@radix-ui/themes";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface ShortcutsDialogProps {
   open: boolean;
@@ -217,37 +225,33 @@ export const ShortcutsDialog = ({
               </Tabs.List>
               {shortcuts.map((shortcut) => (
                 <Tabs.Content key={shortcut.value} value={shortcut.value}>
-                  <Table.Root>
-                    <Table.Header>
-                      <Table.Row>
-                        <Table.ColumnHeaderCell>Command</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>
-                          Windows/Linux
-                        </Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>macOS</Table.ColumnHeaderCell>
-                      </Table.Row>
-                    </Table.Header>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Command</TableHead>
+                        <TableHead>Windows/Linux</TableHead>
+                        <TableHead>macOS</TableHead>
+                      </TableRow>
+                    </TableHeader>
 
-                    <Table.Body>
+                    <TableBody>
                       {shortcut.items.map((shortcut) => (
-                        <Table.Row key={shortcut.action}>
-                          <Table.RowHeaderCell>
-                            {shortcut.action}
-                          </Table.RowHeaderCell>
-                          <Table.Cell>
+                        <TableRow key={shortcut.action}>
+                          <TableCell>{shortcut.action}</TableCell>
+                          <TableCell>
                             <Kbd size="3">
                               {shortcut.winCommand.join(" + ")}
                             </Kbd>
-                          </Table.Cell>
-                          <Table.Cell>
+                          </TableCell>
+                          <TableCell>
                             <Kbd size="3">
                               {shortcut.macCommand.join(" + ")}
                             </Kbd>
-                          </Table.Cell>
-                        </Table.Row>
+                          </TableCell>
+                        </TableRow>
                       ))}
-                    </Table.Body>
-                  </Table.Root>
+                    </TableBody>
+                  </Table>
                 </Tabs.Content>
               ))}
             </Tabs.Root>
