@@ -1,4 +1,4 @@
-import { Link, TextArea, TextField } from "@radix-ui/themes";
+import { Link, Text, TextArea, TextField } from "@radix-ui/themes";
 import { IconHelpCircle } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import type { EditorPostFormData } from "../EditorFormProvider";
