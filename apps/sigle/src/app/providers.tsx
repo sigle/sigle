@@ -7,6 +7,7 @@ import { ThemeProvider } from "next-themes";
 import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
 import { Toaster } from "sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { PostHogInit, SuspendedPostHogPageView } from "./PostHog";
 
 const queryClient = new QueryClient({
@@ -32,8 +33,8 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
             <PostHogProvider client={posthog}>
               <PostHogInit />
               <SuspendedPostHogPageView />
-              {children}
               <Toaster closeButton />
+              <TooltipProvider>{children}</TooltipProvider>
             </PostHogProvider>
           </AuthQueryProvider>
         </QueryClientProvider>

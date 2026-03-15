@@ -1,6 +1,11 @@
-import { AspectRatio, Card, Inset, Text, Tooltip } from "@radix-ui/themes";
+import { AspectRatio, Card, Inset, Text } from "@radix-ui/themes";
 import { IconHelpCircle } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
 import { prettifyUrl } from "@/lib/urls";
@@ -25,8 +30,12 @@ export const SeoPreview = () => {
       <Text as="div" size="2" mb="1" className="flex items-center gap-1">
         Preview
         <Text color="gray">
-          <Tooltip content="This is how the post will be displayed when sharing the link on social media">
-            <IconHelpCircle size={16} />
+          <Tooltip>
+            <TooltipTrigger render={<IconHelpCircle size={16} />} />
+            <TooltipContent>
+              This is how the post will be displayed when sharing the link on
+              social media
+            </TooltipContent>
           </Tooltip>
         </Text>
       </Text>

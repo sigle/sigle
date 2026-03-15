@@ -1,4 +1,4 @@
-import { Card, Inset, Text, Tooltip } from "@radix-ui/themes";
+import { Card, Inset, Text } from "@radix-ui/themes";
 import {
   IconCircleCheck,
   IconInfoCircle,
@@ -6,6 +6,11 @@ import {
 } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 
@@ -64,10 +69,17 @@ export const PublishReviewGeneral = () => {
                 configured <IconCircleCheck size={12} />
               </Badge>
             ) : (
-              <Tooltip content="Publications with a cover image tend to perform better">
-                <Badge variant="outline">
-                  not configured <IconInfoCircle size={12} />
-                </Badge>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <Badge variant="outline">
+                      not configured <IconInfoCircle size={12} />
+                    </Badge>
+                  }
+                />
+                <TooltipContent>
+                  Publications with a cover image tend to perform better
+                </TooltipContent>
               </Tooltip>
             )}
           </Text>
