@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Callout,
-  Dialog,
-  Flex,
-  Spinner,
-  Text,
-  VisuallyHidden,
-} from "@radix-ui/themes";
+import { Callout, Dialog, Flex, Text, VisuallyHidden } from "@radix-ui/themes";
 import * as Sentry from "@sentry/nextjs";
 import { IconExclamationCircle } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
@@ -15,6 +8,7 @@ import { usePostHog } from "posthog-js/react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 import { useContractCall } from "@/hooks/useContractCall";
 import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient, sigleClient } from "@/lib/sigle";

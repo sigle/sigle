@@ -1,17 +1,11 @@
 "use client";
 
-import {
-  Button,
-  Heading,
-  Separator,
-  Spinner,
-  Text,
-  TextField,
-} from "@radix-ui/themes";
+import { Button, Heading, Separator, Text, TextField } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiFetchClient } from "@/lib/sigle";
 

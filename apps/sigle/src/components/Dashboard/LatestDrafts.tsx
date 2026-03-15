@@ -1,8 +1,8 @@
 "use client";
 
-import { Button, Card, Flex, Heading, Spinner, Text } from "@radix-ui/themes";
-import { format } from "date-fns";
+import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { Badge } from "@/components/ui/badge";
+import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { getExplorerTransactionUrl } from "@/lib/stacks";

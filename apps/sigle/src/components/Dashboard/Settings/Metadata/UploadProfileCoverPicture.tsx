@@ -1,9 +1,10 @@
-import { Avatar, Spinner, Text } from "@radix-ui/themes";
+import { Avatar, Text } from "@radix-ui/themes";
 import { IconPencil } from "@tabler/icons-react";
 import { usePostHog } from "posthog-js/react";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiClient } from "@/lib/sigle";

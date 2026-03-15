@@ -1,5 +1,6 @@
-import { Callout, Flex, Spinner, Text } from "@radix-ui/themes";
+import { Callout, Flex, Text } from "@radix-ui/themes";
 import { IconInfoCircle } from "@tabler/icons-react";
+import { Spinner } from "@/components/ui/spinner";
 import { useSession } from "@/lib/auth-hooks";
 
 interface AuthProtectProps {

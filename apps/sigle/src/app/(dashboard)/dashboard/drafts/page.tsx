@@ -8,7 +8,6 @@ import {
   Flex,
   Heading,
   IconButton,
-  Spinner,
   Text,
 } from "@radix-ui/themes";
 import { IconDotsVertical } from "@tabler/icons-react";
@@ -17,6 +16,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { NextLink } from "@/components/Shared/NextLink";
 import { Badge } from "@/components/ui/badge";
+import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
