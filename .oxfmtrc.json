@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/oxfmt/configuration_schema.json",
   "ignorePatterns": [],
+  "printWidth": 80,
   "experimentalSortImports": {
     "newlinesBetween": false,
     "groups": [
@@ -13,5 +14,22 @@
       "unknown"
     ]
   },
-  "printWidth": 80
+  "overrides": [
+    {
+      "files": ["apps/custom-domain/**"],
+      "options": {
+        "sortTailwindcss": {
+          "stylesheet": "apps/custom-domain/src/app/globals.css"
+        }
+      }
+    },
+    {
+      "files": ["apps/sigle/**"],
+      "options": {
+        "sortTailwindcss": {
+          "stylesheet": "apps/sigle/src/app/globals.css"
+        }
+      }
+    }
+  ]
 }

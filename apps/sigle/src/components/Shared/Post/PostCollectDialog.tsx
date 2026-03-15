@@ -208,11 +208,7 @@ export const PostCollectDialog = ({
               {isFree ? "Free" : `${formatBTC(price)} sBTC`}
             </Text>
           </div>
-          <div
-            className={`
-              flex items-center justify-between rounded-2 bg-gray-2 p-2
-            `}
-          >
+          <div className="flex items-center justify-between rounded-2 bg-gray-2 p-2">
             <Text
               as="p"
               size="1"
