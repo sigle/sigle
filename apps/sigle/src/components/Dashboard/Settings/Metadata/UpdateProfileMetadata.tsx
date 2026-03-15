@@ -145,6 +145,7 @@ export const UpdateProfileMetadata = ({
         <Field>
           <FieldLabel htmlFor="displayName">Name</FieldLabel>
           <Input
+            id="displayName"
             aria-invalid={!!errors.displayName}
             placeholder="Your name"
             {...register("displayName")}
@@ -160,6 +161,7 @@ export const UpdateProfileMetadata = ({
             Markdown supported (limited to bold, italic, links)
           </FieldDescription>
           <Textarea
+            id="description"
             aria-invalid={!!errors.description}
             placeholder="Describe yourself in a few words (supports markdown)"
             rows={4}
@@ -171,8 +173,9 @@ export const UpdateProfileMetadata = ({
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="name">Website</FieldLabel>
+          <FieldLabel htmlFor="website">Website</FieldLabel>
           <Input
+            id="website"
             aria-invalid={!!errors.website}
             placeholder="https://my-website.com"
             {...register("website")}
@@ -188,6 +191,7 @@ export const UpdateProfileMetadata = ({
           </FieldLabel>
           <InputGroup>
             <InputGroupInput
+              id="twitter"
               aria-invalid={!!errors.twitter}
               placeholder="username"
               {...register("twitter")}
