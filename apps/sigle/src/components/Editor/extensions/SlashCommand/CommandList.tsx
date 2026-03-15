@@ -155,10 +155,7 @@ const CommandListItem = ({
     <div
       data-index={index}
       className={cn(
-        `
-          flex w-full cursor-pointer items-center justify-between px-4 py-2
-          hover:bg-gray-3
-        `,
+        `flex w-full cursor-pointer items-center justify-between px-4 py-2 hover:bg-gray-3`,
         {
           "bg-gray-3": selectedIndex === index,
         },

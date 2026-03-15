@@ -13,6 +13,6 @@
 }
 
 .editor .ProseMirror .is-empty::before {
-  @apply float-left pointer-events-none h-0 animate-in fade-in text-gray-8;
+  @apply pointer-events-none float-left h-0 animate-in text-gray-8 fade-in;
   content: attr(data-placeholder);
 }

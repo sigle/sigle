@@ -46,12 +46,7 @@ export default function DashboardLayout({
   return (
     <Container size="3" className="px-4">
       <div className="relative">
-        <aside
-          className={`
-            absolute inset-y-0 left-[-200px] hidden w-[150px]
-            lg:block
-          `}
-        >
+        <aside className="absolute inset-y-0 left-[-200px] hidden w-[150px] lg:block">
           <nav className="sticky top-(--header-height) py-10">
             <ul className="space-y-3">
               {navigationLinks.map((link) => (
