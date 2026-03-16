@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import type { EditorPostFormData } from "../EditorFormProvider";
-import { DialogTitleGoBack } from "./DialogTitle";
+import { DialogTitleGoBack } from "./DialogTitleGoBack";
 import { SeoPreview } from "./SeoPreview";
 
 export const MetaSettings = () => {
