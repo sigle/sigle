@@ -1,9 +1,9 @@
 "use client";
 
-import { Button, Heading, Text } from "@radix-ui/themes";
 import { IconPencil } from "@tabler/icons-react";
 import { useState } from "react";
 import { ProfileAvatar } from "@/components/Shared/Profile/ProfileAvatar";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient } from "@/lib/sigle";
@@ -32,15 +32,14 @@ export const SettingsProfileMetadata = () => {
       <CardContent className="space-y-4">
         <div className="flex justify-between">
           <div>
-            <Heading size="3">Profile</Heading>
-            <Text size="2" color="gray">
+            <h2 className="text-lg font-bold">Profile</h2>
+            <p className="text-muted-foreground">
               The informations of your profile on Sigle
-            </Text>
+            </p>
           </div>
           {!editingProfileMetadata ? (
             <Button
-              variant="soft"
-              color="gray"
+              variant="secondary"
               onClick={() => setEditingProfileMetadata(true)}
             >
               <IconPencil size={16} />
@@ -55,9 +54,9 @@ export const SettingsProfileMetadata = () => {
               <ProfileAvatar user={user} size="3" />
               <div className="flex flex-col">
                 {user.profile?.displayName ? (
-                  <Text weight="medium">{user.profile.displayName}</Text>
+                  <p className="font-medium">{user.profile.displayName}</p>
                 ) : null}
-                <Text color="gray">{user.id}</Text>
+                <p className="text-muted-foreground">{user.id}</p>
               </div>
             </CardContent>
           </Card>
