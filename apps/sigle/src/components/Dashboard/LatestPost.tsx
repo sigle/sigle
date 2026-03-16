@@ -1,12 +1,20 @@
 "use client";
 
-import { Button, Heading, Text } from "@radix-ui/themes";
+import { IconPencil } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { NextLink } from "../Shared/NextLink";
+import { Button } from "../ui/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "../ui/empty";
 
 export const LatestPost = () => {
   const { data: session } = useSession();
@@ -32,37 +40,41 @@ export const LatestPost = () => {
       <Card className="mt-2">
         <CardContent>
           {!post ? (
-            <div className="flex flex-col items-center justify-center gap-4 py-7">
-              <Text size="2" color="gray">
-                No post yet
-              </Text>
-              <Button size="2" color="gray" highContrast>
-                <NextLink href="/p/new">Publish your first post!</NextLink>
-              </Button>
-            </div>
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <IconPencil size={20} />
+                </EmptyMedia>
+                <EmptyTitle>No Published Posts</EmptyTitle>
+              </EmptyHeader>
+              <EmptyContent>
+                <Button
+                  render={
+                    <NextLink href="/p/new">Publish your first post</NextLink>
+                  }
+                />
+              </EmptyContent>
+            </Empty>
           ) : null}
 
           {post ? (
             <>
               <div className="rounded-2 bg-gray-3 p-4">
-                <Heading size="4" className="line-clamp-2">
+                <h3 className="line-clamp-2 text-lg font-bold">
                   {post.metaTitle || post.title}
-                </Heading>
-                <Text mt="2" as="p" color="gray" size="1" className="uppercase">
+                </h3>
+                <p className="mt-1 text-xs text-muted-foreground uppercase">
                   {format(new Date(post.createdAt), "MMM dd")}
-                </Text>
+                </p>
                 <Button
-                  mt="3"
-                  color="gray"
-                  highContrast
-                  size="3"
-                  className="w-full"
-                  asChild
-                >
-                  <NextLink href={Routes.post({ postId: post.id })}>
-                    View post
-                  </NextLink>
-                </Button>
+                  size="lg"
+                  className="mt-3 w-full"
+                  render={
+                    <NextLink href={Routes.post({ postId: post.id })}>
+                      View post
+                    </NextLink>
+                  }
+                />
               </div>
 
               {post.collectible ? (
@@ -86,10 +98,8 @@ export const LatestPost = () => {
                 </Text>
               </Flex> */}
                   <div className="flex items-center justify-between gap-5 border-b border-solid border-gray-6 py-5 last:border-b-0">
-                    <Text size="2">Collected</Text>
-                    <Text size="2" weight="medium">
-                      {post.collectible.collected}
-                    </Text>
+                    <p>Collected</p>
+                    <p className="font-medium">{post.collectible.collected}</p>
                   </div>
                 </div>
               ) : null}
