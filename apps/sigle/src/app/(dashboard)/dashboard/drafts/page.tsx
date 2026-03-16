@@ -5,7 +5,6 @@ import {
   Badge,
   Button,
   Card,
-  DropdownMenu,
   Flex,
   Heading,
   IconButton,
@@ -17,6 +16,12 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
 import { NextLink } from "@/components/Shared/NextLink";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
@@ -155,26 +160,25 @@ const Draft = ({
         </Text>
         {isDeleting ? <Spinner /> : null}
         {!isDeleting && !isTxPending ? (
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
-              <IconButton variant="ghost" color="gray" size="2">
-                <IconDotsVertical size={16} />
-              </IconButton>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content
-              align="end"
-              variant="soft"
-              color="gray"
-              highContrast
-            >
-              <DropdownMenu.Item asChild>
-                <NextLink href={Routes.editPost({ postId: draft.id })}>
-                  Edit
-                </NextLink>
-              </DropdownMenu.Item>
-              <DropdownMenu.Item onClick={onDelete}>Delete</DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <IconButton variant="ghost" color="gray" size="2">
+                  <IconDotsVertical size={16} />
+                </IconButton>
+              }
+            />
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                render={
+                  <NextLink href={Routes.editPost({ postId: draft.id })}>
+                    Edit
+                  </NextLink>
+                }
+              />
+              <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : null}
       </Flex>
     </div>

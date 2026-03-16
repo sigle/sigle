@@ -1,10 +1,16 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { Button, Container, DropdownMenu, IconButton } from "@radix-ui/themes";
+import { Button, Container, IconButton } from "@radix-ui/themes";
 import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
 import Image from "next/image";
 import { usePostHog } from "posthog-js/react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { env } from "@/env";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { useSession } from "@/lib/auth-hooks";
@@ -74,23 +80,20 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
               </Button>
             ) : null}
 
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger>
-                <IconButton variant="ghost" color="gray" size="2">
-                  <IconDotsVertical size={16} />
-                </IconButton>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Content
-                align="end"
-                variant="soft"
-                color="gray"
-                highContrast
-              >
-                <DropdownMenu.Item onClick={onCopyLink}>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <IconButton variant="ghost" color="gray" size="2">
+                    <IconDotsVertical size={16} />
+                  </IconButton>
+                }
+              />
+              <DropdownMenuContent align="end" className="min-w-40">
+                <DropdownMenuItem onClick={onCopyLink}>
                   Copy link to profile
-                </DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.Root>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </Container>
