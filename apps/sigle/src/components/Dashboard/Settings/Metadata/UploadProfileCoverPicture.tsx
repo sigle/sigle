@@ -3,7 +3,7 @@ import { usePostHog } from "posthog-js/react";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Field, FieldTitle } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
@@ -71,15 +71,12 @@ export const UploadProfileCoverPicture = ({
       <div className="flex">
         <div className="relative w-full cursor-pointer" {...getRootProps()}>
           <input {...getInputProps()} />
-          {/*<Avatar
-            src={resolvedPicture}
-            size="9"
-          />*/}
           <Avatar
-            className={cn("w-full border border-border", {
+            className={cn("h-60 w-full border border-border", {
               "opacity-25": loadingUploadImage,
             })}
           >
+            <AvatarImage src={resolvedPicture} />
             <AvatarFallback>
               <IconPencil size={20} />
             </AvatarFallback>
