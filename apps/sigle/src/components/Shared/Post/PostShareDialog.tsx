@@ -1,14 +1,9 @@
 import type { paths } from "@sigle/sdk";
-import {
-  Callout,
-  Dialog,
-  IconButton,
-  Link,
-  VisuallyHidden,
-} from "@radix-ui/themes";
+import { Dialog, IconButton, Link, VisuallyHidden } from "@radix-ui/themes";
 import { IconReceiptTax } from "@tabler/icons-react";
 import Image from "next/image";
 import { useState } from "react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -62,11 +57,9 @@ export const PostShareDialog = ({
 
         <div className="space-y-8">
           {post.collectible ? (
-            <Callout.Root variant="surface" size="1" color="gray">
-              <Callout.Icon>
-                <IconReceiptTax size={16} />
-              </Callout.Icon>
-              <Callout.Text>
+            <Alert className="bg-muted">
+              <IconReceiptTax size={16} />
+              <AlertDescription>
                 Earn referrer rewards for each primary sale made through your
                 link.{" "}
                 <Link
@@ -75,8 +68,8 @@ export const PostShareDialog = ({
                 >
                   Learn more.
                 </Link>
-              </Callout.Text>
-            </Callout.Root>
+              </AlertDescription>
+            </Alert>
           ) : null}
 
           <div className="flex justify-center gap-5">

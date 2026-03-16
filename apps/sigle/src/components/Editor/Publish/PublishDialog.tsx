@@ -1,20 +1,15 @@
 "use client";
 
-import {
-  Callout,
-  Dialog,
-  Flex,
-  Spinner,
-  Text,
-  VisuallyHidden,
-} from "@radix-ui/themes";
+import { Dialog, VisuallyHidden } from "@radix-ui/themes";
 import * as Sentry from "@sentry/nextjs";
-import { IconExclamationCircle } from "@tabler/icons-react";
+import { IconAlertCircle } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Spinner } from "@/components/ui/spinner";
 import { useContractCall } from "@/hooks/useContractCall";
 import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient, sigleClient } from "@/lib/sigle";
@@ -177,28 +172,21 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         {publishingLoading === false ? (
           <PublishReview onPublish={onSubmit} />
         ) : (
-          <Flex
-            justify="center"
-            align="center"
-            py="7"
-            direction="column"
-            className="space-y-2"
-          >
+          <div className="flex flex-col items-center justify-center gap-2 py-7">
             <div className="mb-2">
               <Spinner />
             </div>
-            <Text as="div" size="2">
-              Your post is being published...
-            </Text>
-          </Flex>
+            <div>Your post is being published...</div>
+          </div>
         )}
         {publishingError ? (
-          <Callout.Root color="red" role="alert" className="mt-4">
-            <Callout.Icon>
-              <IconExclamationCircle />
-            </Callout.Icon>
-            <Callout.Text>Error publishing: {publishingError}</Callout.Text>
-          </Callout.Root>
+          <Alert variant="destructive" className="mt-4">
+            <IconAlertCircle size={16} />
+            <AlertTitle>Publishing failed</AlertTitle>
+            <AlertDescription>
+              Error publishing: {publishingError}
+            </AlertDescription>
+          </Alert>
         ) : null}
       </Dialog.Content>
     </Dialog.Root>

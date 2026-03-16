@@ -1,7 +1,9 @@
-import { Button, Callout, Dialog, Flex, Grid, Text } from "@radix-ui/themes";
-import { IconExclamationCircle } from "@tabler/icons-react";
+import { Button, Dialog, Flex } from "@radix-ui/themes";
+import { IconAlertCircle, IconExclamationCircle } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { cn } from "@/lib/cn";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { PublishReviewCollect } from "./ReviewCollect";
 import { PublishReviewGeneral } from "./ReviewGeneral";
@@ -62,12 +64,10 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
   return (
     <div className="space-y-4">
       {isFormValid !== "loading" && !isFormValid.valid ? (
-        <Callout.Root color="red" role="alert">
-          <Callout.Icon>
-            <IconExclamationCircle />
-          </Callout.Icon>
-          <Callout.Text>Please fix all errors before publishing. </Callout.Text>
-          <Text as="div" size="2">
+        <Alert variant="destructive">
+          <IconAlertCircle size={16} />
+          <AlertTitle>Please fix all errors before publishing</AlertTitle>
+          <AlertDescription>
             <ul className="list-inside list-disc">
               {isFormValid.title ? <li>Title: {isFormValid.title}</li> : null}
               {isFormValid.content ? (
@@ -87,26 +87,28 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
               ) : null}
               {isFormValid.price ? <li>Price: {isFormValid.price}</li> : null}
             </ul>
-          </Text>
-        </Callout.Root>
+          </AlertDescription>
+        </Alert>
       ) : null}
 
       {type === "draft" && isCollectEnabled ? (
-        <Callout.Root color="orange" role="alert">
-          <Callout.Icon>
-            <IconExclamationCircle />
-          </Callout.Icon>
-          <Callout.Text>
+        <Alert>
+          <IconExclamationCircle />
+          <AlertDescription>
             Review your post before publishing. Once published, you won&apos;t
             be able to make any edits to the collect settings anymore.
-          </Callout.Text>
-        </Callout.Root>
+          </AlertDescription>
+        </Alert>
       ) : null}
 
-      <Grid columns={isCollectEnabled ? "2" : "1"} gap="4" width="auto">
+      <div
+        className={cn("grid grid-cols-1 gap-4", {
+          "grid-cols-2": isCollectEnabled,
+        })}
+      >
         <PublishReviewGeneral />
         <PublishReviewCollect />
-      </Grid>
+      </div>
 
       <Flex gap="3" justify="end">
         <Dialog.Close>
