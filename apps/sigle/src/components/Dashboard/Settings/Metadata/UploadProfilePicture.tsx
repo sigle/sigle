@@ -72,7 +72,7 @@ export const UploadProfilePicture = ({
         <div className="relative cursor-pointer" {...getRootProps()}>
           <input {...getInputProps()} />
           <Avatar
-            className={cn("h-40 w-40 border border-border", {
+            className={cn("size-40 border border-border", {
               "opacity-25": loadingUploadImage,
             })}
           >
