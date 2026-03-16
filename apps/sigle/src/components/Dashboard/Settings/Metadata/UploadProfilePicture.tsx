@@ -1,10 +1,10 @@
-import { Avatar } from "@radix-ui/themes";
 import { IconPencil } from "@tabler/icons-react";
 import { usePostHog } from "posthog-js/react";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Field, FieldTitle } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
@@ -66,21 +66,21 @@ export const UploadProfilePicture = ({
 
   return (
     <Field>
-      <FieldLabel>Profile Picture</FieldLabel>
+      <FieldTitle>Profile Picture</FieldTitle>
 
       <div className="flex">
         <div className="relative cursor-pointer" {...getRootProps()}>
           <input {...getInputProps()} />
           <Avatar
-            src={resolvedPicture}
-            fallback={<IconPencil size={20} />}
-            alt="Profile image"
-            size="9"
-            color="gray"
-            className={cn("rounded-2 border border-gray-6", {
+            className={cn("size-40 border border-border", {
               "opacity-25": loadingUploadImage,
             })}
-          />
+          >
+            <AvatarImage src={resolvedPicture} alt="Profile image" />
+            <AvatarFallback>
+              <IconPencil size={20} />
+            </AvatarFallback>
+          </Avatar>
           {loadingUploadImage ? (
             <div className="absolute inset-0 flex items-center justify-center">
               <Spinner />

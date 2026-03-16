@@ -1,9 +1,10 @@
 "use client";
 
-import { Button, Card, Flex, Heading, Text } from "@radix-ui/themes";
 import { IconPencil } from "@tabler/icons-react";
 import { useState } from "react";
 import { ProfileAvatar } from "@/components/Shared/Profile/ProfileAvatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient } from "@/lib/sigle";
 import { UpdateProfileMetadata } from "./UpdateProfileMetadata";
@@ -27,19 +28,18 @@ export const SettingsProfileMetadata = () => {
   }
 
   return (
-    <Card size="2">
-      <div className="space-y-4">
+    <Card>
+      <CardContent className="space-y-4">
         <div className="flex justify-between">
           <div>
-            <Heading size="3">Profile</Heading>
-            <Text size="2" color="gray">
+            <h2 className="text-lg font-bold">Profile</h2>
+            <p className="text-muted-foreground">
               The informations of your profile on Sigle
-            </Text>
+            </p>
           </div>
           {!editingProfileMetadata ? (
             <Button
-              variant="soft"
-              color="gray"
+              variant="secondary"
               onClick={() => setEditingProfileMetadata(true)}
             >
               <IconPencil size={16} />
@@ -49,16 +49,16 @@ export const SettingsProfileMetadata = () => {
         </div>
 
         {!editingProfileMetadata ? (
-          <Card size="1">
-            <Flex gap="4" align="center">
+          <Card size="sm">
+            <CardContent className="flex items-center gap-4">
               <ProfileAvatar user={user} size="3" />
-              <Flex direction="column">
+              <div className="flex flex-col">
                 {user.profile?.displayName ? (
-                  <Text weight="medium">{user.profile.displayName}</Text>
+                  <p className="font-medium">{user.profile.displayName}</p>
                 ) : null}
-                <Text color="gray">{user.id}</Text>
-              </Flex>
-            </Flex>
+                <p className="text-muted-foreground">{user.id}</p>
+              </div>
+            </CardContent>
           </Card>
         ) : (
           <UpdateProfileMetadata
@@ -66,7 +66,7 @@ export const SettingsProfileMetadata = () => {
             setEditingProfileMetadata={setEditingProfileMetadata}
           />
         )}
-      </div>
+      </CardContent>
     </Card>
   );
 };
