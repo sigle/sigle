@@ -1,5 +1,18 @@
-import { RadioCards, Text, TextField } from "@radix-ui/themes";
 import { useFormContext, useFormState } from "react-hook-form";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+  FieldTitle,
+} from "@/components/ui/field";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import type { EditorPostFormData } from "../../EditorFormProvider";
 
 export const CollectEdition = () => {
@@ -22,54 +35,53 @@ export const CollectEdition = () => {
     ?.message;
 
   return (
-    <div className="space-y-3">
-      <Text as="p" size="2" weight="medium">
-        Edition
-      </Text>
-      <RadioCards.Root
-        columns="2"
+    <Field>
+      <FieldLabel>Edition</FieldLabel>
+      <RadioGroup
+        className="grid-cols-2"
         value={watchCollectLimitType}
         onValueChange={onEditionChange}
         disabled={type === "published"}
       >
-        <RadioCards.Item value="open">
-          <div className="flex w-full flex-col">
-            <Text weight="bold">Open edition</Text>
-            <Text>∞</Text>
-          </div>
-        </RadioCards.Item>
-        <RadioCards.Item value="fixed">
-          <div className="flex w-full flex-col">
-            <Text weight="bold">Limited edition</Text>
-            <Text>0/{watchCollectLimitLimit}</Text>
-          </div>
-        </RadioCards.Item>
-      </RadioCards.Root>
+        <FieldLabel htmlFor="collect-open">
+          <Field orientation="horizontal">
+            <FieldContent>
+              <FieldTitle>Open edition</FieldTitle>
+              <FieldDescription>∞</FieldDescription>
+            </FieldContent>
+            <RadioGroupItem value="open" id="collect-open" />
+          </Field>
+        </FieldLabel>
+
+        <FieldLabel htmlFor="collect-fixed">
+          <Field orientation="horizontal">
+            <FieldContent>
+              <FieldTitle>Limited edition</FieldTitle>
+              <FieldDescription>0/{watchCollectLimitLimit}</FieldDescription>
+            </FieldContent>
+            <RadioGroupItem value="fixed" id="collect-fixed" />
+          </Field>
+        </FieldLabel>
+      </RadioGroup>
+
       {watchCollectLimitType === "fixed" ? (
-        <div className="animate-in space-y-2 fade-in">
-          <div className="space-y-1">
-            <Text as="p" size="2">
-              Number of editions
-            </Text>
-            <Text as="p" size="1" color="gray">
-              After publishing, the edition count can only be reduced.
-            </Text>
-          </div>
-          <TextField.Root
-            className="w-full"
-            type="number"
-            min="1"
-            {...register("collect.collectLimit.limit")}
-          >
-            <TextField.Slot side="right">editions</TextField.Slot>
-          </TextField.Root>
-        </div>
+        <Field>
+          <FieldLabel>Number of editions</FieldLabel>
+          <FieldDescription className="text-xs">
+            After publishing, the edition count can only be reduced.
+          </FieldDescription>
+          <InputGroup>
+            <InputGroupInput
+              className="w-full"
+              type="number"
+              min="1"
+              {...register("collect.collectLimit.limit")}
+            />
+            <InputGroupAddon align="inline-end">editions</InputGroupAddon>
+          </InputGroup>
+          {limitErrorMessage && <FieldError>{limitErrorMessage}</FieldError>}
+        </Field>
       ) : null}
-      {limitErrorMessage && (
-        <Text size="2" color="red">
-          {limitErrorMessage}
-        </Text>
-      )}
-    </div>
+    </Field>
   );
 };
