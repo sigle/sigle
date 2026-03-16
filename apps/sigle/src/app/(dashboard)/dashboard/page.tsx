@@ -1,6 +1,6 @@
 "use client";
 
-import { Grid, Heading } from "@radix-ui/themes";
+import { Heading } from "@radix-ui/themes";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { GetFamiliarCards } from "@/components/Dashboard/GetFamiliarCards";
 import { LatestDrafts } from "@/components/Dashboard/LatestDrafts";
@@ -28,17 +28,10 @@ export default function Dashboard() {
       ) : null}
 
       {!isLoadingWhitelist && userWhitelist?.whitelisted ? (
-        <Grid
-          columns={{
-            initial: "1",
-            md: "2",
-          }}
-          gap="5"
-          width="auto"
-        >
+        <div className="grid gap-5 md:grid-cols-2">
           <LatestPost />
           <LatestDrafts />
-        </Grid>
+        </div>
       ) : null}
 
       <GetFamiliarCards />

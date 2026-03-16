@@ -1,27 +1,21 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import {
-  Badge,
-  Button,
-  Card,
-  Flex,
-  Heading,
-  IconButton,
-  Spinner,
-  Text,
-} from "@radix-ui/themes";
+import { Button, Heading, IconButton, Text } from "@radix-ui/themes";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
 import { NextLink } from "@/components/Shared/NextLink";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
@@ -43,41 +37,37 @@ export default function DashboardDrafts() {
   return (
     <div className="py-10">
       <Heading>Drafts</Heading>
-      <Card mt="5" size="2">
-        {loadingDrafts ? (
-          <Flex justify="center" py="7">
-            <Spinner />
-          </Flex>
-        ) : null}
+      <Card className="mt-5">
+        <CardContent>
+          {loadingDrafts ? (
+            <div className="flex justify-center py-7">
+              <Spinner />
+            </div>
+          ) : null}
 
-        {errorDrafts ? (
-          <Flex justify="center" py="7">
-            <Text size="2" color="red">
-              An error occurred, please try again later. {errorDrafts.message}
-            </Text>
-          </Flex>
-        ) : null}
+          {errorDrafts ? (
+            <div className="flex justify-center py-7">
+              <Text size="2" color="red">
+                An error occurred, please try again later. {errorDrafts.message}
+              </Text>
+            </div>
+          ) : null}
 
-        {drafts?.length === 0 ? (
-          <Flex
-            justify="center"
-            align="center"
-            py="7"
-            gap="4"
-            direction="column"
-          >
-            <Text size="2" color="gray">
-              No drafts yet
-            </Text>
-            <Button color="gray" highContrast asChild>
-              <NextLink href="/p/new">Write a post</NextLink>
-            </Button>
-          </Flex>
-        ) : null}
+          {drafts?.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-4 py-7">
+              <Text size="2" color="gray">
+                No drafts yet
+              </Text>
+              <Button color="gray" highContrast asChild>
+                <NextLink href="/p/new">Write a post</NextLink>
+              </Button>
+            </div>
+          ) : null}
 
-        {drafts?.map((draft) => (
-          <Draft key={draft.id} draft={draft} refetchDrafts={refetchDrafts} />
-        ))}
+          {drafts?.map((draft) => (
+            <Draft key={draft.id} draft={draft} refetchDrafts={refetchDrafts} />
+          ))}
+        </CardContent>
       </Card>
     </div>
   );
@@ -136,14 +126,17 @@ const Draft = ({
   return (
     <div className="border-b border-solid border-gray-6 py-5 first:pt-0 last:border-b-0 last:pb-0">
       {draft.txStatus === "pending" && draft.txId && (
-        <Badge className="mb-2" asChild>
-          <a
-            href={getExplorerTransactionUrl(draft.txId)}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Publishing: Transaction pending
-          </a>
+        <Badge
+          className="mb-2"
+          render={
+            <a
+              href={getExplorerTransactionUrl(draft.txId)}
+              target="_blank"
+              rel="noreferrer"
+            />
+          }
+        >
+          Publishing: Transaction pending
         </Badge>
       )}
       {draft.txStatus === "pending" ? (
@@ -153,7 +146,7 @@ const Draft = ({
           {heading}
         </NextLink>
       )}
-      <Flex justify="between" align="center">
+      <div className="flex items-center justify-between">
         <Text as="p" mt="3" color="gray" size="1">
           Created {format(new Date(draft.createdAt), "MMM dd, yyyy")} • Last
           updated {format(new Date(draft.updatedAt), "MMM dd, yyyy h:mm a")}
@@ -180,7 +173,7 @@ const Draft = ({
             </DropdownMenuContent>
           </DropdownMenu>
         ) : null}
-      </Flex>
+      </div>
     </div>
   );
 };

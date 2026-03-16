@@ -1,10 +1,11 @@
 "use client";
 
-import { Button, Container, Link, Spinner, Text } from "@radix-ui/themes";
+import { Button, Container, Link, Text } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import { use, useEffect } from "react";
 import { AuthProtect } from "@/components/Auth/AuthProtect";
 import { NextLink } from "@/components/Shared/NextLink";
+import { Spinner } from "@/components/ui/spinner";
 import { sigleApiClient } from "@/lib/sigle";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
 
