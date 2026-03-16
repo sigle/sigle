@@ -1,19 +1,23 @@
 "use client";
 
-import {
-  Badge,
-  Button,
-  Card,
-  Flex,
-  Heading,
-  Spinner,
-  Text,
-} from "@radix-ui/themes";
+import { IconPencil } from "@tabler/icons-react";
 import { format } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
 import { NextLink } from "../Shared/NextLink";
+import { Button } from "../ui/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "../ui/empty";
 
 export const LatestDrafts = () => {
   const {
@@ -30,80 +34,96 @@ export const LatestDrafts = () => {
 
   return (
     <div>
-      <Flex justify="between" align="center">
-        <Text size="2">Drafts</Text>
-        <Button size="1" color="gray" variant="ghost">
-          <NextLink href="/dashboard/drafts">View all</NextLink>
-        </Button>
-      </Flex>
-      <Card mt="2" size="2">
-        {loadingDrafts ? (
-          <Flex justify="center" py="7">
-            <Spinner />
-          </Flex>
-        ) : null}
+      <div className="flex items-center justify-between">
+        <p className="text-sm font-medium">Drafts</p>
+        <Button
+          className="text-muted-foreground"
+          size="xs"
+          variant="link"
+          render={<NextLink href="/dashboard/drafts">View all</NextLink>}
+        />
+      </div>
+      <Card className="mt-2">
+        <CardContent>
+          {loadingDrafts ? (
+            <div className="flex justify-center py-7">
+              <Spinner />
+            </div>
+          ) : null}
 
-        {errorDrafts ? (
-          <Flex justify="center" py="7">
-            <Text size="2" color="red">
-              An error occurred, please try again later. Error:{" "}
-              {errorDrafts.message}
-            </Text>
-          </Flex>
-        ) : null}
+          {errorDrafts ? (
+            <div className="flex justify-center py-7">
+              <p className="text-destructive">
+                An error occurred, please try again later. Error:{" "}
+                {errorDrafts.message}
+              </p>
+            </div>
+          ) : null}
 
-        {!loadingDrafts && drafts?.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-4 py-7">
-            <Text size="2" color="gray">
-              No drafts yet
-            </Text>
-            <Button size="2" color="gray" highContrast>
-              <NextLink href="/p/new">Create a new draft</NextLink>
-            </Button>
-          </div>
-        ) : null}
+          {!loadingDrafts && drafts?.length === 0 ? (
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <IconPencil size={20} />
+                </EmptyMedia>
+                <EmptyTitle>No Drafts</EmptyTitle>
+                <EmptyDescription className="max-w-xs text-pretty">
+                  Create a new draft to get started.
+                </EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                <Button
+                  render={<NextLink href="/p/new">Create a new draft</NextLink>}
+                />
+              </EmptyContent>
+            </Empty>
+          ) : null}
 
-        {drafts?.map((draft) => {
-          const heading =
-            draft.metaTitle || draft.title ? (
-              <Heading as="h3" size="4" className="line-clamp-2">
-                {draft.metaTitle || draft.title}
-              </Heading>
-            ) : (
-              <Heading as="h3" size="4" className="line-clamp-2" color="gray">
-                No title
-              </Heading>
-            );
+          {drafts?.map((draft) => {
+            const heading =
+              draft.metaTitle || draft.title ? (
+                <h3 className="line-clamp-2 text-lg font-bold">
+                  {draft.metaTitle || draft.title}
+                </h3>
+              ) : (
+                <h3 className="line-clamp-2 text-lg font-bold text-muted-foreground">
+                  No title
+                </h3>
+              );
 
-          return (
-            <div
-              key={draft.id}
-              className="border-b border-solid border-gray-6 py-5 first:pt-0 last:border-b-0 last:pb-0"
-            >
-              {draft.txStatus === "pending" && draft.txId && (
-                <Badge className="mb-2" asChild>
-                  <a
-                    href={getExplorerTransactionUrl(draft.txId)}
-                    target="_blank"
-                    rel="noreferrer"
+            return (
+              <div
+                key={draft.id}
+                className="border-b border-solid border-gray-6 py-5 first:pt-0 last:border-b-0 last:pb-0"
+              >
+                {draft.txStatus === "pending" && draft.txId && (
+                  <Badge
+                    className="mb-2"
+                    render={
+                      <a
+                        href={getExplorerTransactionUrl(draft.txId)}
+                        target="_blank"
+                        rel="noreferrer"
+                      />
+                    }
                   >
                     Publishing: Transaction pending
-                  </a>
-                </Badge>
-              )}
-              {draft.txStatus === "pending" ? (
-                heading
-              ) : (
-                <NextLink href={Routes.editPost({ postId: draft.id })}>
-                  {heading}
-                </NextLink>
-              )}
-              <Text as="p" mt="3" color="gray" size="1" className="uppercase">
-                {format(new Date(draft.createdAt), "MMM dd")}
-              </Text>
-            </div>
-          );
-        })}
+                  </Badge>
+                )}
+                {draft.txStatus === "pending" ? (
+                  heading
+                ) : (
+                  <NextLink href={Routes.editPost({ postId: draft.id })}>
+                    {heading}
+                  </NextLink>
+                )}
+                <p className="mt-3 text-xs text-muted-foreground uppercase">
+                  {format(new Date(draft.createdAt), "MMM dd")}
+                </p>
+              </div>
+            );
+          })}
+        </CardContent>
       </Card>
     </div>
   );
