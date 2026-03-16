@@ -3,7 +3,6 @@
 import type { paths } from "@sigle/sdk";
 import {
   AspectRatio,
-  DropdownMenu,
   Flex,
   Heading,
   IconButton,
@@ -15,6 +14,12 @@ import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useSession } from "@/lib/auth-hooks";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
@@ -67,27 +72,31 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                 </Link>{" "}
                 • {format(new Date(post.createdAt), "MMM dd, yyyy")}
               </Text>
-              <DropdownMenu.Root>
+              <DropdownMenu>
                 <Tooltip content="More">
-                  <DropdownMenu.Trigger>
-                    <IconButton variant="ghost" color="gray" size="1">
-                      <IconDotsVertical size={16} />
-                    </IconButton>
-                  </DropdownMenu.Trigger>
+                  <DropdownMenuTrigger
+                    render={
+                      <IconButton variant="ghost" color="gray" size="1">
+                        <IconDotsVertical size={16} />
+                      </IconButton>
+                    }
+                  />
                 </Tooltip>
-                <DropdownMenu.Content variant="soft" color="gray" highContrast>
-                  <DropdownMenu.Item onClick={() => setShareDialogOpen(true)}>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={() => setShareDialogOpen(true)}>
                     Share & Earn
-                  </DropdownMenu.Item>
+                  </DropdownMenuItem>
                   {isCurrentUser ? (
-                    <DropdownMenu.Item asChild>
-                      <NextLink href={Routes.editPost({ postId: post.id })}>
-                        Edit
-                      </NextLink>
-                    </DropdownMenu.Item>
+                    <DropdownMenuItem
+                      render={
+                        <NextLink href={Routes.editPost({ postId: post.id })}>
+                          Edit
+                        </NextLink>
+                      }
+                    />
                   ) : null}
-                </DropdownMenu.Content>
-              </DropdownMenu.Root>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
           {post.coverImage ? (
