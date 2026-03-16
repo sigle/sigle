@@ -1,10 +1,11 @@
 "use client";
 
-import { Callout, Heading } from "@radix-ui/themes";
+import { Heading } from "@radix-ui/themes";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { GetFamiliarCards } from "@/components/Dashboard/GetFamiliarCards";
 import { LatestDrafts } from "@/components/Dashboard/LatestDrafts";
 import { LatestPost } from "@/components/Dashboard/LatestPost";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { sigleApiClient } from "@/lib/sigle";
 
 export default function Dashboard() {
@@ -16,16 +17,14 @@ export default function Dashboard() {
       <Heading>Dashboard</Heading>
 
       {!isLoadingWhitelist && !userWhitelist?.whitelisted ? (
-        <Callout.Root color="gray">
-          <Callout.Icon>
-            <IconInfoCircle />
-          </Callout.Icon>
-          <Callout.Text>
+        <Alert>
+          <IconInfoCircle />
+          <AlertDescription>
             Publishing is currrently restricted to whitelisted users only. If
             you are interested in participating in the Sigle beta, please let us
             know on Discord.
-          </Callout.Text>
-        </Callout.Root>
+          </AlertDescription>
+        </Alert>
       ) : null}
 
       {!isLoadingWhitelist && userWhitelist?.whitelisted ? (

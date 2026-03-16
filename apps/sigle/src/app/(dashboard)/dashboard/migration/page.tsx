@@ -1,10 +1,12 @@
 "use client";
 
-import { Button, Heading, Separator, Text, TextField } from "@radix-ui/themes";
+import { Heading, Separator, Text } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiFetchClient } from "@/lib/sigle";
@@ -191,9 +193,8 @@ export default function MigrationPage() {
 
       {!username.ready ? (
         <div className="mt-5">
-          <TextField.Root
+          <Input
             type="text"
-            size="2"
             placeholder="Enter your username (.btc, .id.stx etc...)"
             value={username.value}
             onChange={(e) =>
@@ -204,9 +205,7 @@ export default function MigrationPage() {
             }
           />
           <Button
-            color="gray"
             variant="outline"
-            highContrast
             className="mt-4"
             onClick={() => setUsername({ value: username.value, ready: true })}
           >
@@ -236,11 +235,9 @@ export default function MigrationPage() {
                   </Text>
                 </div>
                 <Button
-                  color="gray"
                   variant="outline"
-                  highContrast
                   onClick={() => handleMigrate(post.id)}
-                  loading={loadingPostId === post.id}
+                  disabled={loadingPostId === post.id}
                 >
                   Migrate
                 </Button>

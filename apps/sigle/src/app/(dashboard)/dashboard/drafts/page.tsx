@@ -1,13 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import {
-  Button,
-  DropdownMenu,
-  Heading,
-  IconButton,
-  Text,
-} from "@radix-ui/themes";
+import { Button, Heading, IconButton, Text } from "@radix-ui/themes";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
@@ -15,6 +9,12 @@ import { toast } from "sonner";
 import { NextLink } from "@/components/Shared/NextLink";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
@@ -153,26 +153,25 @@ const Draft = ({
         </Text>
         {isDeleting ? <Spinner /> : null}
         {!isDeleting && !isTxPending ? (
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
-              <IconButton variant="ghost" color="gray" size="2">
-                <IconDotsVertical size={16} />
-              </IconButton>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content
-              align="end"
-              variant="soft"
-              color="gray"
-              highContrast
-            >
-              <DropdownMenu.Item asChild>
-                <NextLink href={Routes.editPost({ postId: draft.id })}>
-                  Edit
-                </NextLink>
-              </DropdownMenu.Item>
-              <DropdownMenu.Item onClick={onDelete}>Delete</DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <IconButton variant="ghost" color="gray" size="2">
+                  <IconDotsVertical size={16} />
+                </IconButton>
+              }
+            />
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                render={
+                  <NextLink href={Routes.editPost({ postId: draft.id })}>
+                    Edit
+                  </NextLink>
+                }
+              />
+              <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : null}
       </div>
     </div>
