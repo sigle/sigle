@@ -1,9 +1,10 @@
-import { Button, Dialog, Flex } from "@radix-ui/themes";
 import { IconAlertCircle, IconExclamationCircle } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { cn } from "@/lib/cn";
+import { Button } from "@/components/ui/button";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { PublishReviewCollect } from "./ReviewCollect";
 import { PublishReviewGeneral } from "./ReviewGeneral";
@@ -94,6 +95,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
       {type === "draft" && isCollectEnabled ? (
         <Alert>
           <IconExclamationCircle />
+          <AlertTitle>Please fix all errors before publishing</AlertTitle>
           <AlertDescription>
             Review your post before publishing. Once published, you won&apos;t
             be able to make any edits to the collect settings anymore.
@@ -102,28 +104,37 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
       ) : null}
 
       <div
-        className={cn("grid grid-cols-1 gap-4", {
-          "grid-cols-2": isCollectEnabled,
-        })}
+        className={`grid gap-4 ${isCollectEnabled ? "grid-cols-2" : "grid-cols-1"}`}
       >
         <PublishReviewGeneral />
         <PublishReviewCollect />
       </div>
 
-      <Flex gap="3" justify="end">
-        <Dialog.Close>
-          <Button variant="soft" color="gray" disabled={formState.isSubmitting}>
-            Cancel
-          </Button>
-        </Dialog.Close>
+      <DialogFooter>
+        <DialogClose
+          render={
+            <Button
+              type="button"
+              variant="outline"
+              disabled={formState.isSubmitting}
+            >
+              Cancel
+            </Button>
+          }
+        />
+
         <Button
-          disabled={isFormValid === "loading" || !isFormValid.valid}
-          loading={formState.isSubmitting}
+          disabled={
+            isFormValid === "loading" ||
+            !isFormValid.valid ||
+            formState.isSubmitting
+          }
           onClick={onPublish}
         >
+          {formState.isSubmitting ? <Spinner data-icon="inline-start" /> : null}
           {type === "draft" ? "Publish" : "Update"}
         </Button>
-      </Flex>
+      </DialogFooter>
     </div>
   );
 };

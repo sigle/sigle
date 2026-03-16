@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Badge,
   Button,
   Dialog,
   Heading,
@@ -23,6 +22,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 import { appConfig } from "@/config";
 import { useContractCall } from "@/hooks/useContractCall";
 import {
@@ -233,7 +233,7 @@ export const PostCollectDialog = ({
             <Text size="2" weight="medium">
               Number of editions
               {!post.collectible.openEdition ? (
-                <Badge color="gray" highContrast className="ml-1">
+                <Badge variant="secondary" className="ml-1">
                   {post.collectible.maxSupply - post.collectible.collected} left
                 </Badge>
               ) : null}

@@ -1,7 +1,12 @@
-import { AspectRatio, Card, Inset, Text, Tooltip } from "@radix-ui/themes";
+import { Text } from "@radix-ui/themes";
 import { IconHelpCircle } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
 import { prettifyUrl } from "@/lib/urls";
@@ -22,52 +27,41 @@ export const SeoPreview = () => {
   const metaImage = watchCoverImage;
 
   return (
-    <Field>
-      <FieldLabel>
-        Preview{" "}
-        <Tooltip content="This is how the post will be displayed when sharing the link on social media">
-          <IconHelpCircle size={16} />
-        </Tooltip>
-      </FieldLabel>
-
-      <Card size="1">
+    <div>
+      <Text as="div" size="2" mb="1" className="flex items-center gap-1">
+        Preview
+        <Text color="gray">
+          <Tooltip>
+            <TooltipTrigger render={<IconHelpCircle size={16} />} />
+            <TooltipContent>
+              This is how the post will be displayed when sharing the link on
+              social media
+            </TooltipContent>
+          </Tooltip>
+        </Text>
+      </Text>
+      <Card size="sm" className="relative mx-auto pt-0!">
         {metaImage ? (
-          <Inset
-            clip="padding-box"
-            side="top"
-            className="mb-2 border-b border-solid border-gray-6"
-          >
-            <AspectRatio ratio={1.91 / 1}>
-              {/* oxlint-disable-next-line no-img-element */}
-              <img
-                src={resolveImageUrl(metaImage)}
-                alt="Cover social media"
-                style={{
-                  objectFit: "cover",
-                  width: "100%",
-                  height: "100%",
-                  backgroundColor: "var(--gray-5)",
-                }}
-              />
-            </AspectRatio>
-          </Inset>
+          <>
+            <div className="absolute inset-0 z-30 aspect-video bg-black/35" />
+            {/* oxlint-disable-next-line no-img-element */}
+            <img
+              src={resolveImageUrl(metaImage)}
+              alt="Cover social media preview"
+              className="relative z-20 aspect-video w-full object-cover"
+            />
+          </>
         ) : null}
-        <Text as="div" size="2" className="truncate">
-          {metaTitle}
-        </Text>
-        <Text
-          as="div"
-          size="2"
-          color="gray"
-          className="truncate"
-          style={{ marginTop: "2px" }}
-        >
-          {metaDescription}
-        </Text>
-        <Text as="div" size="2" color="gray" className="truncate">
-          {prettifyUrl(env.NEXT_PUBLIC_APP_URL)}
-        </Text>
+        <CardContent>
+          <div className="truncate">{metaTitle}</div>
+          <div className="mt-0.5 truncate text-muted-foreground">
+            {metaDescription}
+          </div>
+          <div className="truncate text-sm text-muted-foreground">
+            {prettifyUrl(env.NEXT_PUBLIC_APP_URL)}
+          </div>
+        </CardContent>
       </Card>
-    </Field>
+    </div>
   );
 };

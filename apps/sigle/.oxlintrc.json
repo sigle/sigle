@@ -2,7 +2,6 @@
   "$schema": "../../node_modules/oxlint/configuration_schema.json",
   "extends": ["../../.oxlintrc.json"],
   "plugins": ["typescript", "react", "nextjs"],
-  "jsPlugins": ["eslint-plugin-better-tailwindcss"],
   "ignorePatterns": [".next/**", "out/**", "build/**", "next-env.d.ts"],
   "settings": {
     "better-tailwindcss": {
@@ -10,13 +9,6 @@
     }
   },
   "rules": {
-    "better-tailwindcss/enforce-canonical-classes": "error",
-    "better-tailwindcss/no-duplicate-classes": "error",
-    "better-tailwindcss/no-deprecated-classes": "error",
-    "better-tailwindcss/no-unnecessary-whitespace": "error",
-    "better-tailwindcss/no-unknown-classes": "error",
-    "better-tailwindcss/no-conflicting-classes": "error",
-
     "no-alert": "off",
     "no-unknown-property": ["error", { "ignore": ["tw"] }],
     "no-restricted-imports": [
@@ -33,5 +25,19 @@
     "only-export-components": "off",
     "no-html-link-for-pages": "off",
     "no-untyped-mock-factory": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/*.{js,cjs,mjs,ts,tsx,cts,mts}"],
+      "jsPlugins": ["eslint-plugin-better-tailwindcss"],
+      "rules": {
+        "better-tailwindcss/enforce-canonical-classes": "error",
+        "better-tailwindcss/no-duplicate-classes": "error",
+        "better-tailwindcss/no-deprecated-classes": "error",
+        "better-tailwindcss/no-unnecessary-whitespace": "error",
+        "better-tailwindcss/no-unknown-classes": "error",
+        "better-tailwindcss/no-conflicting-classes": "error"
+      }
+    }
+  ]
 }

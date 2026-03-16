@@ -1,6 +1,5 @@
 "use client";
 
-import { Dialog, VisuallyHidden } from "@radix-ui/themes";
 import * as Sentry from "@sentry/nextjs";
 import { IconAlertCircle } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
@@ -9,6 +8,13 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Spinner } from "@/components/ui/spinner";
 import { useContractCall } from "@/hooks/useContractCall";
 import { useSession } from "@/lib/auth-hooks";
@@ -163,12 +169,12 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   };
 
   return (
-    <Dialog.Root open={publishOpen} onOpenChange={onOpenChange}>
-      <VisuallyHidden>
-        <Dialog.Title>Publish</Dialog.Title>
-        <Dialog.Description>Publish your post</Dialog.Description>
-      </VisuallyHidden>
-      <Dialog.Content size="3" className="max-w-screen-xs">
+    <Dialog open={publishOpen} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader className="sr-only">
+          <DialogTitle>Publish</DialogTitle>
+          <DialogDescription>Publish your post</DialogDescription>
+        </DialogHeader>
         {publishingLoading === false ? (
           <PublishReview onPublish={onSubmit} />
         ) : (
@@ -180,7 +186,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           </div>
         )}
         {publishingError ? (
-          <Alert variant="destructive" className="mt-4">
+          <Alert variant="destructive">
             <IconAlertCircle size={16} />
             <AlertTitle>Publishing failed</AlertTitle>
             <AlertDescription>
@@ -188,7 +194,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             </AlertDescription>
           </Alert>
         ) : null}
-      </Dialog.Content>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 };

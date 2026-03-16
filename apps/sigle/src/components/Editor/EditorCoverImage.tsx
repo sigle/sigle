@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, IconButton, Spinner } from "@radix-ui/themes";
+import { Button, IconButton } from "@radix-ui/themes";
 import { IconCameraPlus, IconHandGrab, IconTrash } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
@@ -14,6 +14,7 @@ import {
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiClient } from "@/lib/sigle";
