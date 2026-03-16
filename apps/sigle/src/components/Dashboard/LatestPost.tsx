@@ -26,8 +26,8 @@ export const LatestPost = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <Text size="2">Latest post</Text>
+      <div className="flex h-6 items-center justify-between">
+        <p className="text-sm font-medium">Latest post</p>
       </div>
       <Card className="mt-2">
         <CardContent>

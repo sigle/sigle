@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Heading, Text } from "@radix-ui/themes";
+import { IconPencil } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +9,15 @@ import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
 import { NextLink } from "../Shared/NextLink";
+import { Button } from "../ui/button";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "../ui/empty";
 
 export const LatestDrafts = () => {
   const {
@@ -26,10 +35,13 @@ export const LatestDrafts = () => {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <Text size="2">Drafts</Text>
-        <Button size="1" color="gray" variant="ghost">
-          <NextLink href="/dashboard/drafts">View all</NextLink>
-        </Button>
+        <p className="text-sm font-medium">Drafts</p>
+        <Button
+          className="text-muted-foreground"
+          size="xs"
+          variant="link"
+          render={<NextLink href="/dashboard/drafts">View all</NextLink>}
+        />
       </div>
       <Card className="mt-2">
         <CardContent>
@@ -41,34 +53,42 @@ export const LatestDrafts = () => {
 
           {errorDrafts ? (
             <div className="flex justify-center py-7">
-              <Text size="2" color="red">
+              <p className="text-destructive">
                 An error occurred, please try again later. Error:{" "}
                 {errorDrafts.message}
-              </Text>
+              </p>
             </div>
           ) : null}
 
           {!loadingDrafts && drafts?.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-4 py-7">
-              <Text size="2" color="gray">
-                No drafts yet
-              </Text>
-              <Button size="2" color="gray" highContrast>
-                <NextLink href="/p/new">Create a new draft</NextLink>
-              </Button>
-            </div>
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <IconPencil size={20} />
+                </EmptyMedia>
+                <EmptyTitle>No Drafts</EmptyTitle>
+                <EmptyDescription className="max-w-xs text-pretty">
+                  Create a new draft to get started.
+                </EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                <Button
+                  render={<NextLink href="/p/new">Create a new draft</NextLink>}
+                />
+              </EmptyContent>
+            </Empty>
           ) : null}
 
           {drafts?.map((draft) => {
             const heading =
               draft.metaTitle || draft.title ? (
-                <Heading as="h3" size="4" className="line-clamp-2">
+                <h3 className="line-clamp-2 text-lg font-bold">
                   {draft.metaTitle || draft.title}
-                </Heading>
+                </h3>
               ) : (
-                <Heading as="h3" size="4" className="line-clamp-2" color="gray">
+                <h3 className="line-clamp-2 text-lg font-bold text-muted-foreground">
                   No title
-                </Heading>
+                </h3>
               );
 
             return (
@@ -97,9 +117,9 @@ export const LatestDrafts = () => {
                     {heading}
                   </NextLink>
                 )}
-                <Text as="p" mt="3" color="gray" size="1" className="uppercase">
+                <p className="mt-3 text-xs text-muted-foreground uppercase">
                   {format(new Date(draft.createdAt), "MMM dd")}
-                </Text>
+                </p>
               </div>
             );
           })}
