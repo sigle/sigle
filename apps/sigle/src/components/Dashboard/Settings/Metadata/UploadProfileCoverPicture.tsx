@@ -1,9 +1,9 @@
-import { Avatar } from "@radix-ui/themes";
 import { IconPencil } from "@tabler/icons-react";
 import { usePostHog } from "posthog-js/react";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Field, FieldTitle } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
@@ -71,16 +71,19 @@ export const UploadProfileCoverPicture = ({
       <div className="flex">
         <div className="relative w-full cursor-pointer" {...getRootProps()}>
           <input {...getInputProps()} />
-          <Avatar
+          {/*<Avatar
             src={resolvedPicture}
-            fallback={<IconPencil size={20} />}
-            alt="Profile image"
             size="9"
-            color="gray"
-            className={cn("w-full rounded-2 border border-gray-6", {
+          />*/}
+          <Avatar
+            className={cn("w-full border border-border", {
               "opacity-25": loadingUploadImage,
             })}
-          />
+          >
+            <AvatarFallback>
+              <IconPencil size={20} />
+            </AvatarFallback>
+          </Avatar>
           {loadingUploadImage ? (
             <div className="absolute inset-0 flex items-center justify-center">
               <Spinner />
