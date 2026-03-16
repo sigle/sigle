@@ -1,7 +1,12 @@
 import type { paths } from "@sigle/sdk";
-import { Button, IconButton, Text, Tooltip } from "@radix-ui/themes";
+import { Button, IconButton, Text } from "@radix-ui/themes";
 import { IconShare } from "@tabler/icons-react";
 import { useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Routes } from "@/lib/routes";
 import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../Shared/NextLink";
@@ -47,15 +52,20 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
         <div className="flex items-center gap-4">
           {post.collectible ? (
             <>
-              <Tooltip content="Share">
-                <IconButton
-                  variant="ghost"
-                  color="gray"
-                  size="2"
-                  onClick={() => setShareDialogOpen(true)}
-                >
-                  <IconShare size={16} />
-                </IconButton>
+              <Tooltip>
+                <TooltipTrigger
+                  render={
+                    <IconButton
+                      variant="ghost"
+                      color="gray"
+                      size="2"
+                      onClick={() => setShareDialogOpen(true)}
+                    >
+                      <IconShare size={16} />
+                    </IconButton>
+                  }
+                />
+                <TooltipContent>Share</TooltipContent>
               </Tooltip>
               <Button
                 color="gray"

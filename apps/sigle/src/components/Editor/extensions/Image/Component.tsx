@@ -1,5 +1,5 @@
-import { Spinner } from "@radix-ui/themes";
 import { type NodeViewProps, NodeViewWrapper } from "@tiptap/react";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 

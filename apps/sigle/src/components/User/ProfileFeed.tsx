@@ -1,7 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { Button, Flex, Text } from "@radix-ui/themes";
+import { Button, Text } from "@radix-ui/themes";
 import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient } from "@/lib/sigle";
 import { GetFamiliarCards } from "../Dashboard/GetFamiliarCards";
@@ -68,10 +68,10 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
 
 export const ProfileFeedSkeleton = () => {
   return (
-    <Flex direction="column">
+    <div className="flex flex-col">
       <PostListItemSkeleton />
       <PostListItemSkeleton />
       <PostListItemSkeleton />
-    </Flex>
+    </div>
   );
 };
