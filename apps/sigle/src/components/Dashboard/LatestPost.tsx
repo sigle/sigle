@@ -49,6 +49,7 @@ export const LatestPost = () => {
               </EmptyHeader>
               <EmptyContent>
                 <Button
+                  nativeButton={false}
                   render={
                     <NextLink href="/p/new">Publish your first post</NextLink>
                   }
@@ -69,6 +70,7 @@ export const LatestPost = () => {
                 <Button
                   size="lg"
                   className="mt-3 w-full"
+                  nativeButton={false}
                   render={
                     <NextLink href={Routes.post({ postId: post.id })}>
                       View post

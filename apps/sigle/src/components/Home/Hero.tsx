@@ -28,7 +28,7 @@ export const HomeHero = () => {
           render={<NextLink href={Routes.explore()}>Explore</NextLink>}
         />
         {!session ? (
-          <Button size="lg" className="mt-6" onClick={login}>
+          <Button size="lg" onClick={login}>
             Start Writing
           </Button>
         ) : (

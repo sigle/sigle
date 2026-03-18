@@ -48,7 +48,7 @@ export const PublishReviewGeneral = () => {
               variant="outline"
               onClick={openMetaSettings}
             >
-              not configured <IconPencil size={12} />
+              <IconPencil size={12} /> Not configured
             </Badge>
           )}
         </div>
@@ -66,7 +66,7 @@ export const PublishReviewGeneral = () => {
                 <TooltipTrigger
                   render={
                     <Badge variant="outline">
-                      not configured <IconInfoCircle size={12} />
+                      <IconInfoCircle size={12} /> Not configured
                     </Badge>
                   }
                 />
