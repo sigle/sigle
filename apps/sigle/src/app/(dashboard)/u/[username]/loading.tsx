@@ -21,7 +21,7 @@ export const PageProfileSkeleton = () => {
 
         {/* Profile name */}
         <div className="mt-4 space-y-1">
-          <p className="text-sm font-medium">
+          <p className="text-lg font-medium">
             <Skeleton>username username</Skeleton>
           </p>
           <p className="text-sm text-muted-foreground">
