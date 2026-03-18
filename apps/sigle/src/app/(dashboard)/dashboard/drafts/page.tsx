@@ -1,13 +1,13 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { Button, IconButton } from "@radix-ui/themes";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
 import { NextLink } from "@/components/Shared/NextLink";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -56,8 +56,8 @@ export default function DashboardDrafts() {
           {drafts?.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-4 py-7">
               <p className="text-sm text-muted-foreground">No drafts yet</p>
-              <Button color="gray" highContrast asChild>
-                <NextLink href="/p/new">Write a post</NextLink>
+              <Button variant="secondary" render={<NextLink href="/p/new" />}>
+                Write a post
               </Button>
             </div>
           ) : null}
@@ -153,9 +153,9 @@ const Draft = ({
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
-                <IconButton variant="ghost" color="gray" size="2">
+                <Button variant="ghost" size="icon">
                   <IconDotsVertical size={16} />
-                </IconButton>
+                </Button>
               }
             />
             <DropdownMenuContent align="end">

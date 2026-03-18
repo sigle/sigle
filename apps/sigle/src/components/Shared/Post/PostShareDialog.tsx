@@ -1,10 +1,15 @@
 import type { paths } from "@sigle/sdk";
-import { Dialog, IconButton, Link } from "@radix-ui/themes";
 import { IconReceiptTax } from "@tabler/icons-react";
 import Image from "next/image";
 import { useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { appConfig } from "@/config";
@@ -46,13 +51,13 @@ export const PostShareDialog = ({
   const metaTitleAttribute = post.metaTitle || post.title;
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Content size="3" className="max-w-md">
-        <Dialog.Title>Share</Dialog.Title>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogTitle>Share</DialogTitle>
         <div className="sr-only">
-          <Dialog.Description>
+          <DialogDescription>
             Earn referrer rewards for each primary sale made through your link.
-          </Dialog.Description>
+          </DialogDescription>
         </div>
 
         <div className="space-y-8">
@@ -62,68 +67,64 @@ export const PostShareDialog = ({
               <AlertDescription>
                 Earn referrer rewards for each primary sale made through your
                 link.{" "}
-                <Link
+                <a
+                  className="underline"
                   href={`${appConfig.docsUrl}/monetization#fee-structure`}
                   target="_blank"
+                  rel="noreferrer"
                 >
                   Learn more.
-                </Link>
+                </a>
               </AlertDescription>
             </Alert>
           ) : null}
 
           <div className="flex justify-center gap-5">
-            <IconButton size="4" color="gray" highContrast asChild>
-              <a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  `Collect ${metaTitleAttribute} on @sigleapp&url=${postLink}`,
-                )}`}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="overflow-hidden"
-              >
-                <Image
-                  src="/images/x-logo.png"
-                  alt="x logo"
-                  width={48}
-                  height={48}
-                />
-              </a>
-            </IconButton>
-            <IconButton size="4" color="gray" highContrast asChild>
-              <a
-                href={`https://bsky.app/intent/compose?text=${encodeURIComponent(
-                  `Collect ${metaTitleAttribute} on @sigleapp`,
-                )}&url=${postLink}`}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="overflow-hidden"
-              >
-                <Image
-                  src="/images/bluesky-logo.png"
-                  alt="bluesky logo"
-                  width={48}
-                  height={48}
-                />
-              </a>
-            </IconButton>
-            <IconButton size="4" color="gray" highContrast asChild>
-              <a
-                href={`https://t.me/share/url?text=${encodeURIComponent(
-                  `Collect ${metaTitleAttribute} on @sigleapp`,
-                )}&url=${postLink}`}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="overflow-hidden"
-              >
-                <Image
-                  src="/images/telegram-logo.png"
-                  alt="telegram logo"
-                  width={48}
-                  height={48}
-                />
-              </a>
-            </IconButton>
+            <a
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                `Collect ${metaTitleAttribute} on @sigleapp&url=${postLink}`,
+              )}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="overflow-hidden rounded-md hover:grayscale-25"
+            >
+              <Image
+                src="/images/x-logo.png"
+                alt="x logo"
+                width={48}
+                height={48}
+              />
+            </a>
+            <a
+              href={`https://bsky.app/intent/compose?text=${encodeURIComponent(
+                `Collect ${metaTitleAttribute} on @sigleapp`,
+              )}&url=${postLink}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="overflow-hidden rounded-md hover:grayscale-25"
+            >
+              <Image
+                src="/images/bluesky-logo.png"
+                alt="bluesky logo"
+                width={48}
+                height={48}
+              />
+            </a>
+            <a
+              href={`https://t.me/share/url?text=${encodeURIComponent(
+                `Collect ${metaTitleAttribute} on @sigleapp`,
+              )}&url=${postLink}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="overflow-hidden rounded-md hover:grayscale-25"
+            >
+              <Image
+                src="/images/telegram-logo.png"
+                alt="telegram logo"
+                width={48}
+                height={48}
+              />
+            </a>
           </div>
 
           <Field orientation="horizontal">
@@ -137,7 +138,7 @@ export const PostShareDialog = ({
             </Button>
           </Field>
         </div>
-      </Dialog.Content>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 };

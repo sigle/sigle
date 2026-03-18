@@ -1,10 +1,11 @@
 "use client";
 
-import { Button, Container, Link } from "@radix-ui/themes";
+import { Container } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import { use, useEffect } from "react";
 import { AuthProtect } from "@/components/Auth/AuthProtect";
 import { NextLink } from "@/components/Shared/NextLink";
+import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { sigleApiClient } from "@/lib/sigle";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
@@ -53,13 +54,14 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
             <p className="text-sm text-destructive">
               Something went wrong and your transaction was rejected.
             </p>
-            <Link
-              size="2"
+            <a
+              className="text-sm text-muted-foreground hover:underline"
               href={getExplorerTransactionUrl(post.txId)}
               target="_blank"
+              rel="noreferrer"
             >
               View transaction on explorer.
-            </Link>
+            </a>
           </div>
         ) : null}
         {post?.txId && post.txStatus === "pending" ? (
@@ -78,17 +80,21 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
               free to navigate away - your post will still be published after
               confirmation.
             </p>
-            <Link
-              size="2"
+            <a
+              className="text-sm text-muted-foreground hover:underline"
               href={getExplorerTransactionUrl(post.txId)}
               target="_blank"
+              rel="noreferrer"
             >
               View transaction on explorer.
-            </Link>
-            <Button color="gray" highContrast variant="soft" size="2" asChild>
-              <NextLink className="mt-5!" href="/">
-                Explore content on Sigle
-              </NextLink>
+            </a>
+            <Button
+              variant="secondary"
+              className="mt-5"
+              nativeButton={false}
+              render={<NextLink href="/" />}
+            >
+              Explore content on Sigle
             </Button>
           </div>
         ) : null}

@@ -1,8 +1,9 @@
 import type { Editor } from "@tiptap/react";
-import { Container, IconButton } from "@radix-ui/themes";
+import { Container } from "@radix-ui/themes";
 import { IconKeyboard, IconMoon, IconSun } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { ShortcutsDialog } from "../Shortcuts/ShortcutsDialog";
 
 interface EditorBottomInfoProps {
@@ -21,10 +22,9 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
           <p className="text-xs">
             {editor?.storage.characterCount.words()} words
           </p>
-          <IconButton
+          <Button
             variant="ghost"
-            size="1"
-            color="gray"
+            size="icon-sm"
             className="pointer-events-auto"
             onClick={() =>
               setTheme(resolvedTheme === "dark" ? "light" : "dark")
@@ -35,17 +35,16 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
             ) : (
               <IconMoon size={16} />
             )}
-          </IconButton>
+          </Button>
 
-          <IconButton
+          <Button
             variant="ghost"
-            size="1"
-            color="gray"
+            size="icon-sm"
             className="pointer-events-auto"
             onClick={() => setShowShortcutsDialog(true)}
           >
             <IconKeyboard size={16} />
-          </IconButton>
+          </Button>
         </div>
       </Container>
 

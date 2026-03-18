@@ -1,7 +1,7 @@
-import { IconButton } from "@radix-ui/themes";
 import { IconCards, IconPencil } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
@@ -35,9 +35,14 @@ export const PublishReviewCollect = () => {
           <IconCards size={20} />
           Collect settings
         </CardTitle>
-        <IconButton variant="ghost" color="gray" onClick={openCollectSettings}>
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Edit collect settings"
+          onClick={openCollectSettings}
+        >
           <IconPencil size={16} />
-        </IconButton>
+        </Button>
       </CardHeader>
       <CardContent>
         <div className="flex justify-between py-3">

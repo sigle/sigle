@@ -1,7 +1,6 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { AspectRatio, Flex } from "@radix-ui/themes";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import Image from "next/image";
@@ -33,7 +32,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
   return (
     <div className="space-y-3 border-b border-solid border-gray-6 py-5 last:border-b-0">
       <div>
-        <Flex gap="5" align="center" justify="between">
+        <div className="flex items-center justify-between gap-5">
           <div className="flex-1 space-y-2">
             <NextLink href={Routes.post({ postId: post.id })} className="block">
               <h4
@@ -91,7 +90,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
           {post.coverImage ? (
             <NextLink href={Routes.post({ postId: post.id })}>
               <div className="w-[100px] max-w-full overflow-hidden md:w-[200px]">
-                <AspectRatio ratio={16 / 10}>
+                <div className="aspect-16/10">
                   <Image
                     src={resolveImageUrl(post.coverImage.id)}
                     alt="Cover card"
@@ -101,11 +100,11 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                     width={post.coverImage.width}
                     height={post.coverImage.height}
                   />
-                </AspectRatio>
+                </div>
               </div>
             </NextLink>
           ) : null}
-        </Flex>
+        </div>
       </div>
 
       <PostShareDialog

@@ -1,6 +1,5 @@
 "use client";
 
-import { IconButton } from "@radix-ui/themes";
 import {
   IconLogout,
   IconMoon,
@@ -60,9 +59,12 @@ export const UserDropdown = () => {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <IconButton variant="ghost" size="1">
+          <button
+            type="button"
+            className="cursor-pointer transition hover:opacity-85"
+          >
             <ProfileAvatar user={user} size="2" />
-          </IconButton>
+          </button>
         }
       />
       <DropdownMenuContent align="end" className="w-40">

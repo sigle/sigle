@@ -1,6 +1,5 @@
 "use client";
 
-import { Button, IconButton } from "@radix-ui/themes";
 import { IconCameraPlus, IconHandGrab, IconTrash } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
@@ -14,6 +13,7 @@ import {
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
@@ -136,11 +136,11 @@ export const EditorCoverImage = () => {
       >
         {!preview && !resolvedWatchCoverImage ? (
           !isDragActive ? (
-            <Button color="gray" variant="soft" onClick={open}>
+            <Button size="lg" variant="secondary" onClick={open}>
               Add cover image <IconCameraPlus size={16} />
             </Button>
           ) : (
-            <Button color="gray" variant="outline">
+            <Button size="lg" variant="outline">
               Drop your cover image here <IconHandGrab size={16} />
             </Button>
           )
@@ -156,14 +156,9 @@ export const EditorCoverImage = () => {
             />
             {!loadingUploadImage ? (
               <div className="absolute top-2 right-2">
-                <IconButton
-                  size="3"
-                  color="gray"
-                  highContrast
-                  onClick={onRemove}
-                >
+                <Button size="icon-lg" variant="secondary" onClick={onRemove}>
                   <IconTrash size={16} />
-                </IconButton>
+                </Button>
               </div>
             ) : (
               <div className="absolute inset-0 flex items-center justify-center">
