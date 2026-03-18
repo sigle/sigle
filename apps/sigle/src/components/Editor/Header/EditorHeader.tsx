@@ -1,6 +1,5 @@
 "use client";
 
-import { IconButton } from "@radix-ui/themes";
 import {
   IconArrowLeft,
   IconLayoutSidebarRightExpand,
@@ -8,6 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { NextLink } from "@/components/Shared/NextLink";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
@@ -59,31 +59,25 @@ export const EditorHeader = () => {
       )}
     >
       <div className="flex flex-1 items-center justify-between">
-        <div className="flex items-center gap-6">
-          <IconButton
-            size="2"
+        <div className="flex items-center gap-4">
+          <Button
             variant="ghost"
-            color="gray"
-            highContrast
-            asChild
+            size="icon"
+            render={<NextLink href="/dashboard/drafts" />}
           >
-            <NextLink href="/dashboard/drafts">
-              <IconArrowLeft size={headerIconSize} />
-            </NextLink>
-          </IconButton>
+            <IconArrowLeft size={headerIconSize} />
+          </Button>
           {type === "draft" ? <EditorSave /> : null}
         </div>
         <div className="flex items-center gap-6">
           <EditorPublish />
-          <IconButton
-            size="2"
+          <Button
             variant="ghost"
-            color="gray"
-            highContrast
+            size="icon"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             <IconLayoutSidebarRightExpand size={headerIconSize} />
-          </IconButton>
+          </Button>
         </div>
       </div>
     </header>

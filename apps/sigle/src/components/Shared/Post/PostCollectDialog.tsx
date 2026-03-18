@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Dialog, IconButton, Skeleton } from "@radix-ui/themes";
+import { Dialog, Skeleton } from "@radix-ui/themes";
 import { type paths, fixedMintFee, formatBTC } from "@sigle/sdk";
 import {
   IconHelpCircle,
@@ -13,6 +13,7 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
@@ -231,22 +232,18 @@ export const PostCollectDialog = ({
               ) : null}
             </p>
             <div className="flex items-center space-x-2">
-              <IconButton
-                size="1"
+              <Button
+                size="icon-xs"
                 variant="outline"
-                color="gray"
-                highContrast
                 onClick={decrementEditions}
                 disabled={editions === 1}
               >
                 <IconMinus className="size-4" />
-              </IconButton>
+              </Button>
               <p className="w-6 text-center text-sm font-medium">{editions}</p>
-              <IconButton
-                size="1"
+              <Button
+                size="icon-xs"
                 variant="outline"
-                color="gray"
-                highContrast
                 onClick={incrementEditions}
                 disabled={
                   (!post.collectible.openEdition &&
@@ -255,7 +252,7 @@ export const PostCollectDialog = ({
                 }
               >
                 <IconPlus className="size-4" />
-              </IconButton>
+              </Button>
             </div>
           </div>
 
@@ -329,8 +326,8 @@ export const PostCollectDialog = ({
           <div className="space-y-2">
             <Button
               className="w-full"
-              size="3"
-              loading={loadingCollect}
+              size="lg"
+              disabled={loadingCollect}
               onClick={onCollect}
             >
               {isPostOwner ? "Collect as owner" : "Collect"}

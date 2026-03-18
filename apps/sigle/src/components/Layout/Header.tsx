@@ -1,11 +1,11 @@
 "use client";
 
-import { Button, IconButton } from "@radix-ui/themes";
 import { IconMoon, IconSun } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { Suspense, useLayoutEffect } from "react";
+import { Button } from "@/components/ui/button";
 import { useIsClient } from "@/hooks/useIsClient";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
 import { LogoImage } from "@/images/Logo";
@@ -40,48 +40,34 @@ export const Header = () => {
         <NextLink href="/">
           <LogoImage height={28} />
         </NextLink>
-        <Button variant="ghost" color="gray" highContrast asChild>
-          <NextLink href={Routes.explore()}>Explore</NextLink>
+        <Button
+          variant="ghost"
+          nativeButton={false}
+          render={<NextLink href={Routes.explore()} />}
+        >
+          Explore
         </Button>
       </div>
       {!session ? (
         <div className="flex items-center gap-6">
-          <Button
-            variant="ghost"
-            color="gray"
-            highContrast
-            // disabled={loadingSession}
-            onClick={login}
-          >
+          <Button variant="ghost" onClick={login}>
             Write on Sigle
           </Button>
-          <Button
-            color="gray"
-            highContrast
-            // disabled={loadingSession}
-            onClick={login}
-          >
-            Sign In
-          </Button>
-          <IconButton
-            variant="ghost"
-            color="gray"
-            highContrast
-            onClick={onThemeChange}
-          >
+          <Button onClick={login}>Sign In</Button>
+          <Button variant="ghost" size="icon" onClick={onThemeChange}>
             {/* To avoid hydratation issues we always render the sun icon on the server */}
             {!isClient || resolvedTheme === "light" ? (
               <IconSun size={16} />
             ) : (
               <IconMoon size={16} />
             )}
-          </IconButton>
+          </Button>
         </div>
       ) : null}
       {session ? (
         <div className="flex items-center gap-5">
-          <Button color="gray" highContrast asChild>
-            <NextLink href="/dashboard">Dashboard</NextLink>
+          <Button nativeButton={false} render={<NextLink href="/dashboard" />}>
+            Dashboard
           </Button>
           <Suspense fallback={null}>
             <UserDropdown />

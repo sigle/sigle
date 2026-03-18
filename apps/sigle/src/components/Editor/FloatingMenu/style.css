@@ -5,5 +5,5 @@
   @apply bg-transparent;
 }
 .tippy-box[data-theme~="sigle-editor-floating-menu"] .tippy-content {
-  @apply mt-5 mr-1 bg-transparent p-0;
+  @apply bg-transparent p-0;
 }

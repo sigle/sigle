@@ -1,10 +1,11 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { Button, Container, IconButton } from "@radix-ui/themes";
+import { Container } from "@radix-ui/themes";
 import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
 import Image from "next/image";
 import { usePostHog } from "posthog-js/react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -73,19 +74,20 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
 
           <div className="mt-4 flex items-center gap-4">
             {isCurrentUser ? (
-              <Button color="gray" variant="soft" asChild>
-                <NextLink href="/dashboard/settings">
-                  Edit profile <IconPencil size={16} />
-                </NextLink>
+              <Button
+                variant="secondary"
+                render={<NextLink href="/dashboard/settings" />}
+              >
+                Edit profile <IconPencil size={16} />
               </Button>
             ) : null}
 
             <DropdownMenu>
               <DropdownMenuTrigger
                 render={
-                  <IconButton variant="ghost" color="gray" size="2">
+                  <Button variant="ghost" size="icon" title="More">
                     <IconDotsVertical size={16} />
-                  </IconButton>
+                  </Button>
                 }
               />
               <DropdownMenuContent align="end" className="min-w-40">

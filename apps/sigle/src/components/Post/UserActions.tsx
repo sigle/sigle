@@ -1,7 +1,7 @@
 import type { paths } from "@sigle/sdk";
-import { Button, IconButton } from "@radix-ui/themes";
 import { IconShare } from "@tabler/icons-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -55,21 +55,18 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
               <Tooltip>
                 <TooltipTrigger
                   render={
-                    <IconButton
+                    <Button
                       variant="ghost"
-                      color="gray"
-                      size="2"
+                      size="icon"
                       onClick={() => setShareDialogOpen(true)}
                     >
                       <IconShare size={16} />
-                    </IconButton>
+                    </Button>
                   }
                 />
                 <TooltipContent>Share</TooltipContent>
               </Tooltip>
               <Button
-                color="gray"
-                highContrast
                 disabled={!canCollect}
                 onClick={() => setCollectDialogOpen(true)}
               >
@@ -77,12 +74,7 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
               </Button>
             </>
           ) : (
-            <Button
-              variant="ghost"
-              color="gray"
-              size="2"
-              onClick={() => setShareDialogOpen(true)}
-            >
+            <Button variant="ghost" onClick={() => setShareDialogOpen(true)}>
               <IconShare size={16} /> Share
             </Button>
           )}

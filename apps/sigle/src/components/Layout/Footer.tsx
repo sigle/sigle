@@ -1,9 +1,10 @@
-import { Container, IconButton, Link } from "@radix-ui/themes";
+import { Container } from "@radix-ui/themes";
 import {
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
   IconBrandXFilled,
 } from "@tabler/icons-react";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { appConfig } from "@/config";
 
@@ -18,64 +19,95 @@ export const Footer = () => {
               <p className="text-sm text-muted-foreground">
                 © {new Date().getFullYear()} Sigle
               </p>
-              <IconButton variant="ghost" color="gray" asChild>
-                <a href={appConfig.twitterUrl} target="_blank" rel="noreferrer">
-                  <IconBrandXFilled size={16} />
-                </a>
-              </IconButton>
-              <IconButton variant="ghost" color="gray" asChild>
-                <a href={appConfig.discordUrl} target="_blank" rel="noreferrer">
-                  <IconBrandDiscordFilled size={16} />
-                </a>
-              </IconButton>
-              <IconButton variant="ghost" color="gray" asChild>
-                <a href={appConfig.githubUrl} target="_blank" rel="noreferrer">
-                  <IconBrandGithubFilled size={16} />
-                </a>
-              </IconButton>
+              <Button
+                variant="ghost"
+                size="icon"
+                nativeButton={false}
+                render={
+                  <a
+                    href={appConfig.twitterUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  />
+                }
+              >
+                <IconBrandXFilled className="text-muted-foreground" size={16} />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                nativeButton={false}
+                render={
+                  <a
+                    href={appConfig.discordUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  />
+                }
+              >
+                <IconBrandDiscordFilled
+                  className="text-muted-foreground"
+                  size={16}
+                />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                nativeButton={false}
+                render={
+                  <a
+                    href={appConfig.githubUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  />
+                }
+              >
+                <IconBrandGithubFilled
+                  className="text-muted-foreground"
+                  size={16}
+                />
+              </Button>
             </div>
           </div>
 
           <ul className="grid grid-cols-2 gap-x-6 gap-y-2 md:grid-cols-4">
             <li>
-              <Link
-                size="2"
-                color="gray"
+              <a
+                className="text-sm text-muted-foreground underline-offset-2 hover:underline"
                 href={appConfig.docsUrl}
                 target="_blank"
               >
                 Docs
-              </Link>
+              </a>
             </li>
             <li>
-              <Link
-                size="2"
-                color="gray"
+              <a
+                className="text-sm text-muted-foreground underline-offset-2 hover:underline"
                 href="https://blog.sigle.io"
                 target="_blank"
+                rel="noreferrer"
               >
                 Blog
-              </Link>
+              </a>
             </li>
             <li>
-              <Link
-                size="2"
-                color="gray"
+              <a
+                className="text-sm text-muted-foreground underline-offset-2 hover:underline"
                 href={appConfig.discordUrl}
                 target="_blank"
               >
                 Support
-              </Link>
+              </a>
             </li>
             <li>
-              <Link
-                size="2"
-                color="gray"
+              <a
+                className="text-sm text-muted-foreground underline-offset-2 hover:underline"
                 href="https://app.sigle.io/feedback"
                 target="_blank"
+                rel="noreferrer"
               >
                 Feedback
-              </Link>
+              </a>
             </li>
           </ul>
         </div>

@@ -1,5 +1,5 @@
 import type { paths } from "@sigle/sdk";
-import { Dialog, IconButton, Link } from "@radix-ui/themes";
+import { Dialog } from "@radix-ui/themes";
 import { IconReceiptTax } from "@tabler/icons-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -62,68 +62,63 @@ export const PostShareDialog = ({
               <AlertDescription>
                 Earn referrer rewards for each primary sale made through your
                 link.{" "}
-                <Link
+                <a
+                  className="underline"
                   href={`${appConfig.docsUrl}/monetization#fee-structure`}
                   target="_blank"
                 >
                   Learn more.
-                </Link>
+                </a>
               </AlertDescription>
             </Alert>
           ) : null}
 
           <div className="flex justify-center gap-5">
-            <IconButton size="4" color="gray" highContrast asChild>
-              <a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  `Collect ${metaTitleAttribute} on @sigleapp&url=${postLink}`,
-                )}`}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="overflow-hidden"
-              >
-                <Image
-                  src="/images/x-logo.png"
-                  alt="x logo"
-                  width={48}
-                  height={48}
-                />
-              </a>
-            </IconButton>
-            <IconButton size="4" color="gray" highContrast asChild>
-              <a
-                href={`https://bsky.app/intent/compose?text=${encodeURIComponent(
-                  `Collect ${metaTitleAttribute} on @sigleapp`,
-                )}&url=${postLink}`}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="overflow-hidden"
-              >
-                <Image
-                  src="/images/bluesky-logo.png"
-                  alt="bluesky logo"
-                  width={48}
-                  height={48}
-                />
-              </a>
-            </IconButton>
-            <IconButton size="4" color="gray" highContrast asChild>
-              <a
-                href={`https://t.me/share/url?text=${encodeURIComponent(
-                  `Collect ${metaTitleAttribute} on @sigleapp`,
-                )}&url=${postLink}`}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="overflow-hidden"
-              >
-                <Image
-                  src="/images/telegram-logo.png"
-                  alt="telegram logo"
-                  width={48}
-                  height={48}
-                />
-              </a>
-            </IconButton>
+            <a
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                `Collect ${metaTitleAttribute} on @sigleapp&url=${postLink}`,
+              )}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="overflow-hidden rounded-md hover:grayscale-25"
+            >
+              <Image
+                src="/images/x-logo.png"
+                alt="x logo"
+                width={48}
+                height={48}
+              />
+            </a>
+            <a
+              href={`https://bsky.app/intent/compose?text=${encodeURIComponent(
+                `Collect ${metaTitleAttribute} on @sigleapp`,
+              )}&url=${postLink}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="overflow-hidden rounded-md hover:grayscale-25"
+            >
+              <Image
+                src="/images/bluesky-logo.png"
+                alt="bluesky logo"
+                width={48}
+                height={48}
+              />
+            </a>
+            <a
+              href={`https://t.me/share/url?text=${encodeURIComponent(
+                `Collect ${metaTitleAttribute} on @sigleapp`,
+              )}&url=${postLink}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="overflow-hidden rounded-md hover:grayscale-25"
+            >
+              <Image
+                src="/images/telegram-logo.png"
+                alt="telegram logo"
+                width={48}
+                height={48}
+              />
+            </a>
           </div>
 
           <Field orientation="horizontal">
