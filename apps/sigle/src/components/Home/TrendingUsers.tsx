@@ -6,14 +6,14 @@ import { sigleApiClient } from "@/lib/sigle";
 import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../Shared/NextLink";
 import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";
+import { Button } from "../ui/button";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "../ui";
-import { Button } from "../ui/button";
+} from "../ui/carousel";
 
 export const HomeTrendingUsers = () => {
   const { data: users } = sigleApiClient.useSuspenseQuery(
@@ -71,8 +71,8 @@ export const HomeTrendingUsers = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious color="gray" highContrast />
-        <CarouselNext color="gray" highContrast />
+        <CarouselPrevious />
+        <CarouselNext />
       </Carousel>
     </div>
   );

@@ -42,31 +42,29 @@ export const PostCard = ({ post }: PostCardProps) => {
         <div className="relative aspect-video w-full object-cover" />
       )}
       <CardContent>
-        <div className="flex-1 space-y-2">
-          <NextLink href={Routes.post({ postId: post.id })} className="block">
-            <h3 className="line-clamp-2 text-lg font-bold wrap-break-word">
-              {post.metaTitle || post.title}
-            </h3>
+        <h3 className="mb-1 line-clamp-2 text-lg font-medium wrap-break-word">
+          <NextLink href={Routes.post({ postId: post.id })}>
+            {post.metaTitle || post.title}
           </NextLink>
-          <NextLink href={Routes.post({ postId: post.id })} className="block">
-            <p className="line-clamp-1 md:line-clamp-2">
-              {post.metaDescription || post.excerpt}
-            </p>
+        </h3>
+        <p className="line-clamp-1 text-sm text-muted-foreground md:line-clamp-2">
+          <NextLink href={Routes.post({ postId: post.id })}>
+            {post.metaDescription || post.excerpt}
           </NextLink>
-          <div className="mt-3">
-            <p className="text-xs text-muted-foreground">
-              By{" "}
-              <NextLink
-                className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
-                href={Routes.userProfile({ username: post.user.id })}
-              >
-                {post.user.profile?.displayName
-                  ? post.user.profile?.displayName
-                  : formatReadableAddress(post.user.id)}
-              </NextLink>{" "}
-              • {format(new Date(post.createdAt), "MMM dd, yyyy")}
-            </p>
-          </div>
+        </p>
+        <div className="mt-3">
+          <p className="text-xs text-muted-foreground">
+            By{" "}
+            <NextLink
+              className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
+              href={Routes.userProfile({ username: post.user.id })}
+            >
+              {post.user.profile?.displayName
+                ? post.user.profile?.displayName
+                : formatReadableAddress(post.user.id)}
+            </NextLink>{" "}
+            • {format(new Date(post.createdAt), "MMM dd, yyyy")}
+          </p>
         </div>
         {post.collectible ? (
           <>

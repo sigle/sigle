@@ -8,7 +8,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "../ui";
+} from "../ui/carousel";
 
 export const HomeTrendingPosts = () => {
   const { data: posts } = sigleApiClient.useSuspenseQuery(
@@ -27,7 +27,6 @@ export const HomeTrendingPosts = () => {
     <div className="mx-auto mt-10 max-w-6xl px-4 md:mt-20">
       <h3 className="text-lg font-bold">Trending</h3>
 
-      {/* TODO shadcn component */}
       <Carousel
         className="mt-4 w-full"
         opts={{
@@ -41,8 +40,8 @@ export const HomeTrendingPosts = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious color="gray" highContrast />
-        <CarouselNext color="gray" highContrast />
+        <CarouselPrevious />
+        <CarouselNext />
       </Carousel>
     </div>
   );
