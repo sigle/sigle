@@ -1,16 +1,17 @@
-import { Container, IconButton, Link, Separator } from "@radix-ui/themes";
+import { Container, IconButton, Link } from "@radix-ui/themes";
 import {
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
   IconBrandXFilled,
 } from "@tabler/icons-react";
+import { Separator } from "@/components/ui/separator";
 import { appConfig } from "@/config";
 
 export const Footer = () => {
   return (
     <footer>
       <Container className="px-4">
-        <Separator size="4" color="gray" />
+        <Separator />
         <div className="flex flex-col items-center justify-between py-7 md:flex-row">
           <div className="mb-4 md:mb-0">
             <div className="flex items-center space-x-4">

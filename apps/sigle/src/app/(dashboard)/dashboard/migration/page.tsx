@@ -1,12 +1,12 @@
 "use client";
 
-import { Separator } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiFetchClient } from "@/lib/sigle";
@@ -240,7 +240,7 @@ export default function MigrationPage() {
                   Migrate
                 </Button>
               </div>
-              <Separator size="4" />
+              <Separator />
             </div>
           ))}
         </div>

@@ -4,7 +4,6 @@ import {
   Button,
   Dialog,
   IconButton,
-  Separator,
   Skeleton,
   Tooltip,
 } from "@radix-ui/themes";
@@ -20,6 +19,7 @@ import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { appConfig } from "@/config";
 import { useContractCall } from "@/hooks/useContractCall";
 import {
@@ -199,7 +199,7 @@ export const PostCollectDialog = ({
             </p>
           </div>
 
-          <Separator size="4" />
+          <Separator />
 
           <div className="flex items-center justify-between">
             <p className="text-sm font-medium">Price</p>
@@ -260,7 +260,7 @@ export const PostCollectDialog = ({
             </div>
           </div>
 
-          <Separator size="4" />
+          <Separator />
 
           <div className="flex items-start justify-between">
             <p className="flex items-center gap-1 text-base font-medium">

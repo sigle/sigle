@@ -1,4 +1,5 @@
-import { Container, Separator, Skeleton } from "@radix-ui/themes";
+import { Container, Skeleton } from "@radix-ui/themes";
+import { Separator } from "@/components/ui/separator";
 
 export const PagePostSkeleton = () => {
   return (
@@ -31,7 +32,7 @@ export const PagePostSkeleton = () => {
           </div>
         </div>
 
-        <Separator size="4" className="mb-8" />
+        <Separator className="mb-8" />
 
         {/* Content */}
         <div className="space-y-3">
