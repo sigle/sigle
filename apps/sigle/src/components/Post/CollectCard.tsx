@@ -1,6 +1,11 @@
-import { Button, Progress } from "@radix-ui/themes";
+import { Button } from "@radix-ui/themes";
 import { type paths, formatBTC } from "@sigle/sdk";
 import { useState } from "react";
+import {
+  Progress,
+  ProgressIndicator,
+  ProgressTrack,
+} from "@/components/ui/progress";
 import { cn } from "@/lib/cn";
 import { PostCollectDialog } from "../Shared/Post/PostCollectDialog";
 
@@ -58,13 +63,7 @@ export const PostCollectCard = ({ post }: PostCollectCardProps) => {
           </div>
         </div>
         {!post.collectible.openEdition ? (
-          <Progress
-            variant="soft"
-            color="gray"
-            highContrast
-            size="3"
-            value={mintPercentage}
-          />
+          <Progress value={mintPercentage} />
         ) : null}
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
