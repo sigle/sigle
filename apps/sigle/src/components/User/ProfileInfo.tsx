@@ -1,7 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { Heading, Link } from "@radix-ui/themes";
+import { Link } from "@radix-ui/themes";
 import { IconLink } from "@tabler/icons-react";
 import { prettifyUrl } from "@/lib/urls";
 import { NextLink } from "../Shared/NextLink";
@@ -16,7 +16,7 @@ export const ProfileInfo = ({ user }: ProfileInfoProps) => {
     <>
       <div className="mt-4 space-y-1">
         {user.profile?.displayName && (
-          <Heading size="6">{user.profile.displayName}</Heading>
+          <p className="text-sm font-medium">{user.profile.displayName}</p>
         )}
         <p className="text-sm text-muted-foreground">{user.id}</p>
       </div>

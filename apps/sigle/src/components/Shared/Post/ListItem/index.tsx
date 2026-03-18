@@ -1,14 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import {
-  AspectRatio,
-  Flex,
-  Heading,
-  IconButton,
-  Link,
-  Tooltip,
-} from "@radix-ui/themes";
+import { AspectRatio, Flex, IconButton, Link, Tooltip } from "@radix-ui/themes";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import Image from "next/image";
@@ -42,15 +35,14 @@ export const PostListItem = ({ post }: PostListItemProps) => {
         <Flex gap="5" align="center" justify="between">
           <div className="flex-1 space-y-2">
             <NextLink href={Routes.post({ postId: post.id })} className="block">
-              <Heading
-                size="4"
-                className="line-clamp-2 wrap-break-word"
+              <h4
+                className="line-clamp-2 text-lg wrap-break-word"
                 style={{
                   wordBreak: "break-word",
                 }}
               >
                 {post.metaTitle || post.title}
-              </Heading>
+              </h4>
             </NextLink>
             <NextLink href={Routes.post({ postId: post.id })} className="block">
               <p className="line-clamp-1 text-sm md:line-clamp-2">

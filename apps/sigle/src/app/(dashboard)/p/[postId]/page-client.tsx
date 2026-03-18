@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Container, Heading, Separator } from "@radix-ui/themes";
+import { Button, Container, Separator } from "@radix-ui/themes";
 import { IconArrowLeft } from "@tabler/icons-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -74,9 +74,7 @@ export function PostClientPage(props: Props) {
             </div>
           ) : null}
 
-          <Heading as="h1" size="8" className="text-pretty">
-            {post.title}
-          </Heading>
+          <h1 className="text-xs font-medium text-pretty">{post.title}</h1>
 
           <PostUserActions post={post} />
         </header>

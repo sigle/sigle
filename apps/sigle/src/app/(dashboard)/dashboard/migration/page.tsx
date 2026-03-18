@@ -1,6 +1,6 @@
 "use client";
 
-import { Heading, Separator } from "@radix-ui/themes";
+import { Separator } from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useState } from "react";
@@ -186,7 +186,7 @@ export default function MigrationPage() {
 
   return (
     <div className="py-10">
-      <Heading>Migration</Heading>
+      <h2 className="text-2xl font-bold">Migration</h2>
       <p className="mt-2 text-sm text-muted-foreground">
         One click migration for your old posts
       </p>
@@ -225,9 +225,9 @@ export default function MigrationPage() {
             <div key={post.id}>
               <div className="flex items-center justify-between py-4">
                 <div>
-                  <Heading size="2" weight="medium" title={post.id}>
+                  <h3 className="text-xl font-medium" title={post.id}>
                     {post.title}
-                  </Heading>
+                  </h3>
                   <p className="mt-2 text-sm text-muted-foreground">
                     {format(post.createdAt, "MMM dd yyyy")}
                   </p>

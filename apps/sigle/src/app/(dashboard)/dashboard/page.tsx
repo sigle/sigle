@@ -1,6 +1,5 @@
 "use client";
 
-import { Heading } from "@radix-ui/themes";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { GetFamiliarCards } from "@/components/Dashboard/GetFamiliarCards";
 import { LatestDrafts } from "@/components/Dashboard/LatestDrafts";
@@ -14,7 +13,7 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-5 py-10">
-      <Heading>Dashboard</Heading>
+      <h2 className="text-2xl font-bold">Dashboard</h2>
 
       {!isLoadingWhitelist && !userWhitelist?.whitelisted ? (
         <Alert>

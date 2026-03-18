@@ -1,4 +1,4 @@
-import { Button, Heading, Progress } from "@radix-ui/themes";
+import { Button, Progress } from "@radix-ui/themes";
 import { type paths, formatBTC } from "@sigle/sdk";
 import { useState } from "react";
 import { cn } from "@/lib/cn";
@@ -28,9 +28,9 @@ export const PostCollectCard = ({ post }: PostCollectCardProps) => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="space-y-1">
-            <Heading as="h4" size="3" weight="medium">
+            <h4 className="text-xl font-medium">
               {canCollect ? "Collect this post" : "Collect ended"}
-            </Heading>
+            </h4>
             {canCollect ? (
               <p className="text-sm text-muted-foreground">
                 {post.collectible.collected > 0

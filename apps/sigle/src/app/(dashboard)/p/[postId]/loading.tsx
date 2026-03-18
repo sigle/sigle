@@ -1,4 +1,4 @@
-import { Container, Heading, Separator, Skeleton } from "@radix-ui/themes";
+import { Container, Separator, Skeleton } from "@radix-ui/themes";
 
 export const PagePostSkeleton = () => {
   return (
@@ -21,9 +21,9 @@ export const PagePostSkeleton = () => {
           </div>
 
           {/* Title */}
-          <Heading as="h1" size="8" className="text-pretty">
+          <h1 className="text-xs font-medium text-pretty">
             <Skeleton>Lorem ipsum dolor sit amet</Skeleton>
-          </Heading>
+          </h1>
 
           {/* User Actions */}
           <div className="flex gap-4">

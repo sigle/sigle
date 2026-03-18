@@ -3,7 +3,6 @@
 import {
   Button,
   Dialog,
-  Heading,
   IconButton,
   Separator,
   Skeleton,
@@ -193,9 +192,9 @@ export const PostCollectDialog = ({
             </div>
           ) : null}
           <div>
-            <Heading size="3" className="line-clamp-2">
+            <h3 className="line-clamp-2 text-xl font-medium">
               {post.metaTitle || post.title}
-            </Heading>
+            </h3>
             <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
               {post.excerpt}
             </p>

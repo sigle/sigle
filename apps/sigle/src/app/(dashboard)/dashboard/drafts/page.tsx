@@ -1,7 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { Button, Heading, IconButton } from "@radix-ui/themes";
+import { Button, IconButton } from "@radix-ui/themes";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
@@ -36,7 +36,7 @@ export default function DashboardDrafts() {
 
   return (
     <div className="py-10">
-      <Heading>Drafts</Heading>
+      <h2 className="text-2xl font-bold">Drafts</h2>
       <Card className="mt-5">
         <CardContent>
           {loadingDrafts ? (
@@ -111,14 +111,9 @@ const Draft = ({
 
   const heading =
     draft.metaTitle || draft.title ? (
-      <Heading as="h3" size="4" className="line-clamp-2">
-        {" "}
-        {draft.metaTitle || draft.title}{" "}
-      </Heading>
+      <h3 className="line-clamp-2 text-lg">{draft.metaTitle || draft.title}</h3>
     ) : (
-      <Heading as="h3" size="4" className="line-clamp-2" color="gray">
-        No title
-      </Heading>
+      <h3 className="line-clamp-2 text-lg text-muted-foreground">No title</h3>
     );
 
   return (
