@@ -1,5 +1,4 @@
 import type { paths } from "@sigle/sdk";
-import { Text } from "@radix-ui/themes";
 import { Routes } from "@/lib/routes";
 import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../Shared/NextLink";
@@ -27,26 +26,33 @@ export const PostUserInfoCard = ({ post }: PostUserInfoCardProps) => {
               <ProfileAvatar user={post.user} size="2" />
             </NextLink>
             <div className="grid gap-0.5">
-              <Text size="2" weight="medium" asChild>
-                <NextLink href={Routes.userProfile({ username: post.user.id })}>
-                  {post.user.profile?.displayName}
-                </NextLink>
-              </Text>
-              <Text size="1" color="gray" title={post.user.id} asChild>
+              {post.user.profile?.displayName ? (
+                <p className="font-medium">
+                  <NextLink
+                    href={Routes.userProfile({ username: post.user.id })}
+                  >
+                    {post.user.profile?.displayName}
+                  </NextLink>
+                </p>
+              ) : null}
+              <p className="text-xs text-muted-foreground" title={post.user.id}>
                 <NextLink href={Routes.userProfile({ username: post.user.id })}>
                   {formatReadableAddress(post.user.id)}
                 </NextLink>
-              </Text>
+              </p>
             </div>
           </div>
         </div>
 
         {post.user.profile?.description ? (
-          <Text as="p" color="gray" size="2" className="mt-3" asChild>
+          <div
+            className="mt-3 text-xs text-muted-foreground"
+            title={post.user.id}
+          >
             <ProfileMarkdownDescription
               content={post.user.profile.description}
             />
-          </Text>
+          </div>
         ) : null}
       </CardContent>
     </Card>

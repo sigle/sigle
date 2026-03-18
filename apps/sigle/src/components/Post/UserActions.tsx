@@ -1,5 +1,5 @@
 import type { paths } from "@sigle/sdk";
-import { Button, IconButton, Text } from "@radix-ui/themes";
+import { Button, IconButton } from "@radix-ui/themes";
 import { IconShare } from "@tabler/icons-react";
 import { useState } from "react";
 import {
@@ -37,16 +37,16 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
             <ProfileAvatar user={post.user} size="2" />
           </NextLink>
           <div className="grid gap-0.5">
-            <Text size="2" weight="medium" asChild>
-              <NextLink href={Routes.userProfile({ username: post.user.id })}>
+            <NextLink href={Routes.userProfile({ username: post.user.id })}>
+              <p className="text-sm font-medium">
                 {post.user.profile?.displayName}
-              </NextLink>
-            </Text>
-            <Text size="1" color="gray" title={post.user.id} asChild>
-              <NextLink href={Routes.userProfile({ username: post.user.id })}>
+              </p>
+            </NextLink>
+            <NextLink href={Routes.userProfile({ username: post.user.id })}>
+              <p className="text-xs text-muted-foreground" title={post.user.id}>
                 {formatReadableAddress(post.user.id)}
-              </NextLink>
-            </Text>
+              </p>
+            </NextLink>
           </div>
         </div>
         <div className="flex items-center gap-4">

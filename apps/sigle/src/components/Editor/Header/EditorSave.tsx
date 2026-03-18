@@ -1,4 +1,3 @@
-import { Text } from "@radix-ui/themes";
 import { parseBTC } from "@sigle/sdk";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useParams, useSearchParams } from "next/navigation";
@@ -94,12 +93,12 @@ export const EditorSave = () => {
   }
 
   return (
-    <Text size="2">
+    <p className="text-sm">
       {saveState === "idle"
         ? ""
         : saveState === "saved"
           ? "Saved"
           : "Saving..."}
-    </Text>
+    </p>
   );
 };

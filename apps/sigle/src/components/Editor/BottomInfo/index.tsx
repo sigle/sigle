@@ -1,5 +1,5 @@
 import type { Editor } from "@tiptap/react";
-import { Container, IconButton, Text } from "@radix-ui/themes";
+import { Container, IconButton } from "@radix-ui/themes";
 import { IconKeyboard, IconMoon, IconSun } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
@@ -18,7 +18,9 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
     <div className="not-prose">
       <Container className="fixed inset-x-0 bottom-0 mb-8">
         <div className="pointer-events-none flex items-center justify-end gap-3">
-          <Text size="1">{editor?.storage.characterCount.words()} words</Text>
+          <p className="text-xs">
+            {editor?.storage.characterCount.words()} words
+          </p>
           <IconButton
             variant="ghost"
             size="1"

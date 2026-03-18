@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Container, Link, Text } from "@radix-ui/themes";
+import { Button, Container, Link } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import { use, useEffect } from "react";
 import { AuthProtect } from "@/components/Auth/AuthProtect";
@@ -50,9 +50,9 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
       <Container px="4">
         {post?.txId && post.txStatus === "rejected" ? (
           <div className="mx-auto flex max-w-sm flex-col items-center justify-center space-y-2 py-[200px]">
-            <Text as="div" size="2" color="red">
+            <p className="text-sm text-destructive">
               Something went wrong and your transaction was rejected.
-            </Text>
+            </p>
             <Link
               size="2"
               href={getExplorerTransactionUrl(post.txId)}
@@ -67,19 +67,17 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
             <div className="mb-2">
               <Spinner />
             </div>
-            <Text as="div" size="2">
-              Your post is being published...
-            </Text>
-            <Text align="center" color="gray" size="2">
+            <p className="text-sm">Your post is being published...</p>
+            <p className="text-center text-sm text-muted-foreground">
               Your post has been submitted to the blockchain.
               <br />
               It may take up to 15 minutes for the transaction to succeed.
-            </Text>
-            <Text align="center" color="gray" size="2">
+            </p>
+            <p className="text-center text-sm text-muted-foreground">
               You&apos;ll be redirected once the transaction is complete. Feel
               free to navigate away - your post will still be published after
               confirmation.
-            </Text>
+            </p>
             <Link
               size="2"
               href={getExplorerTransactionUrl(post.txId)}

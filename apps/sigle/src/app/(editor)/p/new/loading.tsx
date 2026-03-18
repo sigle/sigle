@@ -1,4 +1,4 @@
-import { Container, Skeleton, Text } from "@radix-ui/themes";
+import { Container, Skeleton } from "@radix-ui/themes";
 
 export const PageEditorSkeleton = () => {
   return (
@@ -17,7 +17,7 @@ export const PageEditorSkeleton = () => {
           <Skeleton className="h-[450px]" />
 
           {/* Text */}
-          <Text as="div" size="1">
+          <div className="text-xs">
             <Skeleton>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
@@ -27,7 +27,7 @@ export const PageEditorSkeleton = () => {
               nulla pariatur. Excepteur sint occaecat cupidatat non proident,
               sunt in culpa qui officia deserunt mollit anim id est laborum.
             </Skeleton>
-          </Text>
+          </div>
         </div>
       </Container>
     </>

@@ -1,7 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { Heading, Link, Text } from "@radix-ui/themes";
+import { Link } from "@radix-ui/themes";
 import { IconLink } from "@tabler/icons-react";
 import { prettifyUrl } from "@/lib/urls";
 import { NextLink } from "../Shared/NextLink";
@@ -16,17 +16,15 @@ export const ProfileInfo = ({ user }: ProfileInfoProps) => {
     <>
       <div className="mt-4 space-y-1">
         {user.profile?.displayName && (
-          <Heading size="6">{user.profile.displayName}</Heading>
+          <p className="text-lg font-medium">{user.profile.displayName}</p>
         )}
-        <Text as="p" color="gray" size="2">
-          {user.id}
-        </Text>
+        <p className="text-sm text-muted-foreground">{user.id}</p>
       </div>
 
       {user.profile?.description ? (
-        <Text mt="3" as="p" color="gray" size="2" asChild>
+        <div className="mt-3 text-sm text-muted-foreground">
           <ProfileMarkdownDescription content={user.profile.description} />
-        </Text>
+        </div>
       ) : null}
 
       {user.profile && (user.profile.twitter || user.profile.website) ? (

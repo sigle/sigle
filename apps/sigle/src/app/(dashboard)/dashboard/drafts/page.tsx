@@ -1,7 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { Button, Heading, IconButton, Text } from "@radix-ui/themes";
+import { Button, IconButton } from "@radix-ui/themes";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
@@ -36,7 +36,7 @@ export default function DashboardDrafts() {
 
   return (
     <div className="py-10">
-      <Heading>Drafts</Heading>
+      <h2 className="text-2xl font-bold">Drafts</h2>
       <Card className="mt-5">
         <CardContent>
           {loadingDrafts ? (
@@ -47,17 +47,15 @@ export default function DashboardDrafts() {
 
           {errorDrafts ? (
             <div className="flex justify-center py-7">
-              <Text size="2" color="red">
+              <p className="text-sm text-destructive">
                 An error occurred, please try again later. {errorDrafts.message}
-              </Text>
+              </p>
             </div>
           ) : null}
 
           {drafts?.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-4 py-7">
-              <Text size="2" color="gray">
-                No drafts yet
-              </Text>
+              <p className="text-sm text-muted-foreground">No drafts yet</p>
               <Button color="gray" highContrast asChild>
                 <NextLink href="/p/new">Write a post</NextLink>
               </Button>
@@ -113,14 +111,13 @@ const Draft = ({
 
   const heading =
     draft.metaTitle || draft.title ? (
-      <Heading as="h3" size="4" className="line-clamp-2">
-        {" "}
-        {draft.metaTitle || draft.title}{" "}
-      </Heading>
+      <h3 className="line-clamp-2 text-lg font-medium">
+        {draft.metaTitle || draft.title}
+      </h3>
     ) : (
-      <Heading as="h3" size="4" className="line-clamp-2" color="gray">
+      <h3 className="line-clamp-2 text-lg font-medium text-muted-foreground">
         No title
-      </Heading>
+      </h3>
     );
 
   return (
@@ -147,10 +144,10 @@ const Draft = ({
         </NextLink>
       )}
       <div className="flex items-center justify-between">
-        <Text as="p" mt="3" color="gray" size="1">
+        <p className="mt-3 text-xs text-muted-foreground">
           Created {format(new Date(draft.createdAt), "MMM dd, yyyy")} • Last
           updated {format(new Date(draft.updatedAt), "MMM dd, yyyy h:mm a")}
-        </Text>
+        </p>
         {isDeleting ? <Spinner /> : null}
         {!isDeleting && !isTxPending ? (
           <DropdownMenu>

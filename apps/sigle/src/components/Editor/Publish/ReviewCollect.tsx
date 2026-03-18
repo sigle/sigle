@@ -1,4 +1,4 @@
-import { IconButton, Text } from "@radix-ui/themes";
+import { IconButton } from "@radix-ui/themes";
 import { IconCards, IconPencil } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
@@ -41,10 +41,8 @@ export const PublishReviewCollect = () => {
       </CardHeader>
       <CardContent>
         <div className="flex justify-between py-3">
-          <Text size="2" color="gray">
-            Type
-          </Text>
-          <Text size="2">
+          <p className="text-sm text-muted-foreground">Type</p>
+          <p className="text-sm">
             {collectLimit ? (
               <>
                 Limited edition{" "}
@@ -53,17 +51,15 @@ export const PublishReviewCollect = () => {
             ) : (
               "Open edition"
             )}
-          </Text>
+          </p>
         </div>
         <div className="flex justify-between border-t border-solid border-gray-4 py-3">
-          <Text size="2" color="gray">
-            Price
-          </Text>
-          <Text size="2">
+          <p className="text-sm text-muted-foreground">Price</p>
+          <p className="text-sm">
             {data.collect.collectPrice.type === "free"
               ? "Free"
               : `${data.collect.collectPrice.price} sBTC`}
-          </Text>
+          </p>
         </div>
       </CardContent>
     </Card>

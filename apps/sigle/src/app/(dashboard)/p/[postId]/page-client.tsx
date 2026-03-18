@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Container, Heading, Separator } from "@radix-ui/themes";
+import { Button, Container } from "@radix-ui/themes";
 import { IconArrowLeft } from "@tabler/icons-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -13,6 +13,7 @@ import { PostUserInfoCard } from "@/components/Post/UserInfoCard";
 import { NextLink } from "@/components/Shared/NextLink";
 import { FadeSlideBottom } from "@/components/ui";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
@@ -74,24 +75,22 @@ export function PostClientPage(props: Props) {
             </div>
           ) : null}
 
-          <Heading as="h1" size="8" className="text-pretty">
-            {post.title}
-          </Heading>
+          <h1 className="text-4xl font-medium text-pretty">{post.title}</h1>
 
           <PostUserActions post={post} />
         </header>
 
-        <Separator size="4" className="mb-8" />
+        <Separator className="mb-8" />
 
         {post.content ? <PostMarkdownContent content={post.content} /> : null}
 
-        <Separator size="4" className="mt-10 mb-8" />
+        <Separator className="mt-10 mb-8" />
 
         <PostProvenanceCard post={post} />
 
         {post.collectible ? (
           <>
-            <Separator size="4" className="my-8" />
+            <Separator className="my-8" />
             <PostCollectCard post={post} />
           </>
         ) : null}

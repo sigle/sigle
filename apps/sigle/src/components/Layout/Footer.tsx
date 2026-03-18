@@ -1,22 +1,23 @@
-import { Container, IconButton, Link, Separator, Text } from "@radix-ui/themes";
+import { Container, IconButton, Link } from "@radix-ui/themes";
 import {
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
   IconBrandXFilled,
 } from "@tabler/icons-react";
+import { Separator } from "@/components/ui/separator";
 import { appConfig } from "@/config";
 
 export const Footer = () => {
   return (
     <footer>
       <Container className="px-4">
-        <Separator size="4" color="gray" />
+        <Separator />
         <div className="flex flex-col items-center justify-between py-7 md:flex-row">
           <div className="mb-4 md:mb-0">
             <div className="flex items-center space-x-4">
-              <Text size="2" color="gray">
+              <p className="text-sm text-muted-foreground">
                 © {new Date().getFullYear()} Sigle
-              </Text>
+              </p>
               <IconButton variant="ghost" color="gray" asChild>
                 <a href={appConfig.twitterUrl} target="_blank" rel="noreferrer">
                   <IconBrandXFilled size={16} />

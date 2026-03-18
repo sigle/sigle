@@ -1,5 +1,5 @@
 import type { Icon } from "@tabler/icons-react";
-import { ScrollArea, Text } from "@radix-ui/themes";
+import { ScrollArea } from "@radix-ui/themes";
 import {
   forwardRef,
   useEffect,
@@ -95,9 +95,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
       >
         {basicItems.length > 0 && (
           <div className="px-4 py-2">
-            <Text color="gray" size="2">
-              Basics
-            </Text>
+            <p className="text-sm text-muted-foreground">Basics</p>
           </div>
         )}
         {basicItems.map(({ title, description, icon: Icon }, index) => (
@@ -113,9 +111,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
         ))}
         {embedItems.length > 0 && (
           <div className="px-4 py-2">
-            <Text color="gray" size="2">
-              Embeds
-            </Text>
+            <p className="text-sm text-muted-foreground">Embeds</p>
           </div>
         )}
         {embedItems.map(({ title, description, icon: Icon }, index) => (
@@ -165,12 +161,8 @@ const CommandListItem = ({
       <div className="flex items-center">
         <Icon width={30} height={30} />
         <div className="ml-2 flex flex-col">
-          <Text size="2" color="gray" highContrast weight="medium">
-            {title}
-          </Text>
-          <Text size="1" color="gray">
-            {description}
-          </Text>
+          <p className="text-sm font-medium text-foreground">{title}</p>
+          <p className="text-xs text-muted-foreground">{description}</p>
         </div>
       </div>
     </div>

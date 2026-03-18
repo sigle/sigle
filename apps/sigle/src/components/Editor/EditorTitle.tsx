@@ -1,4 +1,3 @@
-import { Text } from "@radix-ui/themes";
 import { useFormContext, useFormState } from "react-hook-form";
 import type { EditorPostFormData } from "./EditorFormProvider";
 
@@ -18,9 +17,7 @@ export const EditorTitle = () => {
         />
       </div>
       {errors.title && (
-        <Text as="p" size="2" color="red">
-          {errors.title.message}
-        </Text>
+        <p className="text-sm text-destructive">{errors.title.message}</p>
       )}
     </div>
   );

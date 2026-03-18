@@ -1,4 +1,3 @@
-import { Text } from "@radix-ui/themes";
 import {
   IconCircleCheck,
   IconInfoCircle,
@@ -35,9 +34,7 @@ export const PublishReviewGeneral = () => {
       </CardHeader>
       <CardContent className="-my-3">
         <div className="flex justify-between py-3">
-          <Text size="2" color="gray">
-            Meta SEO
-          </Text>
+          <p className="text-sm text-muted-foreground">Meta SEO</p>
           {isMetaConfigured ? (
             <Badge>
               configured <IconCircleCheck size={12} />
@@ -53,10 +50,8 @@ export const PublishReviewGeneral = () => {
           )}
         </div>
         <div className="flex justify-between border-t border-solid border-gray-4 py-3">
-          <Text size="2" color="gray">
-            Cover image
-          </Text>
-          <Text size="2">
+          <p className="text-sm text-muted-foreground">Cover image</p>
+          <p className="text-sm">
             {data.coverImage ? (
               <Badge>
                 configured <IconCircleCheck size={12} />
@@ -75,7 +70,7 @@ export const PublishReviewGeneral = () => {
                 </TooltipContent>
               </Tooltip>
             )}
-          </Text>
+          </p>
         </div>
       </CardContent>
     </Card>

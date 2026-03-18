@@ -1,4 +1,3 @@
-import { Text } from "@radix-ui/themes";
 import { IconHelpCircle } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,9 +27,9 @@ export const SeoPreview = () => {
 
   return (
     <div>
-      <Text as="div" size="2" mb="1" className="flex items-center gap-1">
+      <p className="mb-1 flex items-center gap-1 text-sm">
         Preview
-        <Text color="gray">
+        <span className="text-muted-foreground">
           <Tooltip>
             <TooltipTrigger render={<IconHelpCircle size={16} />} />
             <TooltipContent>
@@ -38,8 +37,8 @@ export const SeoPreview = () => {
               social media
             </TooltipContent>
           </Tooltip>
-        </Text>
-      </Text>
+        </span>
+      </p>
       <Card size="sm" className="relative mx-auto pt-0!">
         {metaImage ? (
           <>

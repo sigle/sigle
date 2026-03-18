@@ -1,24 +1,17 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import {
-  AspectRatio,
-  Flex,
-  Heading,
-  IconButton,
-  Link,
-  Text,
-  Tooltip,
-} from "@radix-ui/themes";
+import { AspectRatio, Flex } from "@radix-ui/themes";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
+  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "@/lib/auth-hooks";
 import { resolveImageUrl } from "@/lib/images";
@@ -43,45 +36,41 @@ export const PostListItem = ({ post }: PostListItemProps) => {
         <Flex gap="5" align="center" justify="between">
           <div className="flex-1 space-y-2">
             <NextLink href={Routes.post({ postId: post.id })} className="block">
-              <Heading
-                size="4"
-                className="line-clamp-2 wrap-break-word"
+              <h4
+                className="line-clamp-2 text-lg font-medium"
                 style={{
                   wordBreak: "break-word",
                 }}
               >
                 {post.metaTitle || post.title}
-              </Heading>
+              </h4>
             </NextLink>
             <NextLink href={Routes.post({ postId: post.id })} className="block">
-              <Text as="p" size="2" className="line-clamp-1 md:line-clamp-2">
+              <p className="line-clamp-1 text-sm text-muted-foreground md:line-clamp-2">
                 {post.metaDescription || post.excerpt}
-              </Text>
+              </p>
             </NextLink>
-            <div className="mt-3 flex gap-2">
-              <Text as="p" color="gray" size="1">
+            <div className="mt-3 flex items-center gap-2">
+              <p className="text-xs text-muted-foreground">
                 By{" "}
-                <Link asChild>
-                  <NextLink
-                    href={Routes.userProfile({ username: post.user.id })}
-                  >
-                    {post.user.profile?.displayName
-                      ? post.user.profile?.displayName
-                      : formatReadableAddress(post.user.id)}
-                  </NextLink>
-                </Link>{" "}
+                <NextLink
+                  className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
+                  href={Routes.userProfile({ username: post.user.id })}
+                >
+                  {post.user.profile?.displayName
+                    ? post.user.profile?.displayName
+                    : formatReadableAddress(post.user.id)}
+                </NextLink>{" "}
                 • {format(new Date(post.createdAt), "MMM dd, yyyy")}
-              </Text>
+              </p>
               <DropdownMenu>
-                <Tooltip content="More">
-                  <DropdownMenuTrigger
-                    render={
-                      <IconButton variant="ghost" color="gray" size="1">
-                        <IconDotsVertical size={16} />
-                      </IconButton>
-                    }
-                  />
-                </Tooltip>
+                <DropdownMenuTrigger
+                  render={
+                    <Button variant="ghost" size="icon" title="More">
+                      <IconDotsVertical size={14} />
+                    </Button>
+                  }
+                />
                 <DropdownMenuContent>
                   <DropdownMenuItem onClick={() => setShareDialogOpen(true)}>
                     Share & Earn
