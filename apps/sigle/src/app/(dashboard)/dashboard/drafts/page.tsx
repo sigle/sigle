@@ -111,9 +111,13 @@ const Draft = ({
 
   const heading =
     draft.metaTitle || draft.title ? (
-      <h3 className="line-clamp-2 text-lg">{draft.metaTitle || draft.title}</h3>
+      <h3 className="line-clamp-2 text-lg font-medium">
+        {draft.metaTitle || draft.title}
+      </h3>
     ) : (
-      <h3 className="line-clamp-2 text-lg text-muted-foreground">No title</h3>
+      <h3 className="line-clamp-2 text-lg font-medium text-muted-foreground">
+        No title
+      </h3>
     );
 
   return (

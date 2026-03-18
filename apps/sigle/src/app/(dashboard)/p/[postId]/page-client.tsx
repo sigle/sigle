@@ -75,7 +75,7 @@ export function PostClientPage(props: Props) {
             </div>
           ) : null}
 
-          <h1 className="text-xs font-medium text-pretty">{post.title}</h1>
+          <h1 className="text-2xl font-medium text-pretty">{post.title}</h1>
 
           <PostUserActions post={post} />
         </header>
