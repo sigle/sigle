@@ -41,7 +41,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
               </h4>
             </NextLink>
             <NextLink href={Routes.post({ postId: post.id })} className="block">
-              <p className="line-clamp-1 text-sm md:line-clamp-2">
+              <p className="line-clamp-1 text-sm text-muted-foreground md:line-clamp-2">
                 {post.metaDescription || post.excerpt}
               </p>
             </NextLink>
