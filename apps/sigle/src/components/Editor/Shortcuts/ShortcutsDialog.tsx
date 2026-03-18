@@ -1,10 +1,10 @@
-import { Kbd } from "@radix-ui/themes";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Kbd } from "@/components/ui/kbd";
 import {
   Table,
   TableBody,
@@ -233,14 +233,10 @@ export const ShortcutsDialog = ({
                         <TableRow key={shortcut.action}>
                           <TableCell>{shortcut.action}</TableCell>
                           <TableCell>
-                            <Kbd size="3">
-                              {shortcut.winCommand.join(" + ")}
-                            </Kbd>
+                            <Kbd>{shortcut.winCommand.join(" + ")}</Kbd>
                           </TableCell>
                           <TableCell>
-                            <Kbd size="3">
-                              {shortcut.macCommand.join(" + ")}
-                            </Kbd>
+                            <Kbd>{shortcut.macCommand.join(" + ")}</Kbd>
                           </TableCell>
                         </TableRow>
                       ))}
