@@ -9,7 +9,6 @@ import {
 } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { usePostHog } from "posthog-js/react";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
