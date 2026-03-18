@@ -185,7 +185,7 @@ export function HomeCommunitySection() {
             />
           </div>
           <div className="hidden md:relative md:block md:w-1/3">
-            <div className="absolute top-[100px] left-[20px] w-[400px]">
+            <div className="absolute top-[95px] left-[20px] w-[400px]">
               <GitHubMockup />
             </div>
           </div>
@@ -217,7 +217,7 @@ export function HomeCommunitySection() {
             />
           </div>
           <div className="hidden md:relative md:block md:w-1/3">
-            <div className="absolute top-[100px] left-[20px] w-[400px]">
+            <div className="absolute top-[95px] left-[20px] w-[400px]">
               <DiscordMockup />
             </div>
           </div>
