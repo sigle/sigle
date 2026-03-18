@@ -1,22 +1,18 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { AspectRatio, Flex, IconButton, Link } from "@radix-ui/themes";
+import { AspectRatio, Flex } from "@radix-ui/themes";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { useSession } from "@/lib/auth-hooks";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
@@ -52,31 +48,22 @@ export const PostListItem = ({ post }: PostListItemProps) => {
             <div className="mt-3 flex items-center gap-2">
               <p className="text-xs text-muted-foreground">
                 By{" "}
-                <Link asChild>
-                  <NextLink
-                    href={Routes.userProfile({ username: post.user.id })}
-                  >
-                    {post.user.profile?.displayName
-                      ? post.user.profile?.displayName
-                      : formatReadableAddress(post.user.id)}
-                  </NextLink>
-                </Link>{" "}
+                <NextLink
+                  className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
+                  href={Routes.userProfile({ username: post.user.id })}
+                >
+                  {post.user.profile?.displayName
+                    ? post.user.profile?.displayName
+                    : formatReadableAddress(post.user.id)}
+                </NextLink>{" "}
                 • {format(new Date(post.createdAt), "MMM dd, yyyy")}
               </p>
               <DropdownMenu>
                 <DropdownMenuTrigger
                   render={
-                    <Tooltip>
-                      <TooltipTrigger
-                        delay={200}
-                        render={
-                          <IconButton variant="ghost" color="gray" size="1">
-                            <IconDotsVertical size={16} />
-                          </IconButton>
-                        }
-                      />
-                      <TooltipContent>More</TooltipContent>
-                    </Tooltip>
+                    <Button variant="ghost" size="icon" title="More">
+                      <IconDotsVertical size={14} />
+                    </Button>
                   }
                 />
                 <DropdownMenuContent>
