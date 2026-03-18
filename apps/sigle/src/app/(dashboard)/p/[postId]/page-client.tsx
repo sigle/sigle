@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Container } from "@radix-ui/themes";
+import { Container } from "@radix-ui/themes";
 import { IconArrowLeft } from "@tabler/icons-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -13,6 +13,7 @@ import { PostUserInfoCard } from "@/components/Post/UserInfoCard";
 import { NextLink } from "@/components/Shared/NextLink";
 import { FadeSlideBottom } from "@/components/ui";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
@@ -58,10 +59,13 @@ export function PostClientPage(props: Props) {
       ) : null}
 
       <Container size="2" className="my-8 px-4 md:my-10">
-        <Button color="gray" variant="ghost" className="mb-6" asChild>
-          <NextLink href={Routes.explore()}>
-            <IconArrowLeft size={14} /> All articles
-          </NextLink>
+        <Button
+          variant="ghost"
+          className="mb-6"
+          nativeButton={false}
+          render={<NextLink href={Routes.explore()} />}
+        >
+          <IconArrowLeft size={14} /> All articles
         </Button>
 
         <header className="mb-8 flex flex-col gap-4">

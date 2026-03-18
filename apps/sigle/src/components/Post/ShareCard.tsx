@@ -1,6 +1,6 @@
 import type { paths } from "@sigle/sdk";
-import { Button } from "@radix-ui/themes";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { PostShareDialog } from "../Shared/Post/PostShareDialog";
 
 interface PostShareCardProps {
@@ -23,8 +23,6 @@ export const PostShareCard = ({ post }: PostShareCardProps) => {
           <Button
             className="flex-1"
             variant="outline"
-            color="gray"
-            highContrast
             onClick={() => setShareDialogOpen(true)}
           >
             Share

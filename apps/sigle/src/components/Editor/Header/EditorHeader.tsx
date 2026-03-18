@@ -63,6 +63,7 @@ export const EditorHeader = () => {
           <Button
             variant="ghost"
             size="icon"
+            nativeButton={false}
             render={<NextLink href="/dashboard/drafts" />}
           >
             <IconArrowLeft size={headerIconSize} />

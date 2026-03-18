@@ -1,9 +1,10 @@
 "use client";
 
-import { Button, Container, Select } from "@radix-ui/themes";
+import { Container, Select } from "@radix-ui/themes";
 import { usePathname, useRouter } from "next/navigation";
 import { AuthProtect } from "@/components/Auth/AuthProtect";
 import { NextLink } from "@/components/Shared/NextLink";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { sigleApiClient } from "@/lib/sigle";
 
@@ -53,14 +54,12 @@ export default function DashboardLayout({
                 <li key={link.href}>
                   <Button
                     variant="ghost"
-                    color="gray"
-                    highContrast
-                    className={cn("m-0", {
-                      "bg-(--accent-a3) font-medium": pathname === link.href,
+                    className={cn("m-0 w-full justify-start", {
+                      "bg-muted": pathname === link.href,
                     })}
-                    asChild
+                    render={<NextLink href={link.href} />}
                   >
-                    <NextLink href={link.href}>{link.label}</NextLink>
+                    {link.label}
                   </Button>
                 </li>
               ))}

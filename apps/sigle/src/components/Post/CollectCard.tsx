@@ -1,6 +1,6 @@
-import { Button } from "@radix-ui/themes";
 import { type paths, formatBTC } from "@sigle/sdk";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/cn";
 import { PostCollectDialog } from "../Shared/Post/PostCollectDialog";
@@ -70,9 +70,9 @@ export const PostCollectCard = ({ post }: PostCollectCardProps) => {
         </div>
         <Button
           className="w-full"
-          size="3"
-          disabled={!canCollect}
+          size="lg"
           onClick={() => setCollectDialogOpen(true)}
+          disabled={!canCollect}
         >
           Collect
         </Button>

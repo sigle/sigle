@@ -1,7 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { Button } from "@radix-ui/themes";
+import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient } from "@/lib/sigle";
 import { GetFamiliarCards } from "../Dashboard/GetFamiliarCards";
@@ -36,8 +36,8 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
           <p className="text-sm font-medium text-muted-foreground">
             You haven&apos;t published anything yet.
           </p>
-          <Button color="gray" highContrast asChild>
-            <NextLink href="/p/new">Start writing</NextLink>
+          <Button nativeButton={false} render={<NextLink href="/p/new" />}>
+            Start writing
           </Button>
         </div>
 
@@ -50,8 +50,8 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
     return (
       <div className="my-20 flex flex-col items-center gap-3">
         <p>This user has not published anything yet.</p>
-        <Button color="gray" highContrast asChild>
-          <NextLink href="/">Explore</NextLink>
+        <Button nativeButton={false} render={<NextLink href="/" />}>
+          Explore
         </Button>
       </div>
     );
