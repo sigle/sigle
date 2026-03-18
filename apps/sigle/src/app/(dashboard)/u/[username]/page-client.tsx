@@ -40,7 +40,7 @@ export function UserClientPage(props: Props) {
       <Container size="2" className="mt-4 px-4 pb-20">
         <ProfileInfo user={user} />
 
-        <h3 className="mt-10 text-base font-bold">Latest posts</h3>
+        <h3 className="mt-10 text-base font-medium">Latest posts</h3>
 
         <Suspense fallback={<ProfileFeedSkeleton />}>
           <ProfileFeed user={user} />
