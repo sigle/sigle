@@ -1,4 +1,4 @@
-import { Avatar, Container, Heading, Skeleton, Text } from "@radix-ui/themes";
+import { Avatar, Container, Heading, Skeleton } from "@radix-ui/themes";
 import { ProfileFeedSkeleton } from "@/components/User/ProfileFeed";
 
 export const PageProfileSkeleton = () => {
@@ -24,30 +24,30 @@ export const PageProfileSkeleton = () => {
           <Heading size="6">
             <Skeleton>username username</Skeleton>
           </Heading>
-          <Text as="p" color="gray" size="2">
+          <p className="text-sm text-muted-foreground">
             <Skeleton>loremipsum</Skeleton>
-          </Text>
+          </p>
         </div>
 
         {/* Followers info */}
         <div className="mt-4 flex gap-2">
-          <Text as="p" size="2">
+          <p className="text-sm">
             <Skeleton>x Following</Skeleton>
-          </Text>
-          <Text as="p" size="2">
+          </p>
+          <p className="text-sm">
             <Skeleton>x followers</Skeleton>
-          </Text>
+          </p>
         </div>
 
         {/* Bio */}
-        <Text mt="3" as="p" color="gray" size="2">
+        <p className="mt-3 text-sm text-muted-foreground">
           <Skeleton>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
             aliquip ex ea commodo consequat.
           </Skeleton>
-        </Text>
+        </p>
 
         <div className="pt-10 pb-20">
           <ProfileFeedSkeleton />

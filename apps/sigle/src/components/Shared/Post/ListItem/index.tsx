@@ -7,7 +7,6 @@ import {
   Heading,
   IconButton,
   Link,
-  Text,
   Tooltip,
 } from "@radix-ui/themes";
 import { IconDotsVertical } from "@tabler/icons-react";
@@ -54,12 +53,12 @@ export const PostListItem = ({ post }: PostListItemProps) => {
               </Heading>
             </NextLink>
             <NextLink href={Routes.post({ postId: post.id })} className="block">
-              <Text as="p" size="2" className="line-clamp-1 md:line-clamp-2">
+              <p className="line-clamp-1 text-sm md:line-clamp-2">
                 {post.metaDescription || post.excerpt}
-              </Text>
+              </p>
             </NextLink>
             <div className="mt-3 flex gap-2">
-              <Text as="p" color="gray" size="1">
+              <p className="mt-3 text-xs text-muted-foreground">
                 By{" "}
                 <Link asChild>
                   <NextLink
@@ -71,7 +70,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                   </NextLink>
                 </Link>{" "}
                 • {format(new Date(post.createdAt), "MMM dd, yyyy")}
-              </Text>
+              </p>
               <DropdownMenu>
                 <Tooltip content="More">
                   <DropdownMenuTrigger

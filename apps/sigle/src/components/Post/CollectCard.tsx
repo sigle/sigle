@@ -1,6 +1,7 @@
-import { Button, Heading, Progress, Text } from "@radix-ui/themes";
+import { Button, Heading, Progress } from "@radix-ui/themes";
 import { type paths, formatBTC } from "@sigle/sdk";
 import { useState } from "react";
+import { cn } from "@/lib/cn";
 import { PostCollectDialog } from "../Shared/Post/PostCollectDialog";
 
 interface PostCollectCardProps {
@@ -31,28 +32,29 @@ export const PostCollectCard = ({ post }: PostCollectCardProps) => {
               {canCollect ? "Collect this post" : "Collect ended"}
             </Heading>
             {canCollect ? (
-              <Text as="p" color="gray" size="2">
+              <p className="text-sm text-muted-foreground">
                 {post.collectible.collected > 0
                   ? `Join ${post.collectorsCount} collectors`
                   : "Be the first to collect this post"}
-              </Text>
+              </p>
             ) : null}
           </div>
           <div className="space-y-1 text-right">
-            <Text
-              as="p"
-              size={post.minterFixedPrice.price === "0" ? "3" : "4"}
-              weight="medium"
+            <p
+              className={cn(
+                post.minterFixedPrice.price === "0" ? "text-base" : "text-lg",
+                "font-medium",
+              )}
             >
               {post.minterFixedPrice.price === "0"
                 ? "Free"
                 : `${formatBTC(BigInt(post.minterFixedPrice.price))} sBTC`}
-            </Text>
-            <Text as="p" color="gray" size="2">
+            </p>
+            <p className="text-sm text-muted-foreground">
               {post.collectible.openEdition
                 ? "Open edition"
                 : "Limited edition"}
-            </Text>
+            </p>
           </div>
         </div>
         {!post.collectible.openEdition ? (
@@ -65,11 +67,11 @@ export const PostCollectCard = ({ post }: PostCollectCardProps) => {
           />
         ) : null}
         <div className="flex items-center justify-between">
-          <Text as="p" color="gray" size="2">
+          <p className="text-sm text-muted-foreground">
             {post.collectible.openEdition
               ? `${post.collectible.collected} collected`
               : `${post.collectible.collected}/${post.collectible.maxSupply} collected`}
-          </Text>
+          </p>
         </div>
         <Button
           className="w-full"

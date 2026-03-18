@@ -1,10 +1,4 @@
-import {
-  Container,
-  Heading,
-  Separator,
-  Skeleton,
-  Text,
-} from "@radix-ui/themes";
+import { Container, Heading, Separator, Skeleton } from "@radix-ui/themes";
 
 export const PagePostSkeleton = () => {
   return (
@@ -42,24 +36,16 @@ export const PagePostSkeleton = () => {
         {/* Content */}
         <div className="space-y-3">
           <Skeleton className="w-full">
-            <Text as="div" size="2">
-              &#8203;
-            </Text>
+            <p className="text-sm">&#8203;</p>
           </Skeleton>
           <Skeleton className="w-full">
-            <Text as="div" size="2">
-              &#8203;
-            </Text>
+            <p className="text-sm">&#8203;</p>
           </Skeleton>
           <Skeleton className="w-full">
-            <Text as="div" size="2">
-              &#8203;
-            </Text>
+            <p className="text-sm">&#8203;</p>
           </Skeleton>
           <Skeleton className="w-3/4">
-            <Text as="div" size="2">
-              &#8203;
-            </Text>
+            <p className="text-sm">&#8203;</p>
           </Skeleton>
         </div>
       </Container>

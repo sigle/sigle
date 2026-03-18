@@ -7,7 +7,6 @@ import {
   IconButton,
   Separator,
   Skeleton,
-  Text,
   Tooltip,
   VisuallyHidden,
 } from "@radix-ui/themes";
@@ -31,6 +30,7 @@ import {
 } from "@/hooks/useCurrencyFiatPrice";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
 import { useSession } from "@/lib/auth-hooks";
+import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleClient } from "@/lib/sigle";
 import {
@@ -164,12 +164,15 @@ export const PostCollectDialog = ({
             <div className="flex items-center gap-2">
               <ProfileAvatar user={post.user} size="2" />
               <div className="grid gap-0.5">
-                <Text size="2" weight="medium">
+                <p className="text-sm font-medium">
                   {post.user.profile?.displayName}
-                </Text>
-                <Text size="1" color="gray" title={post.user.id}>
+                </p>
+                <p
+                  className="text-xs text-muted-foreground"
+                  title={post.user.id}
+                >
                   {formatReadableAddress(post.user.id)}
-                </Text>
+                </p>
               </div>
             </div>
           </div>
@@ -193,29 +196,21 @@ export const PostCollectDialog = ({
             <Heading size="3" className="line-clamp-2">
               {post.metaTitle || post.title}
             </Heading>
-            <Text as="p" className="mt-2 line-clamp-3" color="gray" size="2">
+            <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
               {post.excerpt}
-            </Text>
+            </p>
           </div>
 
           <Separator size="4" />
 
           <div className="flex items-center justify-between">
-            <Text as="p" size="2" weight="medium">
-              Price
-            </Text>
-            <Text as="p" size="2" weight="medium">
+            <p className="text-sm font-medium">Price</p>
+            <p className="text-sm font-medium">
               {isFree ? "Free" : `${formatBTC(price)} sBTC`}
-            </Text>
+            </p>
           </div>
           <div className="flex items-center justify-between rounded-2 bg-gray-2 p-2">
-            <Text
-              as="p"
-              size="1"
-              weight="medium"
-              color="gray"
-              className="flex items-center gap-1"
-            >
+            <p className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
               Mint fee
               <a
                 href={`${appConfig.docsUrl}/monetization#fee-structure`}
@@ -224,20 +219,20 @@ export const PostCollectDialog = ({
               >
                 <IconHelpCircle size={16} />
               </a>
-            </Text>
-            <Text as="p" size="1" weight="medium" color="gray">
+            </p>
+            <p className="text-xs font-medium text-muted-foreground">
               {formatBTC(fixedMintFee.total)} sBTC
-            </Text>
+            </p>
           </div>
           <div className="flex items-center justify-between">
-            <Text size="2" weight="medium">
+            <p className="text-sm font-medium">
               Number of editions
               {!post.collectible.openEdition ? (
                 <Badge variant="secondary" className="ml-1">
                   {post.collectible.maxSupply - post.collectible.collected} left
                 </Badge>
               ) : null}
-            </Text>
+            </p>
             <div className="flex items-center space-x-2">
               <IconButton
                 size="1"
@@ -249,9 +244,7 @@ export const PostCollectDialog = ({
               >
                 <IconMinus className="size-4" />
               </IconButton>
-              <Text className="w-6 text-center" size="2" weight="medium">
-                {editions}
-              </Text>
+              <p className="w-6 text-center text-sm font-medium">{editions}</p>
               <IconButton
                 size="1"
                 variant="outline"
@@ -272,63 +265,63 @@ export const PostCollectDialog = ({
           <Separator size="4" />
 
           <div className="flex items-start justify-between">
-            <Text className="flex items-center gap-1" size="3" weight="medium">
+            <p className="flex items-center gap-1 text-base font-medium">
               Total{" "}
               {!isPostOwner ? (
                 <Tooltip
                   content={
                     <div className="grid gap-2 p-2">
                       <div className="flex justify-between gap-2">
-                        <Text>Creator:</Text>
-                        <Text>{formatBTC(creatorFee)} sBTC</Text>
+                        <p>Creator:</p>
+                        <p>{formatBTC(creatorFee)} sBTC</p>
                       </div>
                       <div className="flex justify-between gap-2">
-                        <Text>Platform:</Text>
-                        <Text>{formatBTC(protocolFee)} sBTC</Text>
+                        <p>Platform:</p>
+                        <p>{formatBTC(protocolFee)} sBTC</p>
                       </div>
                       <div className="flex justify-between gap-2">
-                        <Text>Create referrer:</Text>
-                        <Text>{formatBTC(createReferrerFee)} sBTC</Text>
+                        <p>Create referrer:</p>
+                        <p>{formatBTC(createReferrerFee)} sBTC</p>
                       </div>
                       <div className="flex justify-between gap-2">
-                        <Text>Mint referrer:</Text>
-                        <Text>{formatBTC(mintReferrerFee)} sBTC</Text>
+                        <p>Mint referrer:</p>
+                        <p>{formatBTC(mintReferrerFee)} sBTC</p>
                       </div>
                     </div>
                   }
                 >
-                  <Text color="gray">
+                  <span className="text-muted-foreground">
                     <IconInfoCircle size={16} />
-                  </Text>
+                  </span>
                 </Tooltip>
               ) : null}
-            </Text>
+            </p>
             <div className="text-right">
-              <Text
-                as="p"
-                size="3"
-                weight="medium"
-                className={isPostOwner ? "line-through" : undefined}
+              <p
+                className={cn(
+                  "text-base font-medium",
+                  isPostOwner && "line-through",
+                )}
               >
                 {formatBTC(totalPrice)} sBTC
-              </Text>
+              </p>
               {!isPostOwner && loadingCurrencyFiatPrice ? (
-                <Text as="p" size="1">
+                <p className="text-xs">
                   <Skeleton>price...</Skeleton>
-                </Text>
+                </p>
               ) : null}
               {!isPostOwner && totalPrice && currencyFiatPrice ? (
-                <Text as="p" size="1" color="gray">
+                <p className="text-xs text-muted-foreground">
                   ~
                   {formatUSDollar.format(
                     Number(formatBTC(totalPrice)) * Number(currencyFiatPrice),
                   )}
-                </Text>
+                </p>
               ) : null}
               {isPostOwner ? (
-                <Text as="p" size="1" color="gray">
+                <p className="text-xs text-muted-foreground">
                   Collect your own post for free.
-                </Text>
+                </p>
               ) : null}
             </div>
           </div>

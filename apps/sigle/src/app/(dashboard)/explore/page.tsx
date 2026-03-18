@@ -1,4 +1,4 @@
-import { Container, Heading, Text } from "@radix-ui/themes";
+import { Container, Heading } from "@radix-ui/themes";
 import { ExplorePostsList } from "@/components/Explore/Posts/List";
 
 export const dynamic = "force-dynamic";
@@ -9,9 +9,9 @@ export default function ExplorePage() {
       <Heading as="h1" size="5">
         Explore
       </Heading>
-      <Text as="p" color="gray" size="2" className="mt-2">
+      <p className="mt-2 text-sm text-muted-foreground">
         Discover the latest posts
-      </Text>
+      </p>
 
       <ExplorePostsList />
     </Container>
