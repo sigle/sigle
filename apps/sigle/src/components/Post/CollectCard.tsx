@@ -1,11 +1,7 @@
 import { Button } from "@radix-ui/themes";
 import { type paths, formatBTC } from "@sigle/sdk";
 import { useState } from "react";
-import {
-  Progress,
-  ProgressIndicator,
-  ProgressTrack,
-} from "@/components/ui/progress";
+import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/cn";
 import { PostCollectDialog } from "../Shared/Post/PostCollectDialog";
 
