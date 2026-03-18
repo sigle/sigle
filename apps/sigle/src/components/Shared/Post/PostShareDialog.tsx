@@ -49,11 +49,11 @@ export const PostShareDialog = ({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Content size="3" className="max-w-md">
         <Dialog.Title>Share</Dialog.Title>
-        <span className="sr-only">
+        <div className="sr-only">
           <Dialog.Description>
             Earn referrer rewards for each primary sale made through your link.
           </Dialog.Description>
-        </span>
+        </div>
 
         <div className="space-y-8">
           {post.collectible ? (

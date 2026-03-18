@@ -151,10 +151,10 @@ export const PostCollectDialog = ({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Content size="3" className="max-w-md">
-        <span className="sr-only">
+        <div className="sr-only">
           <Dialog.Title>Collect</Dialog.Title>
           <Dialog.Description>Collect {editions} editions</Dialog.Description>
-        </span>
+        </div>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">

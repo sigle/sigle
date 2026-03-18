@@ -45,14 +45,14 @@ export const PostUserInfoCard = ({ post }: PostUserInfoCardProps) => {
         </div>
 
         {post.user.profile?.description ? (
-          <p
+          <div
             className="mt-3 text-xs text-muted-foreground"
             title={post.user.id}
           >
             <ProfileMarkdownDescription
               content={post.user.profile.description}
             />
-          </p>
+          </div>
         ) : null}
       </CardContent>
     </Card>
