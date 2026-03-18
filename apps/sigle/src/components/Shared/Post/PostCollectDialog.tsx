@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Button,
-  Dialog,
-  IconButton,
-  Skeleton,
-  Tooltip,
-} from "@radix-ui/themes";
+import { Button, Dialog, IconButton, Skeleton } from "@radix-ui/themes";
 import { type paths, fixedMintFee, formatBTC } from "@sigle/sdk";
 import {
   IconHelpCircle,
@@ -20,6 +14,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { appConfig } from "@/config";
 import { useContractCall } from "@/hooks/useContractCall";
 import {
@@ -266,8 +265,15 @@ export const PostCollectDialog = ({
             <p className="flex items-center gap-1 text-base font-medium">
               Total{" "}
               {!isPostOwner ? (
-                <Tooltip
-                  content={
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <span className="text-muted-foreground">
+                        <IconInfoCircle size={16} />
+                      </span>
+                    }
+                  />
+                  <TooltipContent>
                     <div className="grid gap-2 p-2">
                       <div className="flex justify-between gap-2">
                         <p>Creator:</p>
@@ -286,11 +292,7 @@ export const PostCollectDialog = ({
                         <p>{formatBTC(mintReferrerFee)} sBTC</p>
                       </div>
                     </div>
-                  }
-                >
-                  <span className="text-muted-foreground">
-                    <IconInfoCircle size={16} />
-                  </span>
+                  </TooltipContent>
                 </Tooltip>
               ) : null}
             </p>

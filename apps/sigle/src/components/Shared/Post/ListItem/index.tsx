@@ -1,17 +1,22 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { AspectRatio, Flex, IconButton, Link, Tooltip } from "@radix-ui/themes";
+import { AspectRatio, Flex, IconButton, Link } from "@radix-ui/themes";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useState } from "react";
 import {
   DropdownMenu,
+  DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useSession } from "@/lib/auth-hooks";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
@@ -49,8 +54,8 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                 {post.metaDescription || post.excerpt}
               </p>
             </NextLink>
-            <div className="mt-3 flex gap-2">
-              <p className="mt-3 text-xs text-muted-foreground">
+            <div className="mt-3 flex items-center gap-2">
+              <p className="text-xs text-muted-foreground">
                 By{" "}
                 <Link asChild>
                   <NextLink
@@ -64,15 +69,21 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                 • {format(new Date(post.createdAt), "MMM dd, yyyy")}
               </p>
               <DropdownMenu>
-                <Tooltip content="More">
-                  <DropdownMenuTrigger
-                    render={
-                      <IconButton variant="ghost" color="gray" size="1">
-                        <IconDotsVertical size={16} />
-                      </IconButton>
-                    }
-                  />
-                </Tooltip>
+                <DropdownMenuTrigger
+                  render={
+                    <Tooltip>
+                      <TooltipTrigger
+                        delay={200}
+                        render={
+                          <IconButton variant="ghost" color="gray" size="1">
+                            <IconDotsVertical size={16} />
+                          </IconButton>
+                        }
+                      />
+                      <TooltipContent>More</TooltipContent>
+                    </Tooltip>
+                  }
+                />
                 <DropdownMenuContent>
                   <DropdownMenuItem onClick={() => setShareDialogOpen(true)}>
                     Share & Earn
