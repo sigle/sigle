@@ -42,7 +42,12 @@ export const PostCard = ({ post }: PostCardProps) => {
         <div className="relative aspect-video w-full object-cover" />
       )}
       <CardContent>
-        <h3 className="mb-1 line-clamp-2 text-lg font-medium wrap-break-word">
+        <h3
+          className="mb-1 line-clamp-2 text-lg font-medium"
+          style={{
+            wordBreak: "break-word",
+          }}
+        >
           <NextLink href={Routes.post({ postId: post.id })}>
             {post.metaTitle || post.title}
           </NextLink>
