@@ -40,6 +40,7 @@ export const LatestDrafts = () => {
           className="text-muted-foreground"
           size="xs"
           variant="link"
+          nativeButton={false}
           render={<NextLink href="/dashboard/drafts">View all</NextLink>}
         />
       </div>
