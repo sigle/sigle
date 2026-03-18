@@ -9,15 +9,15 @@ function GitHubMockup() {
       {/* Browser chrome */}
       <div className="flex items-center gap-1.5 border-b border-border bg-foreground/5 px-3 py-1.5">
         <div className="flex gap-1">
-          <div className="h-2 w-2 rounded-full bg-foreground/20" />
-          <div className="h-2 w-2 rounded-full bg-foreground/20" />
-          <div className="h-2 w-2 rounded-full bg-foreground/20" />
+          <div className="size-2 rounded-full bg-foreground/20" />
+          <div className="size-2 rounded-full bg-foreground/20" />
+          <div className="size-2 rounded-full bg-foreground/20" />
         </div>
         <div className="ml-3 flex flex-1 items-center gap-1.5">
           {[10, 6, 8, 7, 9, 6].map((w, i) => (
             <div
               key={i}
-              className="h-1.5 rounded bg-foreground/15"
+              className="h-1.5 rounded-sm bg-foreground/15"
               style={{ width: w * 2.5 }}
             />
           ))}
@@ -27,14 +27,14 @@ function GitHubMockup() {
       {/* Tabs bar */}
       <div className="flex items-center gap-2 border-b border-border px-3 py-1.5">
         <div className="flex items-center gap-1">
-          <div className="h-1 w-1 rounded-full bg-foreground/30" />
-          <div className="h-1.5 w-6 rounded bg-foreground/20" />
+          <div className="size-1 rounded-full bg-foreground/30" />
+          <div className="h-1.5 w-6 rounded-sm bg-foreground/20" />
         </div>
         <div className="flex items-center gap-2">
           {[10, 12, 11, 8, 14, 10].map((w, i) => (
             <div
               key={i}
-              className="h-1.5 rounded bg-foreground/15"
+              className="h-1.5 rounded-sm bg-foreground/15"
               style={{ width: w * 2 }}
             />
           ))}
@@ -44,11 +44,11 @@ function GitHubMockup() {
       {/* Content area */}
       <div className="p-2">
         {/* File listing */}
-        <div className="rounded border border-border">
+        <div className="rounded-sm border border-border">
           {/* Header row */}
           <div className="flex items-center gap-2 border-b border-border bg-secondary/50 px-2 py-1">
-            <div className="h-1.5 w-10 rounded bg-foreground/20" />
-            <div className="h-1.5 w-14 rounded bg-foreground/15" />
+            <div className="h-1.5 w-10 rounded-sm bg-foreground/20" />
+            <div className="h-1.5 w-14 rounded-sm bg-foreground/15" />
           </div>
 
           {/* File rows */}
@@ -57,14 +57,14 @@ function GitHubMockup() {
               key={i}
               className="flex items-center gap-2 border-b border-border px-2 py-1 last:border-b-0"
             >
-              <div className="h-1 w-1 rounded-full bg-foreground/25" />
+              <div className="size-1 rounded-full bg-foreground/25" />
               <div
-                className="h-1.5 rounded bg-foreground/20"
+                className="h-1.5 rounded-sm bg-foreground/20"
                 style={{ width: 28 + (i % 3) * 12 }}
               />
               <div className="ml-auto flex gap-4">
-                <div className="h-1.5 w-12 rounded bg-foreground/10" />
-                <div className="h-1.5 w-10 rounded bg-foreground/10" />
+                <div className="h-1.5 w-12 rounded-sm bg-foreground/10" />
+                <div className="h-1.5 w-10 rounded-sm bg-foreground/10" />
               </div>
             </div>
           ))}
@@ -81,7 +81,7 @@ function DiscordMockup() {
         {/* Server sidebar */}
         <div className="flex w-10 flex-col items-center gap-1.5 bg-[#1e1f22] py-2">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-6 w-6 rounded-full bg-[#36373d]" />
+            <div key={i} className="size-6 rounded-full bg-[#36373d]" />
           ))}
         </div>
 
@@ -89,16 +89,16 @@ function DiscordMockup() {
         <div className="w-28 bg-[#2b2d31] p-1.5">
           <div className="mb-2 flex items-center gap-1 px-1">
             <span className="text-[8px] font-semibold text-[#949ba4]">#</span>
-            <div className="h-1.5 w-12 rounded bg-[#949ba4]/30" />
+            <div className="h-1.5 w-12 rounded-sm bg-[#949ba4]/30" />
           </div>
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="mb-0.5 flex items-center gap-1 rounded px-1.5 py-0.5"
+              className="mb-0.5 flex items-center gap-1 rounded-sm px-1.5 py-0.5"
             >
               <span className="text-[8px] text-[#949ba4]">#</span>
               <div
-                className="h-1.5 rounded bg-[#949ba4]/25"
+                className="h-1.5 rounded-sm bg-[#949ba4]/25"
                 style={{ width: 28 + (i % 4) * 8 }}
               />
             </div>
@@ -110,20 +110,20 @@ function DiscordMockup() {
           {/* Header */}
           <div className="flex items-center gap-1.5 border-b border-[#1e1f22] px-2 py-1.5">
             <span className="text-[8px] text-[#949ba4]">#</span>
-            <div className="h-1.5 w-12 rounded bg-[#dbdee1]/30" />
+            <div className="h-1.5 w-12 rounded-sm bg-[#dbdee1]/30" />
           </div>
 
           {/* Messages area */}
           <div className="flex-1 p-2">
             {Array.from({ length: 3 }).map((_, i) => (
               <div key={i} className="mb-2 flex gap-1.5">
-                <div className="h-5 w-5 shrink-0 rounded-full bg-[#5865f2]" />
+                <div className="size-5 shrink-0 rounded-full bg-[#5865f2]" />
                 <div className="flex flex-col gap-0.5">
                   <div className="flex items-center gap-1.5">
-                    <div className="h-1.5 w-8 rounded bg-[#dbdee1]/40" />
-                    <div className="h-1 w-6 rounded bg-[#949ba4]/30" />
+                    <div className="h-1.5 w-8 rounded-sm bg-[#dbdee1]/40" />
+                    <div className="h-1 w-6 rounded-sm bg-[#949ba4]/30" />
                   </div>
-                  <div className="h-1.5 w-20 rounded bg-[#dbdee1]/20" />
+                  <div className="h-1.5 w-20 rounded-sm bg-[#dbdee1]/20" />
                 </div>
               </div>
             ))}
@@ -133,16 +133,16 @@ function DiscordMockup() {
         {/* Members sidebar */}
         <div className="hidden w-24 bg-[#2b2d31] p-1.5 lg:block">
           <div className="mb-1.5 px-1">
-            <div className="h-1.5 w-12 rounded bg-[#949ba4]/30" />
+            <div className="h-1.5 w-12 rounded-sm bg-[#949ba4]/30" />
           </div>
           {Array.from({ length: 5 }).map((_, i) => (
             <div
               key={i}
-              className="mb-0.5 flex items-center gap-1.5 rounded px-1 py-0.5"
+              className="mb-0.5 flex items-center gap-1.5 rounded-sm px-1 py-0.5"
             >
-              <div className="h-4 w-4 rounded-full bg-[#5865f2]" />
+              <div className="size-4 rounded-full bg-[#5865f2]" />
               <div
-                className="h-1.5 rounded bg-[#dbdee1]/25"
+                className="h-1.5 rounded-sm bg-[#dbdee1]/25"
                 style={{ width: 28 + (i % 3) * 8 }}
               />
             </div>
@@ -156,60 +156,71 @@ function DiscordMockup() {
 export function HomeCommunitySection() {
   return (
     <section className="mt-10 border-y border-border md:mt-20">
-      <div className="grid md:grid-cols-2">
+      <div className="grid md:grid-cols-2 md:divide-x md:divide-border">
         {/* GitHub panel */}
-        <div className="bg-secondary/50 p-8 md:p-12 lg:p-16">
-          <h2 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
-            Engage on GitHub
-          </h2>
-          <p className="mt-4 max-w-md leading-relaxed text-muted-foreground">
-            Don&apos;t trust, verify.
-            <br />
-            Sigle is an open-source platform. Want to contribute to the
-            development? Join us and give us a star!
-          </p>
-          <Button
-            variant="outline"
-            className="mt-6"
-            render={
-              <a
-                href={appConfig.githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Go to GitHub
-                <IconArrowRight className="size-4" />
-              </a>
-            }
-          />
-
-          <GitHubMockup />
+        <div className="flex flex-col justify-between overflow-hidden bg-secondary/50 p-8 md:p-12 lg:flex-row lg:p-16">
+          <div className="lg:w-2/3">
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+              Engage on GitHub
+            </h2>
+            <p className="mt-4 leading-relaxed text-muted-foreground">
+              Don&apos;t trust, verify.
+              <br />
+              Sigle is an open-source platform. Want to contribute to the
+              development? Join us and give us a star!
+            </p>
+            <Button
+              variant="outline"
+              className="mt-6"
+              render={
+                <a
+                  href={appConfig.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Go to GitHub
+                  <IconArrowRight className="size-4" />
+                </a>
+              }
+            />
+          </div>
+          <div className="hidden md:relative md:block md:w-1/3">
+            <div className="absolute top-[100px] left-[20px] w-[400px]">
+              <GitHubMockup />
+            </div>
+          </div>
         </div>
 
         {/* Discord panel */}
-        <div className="bg-background p-8 md:p-12 lg:p-16">
-          <h2 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
-            Join us on Discord
-          </h2>
-          <p className="mt-4 max-w-md leading-relaxed text-muted-foreground">
-            Our community of thousands of amazing people are collaborating to
-            help each other build the next writing platform generation.
-          </p>
-          <Button
-            variant="outline"
-            className="mt-6"
-            render={
-              <a
-                href={appConfig.discordUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Join the Discord
-                <IconArrowRight className="size-4" />
-              </a>
-            }
-          />
-          <DiscordMockup />
+        <div className="flex flex-col justify-between overflow-hidden bg-background p-8 md:p-12 lg:flex-row lg:p-16">
+          <div className="lg:w-2/3">
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground md:text-3xl">
+              Join us on Discord
+            </h2>
+            <p className="mt-4 leading-relaxed text-muted-foreground">
+              Our community of thousands of amazing people are collaborating to
+              help each other build the next writing platform generation.
+            </p>
+            <Button
+              variant="outline"
+              className="mt-6"
+              render={
+                <a
+                  href={appConfig.discordUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Join the Discord
+                  <IconArrowRight className="size-4" />
+                </a>
+              }
+            />
+          </div>
+          <div className="hidden md:relative md:block md:w-1/3">
+            <div className="absolute top-[100px] left-[20px] w-[400px]">
+              <DiscordMockup />
+            </div>
+          </div>
         </div>
       </div>
     </section>
