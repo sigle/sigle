@@ -172,6 +172,7 @@ export function HomeCommunitySection() {
             <Button
               variant="outline"
               className="mt-6"
+              nativeButton={false}
               render={
                 <a
                   href={appConfig.githubUrl}
@@ -204,6 +205,7 @@ export function HomeCommunitySection() {
             <Button
               variant="outline"
               className="mt-6"
+              nativeButton={false}
               render={
                 <a
                   href={appConfig.discordUrl}

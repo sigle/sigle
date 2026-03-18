@@ -1,6 +1,5 @@
 "use client";
 
-import { Button, Container, Heading, Text } from "@radix-ui/themes";
 import { Card, CardContent } from "@/components/ui/card";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
@@ -14,6 +13,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "../ui";
+import { Button } from "../ui/button";
 
 export const HomeTrendingUsers = () => {
   const { data: users } = sigleApiClient.useSuspenseQuery(
@@ -22,10 +22,8 @@ export const HomeTrendingUsers = () => {
   );
 
   return (
-    <Container size="4" className="mt-10 px-4 md:mt-20">
-      <Heading as="h3" size="4">
-        Discover
-      </Heading>
+    <div className="mx-auto mt-10 max-w-6xl px-4 md:mt-20">
+      <h3 className="text-lg font-bold">Discover</h3>
 
       <Carousel
         className="mt-4 w-full"
@@ -44,28 +42,29 @@ export const HomeTrendingUsers = () => {
                   <NextLink href={Routes.userProfile({ username: user.id })}>
                     <ProfileAvatar user={user} size="8" />
                   </NextLink>
-                  <Text
-                    as="p"
-                    size="3"
-                    weight="medium"
-                    className="max-w-full truncate"
-                  >
+
+                  <p className="max-w-full truncate text-base font-medium">
                     {user.profile?.displayName
                       ? user.profile?.displayName
                       : formatReadableAddress(user.id)}
-                  </Text>
+                  </p>
 
                   <div className="flex w-full flex-col gap-2">
-                    <Text as="p" size="1" color="gray">
+                    <p className="text-xs text-muted-foreground">
                       {user.postsCount} posts
-                    </Text>
-                    <Button color="gray" variant="soft" className="w-full">
-                      <NextLink
-                        href={Routes.userProfile({ username: user.id })}
-                      >
-                        Discover
-                      </NextLink>
-                    </Button>
+                    </p>
+                    <Button
+                      variant="secondary"
+                      className="w-full"
+                      nativeButton={false}
+                      render={
+                        <NextLink
+                          href={Routes.userProfile({ username: user.id })}
+                        >
+                          Discover
+                        </NextLink>
+                      }
+                    />
                   </div>
                 </CardContent>
               </Card>
@@ -75,6 +74,6 @@ export const HomeTrendingUsers = () => {
         <CarouselPrevious color="gray" highContrast />
         <CarouselNext color="gray" highContrast />
       </Carousel>
-    </Container>
+    </div>
   );
 };

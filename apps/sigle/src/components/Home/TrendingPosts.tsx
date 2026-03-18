@@ -1,6 +1,5 @@
 "use client";
 
-import { Container, Heading } from "@radix-ui/themes";
 import { sigleApiClient } from "@/lib/sigle";
 import { PostCard } from "../Shared/Post/Card";
 import {
@@ -25,11 +24,10 @@ export const HomeTrendingPosts = () => {
   );
 
   return (
-    <Container size="4" className="mt-10 px-4 md:mt-20">
-      <Heading as="h3" size="5">
-        Trending
-      </Heading>
+    <div className="mx-auto mt-10 max-w-6xl px-4 md:mt-20">
+      <h3 className="text-lg font-bold">Trending</h3>
 
+      {/* TODO shadcn component */}
       <Carousel
         className="mt-4 w-full"
         opts={{
@@ -46,6 +44,6 @@ export const HomeTrendingPosts = () => {
         <CarouselPrevious color="gray" highContrast />
         <CarouselNext color="gray" highContrast />
       </Carousel>
-    </Container>
+    </div>
   );
 };

@@ -1,10 +1,10 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { Button, Heading, Link, Text } from "@radix-ui/themes";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
@@ -44,47 +44,40 @@ export const PostCard = ({ post }: PostCardProps) => {
       <CardContent>
         <div className="flex-1 space-y-2">
           <NextLink href={Routes.post({ postId: post.id })} className="block">
-            <Heading
-              size="4"
-              className="line-clamp-2 wrap-break-word"
-              style={{
-                wordBreak: "break-word",
-              }}
-            >
+            <h3 className="line-clamp-2 text-lg font-bold wrap-break-word">
               {post.metaTitle || post.title}
-            </Heading>
+            </h3>
           </NextLink>
           <NextLink href={Routes.post({ postId: post.id })} className="block">
-            <Text as="p" size="2" className="line-clamp-1 md:line-clamp-2">
+            <p className="line-clamp-1 md:line-clamp-2">
               {post.metaDescription || post.excerpt}
-            </Text>
+            </p>
           </NextLink>
           <div className="mt-3">
-            <Text as="p" color="gray" size="1">
+            <p className="text-xs text-muted-foreground">
               By{" "}
-              <Link asChild>
-                <NextLink href={Routes.userProfile({ username: post.user.id })}>
-                  {post.user.profile?.displayName
-                    ? post.user.profile?.displayName
-                    : formatReadableAddress(post.user.id)}
-                </NextLink>
-              </Link>{" "}
+              <NextLink
+                className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
+                href={Routes.userProfile({ username: post.user.id })}
+              >
+                {post.user.profile?.displayName
+                  ? post.user.profile?.displayName
+                  : formatReadableAddress(post.user.id)}
+              </NextLink>{" "}
               • {format(new Date(post.createdAt), "MMM dd, yyyy")}
-            </Text>
+            </p>
           </div>
         </div>
         {post.collectible ? (
           <>
             <div className="mt-4 flex items-center justify-between">
-              <Text as="p" color="gray" size="2">
+              <p className="text-muted-foreground">
                 {post.collectible.openEdition
                   ? `${post.collectible.collected} collected`
                   : `${post.collectible.collected}/${post.collectible.maxSupply} collected`}
-              </Text>
+              </p>
               <Button
-                color="gray"
-                size="2"
-                variant="soft"
+                variant="secondary"
                 disabled={!canCollect}
                 onClick={() => setCollectDialogOpen(true)}
               >
