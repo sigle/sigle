@@ -35,7 +35,12 @@ export const PublishReviewCollect = () => {
           <IconCards size={20} />
           Collect settings
         </CardTitle>
-        <Button variant="ghost" size="icon" onClick={openCollectSettings}>
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Edit collect settings"
+          onClick={openCollectSettings}
+        >
           <IconPencil size={16} />
         </Button>
       </CardHeader>

@@ -243,6 +243,7 @@ export const PostCollectDialog = ({
                 variant="outline"
                 onClick={decrementEditions}
                 disabled={editions === 1}
+                aria-label="Decrease editions"
               >
                 <IconMinus className="size-4" />
               </Button>
@@ -256,6 +257,7 @@ export const PostCollectDialog = ({
                     editions === post.collectible.maxSupply) ||
                   editions === maxMints
                 }
+                aria-label="Increase editions"
               >
                 <IconPlus className="size-4" />
               </Button>

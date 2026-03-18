@@ -65,6 +65,7 @@ export const EditorHeader = () => {
             size="icon"
             nativeButton={false}
             render={<NextLink href="/dashboard/drafts" />}
+            aria-label="Back to drafts"
           >
             <IconArrowLeft size={headerIconSize} />
           </Button>
