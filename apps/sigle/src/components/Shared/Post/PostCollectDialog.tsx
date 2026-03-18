@@ -7,7 +7,6 @@ import {
   Separator,
   Skeleton,
   Tooltip,
-  VisuallyHidden,
 } from "@radix-ui/themes";
 import { type paths, fixedMintFee, formatBTC } from "@sigle/sdk";
 import {
@@ -153,10 +152,10 @@ export const PostCollectDialog = ({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Content size="3" className="max-w-md">
-        <VisuallyHidden>
+        <span className="sr-only">
           <Dialog.Title>Collect</Dialog.Title>
           <Dialog.Description>Collect {editions} editions</Dialog.Description>
-        </VisuallyHidden>
+        </span>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">

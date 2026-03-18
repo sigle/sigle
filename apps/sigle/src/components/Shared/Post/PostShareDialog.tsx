@@ -1,5 +1,5 @@
 import type { paths } from "@sigle/sdk";
-import { Dialog, IconButton, Link, VisuallyHidden } from "@radix-ui/themes";
+import { Dialog, IconButton, Link } from "@radix-ui/themes";
 import { IconReceiptTax } from "@tabler/icons-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -49,11 +49,11 @@ export const PostShareDialog = ({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Content size="3" className="max-w-md">
         <Dialog.Title>Share</Dialog.Title>
-        <VisuallyHidden>
+        <span className="sr-only">
           <Dialog.Description>
             Earn referrer rewards for each primary sale made through your link.
           </Dialog.Description>
-        </VisuallyHidden>
+        </span>
 
         <div className="space-y-8">
           {post.collectible ? (
