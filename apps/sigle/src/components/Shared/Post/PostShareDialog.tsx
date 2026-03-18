@@ -1,10 +1,15 @@
 import type { paths } from "@sigle/sdk";
-import { Dialog } from "@radix-ui/themes";
 import { IconReceiptTax } from "@tabler/icons-react";
 import Image from "next/image";
 import { useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { appConfig } from "@/config";
@@ -46,13 +51,13 @@ export const PostShareDialog = ({
   const metaTitleAttribute = post.metaTitle || post.title;
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Content size="3" className="max-w-md">
-        <Dialog.Title>Share</Dialog.Title>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogTitle>Share</DialogTitle>
         <div className="sr-only">
-          <Dialog.Description>
+          <DialogDescription>
             Earn referrer rewards for each primary sale made through your link.
-          </Dialog.Description>
+          </DialogDescription>
         </div>
 
         <div className="space-y-8">
@@ -66,6 +71,7 @@ export const PostShareDialog = ({
                   className="underline"
                   href={`${appConfig.docsUrl}/monetization#fee-structure`}
                   target="_blank"
+                  rel="noreferrer"
                 >
                   Learn more.
                 </a>
@@ -132,7 +138,7 @@ export const PostShareDialog = ({
             </Button>
           </Field>
         </div>
-      </Dialog.Content>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { Dialog, Skeleton } from "@radix-ui/themes";
+import { Skeleton } from "@radix-ui/themes";
 import { type paths, fixedMintFee, formatBTC } from "@sigle/sdk";
 import {
   IconHelpCircle,
@@ -14,6 +14,12 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
@@ -150,11 +156,11 @@ export const PostCollectDialog = ({
   const maxMints = isPostOwner ? 1 : 10;
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Content size="3" className="max-w-md">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
         <div className="sr-only">
-          <Dialog.Title>Collect</Dialog.Title>
-          <Dialog.Description>Collect {editions} editions</Dialog.Description>
+          <DialogTitle>Collect</DialogTitle>
+          <DialogDescription>Collect {editions} editions</DialogDescription>
         </div>
 
         <div className="space-y-4">
@@ -334,7 +340,7 @@ export const PostCollectDialog = ({
             </Button>
           </div>
         </div>
-      </Dialog.Content>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 };
