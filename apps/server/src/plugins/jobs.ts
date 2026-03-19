@@ -16,4 +16,8 @@ export default definePlugin(async () => {
   //   action: "indexer-index-posts",
   //   data: {},
   // });
+  // await indexerJob.emit({
+  //   action: "indexer-index-profiles",
+  //   data: {},
+  // });
 });
