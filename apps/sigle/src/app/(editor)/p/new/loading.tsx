@@ -1,4 +1,4 @@
-import { Container, Skeleton } from "@radix-ui/themes";
+import { Skeleton } from "@radix-ui/themes";
 
 export const PageEditorSkeleton = () => {
   return (
@@ -8,7 +8,7 @@ export const PageEditorSkeleton = () => {
         <Skeleton className="size-7" />
         <Skeleton className="h-7 w-20" />
       </div>
-      <Container size="2" className="my-4">
+      <div className="mx-auto my-4 max-w-2xl">
         <div className="space-y-4">
           {/* Title */}
           <Skeleton className="h-9 w-2/3" />
@@ -29,7 +29,7 @@ export const PageEditorSkeleton = () => {
             </Skeleton>
           </div>
         </div>
-      </Container>
+      </div>
     </>
   );
 };

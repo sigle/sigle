@@ -1,5 +1,4 @@
 import type { Editor } from "@tiptap/react";
-import { Container } from "@radix-ui/themes";
 import { IconKeyboard, IconMoon, IconSun } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
@@ -17,7 +16,7 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
   return (
     // oxlint-disable-next-line better-tailwindcss/no-unknown-classes
     <div className="not-prose">
-      <Container className="fixed inset-x-0 bottom-0 mb-8">
+      <div className="fixed inset-x-0 bottom-0 mx-auto mb-8 max-w-3xl px-4">
         <div className="pointer-events-none flex items-center justify-end gap-3">
           <p className="text-xs">
             {editor?.storage.characterCount.words()} words
@@ -46,7 +45,7 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
             <IconKeyboard size={16} />
           </Button>
         </div>
-      </Container>
+      </div>
 
       <ShortcutsDialog
         open={showShortcutsDialog}
