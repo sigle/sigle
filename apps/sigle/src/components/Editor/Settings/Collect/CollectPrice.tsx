@@ -1,4 +1,3 @@
-import { Link } from "@radix-ui/themes";
 import { useFormContext, useFormState } from "react-hook-form";
 import {
   Field,
@@ -68,12 +67,14 @@ export const CollectPrice = () => {
       </RadioGroup>
       <FieldDescription className="text-xs">
         Earn protocol fees on each mint,{" "}
-        <Link
+        <a
+          className="underline underline-offset-2"
           href={`${appConfig.docsUrl}/monetization#fee-structure`}
           target="_blank"
+          rel="noreferrer"
         >
           learn more
-        </Link>
+        </a>
         .
       </FieldDescription>
 

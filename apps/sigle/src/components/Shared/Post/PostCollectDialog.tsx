@@ -1,6 +1,5 @@
 "use client";
 
-import { Skeleton } from "@radix-ui/themes";
 import { type paths, fixedMintFee, formatBTC } from "@sigle/sdk";
 import {
   IconHelpCircle,
@@ -21,6 +20,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
