@@ -1,4 +1,5 @@
-import { Avatar, Skeleton } from "@radix-ui/themes";
+import { ProfileAvatar } from "@/components/Shared/Profile/ProfileAvatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ProfileFeedSkeleton } from "@/components/User/ProfileFeed";
 
 export const PageProfileSkeleton = () => {
@@ -14,7 +15,12 @@ export const PageProfileSkeleton = () => {
         <div className="flex">
           <div className="z-10 mt-[-70px] rounded-5 border-[6px] border-transparent bg-white dark:bg-gray-1">
             <Skeleton>
-              <Avatar fallback="L" size="8" radius="small" />
+              <ProfileAvatar
+                user={{
+                  id: "L",
+                }}
+                size="8"
+              />
             </Skeleton>
           </div>
         </div>
