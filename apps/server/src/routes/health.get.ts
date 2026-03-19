@@ -266,9 +266,12 @@ defineRouteMeta({
                   },
                   profile: {
                     type: "object",
-                    required: ["id"],
+                    required: ["id", "txId"],
                     properties: {
                       id: {
+                        type: "string",
+                      },
+                      txId: {
                         type: "string",
                       },
                       displayName: {
