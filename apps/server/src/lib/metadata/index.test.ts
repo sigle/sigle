@@ -5,7 +5,7 @@ import {
   getMetadataFromUri,
   MetadataFetchFailedError,
   InvalidMetadataError,
-} from "./metadata";
+} from "./index";
 
 const mockFetch = vi.fn();
 
