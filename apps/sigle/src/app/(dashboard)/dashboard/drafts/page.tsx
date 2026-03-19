@@ -36,8 +36,9 @@ export default function DashboardDrafts() {
 
   return (
     <div className="py-10">
-      <h2 className="text-2xl font-bold">Drafts</h2>
-      <Card className="mt-5">
+      <h2 className="mb-5 text-2xl font-bold">Drafts</h2>
+
+      <Card>
         <CardContent>
           {loadingDrafts ? (
             <div className="flex justify-center py-7">

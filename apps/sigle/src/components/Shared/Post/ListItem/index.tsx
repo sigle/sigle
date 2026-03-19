@@ -32,24 +32,22 @@ export const PostListItem = ({ post }: PostListItemProps) => {
   return (
     <div className="space-y-3 border-b border-solid border-border py-5 last:border-b-0">
       <div>
-        <div className="flex items-center justify-between gap-5">
-          <div className="flex-1 space-y-2">
-            <NextLink href={Routes.post({ postId: post.id })} className="block">
+        <div className="flex justify-between gap-5">
+          <div className="flex h-full flex-1 flex-col justify-between">
+            <NextLink href={Routes.post({ postId: post.id })}>
               <h4
-                className="line-clamp-2 text-lg font-medium"
+                className="mb-2 line-clamp-2 text-lg/tight font-medium"
                 style={{
                   wordBreak: "break-word",
                 }}
               >
                 {post.metaTitle || post.title}
               </h4>
-            </NextLink>
-            <NextLink href={Routes.post({ postId: post.id })} className="block">
               <p className="line-clamp-1 text-sm text-muted-foreground md:line-clamp-2">
                 {post.metaDescription || post.excerpt}
               </p>
             </NextLink>
-            <div className="mt-3 flex items-center gap-2">
+            <div className="mt-2 flex items-center gap-2">
               <p className="text-xs text-muted-foreground">
                 By{" "}
                 <NextLink
@@ -65,7 +63,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
               <DropdownMenu>
                 <DropdownMenuTrigger
                   render={
-                    <Button variant="ghost" size="icon" title="More">
+                    <Button variant="ghost" size="icon-sm" title="More">
                       <IconDotsVertical size={14} />
                     </Button>
                   }

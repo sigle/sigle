@@ -31,13 +31,10 @@ export const HomeTrendingUsers = () => {
           align: "start",
         }}
       >
-        <CarouselContent>
+        <CarouselContent className="p-0.25">
           {users.map((user) => (
-            <CarouselItem
-              key={user.id}
-              className="basis-1/2 md:basis-1/5 lg:basis-1/6"
-            >
-              <Card key={user.id} className="m-0.25">
+            <CarouselItem key={user.id} className="basis-1/2 md:basis-1/5">
+              <Card key={user.id}>
                 <CardContent className="flex flex-col items-center gap-2">
                   <NextLink href={Routes.userProfile({ username: user.id })}>
                     <ProfileAvatar user={user} size="8" />

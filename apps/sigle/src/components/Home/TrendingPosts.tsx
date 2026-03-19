@@ -27,16 +27,11 @@ export const HomeTrendingPosts = () => {
     <div className="mx-auto mt-10 max-w-6xl px-4 md:mt-20">
       <h3 className="text-lg font-bold">Trending</h3>
 
-      <Carousel
-        className="mt-4 w-full"
-        opts={{
-          align: "start",
-        }}
-      >
-        <CarouselContent>
+      <Carousel className="mt-4">
+        <CarouselContent className="p-0.25">
           {posts.results.map((post) => (
             <CarouselItem key={post.id} className="md:basis-1/2 lg:basis-1/4">
-              <PostCard post={post} />
+              <PostCard className="h-full" post={post} />
             </CarouselItem>
           ))}
         </CarouselContent>
