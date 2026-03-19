@@ -197,7 +197,7 @@ describe("executeIndexerIndexPostsJob", () => {
 
     expect(result.toProcess).toBe(1);
     expect(result.lastProcessedTxId).toBe("0xtx2");
-    expect(mockEmit).toHaveBeenCalledOnce();
+    expect(mockEmit).toHaveBeenCalledTimes(1);
     expect(mockEmit).toHaveBeenCalledWith({
       action: "indexer-publish-post",
       data: expect.objectContaining({
@@ -227,7 +227,7 @@ describe("executeIndexerIndexPostsJob", () => {
     const result = await executeIndexerIndexPostsJob({});
 
     expect(result.toProcess).toBe(1);
-    expect(mockGetStacksTransaction).toHaveBeenCalledOnce();
+    expect(mockGetStacksTransaction).toHaveBeenCalledTimes(1);
   });
 
   it("skips events with invalid event log schema", async () => {
@@ -258,7 +258,7 @@ describe("executeIndexerIndexPostsJob", () => {
     const result = await executeIndexerIndexPostsJob({});
 
     expect(result.toProcess).toBe(1);
-    expect(mockGetStacksTransaction).toHaveBeenCalledOnce();
+    expect(mockGetStacksTransaction).toHaveBeenCalledTimes(1);
   });
 
   it("skips events when getStacksTransaction fails", async () => {
@@ -280,7 +280,7 @@ describe("executeIndexerIndexPostsJob", () => {
     const result = await executeIndexerIndexPostsJob({});
 
     expect(result.toProcess).toBe(1);
-    expect(mockEmit).toHaveBeenCalledOnce();
+    expect(mockEmit).toHaveBeenCalledTimes(1);
     expect(mockEmit).toHaveBeenCalledWith({
       action: "indexer-publish-post",
       data: expect.objectContaining({
@@ -311,7 +311,7 @@ describe("executeIndexerIndexPostsJob", () => {
     const result = await executeIndexerIndexPostsJob({});
 
     expect(result.toProcess).toBe(1);
-    expect(mockEmit).toHaveBeenCalledOnce();
+    expect(mockEmit).toHaveBeenCalledTimes(1);
     expect(mockEmit).toHaveBeenCalledWith({
       action: "indexer-publish-post",
       data: expect.objectContaining({
