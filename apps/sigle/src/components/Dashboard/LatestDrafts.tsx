@@ -95,7 +95,7 @@ export const LatestDrafts = () => {
             return (
               <div
                 key={draft.id}
-                className="border-b border-solid border-gray-6 py-5 first:pt-0 last:border-b-0 last:pb-0"
+                className="border-b border-solid border-border py-5 first:pt-0 last:border-b-0 last:pb-0"
               >
                 {draft.txStatus === "pending" && draft.txId && (
                   <Badge
