@@ -192,6 +192,7 @@ export default defineEventHandler(async (event) => {
                 await indexerJob.emit({
                   action: "indexer-set-profile",
                   data: {
+                    txId: transaction.transaction_identifier.hash,
                     address: value.address,
                     uri: value.uri,
                   },
