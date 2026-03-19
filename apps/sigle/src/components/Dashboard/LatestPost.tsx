@@ -60,7 +60,7 @@ export const LatestPost = () => {
 
           {post ? (
             <>
-              <div className="rounded-2 bg-gray-3 p-4">
+              <div className="rounded-2 bg-muted p-4">
                 <h3 className="line-clamp-2 text-lg font-bold">
                   {post.metaTitle || post.title}
                 </h3>
