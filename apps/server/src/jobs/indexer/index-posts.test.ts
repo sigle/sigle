@@ -9,6 +9,7 @@ import {
   it,
   vi,
 } from "vitest";
+import { sigleConfig } from "@/lib/sigle";
 import { createTestDatabase, type TestDatabase } from "@/test/database";
 import { createTestPost, createTestUser } from "@/test/helpers";
 
@@ -164,6 +165,7 @@ describe("executeIndexerIndexPostsJob", () => {
       },
     });
     mockGetStacksTransaction.mockImplementation((txId: string) => {
+      // oxlint-disable-next-line vitest/no-conditional-in-test
       if (txId === "0xtx1") {
         return createOkResult(createSuccessTransaction(txId, 101, 1700000000));
       }
@@ -297,6 +299,7 @@ describe("executeIndexerIndexPostsJob", () => {
       },
     });
     mockGetStacksTransaction.mockImplementation((txId: string) => {
+      // oxlint-disable-next-line vitest/no-conditional-in-test
       if (txId === "0xtx1") {
         return createErrResult(new Error("Transaction not found"));
       }
@@ -325,6 +328,7 @@ describe("executeIndexerIndexPostsJob", () => {
       },
     });
     mockGetStacksTransaction.mockImplementation((txId: string) => {
+      // oxlint-disable-next-line vitest/no-conditional-in-test
       if (txId === "0xtx1") {
         return createOkResult({
           ...createSuccessTransaction(txId, 101, 1700000000),
