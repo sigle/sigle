@@ -5,5 +5,5 @@
   @apply bg-background;
 }
 .tippy-box[data-theme~="sigle-editor"] .tippy-content {
-  @apply min-w-[280px] overflow-hidden rounded-md bg-background p-0 shadow-2;
+  @apply min-w-[280px] overflow-hidden rounded-md bg-background p-0 shadow-md;
 }
