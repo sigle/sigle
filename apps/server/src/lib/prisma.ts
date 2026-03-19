@@ -28,6 +28,7 @@ export const SELECT_PUBLIC_USER_FIELDS = {
   profile: {
     select: {
       id: true,
+      txId: true,
       displayName: true,
       description: true,
       website: true,
