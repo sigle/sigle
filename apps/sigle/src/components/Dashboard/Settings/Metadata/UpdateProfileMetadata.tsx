@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { createId } from "@paralleldrive/cuid2";
 import {
   type paths,
   createProfileMetadata,
@@ -105,7 +106,7 @@ export const UpdateProfileMetadata = ({
     const metadata = createProfileMetadata({
       $schema: ProfileMetadataSchemaId.LATEST,
       content: {
-        id: "TODO",
+        id: createId(),
         displayName: formValues.displayName || undefined,
         description: formValues.description || undefined,
         twitter: formValues.twitter || undefined,
