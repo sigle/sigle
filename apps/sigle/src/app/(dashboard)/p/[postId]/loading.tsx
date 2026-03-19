@@ -1,5 +1,5 @@
-import { Skeleton } from "@radix-ui/themes";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const PagePostSkeleton = () => {
   return (
