@@ -1,6 +1,5 @@
 "use client";
 
-import { Container } from "@radix-ui/themes";
 import { notFound } from "next/navigation";
 import { Suspense, use } from "react";
 import { FadeSlideBottom } from "@/components/ui";
@@ -37,7 +36,7 @@ export function UserClientPage(props: Props) {
   return (
     <FadeSlideBottom>
       <ProfileHeader user={user} />
-      <Container size="2" className="mt-4 px-4 pb-20">
+      <div className="mx-auto mt-4 max-w-2xl px-4 pb-20">
         <ProfileInfo user={user} />
 
         <h3 className="mt-10 text-base font-medium">Latest posts</h3>
@@ -45,7 +44,7 @@ export function UserClientPage(props: Props) {
         <Suspense fallback={<ProfileFeedSkeleton />}>
           <ProfileFeed user={user} />
         </Suspense>
-      </Container>
+      </div>
     </FadeSlideBottom>
   );
 }

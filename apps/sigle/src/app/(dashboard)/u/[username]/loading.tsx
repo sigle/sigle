@@ -1,4 +1,4 @@
-import { Avatar, Container, Skeleton } from "@radix-ui/themes";
+import { Avatar, Skeleton } from "@radix-ui/themes";
 import { ProfileFeedSkeleton } from "@/components/User/ProfileFeed";
 
 export const PageProfileSkeleton = () => {
@@ -9,7 +9,7 @@ export const PageProfileSkeleton = () => {
         <div className="h-64 md:h-88" />
       </Skeleton>
 
-      <Container size="2" px="4">
+      <div className="mx-auto max-w-2xl px-4">
         {/* Profile image */}
         <div className="flex">
           <div className="z-10 mt-[-70px] rounded-5 border-[6px] border-transparent bg-white dark:bg-gray-1">
@@ -52,7 +52,7 @@ export const PageProfileSkeleton = () => {
         <div className="pt-10 pb-20">
           <ProfileFeedSkeleton />
         </div>
-      </Container>
+      </div>
     </>
   );
 };

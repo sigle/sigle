@@ -1,7 +1,6 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { Container } from "@radix-ui/themes";
 import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
 import Image from "next/image";
 import { usePostHog } from "posthog-js/react";
@@ -66,7 +65,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
         ) : null}
       </div>
 
-      <Container size="2" px="4">
+      <div className="mx-auto max-w-2xl px-4">
         <div className="flex justify-between">
           <div className="z-10 mt-[-70px] rounded-3 border-[6px] border-white bg-white dark:border-gray-1 dark:bg-gray-1">
             <ProfileAvatar user={user} size="8" />
@@ -76,6 +75,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
             {isCurrentUser ? (
               <Button
                 variant="secondary"
+                nativeButton={false}
                 render={<NextLink href="/dashboard/settings" />}
               >
                 Edit profile <IconPencil size={16} />
@@ -98,7 +98,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
             </DropdownMenu>
           </div>
         </div>
-      </Container>
+      </div>
     </>
   );
 };

@@ -1,6 +1,5 @@
 "use client";
 
-import { Container } from "@radix-ui/themes";
 import { use } from "react";
 import { EditorCoverImage } from "@/components/Editor/EditorCoverImage";
 import { EditorFormProvider } from "@/components/Editor/EditorFormProvider";
@@ -33,11 +32,11 @@ export default function PostEditPage(props: PostEditPageProps) {
   return (
     <EditorFormProvider post={post}>
       <EditorHeader />
-      <Container size="2">
+      <div className="mx-auto max-w-2xl">
         <EditorTitle />
         <EditorCoverImage />
         <EditorTipTap />
-      </Container>
+      </div>
       <EditorSettings />
       <PublishDialog postId={params.postId} />
     </EditorFormProvider>

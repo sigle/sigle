@@ -1,4 +1,3 @@
-import { Container } from "@radix-ui/themes";
 import {
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
@@ -11,7 +10,7 @@ import { appConfig } from "@/config";
 export const Footer = () => {
   return (
     <footer>
-      <Container className="px-4">
+      <div className="mx-auto max-w-6xl px-4">
         <Separator />
         <div className="flex flex-col items-center justify-between py-7 md:flex-row">
           <div className="mb-4 md:mb-0">
@@ -76,6 +75,7 @@ export const Footer = () => {
                 className="text-sm text-muted-foreground underline-offset-2 hover:underline"
                 href={appConfig.docsUrl}
                 target="_blank"
+                rel="noreferrer"
               >
                 Docs
               </a>
@@ -95,6 +95,7 @@ export const Footer = () => {
                 className="text-sm text-muted-foreground underline-offset-2 hover:underline"
                 href={appConfig.discordUrl}
                 target="_blank"
+                rel="noreferrer"
               >
                 Support
               </a>
@@ -111,7 +112,7 @@ export const Footer = () => {
             </li>
           </ul>
         </div>
-      </Container>
+      </div>
     </footer>
   );
 };

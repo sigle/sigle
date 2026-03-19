@@ -1,15 +1,15 @@
-import { Container, Skeleton } from "@radix-ui/themes";
+import { Skeleton } from "@radix-ui/themes";
 import { Separator } from "@/components/ui/separator";
 
 export const PagePostSkeleton = () => {
   return (
     <>
       {/* Cover Image */}
-      <Container size="3" className="mt-6 px-4">
-        <Skeleton className="h-[350px] w-full rounded-2" />
-      </Container>
+      <div className="mx-auto mt-6 max-w-4xl px-4">
+        <Skeleton className="h-[400px] w-full rounded-2" />
+      </div>
 
-      <Container size="2" className="my-8 px-4 md:my-10">
+      <div className="mx-auto my-8 max-w-2xl px-4 md:my-10">
         {/* Back Button */}
         <Skeleton className="mb-6 h-9 w-28" />
 
@@ -49,7 +49,7 @@ export const PagePostSkeleton = () => {
             <p className="text-sm">&#8203;</p>
           </Skeleton>
         </div>
-      </Container>
+      </div>
     </>
   );
 };

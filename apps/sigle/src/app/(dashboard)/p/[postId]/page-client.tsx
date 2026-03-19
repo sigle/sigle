@@ -1,6 +1,5 @@
 "use client";
 
-import { Container } from "@radix-ui/themes";
 import { IconArrowLeft } from "@tabler/icons-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -45,7 +44,7 @@ export function PostClientPage(props: Props) {
   return (
     <FadeSlideBottom>
       {post.coverImage ? (
-        <Container size="3" className="mt-6 px-4">
+        <div className="mx-auto mt-6 max-w-4xl px-4">
           <Image
             src={resolveImageUrl(post.coverImage.id)}
             alt="Cover post"
@@ -55,10 +54,10 @@ export function PostClientPage(props: Props) {
             width={post.coverImage.width}
             height={post.coverImage.height}
           />
-        </Container>
+        </div>
       ) : null}
 
-      <Container size="2" className="my-8 px-4 md:my-10">
+      <div className="mx-auto my-8 max-w-2xl px-4 md:my-10">
         <Button
           variant="ghost"
           className="mb-6"
@@ -100,7 +99,7 @@ export function PostClientPage(props: Props) {
         ) : null}
 
         <PostUserInfoCard post={post} />
-      </Container>
+      </div>
     </FadeSlideBottom>
   );
 }
