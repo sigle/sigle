@@ -95,11 +95,11 @@ export const indexerJob = defineJob("indexer")
       case "indexer-publish-post":
         await executePublishPostJob(job.data.data);
         break;
-      case "indexer-set-profile":
-        await executeIndexerSetProfileJob(job.data.data);
-        break;
       case "indexer-index-profiles":
         await executeIndexerIndexProfilesJob(job.data.data);
+        break;
+      case "indexer-set-profile":
+        await executeIndexerSetProfileJob(job.data.data);
         break;
 
       default:
