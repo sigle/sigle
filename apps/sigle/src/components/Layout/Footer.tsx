@@ -10,7 +10,7 @@ import { appConfig } from "@/config";
 export const Footer = () => {
   return (
     <footer>
-      <div className="mx-auto max-w-5xl px-4">
+      <div className="mx-auto max-w-6xl px-4">
         <Separator />
         <div className="flex flex-col items-center justify-between py-7 md:flex-row">
           <div className="mb-4 md:mb-0">
