@@ -149,7 +149,7 @@ export const EditorCoverImage = () => {
             {/* oxlint-disable-next-line no-img-element */}
             <img
               src={preview || resolvedWatchCoverImage || ""}
-              className={cn("rounded-2", {
+              className={cn("rounded-md", {
                 "opacity-25": loadingUploadImage,
               })}
               alt="Cover post"

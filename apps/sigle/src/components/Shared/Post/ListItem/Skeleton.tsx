@@ -10,7 +10,7 @@ export const PostListItemSkeleton = () => {
 
       {/* Avatar */}
       <div className="flex items-center space-x-1">
-        <Skeleton className="size-6 rounded-3" />
+        <Skeleton className="size-6 rounded-lg" />
         <Skeleton className="w-full max-w-[180px]">
           <div className="text-xs">&#8203;</div>
         </Skeleton>

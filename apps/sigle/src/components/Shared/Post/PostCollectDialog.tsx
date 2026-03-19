@@ -183,7 +183,7 @@ export const PostCollectDialog = ({
           {post.coverImage ? (
             <div
               // oxlint-disable-next-line jsx-curly-brace-presence
-              className={"h-[160px] w-full overflow-hidden rounded-2 bg-muted"}
+              className={"h-[160px] w-full overflow-hidden rounded-md bg-muted"}
             >
               <Image
                 src={resolveImageUrl(post.coverImage.id)}
@@ -213,7 +213,7 @@ export const PostCollectDialog = ({
               {isFree ? "Free" : `${formatBTC(price)} sBTC`}
             </p>
           </div>
-          <div className="flex items-center justify-between rounded-2 bg-muted p-2">
+          <div className="flex items-center justify-between rounded-md bg-muted p-2">
             <p className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
               Mint fee
               <a

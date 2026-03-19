@@ -48,7 +48,7 @@ export function PostClientPage(props: Props) {
           <Image
             src={resolveImageUrl(post.coverImage.id)}
             alt="Cover post"
-            className="size-full rounded-2 object-cover"
+            className="size-full rounded-lg object-cover"
             placeholder={post.coverImage.blurhash ? "blur" : "empty"}
             blurDataURL={post.coverImage.blurhash}
             width={post.coverImage.width}

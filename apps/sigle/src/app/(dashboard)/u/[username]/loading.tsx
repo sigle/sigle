@@ -13,7 +13,7 @@ export const PageProfileSkeleton = () => {
       <div className="mx-auto max-w-2xl px-4">
         {/* Profile image */}
         <div className="flex">
-          <div className="z-10 mt-[-70px] rounded-5 border-[6px] border-background bg-background">
+          <div className="z-10 mt-[-70px] rounded-sm border-[6px] border-background bg-background">
             <Skeleton>
               <ProfileAvatar
                 user={{

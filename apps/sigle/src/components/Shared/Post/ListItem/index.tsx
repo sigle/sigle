@@ -94,7 +94,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                   <Image
                     src={resolveImageUrl(post.coverImage.id)}
                     alt="Cover card"
-                    className="size-full rounded-2 object-cover"
+                    className="size-full rounded-md object-cover"
                     placeholder={post.coverImage.blurhash ? "blur" : "empty"}
                     blurDataURL={post.coverImage.blurhash}
                     width={post.coverImage.width}

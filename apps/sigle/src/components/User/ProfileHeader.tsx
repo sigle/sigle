@@ -67,7 +67,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
 
       <div className="mx-auto max-w-2xl px-4">
         <div className="flex justify-between">
-          <div className="z-10 mt-[-70px] rounded-3 border-[6px] border-background bg-background">
+          <div className="z-10 mt-[-70px] rounded-lg border-[6px] border-background bg-background">
             <ProfileAvatar user={user} size="8" />
           </div>
 
