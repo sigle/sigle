@@ -1,5 +1,5 @@
-import type { Result } from "better-result";
 import { serializeCV, stringAsciiCV, tupleCV } from "@stacks/transactions";
+import { Result } from "better-result";
 import {
   afterAll,
   beforeAll,
@@ -121,11 +121,6 @@ describe("executeIndexerIndexPostsJob", () => {
     burn_block_time: timestamp,
   });
 
-  const createOkResult = <T>(value: T) =>
-    ({ isOk: () => true, isErr: () => false, value }) as Result<T, Error>;
-  const createErrResult = <T>(error: Error) =>
-    ({ isOk: () => false, isErr: () => true, error }) as Result<T, Error>;
-
   it("returns 0 posts when no events exist", async () => {
     mockStacksApiClientGET.mockResolvedValue({
       data: { results: [] },
@@ -147,7 +142,7 @@ describe("executeIndexerIndexPostsJob", () => {
       },
     });
     mockGetStacksTransaction.mockResolvedValue(
-      createOkResult(createSuccessTransaction("0xabc", 100, 1700000000)),
+      Result.ok(createSuccessTransaction("0xabc", 100, 1700000000)),
     );
 
     const result = await executeIndexerIndexPostsJob({});
@@ -167,9 +162,9 @@ describe("executeIndexerIndexPostsJob", () => {
     mockGetStacksTransaction.mockImplementation((txId: string) => {
       // oxlint-disable-next-line vitest/no-conditional-in-test
       if (txId === "0xtx1") {
-        return createOkResult(createSuccessTransaction(txId, 101, 1700000000));
+        return Result.ok(createSuccessTransaction(txId, 101, 1700000000));
       }
-      return createOkResult(createSuccessTransaction(txId, 102, 1700000010));
+      return Result.ok(createSuccessTransaction(txId, 102, 1700000010));
     });
 
     const result = await executeIndexerIndexPostsJob({});
@@ -218,7 +213,7 @@ describe("executeIndexerIndexPostsJob", () => {
       },
     });
     mockGetStacksTransaction.mockReturnValue(
-      createOkResult(createSuccessTransaction("0xtx1", 101, 1700000000)),
+      Result.ok(createSuccessTransaction("0xtx1", 101, 1700000000)),
     );
 
     const result = await executeIndexerIndexPostsJob({});
@@ -249,7 +244,7 @@ describe("executeIndexerIndexPostsJob", () => {
       },
     });
     mockGetStacksTransaction.mockReturnValue(
-      createOkResult(createSuccessTransaction("0xtx2", 102, 1700000010)),
+      Result.ok(createSuccessTransaction("0xtx2", 102, 1700000010)),
     );
 
     const result = await executeIndexerIndexPostsJob({});
@@ -280,7 +275,7 @@ describe("executeIndexerIndexPostsJob", () => {
       },
     });
     mockGetStacksTransaction.mockReturnValue(
-      createOkResult(createSuccessTransaction("0xtx2", 102, 1700000010)),
+      Result.ok(createSuccessTransaction("0xtx2", 102, 1700000010)),
     );
 
     const result = await executeIndexerIndexPostsJob({});
@@ -301,9 +296,9 @@ describe("executeIndexerIndexPostsJob", () => {
     mockGetStacksTransaction.mockImplementation((txId: string) => {
       // oxlint-disable-next-line vitest/no-conditional-in-test
       if (txId === "0xtx1") {
-        return createErrResult(new Error("Transaction not found"));
+        return Result.err(new Error("Transaction not found"));
       }
-      return createOkResult(createSuccessTransaction(txId, 102, 1700000010));
+      return Result.ok(createSuccessTransaction(txId, 102, 1700000010));
     });
 
     const result = await executeIndexerIndexPostsJob({});
@@ -330,12 +325,12 @@ describe("executeIndexerIndexPostsJob", () => {
     mockGetStacksTransaction.mockImplementation((txId: string) => {
       // oxlint-disable-next-line vitest/no-conditional-in-test
       if (txId === "0xtx1") {
-        return createOkResult({
+        return Result.ok({
           ...createSuccessTransaction(txId, 101, 1700000000),
           tx_status: "abort_by_response",
         });
       }
-      return createOkResult(createSuccessTransaction(txId, 102, 1700000010));
+      return Result.ok(createSuccessTransaction(txId, 102, 1700000010));
     });
 
     const result = await executeIndexerIndexPostsJob({});
@@ -375,7 +370,7 @@ describe("executeIndexerIndexPostsJob", () => {
       .mockResolvedValueOnce({ data: { results: eventsPage2 } });
 
     mockGetStacksTransaction.mockImplementation((txId: string) =>
-      createOkResult(createSuccessTransaction(txId, 100, 1700000000)),
+      Result.ok(createSuccessTransaction(txId, 100, 1700000000)),
     );
 
     const result = await executeIndexerIndexPostsJob({});
@@ -427,7 +422,7 @@ describe("executeIndexerIndexPostsJob", () => {
         "0xtx1": 1700000000,
         "0xtx2": 1700000010,
       };
-      return createOkResult(
+      return Result.ok(
         createSuccessTransaction(txId, heights[txId], timestamps[txId]),
       );
     });
