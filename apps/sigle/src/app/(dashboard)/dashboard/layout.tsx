@@ -1,6 +1,6 @@
 "use client";
 
-import { Container, Select } from "@radix-ui/themes";
+import { Select } from "@radix-ui/themes";
 import { usePathname, useRouter } from "next/navigation";
 import { AuthProtect } from "@/components/Auth/AuthProtect";
 import { NextLink } from "@/components/Shared/NextLink";
@@ -45,7 +45,7 @@ export default function DashboardLayout({
   };
 
   return (
-    <Container size="3" className="px-4">
+    <div className="mx-auto max-w-4xl px-4">
       <div className="relative">
         <aside className="absolute inset-y-0 left-[-200px] hidden w-[150px] lg:block">
           <nav className="sticky top-(--header-height) py-10">
@@ -57,6 +57,7 @@ export default function DashboardLayout({
                     className={cn("m-0 w-full justify-start", {
                       "bg-muted": pathname === link.href,
                     })}
+                    nativeButton={false}
                     render={<NextLink href={link.href} />}
                   >
                     {link.label}
@@ -81,6 +82,6 @@ export default function DashboardLayout({
 
         <AuthProtect>{children}</AuthProtect>
       </div>
-    </Container>
+    </div>
   );
 }
