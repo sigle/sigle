@@ -79,6 +79,7 @@ export async function getMetadataFromUri(
   return Result.ok(metadata);
 }
 
+// TODO test this function
 export async function getProfileMetadataFromUri(
   baseTokenUri: string,
 ): Promise<
