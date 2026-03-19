@@ -6,9 +6,8 @@ const config = {
       typography: {
         DEFAULT: {
           css: {
-            "--tw-prose-body": "var(--gray-12)",
-            "--tw-prose-hr": "var(--gray-5)",
-            "--tw-prose-invert-hr": "var(--gray-5)",
+            "--tw-prose-body": "var(--primary)",
+            "--tw-prose-hr": "var(--muted)",
             maxWidth: false,
             // Center images in prose
             img: {

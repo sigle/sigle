@@ -1,9 +1,6 @@
-@layer theme, base, components, utilities;
-
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-
 @plugin "@tailwindcss/typography";
 @config "../../tailwind.config.ts";
 

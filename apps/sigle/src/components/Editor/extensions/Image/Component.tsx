@@ -18,7 +18,7 @@ export const ImageComponent = (props: NodeViewProps) => {
       {/* oxlint-disable-next-line no-img-element */}
       <img
         className={cn(
-          `outline outline-offset-2 outline-orange-9 hover:outline-2`,
+          `outline outline-offset-2 outline-accent hover:outline-2`,
           {
             "outline-2": props.selected,
             "opacity-25": uploadId,

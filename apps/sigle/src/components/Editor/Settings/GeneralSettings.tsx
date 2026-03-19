@@ -52,9 +52,9 @@ export const GeneralSettings = () => {
           tagInput: "flex gap-2",
           clearAll: "whitespace-nowrap",
           tagInputField:
-            "h-8 rounded-md border border-border pl-3.5 w-full focus:outline-orange-8",
+            "h-8 rounded-md border border-border pl-3.5 w-full focus:outline-accent",
           selected: "mt-2 flex gap-2 flex-wrap",
-          tag: "inline-flex gap-1 rounded-md border px-1.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-orange-3 text-orange-9 shadow hover:bg-orange-3",
+          tag: "inline-flex gap-1 rounded-md border px-1.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-orange-3 text-accent shadow hover:bg-orange-3",
         }}
         tags={formattedTags}
         inputFieldPosition="top"
@@ -68,7 +68,7 @@ export const GeneralSettings = () => {
           <button
             type="button"
             onClick={() => onRemove()}
-            className="text-orange-9"
+            className="text-accent"
           >
             <IconX size={14} />
           </button>

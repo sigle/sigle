@@ -88,8 +88,8 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
             <AccordionTrigger className="items-center py-0 hover:no-underline">
               <div className="mr-2 flex w-full items-center justify-between text-left">
                 <div className="flex items-center gap-3">
-                  <div className="flex size-9 items-center justify-center rounded-lg bg-orange-9/10">
-                    <IconCircleCheck size={18} className="text-orange-9" />
+                  <div className="flex size-9 items-center justify-center rounded-lg bg-accent/10">
+                    <IconCircleCheck size={18} className="text-accent" />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-foreground">
