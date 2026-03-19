@@ -78,7 +78,7 @@ export const SlashCommands = Extension.create<{
                 getReferenceClientRect: props.clientRect as any,
                 appendTo: () =>
                   // oxlint-disable-next-line no-explicit-any
-                  document.getElementsByClassName("radix-themes")[0] as any,
+                  document.getElementsByClassName("root")[0] as any,
                 content: reactRenderer.element,
                 showOnCreate: true,
                 interactive: true,
