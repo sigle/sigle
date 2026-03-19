@@ -44,7 +44,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
   return (
     <>
       <div
-        className={cn("relative w-full bg-gray-3", {
+        className={cn("relative w-full bg-muted", {
           "h-64 md:h-88": hasBanner,
           "h-32": !hasBanner,
         })}
@@ -67,7 +67,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
 
       <div className="mx-auto max-w-2xl px-4">
         <div className="flex justify-between">
-          <div className="z-10 mt-[-70px] rounded-3 border-[6px] border-white bg-white dark:border-gray-1 dark:bg-gray-1">
+          <div className="z-10 mt-[-70px] rounded-3 border-[6px] border-background bg-background">
             <ProfileAvatar user={user} size="8" />
           </div>
 
