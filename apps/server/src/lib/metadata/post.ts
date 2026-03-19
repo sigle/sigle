@@ -1,9 +1,7 @@
-import type { UnhandledException } from "better-result";
 import { PostMetadataSchema, type MediaImageMetadata } from "@sigle/sdk";
-import { Result } from "better-result";
-import type { MetadataFetchFailedError } from "./errors";
+import { Result, type UnhandledException } from "better-result";
 import { resolveImageUrl } from "../images";
-import { InvalidMetadataError } from "./errors";
+import { InvalidMetadataError, type MetadataFetchFailedError } from "./errors";
 import { fetchMetadata } from "./fetch";
 
 interface PostMetadata {
