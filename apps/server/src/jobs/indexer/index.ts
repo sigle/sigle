@@ -35,6 +35,10 @@ import {
   indexerSetBaseTokenUriSchema,
 } from "./post/set-base-token-uri";
 import {
+  executeIndexerIndexProfilesJob,
+  indexerIndexProfilesSchema,
+} from "./profile/index-profiles";
+import {
   executeIndexerSetProfileJob,
   indexerSetProfileSchema,
 } from "./profile/set-profile";
@@ -52,6 +56,7 @@ export const indexerJob = defineJob("indexer")
 
       indexerSetProfileSchema,
       indexerIndexPostsSchema,
+      indexerIndexProfilesSchema,
       indexerPublishPostSchema,
     ]),
   )
@@ -92,6 +97,9 @@ export const indexerJob = defineJob("indexer")
         break;
       case "indexer-set-profile":
         await executeIndexerSetProfileJob(job.data.data);
+        break;
+      case "indexer-index-profiles":
+        await executeIndexerIndexProfilesJob(job.data.data);
         break;
 
       default:
