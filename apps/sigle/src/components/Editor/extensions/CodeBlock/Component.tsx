@@ -1,9 +1,17 @@
-import { Select } from "@radix-ui/themes";
 import {
   NodeViewContent,
   type NodeViewProps,
   NodeViewWrapper,
 } from "@tiptap/react";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 /**
  * Custom component for the code block extension.
@@ -19,24 +27,28 @@ export const CodeBlockComponent = (props: NodeViewProps) => {
   return (
     <NodeViewWrapper style={{ position: "relative" }}>
       <div className="absolute top-1 right-1">
-        <Select.Root
+        <Select
           value={props.node.attrs.language || "auto"}
           onValueChange={handleCHangeLanguage}
         >
-          <Select.Trigger className="bg-gray-1" />
-          <Select.Content>
-            <Select.Item value="auto">auto</Select.Item>
-            <Select.Separator />
-            {props.extension.options.lowlight
-              .listLanguages()
-              .sort()
-              .map((o: string) => (
-                <Select.Item value={o} key={o}>
-                  {o}
-                </Select.Item>
-              ))}
-          </Select.Content>
-        </Select.Root>
+          <SelectTrigger className="bg-muted">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectItem value="auto">auto</SelectItem>
+              <SelectSeparator />
+              {props.extension.options.lowlight
+                .listLanguages()
+                .sort()
+                .map((o: string) => (
+                  <SelectItem value={o} key={o}>
+                    {o}
+                  </SelectItem>
+                ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
 
       <NodeViewContent as="pre" />

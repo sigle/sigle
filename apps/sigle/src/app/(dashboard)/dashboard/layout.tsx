@@ -1,10 +1,17 @@
 "use client";
 
-import { Select } from "@radix-ui/themes";
 import { usePathname, useRouter } from "next/navigation";
 import { AuthProtect } from "@/components/Auth/AuthProtect";
 import { NextLink } from "@/components/Shared/NextLink";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/cn";
 import { sigleApiClient } from "@/lib/sigle";
 
@@ -40,8 +47,10 @@ export default function DashboardLayout({
     },
   ];
 
-  const handleNavigation = (href: string) => {
-    router.push(href);
+  const handleNavigation = (href: string | null) => {
+    if (href) {
+      router.push(href);
+    }
   };
 
   return (
@@ -69,16 +78,27 @@ export default function DashboardLayout({
         </aside>
 
         {/* Mobile navigation */}
-        <Select.Root value={pathname} onValueChange={handleNavigation}>
-          <Select.Trigger variant="surface" className="mt-5 w-full lg:hidden" />
-          <Select.Content>
-            {navigationLinks.map((link) => (
-              <Select.Item key={link.href} value={link.href}>
-                {link.label}
-              </Select.Item>
-            ))}
-          </Select.Content>
-        </Select.Root>
+        <Select
+          items={navigationLinks.map((link) => ({
+            value: link.href,
+            label: link.label,
+          }))}
+          value={pathname}
+          onValueChange={handleNavigation}
+        >
+          <SelectTrigger className="mt-5 w-full lg:hidden">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {navigationLinks.map((link) => (
+                <SelectItem key={link.href} value={link.href}>
+                  {link.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
 
         <AuthProtect>{children}</AuthProtect>
       </div>
