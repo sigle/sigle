@@ -1,6 +1,5 @@
 "use client";
 
-import { Container } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import { use, useEffect } from "react";
 import { AuthProtect } from "@/components/Auth/AuthProtect";
@@ -48,7 +47,7 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
 
   return (
     <AuthProtect>
-      <Container px="4">
+      <div className="mx-auto max-w-4xl px-4">
         {post?.txId && post.txStatus === "rejected" ? (
           <div className="mx-auto flex max-w-sm flex-col items-center justify-center space-y-2 py-[200px]">
             <p className="text-sm text-destructive">
@@ -98,7 +97,7 @@ export default function PostDeployPending(props: PostDeployPendingProps) {
             </Button>
           </div>
         ) : null}
-      </Container>
+      </div>
     </AuthProtect>
   );
 }
