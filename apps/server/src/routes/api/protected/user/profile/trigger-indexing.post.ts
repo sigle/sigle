@@ -1,7 +1,6 @@
 import { defineRouteMeta } from "nitro";
 import { defineEventHandler } from "nitro/h3";
 import { indexerJob } from "@/jobs/indexer";
-import { isUserWhitelisted } from "@/lib/users";
 
 defineRouteMeta({
   openAPI: {
@@ -25,9 +24,7 @@ defineRouteMeta({
   },
 });
 
-export default defineEventHandler(async (event) => {
-  isUserWhitelisted(event.context.user.id);
-
+export default defineEventHandler(async () => {
   await indexerJob.emit({
     action: "indexer-index-profiles",
     data: {},
