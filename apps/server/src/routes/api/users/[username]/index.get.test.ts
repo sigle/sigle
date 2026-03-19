@@ -114,6 +114,7 @@ describe("api/users/[username]/index.get", () => {
       _count: undefined,
       profile: {
         id: userId,
+        txId: "0xtest",
         displayName: "Test User",
         description: "Test description",
         website: "https://example.com",
