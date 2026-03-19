@@ -65,10 +65,12 @@ export const executeIndexerSetProfileJob = async (
     },
     update: {
       ...metadataWithoutId,
+      txId: data.txId,
     },
     create: {
       ...metadataWithoutId,
       id: data.address,
+      txId: data.txId,
     },
   });
 
