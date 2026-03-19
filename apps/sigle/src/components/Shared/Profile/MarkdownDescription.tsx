@@ -1,4 +1,3 @@
-import { Link } from "@radix-ui/themes";
 import ReactMarkdown from "react-markdown";
 
 interface ProfileMarkdownDescriptionProps {
@@ -16,13 +15,13 @@ export const ProfileMarkdownDescription = ({
         allowedElements={["p", "a", "strong", "em"]}
         components={{
           // oxlint-disable-next-line no-unused-vars
-          a: ({ href, color, ...props }) => {
+          a: ({ href, ...props }) => {
             return (
-              <Link
+              <a
                 href={href}
                 target="_blank"
-                color="gray"
-                highContrast
+                rel="noreferrer"
+                className="text-muted-foreground underline underline-offset-2 hover:text-foreground"
                 // oxlint-disable-next-line no-explicit-any
                 {...(props as any)}
               />
