@@ -139,7 +139,7 @@ export const EditorTipTap = () => {
       // Extensions
       Markdown,
       TipTapDropcursor.configure({
-        class: "bg-gray-11",
+        class: "bg-primary",
         width: 2,
       }),
       TipTapHistory,

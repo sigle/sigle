@@ -60,7 +60,7 @@ export const LatestPost = () => {
 
           {post ? (
             <>
-              <div className="rounded-2 bg-gray-3 p-4">
+              <div className="rounded-md bg-muted p-4">
                 <h3 className="line-clamp-2 text-lg font-bold">
                   {post.metaTitle || post.title}
                 </h3>
@@ -86,7 +86,7 @@ export const LatestPost = () => {
                 gap="5"
                 align="center"
                 justify="between"
-                className="border-b border-solid border-gray-6 py-5 last:border-b-0"
+                className="border-b border-solid border-border py-5 last:border-b-0"
               >
                 <Text size="2">Earned</Text>
                 <Text size="2" weight="medium">
@@ -99,7 +99,7 @@ export const LatestPost = () => {
                   </Text>
                 </Text>
               </Flex> */}
-                  <div className="flex items-center justify-between gap-5 border-b border-solid border-gray-6 py-5 last:border-b-0">
+                  <div className="flex items-center justify-between gap-5 border-b border-solid border-border py-5 last:border-b-0">
                     <p>Collected</p>
                     <p className="font-medium">{post.collectible.collected}</p>
                   </div>

@@ -1,7 +1,6 @@
 "use client";
 
 import { AuthQueryProvider } from "@daveyplate/better-auth-tanstack";
-import { Theme } from "@radix-ui/themes";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import posthog from "posthog-js";
@@ -27,18 +26,16 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
       enableSystem
       disableTransitionOnChange
     >
-      <Theme grayColor="gray" accentColor="orange" radius="large">
-        <QueryClientProvider client={queryClient}>
-          <AuthQueryProvider>
-            <PostHogProvider client={posthog}>
-              <PostHogInit />
-              <SuspendedPostHogPageView />
-              <Toaster closeButton />
-              <TooltipProvider>{children}</TooltipProvider>
-            </PostHogProvider>
-          </AuthQueryProvider>
-        </QueryClientProvider>
-      </Theme>
+      <QueryClientProvider client={queryClient}>
+        <AuthQueryProvider>
+          <PostHogProvider client={posthog}>
+            <PostHogInit />
+            <SuspendedPostHogPageView />
+            <Toaster closeButton />
+            <TooltipProvider>{children}</TooltipProvider>
+          </PostHogProvider>
+        </AuthQueryProvider>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 };

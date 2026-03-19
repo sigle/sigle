@@ -22,7 +22,7 @@ export const ProfileAvatar = ({
 }) => {
   return (
     <div
-      className={cn("overflow-hidden rounded-2 bg-gray-3", {
+      className={cn("overflow-hidden rounded-sm bg-muted", {
         "size-8": size === "2",
         "size-10": size === "3",
         "size-32": size === "8",

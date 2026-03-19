@@ -51,7 +51,7 @@ export const EditorHeader = () => {
   return (
     <header
       className={cn(
-        `sticky z-10 flex h-[80px] items-center border-b border-gray-5 bg-gray-1 px-6 transition-all duration-500`,
+        `sticky z-10 flex h-[80px] items-center border-b border-border bg-background px-6 transition-all duration-500`,
         {
           "top-0": scrollDirection === "up",
           "-top-[80px]": scrollDirection === "down",

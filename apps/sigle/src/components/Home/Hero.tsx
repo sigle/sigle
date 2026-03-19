@@ -12,15 +12,15 @@ export const HomeHero = () => {
 
   return (
     <div className="container mx-auto px-4 py-10 text-center md:py-20">
-      <h1 className="text-4xl font-bold">
+      <h1 className="text-2xl font-bold tracking-tight text-pretty md:text-4xl">
         Web3 writing platform for Web3 writers
       </h1>
-      <h2 className="mx-auto mt-6 max-w-md text-lg font-medium">
+      <h2 className="mx-auto mt-6 max-w-3xl text-lg font-medium text-muted-foreground md:text-xl">
         Sigle is a secured and open-source writing platform for web3 content
         creators, NFT projects, crypto analysts and more.
       </h2>
 
-      <div className="mt-6 space-x-3">
+      <div className="mt-10 space-x-3">
         <Button
           size="lg"
           variant="outline"

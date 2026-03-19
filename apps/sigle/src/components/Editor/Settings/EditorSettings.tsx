@@ -31,7 +31,7 @@ export const EditorSettings = () => {
             </DrawerHeader>
 
             <div
-              className="flex cursor-pointer justify-between border-y border-gray-5 p-4 transition-colors hover:bg-gray-2"
+              className="flex cursor-pointer justify-between border-y border-border p-4 transition-colors hover:bg-muted"
               onClick={() => setMenuOpen("meta")}
             >
               <div className="flex items-center gap-2 font-medium">
@@ -43,7 +43,7 @@ export const EditorSettings = () => {
             </div>
             {collectEnabled ? (
               <div
-                className="flex cursor-pointer justify-between border-b border-gray-5 p-4 transition-colors hover:bg-gray-2"
+                className="flex cursor-pointer justify-between border-b border-border p-4 transition-colors hover:bg-muted"
                 onClick={() => setMenuOpen("collect")}
               >
                 <div className="flex items-center gap-2 font-medium">

@@ -1,11 +1,6 @@
-@layer theme, base, radix-themes, components, utilities;
-
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@radix-ui/themes/styles.css" layer(radix-themes);
-@import "radix-themes-tw/theme.css";
-
 @plugin "@tailwindcss/typography";
 @config "../../tailwind.config.ts";
 

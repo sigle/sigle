@@ -6,7 +6,7 @@ export const PagePostSkeleton = () => {
     <>
       {/* Cover Image */}
       <div className="mx-auto mt-6 max-w-4xl px-4">
-        <Skeleton className="h-[400px] w-full rounded-2" />
+        <Skeleton className="h-[400px] w-full rounded-lg" />
       </div>
 
       <div className="mx-auto my-8 max-w-2xl px-4 md:my-10">

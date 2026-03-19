@@ -58,7 +58,7 @@ export const PublishReviewCollect = () => {
             )}
           </p>
         </div>
-        <div className="flex justify-between border-t border-solid border-gray-4 py-3">
+        <div className="flex justify-between border-t border-solid border-border py-3">
           <p className="text-sm text-muted-foreground">Price</p>
           <p className="text-sm">
             {data.collect.collectPrice.type === "free"
