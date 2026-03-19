@@ -16,15 +16,15 @@ import { createTestPost, createTestUser } from "@/test/helpers";
 const mockEmit = vi.fn();
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("./index")>(
-  import("./index"),
+vi.mock<typeof import("../index")>(
+  import("../index"),
   () =>
     ({
       indexerJob: {
         emit: (...args: unknown[]) => mockEmit(...args),
       },
       // oxlint-disable-next-line consistent-type-imports
-    }) as unknown as typeof import("./index"),
+    }) as unknown as typeof import("../index"),
 );
 
 const mockStacksApiClientGET = vi.fn();

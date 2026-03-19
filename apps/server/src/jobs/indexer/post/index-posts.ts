@@ -4,7 +4,7 @@ import { consola } from "@/lib/consola";
 import { prisma } from "@/lib/prisma";
 import { sigleConfig } from "@/lib/sigle";
 import { getStacksTransaction, stacksApiClient } from "@/lib/stacks";
-import { indexerJob } from ".";
+import { indexerJob } from "..";
 
 export const indexerIndexPostsSchema = z.object({
   action: z.literal("indexer-index-posts"),
