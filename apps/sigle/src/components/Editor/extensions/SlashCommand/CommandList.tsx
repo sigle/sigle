@@ -1,5 +1,4 @@
 import type { Icon } from "@tabler/icons-react";
-import { ScrollArea } from "@radix-ui/themes";
 import {
   forwardRef,
   useEffect,
@@ -7,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/cn";
 import type { SlashCommandsCommand } from "./SlashCommands";
 
@@ -89,8 +89,6 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
     return (
       <ScrollArea
         className="flex max-h-[332px] flex-col py-2"
-        type="always"
-        scrollbars="vertical"
         ref={containerRef}
       >
         {basicItems.length > 0 && (
