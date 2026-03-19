@@ -9,41 +9,67 @@ import {
   it,
   vi,
 } from "vitest";
-import { sigleConfig } from "@/lib/sigle";
 import { createTestDatabase, type TestDatabase } from "@/test/database";
 import { createTestPost, createTestUser } from "@/test/helpers";
 
 const mockEmit = vi.fn();
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("./index")>(import("./index"), () => ({
-  indexerJob: {
-    emit: (...args: unknown[]) => mockEmit(...args),
-  },
-}));
+vi.mock<typeof import("./index")>(
+  import("./index"),
+  () =>
+    ({
+      indexerJob: {
+        emit: (...args: unknown[]) => mockEmit(...args),
+      },
+      // oxlint-disable-next-line consistent-type-imports
+    }) as unknown as typeof import("./index"),
+);
 
 const mockStacksApiClientGET = vi.fn();
 const mockGetStacksTransaction = vi.fn();
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("@/lib/stacks")>(import("@/lib/stacks"), () => ({
-  stacksNetwork: "testnet",
-  stacksApiClient: {
-    GET: (...args: unknown[]) => mockStacksApiClientGET(...args),
-  },
-  getStacksTransaction: (...args: unknown[]) =>
-    mockGetStacksTransaction(...args),
-}));
+vi.mock<typeof import("@/lib/stacks")>(
+  import("@/lib/stacks"),
+  () =>
+    ({
+      stacksNetwork: "testnet",
+      stacksApiClient: {
+        GET: (...args: unknown[]) => mockStacksApiClientGET(...args),
+      },
+      getStacksTransaction: (...args: unknown[]) =>
+        mockGetStacksTransaction(...args),
+      // oxlint-disable-next-line consistent-type-imports
+    }) as unknown as typeof import("@/lib/stacks"),
+);
 
 // oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("@/lib/consola")>(import("@/lib/consola"), () => ({
-  consola: {
-    debug: vi.fn(),
-    info: vi.fn(),
-    error: vi.fn(),
-    warn: vi.fn(),
-  },
-}));
+vi.mock<typeof import("@/lib/sigle")>(
+  import("@/lib/sigle"),
+  () =>
+    ({
+      sigleConfig: {
+        registryAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+      },
+      // oxlint-disable-next-line consistent-type-imports
+    }) as unknown as typeof import("@/lib/sigle"),
+);
+
+// oxlint-disable-next-line consistent-type-imports
+vi.mock<typeof import("@/lib/consola")>(
+  import("@/lib/consola"),
+  () =>
+    ({
+      consola: {
+        debug: vi.fn(),
+        info: vi.fn(),
+        error: vi.fn(),
+        warn: vi.fn(),
+      },
+      // oxlint-disable-next-line consistent-type-imports
+    }) as unknown as typeof import("@/lib/consola"),
+);
 
 const { executeIndexerIndexPostsJob } = await import("./index-posts");
 
