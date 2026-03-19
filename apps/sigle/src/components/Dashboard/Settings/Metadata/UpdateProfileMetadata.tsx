@@ -112,7 +112,7 @@ export const UpdateProfileMetadata = ({
         return;
       }
 
-      toast.loading("Indexing your profile...", { id: toastId });
+      toast.loading("Indexing profile data...", { id: toastId });
 
       try {
         await triggerIndexing({});
