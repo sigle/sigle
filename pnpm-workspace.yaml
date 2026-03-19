@@ -21,6 +21,3 @@ onlyBuiltDependencies:
   - prisma
   - sharp
   - tiny-secp256k1
-
-patchedDependencies:
-  radix-themes-tw@1.1.0: patches/radix-themes-tw@1.1.0.patch
