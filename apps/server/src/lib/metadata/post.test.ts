@@ -1,11 +1,8 @@
 import { PostMetadataSchemaId } from "@sigle/sdk";
 import { Result } from "better-result";
 import { describe, expect, it, vi, beforeEach } from "vitest";
-import {
-  getMetadataFromUri,
-  MetadataFetchFailedError,
-  InvalidMetadataError,
-} from "./index";
+import { InvalidMetadataError, MetadataFetchFailedError } from "./errors";
+import { getMetadataFromUri } from "./post";
 
 const mockFetch = vi.fn();
 
@@ -35,7 +32,7 @@ const validMetadata = {
   },
 };
 
-describe("metadata", () => {
+describe("post metadata", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.useRealTimers();
