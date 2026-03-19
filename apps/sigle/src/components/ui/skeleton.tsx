@@ -15,7 +15,7 @@ function Skeleton({
       "aria-hidden": true,
       tabIndex: -1,
       className: cn(
-        "animate-pulse rounded-md bg-muted *:invisible empty:block",
+        "pointer-events-none animate-pulse rounded-md border-none! bg-muted bg-none! text-transparent! shadow-none! outline-none! select-none *:invisible empty:block",
         className,
       ),
       ...props,

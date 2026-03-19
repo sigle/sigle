@@ -17,7 +17,7 @@ export const PageEditorSkeleton = () => {
           <Skeleton className="h-[450px]" />
 
           {/* Text */}
-          <div className="text-xs">
+          <div className="prose pb-5 lg:prose-lg dark:prose-invert">
             <Skeleton>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
