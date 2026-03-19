@@ -40,6 +40,7 @@
     "sort-keys": "off",
     "react/no-multi-comp": "off",
     "vitest/no-importing-vitest-globals": "off",
+    "vitest/prefer-called-once": "off",
 
     "no-hooks": "off",
     "require-hook": "off",
