@@ -1664,6 +1664,7 @@ export interface components {
       updatedAt: string;
       profile?: {
         id: string;
+        txId: string;
         displayName?: string;
         description?: string;
         website?: string;
