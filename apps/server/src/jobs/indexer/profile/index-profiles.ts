@@ -30,12 +30,15 @@ const eventLogSchema = z.object({
 export const executeIndexerIndexProfilesJob = async (
   _data: z.TypeOf<typeof indexerIndexProfilesSchema>["data"],
 ) => {
+  // Use updatedAt instead of createdAt because profiles are updated over time
+  // and createdAt doesn't change on update. This ensures we start from
+  // the most recently indexed profile update.
   const latestProfile = await prisma.profile.findFirst({
     select: {
       txId: true,
     },
     orderBy: {
-      createdAt: "desc",
+      updatedAt: "desc",
     },
   });
 
