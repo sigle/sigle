@@ -108,12 +108,14 @@ export const executeIndexerSetProfileJob = async (
       },
     });
 
+    // TODO only do if !== from previous value
     if (metadata.content.picture) {
       await generateImageBlurhashJob.emit({
         imageId: metadata.content.picture,
       });
     }
 
+    // TODO only do if !== from previous value
     if (metadata.content.coverPicture) {
       await generateImageBlurhashJob.emit({
         imageId: metadata.content.coverPicture,
