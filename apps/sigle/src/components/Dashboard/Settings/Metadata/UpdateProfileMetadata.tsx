@@ -141,7 +141,7 @@ export const UpdateProfileMetadata = ({
 
         const result = await refetchProfile();
 
-        if (result.data) {
+        if (result.data?.profile?.txId === data.txId) {
           setIsIndexing(false);
           toast.success("Profile updated!", { id: toastId });
           setEditingProfileMetadata(false);
