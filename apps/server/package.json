@@ -43,7 +43,7 @@
     "zod-validation-error": "5.0.0"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "0.3.16",
+    "@electric-sql/pglite": "0.4.0",
     "nitro": "3.0.260311-beta",
     "pglite-prisma-adapter": "0.7.2",
     "typescript": "5.9.3",
