@@ -7,15 +7,15 @@ import {
 } from "./store";
 
 interface UseMultiStepToastOptions {
-  steps: { title: string; description?: string }[];
-  onError?: (error: Error, stepIndex: number) => void;
+  steps: { id: string; title: string; description?: string }[];
+  onError?: (error: Error, stepId: string) => void;
 }
 
 interface UseMultiStepToastReturn {
   start: () => void;
-  completeStep: (index: number) => void;
-  setStepLoading: (index: number) => void;
-  setStepError: (index: number, errorMessage: string) => void;
+  completeStep: (id: string) => void;
+  setStepLoading: (id: string) => void;
+  setStepError: (id: string, errorMessage: string) => void;
   setAllComplete: () => void;
   dismiss: () => void;
 }
@@ -29,13 +29,14 @@ export function useMultiStepToast(
 
   const renderToast = () => {
     const { steps } = useMultiStepToastStore.getState();
-    toast(toastId, () => <MultiStepToast steps={steps} />);
+    toast(() => <MultiStepToast steps={steps} />, {
+      id: toastId ?? undefined,
+    });
   };
 
   const initializeSteps = (): MultiStepToastStep[] => {
     return stepDefinitions.map((step, index) => ({
       ...step,
-      // Set first element as pending when we start
       status: index === 0 ? ("pending" as const) : ("idle" as const),
     }));
   };
@@ -51,20 +52,20 @@ export function useMultiStepToast(
     setToastId(id);
   };
 
-  const completeStep = (index: number) => {
-    updateStep(index, { status: "success" });
+  const completeStep = (id: string) => {
+    updateStep(id, { status: "success" });
     renderToast();
   };
 
-  const setStepLoading = (index: number) => {
-    updateStep(index, { status: "pending" });
+  const setStepLoading = (id: string) => {
+    updateStep(id, { status: "pending" });
     renderToast();
   };
 
-  const setStepError = (index: number, errorMessage: string) => {
-    updateStep(index, { status: "error", errorMessage });
+  const setStepError = (id: string, errorMessage: string) => {
+    updateStep(id, { status: "error", errorMessage });
     renderToast();
-    onError?.(new Error(errorMessage), index);
+    onError?.(new Error(errorMessage), id);
   };
 
   const setAllComplete = () => {
@@ -78,7 +79,7 @@ export function useMultiStepToast(
 
   const dismiss = () => {
     reset();
-    toast.dismiss(toastId);
+    toast.dismiss(toastId ?? undefined);
   };
 
   return {

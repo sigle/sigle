@@ -8,8 +8,9 @@ import { Spinner } from "../../ui/spinner";
 
 interface MultiStepToastProps {
   steps: {
+    id: string;
     title: string;
-    description: string;
+    description?: string;
     status: "idle" | "pending" | "success" | "error";
     errorMessage?: string;
   }[];
@@ -21,7 +22,7 @@ export const MultiStepToast = ({ steps }: MultiStepToastProps) => {
       <div className="flex flex-col gap-2">
         {steps.map((step) => {
           return (
-            <div key={step.title}>
+            <div key={step.id}>
               <div className="flex items-center gap-2">
                 {step.status === "pending" ? (
                   <Spinner className="size-4" />

@@ -69,9 +69,9 @@ export const UpdateProfileMetadata = ({
     dismiss: dismissToast,
   } = useMultiStepToast({
     steps: [
-      { title: "Uploading data to Arweave..." },
-      { title: "Waiting for blockchain confirmation..." },
-      { title: "Indexing your profile..." },
+      { id: "upload", title: "Uploading data to Arweave..." },
+      { id: "confirm", title: "Waiting for blockchain confirmation..." },
+      { id: "index", title: "Indexing your profile..." },
     ],
   });
 
@@ -111,8 +111,8 @@ export const UpdateProfileMetadata = ({
 
   const { contractCall } = useContractCall({
     onSuccess: async (data) => {
-      completeStep(0);
-      setStepLoading(1);
+      completeStep("upload");
+      setStepLoading("confirm");
 
       try {
         await getPromiseTransactionConfirmation(data.txId);
@@ -127,20 +127,20 @@ export const UpdateProfileMetadata = ({
         return;
       }
 
-      completeStep(1);
-      setStepLoading(2);
+      completeStep("confirm");
+      setStepLoading("index");
 
       try {
         await triggerIndexing({});
       } catch (error) {
         setStepError(
-          2,
+          "index",
           error instanceof Error ? error.message : "Failed to trigger indexing",
         );
         return;
       }
 
-      completeStep(2);
+      completeStep("index");
 
       setIsIndexing(true);
       const startTime = Date.now();
@@ -148,7 +148,10 @@ export const UpdateProfileMetadata = ({
       const pollAndCheck = async (): Promise<void> => {
         if (Date.now() - startTime > POLL_TIMEOUT) {
           setIsIndexing(false);
-          setStepError(2, "Profile update timed out. Please refresh the page.");
+          setStepError(
+            "index",
+            "Profile update timed out. Please refresh the page.",
+          );
           setEditingProfileMetadata(false);
           return;
         }

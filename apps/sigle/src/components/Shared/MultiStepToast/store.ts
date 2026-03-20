@@ -3,6 +3,7 @@ import { create } from "zustand";
 export type StepStatus = "idle" | "pending" | "success" | "error";
 
 export interface MultiStepToastStep {
+  id: string;
   title: string;
   description?: string;
   status: StepStatus;
@@ -14,7 +15,7 @@ interface MultiStepToastState {
   steps: MultiStepToastStep[];
   setToastId: (toastId: string | number | null) => void;
   setSteps: (steps: MultiStepToastStep[]) => void;
-  updateStep: (index: number, updates: Partial<MultiStepToastStep>) => void;
+  updateStep: (id: string, updates: Partial<MultiStepToastStep>) => void;
   reset: () => void;
 }
 
@@ -23,10 +24,10 @@ export const useMultiStepToastStore = create<MultiStepToastState>()((set) => ({
   steps: [],
   setToastId: (toastId) => set(() => ({ toastId })),
   setSteps: (steps) => set(() => ({ steps })),
-  updateStep: (index, updates) =>
+  updateStep: (id, updates) =>
     set((state) => ({
-      steps: state.steps.map((step, i) =>
-        i === index ? { ...step, ...updates } : step,
+      steps: state.steps.map((step) =>
+        step.id === id ? { ...step, ...updates } : step,
       ),
     })),
   reset: () => set({ toastId: null, steps: [] }),
