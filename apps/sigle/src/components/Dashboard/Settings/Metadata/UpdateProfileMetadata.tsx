@@ -105,15 +105,9 @@ export const UpdateProfileMetadata = ({
 
   const { contractCall } = useContractCall({
     onSuccess: async (data) => {
-      try {
-        await getPromiseTransactionConfirmation(data.txId);
-      } catch (error) {
-        setStepError(
-          "transaction",
-          error instanceof Error
-            ? error.message
-            : "Failed to submit transaction",
-        );
+      const result = await getPromiseTransactionConfirmation(data.txId);
+      if (result.isErr()) {
+        setStepError("transaction", result.error.message);
         return;
       }
 

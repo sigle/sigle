@@ -69,16 +69,27 @@ export const PostCollectDialog = ({
 
   const { contractCall, loading: contractLoading } = useContractCall({
     onSuccess: (data) => {
-      toast.promise(getPromiseTransactionConfirmation(data.txId), {
-        loading: "Collect transaction submitted",
-        success: "Collected successfully",
-        error: "Transaction failed",
-        action: {
-          label: "View tx",
-          onClick: () =>
-            window.open(getExplorerTransactionUrl(data.txId), "_blank"),
+      toast.promise(
+        getPromiseTransactionConfirmation(data.txId).then((result) => {
+          return result.match({
+            ok: (msg) => msg,
+            err: (err) => {
+              throw err;
+            },
+          });
+        }),
+        {
+          loading: "Collect transaction submitted",
+          success: "Collected successfully",
+          error: (err) =>
+            err instanceof Error ? err.message : "Transaction failed",
+          action: {
+            label: "View tx",
+            onClick: () =>
+              window.open(getExplorerTransactionUrl(data.txId), "_blank"),
+          },
         },
-      });
+      );
       onOpenChange(false);
     },
     onError: (error) => {
