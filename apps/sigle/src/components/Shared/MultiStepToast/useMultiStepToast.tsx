@@ -23,16 +23,14 @@ interface UseMultiStepToastReturn {
 export function useMultiStepToast(
   options: UseMultiStepToastOptions,
 ): UseMultiStepToastReturn {
+  const toastId = "multi-step-toast";
   const { steps: stepDefinitions, onError } = options;
-  const { toastId, setToastId, setSteps, updateStep, reset } =
-    useMultiStepToastStore();
+  const { setSteps, updateStep, reset } = useMultiStepToastStore();
 
   const renderToast = () => {
     const { steps } = useMultiStepToastStore.getState();
     toast(() => <MultiStepToast steps={steps} />, {
-      id: toastId ?? undefined,
-      duration: Infinity,
-      closeButton: false,
+      id: toastId,
     });
   };
 
@@ -47,11 +45,11 @@ export function useMultiStepToast(
     const initialSteps = initializeSteps();
     setSteps(initialSteps);
 
-    const id = toast(() => <MultiStepToast steps={initialSteps} />, {
+    toast(() => <MultiStepToast steps={initialSteps} />, {
+      id: toastId,
       duration: Infinity,
       closeButton: false,
     });
-    setToastId(id);
   };
 
   const completeStep = (id: string) => {
@@ -81,7 +79,7 @@ export function useMultiStepToast(
 
   const dismiss = () => {
     reset();
-    toast.dismiss(toastId ?? undefined);
+    toast.dismiss(toastId);
   };
 
   return {
