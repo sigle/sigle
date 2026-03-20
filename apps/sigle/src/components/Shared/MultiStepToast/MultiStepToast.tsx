@@ -28,10 +28,10 @@ export const MultiStepToast = ({ steps }: MultiStepToastProps) => {
                   <Spinner className="size-4" />
                 ) : (
                   <div className="flex size-4 items-center justify-center rounded-full">
-                    {step.status === "idle" && <IconCircle size={16} />}
-                    {step.status === "success" && (
-                      <IconCircleCheck size={16} className="text-accent" />
+                    {step.status === "idle" && (
+                      <IconCircle size={16} className="text-muted-foreground" />
                     )}
+                    {step.status === "success" && <IconCircleCheck size={16} />}
                     {step.status === "error" && (
                       <IconAlertCircle size={16} className="text-destructive" />
                     )}
