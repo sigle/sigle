@@ -36,8 +36,8 @@ export const PublishReviewGeneral = () => {
         <div className="flex justify-between py-3">
           <p className="text-sm text-muted-foreground">Meta SEO</p>
           {isMetaConfigured ? (
-            <Badge>
-              configured <IconCircleCheck size={12} />
+            <Badge variant="secondary">
+              <IconCircleCheck size={12} /> Configured
             </Badge>
           ) : (
             <Badge
@@ -53,8 +53,8 @@ export const PublishReviewGeneral = () => {
           <p className="text-sm text-muted-foreground">Cover image</p>
           <p className="text-sm">
             {data.coverImage ? (
-              <Badge>
-                configured <IconCircleCheck size={12} />
+              <Badge variant="secondary">
+                <IconCircleCheck size={12} /> Configured
               </Badge>
             ) : (
               <Tooltip>
