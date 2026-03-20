@@ -53,6 +53,12 @@ export function useMultiStepToast(
   };
 
   const completeStep = (id: string) => {
+    const { steps } = useMultiStepToastStore.getState();
+    const currentIndex = steps.findIndex((s) => s.id === id);
+    if (currentIndex !== -1 && currentIndex < steps.length - 1) {
+      const nextStep = steps[currentIndex + 1];
+      updateStep(nextStep.id, { status: "pending" });
+    }
     updateStep(id, { status: "success" });
     renderToast();
   };
