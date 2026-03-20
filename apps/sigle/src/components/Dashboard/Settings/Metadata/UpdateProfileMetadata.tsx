@@ -7,7 +7,6 @@ import {
 } from "@sigle/sdk";
 import { IconAt, IconBrandX } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 import { useMultiStepToast } from "@/components/Shared/MultiStepToast";
 import { Button } from "@/components/ui/button";
@@ -57,7 +56,6 @@ export const UpdateProfileMetadata = ({
     start: startToast,
     completeStep,
     setStepError,
-    dismiss: dismissToast,
   } = useMultiStepToast({
     steps: [
       { id: "upload", title: "Uploading data to Arweave..." },
