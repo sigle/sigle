@@ -2,23 +2,23 @@ import { toast } from "sonner";
 import { MultiStepToast } from "./MultiStepToast";
 import { type MultiStepToastStep, useMultiStepToastStore } from "./store";
 
-interface UseMultiStepToastOptions {
-  steps: { id: string; title: string; description?: string }[];
+interface UseMultiStepToastOptions<T extends string> {
+  steps: readonly { id: T; title: string; description?: string }[];
   successMessage: string;
-  onError?: (error: Error, stepId: string) => void;
+  onError?: (error: Error, stepId: T) => void;
 }
 
-interface UseMultiStepToastReturn {
+interface UseMultiStepToastReturn<T extends string> {
   start: () => void;
-  completeStep: (id: string) => void;
-  setStepLoading: (id: string) => void;
-  setStepError: (id: string, errorMessage: string) => void;
+  completeStep: (id: T) => void;
+  setStepLoading: (id: T) => void;
+  setStepError: (id: T, errorMessage: string) => void;
   dismiss: () => void;
 }
 
-export function useMultiStepToast(
-  options: UseMultiStepToastOptions,
-): UseMultiStepToastReturn {
+export function useMultiStepToast<T extends string>(
+  options: UseMultiStepToastOptions<T>,
+): UseMultiStepToastReturn<T> {
   const toastId = "multi-step-toast";
   const { steps: stepDefinitions, successMessage, onError } = options;
   const { setSteps, updateStep, reset } = useMultiStepToastStore();
@@ -48,7 +48,7 @@ export function useMultiStepToast(
     });
   };
 
-  const completeStep = (id: string) => {
+  const completeStep = (id: T) => {
     const { steps } = useMultiStepToastStore.getState();
     const currentIndex = steps.findIndex((s) => s.id === id);
     const isLastStep = currentIndex === steps.length - 1;
@@ -71,12 +71,12 @@ export function useMultiStepToast(
     renderToast();
   };
 
-  const setStepLoading = (id: string) => {
+  const setStepLoading = (id: T) => {
     updateStep(id, { status: "pending" });
     renderToast();
   };
 
-  const setStepError = (id: string, errorMessage: string) => {
+  const setStepError = (id: T, errorMessage: string) => {
     updateStep(id, { status: "error", errorMessage });
     renderToast();
     onError?.(new Error(errorMessage), id);
