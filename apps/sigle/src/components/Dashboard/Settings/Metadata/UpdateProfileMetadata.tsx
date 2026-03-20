@@ -6,6 +6,7 @@ import {
   ProfileMetadataSchemaId,
 } from "@sigle/sdk";
 import { IconAt, IconBrandX } from "@tabler/icons-react";
+import { Result } from "better-result";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useMultiStepToast } from "@/components/Shared/MultiStepToast";
@@ -68,11 +69,6 @@ export const UpdateProfileMetadata = ({
   const uploadProfileMetadata = sigleApiClient.useMutation(
     "post",
     "/api/protected/user/profile/upload-metadata",
-    {
-      onError: (error) => {
-        setStepError("upload", error.message);
-      },
-    },
   );
 
   const triggerIndexing = sigleApiClient.useMutation(
@@ -133,15 +129,25 @@ export const UpdateProfileMetadata = ({
       },
     });
 
-    const data = await uploadProfileMetadata.mutateAsync({
-      body: {
-        metadata: metadata as unknown as Record<string, never>,
-      },
-    });
+    const data = await uploadProfileMetadata
+      .mutateAsync({
+        body: {
+          metadata: metadata as unknown as Record<string, never>,
+        },
+      })
+      .then((result) => Result.ok(result))
+      .catch((error) => Result.err(error));
+    if (data.isErr()) {
+      setStepError(
+        "upload",
+        data.error.message ? data.error.message : data.error,
+      );
+      return;
+    }
     completeStep("upload");
 
     const { parameters } = sigleClient.setProfile({
-      metadata: `ar://${data.id}`,
+      metadata: `ar://${data.value.id}`,
     });
 
     const contractCallResult = await contractCall(parameters);
