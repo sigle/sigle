@@ -6,10 +6,11 @@ import {
   ProfileMetadataSchemaId,
 } from "@sigle/sdk";
 import { IconAt, IconBrandX } from "@tabler/icons-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { MultiStepToast } from "@/components/Shared/MultiStepToast";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -28,6 +29,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { useContractCall } from "@/hooks/useContractCall";
 import { useSession } from "@/lib/auth-hooks";
+import { cn } from "@/lib/cn";
 import { sigleApiClient, sigleClient } from "@/lib/sigle";
 import {
   getExplorerTransactionUrl,
@@ -59,6 +61,7 @@ export const UpdateProfileMetadata = ({
 }: UpdateProfileMetadataProps) => {
   const { data: session } = useSession();
   const [isIndexing, setIsIndexing] = useState(false);
+  const toastIdRef = useRef<string | number | null>(null);
 
   const { mutateAsync: uploadProfileMetadata } = sigleApiClient.useMutation(
     "post",
@@ -96,7 +99,16 @@ export const UpdateProfileMetadata = ({
 
   const { contractCall } = useContractCall({
     onSuccess: async (data) => {
-      const toastId = toast.loading("Waiting for blockchain confirmation...");
+      const messages: [string, string, string] = [
+        "Uploading to Arweave...",
+        "Waiting for blockchain confirmation...",
+        "Indexing your profile...",
+      ];
+
+      const toastId = toast.custom(() => (
+        <MultiStepToast step={2} messages={messages} />
+      ));
+      toastIdRef.current = toastId;
 
       try {
         await getPromiseTransactionConfirmation(data.txId);
@@ -112,7 +124,9 @@ export const UpdateProfileMetadata = ({
         return;
       }
 
-      toast.loading("Indexing profile data...", { id: toastId });
+      toast.custom(() => <MultiStepToast step={3} messages={messages} />, {
+        id: toastId,
+      });
 
       try {
         await triggerIndexing({});
@@ -179,6 +193,40 @@ export const UpdateProfileMetadata = ({
   });
 
   const onSubmit = handleSubmit(async (formValues) => {
+    toastIdRef.current = toast(
+      () => (
+        <MultiStepToast
+          steps={[
+            {
+              title: "Uploading data to Arweave...",
+              description: "TODO",
+              status: "success",
+            },
+            {
+              title: "Waiting for blockchain confirmation...",
+              description: "TODO",
+              status: "pending",
+            },
+            {
+              title: "Indexing your profile...",
+              description: "TODO",
+              status: "idle",
+            },
+            {
+              title: "Indexing your profile 2...",
+              description: "TODO",
+              status: "error",
+              errorMessage: "An error occured",
+            },
+          ]}
+        />
+      ),
+      {
+        duration: Infinity,
+        closeButton: false,
+      },
+    );
+
     const metadata = createProfileMetadata({
       $schema: ProfileMetadataSchemaId.LATEST,
       content: {
