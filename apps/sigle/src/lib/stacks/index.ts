@@ -54,3 +54,30 @@ export async function getStacksTransaction(
     catch: (e) => (StacksApiError.is(e) ? e : new StacksApiError({ cause: e })),
   });
 }
+
+/**
+ * Returns a promise that resolves when the transaction is confirmed
+ */
+export async function getPromiseTransactionConfirmation(txId: string) {
+  return new Promise((resolve, reject) => {
+    const checkTransaction = async () => {
+      try {
+        const data = await getStacksTransaction(txId);
+        if (data.isErr()) {
+          reject("Transaction failed");
+          return;
+        } else if (data.value.tx_status === "pending") {
+          setTimeout(checkTransaction, 5000);
+        } else if (data.value.tx_status === "success") {
+          resolve("Transaction confirmed");
+        } else {
+          reject("Transaction failed");
+        }
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    checkTransaction();
+  });
+}
