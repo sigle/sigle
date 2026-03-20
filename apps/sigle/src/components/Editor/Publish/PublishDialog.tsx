@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { useContractCall } from "@/hooks/useContractCall";
 import { useSession } from "@/lib/auth-hooks";
+import { Routes } from "@/lib/routes";
 import { sigleApiClient, sigleClient } from "@/lib/sigle";
 import { waitForTransaction } from "@/lib/stacks";
 import type { EditorPostFormData } from "../EditorFormProvider";
@@ -175,7 +176,50 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           return;
         }
 
+        const pollingInterval = 2_000;
+        const timeout = 180_000;
+        const startTime = Date.now();
+
+        let isIndexed = false;
+        while (Date.now() - startTime < timeout) {
+          const result = await refetchProfile.refetch();
+
+          // Successfully indexed
+          if (result.data?.profile?.txId === txId) {
+            isIndexed = true;
+            break;
+          }
+
+          await new Promise((resolve) => {
+            setTimeout(resolve, pollingInterval);
+          });
+        }
+
+        if (!isIndexed) {
+          setStepError(
+            "indexing",
+            "Profile update timed out. Please refresh the page.",
+          );
+          return;
+        }
+
         completeStep("indexing");
+
+        // wait 1s for a better UX
+        await new Promise((resolve) => {
+          setTimeout(resolve, 1000);
+        });
+
+        router.push(
+          Routes.post(
+            { postId },
+            {
+              search: {
+                published: true,
+              },
+            },
+          ),
+        );
       },
       (errors) => {
         console.error("Publishing form errors", { errors });
