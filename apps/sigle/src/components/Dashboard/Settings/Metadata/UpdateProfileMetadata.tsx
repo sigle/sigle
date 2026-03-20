@@ -30,10 +30,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useContractCall } from "@/hooks/useContractCall";
 import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient, sigleClient } from "@/lib/sigle";
-import {
-  getExplorerTransactionUrl,
-  getPromiseTransactionConfirmation,
-} from "@/lib/stacks";
+import { getPromiseTransactionConfirmation } from "@/lib/stacks";
 import { UploadProfileCoverPicture } from "./UploadProfileCoverPicture";
 import { UploadProfilePicture } from "./UploadProfilePicture";
 
@@ -64,7 +61,6 @@ export const UpdateProfileMetadata = ({
   const {
     start: startToast,
     completeStep,
-    setStepLoading,
     setStepError,
     dismiss: dismissToast,
   } = useMultiStepToast({
