@@ -200,6 +200,7 @@ export const UpdateProfileMetadata = ({
     }
 
     completeStep("index");
+    setEditingProfileMetadata(false);
   });
 
   const handleXChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
