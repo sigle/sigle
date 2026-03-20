@@ -78,7 +78,14 @@ export function useMultiStepToast<T extends string>(
 
   const setStepError = (id: T, errorMessage: string) => {
     updateStep(id, { status: "error", errorMessage });
-    renderToast();
+
+    const { steps } = useMultiStepToastStore.getState();
+    toast(() => <MultiStepToast steps={steps} />, {
+      id: toastId,
+      duration: Infinity,
+      closeButton: true,
+    });
+
     onError?.(new Error(errorMessage), id);
   };
 
