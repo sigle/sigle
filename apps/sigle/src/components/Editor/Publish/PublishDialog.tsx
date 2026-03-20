@@ -140,16 +140,24 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         }
         completeStep("transaction");
 
-        await updateTxId({
-          params: {
-            path: {
-              draftId: postId,
+        try {
+          await updateTxId({
+            params: {
+              path: {
+                draftId: postId,
+              },
             },
-          },
-          body: {
-            txId,
-          },
-        });
+            body: {
+              txId,
+            },
+          });
+        } catch (error) {
+          setStepError(
+            "indexing",
+            error instanceof Error ? error.message : "Failed to index",
+          );
+          return;
+        }
 
         completeStep("indexing");
       },
