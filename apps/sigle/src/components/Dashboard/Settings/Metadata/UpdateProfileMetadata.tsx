@@ -71,7 +71,7 @@ export const UpdateProfileMetadata = ({
     ],
   });
 
-  const { mutateAsync: uploadProfileMetadata } = sigleApiClient.useMutation(
+  const uploadProfileMetadata = sigleApiClient.useMutation(
     "post",
     "/api/protected/user/profile/upload-metadata",
     {
@@ -81,14 +81,14 @@ export const UpdateProfileMetadata = ({
     },
   );
 
-  const { mutateAsync: triggerIndexing } = sigleApiClient.useMutation(
+  const triggerIndexing = sigleApiClient.useMutation(
     "post",
     "/api/protected/user/profile/trigger-indexing",
   );
 
   const userId = session?.user.id;
 
-  const { refetch: refetchProfile } = sigleApiClient.useQuery(
+  const refetchProfile = sigleApiClient.useQuery(
     "get",
     "/api/users/{username}",
     {
@@ -103,65 +103,7 @@ export const UpdateProfileMetadata = ({
     },
   );
 
-  const { contractCall } = useContractCall({
-    onSuccess: async (data) => {
-      const result = await waitForTransaction({ txId: data.txId });
-      if (result.isErr()) {
-        setStepError("transaction", result.error.message);
-        return;
-      }
-      if (result.value.tx_status !== "success") {
-        setStepError("transaction", "Transaction failed");
-        return;
-      }
-
-      completeStep("transaction");
-
-      try {
-        await triggerIndexing({});
-      } catch (error) {
-        setStepError(
-          "index",
-          error instanceof Error ? error.message : "Failed to trigger indexing",
-        );
-        return;
-      }
-
-      completeStep("index");
-
-      setIsIndexing(true);
-      const startTime = Date.now();
-
-      const pollAndCheck = async (): Promise<void> => {
-        if (Date.now() - startTime > POLL_TIMEOUT) {
-          setIsIndexing(false);
-          setStepError(
-            "index",
-            "Profile update timed out. Please refresh the page.",
-          );
-          setEditingProfileMetadata(false);
-          return;
-        }
-
-        const result = await refetchProfile();
-
-        if (result.data?.profile?.txId === data.txId) {
-          setIsIndexing(false);
-          dismissToast();
-          toast.success("Profile updated!");
-          setEditingProfileMetadata(false);
-          return;
-        }
-
-        setTimeout(pollAndCheck, POLL_INTERVAL);
-      };
-
-      pollAndCheck();
-    },
-    onError: (error) => {
-      setStepError("transaction", error);
-    },
-  });
+  const { contractCall } = useContractCall();
 
   const {
     register,
@@ -197,19 +139,75 @@ export const UpdateProfileMetadata = ({
       },
     });
 
-    const data = await uploadProfileMetadata({
+    const data = await uploadProfileMetadata.mutateAsync({
       body: {
         metadata: metadata as unknown as Record<string, never>,
       },
     });
-
     completeStep("upload");
 
     const { parameters } = sigleClient.setProfile({
       metadata: `ar://${data.id}`,
     });
 
-    await contractCall(parameters);
+    const contractCallResult = await contractCall(parameters);
+    if (contractCallResult.isErr()) {
+      setStepError("transaction", contractCallResult.error.message);
+      return;
+    }
+
+    const txId = contractCallResult.value;
+    const transactionResult = await waitForTransaction({ txId });
+    if (transactionResult.isErr()) {
+      setStepError("transaction", transactionResult.error.message);
+      return;
+    }
+    if (transactionResult.value.tx_status !== "success") {
+      setStepError("transaction", "Transaction failed");
+      return;
+    }
+    completeStep("transaction");
+
+    try {
+      await triggerIndexing.mutateAsync({});
+    } catch (error) {
+      setStepError(
+        "index",
+        error instanceof Error ? error.message : "Failed to trigger indexing",
+      );
+      return;
+    }
+
+    completeStep("index");
+
+    setIsIndexing(true);
+    const startTime = Date.now();
+
+    const pollAndCheck = async (): Promise<void> => {
+      if (Date.now() - startTime > POLL_TIMEOUT) {
+        setIsIndexing(false);
+        setStepError(
+          "index",
+          "Profile update timed out. Please refresh the page.",
+        );
+        setEditingProfileMetadata(false);
+        return;
+      }
+
+      const result = await refetchProfile.refetch();
+
+      if (result.data?.profile?.txId === txId) {
+        setIsIndexing(false);
+        dismissToast();
+        toast.success("Profile updated!");
+        setEditingProfileMetadata(false);
+        return;
+      }
+
+      setTimeout(pollAndCheck, POLL_INTERVAL);
+    };
+
+    pollAndCheck();
   });
 
   const handleXChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
