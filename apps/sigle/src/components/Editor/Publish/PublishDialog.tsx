@@ -171,7 +171,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   return (
     <Dialog open={publishOpen} onOpenChange={onOpenChange}>
       <DialogContent>
-        <DialogHeader className="sr-only">
+        <DialogHeader>
           <DialogTitle>Publish</DialogTitle>
           <DialogDescription>Publish your post</DialogDescription>
         </DialogHeader>

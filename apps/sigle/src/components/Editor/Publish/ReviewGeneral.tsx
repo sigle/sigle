@@ -30,7 +30,7 @@ export const PublishReviewGeneral = () => {
   return (
     <Card>
       <CardHeader className="border-b">
-        <CardTitle>General settings</CardTitle>
+        <CardTitle className="text-base">General settings</CardTitle>
       </CardHeader>
       <CardContent className="-my-3">
         <div className="flex justify-between py-3">
