@@ -166,9 +166,7 @@ export const UpdateProfileMetadata = ({
       pollAndCheck();
     },
     onError: (error) => {
-      toast.error("Failed to update profile", {
-        description: error,
-      });
+      setStepError("transaction", error);
     },
   });
 
