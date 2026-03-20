@@ -6,11 +6,11 @@ import {
   ProfileMetadataSchemaId,
 } from "@sigle/sdk";
 import { IconAt, IconBrandX } from "@tabler/icons-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { MultiStepToast } from "@/components/Shared/MultiStepToast";
+import { useMultiStepToast } from "@/components/Shared/MultiStepToast";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -29,7 +29,6 @@ import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { useContractCall } from "@/hooks/useContractCall";
 import { useSession } from "@/lib/auth-hooks";
-import { cn } from "@/lib/cn";
 import { sigleApiClient, sigleClient } from "@/lib/sigle";
 import {
   getExplorerTransactionUrl,
@@ -61,7 +60,20 @@ export const UpdateProfileMetadata = ({
 }: UpdateProfileMetadataProps) => {
   const { data: session } = useSession();
   const [isIndexing, setIsIndexing] = useState(false);
-  const toastIdRef = useRef<string | number | null>(null);
+
+  const {
+    start: startToast,
+    completeStep,
+    setStepLoading,
+    setStepError,
+    dismiss: dismissToast,
+  } = useMultiStepToast({
+    steps: [
+      { title: "Uploading data to Arweave..." },
+      { title: "Waiting for blockchain confirmation..." },
+      { title: "Indexing your profile..." },
+    ],
+  });
 
   const { mutateAsync: uploadProfileMetadata } = sigleApiClient.useMutation(
     "post",
@@ -99,22 +111,13 @@ export const UpdateProfileMetadata = ({
 
   const { contractCall } = useContractCall({
     onSuccess: async (data) => {
-      const messages: [string, string, string] = [
-        "Uploading to Arweave...",
-        "Waiting for blockchain confirmation...",
-        "Indexing your profile...",
-      ];
-
-      const toastId = toast.custom(() => (
-        <MultiStepToast step={2} messages={messages} />
-      ));
-      toastIdRef.current = toastId;
+      completeStep(0);
+      setStepLoading(1);
 
       try {
         await getPromiseTransactionConfirmation(data.txId);
       } catch {
         toast.error("Transaction failed", {
-          id: toastId,
           action: {
             label: "View tx",
             onClick: () =>
@@ -124,20 +127,20 @@ export const UpdateProfileMetadata = ({
         return;
       }
 
-      toast.custom(() => <MultiStepToast step={3} messages={messages} />, {
-        id: toastId,
-      });
+      completeStep(1);
+      setStepLoading(2);
 
       try {
         await triggerIndexing({});
       } catch (error) {
-        toast.error("Failed to trigger indexing", {
-          id: toastId,
-          description: error instanceof Error ? error.message : undefined,
-        });
-        setEditingProfileMetadata(false);
+        setStepError(
+          2,
+          error instanceof Error ? error.message : "Failed to trigger indexing",
+        );
         return;
       }
+
+      completeStep(2);
 
       setIsIndexing(true);
       const startTime = Date.now();
@@ -145,10 +148,7 @@ export const UpdateProfileMetadata = ({
       const pollAndCheck = async (): Promise<void> => {
         if (Date.now() - startTime > POLL_TIMEOUT) {
           setIsIndexing(false);
-          toast.error("Profile update timed out", {
-            id: toastId,
-            description: "Please refresh the page and try again.",
-          });
+          setStepError(2, "Profile update timed out. Please refresh the page.");
           setEditingProfileMetadata(false);
           return;
         }
@@ -157,7 +157,8 @@ export const UpdateProfileMetadata = ({
 
         if (result.data?.profile?.txId === data.txId) {
           setIsIndexing(false);
-          toast.success("Profile updated!", { id: toastId });
+          dismissToast();
+          toast.success("Profile updated!");
           setEditingProfileMetadata(false);
           return;
         }
@@ -193,39 +194,7 @@ export const UpdateProfileMetadata = ({
   });
 
   const onSubmit = handleSubmit(async (formValues) => {
-    toastIdRef.current = toast(
-      () => (
-        <MultiStepToast
-          steps={[
-            {
-              title: "Uploading data to Arweave...",
-              description: "TODO",
-              status: "success",
-            },
-            {
-              title: "Waiting for blockchain confirmation...",
-              description: "TODO",
-              status: "pending",
-            },
-            {
-              title: "Indexing your profile...",
-              description: "TODO",
-              status: "idle",
-            },
-            {
-              title: "Indexing your profile 2...",
-              description: "TODO",
-              status: "error",
-              errorMessage: "An error occured",
-            },
-          ]}
-        />
-      ),
-      {
-        duration: Infinity,
-        closeButton: false,
-      },
-    );
+    startToast();
 
     const metadata = createProfileMetadata({
       $schema: ProfileMetadataSchemaId.LATEST,

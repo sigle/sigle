@@ -4,7 +4,7 @@ import {
   IconAlertCircle,
 } from "@tabler/icons-react";
 import { cn } from "@/lib/cn";
-import { Spinner } from "../ui/spinner";
+import { Spinner } from "../../ui/spinner";
 
 interface MultiStepToastProps {
   steps: {
