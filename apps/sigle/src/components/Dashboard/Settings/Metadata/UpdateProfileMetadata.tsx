@@ -6,7 +6,6 @@ import {
   ProfileMetadataSchemaId,
 } from "@sigle/sdk";
 import { IconAt, IconBrandX } from "@tabler/icons-react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -48,15 +47,11 @@ interface UpdateProfileMetadataProps {
   setEditingProfileMetadata: (editing: boolean) => void;
 }
 
-const POLL_TIMEOUT = 60_000;
-const POLL_INTERVAL = 2000;
-
 export const UpdateProfileMetadata = ({
   profile,
   setEditingProfileMetadata,
 }: UpdateProfileMetadataProps) => {
   const { data: session } = useSession();
-  const [isIndexing, setIsIndexing] = useState(false);
 
   const {
     start: startToast,
@@ -178,36 +173,36 @@ export const UpdateProfileMetadata = ({
       return;
     }
 
-    completeStep("index");
-
-    setIsIndexing(true);
+    const pollingInterval = 2_000;
+    const timeout = 180_000;
     const startTime = Date.now();
 
-    const pollAndCheck = async (): Promise<void> => {
-      if (Date.now() - startTime > POLL_TIMEOUT) {
-        setIsIndexing(false);
-        setStepError(
-          "index",
-          "Profile update timed out. Please refresh the page.",
-        );
-        setEditingProfileMetadata(false);
-        return;
-      }
-
+    let isIndexed = false;
+    while (Date.now() - startTime < timeout) {
       const result = await refetchProfile.refetch();
 
+      // Successfully indexed
       if (result.data?.profile?.txId === txId) {
-        setIsIndexing(false);
-        dismissToast();
-        toast.success("Profile updated!");
-        setEditingProfileMetadata(false);
-        return;
+        isIndexed = true;
+        break;
       }
 
-      setTimeout(pollAndCheck, POLL_INTERVAL);
-    };
+      await new Promise((resolve) => {
+        setTimeout(resolve, pollingInterval);
+      });
+    }
 
-    pollAndCheck();
+    if (!isIndexed) {
+      setStepError(
+        "index",
+        "Profile update timed out. Please refresh the page.",
+      );
+      return;
+    }
+
+    completeStep("index");
+
+    // TODO success message in the multi step with close button
   });
 
   const handleXChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
@@ -309,10 +304,8 @@ export const UpdateProfileMetadata = ({
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={isSubmitting || isIndexing}>
-            {isSubmitting || isIndexing ? (
-              <Spinner data-icon="inline-start" />
-            ) : null}
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? <Spinner data-icon="inline-start" /> : null}
             Save
           </Button>
         </Field>
