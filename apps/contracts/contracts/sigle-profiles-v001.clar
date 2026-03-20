@@ -1,6 +1,3 @@
-(define-constant ERR-NOT-AUTHORIZED u403)
-(define-constant ERR-INVALID-URI u1000)
-
 (define-map profiles
   principal
   (string-ascii 210)

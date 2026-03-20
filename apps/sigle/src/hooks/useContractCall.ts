@@ -1,6 +1,19 @@
 import type { CallContractParams } from "@stacks/connect/dist/types/methods";
 import { request } from "@stacks/connect";
+import { Result, TaggedError } from "better-result";
 import { useCallback, useState } from "react";
+
+export class TransactionUserRejectedError extends TaggedError(
+  "TransactionUserRejectedError",
+)() {
+  constructor() {
+    super({ message: "User rejected the request" });
+  }
+}
+
+export class ContractCallError extends TaggedError("ContractCallError")<{
+  message: string;
+}>() {}
 
 interface UseContractCallOptions {
   onSuccess?: (data: { txId: string }) => void;
@@ -34,7 +47,11 @@ export function useContractCall(options: UseContractCallOptions = {}) {
   }, []);
 
   const contractCall = useCallback(
-    async (parameters: Omit<CallContractParams, "network" | "sponsored">) => {
+    async (
+      parameters: Omit<CallContractParams, "network" | "sponsored">,
+    ): Promise<
+      Result<string, ContractCallError | TransactionUserRejectedError>
+    > => {
       try {
         setState((prev) => ({
           ...prev,
@@ -62,6 +79,7 @@ export function useContractCall(options: UseContractCallOptions = {}) {
         onSuccess?.({
           txId: txId,
         });
+        return Result.ok(txId);
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error";
@@ -73,7 +91,7 @@ export function useContractCall(options: UseContractCallOptions = {}) {
             loading: false,
           }));
           onCancel?.();
-          return;
+          return Result.err(new TransactionUserRejectedError());
         }
 
         setState((prev) => ({
@@ -83,6 +101,7 @@ export function useContractCall(options: UseContractCallOptions = {}) {
           success: false,
         }));
         onError?.(errorMessage);
+        return Result.err(new ContractCallError({ message: errorMessage }));
       }
     },
     [onSuccess, onError, onCancel],

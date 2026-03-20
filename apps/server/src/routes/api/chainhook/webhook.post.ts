@@ -7,7 +7,7 @@ import { sigleConfig } from "@/lib/sigle";
 
 export default defineEventHandler(async (event) => {
   const chainhook = (await event.req.json()) as Payload;
-  const authorization = event.headers.get("authorization");
+  const authorization = event.req.headers.get("authorization");
   const authorizationToken = authorization?.replace("Bearer ", "");
   if (authorizationToken !== env.CHAINHOOK_API_TOKEN) {
     throw new HTTPError({
@@ -192,6 +192,7 @@ export default defineEventHandler(async (event) => {
                 await indexerJob.emit({
                   action: "indexer-set-profile",
                   data: {
+                    txId: transaction.transaction_identifier.hash,
                     address: value.address,
                     uri: value.uri,
                   },

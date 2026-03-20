@@ -72,7 +72,8 @@ export const PostCollectDialog = ({
       toast.promise(getPromiseTransactionConfirmation(data.txId), {
         loading: "Collect transaction submitted",
         success: "Collected successfully",
-        error: "Transaction failed",
+        error: (err) =>
+          err instanceof Error ? err.message : "Transaction failed",
         action: {
           label: "View tx",
           onClick: () =>

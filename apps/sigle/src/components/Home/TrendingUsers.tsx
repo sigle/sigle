@@ -35,7 +35,7 @@ export const HomeTrendingUsers = () => {
           {users.map((user) => (
             <CarouselItem key={user.id} className="basis-1/2 md:basis-1/5">
               <Card key={user.id}>
-                <CardContent className="flex flex-col items-center gap-2">
+                <CardContent className="flex flex-col items-center gap-2 text-center">
                   <NextLink href={Routes.userProfile({ username: user.id })}>
                     <ProfileAvatar user={user} size="8" />
                   </NextLink>

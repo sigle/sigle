@@ -22,11 +22,11 @@ export const setProfile = ({
   params: SetProfileParams;
   networkName: StacksNetworkName;
 }): SetProfileReturn => {
-  const protocolAddress = config[networkName].protocolAddress;
+  const profilesRegistryAddress = config[networkName].profilesRegistryAddress;
 
   return {
     parameters: {
-      contract: `${protocolAddress}.sigle-profiles-v001`,
+      contract: profilesRegistryAddress,
       functionName: "set-profile",
       functionArgs: [stringAsciiCV(params.metadata)],
       postConditionMode: "deny",

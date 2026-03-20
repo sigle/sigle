@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { createId } from "@paralleldrive/cuid2";
 import {
   type paths,
   createProfileMetadata,
@@ -6,8 +7,8 @@ import {
 } from "@sigle/sdk";
 import { IconAt, IconBrandX } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
+import { useMultiStepToast } from "@/components/Shared/MultiStepToast";
 import { Button } from "@/components/ui/button";
 import {
   Field,
@@ -25,11 +26,9 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { useContractCall } from "@/hooks/useContractCall";
+import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient, sigleClient } from "@/lib/sigle";
-import {
-  getExplorerTransactionUrl,
-  getPromiseTransactionConfirmation,
-} from "@/lib/stacks";
+import { waitForTransaction } from "@/lib/stacks";
 import { UploadProfileCoverPicture } from "./UploadProfileCoverPicture";
 import { UploadProfilePicture } from "./UploadProfilePicture";
 
@@ -51,37 +50,54 @@ export const UpdateProfileMetadata = ({
   profile,
   setEditingProfileMetadata,
 }: UpdateProfileMetadataProps) => {
-  const { mutateAsync: uploadProfileMetadata } = sigleApiClient.useMutation(
+  const { data: session } = useSession();
+
+  const {
+    start: startToast,
+    completeStep,
+    setStepError,
+  } = useMultiStepToast({
+    steps: [
+      { id: "upload", title: "Uploading data to Arweave..." },
+      { id: "transaction", title: "Waiting for blockchain confirmation..." },
+      { id: "index", title: "Indexing profile..." },
+    ],
+    successMessage: "Profile updated!",
+  });
+
+  const uploadProfileMetadata = sigleApiClient.useMutation(
     "post",
     "/api/protected/user/profile/upload-metadata",
     {
       onError: (error) => {
-        toast.error("Failed to update profile", {
-          description: error.message,
-        });
+        setStepError("upload", error.message);
       },
     },
   );
 
-  const { contractCall } = useContractCall({
-    onSuccess: (data) => {
-      toast.promise(getPromiseTransactionConfirmation(data.txId), {
-        loading: "Update profile transaction submitted",
-        success: "Profile updated successfully",
-        error: "Transaction failed",
-        action: {
-          label: "View tx",
-          onClick: () =>
-            window.open(getExplorerTransactionUrl(data.txId), "_blank"),
+  const triggerIndexing = sigleApiClient.useMutation(
+    "post",
+    "/api/protected/user/profile/trigger-indexing",
+  );
+
+  const userId = session?.user.id;
+
+  const refetchProfile = sigleApiClient.useQuery(
+    "get",
+    "/api/users/{username}",
+    {
+      params: {
+        path: {
+          username: userId || "",
         },
-      });
+      },
     },
-    onError: (error) => {
-      toast.error("Failed to update profile", {
-        description: error,
-      });
+    {
+      enabled: false,
     },
-  });
+  );
+
+  const { contractCall } = useContractCall();
 
   const {
     register,
@@ -102,10 +118,12 @@ export const UpdateProfileMetadata = ({
   });
 
   const onSubmit = handleSubmit(async (formValues) => {
+    startToast();
+
     const metadata = createProfileMetadata({
       $schema: ProfileMetadataSchemaId.LATEST,
       content: {
-        id: "TODO",
+        id: createId(),
         displayName: formValues.displayName || undefined,
         description: formValues.description || undefined,
         twitter: formValues.twitter || undefined,
@@ -115,18 +133,73 @@ export const UpdateProfileMetadata = ({
       },
     });
 
-    const data = await uploadProfileMetadata({
+    const data = await uploadProfileMetadata.mutateAsync({
       body: {
         metadata: metadata as unknown as Record<string, never>,
       },
     });
+    completeStep("upload");
 
     const { parameters } = sigleClient.setProfile({
       metadata: `ar://${data.id}`,
     });
 
-    await contractCall(parameters);
+    const contractCallResult = await contractCall(parameters);
+    if (contractCallResult.isErr()) {
+      setStepError("transaction", contractCallResult.error.message);
+      return;
+    }
 
+    const txId = contractCallResult.value;
+    const transactionResult = await waitForTransaction({ txId });
+    if (transactionResult.isErr()) {
+      setStepError("transaction", transactionResult.error.message);
+      return;
+    }
+    if (transactionResult.value.tx_status !== "success") {
+      setStepError("transaction", "Transaction failed");
+      return;
+    }
+    completeStep("transaction");
+
+    try {
+      await triggerIndexing.mutateAsync({});
+    } catch (error) {
+      setStepError(
+        "index",
+        error instanceof Error ? error.message : "Failed to trigger indexing",
+      );
+      return;
+    }
+
+    const pollingInterval = 2_000;
+    const timeout = 180_000;
+    const startTime = Date.now();
+
+    let isIndexed = false;
+    while (Date.now() - startTime < timeout) {
+      const result = await refetchProfile.refetch();
+
+      // Successfully indexed
+      if (result.data?.profile?.txId === txId) {
+        isIndexed = true;
+        break;
+      }
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, pollingInterval);
+      });
+    }
+
+    if (!isIndexed) {
+      setStepError(
+        "index",
+        "Profile update timed out. Please refresh the page.",
+      );
+      return;
+    }
+
+    completeStep("index");
     setEditingProfileMetadata(false);
   });
 

@@ -4,10 +4,10 @@ import { consola } from "@/lib/consola";
 import { prisma } from "@/lib/prisma";
 import { sigleConfig } from "@/lib/sigle";
 import { getStacksTransaction, stacksApiClient } from "@/lib/stacks";
-import { indexerJob } from ".";
+import { indexerJob } from "..";
 
-export const indexerIndexPostsSchema = z.object({
-  action: z.literal("indexer-index-posts"),
+export const indexerIndexProfilesSchema = z.object({
+  action: z.literal("indexer-index-profiles"),
   data: z.object({}),
 });
 
@@ -16,9 +16,9 @@ const API_LIMIT = 50;
 const eventLogSchema = z.object({
   value: z.object({
     a: z.object({
-      value: z.literal("publish-post"),
+      value: z.literal("set-profile"),
     }),
-    author: z.object({
+    address: z.object({
       value: z.string(),
     }),
     uri: z.object({
@@ -27,29 +27,30 @@ const eventLogSchema = z.object({
   }),
 });
 
-export const executeIndexerIndexPostsJob = async (
-  _data: z.TypeOf<typeof indexerIndexPostsSchema>["data"],
+export const executeIndexerIndexProfilesJob = async (
+  _data: z.TypeOf<typeof indexerIndexProfilesSchema>["data"],
 ) => {
-  const latestPost = await prisma.post.findFirst({
+  // Use updatedAt instead of createdAt because profiles are updated over time
+  // and createdAt doesn't change on update. This ensures we start from
+  // the most recently indexed profile update.
+  const latestProfile = await prisma.profile.findFirst({
     select: {
       txId: true,
     },
     orderBy: {
-      createdAt: "desc",
+      updatedAt: "desc",
     },
   });
 
-  const lastProcessedTxId = latestPost?.txId;
+  const lastProcessedTxId = latestProfile?.txId;
 
   let offset = 0;
   let hasMore = true;
   let caughtUp = false;
-  const posts: {
+  const profiles: {
     txId: string;
-    blockHeight: number;
-    author: string;
+    address: string;
     uri: string;
-    createdAt: Date;
   }[] = [];
 
   while (hasMore && !caughtUp) {
@@ -62,7 +63,7 @@ export const executeIndexerIndexPostsJob = async (
       {
         params: {
           path: {
-            contract_id: sigleConfig.registryAddress,
+            contract_id: sigleConfig.profilesRegistryAddress,
           },
           query: {
             limit: API_LIMIT,
@@ -73,7 +74,6 @@ export const executeIndexerIndexPostsJob = async (
     );
 
     if (resultEvents.error) {
-      // TODO handle error (retry with backoff, alert, etc.)
       consola.error("Error fetching events from Stacks API", {
         error: resultEvents.error,
       });
@@ -134,15 +134,11 @@ export const executeIndexerIndexPostsJob = async (
           // oxlint-disable-next-line no-continue
           continue;
         }
-        const txTimestamp = new Date(transaction.value.burn_block_time * 1000);
-        const txBlockHeight = transaction.value.block_height;
 
-        posts.push({
+        profiles.push({
           txId: event.tx_id,
-          blockHeight: txBlockHeight,
-          author: eventLog.data.value.author.value,
+          address: eventLog.data.value.address.value,
           uri: eventLog.data.value.uri.value,
-          createdAt: txTimestamp,
         });
       }
     }
@@ -150,21 +146,20 @@ export const executeIndexerIndexPostsJob = async (
     offset += API_LIMIT;
   }
 
-  if (posts.length > 0) {
-    // Process oldest posts first
-    posts.reverse();
-    for (const post of posts) {
+  if (profiles.length > 0) {
+    profiles.reverse();
+    for (const profile of profiles) {
       await indexerJob.emit({
-        action: "indexer-publish-post",
-        data: post,
+        action: "indexer-set-profile",
+        data: profile,
       });
     }
   }
 
   const returnData = {
-    toProcess: posts.length,
+    toProcess: profiles.length,
     lastProcessedTxId,
   };
-  consola.info("Index posts job complete", returnData);
+  consola.info("Index profiles job complete", returnData);
   return returnData;
 };

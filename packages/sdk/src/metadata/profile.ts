@@ -44,7 +44,6 @@ export interface ProfileMetadataDetails {
 }
 
 export const ProfileMetadataDetailsSchema = z.object({
-  $schema: z.literal(ProfileMetadataSchemaId.LATEST),
   id: z.string().min(1).meta({
     description: "Random id also used in the url. Have to be unique on sigle.",
   }),

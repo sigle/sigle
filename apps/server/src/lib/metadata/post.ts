@@ -1,51 +1,8 @@
-import { type MediaImageMetadata, PostMetadataSchema } from "@sigle/sdk";
-import { type UnhandledException, Result, TaggedError } from "better-result";
-import { env } from "../env";
-import { resolveImageUrl } from "./images";
-
-export class MetadataFetchFailedError extends TaggedError(
-  "MetadataFetchFailedError",
-)<{
-  error: string;
-}>() {}
-
-function fetchMetadata(
-  url: string,
-): Promise<Result<unknown, MetadataFetchFailedError>> {
-  const retryConfig =
-    env.NODE_ENV === "test"
-      ? undefined
-      : ({
-          retry: {
-            times: 3,
-            backoff: "exponential",
-            delayMs: 500,
-          },
-        } as const);
-
-  return Result.tryPromise(
-    {
-      try: async () => {
-        const response = await fetch(url);
-        const json = await response.json();
-        return json;
-      },
-      catch: (error) => {
-        return new MetadataFetchFailedError({
-          error:
-            error instanceof Error
-              ? `Failed to fetch metadata from ${url}: ${error.message}`
-              : `Failed to fetch metadata from ${url}: ${String(error)}`,
-        });
-      },
-    },
-    retryConfig,
-  );
-}
-
-export class InvalidMetadataError extends TaggedError("InvalidMetadataError")<{
-  error: string;
-}>() {}
+import { PostMetadataSchema, type MediaImageMetadata } from "@sigle/sdk";
+import { Result, type UnhandledException } from "better-result";
+import { resolveImageUrl } from "../images";
+import { InvalidMetadataError, type MetadataFetchFailedError } from "./errors";
+import { fetchMetadata } from "./fetch";
 
 interface PostMetadata {
   version: string;

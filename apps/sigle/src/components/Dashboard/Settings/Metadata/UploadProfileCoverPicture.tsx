@@ -26,33 +26,34 @@ export const UploadProfileCoverPicture = ({
       "/api/protected/user/profile/upload-cover",
     );
 
-  // oxlint-disable-next-line exhaustive-deps
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    if (!file) return;
-    if (loadingUploadImage) return;
-    posthog.capture("profile_cover_image_upload_start", {});
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      if (!file) return;
+      if (loadingUploadImage) return;
+      posthog.capture("profile_cover_image_upload_start", {});
 
-    const formData = new FormData();
-    formData.append("file", file);
-    uploadImage(
-      {
-        // oxlint-disable-next-line no-explicit-any: wrong type returned by nitro
-        body: formData as any,
-      },
-      {
-        onSuccess: (data) => {
-          setPicture(data.url);
-          posthog.capture("profile_cover_image_upload_success", {});
+      const formData = new FormData();
+      formData.append("file", file);
+      uploadImage(
+        {
+          // oxlint-disable-next-line no-explicit-any: wrong type returned by nitro
+          body: formData as any,
         },
-        onError: (error) => {
-          posthog.capture("profile_cover_image_upload_error", {});
-          toast.error(error.message);
+        {
+          onSuccess: (data) => {
+            setPicture(data.url);
+            posthog.capture("profile_cover_image_upload_success", {});
+          },
+          onError: (error) => {
+            posthog.capture("profile_cover_image_upload_error", {});
+            toast.error(error.message);
+          },
         },
-      },
-    );
-    // oxlint-disable-next-line exhaustive-deps
-  }, []);
+      );
+    },
+    [posthog, uploadImage, setPicture, loadingUploadImage],
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -72,12 +73,15 @@ export const UploadProfileCoverPicture = ({
         <div className="relative w-full cursor-pointer" {...getRootProps()}>
           <input {...getInputProps()} />
           <Avatar
-            className={cn("h-60 w-full border border-border", {
-              "opacity-25": loadingUploadImage,
-            })}
+            className={cn(
+              "h-60 w-full rounded-lg border border-border after:rounded-lg",
+              {
+                "opacity-25": loadingUploadImage,
+              },
+            )}
           >
-            <AvatarImage src={resolvedPicture} />
-            <AvatarFallback>
+            <AvatarImage className="rounded-lg" src={resolvedPicture} />
+            <AvatarFallback className="rounded-lg">
               <IconPencil size={20} />
             </AvatarFallback>
           </Avatar>

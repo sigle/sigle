@@ -26,33 +26,34 @@ export const UploadProfilePicture = ({
       "/api/protected/user/profile/upload-avatar",
     );
 
-  // oxlint-disable-next-line exhaustive-deps
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    if (!file) return;
-    if (loadingUploadImage) return;
-    posthog.capture("profile_image_upload_start", {});
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      if (!file) return;
+      if (loadingUploadImage) return;
+      posthog.capture("profile_image_upload_start", {});
 
-    const formData = new FormData();
-    formData.append("file", file);
-    uploadImage(
-      {
-        // oxlint-disable-next-line no-explicit-any
-        body: formData as any,
-      },
-      {
-        onSuccess: (data) => {
-          setPicture(data.url);
-          posthog.capture("profile_image_upload_success", {});
+      const formData = new FormData();
+      formData.append("file", file);
+      uploadImage(
+        {
+          // oxlint-disable-next-line no-explicit-any
+          body: formData as any,
         },
-        onError: (error) => {
-          posthog.capture("profile_image_upload_error", {});
-          toast.error(error.message);
+        {
+          onSuccess: (data) => {
+            setPicture(data.url);
+            posthog.capture("profile_image_upload_success", {});
+          },
+          onError: (error) => {
+            posthog.capture("profile_image_upload_error", {});
+            toast.error(error.message);
+          },
         },
-      },
-    );
-    // oxlint-disable-next-line exhaustive-deps
-  }, []);
+      );
+    },
+    [posthog, uploadImage, setPicture, loadingUploadImage],
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
