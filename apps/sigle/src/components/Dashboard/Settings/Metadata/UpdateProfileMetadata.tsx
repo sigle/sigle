@@ -60,8 +60,9 @@ export const UpdateProfileMetadata = ({
     steps: [
       { id: "upload", title: "Uploading data to Arweave..." },
       { id: "transaction", title: "Waiting for blockchain confirmation..." },
-      { id: "index", title: "Indexing your profile..." },
+      { id: "index", title: "Indexing profile..." },
     ],
+    successMessage: "Profile updated!",
   });
 
   const uploadProfileMetadata = sigleApiClient.useMutation(
@@ -199,9 +200,6 @@ export const UpdateProfileMetadata = ({
     }
 
     completeStep("index");
-    setEditingProfileMetadata(false);
-
-    // TODO success message in the multi step with close button
   });
 
   const handleXChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {

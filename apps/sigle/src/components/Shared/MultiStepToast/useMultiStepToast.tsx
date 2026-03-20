@@ -1,13 +1,10 @@
 import { toast } from "sonner";
 import { MultiStepToast } from "./MultiStepToast";
-import {
-  type MultiStepToastStep,
-  type StepStatus,
-  useMultiStepToastStore,
-} from "./store";
+import { type MultiStepToastStep, useMultiStepToastStore } from "./store";
 
 interface UseMultiStepToastOptions {
   steps: { id: string; title: string; description?: string }[];
+  successMessage: string;
   onError?: (error: Error, stepId: string) => void;
 }
 
@@ -16,7 +13,6 @@ interface UseMultiStepToastReturn {
   completeStep: (id: string) => void;
   setStepLoading: (id: string) => void;
   setStepError: (id: string, errorMessage: string) => void;
-  setAllComplete: () => void;
   dismiss: () => void;
 }
 
@@ -24,7 +20,7 @@ export function useMultiStepToast(
   options: UseMultiStepToastOptions,
 ): UseMultiStepToastReturn {
   const toastId = "multi-step-toast";
-  const { steps: stepDefinitions, onError } = options;
+  const { steps: stepDefinitions, successMessage, onError } = options;
   const { setSteps, updateStep, reset } = useMultiStepToastStore();
 
   const renderToast = () => {
@@ -55,11 +51,23 @@ export function useMultiStepToast(
   const completeStep = (id: string) => {
     const { steps } = useMultiStepToastStore.getState();
     const currentIndex = steps.findIndex((s) => s.id === id);
-    if (currentIndex !== -1 && currentIndex < steps.length - 1) {
+    const isLastStep = currentIndex === steps.length - 1;
+
+    updateStep(id, { status: "success" });
+
+    if (isLastStep) {
+      renderToast();
+      setTimeout(() => {
+        dismiss();
+        toast.success(successMessage);
+      }, 500);
+      return;
+    }
+
+    if (currentIndex !== -1) {
       const nextStep = steps[currentIndex + 1];
       updateStep(nextStep.id, { status: "pending" });
     }
-    updateStep(id, { status: "success" });
     renderToast();
   };
 
@@ -74,15 +82,6 @@ export function useMultiStepToast(
     onError?.(new Error(errorMessage), id);
   };
 
-  const setAllComplete = () => {
-    const allCompleteSteps = stepDefinitions.map((step) => ({
-      ...step,
-      status: "success" as StepStatus,
-    }));
-    setSteps(allCompleteSteps);
-    renderToast();
-  };
-
   const dismiss = () => {
     reset();
     toast.dismiss(toastId);
@@ -93,7 +92,6 @@ export function useMultiStepToast(
     completeStep,
     setStepLoading,
     setStepError,
-    setAllComplete,
     dismiss,
   };
 }
