@@ -22,3 +22,10 @@ export class StacksApiError extends TaggedError("StacksApiError")<{
     super({ cause, message });
   }
 }
+
+export class TransactionTimeoutError extends TaggedError(
+  "TransactionTimeoutError",
+)<{
+  txId: string;
+  message: string;
+}>() {}

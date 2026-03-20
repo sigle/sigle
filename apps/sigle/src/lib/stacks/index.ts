@@ -3,7 +3,7 @@ import { createClient } from "@stacks/blockchain-api-client";
 import { STACKS_DEVNET, STACKS_MAINNET, STACKS_TESTNET } from "@stacks/network";
 import { Result } from "better-result";
 import { env } from "@/env";
-import { StacksApiError } from "./errors";
+import { StacksApiError, TransactionTimeoutError } from "./errors";
 
 export const stacksNetwork =
   env.NEXT_PUBLIC_STACKS_ENV === "mainnet"
@@ -27,7 +27,7 @@ export async function getStacksTransaction(
 ): Promise<
   Result<
     stacksApiPaths["/extended/v1/tx/{tx_id}"]["get"]["responses"]["200"]["content"]["application/json"],
-    Error
+    StacksApiError
   >
 > {
   return Result.tryPromise({
@@ -55,29 +55,60 @@ export async function getStacksTransaction(
   });
 }
 
-/**
- * Returns a promise that resolves when the transaction is confirmed
- */
-export async function getPromiseTransactionConfirmation(txId: string) {
-  return new Promise((resolve, reject) => {
-    const checkTransaction = async () => {
-      try {
-        const data = await getStacksTransaction(txId);
-        if (data.isErr()) {
-          reject("Transaction failed");
-          return;
-        } else if (data.value.tx_status === "pending") {
-          setTimeout(checkTransaction, 5000);
-        } else if (data.value.tx_status === "success") {
-          resolve("Transaction confirmed");
-        } else {
-          reject("Transaction failed");
-        }
-      } catch (error) {
-        reject(error);
-      }
-    };
+export async function waitForTransaction(options: {
+  txId: string;
 
-    checkTransaction();
-  });
+  /**
+   * Polling frequency (in ms).
+   * @default 2000
+   */
+  pollingInterval?: number | undefined;
+  /**
+   * Optional timeout (in milliseconds) to wait before stopping polling.
+   * @default 180_000
+   */
+  timeout?: number;
+}): Promise<
+  Result<
+    stacksApiPaths["/extended/v1/tx/{tx_id}"]["get"]["responses"]["200"]["content"]["application/json"],
+    StacksApiError | TransactionTimeoutError
+  >
+> {
+  const { txId, pollingInterval = 2_000, timeout = 180_000 } = options;
+  const startTime = Date.now();
+
+  while (Date.now() - startTime < timeout) {
+    const txResult = await getStacksTransaction(txId);
+
+    if (txResult.isErr()) {
+      return txResult;
+    }
+
+    if (txResult.value.tx_status !== "pending") {
+      return txResult;
+    }
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, pollingInterval);
+    });
+  }
+
+  return Result.err(
+    new TransactionTimeoutError({
+      txId,
+      message: `Transaction ${txId} timed out after ${timeout}ms`,
+    }),
+  );
+}
+
+export async function getPromiseTransactionConfirmation(
+  txId: string,
+): Promise<string> {
+  const result = await waitForTransaction({ txId });
+
+  if (result.isErr()) {
+    throw new Error(result.error.message);
+  }
+
+  return "Transaction confirmed";
 }
