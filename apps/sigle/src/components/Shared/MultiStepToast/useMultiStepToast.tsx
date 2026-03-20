@@ -31,6 +31,8 @@ export function useMultiStepToast(
     const { steps } = useMultiStepToastStore.getState();
     toast(() => <MultiStepToast steps={steps} />, {
       id: toastId ?? undefined,
+      duration: Infinity,
+      closeButton: false,
     });
   };
 
