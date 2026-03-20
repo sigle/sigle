@@ -58,9 +58,9 @@ export const UpdateProfileMetadata = ({
     setStepError,
   } = useMultiStepToast({
     steps: [
-      { id: "upload", title: "Uploading data to Arweave..." },
-      { id: "transaction", title: "Waiting for blockchain confirmation..." },
-      { id: "index", title: "Indexing profile..." },
+      { id: "upload", title: "Uploading data to Arweave" },
+      { id: "transaction", title: "Waiting for blockchain confirmation" },
+      { id: "index", title: "Indexing profile" },
     ],
     successMessage: "Profile updated!",
   });
