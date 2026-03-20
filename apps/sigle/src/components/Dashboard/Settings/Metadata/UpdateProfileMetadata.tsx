@@ -30,7 +30,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useContractCall } from "@/hooks/useContractCall";
 import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient, sigleClient } from "@/lib/sigle";
-import { getPromiseTransactionConfirmation } from "@/lib/stacks";
+import { waitForTransaction } from "@/lib/stacks";
 import { UploadProfileCoverPicture } from "./UploadProfileCoverPicture";
 import { UploadProfilePicture } from "./UploadProfilePicture";
 
@@ -105,9 +105,13 @@ export const UpdateProfileMetadata = ({
 
   const { contractCall } = useContractCall({
     onSuccess: async (data) => {
-      const result = await getPromiseTransactionConfirmation(data.txId);
+      const result = await waitForTransaction({ txId: data.txId });
       if (result.isErr()) {
         setStepError("transaction", result.error.message);
+        return;
+      }
+      if (result.value.tx_status !== "success") {
+        setStepError("transaction", "Transaction failed");
         return;
       }
 
