@@ -33,9 +33,10 @@ export function useMultiStepToast(
   };
 
   const initializeSteps = (): MultiStepToastStep[] => {
-    return stepDefinitions.map((step) => ({
+    return stepDefinitions.map((step, index) => ({
       ...step,
-      status: "idle" as StepStatus,
+      // Set first element as pending when we start
+      status: index === 0 ? ("pending" as const) : ("idle" as const),
     }));
   };
 
