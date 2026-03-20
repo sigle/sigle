@@ -1,5 +1,6 @@
 "use client";
 
+import { Result } from "better-result";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { useState } from "react";
@@ -86,7 +87,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           return;
         }
 
-        const uploadedMetadata = await uploadMetadata({
+        const uploadedMetadataResult = await uploadMetadata({
           params: {
             path: {
               draftId: postId,
@@ -97,11 +98,26 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             // oxlint-disable-next-line no-explicit-any
             metadata: metadata as any,
           },
-        });
+        })
+          .then((result) => Result.ok(result))
+          .catch((error) => Result.err(error));
+        if (uploadedMetadataResult.isErr()) {
+          posthog.capture("post_publish_upload_metadata_error", {
+            postId,
+            error: uploadedMetadataResult.error,
+          });
+          setStepError(
+            "arweave",
+            uploadedMetadataResult.error.message
+              ? uploadedMetadataResult.error.message
+              : uploadedMetadataResult.error,
+          );
+          return;
+        }
 
         completeStep("arweave");
 
-        const arweaveUrl = `ar://${uploadedMetadata.id}`;
+        const arweaveUrl = `ar://${uploadedMetadataResult.value.id}`;
         const { parameters } = sigleClient.publishPost({
           metadataUri: arweaveUrl,
         });
