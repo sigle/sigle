@@ -56,7 +56,7 @@ export const GeneralSettings = () => {
             "h-8 rounded-md border border-border pl-3.5 w-full focus:outline-accent",
           selected: "mt-2 flex gap-2 flex-wrap",
           tag: cn(
-            "inline-flex h-5 gap-1 rounded-md border border-transparent px-2 py-0.5 text-xs font-medium whitespace-nowrap text-accent transition-colors focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-none",
+            "inline-flex h-5 gap-1 rounded-4xl border border-transparent bg-secondary px-2 py-0.5 text-xs font-medium whitespace-nowrap text-secondary-foreground transition-colors focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none [a]:hover:bg-secondary/80",
           ),
         }}
         tags={formattedTags}
@@ -68,7 +68,7 @@ export const GeneralSettings = () => {
         onClearAll={handleClearAll}
         maxTags={5}
         removeComponent={({ onRemove }) => (
-          <button type="button" onClick={onRemove} className="text-accent">
+          <button type="button" onClick={onRemove} className="text-primary">
             <IconX size={14} />
           </button>
         )}
