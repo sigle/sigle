@@ -34,7 +34,9 @@ export async function createTestUser(
             description: options.profile.description ?? "Test description",
             website: options.profile.website ?? "https://example.com",
             twitter: options.profile.twitter ?? "testuser",
-            txId: options.profile.txId ?? "0xtest",
+            txId:
+              options.profile.txId ??
+              `0x${Math.random().toString(16).slice(2)}`,
             createdAt: now,
             updatedAt: now,
           },
