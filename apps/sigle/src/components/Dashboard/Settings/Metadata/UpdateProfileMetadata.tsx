@@ -122,7 +122,6 @@ export const UpdateProfileMetadata = ({
       }
 
       completeStep("transaction");
-      setStepLoading("index");
 
       try {
         await triggerIndexing({});
@@ -211,7 +210,6 @@ export const UpdateProfileMetadata = ({
     });
 
     completeStep("upload");
-    setStepLoading("confirm");
 
     const { parameters } = sigleClient.setProfile({
       metadata: `ar://${data.id}`,
