@@ -70,7 +70,7 @@ export const UpdateProfileMetadata = ({
   } = useMultiStepToast({
     steps: [
       { id: "upload", title: "Uploading data to Arweave..." },
-      { id: "confirm", title: "Waiting for blockchain confirmation..." },
+      { id: "transaction", title: "Waiting for blockchain confirmation..." },
       { id: "index", title: "Indexing your profile..." },
     ],
   });
@@ -80,9 +80,7 @@ export const UpdateProfileMetadata = ({
     "/api/protected/user/profile/upload-metadata",
     {
       onError: (error) => {
-        toast.error("Failed to update profile", {
-          description: error.message,
-        });
+        setStepError("upload", error.message);
       },
     },
   );
@@ -111,23 +109,19 @@ export const UpdateProfileMetadata = ({
 
   const { contractCall } = useContractCall({
     onSuccess: async (data) => {
-      completeStep("upload");
-      setStepLoading("confirm");
-
       try {
         await getPromiseTransactionConfirmation(data.txId);
-      } catch {
-        toast.error("Transaction failed", {
-          action: {
-            label: "View tx",
-            onClick: () =>
-              window.open(getExplorerTransactionUrl(data.txId), "_blank"),
-          },
-        });
+      } catch (error) {
+        setStepError(
+          "transaction",
+          error instanceof Error
+            ? error.message
+            : "Failed to submit transaction",
+        );
         return;
       }
 
-      completeStep("confirm");
+      completeStep("transaction");
       setStepLoading("index");
 
       try {
@@ -217,6 +211,9 @@ export const UpdateProfileMetadata = ({
         metadata: metadata as unknown as Record<string, never>,
       },
     });
+
+    completeStep("upload");
+    setStepLoading("confirm");
 
     const { parameters } = sigleClient.setProfile({
       metadata: `ar://${data.id}`,
