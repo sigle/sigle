@@ -199,6 +199,7 @@ export const UpdateProfileMetadata = ({
     }
 
     completeStep("index");
+    setEditingProfileMetadata(false);
 
     // TODO success message in the multi step with close button
   });
