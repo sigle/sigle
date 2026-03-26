@@ -49,6 +49,21 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     "/api/protected/drafts/{draftId}/set-tx-id",
   );
 
+  const { refetch: refetchPost } = sigleApiClient.useQuery(
+    "get",
+    "/api/posts/{postId}",
+    {
+      params: {
+        path: {
+          postId,
+        },
+      },
+    },
+    {
+      enabled: false,
+    },
+  );
+
   const { steps, start, completeStep, setStepError } = useMultiStep({
     steps: [
       { id: "arweave", title: "Uploading data to Arweave" },
@@ -182,10 +197,9 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
         let isIndexed = false;
         while (Date.now() - startTime < timeout) {
-          const result = await refetchProfile.refetch();
+          const result = await refetchPost();
 
-          // Successfully indexed
-          if (result.data?.profile?.txId === txId) {
+          if (result.data?.txId === txId) {
             isIndexed = true;
             break;
           }
@@ -198,7 +212,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         if (!isIndexed) {
           setStepError(
             "indexing",
-            "Profile update timed out. Please refresh the page.",
+            "Post indexing timed out. Please refresh the page.",
           );
           return;
         }
