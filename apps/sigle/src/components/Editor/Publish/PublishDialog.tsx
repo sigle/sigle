@@ -49,13 +49,13 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     "/api/protected/drafts/{draftId}/set-tx-id",
   );
 
-  const { refetch: refetchPost } = sigleApiClient.useQuery(
+  const { refetch: refetchPostByTxId } = sigleApiClient.useQuery(
     "get",
-    "/api/posts/{postId}",
+    "/api/posts/by-tx-id",
     {
       params: {
-        path: {
-          postId,
+        query: {
+          txId: "",
         },
       },
     },
@@ -197,9 +197,15 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
         let isIndexed = false;
         while (Date.now() - startTime < timeout) {
-          const result = await refetchPost();
+          const result = await refetchPostByTxId({
+            params: {
+              query: {
+                txId,
+              },
+            },
+          });
 
-          if (result.data?.txId === txId) {
+          if (result.data) {
             isIndexed = true;
             break;
           }
