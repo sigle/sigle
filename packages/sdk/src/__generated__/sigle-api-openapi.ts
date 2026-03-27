@@ -288,6 +288,53 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/posts/by-tx-id": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** @description Get post by txId. */
+    get: {
+      parameters: {
+        query: {
+          txId: string;
+        };
+        header?: never;
+        path?: never;
+        cookie?: never;
+      };
+      requestBody?: never;
+      responses: {
+        /** @description Post entry. */
+        200: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["Post"];
+          };
+        };
+        /** @description Post not found */
+        404: {
+          headers: {
+            [name: string]: unknown;
+          };
+          content: {
+            "application/json": components["schemas"]["BadRequest"];
+          };
+        };
+      };
+    };
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/posts/list.get.test": {
     parameters: {
       query?: never;
