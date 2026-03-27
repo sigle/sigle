@@ -49,7 +49,7 @@ export function useMultiStep<T extends string>(
     if (currentIndex !== -1) {
       const nextStep = steps[currentIndex + 1];
       updateStep(nextStep.id, { status: "pending" });
-      onStepChange?.(nextStep.id, "pending");
+      onStepChange?.(nextStep.id as T, "pending");
     }
   };
 

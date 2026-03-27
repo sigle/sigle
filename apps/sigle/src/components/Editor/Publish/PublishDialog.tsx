@@ -18,7 +18,7 @@ import {
 import { useContractCall } from "@/hooks/useContractCall";
 import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
-import { sigleApiClient, sigleClient } from "@/lib/sigle";
+import { sigleApiClient, sigleApiFetchClient, sigleClient } from "@/lib/sigle";
 import { waitForTransaction } from "@/lib/stacks";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
@@ -49,20 +49,15 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     "/api/protected/drafts/{draftId}/set-tx-id",
   );
 
-  const { refetch: refetchPostByTxId } = sigleApiClient.useQuery(
-    "get",
-    "/api/posts/by-tx-id",
-    {
+  const getPostByTxId = async (txId: string) => {
+    return sigleApiFetchClient.GET("/api/posts/by-tx-id", {
       params: {
         query: {
-          txId: "",
+          txId,
         },
       },
-    },
-    {
-      enabled: false,
-    },
-  );
+    });
+  };
 
   const { steps, start, completeStep, setStepError } = useMultiStep({
     steps: [
@@ -197,15 +192,9 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
         let isIndexed = false;
         while (Date.now() - startTime < timeout) {
-          const result = await refetchPostByTxId({
-            params: {
-              query: {
-                txId,
-              },
-            },
-          });
+          const result = await getPostByTxId(txId);
 
-          if (result.data) {
+          if (!result.error && result.data) {
             isIndexed = true;
             break;
           }
