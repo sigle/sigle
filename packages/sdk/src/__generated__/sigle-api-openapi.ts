@@ -681,46 +681,6 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/protected/drafts/{draftId}/trigger-indexing": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Trigger post indexing. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          draftId: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Indexing triggered. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              success?: boolean;
-            };
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
   "/api/protected/drafts/{draftId}/update.post.test": {
     parameters: {
       query?: never;
