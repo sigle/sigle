@@ -1,6 +1,7 @@
 import { toast } from "sonner";
 import { MultiStepToast } from "./MultiStepToast";
-import { type MultiStepToastStep, useMultiStepToastStore } from "./store";
+import { useMultiStepToastStore } from "./store";
+import { useMultiStep } from "./useMultiStep";
 
 interface UseMultiStepToastOptions<T extends string> {
   steps: readonly { id: T; title: string; description?: string }[];
@@ -11,7 +12,6 @@ interface UseMultiStepToastOptions<T extends string> {
 interface UseMultiStepToastReturn<T extends string> {
   start: () => void;
   completeStep: (id: T) => void;
-  setStepLoading: (id: T) => void;
   setStepError: (id: T, errorMessage: string) => void;
   dismiss: () => void;
 }
@@ -19,29 +19,24 @@ interface UseMultiStepToastReturn<T extends string> {
 export function useMultiStepToast<T extends string>(
   options: UseMultiStepToastOptions<T>,
 ): UseMultiStepToastReturn<T> {
-  const toastId = "multi-step-toast";
   const { steps: stepDefinitions, successMessage, onError } = options;
-  const { setSteps, updateStep, reset } = useMultiStepToastStore();
+  const toastId = "multi-step-toast";
 
-  const renderToast = () => {
-    const { steps } = useMultiStepToastStore.getState();
-    toast(() => <MultiStepToast steps={steps} />, {
-      id: toastId,
-    });
-  };
-
-  const initializeSteps = (): MultiStepToastStep[] => {
-    return stepDefinitions.map((step, index) => ({
-      ...step,
-      status: index === 0 ? ("pending" as const) : ("idle" as const),
-    }));
-  };
+  const multiStep = useMultiStep({
+    steps: stepDefinitions,
+    onStepChange: () => {
+      const { steps } = useMultiStepToastStore.getState();
+      toast(() => <MultiStepToast steps={steps} />, {
+        id: toastId,
+      });
+    },
+  });
 
   const start = () => {
-    const initialSteps = initializeSteps();
-    setSteps(initialSteps);
+    multiStep.start();
+    const { steps } = useMultiStepToastStore.getState();
 
-    toast(() => <MultiStepToast steps={initialSteps} />, {
+    toast(() => <MultiStepToast steps={steps} />, {
       id: toastId,
       duration: Infinity,
       closeButton: false,
@@ -53,33 +48,26 @@ export function useMultiStepToast<T extends string>(
     const currentIndex = steps.findIndex((s) => s.id === id);
     const isLastStep = currentIndex === steps.length - 1;
 
-    updateStep(id, { status: "success" });
+    multiStep.completeStep(id);
 
     if (isLastStep) {
-      renderToast();
       setTimeout(() => {
-        dismiss();
+        multiStep.reset();
         toast.success(successMessage);
       }, 500);
       return;
     }
 
-    if (currentIndex !== -1) {
-      const nextStep = steps[currentIndex + 1];
-      updateStep(nextStep.id, { status: "pending" });
-    }
-    renderToast();
-  };
-
-  const setStepLoading = (id: T) => {
-    updateStep(id, { status: "pending" });
-    renderToast();
+    const { steps: updatedSteps } = useMultiStepToastStore.getState();
+    toast(() => <MultiStepToast steps={updatedSteps} />, {
+      id: toastId,
+    });
   };
 
   const setStepError = (id: T, errorMessage: string) => {
-    updateStep(id, { status: "error", errorMessage });
-
+    multiStep.setStepError(id, errorMessage);
     const { steps } = useMultiStepToastStore.getState();
+
     toast(() => <MultiStepToast steps={steps} />, {
       id: toastId,
       duration: Infinity,
@@ -90,14 +78,13 @@ export function useMultiStepToast<T extends string>(
   };
 
   const dismiss = () => {
-    reset();
+    multiStep.reset();
     toast.dismiss(toastId);
   };
 
   return {
     start,
     completeStep,
-    setStepLoading,
     setStepError,
     dismiss,
   };

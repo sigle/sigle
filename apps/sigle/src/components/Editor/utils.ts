@@ -166,7 +166,6 @@ export const generateSigleMetadataFromForm = async ({
         username: userAddress,
       },
     ),
-    // TODO keep content or rename to metadata?
     content: {
       id: postId,
       title: post.title,

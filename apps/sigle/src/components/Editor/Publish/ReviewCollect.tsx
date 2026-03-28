@@ -31,7 +31,7 @@ export const PublishReviewCollect = () => {
   return (
     <Card>
       <CardHeader className="flex items-center justify-between border-b">
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-base">
           <IconCards size={20} />
           Collect settings
         </CardTitle>

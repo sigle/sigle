@@ -24,6 +24,7 @@ export const Routes = {
     }),
     z.object({
       referral: z.string().optional().nullable(),
+      published: z.boolean().optional(),
     }),
   ),
   // Logged in routes

@@ -14,4 +14,5 @@ export default defineNitroConfig({
     generateRuntimeConfigTypes: true,
     generateTsConfig: true,
   },
+  ignore: ["**/*.test.ts"],
 });

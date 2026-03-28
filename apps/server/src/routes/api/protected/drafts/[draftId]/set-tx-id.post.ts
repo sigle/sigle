@@ -1,6 +1,7 @@
 import { defineRouteMeta } from "nitro";
 import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
+import { indexerJob } from "@/jobs/indexer";
 import { readValidatedBodyZod } from "@/lib/nitro";
 import { prisma } from "@/lib/prisma";
 import { stacksApiClient } from "@/lib/stacks";
@@ -53,7 +54,17 @@ export default defineEventHandler(async (event) => {
   });
 
   if (!transaction.data) {
-    throw new Error(`Transaction ${body.txId} not found`);
+    throw new HTTPError({
+      status: 404,
+      message: "Transaction not found",
+    });
+  }
+
+  if (transaction.data.tx_status !== "success") {
+    throw new HTTPError({
+      status: 400,
+      message: "Transaction not successful",
+    });
   }
 
   await prisma.draft.update({
@@ -78,6 +89,11 @@ export default defineEventHandler(async (event) => {
       txId: body.txId,
       txStatus: "pending",
     },
+  });
+
+  await indexerJob.emit({
+    action: "indexer-index-posts",
+    data: {},
   });
 
   return true;

@@ -6,7 +6,7 @@ import {
 import { cn } from "@/lib/cn";
 import { Spinner } from "../../ui/spinner";
 
-interface MultiStepToastProps {
+interface MultiStepProps {
   steps: {
     id: string;
     title: string;
@@ -17,7 +17,7 @@ interface MultiStepToastProps {
   className?: string;
 }
 
-export const MultiStepToast = ({ steps, className }: MultiStepToastProps) => {
+export const MultiStep = ({ steps, className }: MultiStepProps) => {
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       {steps.map((step) => {
