@@ -17,7 +17,7 @@ vi.mock(import("@/lib/sigle"), () => ({
 }));
 
 vi.mock(import("next/navigation"), () => ({
-  useParams: () => ({ txId: "test-post-id" }),
+  useParams: () => ({ postId: "test-post-id" }),
 }));
 
 vi.mock(import("posthog-js/react"), () => ({

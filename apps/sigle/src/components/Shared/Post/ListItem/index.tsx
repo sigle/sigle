@@ -34,7 +34,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
       <div>
         <div className="flex justify-between gap-5">
           <div className="flex h-full flex-1 flex-col justify-between">
-            <NextLink href={Routes.post({ txId: post.id })}>
+            <NextLink href={Routes.post({ postId: post.id })}>
               <h4
                 className="mb-2 line-clamp-2 text-lg/tight font-medium"
                 style={{
@@ -75,7 +75,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                   {isCurrentUser ? (
                     <DropdownMenuItem
                       render={
-                        <NextLink href={Routes.editPost({ txId: post.id })}>
+                        <NextLink href={Routes.editPost({ postId: post.id })}>
                           Edit
                         </NextLink>
                       }
@@ -86,7 +86,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
             </div>
           </div>
           {post.coverImage ? (
-            <NextLink href={Routes.post({ txId: post.id })}>
+            <NextLink href={Routes.post({ postId: post.id })}>
               <div className="w-[100px] max-w-full overflow-hidden md:w-[200px]">
                 <div className="aspect-16/10">
                   <Image

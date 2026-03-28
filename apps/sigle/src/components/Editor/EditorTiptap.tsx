@@ -52,7 +52,7 @@ const lowlight = createLowlight(common);
 
 export const EditorTipTap = () => {
   const params = useParams();
-  const txId = params.txId as string;
+  const postId = params.postId as string;
   const posthog = usePostHog();
   const { width } = useWindowSize();
   const isMobile = width ? width < 768 : false;
@@ -96,7 +96,7 @@ export const EditorTipTap = () => {
       TipTapImage.configure({
         uploadFile: async (file: File) => {
           posthog.capture("editor_image_upload_start", {
-            txId,
+            postId,
           });
 
           const formData = new FormData();
@@ -106,7 +106,7 @@ export const EditorTipTap = () => {
             const data = await uploadMedia({
               params: {
                 path: {
-                  draftId: txId,
+                  draftId: postId,
                 },
               },
               // oxlint-disable-next-line no-explicit-any
@@ -114,7 +114,7 @@ export const EditorTipTap = () => {
             });
 
             posthog.capture("editor_image_upload_success", {
-              txId,
+              postId,
             });
             return data.url;
             // oxlint-disable-next-line no-explicit-any
@@ -123,7 +123,7 @@ export const EditorTipTap = () => {
               description: error.message,
             });
             posthog.capture("editor_image_upload_error", {
-              txId,
+              postId,
               error: error.message,
             });
             throw error;

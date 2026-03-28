@@ -26,10 +26,10 @@ import { generateSigleMetadataFromForm } from "../utils";
 import { PublishReview } from "./PublishReview";
 
 interface PublishDialogProps {
-  txId: string;
+  postId: string;
 }
 
-export const PublishDialog = ({ txId }: PublishDialogProps) => {
+export const PublishDialog = ({ postId }: PublishDialogProps) => {
   const { data: session } = useSession();
   const posthog = usePostHog();
   const router = useRouter();
@@ -49,11 +49,11 @@ export const PublishDialog = ({ txId }: PublishDialogProps) => {
     "/api/protected/drafts/{draftId}/set-tx-id",
   );
 
-  const getPostByTxId = async (postTxId: string) => {
+  const getPostByTxId = async (txId: string) => {
     return sigleApiFetchClient.GET("/api/posts/by-tx-id", {
       params: {
         query: {
-          txId: postTxId,
+          txId,
         },
       },
     });
@@ -75,20 +75,20 @@ export const PublishDialog = ({ txId }: PublishDialogProps) => {
         start();
 
         posthog.capture("post_publish_start", {
-          txId,
+          postId,
         });
 
         const metadata = await generateSigleMetadataFromForm({
           userAddress: session.user.id,
           type: data.type,
           editor,
-          postId: txId,
+          postId,
           post: data,
         });
 
         if (metadata.content.content.includes("blob:")) {
           posthog.capture("post_publish_images_uploading_error", {
-            txId,
+            postId,
           });
           toast.error("Images still uploading", {
             description:
@@ -101,7 +101,7 @@ export const PublishDialog = ({ txId }: PublishDialogProps) => {
         const uploadedMetadataResult = await uploadMetadata({
           params: {
             path: {
-              draftId: txId,
+              draftId: postId,
             },
           },
           body: {
@@ -114,7 +114,7 @@ export const PublishDialog = ({ txId }: PublishDialogProps) => {
           .catch((error) => Result.err(error));
         if (uploadedMetadataResult.isErr()) {
           posthog.capture("post_publish_upload_metadata_error", {
-            txId,
+            postId,
             error: uploadedMetadataResult.error,
           });
           setStepError(
@@ -135,23 +135,23 @@ export const PublishDialog = ({ txId }: PublishDialogProps) => {
         const contractCallResult = await contractCall(parameters);
         if (contractCallResult.isErr()) {
           posthog.capture("post_publish_cancel", {
-            txId,
+            postId,
             error: contractCallResult.error,
           });
           setStepError("transaction", contractCallResult.error.message);
           return;
         }
 
-        const postTxId = contractCallResult.value;
+        const txId = contractCallResult.value;
         posthog.capture("post_publish_transaction_submitted", {
+          postId,
           txId,
-          postTxId,
         });
 
-        const transactionResult = await waitForTransaction({ txId: postTxId });
+        const transactionResult = await waitForTransaction({ txId });
         if (transactionResult.isErr()) {
           posthog.capture("post_publish_wait_transaction_error", {
-            txId,
+            postId,
             error: transactionResult.error,
           });
           setStepError("transaction", transactionResult.error.message);
@@ -159,7 +159,7 @@ export const PublishDialog = ({ txId }: PublishDialogProps) => {
         }
         if (transactionResult.value.tx_status !== "success") {
           posthog.capture("post_publish_transaction_failed", {
-            txId,
+            postId,
             tx_status: transactionResult.value.tx_status,
           });
           setStepError("transaction", "Transaction failed");
@@ -171,11 +171,11 @@ export const PublishDialog = ({ txId }: PublishDialogProps) => {
           await updateTxId({
             params: {
               path: {
-                draftId: txId,
+                draftId: postId,
               },
             },
             body: {
-              txId: postTxId,
+              txId,
             },
           });
         } catch (error) {
@@ -192,7 +192,7 @@ export const PublishDialog = ({ txId }: PublishDialogProps) => {
 
         let isIndexed = false;
         while (Date.now() - startTime < timeout) {
-          const result = await getPostByTxId(postTxId);
+          const result = await getPostByTxId(txId);
 
           if (!result.error && result.data) {
             isIndexed = true;
@@ -221,7 +221,7 @@ export const PublishDialog = ({ txId }: PublishDialogProps) => {
 
         router.push(
           Routes.post(
-            { txId: postTxId },
+            { postId: txId },
             {
               search: {
                 published: true,

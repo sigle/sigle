@@ -72,7 +72,7 @@ export const LatestPost = () => {
                   className="mt-3 w-full"
                   nativeButton={false}
                   render={
-                    <NextLink href={Routes.post({ txId: post.id })}>
+                    <NextLink href={Routes.post({ postId: post.id })}>
                       View post
                     </NextLink>
                   }

@@ -22,7 +22,7 @@ import type { EditorPostFormData } from "./EditorFormProvider";
 
 export const EditorCoverImage = () => {
   const params = useParams();
-  const txId = params.txId as string;
+  const postId = params.postId as string;
   const posthog = usePostHog();
   const [preview, setPreview] = useState<string | null>(null);
   const { setValue, watch } = useFormContext<EditorPostFormData>();
@@ -43,7 +43,7 @@ export const EditorCoverImage = () => {
       setPreview(previewBlobUrl);
 
       posthog.capture("cover_image_upload_start", {
-        txId,
+        postId,
       });
       const formData = new FormData();
       formData.append("file", file);
@@ -51,7 +51,7 @@ export const EditorCoverImage = () => {
         {
           params: {
             path: {
-              draftId: txId,
+              draftId: postId,
             },
           },
           // oxlint-disable-next-line no-explicit-any
@@ -63,20 +63,20 @@ export const EditorCoverImage = () => {
             setValue("coverImage", data.url);
             setPreview(null);
             posthog.capture("cover_image_upload_success", {
-              txId,
+              postId,
             });
           },
           onError: (error) => {
             setPreview(null);
             posthog.capture("cover_image_upload_error", {
-              txId,
+              postId,
             });
             toast.error(error?.message);
           },
         },
       );
     },
-    [txId, loadingUploadImage, posthog, setValue, setPreview, uploadMedia],
+    [postId, loadingUploadImage, posthog, setValue, setPreview, uploadMedia],
   );
 
   // This is required for the migration process from Gaia.
@@ -108,7 +108,7 @@ export const EditorCoverImage = () => {
     e.stopPropagation();
     setValue("coverImage", undefined);
     posthog.capture("cover_image_removed", {
-      txId,
+      postId,
     });
   };
 
