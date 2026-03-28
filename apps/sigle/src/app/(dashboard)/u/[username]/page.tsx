@@ -35,6 +35,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   return {
     title: `${title} | Sigle Profile`,
     description,
+    robots: {
+      follow: false,
+    },
   };
 }
 
