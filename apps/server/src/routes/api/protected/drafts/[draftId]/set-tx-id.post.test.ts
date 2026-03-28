@@ -22,7 +22,9 @@ vi.mock<typeof import("@/lib/stacks")>(
   () =>
     ({
       stacksApiClient: {
-        GET: vi.fn().mockResolvedValue({ data: { tx_id: "0x123" } }),
+        GET: vi.fn().mockResolvedValue({
+          data: { tx_id: "0x123", tx_status: "success" },
+        }),
       },
       // oxlint-disable-next-line consistent-type-imports
     }) as unknown as typeof import("@/lib/stacks"),
