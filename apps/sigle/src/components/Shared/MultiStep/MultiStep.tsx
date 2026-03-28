@@ -31,9 +31,7 @@ export const MultiStep = ({ steps, className }: MultiStepProps) => {
                   {step.status === "idle" && (
                     <IconCircle size={16} className="text-muted-foreground" />
                   )}
-                  {step.status === "success" && (
-                    <IconCircleCheck size={16} className="text-accent" />
-                  )}
+                  {step.status === "success" && <IconCircleCheck size={16} />}
                   {step.status === "error" && (
                     <IconAlertCircle size={16} className="text-destructive" />
                   )}
