@@ -14,11 +14,12 @@ interface MultiStepToastProps {
     status: "idle" | "pending" | "success" | "error";
     errorMessage?: string;
   }[];
+  className?: string;
 }
 
-export const MultiStepToast = ({ steps }: MultiStepToastProps) => {
+export const MultiStepToast = ({ steps, className }: MultiStepToastProps) => {
   return (
-    <div className="flex flex-col gap-2">
+    <div className={cn("flex flex-col gap-3", className)}>
       {steps.map((step) => {
         return (
           <div key={step.id}>
