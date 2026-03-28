@@ -54,11 +54,17 @@ export default defineEventHandler(async (event) => {
   });
 
   if (!transaction.data) {
-    throw new Error(`Transaction ${body.txId} not found`);
+    throw new HTTPError({
+      status: 404,
+      message: "Transaction not found",
+    });
   }
 
   if (transaction.data.tx_status !== "success") {
-    throw new Error(`Transaction ${body.txId} is not successful.`);
+    throw new HTTPError({
+      status: 400,
+      message: "Transaction not successful",
+    });
   }
 
   await prisma.draft.update({
