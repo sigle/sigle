@@ -57,6 +57,10 @@ export default defineEventHandler(async (event) => {
     throw new Error(`Transaction ${body.txId} not found`);
   }
 
+  if (transaction.data.tx_status !== "success") {
+    throw new Error(`Transaction ${body.txId} is not successful.`);
+  }
+
   await prisma.draft.update({
     where: {
       id: draftId,
