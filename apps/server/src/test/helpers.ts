@@ -68,14 +68,13 @@ export async function createTestPost(
 
   return prisma.post.create({
     data: {
-      id: options.id ?? `post-${Date.now()}`,
+      id: options.id ?? `0x${Math.random().toString(16).slice(2)}`,
       version: options.version ?? "1.0.0",
-      txId: options.txId ?? `0x${Math.random().toString(16).slice(2)}`,
       blockHeight: options.blockHeight ?? 100,
       title: options.title ?? "Test Post",
       content: options.content ?? "Test content",
       excerpt: options.excerpt ?? "Test excerpt",
-      metadataUri: options.metadataUri ?? "ipfs://QmTest",
+      metadataUri: options.metadataUri ?? "ar://QmTest",
       createdAt: now,
       updatedAt: now,
       userId: options.userId,

@@ -162,7 +162,7 @@ const Draft = ({
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 render={
-                  <NextLink href={Routes.editPost({ postId: draft.id })}>
+                  <NextLink href={Routes.editPost({ txId: draft.id })}>
                     Edit
                   </NextLink>
                 }

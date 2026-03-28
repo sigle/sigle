@@ -32,14 +32,14 @@ export const executeIndexerIndexPostsJob = async (
 ) => {
   const latestPost = await prisma.post.findFirst({
     select: {
-      txId: true,
+      id: true,
     },
     orderBy: {
       createdAt: "desc",
     },
   });
 
-  const lastProcessedTxId = latestPost?.txId;
+  const lastProcessedId = latestPost?.id;
 
   let offset = 0;
   let hasMore = true;
@@ -92,9 +92,9 @@ export const executeIndexerIndexPostsJob = async (
     }
 
     for (const event of events) {
-      if (lastProcessedTxId && event.tx_id === lastProcessedTxId) {
+      if (lastProcessedId && event.tx_id === lastProcessedId) {
         consola.info("Caught up to last processed txId, stopping", {
-          txId: lastProcessedTxId,
+          txId: lastProcessedId,
         });
         caughtUp = true;
         break;
@@ -163,7 +163,7 @@ export const executeIndexerIndexPostsJob = async (
 
   const returnData = {
     toProcess: posts.length,
-    lastProcessedTxId,
+    lastProcessedId,
   };
   consola.info("Index posts job complete", returnData);
   return returnData;

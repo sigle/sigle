@@ -112,8 +112,8 @@ export default defineEventHandler<
     metaTitle: string | null;
     metaDescription: string | null;
     coverImage: string | null;
-    txId: string | null;
-    collectLimitType: string | null;
+    tags: string[];
+    canonicalUri: string | null;
     createdAt: Date;
     updatedAt: Date;
   }>
@@ -171,9 +171,6 @@ export default defineEventHandler<
         coverImageId: true,
         tags: true,
         canonicalUri: true,
-        txId: true,
-        minterFixedPrice: true,
-        collectible: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -200,14 +197,6 @@ export default defineEventHandler<
       coverImage: published.coverImageId,
       tags: published.tags,
       canonicalUri: published.canonicalUri,
-      txId: published.txId,
-      collectPriceType:
-        published.minterFixedPrice && published.minterFixedPrice.price > 0
-          ? "paid"
-          : "free",
-      collectPrice: published.minterFixedPrice?.price,
-      collectLimitType: published.collectible?.openEdition ? "open" : "fixed",
-      collectLimit: published.collectible?.maxSupply,
       createdAt: published.createdAt,
       updatedAt: published.updatedAt,
     };

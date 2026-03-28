@@ -29,7 +29,7 @@ export const PostCard = ({ post, className }: PostCardProps) => {
     <Card className={cn("relative pt-0", className)}>
       <div className="absolute inset-0 aspect-video bg-muted" />
       {post.coverImage ? (
-        <NextLink href={Routes.post({ postId: post.id })}>
+        <NextLink href={Routes.post({ txId: post.id })}>
           <Image
             src={resolveImageUrl(post.coverImage.id)}
             alt="Cover card"
@@ -51,12 +51,12 @@ export const PostCard = ({ post, className }: PostCardProps) => {
               wordBreak: "break-word",
             }}
           >
-            <NextLink href={Routes.post({ postId: post.id })}>
+            <NextLink href={Routes.post({ txId: post.id })}>
               {post.metaTitle || post.title}
             </NextLink>
           </h3>
           <p className="line-clamp-1 text-sm text-muted-foreground md:line-clamp-2">
-            <NextLink href={Routes.post({ postId: post.id })}>
+            <NextLink href={Routes.post({ txId: post.id })}>
               {post.metaDescription || post.excerpt}
             </NextLink>
           </p>
