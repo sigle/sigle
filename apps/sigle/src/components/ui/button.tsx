@@ -1,6 +1,7 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/cn";
+import { Spinner } from "./spinner";
 
 const buttonVariants = cva(
   "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
@@ -43,14 +44,51 @@ function Button({
   className,
   variant = "default",
   size = "default",
+  loading,
+  disabled = loading,
+  children,
   ...props
-}: ButtonPrimitive.Props & VariantProps<typeof buttonVariants>) {
+}: ButtonPrimitive.Props &
+  VariantProps<typeof buttonVariants> & { loading?: boolean }) {
+  let child = children;
+  if (loading) {
+    child = renderLoadingButtonContents(children);
+  }
+
   return (
     <ButtonPrimitive
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size, className }), {
+        relative: loading,
+      })}
+      disabled={disabled}
       {...props}
-    />
+    >
+      {child}
+    </ButtonPrimitive>
+  );
+}
+
+function renderLoadingButtonContents(children: React.ReactNode) {
+  return (
+    <>
+      {/*
+       * We need a wrapper to set `visibility: hidden` to hide the button content
+       * whilst we show the `Spinner`. The button is a flex container with a `gap`,
+       * so we use `display: contents` to ensure the correct flex layout.
+       *
+       * However, `display: contents` removes the content from the accessibility
+       * tree in some browsers, so we force remove it with `aria-hidden` and
+       * re-add it in the tree with `VisuallyHidden`
+       */}
+      <span style={{ display: "contents", visibility: "hidden" }} aria-hidden>
+        {children}
+      </span>
+      <span className="sr-only">{children}</span>
+      <span className="absolute inset-0 flex items-center justify-center">
+        <Spinner />
+      </span>
+    </>
   );
 }
 

@@ -283,7 +283,7 @@ describe("editor tiptap - markdown deserialization", () => {
     expect(editor).toBeDefined();
     editor?.commands.setContent("**bold text**");
     expect(editor?.getText()).toBe("bold text");
-    expect(editor?.isActive("bold")).toBeTruthy();
+    expect(editor?.isActive("bold")).toBe(true);
   });
 
   it("should parse markdown italic formatting", async () => {
@@ -297,7 +297,7 @@ describe("editor tiptap - markdown deserialization", () => {
     expect(editor).toBeDefined();
     editor?.commands.setContent("*italic text*");
     expect(editor?.getText()).toBe("italic text");
-    expect(editor?.isActive("italic")).toBeTruthy();
+    expect(editor?.isActive("italic")).toBe(true);
   });
 
   it("should parse markdown heading", async () => {
@@ -311,7 +311,7 @@ describe("editor tiptap - markdown deserialization", () => {
     expect(editor).toBeDefined();
     editor?.commands.setContent("## Heading 2");
     expect(editor?.getText()).toBe("Heading 2");
-    expect(editor?.isActive("heading", { level: 2 })).toBeTruthy();
+    expect(editor?.isActive("heading", { level: 2 })).toBe(true);
   });
 
   it("should parse markdown blockquote", async () => {
@@ -325,7 +325,7 @@ describe("editor tiptap - markdown deserialization", () => {
     expect(editor).toBeDefined();
     editor?.commands.setContent("> This is a quote");
     expect(editor?.getText()).toContain("This is a quote");
-    expect(editor?.isActive("blockquote")).toBeTruthy();
+    expect(editor?.isActive("blockquote")).toBe(true);
   });
 
   it("should parse markdown list", async () => {
@@ -340,7 +340,7 @@ describe("editor tiptap - markdown deserialization", () => {
     editor?.commands.setContent("- Item 1\n- Item 2");
     expect(editor?.getText()).toContain("Item 1");
     expect(editor?.getText()).toContain("Item 2");
-    expect(editor?.isActive("bulletList")).toBeTruthy();
+    expect(editor?.isActive("bulletList")).toBe(true);
   });
 
   it("should parse markdown code block", async () => {
@@ -354,7 +354,7 @@ describe("editor tiptap - markdown deserialization", () => {
     expect(editor).toBeDefined();
     editor?.commands.setContent("```\ncode here\n```");
     expect(editor?.getText()).toBe("code here");
-    expect(editor?.isActive("codeBlock")).toBeTruthy();
+    expect(editor?.isActive("codeBlock")).toBe(true);
   });
 
   it("should parse markdown link", async () => {
@@ -368,7 +368,7 @@ describe("editor tiptap - markdown deserialization", () => {
     expect(editor).toBeDefined();
     editor?.commands.setContent("[Example](https://example.com)");
     expect(editor?.getText()).toBe("Example");
-    expect(editor?.isActive("link")).toBeTruthy();
+    expect(editor?.isActive("link")).toBe(true);
   });
 });
 

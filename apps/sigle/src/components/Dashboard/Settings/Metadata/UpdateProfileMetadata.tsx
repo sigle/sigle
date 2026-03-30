@@ -24,7 +24,6 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { useContractCall } from "@/hooks/useContractCall";
 import { useSession } from "@/lib/auth-hooks";
@@ -308,8 +307,7 @@ export const UpdateProfileMetadata = ({
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? <Spinner data-icon="inline-start" /> : null}
+          <Button type="submit" loading={isSubmitting}>
             Save
           </Button>
         </Field>

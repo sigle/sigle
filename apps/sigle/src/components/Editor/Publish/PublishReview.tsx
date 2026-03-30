@@ -4,7 +4,6 @@ import { useFormContext } from "react-hook-form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/spinner";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { PublishReviewCollect } from "./ReviewCollect";
 import { PublishReviewGeneral } from "./ReviewGeneral";
@@ -129,9 +128,9 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
             !isFormValid.valid ||
             formState.isSubmitting
           }
+          loading={formState.isSubmitting}
           onClick={onPublish}
         >
-          {formState.isSubmitting ? <Spinner data-icon="inline-start" /> : null}
           {type === "draft" ? "Publish" : "Update"}
         </Button>
       </DialogFooter>
