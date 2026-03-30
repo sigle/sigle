@@ -3,6 +3,7 @@ import { env } from "@/env";
 
 Sentry.init({
   dsn: env.NEXT_PUBLIC_SENTRY_DSN,
+  environment: env.NEXT_PUBLIC_STACKS_ENV,
   integrations: [Sentry.replayIntegration()],
 
   // Capture Replay for 1% of all sessions,
