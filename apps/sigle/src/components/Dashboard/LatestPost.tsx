@@ -11,6 +11,7 @@ import { Button } from "../ui/button";
 import {
   Empty,
   EmptyContent,
+  EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
@@ -46,6 +47,9 @@ export const LatestPost = () => {
                   <IconPencil size={20} />
                 </EmptyMedia>
                 <EmptyTitle>No Published Posts</EmptyTitle>
+                <EmptyDescription className="max-w-xs text-pretty">
+                  Create a new draft to get started.
+                </EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
                 <Button
