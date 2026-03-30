@@ -110,7 +110,7 @@ describe("api/protected/drafts/[draftId]/set-tx-id.post", () => {
 
     const result = await handler(mockEvent);
 
-    expect(result).toBeTruthy();
+    expect(result).toBe(true);
 
     // Verify DB was updated
     const updatedDraft = await testDb.db.draft.findUnique({

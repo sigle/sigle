@@ -74,7 +74,7 @@ describe("api/protected/drafts/[draftId]/delete.post", () => {
 
     const result = await handler(mockEvent);
 
-    expect(result).toBeTruthy();
+    expect(result).toBe(true);
 
     // Verify DB was deleted
     const deletedDraft = await testDb.db.draft.findUnique({

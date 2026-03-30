@@ -41,6 +41,8 @@
     "react/no-multi-comp": "off",
     "vitest/no-importing-vitest-globals": "off",
     "vitest/prefer-called-once": "off",
+    "vitest/prefer-to-be-truthy": "off",
+    "vitest/prefer-to-be-falsy": "off",
 
     "no-hooks": "off",
     "require-hook": "off",

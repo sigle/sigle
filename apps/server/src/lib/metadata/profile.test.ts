@@ -38,7 +38,7 @@ describe("profile metadata", () => {
         "https://example.com/metadata.json",
       );
 
-      expect(result.isOk()).toBeTruthy();
+      expect(result.isOk()).toBe(true);
       expect(result).toStrictEqual(Result.ok(validMetadata));
     });
 
@@ -49,7 +49,7 @@ describe("profile metadata", () => {
         "https://example.com/fail.json",
       );
 
-      expect(result.isOk()).toBeFalsy();
+      expect(result.isOk()).toBe(false);
       const error = (result as unknown as { error: MetadataFetchFailedError })
         .error;
       expect(error).toBeInstanceOf(MetadataFetchFailedError);
@@ -67,7 +67,7 @@ describe("profile metadata", () => {
         "https://example.com/notfound.json",
       );
 
-      expect(result.isOk()).toBeFalsy();
+      expect(result.isOk()).toBe(false);
       const error = (result as unknown as { error: MetadataFetchFailedError })
         .error;
       expect(error).toBeInstanceOf(MetadataFetchFailedError);
@@ -83,7 +83,7 @@ describe("profile metadata", () => {
         "https://example.com/invalid.json",
       );
 
-      expect(result.isOk()).toBeFalsy();
+      expect(result.isOk()).toBe(false);
       const error = (result as unknown as { error: InvalidMetadataError })
         .error;
       expect(error).toBeInstanceOf(InvalidMetadataError);
@@ -103,7 +103,7 @@ describe("profile metadata", () => {
         "https://example.com/bad.json",
       );
 
-      expect(result.isOk()).toBeFalsy();
+      expect(result.isOk()).toBe(false);
       const error = (result as unknown as { error: MetadataFetchFailedError })
         .error;
       expect(error).toBeInstanceOf(MetadataFetchFailedError);
@@ -122,7 +122,7 @@ describe("profile metadata", () => {
         "https://example.com/missing-fields.json",
       );
 
-      expect(result.isOk()).toBeFalsy();
+      expect(result.isOk()).toBe(false);
       const error = (result as unknown as { error: InvalidMetadataError })
         .error;
       expect(error).toBeInstanceOf(InvalidMetadataError);
@@ -144,7 +144,7 @@ describe("profile metadata", () => {
         "https://example.com/minimal.json",
       );
 
-      expect(result.isOk()).toBeTruthy();
+      expect(result.isOk()).toBe(true);
       expect(result).toStrictEqual(
         Result.ok({
           $schema: ProfileMetadataSchemaId.LATEST,
@@ -171,7 +171,7 @@ describe("profile metadata", () => {
         "https://example.com/invalid-twitter.json",
       );
 
-      expect(result.isOk()).toBeFalsy();
+      expect(result.isOk()).toBe(false);
       const error = (result as unknown as { error: InvalidMetadataError })
         .error;
       expect(error).toBeInstanceOf(InvalidMetadataError);
