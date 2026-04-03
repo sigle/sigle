@@ -149,7 +149,6 @@ model Draft {
 model Post {
   id          String @id @map("id")
   version     String @map("version")
-  txId        String @unique @map("tx_id")
   blockHeight Int    @map("block_height")
   metadataUri String @map("metadata_uri")
 

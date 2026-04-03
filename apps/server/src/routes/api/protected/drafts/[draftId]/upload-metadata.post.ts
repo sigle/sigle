@@ -116,24 +116,6 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  if (body.type === "draft") {
-    // Check that a published post with the same id does not exist to ensure id uniqueness
-    const post = await prisma.post.findUnique({
-      select: {
-        id: true,
-      },
-      where: {
-        id: draftId,
-      },
-    });
-    if (post) {
-      throw new HTTPError({
-        status: 400,
-        message: "A post with this ID already exists.",
-      });
-    }
-  }
-
   const { id } = await aerweaveUploadFile(event, {
     metadata: parsedMetadata.data,
   });
