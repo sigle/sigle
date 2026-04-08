@@ -43,6 +43,7 @@
     "vitest/prefer-called-once": "off",
     "vitest/prefer-to-be-truthy": "off",
     "vitest/prefer-to-be-falsy": "off",
+    "vitest/require-test-timeout": "off",
 
     "no-hooks": "off",
     "require-hook": "off",
@@ -63,6 +64,7 @@
     "default-case": "off",
     "new-cap": "off",
     "no-use-before-define": "off",
-    "no-shadow": "off"
+    "no-shadow": "off",
+    "vitest/require-mock-type-parameters": "off"
   }
 }

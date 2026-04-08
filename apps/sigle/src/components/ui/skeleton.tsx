@@ -20,7 +20,7 @@ function Skeleton({
       ),
       ...props,
     },
-    ref: ref,
+    ref,
   });
 
   return element;
