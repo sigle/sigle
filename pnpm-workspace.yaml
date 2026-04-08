@@ -1,6 +1,3 @@
-packages:
-  - apps/*
-  - packages/*
 allowBuilds:
   "@parcel/watcher": false
   "@prisma/engines": false
@@ -21,3 +18,7 @@ allowBuilds:
   "utf-8-validate": false
 blockExoticSubdeps: true
 strictDepBuilds: true
+minimumReleaseAge: 10080 # 1 week
+packages:
+  - apps/*
+  - packages/*
