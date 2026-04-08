@@ -65,6 +65,7 @@
     "new-cap": "off",
     "no-use-before-define": "off",
     "no-shadow": "off",
-    "vitest/require-mock-type-parameters": "off"
+    "vitest/require-mock-type-parameters": "off",
+    "no-useless-assignment": "off"
   }
 }
