@@ -1,6 +1,6 @@
 allowBuilds:
   "@parcel/watcher": false
-  "@prisma/engines": false
+  "@prisma/engines": true
   "@reown/appkit": false
   "@sentry/cli": false
   "bigint-buffer": false
