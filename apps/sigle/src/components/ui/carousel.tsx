@@ -108,7 +108,7 @@ function Carousel({
       // oxlint-disable-next-line react/jsx-no-constructed-context-values
       value={{
         carouselRef,
-        api: api,
+        api,
         opts,
         orientation:
           orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),

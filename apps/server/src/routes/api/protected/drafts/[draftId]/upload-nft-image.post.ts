@@ -95,7 +95,7 @@ export default defineEventHandler(async (event) => {
       filename: file.name,
       type: file.type,
     },
-    type: type,
+    type,
   });
   if (!parsedFile.success) {
     throw new HTTPError({

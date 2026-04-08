@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi, expectTypeOf } from "vitest";
 import type { SlashCommandsCommand } from "./SlashCommands";
 
 const filterCommands = (

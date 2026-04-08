@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
   const collectorsCount = await prisma.postNft.groupBy({
     by: ["minterId"],
     where: {
-      postId: postId,
+      postId,
     },
     _count: true,
   });

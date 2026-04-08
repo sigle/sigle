@@ -128,7 +128,7 @@ export const executeNewPostJob = async (
     metadata: baseTokenUri,
     collectInfo: {
       amount: fixedPricingDetails.price,
-      maxSupply: maxSupply,
+      maxSupply,
     },
   });
   // Minify the contract to make comparison easier in case of formatting changes

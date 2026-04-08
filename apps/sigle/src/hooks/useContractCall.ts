@@ -74,10 +74,10 @@ export function useContractCall(options: UseContractCallOptions = {}) {
           ...prev,
           loading: false,
           success: true,
-          txId: txId,
+          txId,
         }));
         onSuccess?.({
-          txId: txId,
+          txId,
         });
         return Result.ok(txId);
       } catch (error) {

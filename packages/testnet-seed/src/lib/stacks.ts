@@ -101,7 +101,7 @@ export const publishPost = async ({
     contractAddress: parameters.contract.split(".")[0],
     contractName: parameters.contract.split(".")[1],
     functionArgs: parameters.functionArgs as ClarityValue[],
-    network: network,
+    network,
     senderKey: privateKey,
   });
   const broadcastResponse = await broadcastTransaction({ transaction });
