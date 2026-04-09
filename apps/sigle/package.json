@@ -7,7 +7,7 @@
     "#global.css": "./src/app/globals.css"
   },
   "scripts": {
-    "build": "next build",
+    "build": "next build --webpack",
     "dev": "next dev",
     "start": "next start",
     "test": "dotenvx run --env-file=.env.test -- vitest"

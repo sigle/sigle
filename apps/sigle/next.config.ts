@@ -24,4 +24,11 @@ export default withSentryConfig(nextConfig, {
   },
   // Upload large source maps to Sentry
   widenClientFileUpload: true,
+  bundleSizeOptimizations: {
+    excludeDebugStatements: true,
+    excludeReplayShadowDom: true,
+    excludeReplayWorker: true,
+    excludeReplayIframe: true,
+    excludeTracing: true,
+  },
 });
