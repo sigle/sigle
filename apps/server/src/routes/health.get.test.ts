@@ -1,4 +1,3 @@
-// import { e2eFetch, resetTestDb } from "@/test/e2e";
 import { $fetchRaw } from "nitro-test-utils/e2e";
 import { describe, expect, it } from "vitest";
 
