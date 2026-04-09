@@ -77,6 +77,6 @@ export default defineCachedHandler(
     }));
   },
   {
-    maxAge: import.meta.test ? 0 : 60 * 5,
+    maxAge: import.meta.test ? 0 : 60 * 5, // 5 minutes
   },
 );
