@@ -74,19 +74,21 @@ const router = createRouter<RouteConfig>();
 
 const rateLimiters = new Map<string, RateLimiterPrisma>();
 
-for (const routeConfig of routeConfigs) {
-  const { path, method, config } = routeConfig;
-  addRoute(router, method, path, routeConfig);
+if (!import.meta.test) {
+  for (const routeConfig of routeConfigs) {
+    const { path, method, config } = routeConfig;
+    addRoute(router, method, path, routeConfig);
 
-  rateLimiters.set(
-    path,
-    new RateLimiterPrisma({
-      storeClient: prisma,
-      points: config.points,
-      duration: config.duration,
-      blockDuration: config.blockDuration,
-    }),
-  );
+    rateLimiters.set(
+      path,
+      new RateLimiterPrisma({
+        storeClient: prisma,
+        points: config.points,
+        duration: config.duration,
+        blockDuration: config.blockDuration,
+      }),
+    );
+  }
 }
 
 // Helper function to get client identifier

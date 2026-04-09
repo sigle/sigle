@@ -1,7 +1,28 @@
-import type { H3Event } from "nitro/h3";
 import type { User, Profile, Post, Draft } from "@/__generated__/prisma/client";
 import type { UserFlag } from "@/__generated__/prisma/enums";
-import { prisma } from "@/lib/prisma";
+import { createTestDatabase, type TestDatabase } from "@/test/database";
+
+let testDb: TestDatabase | null = null;
+
+async function getOrCreateTestDatabase(): Promise<TestDatabase> {
+  if (!testDb) {
+    testDb = await createTestDatabase();
+  }
+  return testDb;
+}
+
+function getDb() {
+  if (!testDb) {
+    throw new Error(
+      "Test database not initialized. Call initTestDatabase() first.",
+    );
+  }
+  return testDb;
+}
+
+export async function initTestDatabase(): Promise<void> {
+  await getOrCreateTestDatabase();
+}
 
 interface CreateTestUserOptions {
   id?: string;
@@ -20,8 +41,9 @@ export async function createTestUser(
 ): Promise<User & { profile?: Profile | null }> {
   const now = new Date();
   const userId = options.id ?? "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM";
+  const db = getDb();
 
-  return prisma.user.create({
+  return db.user.create({
     data: {
       id: userId,
       flag: options.flag ?? "NONE",
@@ -65,8 +87,9 @@ export async function createTestPost(
   options: CreateTestPostOptions,
 ): Promise<Post> {
   const now = new Date();
+  const db = getDb();
 
-  return prisma.post.create({
+  return db.post.create({
     data: {
       id: options.id ?? `post-${Date.now()}`,
       version: options.version ?? "1.0.0",
@@ -93,7 +116,9 @@ interface CreateTestDraftOptions {
 export async function createTestDraft(
   options: CreateTestDraftOptions,
 ): Promise<Draft> {
-  return prisma.draft.create({
+  const db = getDb();
+
+  return db.draft.create({
     data: {
       id: options.id ?? `draft-${Date.now()}`,
       title: options.title ?? "Test Draft",
@@ -103,17 +128,4 @@ export async function createTestDraft(
   });
 }
 
-export function createMockEvent(
-  userId: string,
-  overrides: Partial<H3Event> = {},
-): H3Event {
-  return {
-    context: {
-      user: { id: userId },
-    },
-    path: "/api/protected/test",
-    method: "GET",
-    headers: {},
-    ...overrides,
-  } as unknown as H3Event;
-}
+export { createTestDatabase, type TestDatabase };

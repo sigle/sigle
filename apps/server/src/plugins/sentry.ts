@@ -16,6 +16,8 @@ BigInt.prototype.toJSON = function toJSON() {
 };
 
 export default definePlugin((nitroApp) => {
+  if (import.meta.test) return;
+
   Sentry.init({
     dsn: env.SENTRY_DSN,
     environment: env.SIGLE_ENV,

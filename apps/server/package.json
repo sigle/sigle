@@ -45,6 +45,7 @@
   "devDependencies": {
     "@electric-sql/pglite": "0.4.0",
     "nitro": "3.0.260311-beta",
+    "nitro-test-utils": "2.0.2",
     "pglite-prisma-adapter": "0.7.2",
     "typescript": "5.9.3",
     "vite-tsconfig-paths": "6.1.1",

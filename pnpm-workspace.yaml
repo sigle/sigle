@@ -19,6 +19,9 @@ allowBuilds:
 blockExoticSubdeps: true
 strictDepBuilds: true
 minimumReleaseAge: 1440 # 1 day
+# TODO remove
+minimumReleaseAgeExclude:
+  - nitro-test-utils
 packages:
   - apps/*
   - packages/*
