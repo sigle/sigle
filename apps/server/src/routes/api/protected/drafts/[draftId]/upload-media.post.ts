@@ -1,10 +1,11 @@
-import { createError, defineEventHandler, getRouterParam } from "h3";
-import { defineRouteMeta } from "nitropack/runtime";
+import { defineRouteMeta } from "nitro";
+import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
-import { allowedFormats, optimizeImage } from "~/lib/images";
-import { ipfsUploadFile } from "~/lib/ipfs-upload";
-import { readMultipartFormDataSafe } from "~/lib/nitro";
-import { prisma } from "~/lib/prisma";
+import { allowedFormats, optimizeImage } from "@/lib/images";
+import { ipfsUploadFile } from "@/lib/ipfs-upload";
+import { readFormData } from "@/lib/nitro";
+import { prisma } from "@/lib/prisma";
+import { isUserWhitelisted } from "@/lib/users";
 
 defineRouteMeta({
   openAPI: {
@@ -65,20 +66,31 @@ const fileSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
-  const draftId = getRouterParam(event, "draftId");
-  const formData = await readMultipartFormDataSafe(event, "5mb");
+  if (!isUserWhitelisted(event.context.user.id)) {
+    throw new HTTPError({
+      status: 403,
+      message: "User is not whitelisted.",
+    });
+  }
 
-  const file = formData?.find((f) => f.name === "file");
-  if (!file) {
-    throw createError({
+  const draftId = getRouterParam(event, "draftId");
+  const formData = await readFormData(event, "5mb");
+
+  const file = formData.get("file");
+  if (!file || !(file instanceof File)) {
+    throw new HTTPError({
       status: 400,
       message: "No file provided",
     });
   }
 
-  const parsedFile = fileSchema.safeParse(file);
+  const parsedFile = fileSchema.safeParse({
+    name: file.name,
+    filename: file.name,
+    type: file.type,
+  });
   if (!parsedFile.success) {
-    throw createError({
+    throw new HTTPError({
       status: 400,
       message: "Invalid file",
     });
@@ -94,14 +106,14 @@ export default defineEventHandler(async (event) => {
     },
   });
   if (!draft) {
-    throw createError({
+    throw new HTTPError({
       status: 404,
       message: "Draft not found.",
     });
   }
 
   const optimizedBuffer = await optimizeImage({
-    buffer: file.data,
+    buffer: Buffer.from(await file.arrayBuffer()),
     contentType: parsedFile.data.type,
     quality: 75,
     width: 700,

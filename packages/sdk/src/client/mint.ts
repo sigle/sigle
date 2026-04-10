@@ -1,15 +1,14 @@
-import type { ContractCallBase } from "@stacks/connect";
+import type { CallContractParams } from "@stacks/connect/dist/types/methods.js";
 import type { StacksNetwork, StacksNetworkName } from "@stacks/network";
 import {
   contractPrincipalCV,
   fetchCallReadOnlyFunction,
   noneCV,
-  PostConditionMode,
   uintCV,
 } from "@stacks/transactions";
 import { config, fixedMintFee } from "./config.js";
 
-export type MintParams = {
+export interface MintParams {
   // Contract address of the post
   contract: string;
   // Number of tokens to mint.
@@ -22,12 +21,12 @@ export type MintParams = {
   sender: string;
   // Price of one token in satoshis
   price: string;
-};
+}
 
-export type MintReturn = {
+export interface MintReturn {
   // Parameters to pass to the stacks.js contract call
-  parameters: ContractCallBase;
-};
+  parameters: CallContractParams;
+}
 
 export const mint = async ({
   params,
@@ -61,8 +60,7 @@ export const mint = async ({
 
   return {
     parameters: {
-      contractAddress: minterContractAddress,
-      contractName: minterContractName,
+      contract: `${minterContractAddress}.${minterContractName}`,
       functionName: "mint",
       functionArgs: [
         contractPrincipalCV(contractAddress, contractName),
@@ -83,8 +81,8 @@ export const mint = async ({
           amount: totalPrice,
         },
       ],
-      postConditionMode: PostConditionMode.Deny,
-      network,
+      postConditionMode: "deny",
+      network: networkName,
     },
   };
 };

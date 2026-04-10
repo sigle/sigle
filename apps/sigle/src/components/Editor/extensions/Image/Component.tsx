@@ -1,5 +1,5 @@
-import { Spinner } from "@radix-ui/themes";
 import { type NodeViewProps, NodeViewWrapper } from "@tiptap/react";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 
@@ -15,10 +15,10 @@ export const ImageComponent = (props: NodeViewProps) => {
           <Spinner />
         </div>
       )}
-      {/* biome-ignore lint/performance/noImgElement: ok */}
+      {/* oxlint-disable-next-line no-img-element */}
       <img
         className={cn(
-          "outline outline-offset-2 outline-orange-9 hover:outline-2",
+          `outline outline-offset-2 outline-accent hover:outline-2`,
           {
             "outline-2": props.selected,
             "opacity-25": uploadId,

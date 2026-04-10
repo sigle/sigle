@@ -1,7 +1,9 @@
-import { Button, Callout, Dialog, Flex, Grid, Text } from "@radix-ui/themes";
-import { IconExclamationCircle } from "@tabler/icons-react";
+import { IconAlertCircle, IconExclamationCircle } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { DialogClose, DialogFooter } from "@/components/ui/dialog";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { PublishReviewCollect } from "./ReviewCollect";
 import { PublishReviewGeneral } from "./ReviewGeneral";
@@ -31,7 +33,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
 
   // Validate form on mount so we can show the various error messages in the callout
   // and disable the publish button
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
+  // oxlint-disable-next-line exhaustive-deps
   useEffect(() => {
     handleSubmit(
       async () => {
@@ -54,17 +56,18 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
         });
       },
     )();
+    // oxlint-disable-next-line exhaustive-deps
   }, []);
+
+  const isCollectEnabled = false;
 
   return (
     <div className="space-y-4">
       {isFormValid !== "loading" && !isFormValid.valid ? (
-        <Callout.Root color="red" role="alert">
-          <Callout.Icon>
-            <IconExclamationCircle />
-          </Callout.Icon>
-          <Callout.Text>Please fix all errors before publishing. </Callout.Text>
-          <Text as="div" size="2">
+        <Alert variant="destructive">
+          <IconAlertCircle size={16} />
+          <AlertTitle>Please fix all errors before publishing</AlertTitle>
+          <AlertDescription>
             <ul className="list-inside list-disc">
               {isFormValid.title ? <li>Title: {isFormValid.title}</li> : null}
               {isFormValid.content ? (
@@ -84,41 +87,53 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
               ) : null}
               {isFormValid.price ? <li>Price: {isFormValid.price}</li> : null}
             </ul>
-          </Text>
-        </Callout.Root>
+          </AlertDescription>
+        </Alert>
       ) : null}
 
-      {type === "draft" ? (
-        <Callout.Root color="orange" role="alert">
-          <Callout.Icon>
-            <IconExclamationCircle />
-          </Callout.Icon>
-          <Callout.Text>
-            Review your post before publishing. Once published, you won
-            {"'"}t be able to make any edits to the collect settings anymore.
-          </Callout.Text>
-        </Callout.Root>
+      {type === "draft" && isCollectEnabled ? (
+        <Alert>
+          <IconExclamationCircle />
+          <AlertTitle>Please fix all errors before publishing</AlertTitle>
+          <AlertDescription>
+            Review your post before publishing. Once published, you won&apos;t
+            be able to make any edits to the collect settings anymore.
+          </AlertDescription>
+        </Alert>
       ) : null}
 
-      <Grid columns="2" gap="4" width="auto">
+      <div
+        className={`grid gap-4 ${isCollectEnabled ? "grid-cols-2" : "grid-cols-1"}`}
+      >
         <PublishReviewGeneral />
         <PublishReviewCollect />
-      </Grid>
+      </div>
 
-      <Flex gap="3" justify="end">
-        <Dialog.Close>
-          <Button variant="soft" color="gray">
-            Cancel
-          </Button>
-        </Dialog.Close>
+      <DialogFooter>
+        <DialogClose
+          render={
+            <Button
+              type="button"
+              variant="outline"
+              disabled={formState.isSubmitting}
+            >
+              Cancel
+            </Button>
+          }
+        />
+
         <Button
-          disabled={isFormValid === "loading" || !isFormValid.valid}
+          disabled={
+            isFormValid === "loading" ||
+            !isFormValid.valid ||
+            formState.isSubmitting
+          }
           loading={formState.isSubmitting}
           onClick={onPublish}
         >
           {type === "draft" ? "Publish" : "Update"}
         </Button>
-      </Flex>
+      </DialogFooter>
     </div>
   );
 };

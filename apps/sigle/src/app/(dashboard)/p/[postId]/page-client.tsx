@@ -1,22 +1,26 @@
 "use client";
 
-import { Badge, Container, Heading, Separator } from "@radix-ui/themes";
+import { IconArrowLeft } from "@tabler/icons-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { use } from "react";
 import { PostCollectCard } from "@/components/Post/CollectCard";
-import { PostInfoCard } from "@/components/Post/InfoCard";
 import { PostMarkdownContent } from "@/components/Post/MarkdownContent";
-import { PostShareCard } from "@/components/Post/ShareCard";
+import { PostProvenanceCard } from "@/components/Post/ProvenanceCard";
 import { PostUserActions } from "@/components/Post/UserActions";
 import { PostUserInfoCard } from "@/components/Post/UserInfoCard";
+import { NextLink } from "@/components/Shared/NextLink";
 import { FadeSlideBottom } from "@/components/ui";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { resolveImageUrl } from "@/lib/images";
+import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 
-type Props = {
+interface Props {
   params: Promise<{ postId: string }>;
-};
+}
 
 export function PostClientPage(props: Props) {
   const params = use(props.params);
@@ -39,50 +43,63 @@ export function PostClientPage(props: Props) {
 
   return (
     <FadeSlideBottom>
-      <Container size="2" className="my-20 px-4">
-        <Heading size="8" className="text-pretty">
-          {post.title}
-        </Heading>
-
-        <PostUserActions post={post} />
-
-        {post.coverImage ? (
+      {post.coverImage ? (
+        <div className="mx-auto mt-6 max-w-4xl px-4">
           <Image
             src={resolveImageUrl(post.coverImage.id)}
             alt="Cover post"
-            className="mt-10 size-full rounded-2 object-cover"
+            className="size-full rounded-lg object-cover"
             placeholder={post.coverImage.blurhash ? "blur" : "empty"}
             blurDataURL={post.coverImage.blurhash}
             width={post.coverImage.width}
             height={post.coverImage.height}
           />
-        ) : null}
+        </div>
+      ) : null}
+
+      <div className="mx-auto my-8 max-w-2xl px-4 md:my-10">
+        <Button
+          variant="ghost"
+          className="mb-6"
+          nativeButton={false}
+          render={<NextLink href={Routes.explore()} />}
+        >
+          <IconArrowLeft size={14} /> All articles
+        </Button>
+
+        <header className="mb-8 flex flex-col gap-4">
+          {post.tags ? (
+            <div className="flex flex-wrap items-center gap-2">
+              {post.tags.map((tag) => (
+                <Badge key={tag} variant="secondary">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          ) : null}
+
+          <h1 className="text-4xl font-medium text-pretty">{post.title}</h1>
+
+          <PostUserActions post={post} />
+        </header>
+
+        <Separator className="mb-8" />
 
         {post.content ? <PostMarkdownContent content={post.content} /> : null}
 
-        {post.tags ? (
-          <div className="mt-5 flex gap-2">
-            {post.tags.map((tag) => (
-              <Badge key={tag} color="orange">
-                {tag}
-              </Badge>
-            ))}
-          </div>
+        <Separator className="mt-10 mb-8" />
+
+        <PostProvenanceCard post={post} />
+
+        {post.collectible ? (
+          <>
+            <Separator className="my-8" />
+            <PostCollectCard post={post} />
+          </>
         ) : null}
 
-        <Separator size="4" className="my-10" />
-
-        <PostCollectCard post={post} />
-
-        <Separator size="4" className="my-10" />
-
-        <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-3 md:items-center">
-          <PostInfoCard post={post} />
-          <PostShareCard post={post} />
-        </div>
-
         <PostUserInfoCard post={post} />
-      </Container>
+      </div>
     </FadeSlideBottom>
   );
 }

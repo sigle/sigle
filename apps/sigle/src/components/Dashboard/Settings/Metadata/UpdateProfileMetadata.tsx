@@ -1,24 +1,41 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Flex, Text, TextArea, TextField } from "@radix-ui/themes";
-import type { paths } from "@sigle/sdk";
-import { createProfileMetadata } from "@sigle/sdk";
-import { IconAt, IconBrandX } from "@tabler/icons-react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
-import { useContractCall } from "@/hooks/useContractCall";
-import { sigleApiClient, sigleClient } from "@/lib/sigle";
+import { createId } from "@paralleldrive/cuid2";
 import {
-  getExplorerTransactionUrl,
-  getPromiseTransactionConfirmation,
-} from "@/lib/stacks";
+  type paths,
+  createProfileMetadata,
+  ProfileMetadataSchemaId,
+} from "@sigle/sdk";
+import { IconAt, IconBrandX } from "@tabler/icons-react";
+import { Result } from "better-result";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useMultiStepToast } from "@/components/Shared/MultiStepToast";
+import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { Textarea } from "@/components/ui/textarea";
+import { useContractCall } from "@/hooks/useContractCall";
+import { useSession } from "@/lib/auth-hooks";
+import { sigleApiClient, sigleClient } from "@/lib/sigle";
+import { waitForTransaction } from "@/lib/stacks";
 import { UploadProfileCoverPicture } from "./UploadProfileCoverPicture";
 import { UploadProfilePicture } from "./UploadProfilePicture";
 
 const updateProfileMetadataSchema = z.object({
   displayName: z.string().optional(),
   description: z.string().optional(),
-  website: z.string().url().optional().or(z.literal("")),
+  website: z.url().optional().or(z.literal("")),
   twitter: z.string().optional(),
   picture: z.string().optional(),
   coverPicture: z.string().optional(),
@@ -33,37 +50,49 @@ export const UpdateProfileMetadata = ({
   profile,
   setEditingProfileMetadata,
 }: UpdateProfileMetadataProps) => {
-  const { mutateAsync: uploadProfileMetadata } = sigleApiClient.useMutation(
+  const { data: session } = useSession();
+
+  const {
+    start: startToast,
+    completeStep,
+    setStepError,
+  } = useMultiStepToast({
+    steps: [
+      { id: "upload", title: "Uploading data to Arweave" },
+      { id: "transaction", title: "Waiting for blockchain confirmation" },
+      { id: "index", title: "Indexing profile" },
+    ],
+    successMessage: "Profile updated!",
+  });
+
+  const uploadProfileMetadata = sigleApiClient.useMutation(
     "post",
     "/api/protected/user/profile/upload-metadata",
+  );
+
+  const triggerIndexing = sigleApiClient.useMutation(
+    "post",
+    "/api/protected/user/profile/trigger-indexing",
+  );
+
+  const userId = session?.user.id;
+
+  const refetchProfile = sigleApiClient.useQuery(
+    "get",
+    "/api/users/{username}",
     {
-      onError: (error) => {
-        toast.error("Failed to update profile", {
-          description: error.message,
-        });
+      params: {
+        path: {
+          username: userId || "",
+        },
       },
+    },
+    {
+      enabled: false,
     },
   );
 
-  const { contractCall } = useContractCall({
-    onSuccess: (data) => {
-      toast.promise(getPromiseTransactionConfirmation(data.txId), {
-        loading: "Update profile transaction submitted",
-        success: "Profile updated successfully",
-        error: "Transaction failed",
-        action: {
-          label: "View tx",
-          onClick: () =>
-            window.open(getExplorerTransactionUrl(data.txId), "_blank"),
-        },
-      });
-    },
-    onError: (error) => {
-      toast.error("Failed to update profile", {
-        description: error,
-      });
-    },
-  });
+  const { contractCall } = useContractCall();
 
   const {
     register,
@@ -84,29 +113,98 @@ export const UpdateProfileMetadata = ({
   });
 
   const onSubmit = handleSubmit(async (formValues) => {
-    const metadata = createProfileMetadata({
-      // TODO: add random id
-      id: "TODO",
-      displayName: formValues.displayName || undefined,
-      description: formValues.description || undefined,
-      twitter: formValues.twitter || undefined,
-      website: formValues.website || undefined,
-      picture: formValues.picture || undefined,
-      coverPicture: formValues.coverPicture || undefined,
-    });
+    startToast();
 
-    const data = await uploadProfileMetadata({
-      body: {
-        metadata: metadata as unknown as Record<string, never>,
+    const metadata = createProfileMetadata({
+      $schema: ProfileMetadataSchemaId.LATEST,
+      content: {
+        id: createId(),
+        displayName: formValues.displayName || undefined,
+        description: formValues.description || undefined,
+        twitter: formValues.twitter || undefined,
+        website: formValues.website || undefined,
+        picture: formValues.picture || undefined,
+        coverPicture: formValues.coverPicture || undefined,
       },
     });
 
+    const data = await uploadProfileMetadata
+      .mutateAsync({
+        body: {
+          metadata: metadata as unknown as Record<string, never>,
+        },
+      })
+      .then((result) => Result.ok(result))
+      .catch((error) => Result.err(error));
+    if (data.isErr()) {
+      setStepError(
+        "upload",
+        data.error.message ? data.error.message : data.error,
+      );
+      return;
+    }
+    completeStep("upload");
+
     const { parameters } = sigleClient.setProfile({
-      metadata: `ar://${data.id}`,
+      metadata: `ar://${data.value.id}`,
     });
 
-    await contractCall(parameters);
+    const contractCallResult = await contractCall(parameters);
+    if (contractCallResult.isErr()) {
+      setStepError("transaction", contractCallResult.error.message);
+      return;
+    }
 
+    const txId = contractCallResult.value;
+    const transactionResult = await waitForTransaction({ txId });
+    if (transactionResult.isErr()) {
+      setStepError("transaction", transactionResult.error.message);
+      return;
+    }
+    if (transactionResult.value.tx_status !== "success") {
+      setStepError("transaction", "Transaction failed");
+      return;
+    }
+    completeStep("transaction");
+
+    try {
+      await triggerIndexing.mutateAsync({});
+    } catch (error) {
+      setStepError(
+        "index",
+        error instanceof Error ? error.message : "Failed to trigger indexing",
+      );
+      return;
+    }
+
+    const pollingInterval = 2_000;
+    const timeout = 180_000;
+    const startTime = Date.now();
+
+    let isIndexed = false;
+    while (Date.now() - startTime < timeout) {
+      const result = await refetchProfile.refetch();
+
+      // Successfully indexed
+      if (result.data?.profile?.txId === txId) {
+        isIndexed = true;
+        break;
+      }
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, pollingInterval);
+      });
+    }
+
+    if (!isIndexed) {
+      setStepError(
+        "index",
+        "Profile update timed out. Please refresh the page.",
+      );
+      return;
+    }
+
+    completeStep("index");
     setEditingProfileMetadata(false);
   });
 
@@ -121,102 +219,99 @@ export const UpdateProfileMetadata = ({
 
   return (
     <form onSubmit={onSubmit} className="space-y-4">
-      <div className="space-y-3">
-        <div className="space-y-1">
-          <Text as="div" size="2">
-            Name
-          </Text>
-          <TextField.Root
+      <FieldGroup>
+        <Field>
+          <FieldLabel htmlFor="displayName">Name</FieldLabel>
+          <Input
+            id="displayName"
+            aria-invalid={!!errors.displayName}
             placeholder="Your name"
             {...register("displayName")}
           />
-          {errors.displayName && (
-            <Text as="div" size="1" color="red" mt="1">
-              {errors.displayName.message}
-            </Text>
-          )}
-        </div>
+          {errors.displayName ? (
+            <FieldError>{errors.displayName.message}</FieldError>
+          ) : null}
+        </Field>
 
-        <div className="space-y-1">
-          <Text as="div" size="2">
-            Description - Markdown supported (limited to bold, italic, links)
-          </Text>
-          <TextArea
+        <Field>
+          <FieldLabel htmlFor="description">Description</FieldLabel>
+          <FieldDescription>
+            Markdown supported (limited to bold, italic, links)
+          </FieldDescription>
+          <Textarea
+            id="description"
+            aria-invalid={!!errors.description}
             placeholder="Describe yourself in a few words (supports markdown)"
             rows={4}
             {...register("description")}
           />
-          {errors.description && (
-            <Text as="div" size="1" color="red" mt="1">
-              {errors.description.message}
-            </Text>
-          )}
-        </div>
+          {errors.description ? (
+            <FieldError>{errors.description.message}</FieldError>
+          ) : null}
+        </Field>
 
-        <div className="space-y-1">
-          <Text as="div" size="2">
-            Website
-          </Text>
-          <TextField.Root
+        <Field>
+          <FieldLabel htmlFor="website">Website</FieldLabel>
+          <Input
+            id="website"
+            aria-invalid={!!errors.website}
             placeholder="https://my-website.com"
             {...register("website")}
           />
-          {errors.website && (
-            <Text as="div" size="1" color="red" mt="1">
-              {errors.website.message}
-            </Text>
-          )}
-        </div>
+          {errors.website ? (
+            <FieldError>{errors.website.message}</FieldError>
+          ) : null}
+        </Field>
 
-        <div className="space-y-1">
-          <Text as="div" size="2" className="flex items-center gap-1">
+        <Field>
+          <FieldLabel htmlFor="twitter">
             <IconBrandX height="16" width="16" /> (Twitter)
-          </Text>
-          <TextField.Root
-            placeholder="username"
-            {...register("twitter")}
-            onChange={handleXChange}
+          </FieldLabel>
+          <InputGroup>
+            <InputGroupInput
+              id="twitter"
+              aria-invalid={!!errors.twitter}
+              placeholder="username"
+              {...register("twitter")}
+              onChange={handleXChange}
+            />
+            <InputGroupAddon align="inline-start">
+              <IconAt size={16} className="text-muted-foreground" />
+            </InputGroupAddon>
+          </InputGroup>
+          {errors.twitter ? (
+            <FieldError>{errors.twitter.message}</FieldError>
+          ) : null}
+        </Field>
+
+        <UploadProfilePicture
+          picture={getValues("picture")}
+          setPicture={(value) =>
+            setValue("picture", value, { shouldValidate: true })
+          }
+        />
+
+        <UploadProfileCoverPicture
+          picture={getValues("coverPicture")}
+          setPicture={(value) =>
+            setValue("coverPicture", value, { shouldValidate: true })
+          }
+        />
+
+        <Field orientation="horizontal" className="justify-end">
+          <Button
+            variant="outline"
+            type="button"
+            disabled={isSubmitting}
+            onClick={() => setEditingProfileMetadata(false)}
           >
-            <TextField.Slot>
-              <IconAt height="16" width="16" />
-            </TextField.Slot>
-          </TextField.Root>
-          {errors.twitter && (
-            <Text as="div" size="1" color="red" mt="1">
-              {errors.twitter.message}
-            </Text>
-          )}
-        </div>
-      </div>
-
-      <UploadProfilePicture
-        picture={getValues("picture")}
-        setPicture={(value) =>
-          setValue("picture", value, { shouldValidate: true })
-        }
-      />
-
-      <UploadProfileCoverPicture
-        picture={getValues("coverPicture")}
-        setPicture={(value) =>
-          setValue("coverPicture", value, { shouldValidate: true })
-        }
-      />
-
-      <Flex gap="3" justify="end">
-        <Button
-          variant="soft"
-          color="gray"
-          type="button"
-          disabled={isSubmitting}
-          onClick={() => setEditingProfileMetadata(false)}
-        >
-          Cancel
-        </Button>
-        <Button type="submit" loading={isSubmitting}>
-          Save
-        </Button>
-      </Flex>
+            Cancel
+          </Button>
+          <Button type="submit" loading={isSubmitting}>
+            Save
+          </Button>
+        </Field>
+      </FieldGroup>
     </form>
   );
 };

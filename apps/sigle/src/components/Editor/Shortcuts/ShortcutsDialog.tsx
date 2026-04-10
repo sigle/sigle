@@ -1,4 +1,19 @@
-import { Dialog, Kbd, Table, Tabs, VisuallyHidden } from "@radix-ui/themes";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Kbd } from "@/components/ui/kbd";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface ShortcutsDialogProps {
   open: boolean;
@@ -176,80 +191,63 @@ export const ShortcutsDialog = ({
   onOpenChange,
 }: ShortcutsDialogProps) => {
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <VisuallyHidden>
-        <Dialog.Title>Keyboard shortcuts</Dialog.Title>
-        <Dialog.Description>
-          Explore keyboard shortcuts and hints
-        </Dialog.Description>
-      </VisuallyHidden>
-      <Dialog.Content size="3">
-        <Tabs.Root defaultValue="shortcuts">
-          <Tabs.List
-            className="mb-4"
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogTitle className="sr-only">Keyboard shortcuts</DialogTitle>
+      <DialogDescription className="sr-only">
+        Explore keyboard shortcuts and hints
+      </DialogDescription>
+      <DialogContent className="md:max-w-lg">
+        <Tabs defaultValue="shortcuts">
+          <TabsList
+            variant="line"
             aria-label="Find keyboard shortcuts and hints"
-            color="gray"
-            highContrast
           >
-            <Tabs.Trigger value="shortcuts">Keyboard Shortcuts</Tabs.Trigger>
-          </Tabs.List>
+            <TabsTrigger value="shortcuts">Keyboard Shortcuts</TabsTrigger>
+          </TabsList>
 
-          <Tabs.Content value="shortcuts">
-            <Tabs.Root defaultValue="essentials">
-              <Tabs.List
-                className="mb-4"
-                aria-label="Explore shortcut types"
-                color="gray"
-                highContrast
-              >
-                <Tabs.Trigger value="essentials">Essentials</Tabs.Trigger>
-                <Tabs.Trigger value="text-formatting">
+          <TabsContent value="shortcuts">
+            <Tabs defaultValue="essentials">
+              <TabsList variant="line" aria-label="Explore shortcut types">
+                <TabsTrigger value="essentials">Essentials</TabsTrigger>
+                <TabsTrigger value="text-formatting">
                   Text Formatting
-                </Tabs.Trigger>
-                <Tabs.Trigger value="p-formatting">
+                </TabsTrigger>
+                <TabsTrigger value="p-formatting">
                   Paragraph Formatting
-                </Tabs.Trigger>
-                <Tabs.Trigger value="selection">Text Selection</Tabs.Trigger>
-              </Tabs.List>
+                </TabsTrigger>
+                <TabsTrigger value="selection">Text Selection</TabsTrigger>
+              </TabsList>
               {shortcuts.map((shortcut) => (
-                <Tabs.Content key={shortcut.value} value={shortcut.value}>
-                  <Table.Root>
-                    <Table.Header>
-                      <Table.Row>
-                        <Table.ColumnHeaderCell>Command</Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>
-                          Windows/Linux
-                        </Table.ColumnHeaderCell>
-                        <Table.ColumnHeaderCell>macOS</Table.ColumnHeaderCell>
-                      </Table.Row>
-                    </Table.Header>
+                <TabsContent key={shortcut.value} value={shortcut.value}>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Command</TableHead>
+                        <TableHead>Windows/Linux</TableHead>
+                        <TableHead>macOS</TableHead>
+                      </TableRow>
+                    </TableHeader>
 
-                    <Table.Body>
+                    <TableBody>
                       {shortcut.items.map((shortcut) => (
-                        <Table.Row key={shortcut.action}>
-                          <Table.RowHeaderCell>
-                            {shortcut.action}
-                          </Table.RowHeaderCell>
-                          <Table.Cell>
-                            <Kbd size="3">
-                              {shortcut.winCommand.join(" + ")}
-                            </Kbd>
-                          </Table.Cell>
-                          <Table.Cell>
-                            <Kbd size="3">
-                              {shortcut.macCommand.join(" + ")}
-                            </Kbd>
-                          </Table.Cell>
-                        </Table.Row>
+                        <TableRow key={shortcut.action}>
+                          <TableCell>{shortcut.action}</TableCell>
+                          <TableCell>
+                            <Kbd>{shortcut.winCommand.join(" + ")}</Kbd>
+                          </TableCell>
+                          <TableCell>
+                            <Kbd>{shortcut.macCommand.join(" + ")}</Kbd>
+                          </TableCell>
+                        </TableRow>
                       ))}
-                    </Table.Body>
-                  </Table.Root>
-                </Tabs.Content>
+                    </TableBody>
+                  </Table>
+                </TabsContent>
               ))}
-            </Tabs.Root>
-          </Tabs.Content>
-        </Tabs.Root>
-      </Dialog.Content>
-    </Dialog.Root>
+            </Tabs>
+          </TabsContent>
+        </Tabs>
+      </DialogContent>
+    </Dialog>
   );
 };

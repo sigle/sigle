@@ -1,6 +1,6 @@
-import { Button } from "@radix-ui/themes";
 import { IconRocket } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 
@@ -11,14 +11,14 @@ export const EditorPublish = () => {
 
   if (type === "published") {
     return (
-      <Button size="2" variant="ghost" onClick={() => setPublishOpen(true)}>
+      <Button variant="ghost" onClick={() => setPublishOpen(true)}>
         Update
       </Button>
     );
   }
 
   return (
-    <Button size="2" variant="ghost" onClick={() => setPublishOpen(true)}>
+    <Button variant="ghost" onClick={() => setPublishOpen(true)}>
       Publish
       <IconRocket size={16} />
     </Button>

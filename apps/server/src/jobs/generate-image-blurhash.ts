@@ -1,9 +1,9 @@
 import sharp from "sharp";
 import { z } from "zod";
-import { consola } from "~/lib/consola";
-import { generateBlurhashURI, resolveImageUrl } from "~/lib/images";
-import { defineJob } from "~/lib/jobs";
-import { prisma } from "~/lib/prisma";
+import { consola } from "@/lib/consola";
+import { generateBlurhashURI, resolveImageUrl } from "@/lib/images";
+import { defineJob } from "@/lib/jobs";
+import { prisma } from "@/lib/prisma";
 
 export const generateImageBlurhashJob = defineJob("generate-image-blurhash")
   .input(

@@ -48,7 +48,7 @@ export const Header = ({ site }: HeaderProps) => {
   return (
     <header
       className={cn(
-        "sticky top-0 z-10 flex h-16 items-center justify-between border-b border-gray-200 bg-sigle-background px-4 transition-all duration-300 ease-in-out md:px-16",
+        `sticky top-0 z-10 flex h-16 items-center justify-between border-b border-gray-200 bg-sigle-background px-4 transition-all duration-300 ease-in-out md:px-16`,
         {
           "-top-16": scrollDirection === "down",
         },
@@ -57,7 +57,7 @@ export const Header = ({ site }: HeaderProps) => {
       <Link href="/" className="w-full md:w-auto">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="relative overflow-hidden rounded object-cover">
+            <div className="relative overflow-hidden rounded-sm object-cover">
               {site.user.profile?.coverPictureUri ? (
                 <Image
                   src={resolveImageUrl(site.user.profile?.coverPictureUri.id)}
@@ -88,7 +88,7 @@ export const Header = ({ site }: HeaderProps) => {
               <SheetHeader>
                 <SheetTitle>
                   <div className="flex items-center gap-2">
-                    <div className="relative overflow-hidden rounded object-cover">
+                    <div className="relative overflow-hidden rounded-sm object-cover">
                       {site.user.profile?.coverPictureUri ? (
                         <Image
                           src={resolveImageUrl(

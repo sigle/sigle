@@ -6,9 +6,9 @@ import { UserClientPage } from "./page-client";
 
 export const dynamic = "force-dynamic";
 
-type Props = {
+interface Props {
   params: Promise<typeof Routes.userProfile.params>;
-};
+}
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
@@ -35,6 +35,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   return {
     title: `${title} | Sigle Profile`,
     description,
+    robots: {
+      follow: false,
+    },
   };
 }
 

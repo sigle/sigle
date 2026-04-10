@@ -1,12 +1,13 @@
-export const sites: {
-  [key: string]: {
+export const sites: Record<
+  string,
+  {
     address: string;
     url: string;
     banner: string;
     links: { href: string; label: string }[];
     cta?: { href: string; label: string };
-  };
-} = {
+  }
+> = {
   "blog.sigle.io": {
     address: "ST3CH69RQ9FWCHSKMWG7J5TQCNADRDPX43M9AS35Z",
     url: "https://blog.sigle.io",

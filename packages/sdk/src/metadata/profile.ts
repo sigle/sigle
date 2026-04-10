@@ -1,10 +1,16 @@
 import { z } from "zod";
+import { SignatureSchema } from "./common.js";
+import { ProfileMetadataSchemaId } from "./config.js";
+import {
+  MetadataAttributeSchema,
+  type MetadataAttribute,
+} from "./metadata-attribute.js";
 import { evaluate } from "./utils.js";
 
-export interface ProfileMetadata {
+export interface ProfileMetadataDetails {
   /**
-   * Random id also used in the url
-   * Have to be unique on sigle
+   * Random id also used in the url.
+   * Have to be unique on sigle. Use a UUID if unsure.
    */
   id: string;
   /**
@@ -31,13 +37,25 @@ export interface ProfileMetadata {
    * The profile cover image URL.
    */
   coverPicture?: string;
+  /**
+   * List of attributes that can be used to store any additional information that is not supported by the standard.
+   */
+  attributes?: MetadataAttribute[];
 }
 
-export const ProfileMetadataSchema = z.object({
-  id: z.string().min(1),
-  displayName: z.string().min(1).max(100).optional(),
-  description: z.string().min(1).optional(),
-  website: z.string().url().optional(),
+export const ProfileMetadataDetailsSchema = z.object({
+  id: z.string().min(1).meta({
+    description: "Random id also used in the url. Have to be unique on sigle.",
+  }),
+  displayName: z.string().min(1).max(100).optional().meta({
+    description: "The profile display name.",
+  }),
+  description: z.string().min(1).optional().meta({
+    description: "The profile description as Markdown.",
+  }),
+  website: z.url().optional().meta({
+    description: "The website URL.",
+  }),
   twitter: z
     .string()
     .min(1)
@@ -45,9 +63,41 @@ export const ProfileMetadataSchema = z.object({
       /^[A-Za-z0-9_]*$/,
       "Twitter handle can only contain letters, numbers and underscore",
     )
-    .optional(),
-  picture: z.string().url().optional(),
-  coverPicture: z.string().url().optional(),
+    .optional()
+    .meta({
+      description: "Twitter username.",
+    }),
+  picture: z.url().optional().meta({
+    description: "The profile image URL.",
+  }),
+  coverPicture: z.url().optional().meta({
+    description: "The profile cover image URL.",
+  }),
+  attributes: MetadataAttributeSchema.array().min(1).max(20).optional().meta({
+    description:
+      "List of attributes that can be used to store any additional information that is not supported by the standard",
+  }),
+});
+
+export interface ProfileMetadata {
+  /**
+   * The schema id.
+   */
+  $schema: ProfileMetadataSchemaId.LATEST;
+  /**
+   * The metadata details.
+   */
+  content: ProfileMetadataDetails;
+  /**
+   * A cryptographic signature of the `content` data.
+   */
+  signature?: string;
+}
+
+export const ProfileMetadataSchema = z.object({
+  $schema: z.literal(ProfileMetadataSchemaId.LATEST),
+  content: ProfileMetadataDetailsSchema,
+  signature: SignatureSchema.optional(),
 });
 
 export function createProfileMetadata(data: ProfileMetadata): ProfileMetadata {

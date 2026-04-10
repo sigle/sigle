@@ -1,22 +1,23 @@
 {
   "name": "@sigle/testnet-seed",
-  "private": true,
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc --noEmit",
+    "check-types": "tsc --noEmit",
     "dev": "tsx src/index.ts"
   },
   "devDependencies": {
-    "@paralleldrive/cuid2": "2.2.2",
+    "@paralleldrive/cuid2": "3.3.0",
     "@sigle/sdk": "workspace:*",
-    "@stacks/network": "7.0.2",
-    "@stacks/transactions": "7.0.6",
-    "@stacks/wallet-sdk": "7.0.6",
-    "@tsconfig/recommended": "1.0.10",
-    "@types/node": "22.15.21",
-    "smol-toml": "1.4.2",
-    "tsx": "4.20.4",
-    "typescript": "5.9.2"
+    "@stacks/blockchain-api-client": "8.14.1",
+    "@stacks/network": "7.3.1",
+    "@stacks/transactions": "7.3.1",
+    "@stacks/wallet-sdk": "7.2.0",
+    "@tsconfig/recommended": "1.0.13",
+    "@types/node": "24.10.12",
+    "smol-toml": "1.6.0",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3"
   }
 }

@@ -1,17 +1,13 @@
 "use client";
 
-import {
-  Button,
-  Heading,
-  Separator,
-  Spinner,
-  Text,
-  TextField,
-} from "@radix-ui/themes";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiFetchClient } from "@/lib/sigle";
 
@@ -28,7 +24,7 @@ interface Story {
   /**
    * JSON representing the slate.js structure of the story
    */
-  // biome-ignore lint/suspicious/noExplicitAny: content is not typed
+  // oxlint-disable-next-line no-explicit-any: content is not typed
   content: any;
   /**
    * Version representing the format of the content
@@ -190,16 +186,15 @@ export default function MigrationPage() {
 
   return (
     <div className="py-10">
-      <Heading>Migration</Heading>
-      <Text as="p" color="gray" size="2" className="mt-2">
+      <h2 className="text-2xl font-bold">Migration</h2>
+      <p className="mt-2 text-sm text-muted-foreground">
         One click migration for your old posts
-      </Text>
+      </p>
 
       {!username.ready ? (
         <div className="mt-5">
-          <TextField.Root
+          <Input
             type="text"
-            size="2"
             placeholder="Enter your username (.btc, .id.stx etc...)"
             value={username.value}
             onChange={(e) =>
@@ -210,9 +205,7 @@ export default function MigrationPage() {
             }
           />
           <Button
-            color="gray"
             variant="outline"
-            highContrast
             className="mt-4"
             onClick={() => setUsername({ value: username.value, ready: true })}
           >
@@ -224,34 +217,30 @@ export default function MigrationPage() {
       {username.ready ? (
         <div className="mt-5">
           {isLoading ? <Spinner /> : null}
-          {error ? <Text color="red">{error.message}</Text> : null}
+          {error ? <p className="text-destructive">{error.message}</p> : null}
           {posts?.length === 0 ? (
-            <Text color="gray" size="2" className="mt-2">
-              No posts found
-            </Text>
+            <p className="mt-2 text-sm text-muted-foreground">No posts found</p>
           ) : null}
           {posts?.map((post) => (
             <div key={post.id}>
               <div className="flex items-center justify-between py-4">
                 <div>
-                  <Heading size="2" weight="medium" title={post.id}>
+                  <h3 className="text-xl font-medium" title={post.id}>
                     {post.title}
-                  </Heading>
-                  <Text as="p" color="gray" size="2" className="mt-2">
+                  </h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
                     {format(post.createdAt, "MMM dd yyyy")}
-                  </Text>
+                  </p>
                 </div>
                 <Button
-                  color="gray"
                   variant="outline"
-                  highContrast
                   onClick={() => handleMigrate(post.id)}
-                  loading={loadingPostId === post.id}
+                  disabled={loadingPostId === post.id}
                 >
                   Migrate
                 </Button>
               </div>
-              <Separator size="4" />
+              <Separator />
             </div>
           ))}
         </div>

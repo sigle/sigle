@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { consola } from "~/lib/consola";
-import { prisma } from "~/lib/prisma";
+import { consola } from "@/lib/consola";
+import { prisma } from "@/lib/prisma";
 
 export const indexerMintSchema = z.object({
   action: z.literal("indexer-mint"),
@@ -55,10 +55,7 @@ export const executeIndexerMintJob = async (
     });
   }
 
-  const updatedPost = await prisma.post.update({
-    select: {
-      id: true,
-    },
+  const updatedCollectible = await prisma.collectible.update({
     where: {
       address: data.address,
     },
@@ -67,7 +64,15 @@ export const executeIndexerMintJob = async (
         increment: data.quantity,
       },
     },
+    select: {
+      post: {
+        select: {
+          id: true,
+        },
+      },
+    },
   });
+  const updatedPost = updatedCollectible.post;
 
   for (const event of data.nftMintEvents) {
     const postNftData = {

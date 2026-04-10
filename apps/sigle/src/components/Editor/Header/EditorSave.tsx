@@ -1,9 +1,9 @@
-import { Callout, Text } from "@radix-ui/themes";
 import { parseBTC } from "@sigle/sdk";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "../EditorFormProvider";
@@ -85,22 +85,20 @@ export const EditorSave = () => {
 
   if (saveState === "error") {
     return (
-      <Callout.Root color="red" size="1">
-        <Callout.Icon>
-          <IconInfoCircle />
-        </Callout.Icon>
-        <Callout.Text>Error Saving, please try again</Callout.Text>
-      </Callout.Root>
+      <Alert variant="destructive" className="mt-4">
+        <IconInfoCircle size={14} />
+        <AlertDescription>Error Saving, please try again</AlertDescription>
+      </Alert>
     );
   }
 
   return (
-    <Text size="2">
+    <p className="text-sm">
       {saveState === "idle"
         ? ""
         : saveState === "saved"
           ? "Saved"
           : "Saving..."}
-    </Text>
+    </p>
   );
 };

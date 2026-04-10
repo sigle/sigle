@@ -1,13 +1,13 @@
 import {
-  createError,
+  HTTPError,
   defineEventHandler,
   getRequestIP,
+  setResponseHeaders,
   type H3Event,
-  setHeaders,
-} from "h3";
+} from "nitro/h3";
 import { RateLimiterPrisma, type RateLimiterRes } from "rate-limiter-flexible";
 import { addRoute, createRouter, findRoute } from "rou3";
-import { prisma } from "~/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 interface RateLimitConfig {
   points: number;
@@ -99,8 +99,8 @@ function getClientIdentifier(event: H3Event): string {
 }
 
 export default defineEventHandler(async (event) => {
-  const path = event.path;
-  const method = event.method;
+  const path = event.req.url || "/";
+  const method = event.req.method || "GET";
 
   const match = findRoute<RouteConfig>(router, method, path);
 
@@ -118,7 +118,7 @@ export default defineEventHandler(async (event) => {
   try {
     const rateLimiterRes = await rateLimiter.consume(clientId);
 
-    setHeaders(event, {
+    setResponseHeaders(event, {
       "X-RateLimit-Limit": String(config.points),
       "X-RateLimit-Remaining": String(rateLimiterRes.remainingPoints),
       "X-RateLimit-Reset": String(rateLimiterRes.msBeforeNext),
@@ -129,16 +129,15 @@ export default defineEventHandler(async (event) => {
 
     const res = rateLimiterRes as RateLimiterRes;
 
-    setHeaders(event, {
+    setResponseHeaders(event, {
       "X-RateLimit-Limit": String(config.points),
       "X-RateLimit-Remaining": "0",
       "X-RateLimit-Reset": String(res.msBeforeNext),
       "Retry-After": String(Math.ceil(res.msBeforeNext / 1000)),
     });
 
-    throw createError({
-      statusCode: 429,
-      statusMessage: "Too Many Requests",
+    throw new HTTPError({
+      status: 429,
       message: `Rate limit exceeded. Please try again in ${Math.ceil(
         res.msBeforeNext / 1000,
       )} seconds.`,

@@ -1,11 +1,11 @@
+import type { BetterAuthPlugin } from "better-auth";
 // Adapted from https://github.com/better-auth/better-auth/issues/1594#issuecomment-2692434209
 import * as Sentry from "@sentry/node";
-import type { BetterAuthPlugin } from "better-auth";
 import { APIError, createAuthEndpoint } from "better-auth/api";
 import { setSessionCookie } from "better-auth/cookies";
 import { generateSiwsNonce, verifySiwsMessage } from "sign-in-with-stacks";
 import { z } from "zod";
-import { env } from "~/env";
+import { env } from "@/env";
 import { prisma } from "./prisma";
 
 export const betterAuthSiws = () =>
@@ -76,7 +76,7 @@ export const betterAuthSiws = () =>
             }
 
             // Delete used nonce to prevent replay attacks
-            await ctx.context.internalAdapter.deleteVerificationValue(
+            await ctx.context.internalAdapter.deleteVerificationByIdentifier(
               verification.id,
             );
 
@@ -111,7 +111,6 @@ export const betterAuthSiws = () =>
 
             const session = await ctx.context.internalAdapter.createSession(
               user.id,
-              ctx,
             );
 
             if (!session) {
@@ -123,11 +122,11 @@ export const betterAuthSiws = () =>
               });
             }
 
-            // biome-ignore lint/suspicious/noExplicitAny: ok
+            // oxlint-disable-next-line no-explicit-any
             await setSessionCookie(ctx, { session, user: user as any });
 
             return ctx.json({ token: session.token });
-            // biome-ignore lint/suspicious/noExplicitAny: ok
+            // oxlint-disable-next-line no-explicit-any
           } catch (error: any) {
             if (error instanceof APIError) throw error;
             Sentry.captureException(error);

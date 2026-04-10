@@ -1,6 +1,6 @@
 import type { BetterAuthPlugin } from "better-auth";
 import { createAuthEndpoint } from "better-auth/api";
-import z from "zod";
+import { z } from "zod";
 
 /**
  * Mock what we have on the server so that the client can have proper types

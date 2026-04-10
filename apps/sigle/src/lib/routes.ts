@@ -10,6 +10,7 @@ import { z } from "zod";
 
 export const Routes = {
   home: makeRoute(() => "/"),
+  explore: makeRoute(() => "/explore"),
   userProfile: makeRoute(
     ({ username }) => `/u/${username}`,
     z.object({
@@ -23,8 +24,11 @@ export const Routes = {
     }),
     z.object({
       referral: z.string().optional().nullable(),
+      published: z.boolean().optional(),
     }),
   ),
+  // Logged in routes
+  dashboard: makeRoute(() => "/dashboard"),
   editPost: makeRoute(
     ({ postId }) => `/p/${postId}/edit`,
     z.object({
@@ -36,16 +40,15 @@ export const Routes = {
       forceSave: z.string().optional().nullable(),
     }),
   ),
-  dashboard: makeRoute(() => "/dashboard"),
 };
 
-type RouteBuilder<Params extends z.ZodSchema, Search extends z.ZodSchema> = {
+interface RouteBuilder<Params extends z.ZodSchema, Search extends z.ZodSchema> {
   (p?: z.input<Params>, options?: { search?: z.input<Search> }): string;
   parse: (input: z.input<Params>) => z.output<Params>;
   useParams: () => z.output<Params>;
   useSearchParams: () => z.output<Search>;
   params: z.output<Params>;
-};
+}
 
 function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
   fn: (p: z.input<Params>) => string,
@@ -53,7 +56,7 @@ function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
   search: Search = {} as Search,
 ): RouteBuilder<Params, Search> {
   const routeBuilder: RouteBuilder<Params, Search> = (params, options) => {
-    const baseUrl = fn(params);
+    const baseUrl = fn(params as z.input<Params>);
     const searchString =
       options?.search && queryString.stringify(options.search);
     return [baseUrl, searchString ? `?${searchString}` : ""].join("");

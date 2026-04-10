@@ -1,6 +1,5 @@
 "use client";
 
-import { Flex, IconButton } from "@radix-ui/themes";
 import {
   IconArrowLeft,
   IconLayoutSidebarRightExpand,
@@ -8,6 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { NextLink } from "@/components/Shared/NextLink";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
@@ -51,41 +51,37 @@ export const EditorHeader = () => {
   return (
     <header
       className={cn(
-        "sticky z-10 flex h-[80px] items-center border-b border-gray-5 bg-gray-1 px-6 transition-all duration-500",
+        `sticky z-10 flex h-[80px] items-center border-b border-border bg-background px-6 transition-all duration-500`,
         {
           "top-0": scrollDirection === "up",
           "-top-[80px]": scrollDirection === "down",
         },
       )}
     >
-      <Flex justify="between" align="center" className="flex-1">
-        <Flex align="center" gap="6">
-          <IconButton
-            size="2"
+      <div className="flex flex-1 items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Button
             variant="ghost"
-            color="gray"
-            highContrast
-            asChild
+            size="icon"
+            nativeButton={false}
+            render={<NextLink href="/dashboard/drafts" />}
+            aria-label="Back to drafts"
           >
-            <NextLink href="/dashboard/drafts">
-              <IconArrowLeft size={headerIconSize} />
-            </NextLink>
-          </IconButton>
+            <IconArrowLeft size={headerIconSize} />
+          </Button>
           {type === "draft" ? <EditorSave /> : null}
-        </Flex>
-        <Flex align="center" gap="6">
+        </div>
+        <div className="flex items-center gap-6">
           <EditorPublish />
-          <IconButton
-            size="2"
+          <Button
             variant="ghost"
-            color="gray"
-            highContrast
+            size="icon"
             onClick={() => setMenuOpen(!menuOpen)}
           >
             <IconLayoutSidebarRightExpand size={headerIconSize} />
-          </IconButton>
-        </Flex>
-      </Flex>
+          </Button>
+        </div>
+      </div>
     </header>
   );
 };

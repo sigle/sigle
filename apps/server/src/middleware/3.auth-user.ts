@@ -1,5 +1,5 @@
-import { createError, defineEventHandler } from "h3";
-import { auth } from "~/lib/auth";
+import { HTTPError, defineEventHandler } from "nitro/h3";
+import { auth } from "@/lib/auth";
 
 export interface AuthenticatedUser {
   id: string;
@@ -11,17 +11,16 @@ export interface AuthenticatedUser {
  */
 export default defineEventHandler(async (event) => {
   // Only apply middleware for /api/protected/** routes
-  if (!event.path.startsWith("/api/protected")) {
+  const url = new URL(event.req.url);
+  if (!url.pathname.startsWith("/api/protected")) {
     return;
   }
 
-  const headers = event.headers;
-
   const session = await auth.api.getSession({
-    headers: headers,
+    headers: event.req.headers,
   });
   if (!session) {
-    throw createError({
+    throw new HTTPError({
       status: 401,
       message: "Unauthorized",
     });

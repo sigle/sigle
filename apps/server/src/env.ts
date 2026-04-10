@@ -7,12 +7,12 @@ export const env = createEnv({
   runtimeEnv: import.meta.env,
 
   server: {
-    NODE_ENV: z.enum(["production", "development"]),
+    NODE_ENV: z.enum(["production", "development", "test"]),
     STACKS_ENV: z.enum(["mainnet", "testnet"]),
     SIGLE_ENV: z.enum(["production", "staging", "local"]),
     APP_ID: z.string(),
     // The URL to the Postgres database
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.url(),
     // The next-auth secret used to verify the user session tokens
     AUTH_SECRET: z.string(),
     // Private key used to send transactions on Arweave
@@ -20,19 +20,21 @@ export const env = createEnv({
     // An internal API token used to authenticate the internal services with the API
     INTERNAL_API_TOKEN: z.string(),
     // The URL to the web application
-    APP_URL: z.string().url(),
+    APP_URL: z.url(),
     // The URL to the API server
-    API_URL: z.string().url(),
+    API_URL: z.url(),
     // The API key to use to interact with the Hiro Platform API
     HIRO_API_KEY: z.string().optional(),
     // Only used in development, the URL to proxy the various webhooks we receive
-    WEBHOOK_PROXY_URL: z.string().url().optional(),
+    WEBHOOK_PROXY_URL: z.url().optional(),
     // The key used to verify the chainhooks bearer token
     CHAINHOOK_API_TOKEN: z.string(),
-    SENTRY_DSN: z.string().url().optional(),
+    // The gateway URL to use when serving files stored on Arweave
+    ARWEAVE_GATEWAY_URL: z.url().default("https://turbo-gateway.com"),
+    SENTRY_DSN: z.url().optional(),
     POSTHOG_API_KEY: z.string().optional(),
     POSTHOG_API_HOST: z.string().optional(),
-    W3UP_AGENT_KEY: z.string(),
-    W3UP_AGENT_PROOF: z.string(),
+    STORACHA_AGENT_KEY: z.string(),
+    STORACHA_AGENT_PROOF: z.string(),
   },
 });

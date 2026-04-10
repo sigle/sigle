@@ -1,8 +1,22 @@
-import { PrismaClient } from "~/__generated__/prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@/__generated__/prisma/client";
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
-export const prisma = globalForPrisma.prisma || new PrismaClient();
+function createPrismaClient() {
+  const connectionString = process.env.DATABASE_URL;
+  const adapter = new PrismaPg({ connectionString });
+  return new PrismaClient({ adapter });
+}
+
+export let prisma = createPrismaClient();
+
+/**
+ * Replace the global prisma instance. Used by tests to point at the test database.
+ */
+export function setPrismaClient(client: PrismaClient) {
+  prisma = client;
+}
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
@@ -14,6 +28,7 @@ export const SELECT_PUBLIC_USER_FIELDS = {
   profile: {
     select: {
       id: true,
+      txId: true,
       displayName: true,
       description: true,
       website: true,
@@ -26,7 +41,6 @@ export const SELECT_PUBLIC_USER_FIELDS = {
 
 export const SELECT_PUBLIC_POST_FIELDS = {
   id: true,
-  address: true,
   title: true,
   content: true,
   metaTitle: true,
@@ -36,12 +50,20 @@ export const SELECT_PUBLIC_POST_FIELDS = {
   tags: true,
   canonicalUri: true,
   txId: true,
-  maxSupply: true,
-  collected: true,
-  openEdition: true,
+  blockHeight: true,
   metadataUri: true,
   createdAt: true,
   updatedAt: true,
   // Relations
   minterFixedPrice: true,
+  collectible: {
+    select: {
+      id: true,
+      address: true,
+      maxSupply: true,
+      openEdition: true,
+      collected: true,
+      enabled: true,
+    },
+  },
 };

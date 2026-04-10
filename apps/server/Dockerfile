@@ -1,4 +1,4 @@
-ARG NODE_VERSION=22
+ARG NODE_VERSION=24
 FROM node:${NODE_VERSION}-alpine AS base
 
 WORKDIR /app
@@ -11,9 +11,9 @@ ENV APP_NAME="server"
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 COPY --link ./package.json ./
-RUN npm install -g corepack@latest # fix for https://github.com/nodejs/corepack/issues/612
 RUN corepack enable pnpm
-RUN pnpm install turbo@^2 --global
+RUN TURBO_VERSION=$(grep -o '"turbo": "[^"]*' package.json | cut -d'"' -f4) && \
+    pnpm install turbo@${TURBO_VERSION} --global
 RUN pnpm install @dotenvx/dotenvx@^1 --global
 
 # --- Turbo stage ---
@@ -62,6 +62,7 @@ RUN adduser --system --uid 1001 nitro
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/.output ./.output
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/package.json ./package.json
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/scripts ./scripts
+COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/prisma.config.ts ./prisma.config.ts
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/prisma ./prisma
 # Copy the generated prisma client as it contains the required Query engine
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/src/__generated__/prisma ./apps/$APP_NAME/src/__generated__/prisma

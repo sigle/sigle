@@ -1,6 +1,5 @@
 "use client";
 
-import { Container, Heading } from "@radix-ui/themes";
 import { sigleApiClient } from "@/lib/sigle";
 import { PostCard } from "../Shared/Post/Card";
 import {
@@ -9,7 +8,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "../ui";
+} from "../ui/carousel";
 
 export const HomeTrendingPosts = () => {
   const { data: posts } = sigleApiClient.useSuspenseQuery(
@@ -25,27 +24,20 @@ export const HomeTrendingPosts = () => {
   );
 
   return (
-    <Container size="4" className="mt-10 px-4 md:mt-20">
-      <Heading as="h3" size="5">
-        Trending
-      </Heading>
+    <div className="mx-auto mt-10 max-w-6xl px-4 md:mt-20">
+      <h3 className="text-lg font-bold">Trending</h3>
 
-      <Carousel
-        className="mt-4 w-full"
-        opts={{
-          align: "start",
-        }}
-      >
-        <CarouselContent>
+      <Carousel className="mt-4">
+        <CarouselContent className="p-0.25">
           {posts.results.map((post) => (
             <CarouselItem key={post.id} className="md:basis-1/2 lg:basis-1/4">
-              <PostCard post={post} />
+              <PostCard className="h-full" post={post} />
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious color="gray" highContrast />
-        <CarouselNext color="gray" highContrast />
+        <CarouselPrevious />
+        <CarouselNext />
       </Carousel>
-    </Container>
+    </div>
   );
 };

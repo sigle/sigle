@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/syncpack/schema.json",
+  "semverGroups": [
+    {
+      "label": "pin all deps",
+      "dependencyTypes": ["prod", "dev"],
+      "range": ""
+    }
+  ],
+  "versionGroups": [
+    {
+      "label": "@sigle/contracts old version enforced by clarinet",
+      "packages": ["@sigle/sdk"],
+      "dependencies": [
+        "@stacks/connect",
+        "@stacks/transactions",
+        "@stacks/network",
+        "zod"
+      ],
+      "dependencyTypes": ["peer"],
+      "isIgnored": true
+    }
+  ]
+}

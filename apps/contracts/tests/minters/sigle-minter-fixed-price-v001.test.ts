@@ -1,3 +1,4 @@
+// oxlint-disable no-non-null-assertion
 import { createClient, fixedMintFee } from "@sigle/sdk";
 import { STACKS_MOCKNET } from "@stacks/network";
 import { Cl } from "@stacks/transactions";
@@ -131,7 +132,7 @@ describe(contract, () => {
         wallet2,
       );
 
-      expect(events[0]).toEqual({
+      expect(events[0]).toStrictEqual({
         event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.protocol.toString(),
@@ -141,7 +142,7 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
-      expect(events[1]).toEqual({
+      expect(events[1]).toStrictEqual({
         event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.creator.toString(),
@@ -151,7 +152,7 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
-      expect(events[2]).toEqual({
+      expect(events[2]).toStrictEqual({
         event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.createReferrer.toString(),
@@ -161,7 +162,7 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
-      expect(events[3]).toEqual({
+      expect(events[3]).toStrictEqual({
         event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.mintReferrer.toString(),
@@ -171,7 +172,7 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
-      expect(events.length).toBe(6);
+      expect(events).toHaveLength(6);
     });
 
     it("fees should match the SDK values for paid mints", () => {
@@ -206,7 +207,7 @@ describe(contract, () => {
         wallet2,
       );
 
-      expect(events[0]).toEqual({
+      expect(events[0]).toStrictEqual({
         event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.protocol.toString(),
@@ -216,7 +217,7 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
-      expect(events[1]).toEqual({
+      expect(events[1]).toStrictEqual({
         event: "ft_transfer_event",
         data: {
           amount: (42000n + fixedMintFee.creator).toString(),
@@ -226,7 +227,7 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
-      expect(events[2]).toEqual({
+      expect(events[2]).toStrictEqual({
         event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.createReferrer.toString(),
@@ -236,7 +237,7 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
-      expect(events[3]).toEqual({
+      expect(events[3]).toStrictEqual({
         event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.mintReferrer.toString(),
@@ -246,7 +247,7 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
-      expect(events.length).toBe(6);
+      expect(events).toHaveLength(6);
     });
 
     it("fees should respect the create referrer fee for mints", () => {
@@ -282,7 +283,7 @@ describe(contract, () => {
         wallet2,
       );
 
-      expect(events[0]).toEqual({
+      expect(events[0]).toStrictEqual({
         event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.protocol.toString(),
@@ -292,7 +293,7 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
-      expect(events[1]).toEqual({
+      expect(events[1]).toStrictEqual({
         event: "ft_transfer_event",
         data: {
           amount: (42000n + fixedMintFee.creator).toString(),
@@ -302,7 +303,7 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
-      expect(events[2]).toEqual({
+      expect(events[2]).toStrictEqual({
         event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.createReferrer.toString(),
@@ -312,7 +313,7 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
-      expect(events[3]).toEqual({
+      expect(events[3]).toStrictEqual({
         event: "ft_transfer_event",
         data: {
           amount: fixedMintFee.mintReferrer.toString(),
@@ -322,7 +323,7 @@ describe(contract, () => {
           sender: wallet2,
         },
       });
-      expect(events.length).toBe(6);
+      expect(events).toHaveLength(6);
     });
   });
 

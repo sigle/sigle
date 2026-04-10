@@ -1,11 +1,13 @@
+import type { Editor } from "@tiptap/core";
 import {
   createPostMetadata,
   type MediaImageMetadata,
   MediaImageMimeType,
   type MetadataAttribute,
+  MetadataAttributeType,
   type PostMetadata,
+  PostMetadataSchemaId,
 } from "@sigle/sdk";
-import type { Editor } from "@tiptap/core";
 import { fileTypeFromBuffer } from "file-type";
 import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
@@ -23,24 +25,28 @@ const generateMetadataAttributesFromForm = ({
   const attributes: MetadataAttribute[] = [
     // Generate an excerpt from the content that can be used as the description in the post cards
     {
+      type: MetadataAttributeType.STRING,
       value: editorText.slice(0, 350),
       key: "excerpt",
     },
   ];
   if (post.metaTitle) {
     attributes.push({
+      type: MetadataAttributeType.STRING,
       value: post.metaTitle,
       key: "meta-title",
     });
   }
   if (post.metaDescription) {
     attributes.push({
+      type: MetadataAttributeType.STRING,
       value: post.metaDescription,
       key: "meta-description",
     });
   }
   if (post.canonicalUri) {
     attributes.push({
+      type: MetadataAttributeType.STRING,
       value: post.canonicalUri,
       key: "canonical-uri",
     });
@@ -88,7 +94,9 @@ const uploadNftImage = async (
 ) => {
   const url = new URL(`${env.NEXT_PUBLIC_APP_URL}/api/post/nft-image`);
   for (const [key, value] of Object.entries(params)) {
-    url.searchParams.append(key, String(value));
+    if (value !== undefined) {
+      url.searchParams.append(key, String(value));
+    }
   }
   const response = await fetch(url.toString());
 
@@ -108,7 +116,7 @@ const uploadNftImage = async (
           draftId: postId,
         },
       },
-      // biome-ignore lint/suspicious/noExplicitAny: ok
+      // oxlint-disable-next-line no-explicit-any
       body: formData as any,
     },
   );
@@ -146,6 +154,7 @@ export const generateSigleMetadataFromForm = async ({
   description = `${description}...\n\nWritten on www.sigle.io`;
 
   const metadata = createPostMetadata({
+    $schema: PostMetadataSchemaId.LATEST,
     name: post.title,
     description,
     external_url: `${env.NEXT_PUBLIC_APP_URL}/p/${postId}`,
@@ -157,7 +166,6 @@ export const generateSigleMetadataFromForm = async ({
         username: userAddress,
       },
     ),
-    // TODO keep content or rename to metadata?
     content: {
       id: postId,
       title: post.title,

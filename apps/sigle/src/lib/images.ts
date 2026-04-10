@@ -17,7 +17,7 @@ export const resolveImageUrl = (
         : `https://${cid}.ipfs.w3s.link/`;
   }
   if (image?.startsWith("ar://")) {
-    image = `https://arweave.net/${image.slice(5)}`;
+    image = `${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${image.slice(5)}`;
   }
   return image;
 };

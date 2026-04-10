@@ -28,7 +28,9 @@ const useIntersectionObserver = (setActiveId: (id: string) => void) => {
       const visibleHeadings: IntersectionObserverEntry[] = [];
       for (const key of Object.keys(headingElementsRef.current)) {
         const headingElement = headingElementsRef.current[key];
-        if (headingElement.isIntersecting) visibleHeadings.push(headingElement);
+        if (headingElement.isIntersecting) {
+          visibleHeadings.push(headingElement);
+        }
       }
 
       const getIndexFromId = (id: string) =>
@@ -61,7 +63,7 @@ const useIntersectionObserver = (setActiveId: (id: string) => void) => {
 };
 
 interface TableOfContentsProps {
-  items: Array<{ level: 2 | 3; text: string; id: string }>;
+  items: { level: 2 | 3; text: string; id: string }[];
   post: {
     id: string;
     title: string;
@@ -71,7 +73,7 @@ interface TableOfContentsProps {
 export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
   const router = useRouter();
   const [activeId, setActiveId] = useState();
-  // biome-ignore lint/suspicious/noExplicitAny: ok
+  // oxlint-disable-next-line no-explicit-any
   useIntersectionObserver(setActiveId as any);
 
   return (
@@ -88,6 +90,7 @@ export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
               "font-bold": activeId === item.id,
             })}
           >
+            {/* eslint-disable-next-line eslint-plugin-next/no-html-link-for-pages */}
             <a
               className="line-clamp-2"
               href={`#${item.id}`}

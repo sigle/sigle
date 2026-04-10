@@ -1,6 +1,5 @@
 "use client";
 
-import { Heading, Link, Text } from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
 import { IconLink } from "@tabler/icons-react";
 import { prettifyUrl } from "@/lib/urls";
@@ -16,41 +15,42 @@ export const ProfileInfo = ({ user }: ProfileInfoProps) => {
     <>
       <div className="mt-4 space-y-1">
         {user.profile?.displayName && (
-          <Heading size="6">{user.profile.displayName}</Heading>
+          <p className="text-lg font-medium">{user.profile.displayName}</p>
         )}
-        <Text as="p" color="gray" size="2">
-          {user.id}
-        </Text>
+        <p className="text-sm text-muted-foreground">{user.id}</p>
       </div>
 
       {user.profile?.description ? (
-        <Text mt="3" as="p" color="gray" size="2" asChild>
+        <div className="mt-3 text-sm text-muted-foreground">
           <ProfileMarkdownDescription content={user.profile.description} />
-        </Text>
+        </div>
       ) : null}
 
       {user.profile && (user.profile.twitter || user.profile.website) ? (
         <div className="mt-3 flex items-center gap-4">
           {user.profile.twitter && (
-            <Link asChild size="2">
-              <NextLink
-                href={`https://x.com/${user.profile.twitter}`}
-                target="_blank"
-              >
-                @{user.profile.twitter}
-              </NextLink>
-            </Link>
+            <NextLink
+              className="text-sm text-muted-foreground underline-offset-2 hover:underline"
+              href={`https://x.com/${user.profile.twitter}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              @{user.profile.twitter}
+            </NextLink>
           )}
 
           {user.profile.website && (
-            <Link asChild size="2">
-              <NextLink href={user.profile.website} target="_blank">
-                <div className="flex items-center gap-1">
-                  <IconLink size={16} />
-                  {prettifyUrl(user.profile.website)}
-                </div>
-              </NextLink>
-            </Link>
+            <NextLink
+              className="text-sm text-muted-foreground underline-offset-2 hover:underline"
+              href={user.profile.website}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <div className="flex items-center gap-1">
+                <IconLink size={16} />
+                {prettifyUrl(user.profile.website)}
+              </div>
+            </NextLink>
           )}
         </div>
       ) : null}

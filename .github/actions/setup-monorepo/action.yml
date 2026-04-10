@@ -3,10 +3,10 @@ description: "Setup the monorepo"
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
 
     - name: Cache turbo build setup
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ github.workspace }}/.turbo
         key: ${{ runner.os }}-turbo-${{ github.sha }}
@@ -15,10 +15,10 @@ runs:
 
     - uses: pnpm/action-setup@v4
 
-    - name: Use Node.js 22
-      uses: actions/setup-node@v4
+    - name: Use Node.js 24
+      uses: actions/setup-node@v6
       with:
-        node-version: 22
+        node-version: 24
         cache: "pnpm"
 
     - name: Install dependencies

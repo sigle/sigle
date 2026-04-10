@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum UserFlag {
@@ -13,10 +12,18 @@ enum UserFlag {
   VERIFIED
 }
 
+// --
+// better-auth models
+// --
+
 model User {
-  id          String    @id @map("id")
-  lastLoginAt DateTime? @map("last_login_at")
-  flag        UserFlag  @default(NONE) @map("flag")
+  id            String    @id @map("id")
+  lastLoginAt   DateTime? @map("last_login_at")
+  flag          UserFlag  @default(NONE) @map("flag")
+  name          String?   @map("name")
+  email         String?   @map("email")
+  emailVerified Boolean   @default(false)
+  image         String?   @map("image")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -29,24 +36,87 @@ model User {
   sessions   Session[]
   accounts   Account[]
 
+  @@unique([email])
   @@map("user")
 }
 
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@index([userId])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@index([userId])
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@index([identifier])
+  @@map("verification")
+}
+
+// --
+// End of better-auth models
+// --
+
+// Model for the rate-limiter-flexible package
+// https://github.com/animir/node-rate-limiter-flexible/wiki/Prisma#schema-example
+
+model RateLimiterFlexible {
+  key    String    @id @map("key")
+  points Int       @map("points")
+  expire DateTime? @map("expire")
+}
+
 model Profile {
-  id                String      @id @map("id")
-  displayName       String?     @map("display_name")
-  description       String?     @map("description")
-  website           String?     @map("website")
-  twitter           String?     @map("twitter")
-  pictureUriId      String?     @map("picture_uri_id")
-  pictureUri        MediaImage? @relation(fields: [pictureUriId], references: [id], name: "Profile_picture_uri_id_fkey")
-  coverPictureUriId String?     @map("cover_picture_uri_id")
-  coverPictureUri   MediaImage? @relation(fields: [coverPictureUriId], references: [id], name: "Profile_cover_picture_uri_id_fkey")
+  id                String  @id @map("id")
+  txId              String  @unique @map("tx_id")
+  displayName       String? @map("display_name")
+  description       String? @map("description")
+  website           String? @map("website")
+  twitter           String? @map("twitter")
+  pictureUriId      String? @map("picture_uri_id")
+  coverPictureUriId String? @map("cover_picture_uri_id")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  user User @relation(fields: [id], references: [id])
+  user            User        @relation(fields: [id], references: [id])
+  pictureUri      MediaImage? @relation(fields: [pictureUriId], references: [id], name: "Profile_picture_uri_id_fkey")
+  coverPictureUri MediaImage? @relation(fields: [coverPictureUriId], references: [id], name: "Profile_cover_picture_uri_id_fkey")
 
   @@map("profile")
 }
@@ -77,15 +147,11 @@ model Draft {
 }
 
 model Post {
-  id          String  @id @map("id")
-  version     Int     @map("version")
-  address     String  @unique @map("address")
-  txId        String  @unique @map("tx_id")
-  collected   Int     @map("collected")
-  maxSupply   Int     @map("max_supply")
-  metadataUri String  @map("metadata_uri")
-  enabled     Boolean @map("enabled")
-  openEdition Boolean @map("open_edition")
+  id          String @id @map("id")
+  version     String @map("version")
+  txId        String @unique @map("tx_id")
+  blockHeight Int    @map("block_height")
+  metadataUri String @map("metadata_uri")
 
   // Metadata fields
   title           String      @map("title")
@@ -105,6 +171,7 @@ model Post {
   user             User              @relation(fields: [userId], references: [id])
   nfts             PostNft[]
   minterFixedPrice MinterFixedPrice?
+  collectible      Collectible?
 
   @@map("post")
 }
@@ -120,15 +187,30 @@ model MinterFixedPrice {
   @@map("minter_fixed_price")
 }
 
+model Collectible {
+  id          String  @id @map("id")
+  address     String  @unique @map("address")
+  maxSupply   Int     @map("max_supply")
+  openEdition Boolean @map("open_edition")
+  collected   Int     @map("collected")
+  enabled     Boolean @map("enabled")
+
+  post Post @relation(fields: [id], references: [id])
+
+  @@map("collectible")
+}
+
 model MediaImage {
-  id                  String    @id @map("id")
-  mimeType            String    @map("mime_type")
-  alt                 String?   @map("alt")
-  width               Int?      @map("width")
-  height              Int?      @map("height")
-  size                Int?      @map("size")
-  blurhash            String?   @map("blurhash")
-  createdAt           DateTime  @default(now()) @map("created_at")
+  id       String  @id @map("id")
+  mimeType String  @map("mime_type")
+  alt      String? @map("alt")
+  width    Int?    @map("width")
+  height   Int?    @map("height")
+  size     Int?    @map("size")
+  blurhash String? @map("blurhash")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
   posts               Post[]
   profilePicture      Profile[] @relation(name: "Profile_picture_uri_id_fkey")
   profileCoverPicture Profile[] @relation(name: "Profile_cover_picture_uri_id_fkey")
@@ -149,57 +231,4 @@ model PostNft {
   minter   User   @relation(name: "minter", fields: [minterId], references: [id])
 
   @@map("post_nft")
-}
-
-// Model for the rate-limiter-flexible package
-// https://github.com/animir/node-rate-limiter-flexible/wiki/Prisma#schema-example
-model RateLimiterFlexible {
-  key    String    @id
-  points Int
-  expire DateTime?
-}
-
-model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String
-  createdAt DateTime
-  updatedAt DateTime
-  ipAddress String?
-  userAgent String?
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([token])
-  @@map("session")
-}
-
-model Account {
-  id                    String    @id
-  accountId             String
-  providerId            String
-  userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  accessToken           String?
-  refreshToken          String?
-  idToken               String?
-  accessTokenExpiresAt  DateTime?
-  refreshTokenExpiresAt DateTime?
-  scope                 String?
-  password              String?
-  createdAt             DateTime
-  updatedAt             DateTime
-
-  @@map("account")
-}
-
-model Verification {
-  id         String    @id
-  identifier String
-  value      String
-  expiresAt  DateTime
-  createdAt  DateTime?
-  updatedAt  DateTime?
-
-  @@map("verification")
 }

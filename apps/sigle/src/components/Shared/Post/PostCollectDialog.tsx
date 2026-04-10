@@ -1,19 +1,6 @@
 "use client";
 
-import {
-  Badge,
-  Button,
-  Dialog,
-  Heading,
-  IconButton,
-  Separator,
-  Skeleton,
-  Text,
-  Tooltip,
-  VisuallyHidden,
-} from "@radix-ui/themes";
-import type { paths } from "@sigle/sdk";
-import { fixedMintFee, formatBTC } from "@sigle/sdk";
+import { type paths, fixedMintFee, formatBTC } from "@sigle/sdk";
 import {
   IconHelpCircle,
   IconInfoCircle,
@@ -24,6 +11,21 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { appConfig } from "@/config";
 import { useContractCall } from "@/hooks/useContractCall";
 import {
@@ -32,6 +34,7 @@ import {
 } from "@/hooks/useCurrencyFiatPrice";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
 import { useSession } from "@/lib/auth-hooks";
+import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleClient } from "@/lib/sigle";
 import {
@@ -62,14 +65,15 @@ export const PostCollectDialog = ({
       open ? "sBTC" : undefined,
     );
   const [editions, setEditions] = useState(1);
-  const isPostOwner = session?.user.id === post.address.split(".")[0];
+  const isPostOwner = session?.user.id === post.user.id;
 
   const { contractCall, loading: contractLoading } = useContractCall({
     onSuccess: (data) => {
       toast.promise(getPromiseTransactionConfirmation(data.txId), {
         loading: "Collect transaction submitted",
         success: "Collected successfully",
-        error: "Transaction failed",
+        error: (err) =>
+          err instanceof Error ? err.message : "Transaction failed",
         action: {
           label: "View tx",
           onClick: () =>
@@ -86,15 +90,19 @@ export const PostCollectDialog = ({
   });
 
   const onCollect = async () => {
-    if (!session || !post.minterFixedPrice) {
+    if (!session) {
       login();
+      return;
+    }
+
+    if (!post.collectible || !post.minterFixedPrice) {
       return;
     }
 
     // Handle owner mint case
     if (isPostOwner) {
       const { parameters } = await sigleClient.ownerMint({
-        contract: post.address,
+        contract: post.collectible.address,
       });
 
       await contractCall(parameters);
@@ -103,7 +111,7 @@ export const PostCollectDialog = ({
 
     const { parameters } = await sigleClient.mint({
       sender: session.user.id,
-      contract: post.address,
+      contract: post.collectible.address,
       amount: editions,
       referral: referral ? referral : undefined,
       price: post.minterFixedPrice.price,
@@ -113,10 +121,14 @@ export const PostCollectDialog = ({
   };
 
   const incrementEditions = () => {
-    const remainingEditions = post.maxSupply - editions;
+    if (!post.collectible || !post.minterFixedPrice) {
+      return;
+    }
+
+    const remainingEditions = post.collectible.maxSupply - editions;
     if (
-      (post.openEdition ||
-        editions < post.maxSupply ||
+      (post.collectible.openEdition ||
+        editions < post.collectible.maxSupply ||
         remainingEditions < 1) &&
       editions < maxMints
     ) {
@@ -130,7 +142,7 @@ export const PostCollectDialog = ({
     }
   };
 
-  if (!post.minterFixedPrice) {
+  if (!post.minterFixedPrice || !post.collectible) {
     return null;
   }
 
@@ -145,29 +157,35 @@ export const PostCollectDialog = ({
   const maxMints = isPostOwner ? 1 : 10;
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Content size="3" className="max-w-md">
-        <VisuallyHidden>
-          <Dialog.Title>Collect</Dialog.Title>
-          <Dialog.Description>Collect {editions} editions</Dialog.Description>
-        </VisuallyHidden>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <div className="sr-only">
+          <DialogTitle>Collect</DialogTitle>
+          <DialogDescription>Collect {editions} editions</DialogDescription>
+        </div>
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <ProfileAvatar user={post.user} size="2" />
               <div className="grid gap-0.5">
-                <Text size="2" weight="medium">
+                <p className="text-sm font-medium">
                   {post.user.profile?.displayName}
-                </Text>
-                <Text size="1" color="gray" title={post.user.id}>
+                </p>
+                <p
+                  className="text-xs text-muted-foreground"
+                  title={post.user.id}
+                >
                   {formatReadableAddress(post.user.id)}
-                </Text>
+                </p>
               </div>
             </div>
           </div>
           {post.coverImage ? (
-            <div className="h-[160px] w-full overflow-hidden rounded-2 bg-gray-2">
+            <div
+              // oxlint-disable-next-line jsx-curly-brace-presence
+              className={"h-[160px] w-full overflow-hidden rounded-md bg-muted"}
+            >
               <Image
                 src={resolveImageUrl(post.coverImage.id)}
                 alt={post.title}
@@ -180,32 +198,24 @@ export const PostCollectDialog = ({
             </div>
           ) : null}
           <div>
-            <Heading size="3" className="line-clamp-2">
+            <h3 className="line-clamp-2 text-xl font-medium">
               {post.metaTitle || post.title}
-            </Heading>
-            <Text as="p" className="mt-2 line-clamp-3" color="gray" size="2">
+            </h3>
+            <p className="mt-2 line-clamp-3 text-sm text-muted-foreground">
               {post.excerpt}
-            </Text>
+            </p>
           </div>
 
-          <Separator size="4" />
+          <Separator />
 
           <div className="flex items-center justify-between">
-            <Text as="p" size="2" weight="medium">
-              Price
-            </Text>
-            <Text as="p" size="2" weight="medium">
+            <p className="text-sm font-medium">Price</p>
+            <p className="text-sm font-medium">
               {isFree ? "Free" : `${formatBTC(price)} sBTC`}
-            </Text>
+            </p>
           </div>
-          <div className="flex items-center justify-between rounded-2 bg-gray-2 p-2">
-            <Text
-              as="p"
-              size="1"
-              weight="medium"
-              color="gray"
-              className="flex items-center gap-1"
-            >
+          <div className="flex items-center justify-between rounded-md bg-muted p-2">
+            <p className="flex items-center gap-1 text-xs font-medium text-muted-foreground">
               Mint fee
               <a
                 href={`${appConfig.docsUrl}/monetization#fee-structure`}
@@ -214,110 +224,110 @@ export const PostCollectDialog = ({
               >
                 <IconHelpCircle size={16} />
               </a>
-            </Text>
-            <Text as="p" size="1" weight="medium" color="gray">
+            </p>
+            <p className="text-xs font-medium text-muted-foreground">
               {formatBTC(fixedMintFee.total)} sBTC
-            </Text>
+            </p>
           </div>
           <div className="flex items-center justify-between">
-            <Text size="2" weight="medium">
+            <p className="text-sm font-medium">
               Number of editions
-              {!post.openEdition ? (
-                <Badge color="gray" highContrast className="ml-1">
-                  {post.maxSupply - post.collected} left
+              {!post.collectible.openEdition ? (
+                <Badge variant="secondary" className="ml-1">
+                  {post.collectible.maxSupply - post.collectible.collected} left
                 </Badge>
               ) : null}
-            </Text>
+            </p>
             <div className="flex items-center space-x-2">
-              <IconButton
-                size="1"
+              <Button
+                size="icon-xs"
                 variant="outline"
-                color="gray"
-                highContrast
                 onClick={decrementEditions}
                 disabled={editions === 1}
+                aria-label="Decrease editions"
               >
                 <IconMinus className="size-4" />
-              </IconButton>
-              <Text className="w-6 text-center" size="2" weight="medium">
-                {editions}
-              </Text>
-              <IconButton
-                size="1"
+              </Button>
+              <p className="w-6 text-center text-sm font-medium">{editions}</p>
+              <Button
+                size="icon-xs"
                 variant="outline"
-                color="gray"
-                highContrast
                 onClick={incrementEditions}
                 disabled={
-                  (!post.openEdition && editions === post.maxSupply) ||
+                  (!post.collectible.openEdition &&
+                    editions === post.collectible.maxSupply) ||
                   editions === maxMints
                 }
+                aria-label="Increase editions"
               >
                 <IconPlus className="size-4" />
-              </IconButton>
+              </Button>
             </div>
           </div>
 
-          <Separator size="4" />
+          <Separator />
 
           <div className="flex items-start justify-between">
-            <Text className="flex items-center gap-1" size="3" weight="medium">
+            <p className="flex items-center gap-1 text-base font-medium">
               Total{" "}
               {!isPostOwner ? (
-                <Tooltip
-                  content={
+                <Tooltip>
+                  <TooltipTrigger
+                    render={
+                      <span className="text-muted-foreground">
+                        <IconInfoCircle size={16} />
+                      </span>
+                    }
+                  />
+                  <TooltipContent>
                     <div className="grid gap-2 p-2">
                       <div className="flex justify-between gap-2">
-                        <Text>Creator:</Text>
-                        <Text>{formatBTC(creatorFee)} sBTC</Text>
+                        <p>Creator:</p>
+                        <p>{formatBTC(creatorFee)} sBTC</p>
                       </div>
                       <div className="flex justify-between gap-2">
-                        <Text>Platform:</Text>
-                        <Text>{formatBTC(protocolFee)} sBTC</Text>
+                        <p>Platform:</p>
+                        <p>{formatBTC(protocolFee)} sBTC</p>
                       </div>
                       <div className="flex justify-between gap-2">
-                        <Text>Create referrer:</Text>
-                        <Text>{formatBTC(createReferrerFee)} sBTC</Text>
+                        <p>Create referrer:</p>
+                        <p>{formatBTC(createReferrerFee)} sBTC</p>
                       </div>
                       <div className="flex justify-between gap-2">
-                        <Text>Mint referrer:</Text>
-                        <Text>{formatBTC(mintReferrerFee)} sBTC</Text>
+                        <p>Mint referrer:</p>
+                        <p>{formatBTC(mintReferrerFee)} sBTC</p>
                       </div>
                     </div>
-                  }
-                >
-                  <Text color="gray">
-                    <IconInfoCircle size={16} />
-                  </Text>
+                  </TooltipContent>
                 </Tooltip>
               ) : null}
-            </Text>
+            </p>
             <div className="text-right">
-              <Text
-                as="p"
-                size="3"
-                weight="medium"
-                className={isPostOwner ? "line-through" : undefined}
+              <p
+                className={cn(
+                  "text-base font-medium",
+                  isPostOwner && "line-through",
+                )}
               >
                 {formatBTC(totalPrice)} sBTC
-              </Text>
+              </p>
               {!isPostOwner && loadingCurrencyFiatPrice ? (
-                <Text as="p" size="1">
+                <p className="text-xs">
                   <Skeleton>price...</Skeleton>
-                </Text>
+                </p>
               ) : null}
               {!isPostOwner && totalPrice && currencyFiatPrice ? (
-                <Text as="p" size="1" color="gray">
+                <p className="text-xs text-muted-foreground">
                   ~
                   {formatUSDollar.format(
                     Number(formatBTC(totalPrice)) * Number(currencyFiatPrice),
                   )}
-                </Text>
+                </p>
               ) : null}
               {isPostOwner ? (
-                <Text as="p" size="1" color="gray">
+                <p className="text-xs text-muted-foreground">
                   Collect your own post for free.
-                </Text>
+                </p>
               ) : null}
             </div>
           </div>
@@ -325,15 +335,15 @@ export const PostCollectDialog = ({
           <div className="space-y-2">
             <Button
               className="w-full"
-              size="3"
-              loading={loadingCollect}
+              size="lg"
+              disabled={loadingCollect}
               onClick={onCollect}
             >
               {isPostOwner ? "Collect as owner" : "Collect"}
             </Button>
           </div>
         </div>
-      </Dialog.Content>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 };

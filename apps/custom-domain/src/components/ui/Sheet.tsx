@@ -23,7 +23,8 @@ const portalVariants = cva("fixed inset-0 z-50 flex", {
 });
 
 interface SheetPortalProps
-  extends SheetPrimitive.DialogPortalProps,
+  extends
+    SheetPrimitive.DialogPortalProps,
     VariantProps<typeof portalVariants> {}
 
 const SheetPortal = ({ position, children, ...props }: SheetPortalProps) => (
@@ -39,7 +40,7 @@ const SheetOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SheetPrimitive.Overlay
     className={cn(
-      "fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-all duration-100 data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in",
+      `fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-all duration-100 data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in`,
       className,
     )}
     {...props}
@@ -49,7 +50,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName;
 
 const sheetVariants = cva(
-  "fixed z-50 scale-100 gap-4 bg-white p-6 opacity-100 dark:bg-slate-900",
+  `fixed z-50 scale-100 gap-4 bg-white p-6 opacity-100 dark:bg-slate-900`,
   {
     variants: {
       position: {
@@ -137,7 +138,8 @@ const sheetVariants = cva(
 );
 
 export interface DialogContentProps
-  extends React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
+  extends
+    React.ComponentPropsWithoutRef<typeof SheetPrimitive.Content>,
     VariantProps<typeof sheetVariants> {}
 
 const SheetContent = React.forwardRef<
@@ -167,7 +169,7 @@ const SheetHeader = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col space-y-2 text-center sm:text-left",
+      `flex flex-col space-y-2 text-center sm:text-left`,
       className,
     )}
     {...props}
@@ -181,7 +183,7 @@ const SheetFooter = ({
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn(
-      "flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2",
+      `flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2`,
       className,
     )}
     {...props}

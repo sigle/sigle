@@ -1,6 +1,6 @@
-import { randomUUID } from "node:crypto";
 import type { Predicate } from "@hirosystems/chainhook-client";
-import { env } from "~/env";
+import { randomUUID } from "node:crypto";
+import { env } from "@/env";
 import { consola } from "./consola";
 
 export const getChainhooks = async (): Promise<
@@ -60,6 +60,7 @@ export const preparePredicate = (predicate: Predicate) => {
     predicateBody.then_that.http_post.url =
       predicateBody.then_that.http_post.url.replace(
         "{__BASE_URL__}",
+        // oxlint-disable-next-line no-non-null-assertion
         env.NODE_ENV === "development" ? env.WEBHOOK_PROXY_URL! : env.API_URL,
       );
 

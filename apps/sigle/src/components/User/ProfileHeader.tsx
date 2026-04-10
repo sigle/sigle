@@ -1,10 +1,16 @@
 "use client";
 
-import { Button, Container, DropdownMenu, IconButton } from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
 import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
 import Image from "next/image";
 import { usePostHog } from "posthog-js/react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { env } from "@/env";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { useSession } from "@/lib/auth-hooks";
@@ -38,8 +44,8 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
   return (
     <>
       <div
-        className={cn("relative w-full bg-gray-3", {
-          "h-64 md:h-[22rem]": hasBanner,
+        className={cn("relative w-full bg-muted", {
+          "h-64 md:h-88": hasBanner,
           "h-32": !hasBanner,
         })}
       >
@@ -59,41 +65,40 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
         ) : null}
       </div>
 
-      <Container size="2" px="4">
+      <div className="mx-auto max-w-2xl px-4">
         <div className="flex justify-between">
-          <div className="z-10 mt-[-70px] rounded-3 border-[6px] border-white bg-white dark:border-gray-1 dark:bg-gray-1">
+          <div className="z-10 mt-[-70px] rounded-lg border-[6px] border-background bg-background">
             <ProfileAvatar user={user} size="8" />
           </div>
 
           <div className="mt-4 flex items-center gap-4">
             {isCurrentUser ? (
-              <Button color="gray" variant="soft" asChild>
-                <NextLink href="/dashboard/settings">
-                  Edit profile <IconPencil size={16} />
-                </NextLink>
+              <Button
+                variant="secondary"
+                nativeButton={false}
+                render={<NextLink href="/dashboard/settings" />}
+              >
+                Edit profile <IconPencil size={16} />
               </Button>
             ) : null}
 
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger>
-                <IconButton variant="ghost" color="gray" size="2">
-                  <IconDotsVertical size={16} />
-                </IconButton>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Content
-                align="end"
-                variant="soft"
-                color="gray"
-                highContrast
-              >
-                <DropdownMenu.Item onClick={onCopyLink}>
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                render={
+                  <Button variant="ghost" size="icon" title="More">
+                    <IconDotsVertical size={16} />
+                  </Button>
+                }
+              />
+              <DropdownMenuContent align="end" className="min-w-40">
+                <DropdownMenuItem onClick={onCopyLink}>
                   Copy link to profile
-                </DropdownMenu.Item>
-              </DropdownMenu.Content>
-            </DropdownMenu.Root>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
-      </Container>
+      </div>
     </>
   );
 };

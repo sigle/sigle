@@ -1,16 +1,17 @@
 import { MAX_UINT, PostMetadataSchema } from "@sigle/sdk";
 import { z } from "zod";
-import { env } from "~/env";
+import { env } from "@/env";
 import {
   createChainhook,
   createPredicate,
   getChainhooks,
   preparePredicate,
-} from "~/lib/chainhook";
-import { consola } from "~/lib/consola";
-import { siglePostPrintPredicate } from "~/lib/predicates";
-import { prisma } from "~/lib/prisma";
-import { sigleClient } from "~/lib/sigle";
+} from "@/lib/chainhook";
+import { minifyClarity } from "@/lib/clarity";
+import { consola } from "@/lib/consola";
+import { siglePostPrintPredicate } from "@/lib/predicates";
+import { prisma } from "@/lib/prisma";
+import { sigleClient } from "@/lib/sigle";
 import { generateImageBlurhashJob } from "../../generate-image-blurhash";
 
 function extractBaseTokenUri(contractString: string): string | null {
@@ -50,7 +51,7 @@ export async function getMetadataFromUri(baseTokenUri: string) {
   let url = baseTokenUri;
   if (baseTokenUri.startsWith("ar://")) {
     const arweaveTxId = baseTokenUri.replace("ar://", "");
-    url = `https://arweave.net/${arweaveTxId}`;
+    url = `${env.ARWEAVE_GATEWAY_URL}/${arweaveTxId}`;
   }
   const response = await fetch(url);
   const json = await response.json();
@@ -96,7 +97,7 @@ export const indexerNewPostSchema = z.object({
     address: z.string(),
     txId: z.string(),
     blockHeight: z.number(),
-    version: z.number().min(1).max(1),
+    version: z.string(),
     contract: z.string(),
     sender: z.string(),
     createdAt: z.coerce.date(),
@@ -127,10 +128,11 @@ export const executeNewPostJob = async (
     metadata: baseTokenUri,
     collectInfo: {
       amount: fixedPricingDetails.price,
-      maxSupply: maxSupply,
+      maxSupply,
     },
   });
-  if (contract !== data.contract) {
+  // Minify the contract to make comparison easier in case of formatting changes
+  if (minifyClarity(contract) !== minifyClarity(data.contract)) {
     throw new Error(`Contract mismatch: ${data.txId}`);
   }
 
@@ -177,17 +179,14 @@ export const executeNewPostJob = async (
       update: {
         txId: data.txId,
         version: data.version,
+        blockHeight: data.blockHeight,
       },
       create: {
         id: metadata.id,
-        address: data.address,
         txId: data.txId,
         version: data.version,
+        blockHeight: data.blockHeight,
         userId,
-        collected: 0,
-        enabled: true,
-        openEdition,
-        maxSupply: maxSupply === BigInt(MAX_UINT) ? 0 : Number(maxSupply),
         createdAt: new Date(data.createdAt),
 
         // Metadata fields
@@ -199,6 +198,17 @@ export const executeNewPostJob = async (
         excerpt: metadata.excerpt,
         tags: metadata.tags,
         canonicalUri: metadata.canonicalUri,
+
+        // Collectible
+        collectible: {
+          create: {
+            address: data.address,
+            maxSupply: maxSupply === BigInt(MAX_UINT) ? 0 : Number(maxSupply),
+            openEdition,
+            collected: 0,
+            enabled: true,
+          },
+        },
       },
     });
 

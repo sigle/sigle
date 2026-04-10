@@ -1,9 +1,11 @@
-import { Avatar, Spinner, Text } from "@radix-ui/themes";
 import { IconPencil } from "@tabler/icons-react";
 import { usePostHog } from "posthog-js/react";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Field, FieldTitle } from "@/components/ui/field";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiClient } from "@/lib/sigle";
@@ -24,32 +26,34 @@ export const UploadProfilePicture = ({
       "/api/protected/user/profile/upload-avatar",
     );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
-  const onDrop = useCallback(async (acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
-    if (!file) return;
-    if (loadingUploadImage) return;
-    posthog.capture("profile_image_upload_start", {});
+  const onDrop = useCallback(
+    async (acceptedFiles: File[]) => {
+      const file = acceptedFiles[0];
+      if (!file) return;
+      if (loadingUploadImage) return;
+      posthog.capture("profile_image_upload_start", {});
 
-    const formData = new FormData();
-    formData.append("file", file);
-    uploadImage(
-      {
-        // biome-ignore lint/suspicious/noExplicitAny: ok
-        body: formData as any,
-      },
-      {
-        onSuccess: (data) => {
-          setPicture(data.url);
-          posthog.capture("profile_image_upload_success", {});
+      const formData = new FormData();
+      formData.append("file", file);
+      uploadImage(
+        {
+          // oxlint-disable-next-line no-explicit-any
+          body: formData as any,
         },
-        onError: (error) => {
-          posthog.capture("profile_image_upload_error", {});
-          toast.error(error.message);
+        {
+          onSuccess: (data) => {
+            setPicture(data.url);
+            posthog.capture("profile_image_upload_success", {});
+          },
+          onError: (error) => {
+            posthog.capture("profile_image_upload_error", {});
+            toast.error(error.message);
+          },
         },
-      },
-    );
-  }, []);
+      );
+    },
+    [posthog, uploadImage, setPicture, loadingUploadImage],
+  );
 
   const { getRootProps, getInputProps } = useDropzone({
     onDrop,
@@ -62,24 +66,22 @@ export const UploadProfilePicture = ({
   const resolvedPicture = picture ? resolveImageUrl(picture) : undefined;
 
   return (
-    <div className="space-y-1">
-      <Text as="div" size="2">
-        Profile Picture
-      </Text>
+    <Field>
+      <FieldTitle>Profile Picture</FieldTitle>
 
       <div className="flex">
         <div className="relative cursor-pointer" {...getRootProps()}>
           <input {...getInputProps()} />
           <Avatar
-            src={resolvedPicture}
-            fallback={<IconPencil size={20} />}
-            alt="Profile image"
-            size="9"
-            color="gray"
-            className={cn("rounded-2 border border-gray-6", {
+            className={cn("size-40 border border-border", {
               "opacity-25": loadingUploadImage,
             })}
-          />
+          >
+            <AvatarImage src={resolvedPicture} alt="Profile image" />
+            <AvatarFallback>
+              <IconPencil size={20} />
+            </AvatarFallback>
+          </Avatar>
           {loadingUploadImage ? (
             <div className="absolute inset-0 flex items-center justify-center">
               <Spinner />
@@ -87,6 +89,6 @@ export const UploadProfilePicture = ({
           ) : null}
         </div>
       </div>
-    </div>
+    </Field>
   );
 };

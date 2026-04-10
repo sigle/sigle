@@ -1,5 +1,5 @@
-import { format } from "date-fns";
 import type { Metadata } from "next";
+import { format } from "date-fns";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { TableOfContents } from "@/components/Post/TableOfContents";
@@ -129,13 +129,13 @@ export default async function Post({
         </div>
         <h1 className="mt-2 text-4xl font-bold">{post.title}</h1>
 
-        <div className="mt-9 grid grid-cols-1 gap-14 md:grid-cols-[280px,_1fr]">
+        <div className="mt-9 grid grid-cols-1 gap-14 md:grid-cols-[280px,1fr]">
           <div>
             <TableOfContents items={tableOfContent} post={post} />
           </div>
           <div>
             {post.coverImage && (
-              <div className="relative mb-3 aspect-[45/28] overflow-hidden rounded-2xl">
+              <div className="relative mb-3 aspect-45/28 overflow-hidden rounded-2xl">
                 <Image
                   className="object-cover"
                   src={resolveImageUrl(post.coverImage.id)}
@@ -148,7 +148,7 @@ export default async function Post({
             )}
             <div
               className="prose lg:prose-lg"
-              // biome-ignore lint/security/noDangerouslySetInnerHtml: it's safe to use this as the html is sanitized
+              // oxlint-disable-next-line no-danger: it's safe to use this as the html is sanitized
               dangerouslySetInnerHTML={{
                 __html: posthtml,
               }}

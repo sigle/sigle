@@ -11,8 +11,8 @@ npm install @sigle/sdk
 To create a client, use the `createClient` method. Pass in the network you want to use.
 
 ```tsx
-import { STACKS_MAINNET } from '@stacks/network';
-import { createClient } from '@sigle/sdk';
+import { STACKS_MAINNET } from "@stacks/network";
+import { createClient } from "@sigle/sdk";
 
 const sigleClient = createClient({
   network: STACKS_MAINNET,
@@ -21,12 +21,12 @@ const sigleClient = createClient({
 
 ## Mint
 
-To prepare a mint transaction, use the `mint` method. Then pass the  parameters to `openContractCall` to execute the transaction with the user's wallet.
+To prepare a mint transaction, use the `mint` method. Then pass the parameters to `stx_callContract` to execute the transaction with the user's wallet.
 
 ```tsx
-import { STACKS_MAINNET } from '@stacks/network';
-import { openContractCall } from '@stacks/connect';
-import { createClient } from '@sigle/sdk';
+import { STACKS_MAINNET } from "@stacks/network";
+import { request } from "@stacks/connect";
+import { createClient } from "@sigle/sdk";
 
 const sigleClient = createClient({
   network: STACKS_MAINNET,
@@ -34,33 +34,32 @@ const sigleClient = createClient({
 
 const { parameters } = await sigleClient.mint({
   // Your user sender address
-  sender: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173',
+  sender: "SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173",
   // Address of the NFT post contract
-  contract: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173.xxx',
+  contract: "SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173.xxx",
   // Amount of tokens to mint
   amount: 1,
   // Optionally, set a referral address to receive the referral fee
-  referral: 'SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173',
+  referral: "SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173",
   // Price of 1 NFT
   price: post.minterFixedPrice.price,
 });
 
-openContractCall({
+const response = await request("stx_callContract", {
   ...parameters,
-  network: STACKS_MAINNET,
   // Your other options
-})
+});
 ```
 
 ## Publish post
 
-To deploy a new post, use the `generatePostContract` method to get the smart contract code. Then pass the parameters to `openContractDeploy` to execute the transaction with the user's wallet.
+To deploy a new post, use the `generatePostContract` method to get the smart contract code. Then pass the parameters to `stx_deployContract` to execute the transaction with the user's wallet.
 
 ```tsx
-import { STACKS_MAINNET } from '@stacks/network';
-import { openContractCall } from '@stacks/connect';
-import { createClient, createPostMetadata } from '@sigle/sdk';
-import { createId } from '@paralleldrive/cuid2';
+import { STACKS_MAINNET } from "@stacks/network";
+import { request } from "@stacks/connect";
+import { createClient, createPostMetadata } from "@sigle/sdk";
+import { createId } from "@paralleldrive/cuid2";
 
 const sigleClient = createClient({
   network: STACKS_MAINNET,
@@ -76,7 +75,7 @@ const metadata = createPostMetadata({
 
 // Upload the post metadata on the storage of your choice (IPFS, Arweave, etc.)
 const metadataUrl = await uploadMetadata({
-  metadata
+  metadata,
 });
 
 const { contract } = sigleClient.generatePostContract({
@@ -87,10 +86,9 @@ const { contract } = sigleClient.generatePostContract({
   },
 });
 
-openContractDeploy({
-  network: STACKS_MAINNET,
-  contractName: postId,
-  codeBody: contract,
+const response = await request("stx_callContract", {
+  name: postId,
+  clarityCode: contract,
   // Your other options
-})
+});
 ```

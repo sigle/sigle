@@ -1,12 +1,16 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Text, TextField } from "@radix-ui/themes";
-import { IconBrandX, IconBrandYoutube } from "@tabler/icons-react";
 import type { NodeViewProps } from "@tiptap/core";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { IconBrandX, IconBrandYoutube } from "@tabler/icons-react";
 import { NodeViewWrapper } from "@tiptap/react";
-import type React from "react";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { Field, FieldError } from "@/components/ui/field";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import { TwitterComponent } from "./twitter/component";
 import { isValidTwitterUrl, TWITTER_REGEX_GLOBAL } from "./twitter/twitter";
 import { isValidYoutubeUrl, YOUTUBE_REGEX_GLOBAL } from "./video";
@@ -76,30 +80,29 @@ export const EmbedComponent = (props: NodeViewProps) => {
     <NodeViewWrapper data-embed>
       {!url && (
         <form onSubmit={onSubmit} className="space-y-2">
-          <TextField.Root
-            size="3"
-            placeholder={
-              props.node.attrs.embedType === "twitter"
-                ? "Paste tweet URL and press “enter”..."
-                : "Paste video URL and press “enter”..."
-            }
-            {...register("url")}
-            onKeyDown={onKeyDown}
-          >
-            <TextField.Slot>
-              {props.node.attrs.embedType === "twitter" ? (
-                <IconBrandX height="16" width="16" />
-              ) : null}
-              {props.node.attrs.embedType === "video" ? (
-                <IconBrandYoutube height="16" width="16" />
-              ) : null}
-            </TextField.Slot>
-          </TextField.Root>
-          {errors.url && (
-            <Text as="div" size="2" color="red">
-              {errors.url.message}
-            </Text>
-          )}
+          <Field>
+            <InputGroup>
+              <InputGroupInput
+                aria-invalid={!!errors.url}
+                placeholder={
+                  props.node.attrs.embedType === "twitter"
+                    ? "Paste tweet URL and press “enter”..."
+                    : "Paste video URL and press “enter”..."
+                }
+                {...register("url")}
+                onKeyDown={onKeyDown}
+              />
+              <InputGroupAddon align="inline-start">
+                {props.node.attrs.embedType === "twitter" ? (
+                  <IconBrandX height="16" width="16" />
+                ) : null}
+                {props.node.attrs.embedType === "video" ? (
+                  <IconBrandYoutube height="16" width="16" />
+                ) : null}
+              </InputGroupAddon>
+            </InputGroup>
+            {errors.url && <FieldError>{errors.url.message}</FieldError>}
+          </Field>
         </form>
       )}
 

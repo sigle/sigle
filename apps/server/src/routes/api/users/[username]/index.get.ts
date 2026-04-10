@@ -1,6 +1,6 @@
-import { createError, defineEventHandler, getRouterParam } from "h3";
-import { defineRouteMeta } from "nitropack/runtime";
-import { prisma, SELECT_PUBLIC_USER_FIELDS } from "~/lib/prisma";
+import { defineRouteMeta } from "nitro";
+import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
+import { prisma, SELECT_PUBLIC_USER_FIELDS } from "@/lib/prisma";
 
 defineRouteMeta({
   openAPI: {
@@ -32,9 +32,9 @@ defineRouteMeta({
 export default defineEventHandler(async (event) => {
   const username = getRouterParam(event, "username");
   if (!username) {
-    throw createError({
+    throw new HTTPError({
       status: 400,
-      statusMessage: "Bad Request",
+      message: "Bad Request",
     });
   }
 
@@ -53,9 +53,9 @@ export default defineEventHandler(async (event) => {
   });
 
   if (!user) {
-    throw createError({
+    throw new HTTPError({
       status: 404,
-      statusMessage: "User not found",
+      message: "User not found",
     });
   }
 

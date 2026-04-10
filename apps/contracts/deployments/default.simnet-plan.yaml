@@ -58,6 +58,7 @@ genesis:
     - pox-4
     - signers
     - signers-voting
+    - costs-4
 plan:
   batches:
     - id: 0
@@ -72,7 +73,7 @@ plan:
             emulated-sender: SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335
             path: "./.cache/requirements/SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335.commission-trait.clar"
             clarity-version: 1
-      epoch: "2.1"
+      epoch: "2.0"
     - id: 1
       transactions:
         - emulated-contract-publish:
@@ -96,9 +97,9 @@ plan:
             path: contracts/sigle-post-trait-v001.clar
             clarity-version: 3
         - emulated-contract-publish:
-            contract-name: sigle-protocol
+            contract-name: sigle-protocol-v001
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/sigle-protocol.clar
+            path: contracts/sigle-protocol-v001.clar
             clarity-version: 3
         - emulated-contract-publish:
             contract-name: sigle-minter-fixed-price-v001
@@ -114,5 +115,10 @@ plan:
             contract-name: sigle-profiles-v001
             emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
             path: contracts/sigle-profiles-v001.clar
+            clarity-version: 3
+        - emulated-contract-publish:
+            contract-name: sigle-registry-v001
+            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+            path: contracts/sigle-registry-v001.clar
             clarity-version: 3
       epoch: "3.0"

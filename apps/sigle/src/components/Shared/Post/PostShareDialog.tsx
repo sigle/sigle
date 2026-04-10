@@ -1,16 +1,17 @@
-import {
-  Button,
-  Callout,
-  Dialog,
-  IconButton,
-  Link,
-  TextField,
-  VisuallyHidden,
-} from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
 import { IconReceiptTax } from "@tabler/icons-react";
 import Image from "next/image";
 import { useState } from "react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Field } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import { appConfig } from "@/config";
 import { env } from "@/env";
 import { useSession } from "@/lib/auth-hooks";
@@ -29,12 +30,11 @@ export const PostShareDialog = ({
 }: PostShareDialogProps) => {
   const [isCopied, setIsCopied] = useState(false);
   const { data: session } = useSession();
-  // const session = null;
   const postLink = `${env.NEXT_PUBLIC_APP_URL}${Routes.post(
     { postId: post.id },
     {
       search: {
-        referral: session ? session.user.id : undefined,
+        referral: post.collectible && session ? session.user.id : undefined,
       },
     },
   )}`;
@@ -51,106 +51,94 @@ export const PostShareDialog = ({
   const metaTitleAttribute = post.metaTitle || post.title;
 
   return (
-    <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Content size="3" className="max-w-md">
-        <Dialog.Title>Share</Dialog.Title>
-        <VisuallyHidden>
-          <Dialog.Description>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogTitle>Share</DialogTitle>
+        <div className="sr-only">
+          <DialogDescription>
             Earn referrer rewards for each primary sale made through your link.
-          </Dialog.Description>
-        </VisuallyHidden>
+          </DialogDescription>
+        </div>
 
         <div className="space-y-8">
-          <Callout.Root variant="surface" size="1" color="gray">
-            <Callout.Icon>
+          {post.collectible ? (
+            <Alert className="bg-muted">
               <IconReceiptTax size={16} />
-            </Callout.Icon>
-            <Callout.Text>
-              Earn referrer rewards for each primary sale made through your
-              link.{" "}
-              <Link
-                href={`${appConfig.docsUrl}/monetization#fee-structure`}
-                target="_blank"
-              >
-                Learn more.
-              </Link>
-            </Callout.Text>
-          </Callout.Root>
+              <AlertDescription>
+                Earn referrer rewards for each primary sale made through your
+                link.{" "}
+                <a
+                  className="underline"
+                  href={`${appConfig.docsUrl}/monetization#fee-structure`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Learn more.
+                </a>
+              </AlertDescription>
+            </Alert>
+          ) : null}
 
           <div className="flex justify-center gap-5">
-            <IconButton size="4" color="gray" highContrast asChild>
-              <a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  `Collect ${metaTitleAttribute} on @sigleapp&url=${postLink}`,
-                )}`}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="overflow-hidden"
-              >
-                <Image
-                  src="/images/x-logo.png"
-                  alt="x logo"
-                  width={48}
-                  height={48}
-                />
-              </a>
-            </IconButton>
-            <IconButton size="4" color="gray" highContrast asChild>
-              <a
-                href={`https://bsky.app/intent/compose?text=${encodeURIComponent(
-                  `Collect ${metaTitleAttribute} on @sigleapp`,
-                )}&url=${postLink}`}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="overflow-hidden"
-              >
-                <Image
-                  src="/images/bluesky-logo.png"
-                  alt="bluesky logo"
-                  width={48}
-                  height={48}
-                />
-              </a>
-            </IconButton>
-            <IconButton size="4" color="gray" highContrast asChild>
-              <a
-                href={`https://t.me/share/url?text=${encodeURIComponent(
-                  `Collect ${metaTitleAttribute} on @sigleapp`,
-                )}&url=${postLink}`}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="overflow-hidden"
-              >
-                <Image
-                  src="/images/telegram-logo.png"
-                  alt="telegram logo"
-                  width={48}
-                  height={48}
-                />
-              </a>
-            </IconButton>
+            <a
+              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                `Collect ${metaTitleAttribute} on @sigleapp&url=${postLink}`,
+              )}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="overflow-hidden rounded-md hover:grayscale-25"
+            >
+              <Image
+                src="/images/x-logo.png"
+                alt="x logo"
+                width={48}
+                height={48}
+              />
+            </a>
+            <a
+              href={`https://bsky.app/intent/compose?text=${encodeURIComponent(
+                `Collect ${metaTitleAttribute} on @sigleapp`,
+              )}&url=${postLink}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="overflow-hidden rounded-md hover:grayscale-25"
+            >
+              <Image
+                src="/images/bluesky-logo.png"
+                alt="bluesky logo"
+                width={48}
+                height={48}
+              />
+            </a>
+            <a
+              href={`https://t.me/share/url?text=${encodeURIComponent(
+                `Collect ${metaTitleAttribute} on @sigleapp`,
+              )}&url=${postLink}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="overflow-hidden rounded-md hover:grayscale-25"
+            >
+              <Image
+                src="/images/telegram-logo.png"
+                alt="telegram logo"
+                width={48}
+                height={48}
+              />
+            </a>
           </div>
 
-          <div className="flex gap-2">
-            <TextField.Root
-              size="3"
-              className="grow"
-              variant="soft"
-              disabled={true}
+          <Field orientation="horizontal">
+            <Input
+              className="disabled:opacity-100"
+              disabled
               defaultValue={postLink}
             />
-            <Button
-              size="3"
-              color="gray"
-              highContrast
-              disabled={isCopied}
-              onClick={onCopy}
-            >
+            <Button disabled={isCopied} onClick={onCopy}>
               {isCopied ? "Copied" : "Copy"}
             </Button>
-          </div>
+          </Field>
         </div>
-      </Dialog.Content>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 };

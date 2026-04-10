@@ -1,5 +1,5 @@
-import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
   output: "standalone",
@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  serverExternalPackages: ["@stacks/connect"],
 };
 
 export default withSentryConfig(nextConfig, {
@@ -23,6 +24,11 @@ export default withSentryConfig(nextConfig, {
   },
   // Upload large source maps to Sentry
   widenClientFileUpload: true,
-  // Disable logger to save bundle size
-  disableLogger: true,
+  bundleSizeOptimizations: {
+    excludeDebugStatements: true,
+    excludeReplayShadowDom: true,
+    excludeReplayWorker: true,
+    excludeReplayIframe: true,
+    excludeTracing: true,
+  },
 });

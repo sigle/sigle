@@ -1,5 +1,5 @@
-ARG NODE_VERSION=22
-FROM node:${NODE_VERSION}-alpine as base
+ARG NODE_VERSION=24
+FROM node:${NODE_VERSION}-alpine AS base
 
 WORKDIR /app
 
@@ -11,9 +11,9 @@ ENV APP_NAME="sigle"
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 COPY --link ./package.json ./
-RUN npm install -g corepack@latest # fix for https://github.com/nodejs/corepack/issues/612
 RUN corepack enable pnpm
-RUN pnpm install turbo@^2 --global
+RUN TURBO_VERSION=$(grep -o '"turbo": "[^"]*' package.json | cut -d'"' -f4) && \
+    pnpm install turbo@${TURBO_VERSION} --global
 RUN pnpm install @dotenvx/dotenvx@^1 --global
 
 # --- Turbo stage ---
@@ -27,7 +27,7 @@ RUN turbo prune @sigle/$APP_NAME --docker
 
 # --- Build stage ---
 
-FROM base as installer
+FROM base AS installer
 WORKDIR /app
 
 RUN apk update && \

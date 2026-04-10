@@ -1,5 +1,6 @@
 import { encode } from "blurhash";
 import sharp from "sharp";
+import { env } from "../env";
 import { blurHashToDataURL } from "./blurhash";
 import { convertCIDv0toCIDv1 } from "./ipfs";
 
@@ -13,7 +14,7 @@ export const resolveImageUrl = (image: string) => {
     image = `https://${cid}.ipfs.w3s.link/`;
   }
   if (image?.startsWith("ar://")) {
-    image = `https://arweave.net/${image.slice(5)}`;
+    image = `${env.ARWEAVE_GATEWAY_URL}/${image.slice(5)}`;
   }
   return image;
 };
@@ -76,7 +77,7 @@ export function mimeTypeToExtension(mimeType: string): string {
 
 export async function generateBlurhashURI({
   buffer,
-  size = 40,
+  size = 20,
 }: {
   buffer: Buffer | ArrayBuffer;
   size?: number;

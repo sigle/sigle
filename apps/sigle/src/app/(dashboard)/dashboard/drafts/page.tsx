@@ -1,22 +1,21 @@
 "use client";
 
-import {
-  Badge,
-  Button,
-  Card,
-  DropdownMenu,
-  Flex,
-  Heading,
-  IconButton,
-  Spinner,
-  Text,
-} from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
 import { NextLink } from "@/components/Shared/NextLink";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { getExplorerTransactionUrl } from "@/lib/stacks";
@@ -37,42 +36,37 @@ export default function DashboardDrafts() {
 
   return (
     <div className="py-10">
-      <Heading>Drafts</Heading>
-      <Card mt="5" size="2">
-        {loadingDrafts ? (
-          <Flex justify="center" py="7">
-            <Spinner />
-          </Flex>
-        ) : null}
+      <h2 className="mb-5 text-2xl font-bold">Drafts</h2>
 
-        {errorDrafts ? (
-          <Flex justify="center" py="7">
-            <Text size="2" color="red">
-              An error occurred, please try again later
-            </Text>
-          </Flex>
-        ) : null}
+      <Card>
+        <CardContent>
+          {loadingDrafts ? (
+            <div className="flex justify-center py-7">
+              <Spinner />
+            </div>
+          ) : null}
 
-        {drafts?.length === 0 ? (
-          <Flex
-            justify="center"
-            align="center"
-            py="7"
-            gap="4"
-            direction="column"
-          >
-            <Text size="2" color="gray">
-              No drafts yet
-            </Text>
-            <Button color="gray" highContrast asChild>
-              <NextLink href={"/p/new"}>Write a post</NextLink>
-            </Button>
-          </Flex>
-        ) : null}
+          {errorDrafts ? (
+            <div className="flex justify-center py-7">
+              <p className="text-sm text-destructive">
+                An error occurred, please try again later. {errorDrafts.message}
+              </p>
+            </div>
+          ) : null}
 
-        {drafts?.map((draft) => (
-          <Draft key={draft.id} draft={draft} refetchDrafts={refetchDrafts} />
-        ))}
+          {drafts?.length === 0 ? (
+            <div className="flex flex-col items-center justify-center gap-4 py-7">
+              <p className="text-sm text-muted-foreground">No drafts yet</p>
+              <Button variant="secondary" render={<NextLink href="/p/new" />}>
+                Write a post
+              </Button>
+            </div>
+          ) : null}
+
+          {drafts?.map((draft) => (
+            <Draft key={draft.id} draft={draft} refetchDrafts={refetchDrafts} />
+          ))}
+        </CardContent>
       </Card>
     </div>
   );
@@ -118,27 +112,29 @@ const Draft = ({
 
   const heading =
     draft.metaTitle || draft.title ? (
-      <Heading as="h3" size="4" className="line-clamp-2">
-        {" "}
-        {draft.metaTitle || draft.title}{" "}
-      </Heading>
+      <h3 className="line-clamp-2 text-lg font-medium">
+        {draft.metaTitle || draft.title}
+      </h3>
     ) : (
-      <Heading as="h3" size="4" className="line-clamp-2" color="gray">
+      <h3 className="line-clamp-2 text-lg font-medium text-muted-foreground">
         No title
-      </Heading>
+      </h3>
     );
 
   return (
-    <div className="border-b border-solid border-gray-6 py-5 first:pt-0 last:border-b-0 last:pb-0">
+    <div className="border-b border-solid border-border py-5 first:pt-0 last:border-b-0 last:pb-0">
       {draft.txStatus === "pending" && draft.txId && (
-        <Badge className="mb-2" asChild>
-          <a
-            href={getExplorerTransactionUrl(draft.txId)}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Publishing: Transaction pending
-          </a>
+        <Badge
+          className="mb-2"
+          render={
+            <a
+              href={getExplorerTransactionUrl(draft.txId)}
+              target="_blank"
+              rel="noreferrer"
+            />
+          }
+        >
+          Publishing: Transaction pending
         </Badge>
       )}
       {draft.txStatus === "pending" ? (
@@ -148,35 +144,34 @@ const Draft = ({
           {heading}
         </NextLink>
       )}
-      <Flex justify="between" align="center">
-        <Text as="p" mt="3" color="gray" size="1">
+      <div className="flex items-center justify-between">
+        <p className="mt-3 text-xs text-muted-foreground">
           Created {format(new Date(draft.createdAt), "MMM dd, yyyy")} • Last
           updated {format(new Date(draft.updatedAt), "MMM dd, yyyy h:mm a")}
-        </Text>
+        </p>
         {isDeleting ? <Spinner /> : null}
         {!isDeleting && !isTxPending ? (
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
-              <IconButton variant="ghost" color="gray" size="2">
-                <IconDotsVertical size={16} />
-              </IconButton>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content
-              align="end"
-              variant="soft"
-              color="gray"
-              highContrast
-            >
-              <DropdownMenu.Item asChild>
-                <NextLink href={Routes.editPost({ postId: draft.id })}>
-                  Edit
-                </NextLink>
-              </DropdownMenu.Item>
-              <DropdownMenu.Item onClick={onDelete}>Delete</DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button variant="ghost" size="icon">
+                  <IconDotsVertical size={16} />
+                </Button>
+              }
+            />
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                render={
+                  <NextLink href={Routes.editPost({ postId: draft.id })}>
+                    Edit
+                  </NextLink>
+                }
+              />
+              <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         ) : null}
-      </Flex>
+      </div>
     </div>
   );
 };

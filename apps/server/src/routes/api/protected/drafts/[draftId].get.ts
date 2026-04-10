@@ -1,6 +1,7 @@
-import { createError, defineEventHandler, getRouterParam } from "h3";
-import { defineRouteMeta } from "nitropack/runtime";
-import { prisma } from "~/lib/prisma";
+import { defineRouteMeta } from "nitro";
+import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
+import { prisma } from "@/lib/prisma";
+import { isUserWhitelisted } from "@/lib/users";
 
 defineRouteMeta({
   openAPI: {
@@ -117,12 +118,19 @@ export default defineEventHandler<
     updatedAt: Date;
   }>
 >(async (event) => {
+  if (!isUserWhitelisted(event.context.user.id)) {
+    throw new HTTPError({
+      status: 403,
+      message: "User is not whitelisted.",
+    });
+  }
+
   const draftId = getRouterParam(event, "draftId");
 
   if (!draftId) {
-    throw createError({
+    throw new HTTPError({
       status: 400,
-      statusMessage: "Bad Request",
+      message: "Bad Request",
     });
   }
 
@@ -164,9 +172,8 @@ export default defineEventHandler<
         tags: true,
         canonicalUri: true,
         txId: true,
-        openEdition: true,
-        maxSupply: true,
         minterFixedPrice: true,
+        collectible: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -177,9 +184,9 @@ export default defineEventHandler<
     });
 
     if (!published) {
-      throw createError({
+      throw new HTTPError({
         status: 404,
-        statusMessage: "Not Found",
+        message: "Not Found",
       });
     }
 
@@ -199,17 +206,17 @@ export default defineEventHandler<
           ? "paid"
           : "free",
       collectPrice: published.minterFixedPrice?.price,
-      collectLimitType: published.openEdition ? "open" : "fixed",
-      collectLimit: published.maxSupply,
+      collectLimitType: published.collectible?.openEdition ? "open" : "fixed",
+      collectLimit: published.collectible?.maxSupply,
       createdAt: published.createdAt,
       updatedAt: published.updatedAt,
     };
   }
 
   if (!draft) {
-    throw createError({
+    throw new HTTPError({
       status: 404,
-      statusMessage: "Not Found",
+      message: "Not Found",
     });
   }
 

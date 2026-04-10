@@ -1,30 +1,25 @@
 "use client";
 
-import {
-  Callout,
-  Dialog,
-  Flex,
-  Spinner,
-  Text,
-  VisuallyHidden,
-} from "@radix-ui/themes";
-import * as Sentry from "@sentry/nextjs";
-import { parseBTC } from "@sigle/sdk";
-import { IconExclamationCircle } from "@tabler/icons-react";
+import { Result } from "better-result";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { MultiStep } from "@/components/Shared/MultiStep";
+import { useMultiStep } from "@/components/Shared/MultiStepToast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useContractCall } from "@/hooks/useContractCall";
-import { useContractDeploy } from "@/hooks/useContractDeploy";
 import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient, sigleApiFetchClient, sigleClient } from "@/lib/sigle";
-import {
-  getExplorerTransactionUrl,
-  getPromiseTransactionConfirmation,
-} from "@/lib/stacks";
+import { waitForTransaction } from "@/lib/stacks";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 import { generateSigleMetadataFromForm } from "../utils";
@@ -38,15 +33,13 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   const { data: session } = useSession();
   const posthog = usePostHog();
   const router = useRouter();
-  const [publishingError, setPublishingError] = useState<string | null>(null);
   const { handleSubmit, watch } = useFormContext<EditorPostFormData>();
   const type = watch("type");
   const editor = useEditorStore((state) => state.editor);
   const publishOpen = useEditorStore((state) => state.publishOpen);
   const setPublishOpen = useEditorStore((state) => state.setPublishOpen);
-  const [publishingLoading, setPublishingLoading] = useState<
-    { action: "transaction-pending"; txId: string } | false
-  >(false);
+  const [publishingLoading, setPublishingLoading] = useState(false);
+  const { contractCall } = useContractCall();
   const { mutateAsync: uploadMetadata } = sigleApiClient.useMutation(
     "post",
     "/api/protected/drafts/{draftId}/upload-metadata",
@@ -55,173 +48,191 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     "post",
     "/api/protected/drafts/{draftId}/set-tx-id",
   );
-  const { contractDeploy } = useContractDeploy({
-    onCancel: () => {
-      posthog.capture("post_publish_cancel", {
-        postId,
-      });
 
-      setPublishingLoading(false);
-    },
-    onSuccess: async (tx) => {
-      // For some reason, from time to time the txId is returned without the 0x prefix
-      const txId = !tx.txId.startsWith("0x") ? `0x${tx.txId}` : tx.txId;
-
-      posthog.capture("post_publish_transaction_submitted", {
-        postId,
-        txId,
-      });
-
-      setPublishingLoading({
-        action: "transaction-pending",
-        txId,
-      });
-
-      await updateTxId({
-        params: {
-          path: {
-            draftId: postId,
-          },
-        },
-        body: {
+  const getPostByTxId = async (txId: string) => {
+    return sigleApiFetchClient.GET("/api/posts/by-tx-id", {
+      params: {
+        query: {
           txId,
         },
-      });
+      },
+    });
+  };
 
-      // Redirect to the deploy page
-      router.push(`/p/${postId}/deploy`);
-    },
-  });
-
-  const { contractCall } = useContractCall({
-    onSuccess: (data) => {
-      toast.promise(getPromiseTransactionConfirmation(data.txId), {
-        loading: "Edit transaction submitted, it will be indexed shortly",
-        success: "Post updated successfully",
-        error: "Transaction failed",
-        action: {
-          label: "View tx",
-          onClick: () =>
-            window.open(getExplorerTransactionUrl(data.txId), "_blank"),
-        },
-      });
-
-      router.push(Routes.post({ postId }));
-    },
-    onError: (error) => {
-      toast.error("Failed to edit", {
-        description: error,
-      });
-    },
+  const { steps, start, completeStep, setStepError } = useMultiStep({
+    steps: [
+      { id: "arweave", title: "Uploading data to Arweave" },
+      { id: "transaction", title: "Waiting for blockchain confirmation" },
+      { id: "indexing", title: "Indexing new post" },
+    ],
   });
 
   const onSubmit = () => {
     handleSubmit(
       async (data) => {
-        try {
-          setPublishingError(null);
-          if (!session) return;
+        if (!session) return;
+        setPublishingLoading(true);
+        start();
 
-          posthog.capture("post_publish_start", {
+        posthog.capture("post_publish_start", {
+          postId,
+        });
+
+        const metadata = await generateSigleMetadataFromForm({
+          userAddress: session.user.id,
+          type: data.type,
+          editor,
+          postId,
+          post: data,
+        });
+
+        if (metadata.content.content.includes("blob:")) {
+          posthog.capture("post_publish_images_uploading_error", {
             postId,
           });
-
-          // Do we do one global id or other?
-          // TODO create a REST route to determine the next post id? But do not use postId
-          const newPostId = postId;
-          const metadata = await generateSigleMetadataFromForm({
-            userAddress: session.user.id,
-            type: data.type,
-            editor,
-            postId: newPostId,
-            post: data,
-          });
-
-          // Check for blob URLs in editor content which indicates unfinished image uploads
-          // or something that went wrong during the upload process
-          if (metadata.content.content.includes("blob:")) {
-            setPublishingError(
+          toast.error("Images still uploading", {
+            description:
               "Please wait for all images to finish uploading before publishing",
-            );
-            toast.error("Images still uploading", {
-              description:
-                "Please wait for all images to finish uploading before publishing",
-            });
-            return;
-          }
+          });
+          setPublishingLoading(false);
+          return;
+        }
 
-          const uploadedMetadata = await uploadMetadata({
+        const uploadedMetadataResult = await uploadMetadata({
+          params: {
+            path: {
+              draftId: postId,
+            },
+          },
+          body: {
+            type,
+            // oxlint-disable-next-line no-explicit-any
+            metadata: metadata as any,
+          },
+        })
+          .then((result) => Result.ok(result))
+          .catch((error) => Result.err(error));
+        if (uploadedMetadataResult.isErr()) {
+          posthog.capture("post_publish_upload_metadata_error", {
+            postId,
+            error: uploadedMetadataResult.error,
+          });
+          setStepError(
+            "arweave",
+            uploadedMetadataResult.error.message
+              ? uploadedMetadataResult.error.message
+              : uploadedMetadataResult.error,
+          );
+          return;
+        }
+
+        completeStep("arweave");
+
+        const arweaveUrl = `ar://${uploadedMetadataResult.value.id}`;
+        const { parameters } = sigleClient.publishPost({
+          metadataUri: arweaveUrl,
+        });
+        const contractCallResult = await contractCall(parameters);
+        if (contractCallResult.isErr()) {
+          posthog.capture("post_publish_cancel", {
+            postId,
+            error: contractCallResult.error,
+          });
+          setStepError("transaction", contractCallResult.error.message);
+          return;
+        }
+
+        const txId = contractCallResult.value;
+        posthog.capture("post_publish_transaction_submitted", {
+          postId,
+          txId,
+        });
+
+        const transactionResult = await waitForTransaction({ txId });
+        if (transactionResult.isErr()) {
+          posthog.capture("post_publish_wait_transaction_error", {
+            postId,
+            error: transactionResult.error,
+          });
+          setStepError("transaction", transactionResult.error.message);
+          return;
+        }
+        if (transactionResult.value.tx_status !== "success") {
+          posthog.capture("post_publish_transaction_failed", {
+            postId,
+            tx_status: transactionResult.value.tx_status,
+          });
+          setStepError("transaction", "Transaction failed");
+          return;
+        }
+        completeStep("transaction");
+
+        try {
+          await updateTxId({
             params: {
               path: {
                 draftId: postId,
               },
             },
             body: {
-              type,
-              // biome-ignore lint/suspicious/noExplicitAny: ok
-              metadata: metadata as any,
+              txId,
             },
           });
-          const arweaveUrl = `ar://${uploadedMetadata.id}`;
-
-          if (type === "draft") {
-            const { contract } = sigleClient.generatePostContract({
-              metadata: arweaveUrl,
-              collectInfo: {
-                amount:
-                  data.collect.collectPrice.type === "paid"
-                    ? parseBTC(data.collect.collectPrice.price.toString())
-                    : 0,
-                maxSupply:
-                  data.collect.collectLimit.type === "fixed" &&
-                  data.collect.collectLimit.limit
-                    ? data.collect.collectLimit.limit
-                    : undefined,
-              },
-            });
-
-            await contractDeploy({
-              contractName: newPostId,
-              codeBody: contract,
-            });
-            return;
-          }
-
-          const publishedPost = await sigleApiFetchClient.GET(
-            "/api/posts/{postId}",
-            {
-              params: {
-                path: {
-                  postId,
-                },
-              },
-            },
+        } catch (error) {
+          setStepError(
+            "indexing",
+            error instanceof Error ? error.message : "Failed to index",
           );
-          if (!publishedPost.data) {
-            setPublishingError("Error fetching published post");
-            Sentry.captureException("Error fetching published post");
-            return;
-          }
-
-          const { parameters } = sigleClient.setBaseTokenUri({
-            contract: publishedPost.data.address,
-            metadata: arweaveUrl,
-          });
-          await contractCall(parameters);
-          // biome-ignore lint/suspicious/noExplicitAny: ok
-        } catch (error: any) {
-          console.error("Error SDK publishing", error);
-          toast("Error publishing", {
-            description: error.message ? error.message : error,
-          });
-          setPublishingError(error.message ? error.message : error);
-          Sentry.captureException(error);
           return;
         }
+
+        const pollingInterval = 2_000;
+        const timeout = 180_000;
+        const startTime = Date.now();
+
+        let isIndexed = false;
+        while (Date.now() - startTime < timeout) {
+          const result = await getPostByTxId(txId);
+
+          if (!result.error && result.data) {
+            isIndexed = true;
+            break;
+          }
+
+          await new Promise((resolve) => {
+            setTimeout(resolve, pollingInterval);
+          });
+        }
+
+        if (!isIndexed) {
+          setStepError(
+            "indexing",
+            "Post indexing timed out. Please refresh the page.",
+          );
+          return;
+        }
+
+        completeStep("indexing");
+
+        // wait 1s for a better UX
+        await new Promise((resolve) => {
+          setTimeout(resolve, 1000);
+        });
+
+        router.push(
+          Routes.post(
+            { postId },
+            {
+              search: {
+                published: true,
+              },
+            },
+          ),
+        );
       },
       (errors) => {
         console.error("Publishing form errors", { errors });
-        toast("Error publishing", {
+        toast.error("Error publishing", {
           description: "Please check the form for errors",
         });
       },
@@ -229,45 +240,26 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   };
 
   const onOpenChange = (open: boolean) => {
-    if (publishingLoading === false) {
+    if (!publishingLoading) {
       setPublishOpen(open);
     }
   };
 
   return (
-    <Dialog.Root open={publishOpen} onOpenChange={onOpenChange}>
-      <VisuallyHidden>
-        <Dialog.Title>Publish</Dialog.Title>
-        <Dialog.Description>Publish your post</Dialog.Description>
-      </VisuallyHidden>
-      <Dialog.Content size="3" className="max-w-screen-sm">
-        {publishingLoading === false ? (
+    <Dialog open={publishOpen} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Publish</DialogTitle>
+          <DialogDescription>Publish your post</DialogDescription>
+        </DialogHeader>
+        {!publishingLoading ? (
           <PublishReview onPublish={onSubmit} />
         ) : (
-          <Flex
-            justify="center"
-            align="center"
-            py="7"
-            direction="column"
-            className="space-y-2"
-          >
-            <div className="mb-2">
-              <Spinner />
-            </div>
-            <Text as="div" size="2">
-              Your post is being published...
-            </Text>
-          </Flex>
+          <div className="flex flex-col gap-3 py-4">
+            <MultiStep steps={steps} />
+          </div>
         )}
-        {publishingError ? (
-          <Callout.Root color="red" role="alert" className="mt-4">
-            <Callout.Icon>
-              <IconExclamationCircle />
-            </Callout.Icon>
-            <Callout.Text>Error publishing: {publishingError}</Callout.Text>
-          </Callout.Root>
-        ) : null}
-      </Dialog.Content>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 };

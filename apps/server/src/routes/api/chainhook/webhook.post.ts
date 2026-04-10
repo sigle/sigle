@@ -1,17 +1,17 @@
 import type { Payload } from "@hirosystems/chainhook-client";
-import { createError, defineEventHandler, readBody } from "h3";
-import { env } from "~/env";
-import { indexerJob } from "~/jobs/indexer/index";
-import { consola } from "~/lib/consola";
-import { sigleConfig } from "~/lib/sigle";
+import { HTTPError, defineEventHandler } from "nitro/h3";
+import { env } from "@/env";
+import { indexerJob } from "@/jobs/indexer/index";
+import { consola } from "@/lib/consola";
+import { sigleConfig } from "@/lib/sigle";
 
 export default defineEventHandler(async (event) => {
-  const chainhook = await readBody<Payload>(event);
-  const authorization = event.headers.get("authorization");
+  const chainhook = (await event.req.json()) as Payload;
+  const authorization = event.req.headers.get("authorization");
   const authorizationToken = authorization?.replace("Bearer ", "");
   if (authorizationToken !== env.CHAINHOOK_API_TOKEN) {
-    return createError({
-      statusCode: 401,
+    throw new HTTPError({
+      status: 401,
       message: "Unauthorized",
     });
   }
@@ -28,10 +28,10 @@ export default defineEventHandler(async (event) => {
           const logEvents = transaction.metadata.receipt.events
             .filter((event) => event.type === "SmartContractEvent")
             .sort((a, b) => (a.position.index > b.position.index ? 1 : -1));
-          // biome-ignore lint/suspicious/noExplicitAny: ok
+          // oxlint-disable-next-line no-explicit-any
           const deployLogEvent: Record<string, any> | undefined =
             logEvents[0] && logEvents[0].data.topic === "print"
-              ? // biome-ignore lint/suspicious/noExplicitAny: ok
+              ? // oxlint-disable-next-line no-explicit-any
                 (logEvents[0].data as any).value
               : undefined;
 
@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
                 address: transaction.metadata.kind.data.contract_identifier,
                 txId,
                 blockHeight: block.block_identifier.index,
-                version: 1,
+                version: "1.0.0",
                 contract: transaction.metadata.kind.data.code,
                 sender: transaction.metadata.sender,
                 createdAt: new Date(block.metadata.block_time * 1000),
@@ -97,7 +97,7 @@ export default defineEventHandler(async (event) => {
               | { a: "mint-enabled"; enabled: boolean }
               | { a: "reduce-supply"; "max-supply": number }
               | { a: "set-profile"; address: string; uri: string }
-              // biome-ignore lint/suspicious/noExplicitAny: ok
+              // oxlint-disable-next-line no-explicit-any
               | { a: "set-base-token-uri"; uri: string } = (event.data as any)
               .value;
             switch (value.a) {
@@ -192,6 +192,7 @@ export default defineEventHandler(async (event) => {
                 await indexerJob.emit({
                   action: "indexer-set-profile",
                   data: {
+                    txId: transaction.transaction_identifier.hash,
                     address: value.address,
                     uri: value.uri,
                   },

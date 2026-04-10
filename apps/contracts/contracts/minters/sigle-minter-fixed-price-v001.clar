@@ -104,7 +104,7 @@
     (recipient (optional principal))
   )
   (let (
-      (protocol-address (contract-call? .sigle-protocol get-payout-address))
+      (protocol-address (contract-call? .sigle-protocol-v001 get-payout-address))
       (mint-config (unwrap! (map-get? contract-mint-config (contract-of token-contract))
         (err ERR-INVALID-MINT-DATA)
       ))
@@ -201,7 +201,7 @@
     (create-referrer uint)
     (mint-referrer uint)
   )
-  (let ((protocol-owner (contract-call? .sigle-protocol get-contract-owner)))
+  (let ((protocol-owner (contract-call? .sigle-protocol-v001 get-contract-owner)))
     (asserts! (is-eq tx-sender protocol-owner) (err ERR-NOT-AUTHORIZED))
     (var-set fixed-fee-structure {
       protocol: protocol,

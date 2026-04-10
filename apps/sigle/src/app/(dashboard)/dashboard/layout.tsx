@@ -1,10 +1,19 @@
 "use client";
 
-import { Button, Container, Select } from "@radix-ui/themes";
 import { usePathname, useRouter } from "next/navigation";
 import { AuthProtect } from "@/components/Auth/AuthProtect";
 import { NextLink } from "@/components/Shared/NextLink";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/cn";
+import { sigleApiClient } from "@/lib/sigle";
 
 export default function DashboardLayout({
   children,
@@ -14,44 +23,53 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
 
+  const { data: userWhitelist } = sigleApiClient.useQuery(
+    "get",
+    "/api/protected/user/whitelisted",
+  );
+
   const navigationLinks = [
     {
       label: "Dashboard",
       href: "/dashboard",
     },
-    {
-      label: "Drafts",
-      href: "/dashboard/drafts",
-    },
+    ...(userWhitelist?.whitelisted
+      ? [
+          {
+            label: "Drafts",
+            href: "/dashboard/drafts",
+          },
+        ]
+      : []),
     {
       label: "Settings",
       href: "/dashboard/settings",
     },
   ];
 
-  const handleNavigation = (href: string) => {
-    router.push(href);
+  const handleNavigation = (href: string | null) => {
+    if (href) {
+      router.push(href);
+    }
   };
 
   return (
-    <Container size="3" className="px-4">
+    <div className="mx-auto max-w-4xl px-4">
       <div className="relative">
         <aside className="absolute inset-y-0 left-[-200px] hidden w-[150px] lg:block">
-          <nav className="sticky top-[var(--header-height)] py-10">
+          <nav className="sticky top-(--header-height) py-10">
             <ul className="space-y-3">
               {navigationLinks.map((link) => (
                 <li key={link.href}>
                   <Button
                     variant="ghost"
-                    color="gray"
-                    highContrast
-                    className={cn("m-0", {
-                      "bg-[var(--accent-a3)] font-medium":
-                        pathname === link.href,
+                    className={cn("m-0 w-full justify-start", {
+                      "bg-muted": pathname === link.href,
                     })}
-                    asChild
+                    nativeButton={false}
+                    render={<NextLink href={link.href} />}
                   >
-                    <NextLink href={link.href}>{link.label}</NextLink>
+                    {link.label}
                   </Button>
                 </li>
               ))}
@@ -60,19 +78,30 @@ export default function DashboardLayout({
         </aside>
 
         {/* Mobile navigation */}
-        <Select.Root value={pathname} onValueChange={handleNavigation}>
-          <Select.Trigger variant="surface" className="mt-5 w-full lg:hidden" />
-          <Select.Content>
-            {navigationLinks.map((link) => (
-              <Select.Item key={link.href} value={link.href}>
-                {link.label}
-              </Select.Item>
-            ))}
-          </Select.Content>
-        </Select.Root>
+        <Select
+          items={navigationLinks.map((link) => ({
+            value: link.href,
+            label: link.label,
+          }))}
+          value={pathname}
+          onValueChange={handleNavigation}
+        >
+          <SelectTrigger className="mt-5 w-full lg:hidden">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {navigationLinks.map((link) => (
+                <SelectItem key={link.href} value={link.href}>
+                  {link.label}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
 
         <AuthProtect>{children}</AuthProtect>
       </div>
-    </Container>
+    </div>
   );
 }

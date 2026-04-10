@@ -8,9 +8,7 @@ export class ValidationError extends Error {
   name = "ValidationError" as const;
 }
 
-export function evaluate<Input, Output>(
-  result: z.SafeParseReturnType<Input, Output>,
-): Output {
+export function evaluate<Output>(result: z.ZodSafeParseResult<Output>): Output {
   if (result.success) {
     return result.data;
   }

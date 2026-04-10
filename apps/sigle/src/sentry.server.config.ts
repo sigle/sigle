@@ -3,4 +3,5 @@ import { env } from "@/env";
 
 Sentry.init({
   dsn: env.NEXT_PUBLIC_SENTRY_DSN,
+  environment: env.NEXT_PUBLIC_STACKS_ENV,
 });

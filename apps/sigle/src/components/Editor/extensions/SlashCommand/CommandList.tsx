@@ -1,4 +1,3 @@
-import { Flex, ScrollArea, Text } from "@radix-ui/themes";
 import type { Icon } from "@tabler/icons-react";
 import {
   forwardRef,
@@ -7,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/cn";
 import type { SlashCommandsCommand } from "./SlashCommands";
 
@@ -26,7 +26,6 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
     const [selectedIndex, setSelectedIndex] = useState(0);
 
     // When filter is happening reset to index 0
-    // biome-ignore lint/correctness/useExhaustiveDependencies: ok
     useEffect(() => setSelectedIndex(0), [items]);
 
     useImperativeHandle(ref, () => ({
@@ -90,15 +89,11 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
     return (
       <ScrollArea
         className="flex max-h-[332px] flex-col py-2"
-        type="always"
-        scrollbars="vertical"
         ref={containerRef}
       >
         {basicItems.length > 0 && (
           <div className="px-4 py-2">
-            <Text color="gray" size="2">
-              Basics
-            </Text>
+            <p className="text-sm text-muted-foreground">Basics</p>
           </div>
         )}
         {basicItems.map(({ title, description, icon: Icon }, index) => (
@@ -114,9 +109,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
         ))}
         {embedItems.length > 0 && (
           <div className="px-4 py-2">
-            <Text color="gray" size="2">
-              Embeds
-            </Text>
+            <p className="text-sm text-muted-foreground">Embeds</p>
           </div>
         )}
         {embedItems.map(({ title, description, icon: Icon }, index) => (
@@ -153,28 +146,23 @@ const CommandListItem = ({
   selectItem(index: number): void;
 }) => {
   return (
-    // biome-ignore lint/a11y/noStaticElementInteractions: ok
     <div
       data-index={index}
       className={cn(
-        "flex w-full cursor-pointer items-center justify-between px-4 py-2 hover:bg-gray-3",
+        `flex w-full cursor-pointer items-center justify-between px-4 py-2 hover:bg-muted`,
         {
-          "bg-gray-3": selectedIndex === index,
+          "bg-muted": selectedIndex === index,
         },
       )}
       onClick={() => selectItem(index)}
     >
-      <Flex align="center">
+      <div className="flex items-center">
         <Icon width={30} height={30} />
-        <Flex direction="column" className="ml-2">
-          <Text size="2" color="gray" highContrast weight="medium">
-            {title}
-          </Text>
-          <Text size="1" color="gray">
-            {description}
-          </Text>
-        </Flex>
-      </Flex>
+        <div className="ml-2 flex flex-col">
+          <p className="text-sm font-medium text-foreground">{title}</p>
+          <p className="text-xs text-muted-foreground">{description}</p>
+        </div>
+      </div>
     </div>
   );
 };

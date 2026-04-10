@@ -9,12 +9,13 @@ import {
   generatePostContract,
 } from "./generate-post-contract.js";
 import { type MintParams, mint } from "./mint.js";
-import { type OwnerMintParams, ownerMint } from "./ownerMint.js";
+import { type OwnerMintParams, ownerMint } from "./owner-mint.js";
+import { type PublishPostParams, publishPost } from "./publish-post.js";
 import {
   type SetBaseTokenUriParams,
   setBaseTokenUri,
-} from "./setBaseTokenUri.js";
-import { type SetProfileParams, setProfile } from "./setProfile.js";
+} from "./set-base-token-uri.js";
+import { type SetProfileParams, setProfile } from "./set-profile.js";
 
 interface CreateClientOptions {
   /**
@@ -37,16 +38,9 @@ export const createClient = (options: CreateClientOptions) => {
   return {
     mint: (params: MintParams) =>
       mint({ network: options.network, networkName, params }),
-    ownerMint: (params: OwnerMintParams) =>
-      ownerMint({ network: options.network, params }),
+    ownerMint: (params: OwnerMintParams) => ownerMint({ networkName, params }),
     generatePostContract: (params: GeneratePostParams) =>
       generatePostContract({
-        params,
-        network: options.network,
-        networkName,
-      }),
-    setProfile: (params: SetProfileParams) =>
-      setProfile({
         params,
         network: options.network,
         networkName,
@@ -54,7 +48,18 @@ export const createClient = (options: CreateClientOptions) => {
     setBaseTokenUri: (params: SetBaseTokenUriParams) =>
       setBaseTokenUri({
         params,
-        network: options.network,
+        networkName,
+      }),
+
+    publishPost: (params: PublishPostParams) =>
+      publishPost({
+        params,
+        networkName,
+      }),
+    setProfile: (params: SetProfileParams) =>
+      setProfile({
+        params,
+        networkName,
       }),
   };
 };

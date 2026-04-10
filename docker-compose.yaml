@@ -1,7 +1,7 @@
 services:
   postgres:
     container_name: postgres
-    image: postgres:17-alpine
+    image: postgres:18-alpine
     ports:
       - 5432:5432
     extra_hosts:
@@ -50,15 +50,15 @@ services:
     networks:
       - sigle-network
 
-  cloudflared:
-    image: cloudflare/cloudflared:2025.2.1
-    container_name: cloudflared
-    restart: unless-stopped
-    command: tunnel --url http://server:3001
-    depends_on:
-      - server
-    networks:
-      - sigle-network
+  # cloudflared:
+  #   image: cloudflare/cloudflared:2025.2.1
+  #   container_name: cloudflared
+  #   restart: unless-stopped
+  #   command: tunnel --url http://server:3001
+  #   depends_on:
+  #     - server
+  #   networks:
+  #     - sigle-network
 
 volumes:
   postgres_data:

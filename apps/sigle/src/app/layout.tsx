@@ -1,9 +1,9 @@
+import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { env } from "@/env";
 import { cn } from "@/lib/cn";
 import { Providers } from "./providers";
-import "./globals.css";
-import { env } from "@/env";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -45,7 +45,8 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={cn(inter.className, "antialiased")}
+        // oxlint-disable-next-line better-tailwindcss/no-unknown-classes
+        className={cn(inter.className, "root antialiased")}
         suppressHydrationWarning
       >
         <Providers>{children}</Providers>

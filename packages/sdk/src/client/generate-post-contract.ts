@@ -1,9 +1,9 @@
-import { contracts } from "@sigle/contracts-source";
 import type { StacksNetwork, StacksNetworkName } from "@stacks/network";
+import { contracts } from "@sigle/contracts-source";
 import { MAX_UINT } from "../lib/clarity.js";
 import { config } from "./config.js";
 
-export type GeneratePostParams = {
+export interface GeneratePostParams {
   /**
    * The metadata string for the post
    */
@@ -23,14 +23,14 @@ export type GeneratePostParams = {
      */
     createReferrer?: string;
   };
-};
+}
 
-export type GeneratePostReturn = {
+export interface GeneratePostReturn {
   /**
    * The contract code to be deployed
    */
   contract: string;
-};
+}
 
 export const generatePostContract = ({
   params,

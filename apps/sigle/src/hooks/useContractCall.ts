@@ -1,13 +1,22 @@
-import {
-  type ContractCallOptions,
-  type FinishedTxData,
-  openContractCall,
-} from "@stacks/connect";
+import type { CallContractParams } from "@stacks/connect/dist/types/methods";
+import { request } from "@stacks/connect";
+import { Result, TaggedError } from "better-result";
 import { useCallback, useState } from "react";
-import { stacksNetwork } from "@/lib/stacks";
+
+export class TransactionUserRejectedError extends TaggedError(
+  "TransactionUserRejectedError",
+)() {
+  constructor() {
+    super({ message: "User rejected the request" });
+  }
+}
+
+export class ContractCallError extends TaggedError("ContractCallError")<{
+  message: string;
+}>() {}
 
 interface UseContractCallOptions {
-  onSuccess?: (data: FinishedTxData) => void;
+  onSuccess?: (data: { txId: string }) => void;
   onError?: (error: string) => void;
   onCancel?: () => void;
 }
@@ -39,11 +48,10 @@ export function useContractCall(options: UseContractCallOptions = {}) {
 
   const contractCall = useCallback(
     async (
-      parameters: Omit<
-        ContractCallOptions,
-        "network" | "onFinish" | "onCancel" | "sponsored"
-      >,
-    ) => {
+      parameters: Omit<CallContractParams, "network" | "sponsored">,
+    ): Promise<
+      Result<string, ContractCallError | TransactionUserRejectedError>
+    > => {
       try {
         setState((prev) => ({
           ...prev,
@@ -53,29 +61,39 @@ export function useContractCall(options: UseContractCallOptions = {}) {
           txId: null,
         }));
 
-        await openContractCall({
-          ...parameters,
-          network: stacksNetwork,
-          onFinish: (data) => {
-            setState((prev) => ({
-              ...prev,
-              loading: false,
-              success: true,
-              txId: data.txId,
-            }));
-            onSuccess?.(data);
-          },
-          onCancel: () => {
-            setState((prev) => ({
-              ...prev,
-              loading: false,
-            }));
-            onCancel?.();
-          },
+        const response = await request("stx_callContract", parameters);
+
+        // For some reason, from time to time the txId is returned without the 0x prefix
+        const txId = response.txid
+          ? !response.txid.startsWith("0x")
+            ? `0x${response.txid}`
+            : response.txid
+          : "";
+
+        setState((prev) => ({
+          ...prev,
+          loading: false,
+          success: true,
+          txId,
+        }));
+        onSuccess?.({
+          txId,
         });
+        return Result.ok(txId);
       } catch (error) {
         const errorMessage =
           error instanceof Error ? error.message : "Unknown error";
+
+        // TODO this is not working for now
+        if (errorMessage.endsWith("User denied transaction")) {
+          setState((prev) => ({
+            ...prev,
+            loading: false,
+          }));
+          onCancel?.();
+          return Result.err(new TransactionUserRejectedError());
+        }
+
         setState((prev) => ({
           ...prev,
           loading: false,
@@ -83,6 +101,7 @@ export function useContractCall(options: UseContractCallOptions = {}) {
           success: false,
         }));
         onError?.(errorMessage);
+        return Result.err(new ContractCallError({ message: errorMessage }));
       }
     },
     [onSuccess, onError, onCancel],

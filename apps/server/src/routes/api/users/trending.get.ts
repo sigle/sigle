@@ -1,5 +1,6 @@
-import { defineCachedEventHandler, defineRouteMeta } from "nitropack/runtime";
-import { prisma, SELECT_PUBLIC_USER_FIELDS } from "~/lib/prisma";
+import { defineRouteMeta } from "nitro";
+import { defineCachedHandler } from "nitro/cache";
+import { prisma, SELECT_PUBLIC_USER_FIELDS } from "@/lib/prisma";
 
 defineRouteMeta({
   openAPI: {
@@ -35,7 +36,7 @@ defineRouteMeta({
 
 const NUMBER_OF_USERS = 20;
 
-export default defineCachedEventHandler(
+export default defineCachedHandler(
   async () => {
     // First get count of all users with posts
     const totalUsers = await prisma.user.count({

@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { consola } from "~/lib/consola";
-import { prisma } from "~/lib/prisma";
+import { consola } from "@/lib/consola";
+import { prisma } from "@/lib/prisma";
 import { generateImageBlurhashJob } from "../../generate-image-blurhash";
 import { getMetadataFromUri } from "./new-post";
 
@@ -17,18 +17,23 @@ export const executeIndexerSetBaseTokenUriJob = async (
 ) => {
   const metadata = await getMetadataFromUri(data.uri);
 
-  const post = await prisma.post.findUnique({
+  const collectible = await prisma.collectible.findUnique({
     select: {
-      id: true,
-      coverImageId: true,
+      post: {
+        select: {
+          id: true,
+          coverImageId: true,
+        },
+      },
     },
     where: {
       address: data.address,
     },
   });
-  if (!post) {
+  if (!collectible) {
     throw new Error(`Post not found for address ${data.address}`);
   }
+  const post = collectible.post;
 
   await prisma.post.update({
     where: {

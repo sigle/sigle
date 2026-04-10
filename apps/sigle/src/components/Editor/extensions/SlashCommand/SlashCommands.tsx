@@ -1,12 +1,11 @@
 // https://github.com/ueberdosis/tiptap/issues/1508#issuecomment-877348787
 
+import "./style.css";
 import type { IconProps } from "@tabler/icons-react";
-import type { Editor } from "@tiptap/core";
-import { Extension } from "@tiptap/core";
+import { type Editor, Extension } from "@tiptap/core";
 import { type Range, ReactRenderer } from "@tiptap/react";
 import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion";
 import { CommandList, type CommandListRef } from "./CommandList";
-import "./style.css";
 
 export interface SlashCommandsCommand {
   title: string;
@@ -62,8 +61,9 @@ export const SlashCommands = Extension.create<{
           props.command({ editor, range });
         },
         render: () => {
+          // oxlint-disable-next-line init-declarations
           let reactRenderer: ReactRenderer<CommandListRef>;
-          let popup: Instance[];
+          let popup: Instance[] = [];
 
           return {
             onStart: (props) => {
@@ -73,11 +73,11 @@ export const SlashCommands = Extension.create<{
               });
 
               popup = tippy("body", {
-                // biome-ignore lint/suspicious/noExplicitAny: ok
+                // oxlint-disable-next-line no-explicit-any
                 getReferenceClientRect: props.clientRect as any,
                 appendTo: () =>
-                  // biome-ignore lint/suspicious/noExplicitAny: ok
-                  document.getElementsByClassName("radix-themes")[0] as any,
+                  // oxlint-disable-next-line no-explicit-any
+                  document.getElementsByClassName("root")[0] as any,
                 content: reactRenderer.element,
                 showOnCreate: true,
                 interactive: true,
@@ -91,7 +91,7 @@ export const SlashCommands = Extension.create<{
               reactRenderer.updateProps(props);
 
               popup[0]?.setProps({
-                // biome-ignore lint/suspicious/noExplicitAny: ok
+                // oxlint-disable-next-line no-explicit-any
                 getReferenceClientRect: props.clientRect as any,
               });
             },

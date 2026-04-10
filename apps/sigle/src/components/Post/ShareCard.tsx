@@ -1,6 +1,6 @@
-import { Button, Heading, Text } from "@radix-ui/themes";
 import type { paths } from "@sigle/sdk";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { PostShareDialog } from "../Shared/Post/PostShareDialog";
 
 interface PostShareCardProps {
@@ -14,19 +14,15 @@ export const PostShareCard = ({ post }: PostShareCardProps) => {
     <>
       <div className="space-y-4">
         <div className="space-y-1 text-center md:text-left">
-          <Heading as="h4" size="3" weight="medium">
-            Share & Earn
-          </Heading>
-          <Text as="p" color="gray" size="2">
+          <h4 className="text-xl font-medium">Share & Earn</h4>
+          <p className="mt-2 text-sm text-muted-foreground">
             Share this post and earn sBTC.
-          </Text>
+          </p>
         </div>
         <div className="flex space-x-4">
           <Button
             className="flex-1"
             variant="outline"
-            color="gray"
-            highContrast
             onClick={() => setShareDialogOpen(true)}
           >
             Share

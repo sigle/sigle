@@ -16,15 +16,16 @@ interface PostMarkdownContentProps {
 
 export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
   return (
-    <div className="prose mt-10 lg:prose-lg dark:prose-invert">
+    <div className="prose lg:prose-lg dark:prose-invert">
       <ReactMarkdown
         components={{
+          // oxlint-disable-next-line no-unused-vars
           img: ({ node, src, ...props }) => {
             src = src ? resolveImageUrl(src as string) : undefined;
-            // biome-ignore lint/a11y/useAltText: ok
-            // biome-ignore lint/performance/noImgElement: ok
+            // oxlint-disable-next-line no-img-element
             return <img src={src} {...props} />;
           },
+          // oxlint-disable-next-line no-unused-vars
           a: ({ node, href, ...props }) => {
             if (href && isValidTwitterUrl(href)) {
               const tweetId = getTweetIdFromUrl(href);

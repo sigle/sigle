@@ -4,8 +4,8 @@ We're open to all community contributions! This includes bug reports, feature re
 
 ## Requirements
 
-- [Node](https://nodejs.org/en/) 22+
-- [pnpm](https://pnpm.io/) 9+
+- [Node](https://nodejs.org/en/) 24+
+- [pnpm](https://pnpm.io/) 10+
 - [Docker](https://www.docker.com/)
 
 ## Pull Requests
@@ -15,8 +15,9 @@ For non-bug-fixes, please open an issue first and discuss your idea to make sure
 **Before submitting a pull request**, please make sure the following is done:
 
 - Fork the repository and create a new branch from `main`.
-- Must not break the test suite. If you're fixing a bug, include a test that would fail without your fix.
-- Must be formatted with biome (`pnpm run format`).
+- Must not break the test suite. If you're fixing a bug, include a test that would fail without your fix (`pnpm test`).
+- Must be formatted with oxfmt (`pnpm format:fix`).
+- Must be linted with oxlint (`pnpm lint:fix`).
 - Must be **isolated**. Avoid grouping many, unrelated changes in a single PR.
 - Must contain a changeset file describing the changes and affected packages. Run `pnpm changeset` to generate one.
 

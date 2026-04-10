@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { paths } from "@sigle/sdk";
-import { formatBTC } from "@sigle/sdk";
+import { type paths, formatBTC } from "@sigle/sdk";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 

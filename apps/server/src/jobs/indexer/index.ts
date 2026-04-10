@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { consola } from "~/lib/consola";
-import { defineJob } from "~/lib/jobs";
+import { consola } from "@/lib/consola";
+import { defineJob } from "@/lib/jobs";
 import {
   executeIndexerInitMintDetailsJob,
   indexerInitMintDetailsSchema,
@@ -14,10 +14,18 @@ import {
   indexerSetMintDetailsSchema,
 } from "./minter-fixed-price/set-mint-details";
 import {
+  executeIndexerIndexPostsJob,
+  indexerIndexPostsSchema,
+} from "./post/index-posts";
+import {
   executeIndexerMintEnabledJob,
   indexerMintEnabledSchema,
 } from "./post/mint-enabled";
 import { executeNewPostJob, indexerNewPostSchema } from "./post/new-post";
+import {
+  executePublishPostJob,
+  indexerPublishPostSchema,
+} from "./post/publish-post";
 import {
   executeIndexerReduceSupplyJob,
   indexerReduceSupplySchema,
@@ -26,6 +34,10 @@ import {
   executeIndexerSetBaseTokenUriJob,
   indexerSetBaseTokenUriSchema,
 } from "./post/set-base-token-uri";
+import {
+  executeIndexerIndexProfilesJob,
+  indexerIndexProfilesSchema,
+} from "./profile/index-profiles";
 import {
   executeIndexerSetProfileJob,
   indexerSetProfileSchema,
@@ -37,11 +49,15 @@ export const indexerJob = defineJob("indexer")
       indexerNewPostSchema,
       indexerMintEnabledSchema,
       indexerMintSchema,
-      indexerSetProfileSchema,
       indexerReduceSupplySchema,
       indexerSetBaseTokenUriSchema,
       indexerInitMintDetailsSchema,
       indexerSetMintDetailsSchema,
+
+      indexerSetProfileSchema,
+      indexerIndexPostsSchema,
+      indexerIndexProfilesSchema,
+      indexerPublishPostSchema,
     ]),
   )
   .options({
@@ -66,14 +82,24 @@ export const indexerJob = defineJob("indexer")
       case "indexer-set-base-token-uri":
         await executeIndexerSetBaseTokenUriJob(job.data.data);
         break;
-      case "indexer-set-profile":
-        await executeIndexerSetProfileJob(job.data.data);
-        break;
       case "indexer-init-mint-details":
         await executeIndexerInitMintDetailsJob(job.data.data);
         break;
       case "indexer-set-mint-details":
         await executeIndexerSetMintDetailsJob(job.data.data);
+        break;
+
+      case "indexer-index-posts":
+        await executeIndexerIndexPostsJob(job.data.data);
+        break;
+      case "indexer-publish-post":
+        await executePublishPostJob(job.data.data);
+        break;
+      case "indexer-index-profiles":
+        await executeIndexerIndexProfilesJob(job.data.data);
+        break;
+      case "indexer-set-profile":
+        await executeIndexerSetProfileJob(job.data.data);
         break;
 
       default:

@@ -12,7 +12,7 @@ const DEFAULT_DELAY = 10;
 const DEFAULT_OFFSET_BOTTOM = 80;
 const DEFAULT_OFFEST_TOP = 0;
 const DEFAULT_SCROLL_DISTANCE = 56;
-let timeoutScroll: ReturnType<typeof setTimeout>;
+let timeoutScroll: ReturnType<typeof setTimeout> | null = null;
 
 const MobileScroll = Extension.create({
   addProseMirrorPlugins() {

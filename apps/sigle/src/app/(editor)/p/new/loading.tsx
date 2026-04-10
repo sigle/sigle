@@ -1,14 +1,14 @@
-import { Container, Skeleton, Text } from "@radix-ui/themes";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const PageEditorSkeleton = () => {
   return (
     <>
       {/* Header */}
-      <div className="flex h-[80px] items-center justify-between border-b border-gray-5 px-6">
+      <div className="flex h-[80px] items-center justify-between border-b border-border px-6">
         <Skeleton className="size-7" />
         <Skeleton className="h-7 w-20" />
       </div>
-      <Container size="2" className="my-4">
+      <div className="mx-auto my-4 max-w-2xl">
         <div className="space-y-4">
           {/* Title */}
           <Skeleton className="h-9 w-2/3" />
@@ -17,7 +17,7 @@ export const PageEditorSkeleton = () => {
           <Skeleton className="h-[450px]" />
 
           {/* Text */}
-          <Text as="div" size="1">
+          <div className="prose pb-5 lg:prose-lg dark:prose-invert">
             <Skeleton>
               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
               eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
@@ -27,9 +27,9 @@ export const PageEditorSkeleton = () => {
               nulla pariatur. Excepteur sint occaecat cupidatat non proident,
               sunt in culpa qui officia deserunt mollit anim id est laborum.
             </Skeleton>
-          </Text>
+          </div>
         </div>
-      </Container>
+      </div>
     </>
   );
 };

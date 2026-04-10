@@ -1,14 +1,5 @@
-import {
-  createError,
-  getQuery,
-  getRequestHeader,
-  type H3Event,
-  type MultiPartData,
-  readBody,
-  readMultipartFormData,
-  setResponseHeader,
-} from "h3";
 import type { z } from "zod";
+import { HTTPError, getQuery, type H3Event } from "nitro/h3";
 import { fromError } from "zod-validation-error";
 
 export const getValidatedQueryZod = async <T, Event extends H3Event = H3Event>(
@@ -19,9 +10,8 @@ export const getValidatedQueryZod = async <T, Event extends H3Event = H3Event>(
   const response = schema.safeParse(query);
 
   if (!response.success) {
-    throw createError({
+    throw new HTTPError({
       status: 400,
-      statusMessage: "Validation Error",
       message: fromError(response.error).toString(),
       data: response.error,
     });
@@ -34,13 +24,21 @@ export const readValidatedBodyZod = async <T, Event extends H3Event = H3Event>(
   event: Event,
   schema: z.ZodType<T>,
 ) => {
-  const body = await readBody(event, { strict: true });
+  let body: unknown = null;
+  try {
+    body = await event.req.json();
+  } catch (error) {
+    throw new HTTPError({
+      status: 400,
+      message: `Invalid JSON body: ${error instanceof Error ? error.message : "Unknown error"}`,
+    });
+  }
+
   const response = schema.safeParse(body);
 
   if (!response.success) {
-    throw createError({
+    throw new HTTPError({
       status: 400,
-      statusMessage: "Validation Error",
       message: fromError(response.error).toString(),
       data: response.error,
     });
@@ -54,22 +52,37 @@ const possibleMaxSizes = {
   "5mb": 1024 * 1024 * 5,
 };
 
-export const readMultipartFormDataSafe = async (
+export const readFormData = async (
   event: H3Event,
   maxSize: keyof typeof possibleMaxSizes,
-): Promise<MultiPartData[] | undefined> => {
+): Promise<FormData> => {
   const maxSizeValue = possibleMaxSizes[maxSize];
   if (!maxSizeValue) {
     throw new Error(`Invalid maxSize: ${maxSize}`);
   }
-  setResponseHeader(event, "max-content-length", maxSizeValue.toString());
 
-  if (Number(getRequestHeader(event, "content-length")) > maxSizeValue) {
-    throw createError({
+  const contentLength = event.req.headers.get("content-length");
+  if (!contentLength) {
+    throw new HTTPError({
+      status: 411,
+      message: "Content-Length header is required.",
+    });
+  }
+
+  const parsedContentLength = Number(contentLength);
+  if (!Number.isFinite(parsedContentLength) || parsedContentLength < 0) {
+    throw new HTTPError({
+      status: 400,
+      message: "Invalid Content-Length header.",
+    });
+  }
+
+  if (parsedContentLength > maxSizeValue) {
+    throw new HTTPError({
       status: 413,
       message: `File too large. Maximum size is ${maxSize}.`,
     });
   }
 
-  return readMultipartFormData(event);
+  return await event.req.formData();
 };

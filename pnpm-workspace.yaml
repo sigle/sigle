@@ -1,3 +1,24 @@
+allowBuilds:
+  "@parcel/watcher": false
+  "@prisma/engines": true
+  "@reown/appkit": false
+  "@sentry/cli": false
+  "bigint-buffer": false
+  "bufferutil": false
+  "core-js": false
+  "esbuild": false
+  "keccak": false
+  "lefthook": true
+  msw: false
+  "prisma": false
+  "protobufjs": false
+  "secp256k1": false
+  "sharp": false
+  "tiny-secp256k1": false
+  "utf-8-validate": false
+blockExoticSubdeps: true
+strictDepBuilds: true
+minimumReleaseAge: 1440 # 1 day
 packages:
-  - 'apps/*'
-  - 'packages/*'
+  - apps/*
+  - packages/*

@@ -1,6 +1,8 @@
-import { Badge, Card, IconButton, Inset, Text } from "@radix-ui/themes";
 import { IconCards, IconPencil } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 
@@ -15,63 +17,56 @@ export const PublishReviewCollect = () => {
     data.collect.collectLimit.limit
       ? data.collect.collectLimit.limit
       : undefined;
+  const isCollectEnabled = false;
 
   const openCollectSettings = () => {
     setPublishOpen(false);
     setMenuOpen("collect");
   };
 
+  if (!isCollectEnabled) {
+    return null;
+  }
+
   return (
-    <Card size="2">
-      <Inset clip="padding-box" side="top" pb="current">
-        <div className="flex items-center justify-between border-b border-solid border-gray-4 bg-gray-2 p-4">
-          <Text
-            as="div"
-            size="2"
-            weight="medium"
-            className="flex items-center gap-2"
-          >
-            <IconCards size={20} />
-            Collect settings
-          </Text>
-          <IconButton
-            variant="ghost"
-            color="gray"
-            onClick={openCollectSettings}
-          >
-            <IconPencil size={16} />
-          </IconButton>
-        </div>
-      </Inset>
-      <div className="-my-3">
+    <Card>
+      <CardHeader className="flex items-center justify-between border-b">
+        <CardTitle className="flex items-center gap-2 text-base">
+          <IconCards size={20} />
+          Collect settings
+        </CardTitle>
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Edit collect settings"
+          onClick={openCollectSettings}
+        >
+          <IconPencil size={16} />
+        </Button>
+      </CardHeader>
+      <CardContent>
         <div className="flex justify-between py-3">
-          <Text size="2" color="gray">
-            Type
-          </Text>
-          <Text size="2">
+          <p className="text-sm text-muted-foreground">Type</p>
+          <p className="text-sm">
             {collectLimit ? (
               <>
                 Limited edition{" "}
-                <Badge color="gray" highContrast>
-                  {collectLimit}
-                </Badge>
+                <Badge variant="secondary">{collectLimit}</Badge>
               </>
             ) : (
               "Open edition"
             )}
-          </Text>
+          </p>
         </div>
-        <div className="flex justify-between border-t border-solid border-gray-4 py-3">
-          <Text size="2" color="gray">
-            Price
-          </Text>
-          <Text size="2">
+        <div className="flex justify-between border-t border-solid border-border py-3">
+          <p className="text-sm text-muted-foreground">Price</p>
+          <p className="text-sm">
             {data.collect.collectPrice.type === "free"
               ? "Free"
               : `${data.collect.collectPrice.price} sBTC`}
-          </Text>
+          </p>
         </div>
-      </div>
+      </CardContent>
     </Card>
   );
 };

@@ -32,10 +32,10 @@ export const addIdsToHeadings = (html: string): string => {
 
 export const extractTableOfContents = (
   html: string,
-): Array<{ level: 2 | 3; text: string; id: string }> => {
+): { level: 2 | 3; text: string; id: string }[] => {
   const $ = cheerio.load(html);
   const headings = $("h2, h3");
-  const tableOfContents: Array<{ level: 2 | 3; text: string; id: string }> = [];
+  const tableOfContents: { level: 2 | 3; text: string; id: string }[] = [];
 
   headings.each((_index, heading) => {
     const level = heading.tagName.toLowerCase() === "h2" ? 2 : 3;

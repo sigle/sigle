@@ -11,13 +11,15 @@ export const resolveImageUrl = (
     if (cid.startsWith("Qm")) {
       cid = parse(cid).toV1().toString();
     }
+    // oxlint-disable-next-line no-param-reassign
     image =
       options.gateway && env.NEXT_PUBLIC_IPFS_GATEWAY_URL
         ? `${env.NEXT_PUBLIC_IPFS_GATEWAY_URL}/${cid}`
         : `https://${cid}.ipfs.w3s.link/`;
   }
   if (image?.startsWith("ar://")) {
-    image = `https://arweave.net/${image.slice(5)}`;
+    // oxlint-disable-next-line no-param-reassign
+    image = `${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${image.slice(5)}`;
   }
   return image;
 };

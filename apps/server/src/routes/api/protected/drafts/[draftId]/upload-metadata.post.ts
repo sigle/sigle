@@ -1,11 +1,12 @@
 import { PostMetadataSchema } from "@sigle/sdk";
-import { createError, defineEventHandler, getRouterParam } from "h3";
-import { defineRouteMeta } from "nitropack/runtime";
+import { defineRouteMeta } from "nitro";
+import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
-import { aerweaveUploadFile } from "~/lib/arweave";
-import { readValidatedBodyZod } from "~/lib/nitro";
-import { prisma } from "~/lib/prisma";
+import { aerweaveUploadFile } from "@/lib/arweave";
+import { readValidatedBodyZod } from "@/lib/nitro";
+import { prisma } from "@/lib/prisma";
+import { isUserWhitelisted } from "@/lib/users";
 
 defineRouteMeta({
   openAPI: {
@@ -69,16 +70,21 @@ const uploadMetadataDraftSchema = z.object({
 });
 
 export default defineEventHandler(async (event) => {
+  if (!isUserWhitelisted(event.context.user.id)) {
+    throw new HTTPError({
+      status: 403,
+      message: "User is not whitelisted.",
+    });
+  }
+
   const draftId = getRouterParam(event, "draftId");
   const body = await readValidatedBodyZod(event, uploadMetadataDraftSchema);
 
   const parsedMetadata = PostMetadataSchema.safeParse(body.metadata);
   if (!parsedMetadata.success) {
-    throw createError({
+    throw new HTTPError({
       status: 400,
-      message: `Invalid metadata: ${fromError(
-        parsedMetadata.error,
-      ).toString()}`,
+      message: `Invalid metadata: ${fromError(parsedMetadata.error).toString()}`,
     });
   }
 
@@ -104,7 +110,7 @@ export default defineEventHandler(async (event) => {
         });
 
   if (!draft) {
-    throw createError({
+    throw new HTTPError({
       status: 404,
       message: "Draft not found.",
     });
@@ -121,7 +127,7 @@ export default defineEventHandler(async (event) => {
       },
     });
     if (post) {
-      throw createError({
+      throw new HTTPError({
         status: 400,
         message: "A post with this ID already exists.",
       });

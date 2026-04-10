@@ -1,5 +1,5 @@
-import { defineEventHandler } from "h3";
-import { defineRouteMeta } from "nitropack/runtime";
+import { defineRouteMeta } from "nitro";
+import { defineEventHandler } from "nitro/h3";
 
 defineRouteMeta({
   openAPI: {
@@ -62,9 +62,12 @@ defineRouteMeta({
               },
               profile: {
                 type: "object",
-                required: ["id"],
+                required: ["id", "txId"],
                 properties: {
                   id: {
+                    type: "string",
+                  },
+                  txId: {
                     type: "string",
                   },
                   displayName: {
@@ -124,12 +127,9 @@ defineRouteMeta({
             type: "object",
             required: [
               "id",
-              "address",
               "txId",
+              "blockHeight",
               "title",
-              "maxSupply",
-              "collected",
-              "openEdition",
               "metadataUri",
               "createdAt",
               "updatedAt",
@@ -181,23 +181,14 @@ defineRouteMeta({
               canonicalUri: {
                 type: "string",
               },
-              address: {
-                type: "string",
-              },
               txId: {
                 type: "string",
               },
-              maxSupply: {
-                type: "number",
-              },
-              collected: {
+              blockHeight: {
                 type: "number",
               },
               collectorsCount: {
                 type: "number",
-              },
-              openEdition: {
-                type: "boolean",
               },
               metadataUri: {
                 type: "string",
@@ -229,6 +220,37 @@ defineRouteMeta({
                   },
                 },
               },
+              collectible: {
+                type: "object",
+                required: [
+                  "id",
+                  "address",
+                  "maxSupply",
+                  "openEdition",
+                  "collected",
+                  "enabled",
+                ],
+                properties: {
+                  id: {
+                    type: "string",
+                  },
+                  address: {
+                    type: "string",
+                  },
+                  maxSupply: {
+                    type: "number",
+                  },
+                  openEdition: {
+                    type: "boolean",
+                  },
+                  collected: {
+                    type: "number",
+                  },
+                  enabled: {
+                    type: "boolean",
+                  },
+                },
+              },
               user: {
                 type: "object",
                 required: ["id", "createdAt", "updatedAt"],
@@ -244,9 +266,12 @@ defineRouteMeta({
                   },
                   profile: {
                     type: "object",
-                    required: ["id"],
+                    required: ["id", "txId"],
                     properties: {
                       id: {
+                        type: "string",
+                      },
+                      txId: {
                         type: "string",
                       },
                       displayName: {

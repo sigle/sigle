@@ -1,33 +1,27 @@
 {
   "name": "root",
-  "engines": {
-    "node": ">=20"
-  },
   "private": true,
-  "packageManager": "pnpm@10.15.0",
   "scripts": {
-    "build": "turbo typecheck build --cache-dir=.turbo",
-    "format": "biome check --write --no-errors-on-unmatched",
-    "lint": "turbo lint --cache-dir=.turbo",
+    "build": "turbo build",
+    "format": "oxfmt --check",
+    "format:fix": "oxfmt .",
+    "lint": "oxlint .",
+    "lint:fix": "oxlint --fix .",
     "release": "pnpm changeset publish",
-    "test": "turbo test --cache-dir=.turbo",
+    "test": "turbo test",
+    "check-types": "turbo check-types",
     "version": "pnpm changeset version && pnpm install --lockfile-only"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.0",
-    "@changesets/cli": "2.29.6",
-    "lefthook": "1.12.3",
-    "syncpack": "13.0.4",
-    "turbo": "2.5.6"
+    "@changesets/cli": "2.30.0",
+    "lefthook": "2.1.5",
+    "oxfmt": "0.44.0",
+    "oxlint": "1.59.0",
+    "syncpack": "14.3.0",
+    "turbo": "2.9.5"
   },
-  "pnpm": {
-    "neverBuiltDependencies": [],
-    "overrides": {
-      "@noble/hashes@1.3.2": "1.7.1"
-    },
-    "patchedDependencies": {
-      "@dha-team/arbundles@1.0.1": "patches/@dha-team__arbundles@1.0.1.patch",
-      "@ardrive/turbo-sdk@1.22.0": "patches/@ardrive__turbo-sdk@1.22.0.patch"
-    }
-  }
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@10.33.0"
 }

@@ -1,6 +1,6 @@
 import type { Predicate } from "@hirosystems/chainhook-client";
 import { sigleConfig } from "@sigle/sdk";
-import { env } from "~/env";
+import { env } from "@/env";
 
 /**
  * Predicate listing for all contracts deployed on the network.
@@ -39,9 +39,7 @@ export const sigleProfilesPredicate = {
       if_this: {
         scope: "print_event",
         contains: "set-profile",
-        contract_identifier: `${
-          sigleConfig[env.STACKS_ENV].protocolAddress
-        }.sigle-profiles-v001`,
+        contract_identifier: `${sigleConfig[env.STACKS_ENV].protocolAddress}.sigle-profiles-v001`,
       },
       then_that: {
         http_post: {

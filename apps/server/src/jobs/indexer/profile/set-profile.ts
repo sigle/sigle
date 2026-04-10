@@ -1,12 +1,14 @@
-import { ProfileMetadataSchema } from "@sigle/sdk";
+import { matchError } from "better-result";
 import { z } from "zod";
-import { consola } from "~/lib/consola";
-import { prisma } from "~/lib/prisma";
+import { consola } from "@/lib/consola";
+import { getProfileMetadataFromUri } from "@/lib/metadata";
+import { prisma } from "@/lib/prisma";
 import { generateImageBlurhashJob } from "../../generate-image-blurhash";
 
 export const indexerSetProfileSchema = z.object({
   action: z.literal("indexer-set-profile"),
   data: z.object({
+    txId: z.string(),
     address: z.string(),
     uri: z.string(),
   }),
@@ -15,22 +17,30 @@ export const indexerSetProfileSchema = z.object({
 export const executeIndexerSetProfileJob = async (
   data: z.TypeOf<typeof indexerSetProfileSchema>["data"],
 ) => {
-  // Fetch data from Arweave
-  const arweaveTxId = data.uri.replace("ar://", "");
-  const response = await fetch(`https://arweave.net/${arweaveTxId}`);
-  const json = await response.json();
+  const metadataResult = await getProfileMetadataFromUri(data.uri);
 
-  // Verify data is correct
-  const profileMetadata = ProfileMetadataSchema.safeParse(json);
-  if (!profileMetadata.success) {
-    throw new Error(`Invalid profile: ${profileMetadata.error}`);
+  if (metadataResult.isErr()) {
+    const message = matchError(metadataResult.error, {
+      MetadataFetchFailedError: (e) => `Failed to fetch metadata: ${e.error}`,
+      InvalidMetadataError: (e) => `Metadata validation failed: ${e.error}`,
+      UnhandledException: (e) => `Unhandled exception: ${e.message}`,
+    });
+    consola.error("Can't process profile metadata", {
+      txId: data.txId,
+      uri: data.uri,
+      author: data.address,
+      error: message,
+    });
+    return;
   }
+  const metadata = metadataResult.value;
+
   const {
     id: _,
     picture: __,
     coverPicture: ____,
     ...metadataWithoutId
-  } = profileMetadata.data;
+  } = metadata.content;
 
   // Ensure user exists
   const user = await prisma.user.findUnique({
@@ -55,41 +65,43 @@ export const executeIndexerSetProfileJob = async (
     },
     update: {
       ...metadataWithoutId,
+      txId: data.txId,
     },
     create: {
       ...metadataWithoutId,
       id: data.address,
+      txId: data.txId,
     },
   });
 
-  if (profileMetadata.data.picture || profileMetadata.data.coverPicture) {
+  if (metadata.content.picture || metadata.content.coverPicture) {
     // We do a separate update query here as for some reason prisma doesn't let us update the relationship in the upsert
     await prisma.profile.update({
       where: {
         id: data.address,
       },
       data: {
-        pictureUri: profileMetadata.data.picture
+        pictureUri: metadata.content.picture
           ? {
               connectOrCreate: {
                 where: {
-                  id: profileMetadata.data.picture,
+                  id: metadata.content.picture,
                 },
                 create: {
-                  id: profileMetadata.data.picture,
+                  id: metadata.content.picture,
                   mimeType: "unknown",
                 },
               },
             }
           : undefined,
-        coverPictureUri: profileMetadata.data.coverPicture
+        coverPictureUri: metadata.content.coverPicture
           ? {
               connectOrCreate: {
                 where: {
-                  id: profileMetadata.data.coverPicture,
+                  id: metadata.content.coverPicture,
                 },
                 create: {
-                  id: profileMetadata.data.coverPicture,
+                  id: metadata.content.coverPicture,
                   mimeType: "unknown",
                 },
               },
@@ -98,15 +110,17 @@ export const executeIndexerSetProfileJob = async (
       },
     });
 
-    if (profileMetadata.data.picture) {
+    // TODO only do if !== from previous value
+    if (metadata.content.picture) {
       await generateImageBlurhashJob.emit({
-        imageId: profileMetadata.data.picture,
+        imageId: metadata.content.picture,
       });
     }
 
-    if (profileMetadata.data.coverPicture) {
+    // TODO only do if !== from previous value
+    if (metadata.content.coverPicture) {
       await generateImageBlurhashJob.emit({
-        imageId: profileMetadata.data.coverPicture,
+        imageId: metadata.content.coverPicture,
       });
     }
   }
@@ -114,5 +128,6 @@ export const executeIndexerSetProfileJob = async (
   consola.info("profile.setProfile", {
     id: data.address,
     uri: data.uri,
+    txId: data.txId,
   });
 };
