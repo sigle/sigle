@@ -1,14 +1,22 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import {
-  createTestPost,
-  createTestUser,
-  e2eFetch,
-  resetTestDb,
-} from "@/test/e2e";
+import { $fetchRaw } from "nitro-test-utils/e2e";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import { createTestDatabase, type TestDatabase } from "@/test/database";
+import { createTestPost, createTestUser } from "@/test/helpers";
 
 describe("api/users/trending.get", () => {
+  // oxlint-disable-next-line init-declarations
+  let testDb: TestDatabase;
+
+  beforeAll(async () => {
+    testDb = await createTestDatabase();
+  });
+
   beforeEach(async () => {
-    await resetTestDb();
+    await testDb.cleanup();
+  });
+
+  afterAll(async () => {
+    await testDb.close();
   });
 
   it("returns trending users with posts", async () => {
@@ -16,16 +24,16 @@ describe("api/users/trending.get", () => {
     const user2 = await createTestUser({ id: "user2" });
     await createTestPost({
       id: "post-1",
-      userId: (user1 as Record<string, unknown>).id as string,
+      userId: user1.id,
       title: "Post 1",
     });
     await createTestPost({
       id: "post-2",
-      userId: (user2 as Record<string, unknown>).id as string,
+      userId: user2.id,
       title: "Post 2",
     });
 
-    const { data, status } = await e2eFetch("/api/users/trending");
+    const { data, status } = await $fetchRaw("/api/users/trending");
 
     expect(status).toBe(200);
     expect(data).toHaveLength(2);
@@ -35,7 +43,7 @@ describe("api/users/trending.get", () => {
     await createTestUser({ id: "user1" });
     await createTestUser({ id: "user2" });
 
-    const { data, status } = await e2eFetch("/api/users/trending");
+    const { data, status } = await $fetchRaw("/api/users/trending");
 
     expect(status).toBe(200);
     expect(data).toHaveLength(0);
@@ -45,16 +53,16 @@ describe("api/users/trending.get", () => {
     const user = await createTestUser({ id: "user1" });
     await createTestPost({
       id: "post-1",
-      userId: (user as Record<string, unknown>).id as string,
+      userId: user.id,
       title: "Post 1",
     });
     await createTestPost({
       id: "post-2",
-      userId: (user as Record<string, unknown>).id as string,
+      userId: user.id,
       title: "Post 2",
     });
 
-    const { data, status } = await e2eFetch("/api/users/trending");
+    const { data, status } = await $fetchRaw("/api/users/trending");
 
     expect(status).toBe(200);
     expect(data).toHaveLength(1);
