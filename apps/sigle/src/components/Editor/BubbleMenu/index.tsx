@@ -11,6 +11,7 @@ import {
   type Editor,
   isTextSelection,
   BubbleMenu as TipTapBubbleMenu,
+  useEditorState,
 } from "@tiptap/react";
 import { useEffect } from "react";
 import { cn } from "@/lib/cn";
@@ -39,6 +40,25 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
   const linkOpen = useBubbleMenuStore((state) => state.linkOpen);
   const setLinkValue = useBubbleMenuStore((state) => state.setLinkValue);
   const setLinkOpen = useBubbleMenuStore((state) => state.setLinkOpen);
+
+  const {
+    isActiveBold,
+    isActiveItalic,
+    isActiveUnderline,
+    isActiveStrike,
+    isActiveCode,
+    isActiveLink,
+  } = useEditorState({
+    editor,
+    selector: (context) => ({
+      isActiveBold: context.editor.isActive("bold"),
+      isActiveItalic: context.editor.isActive("italic"),
+      isActiveUnderline: context.editor.isActive("underline"),
+      isActiveStrike: context.editor.isActive("strike"),
+      isActiveCode: context.editor.isActive("code"),
+      isActiveLink: context.editor.isActive("link"),
+    }),
+  });
 
   // Listen to any key press to detect cmd + k and activate the link edition
   // oxlint-disable-next-line exhaustive-deps
@@ -80,18 +100,31 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
           resetLink();
         },
       }}
-      shouldShow={({ editor, state, from, to, view }) => {
+      shouldShow={({ editor, state, from, to, view, element }) => {
         // Take the initial implementation of the plugin and extends it
-        // https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bubble-menu/src/bubble-menu-plugin.ts#L43
+        // https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bubble-menu/src/bubble-menu-plugin.ts#L173
         const { doc, selection } = state;
         const { empty } = selection;
+
         // Sometime check for `empty` is not enough.
         // Doubleclick an empty paragraph returns a node size of 2.
         // So we check also for an empty text size.
         const isEmptyTextBlock =
           !doc.textBetween(from, to).length && isTextSelection(state.selection);
 
-        if (!view.hasFocus() || empty || isEmptyTextBlock) {
+        // When clicking on a element inside the bubble menu the editor "blur" event
+        // is called and the bubble menu item is focussed. In this case we should
+        // consider the menu as part of the editor and keep showing the menu
+        const isChildOfMenu = element.contains(document.activeElement);
+
+        const hasEditorFocus = view.hasFocus() || isChildOfMenu;
+
+        if (
+          !hasEditorFocus ||
+          empty ||
+          isEmptyTextBlock ||
+          !editor.isEditable
+        ) {
           return false;
         }
         // End default implementation
@@ -111,13 +144,8 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
           return false;
         }
 
-        /// Do not show on twitter embed
+        // Do not show on twitter embed
         if (editor.isActive("twitter")) {
-          return false;
-        }
-
-        /// Do not show on cta
-        if (editor.isActive("cta")) {
           return false;
         }
 
@@ -129,37 +157,37 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
         <>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleBold().run()}
-            active={editor.isActive("bold")}
+            active={isActiveBold}
           >
             <IconBold size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleItalic().run()}
-            active={editor.isActive("italic")}
+            active={isActiveItalic}
           >
             <IconItalic size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleUnderline().run()}
-            active={editor.isActive("underline")}
+            active={isActiveUnderline}
           >
             <IconUnderline size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleStrike().run()}
-            active={editor.isActive("strike")}
+            active={isActiveStrike}
           >
             <IconStrikethrough size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => editor.chain().focus().toggleCode().run()}
-            active={editor.isActive("code")}
+            active={isActiveCode}
           >
             <IconCode size={18} />
           </BubbleMenuButton>
           <BubbleMenuButton
             onClick={() => onSelectLink()}
-            active={editor.isActive("link")}
+            active={isActiveLink}
           >
             <IconLink size={18} />
           </BubbleMenuButton>

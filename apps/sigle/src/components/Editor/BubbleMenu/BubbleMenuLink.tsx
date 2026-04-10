@@ -77,7 +77,7 @@ export const EditorBubbleMenuLink = ({ editor }: EditorBubbleMenuProps) => {
   return (
     <form className="flex" onSubmit={onSubmitLink}>
       <input
-        className="w-full bg-transparent pr-1 pl-2 outline-none"
+        className="h-[16px] w-full bg-transparent pr-1 pl-2 text-sm text-white outline-none"
         value={linkValue}
         onKeyDown={onKeyDown}
         onChange={(e) => setLinkValue(e.target.value)}
