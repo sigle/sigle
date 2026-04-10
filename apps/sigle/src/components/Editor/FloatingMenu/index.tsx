@@ -1,8 +1,8 @@
-import { IconButton } from "@radix-ui/themes";
-import { IconPlus } from "@tabler/icons-react";
-import type { Editor } from "@tiptap/react";
-import { FloatingMenu as TipTapFloatingMenu } from "@tiptap/react/menus";
 import "./style.css";
+import type { Editor } from "@tiptap/react";
+import { IconPlus } from "@tabler/icons-react";
+import { FloatingMenu as TipTapFloatingMenu } from "@tiptap/react/menus";
+import { Button } from "@/components/ui/button";
 
 interface EditorFloatingMenuProps {
   editor: Editor;
@@ -48,14 +48,9 @@ export const EditorFloatingMenu = ({ editor }: EditorFloatingMenuProps) => {
         );
       }}
     >
-      <IconButton
-        color="gray"
-        size="2"
-        variant="ghost"
-        onClick={handleButtonClick}
-      >
+      <Button size="icon" variant="ghost" onClick={handleButtonClick}>
         <IconPlus width={14} height={14} />
-      </IconButton>
+      </Button>
     </TipTapFloatingMenu>
   );
 };

@@ -1,8 +1,8 @@
-import { Container, IconButton, Text } from "@radix-ui/themes";
 import { IconKeyboard, IconMoon, IconSun } from "@tabler/icons-react";
 import { type Editor, useEditorState } from "@tiptap/react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { ShortcutsDialog } from "../Shortcuts/ShortcutsDialog";
 
 interface EditorBottomInfoProps {
@@ -21,15 +21,14 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
   });
 
   return (
-    // eslint-disable-next-line better-tailwindcss/no-unregistered-classes
+    // oxlint-disable-next-line better-tailwindcss/no-unknown-classes
     <div className="not-prose">
-      <Container className="fixed inset-x-0 bottom-0 mb-8">
+      <div className="fixed inset-x-0 bottom-0 mx-auto mb-8 max-w-3xl px-4">
         <div className="pointer-events-none flex items-center justify-end gap-3">
-          <Text size="1">{wordsCount} words</Text>
-          <IconButton
+          <p className="text-xs">{wordsCount} words</p>
+          <Button
             variant="ghost"
-            size="1"
-            color="gray"
+            size="icon-sm"
             className="pointer-events-auto"
             onClick={() =>
               setTheme(resolvedTheme === "dark" ? "light" : "dark")
@@ -40,19 +39,18 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
             ) : (
               <IconMoon size={16} />
             )}
-          </IconButton>
+          </Button>
 
-          <IconButton
+          <Button
             variant="ghost"
-            size="1"
-            color="gray"
+            size="icon-sm"
             className="pointer-events-auto"
             onClick={() => setShowShortcutsDialog(true)}
           >
             <IconKeyboard size={16} />
-          </IconButton>
+          </Button>
         </div>
-      </Container>
+      </div>
 
       <ShortcutsDialog
         open={showShortcutsDialog}

@@ -85,7 +85,7 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
 
   return (
     <TipTapBubbleMenu
-      className="flex gap-3 px-4 py-3 bg-gray-12 rounded-3 text-gray-1"
+      className="bg-gray-12 rounded-3 text-gray-1 flex gap-3 px-4 py-3"
       updateDelay={100}
       options={{
         placement: "top",
