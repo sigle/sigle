@@ -18,7 +18,7 @@
     "@paralleldrive/cuid2": "3.3.0",
     "@prisma/adapter-pg": "7.4.2",
     "@prisma/client": "7.4.2",
-    "@sentry/node": "10.46.0",
+    "@sentry/node": "10.47.0",
     "@sigle/sdk": "workspace:*",
     "@stacks/blockchain-api-client": "8.14.1",
     "@stacks/network": "7.3.1",
@@ -43,7 +43,7 @@
     "zod-validation-error": "5.0.0"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "0.4.0",
+    "@electric-sql/pglite": "0.4.4",
     "nitro": "3.0.260311-beta",
     "pglite-prisma-adapter": "0.7.2",
     "typescript": "5.9.3",

@@ -1,5 +1,5 @@
-import type { Editor } from "@tiptap/react";
 import { IconKeyboard, IconMoon, IconSun } from "@tabler/icons-react";
+import { type Editor, useEditorState } from "@tiptap/react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -13,14 +13,19 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
   const [showShortcutsDialog, setShowShortcutsDialog] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
 
+  const { wordsCount } = useEditorState({
+    editor,
+    selector: (context) => ({
+      wordsCount: context.editor.storage.characterCount.words(),
+    }),
+  });
+
   return (
     // oxlint-disable-next-line better-tailwindcss/no-unknown-classes
     <div className="not-prose">
       <div className="fixed inset-x-0 bottom-0 mx-auto mb-8 max-w-3xl px-4">
         <div className="pointer-events-none flex items-center justify-end gap-3">
-          <p className="text-xs">
-            {editor?.storage.characterCount.words()} words
-          </p>
+          <p className="text-xs">{wordsCount} words</p>
           <Button
             variant="ghost"
             size="icon-sm"
