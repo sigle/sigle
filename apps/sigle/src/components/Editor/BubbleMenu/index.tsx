@@ -18,10 +18,11 @@ const BubbleMenuButton = ({
   ...props
 }: { active: boolean } & React.ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button
+    type="button"
     {...props}
     className={cn({
-      "text-gray-1": !active,
-      "text-orange-7 dark:text-orange-9": active,
+      "text-background": !active,
+      "text-accent": active,
     })}
   />
 );
@@ -55,7 +56,7 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
   });
 
   // Listen to any key press to detect cmd + k and activate the link edition
-  // biome-ignore lint/correctness/useExhaustiveDependencies: ok
+  // oxlint-disable-next-line exhaustive-deps
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       // We want all our commands to start with the user pressing ctrl or cmd for mac users
@@ -66,6 +67,7 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
+    // oxlint-disable-next-line exhaustive-deps
   }, []);
 
   const onSelectLink = () => {
@@ -138,7 +140,7 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
           return false;
         }
 
-        /// Do not show on twitter embed
+        // Do not show on twitter embed
         if (editor.isActive("twitter")) {
           return false;
         }
