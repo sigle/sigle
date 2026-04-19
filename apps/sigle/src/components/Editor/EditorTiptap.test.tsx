@@ -283,6 +283,26 @@ describe("editor tiptap - markdown serialization", () => {
     editor?.commands.setHorizontalRule();
     expect(getMarkdownOutput()).toBe("---");
   });
+
+  it("should export image as ![alt](url)", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.insertContent({
+      type: "image",
+      attrs: {
+        src: "https://example.com/image.png",
+        alt: "Test image",
+      },
+    });
+    const output = getMarkdownOutput();
+    expect(output).toContain("![Test image](https://example.com/image.png)");
+  });
 });
 
 describe("editor tiptap - markdown deserialization", () => {
@@ -458,6 +478,20 @@ describe("editor tiptap - markdown deserialization", () => {
     editor?.commands.setContent("---");
     const output = getMarkdownOutput();
     expect(output).toBe("---");
+  });
+
+  it("should parse markdown image", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("![Test image](https://example.com/image.png)");
+    const output = getMarkdownOutput();
+    expect(output).toContain("![Test image](https://example.com/image.png)");
   });
 });
 
@@ -648,6 +682,21 @@ describe("editor tiptap - round-trip", () => {
     editor?.commands.setContent(original);
     const exported = editor?.storage.markdown.getMarkdown();
     expect(exported).toBe("---");
+  });
+
+  it("should preserve image through round-trip", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    const original = "![Test image](https://example.com/image.png)";
+    editor?.commands.setContent(original);
+    const exported = editor?.storage.markdown.getMarkdown();
+    expect(exported).toBe(original);
   });
 });
 
