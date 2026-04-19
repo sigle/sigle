@@ -1,7 +1,15 @@
 import type * as nextNavigationModule from "next/navigation";
 import type * as posthogModule from "posthog-js/react";
 import { render } from "@testing-library/react";
-import { describe, expect, it, beforeEach, vi, afterEach } from "vitest";
+import {
+  describe,
+  expect,
+  it,
+  beforeEach,
+  vi,
+  afterEach,
+  expectTypeOf,
+} from "vitest";
 import type * as sigleModule from "@/lib/sigle";
 import { EditorFormProvider } from "../../EditorFormProvider";
 import { EditorTipTap } from "../../EditorTiptap";
