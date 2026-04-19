@@ -388,6 +388,77 @@ describe("editor tiptap - markdown deserialization", () => {
     expect(editor?.getText()).toBe("Example");
     expect(editor?.isActive("link")).toBe(true);
   });
+
+  it("should parse markdown strikethrough", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("~~strikethrough text~~");
+    expect(editor?.getText()).toBe("strikethrough text");
+    expect(editor?.isActive("strike")).toBe(true);
+  });
+
+  it("should parse markdown inline code", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("`inline code`");
+    expect(editor?.getText()).toBe("inline code");
+    expect(editor?.isActive("code")).toBe(true);
+  });
+
+  it("should parse markdown h3 heading", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("### Heading 3");
+    expect(editor?.getText()).toBe("Heading 3");
+    expect(editor?.isActive("heading", { level: 3 })).toBe(true);
+  });
+
+  it("should parse markdown ordered list", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("1. First item\n2. Second item");
+    expect(editor?.getText()).toContain("First item");
+    expect(editor?.getText()).toContain("Second item");
+    expect(editor?.isActive("orderedList")).toBe(true);
+  });
+
+  it("should parse markdown horizontal rule", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("---");
+    const output = getMarkdownOutput();
+    expect(output).toBe("---");
+  });
 });
 
 describe("editor tiptap - round-trip", () => {
@@ -470,6 +541,113 @@ describe("editor tiptap - round-trip", () => {
     editor?.commands.setContent(original);
     const exported = editor?.storage.markdown.getMarkdown();
     expect(exported).toContain("A quote");
+  });
+
+  it("should preserve strikethrough through round-trip", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    const original = "~~strikethrough text~~";
+    editor?.commands.setContent(original);
+    const exported = editor?.storage.markdown.getMarkdown();
+    expect(exported).toBe(original);
+  });
+
+  it("should preserve inline code through round-trip", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    const original = "`inline code`";
+    editor?.commands.setContent(original);
+    const exported = editor?.storage.markdown.getMarkdown();
+    expect(exported).toBe(original);
+  });
+
+  it("should preserve link through round-trip", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    const original = "[Example](https://example.com)";
+    editor?.commands.setContent(original);
+    const exported = editor?.storage.markdown.getMarkdown();
+    expect(exported).toBe(original);
+  });
+
+  it("should preserve h3 heading through round-trip", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    const original = "### Heading 3";
+    editor?.commands.setContent(original);
+    const exported = editor?.storage.markdown.getMarkdown();
+    expect(exported).toContain("### Heading 3");
+  });
+
+  it("should preserve ordered list through round-trip", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    const original = "1. First item\n2. Second item";
+    editor?.commands.setContent(original);
+    const exported = editor?.storage.markdown.getMarkdown();
+    expect(exported).toContain("1. First item");
+    expect(exported).toContain("2. Second item");
+  });
+
+  it("should preserve code block through round-trip", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    const original = "```\nconst x = 1;\n```";
+    editor?.commands.setContent(original);
+    const exported = editor?.storage.markdown.getMarkdown();
+    expect(exported).toContain("```");
+    expect(exported).toContain("const x = 1;");
+  });
+
+  it("should preserve horizontal rule through round-trip", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    const original = "---";
+    editor?.commands.setContent(original);
+    const exported = editor?.storage.markdown.getMarkdown();
+    expect(exported).toBe("---");
   });
 });
 
