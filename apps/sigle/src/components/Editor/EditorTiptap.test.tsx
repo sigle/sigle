@@ -495,6 +495,200 @@ describe("editor tiptap - markdown deserialization", () => {
   });
 });
 
+describe("editor tiptap - html deserialization", () => {
+  beforeEach(() => {
+    useEditorStore.setState({ editor: undefined });
+  });
+
+  it("should parse html bold", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("<strong>bold text</strong>");
+    expect(editor?.getText()).toBe("bold text");
+    expect(editor?.isActive("bold")).toBe(true);
+  });
+
+  it("should parse html italic", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("<em>italic text</em>");
+    expect(editor?.getText()).toBe("italic text");
+    expect(editor?.isActive("italic")).toBe(true);
+  });
+
+  it("should parse html strikethrough", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("<s>strikethrough text</s>");
+    expect(editor?.getText()).toBe("strikethrough text");
+    expect(editor?.isActive("strike")).toBe(true);
+  });
+
+  it("should parse html inline code", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("<code>inline code</code>");
+    expect(editor?.getText()).toBe("inline code");
+    expect(editor?.isActive("code")).toBe(true);
+  });
+
+  it("should parse html link", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent('<a href="https://example.com">Example</a>');
+    expect(editor?.getText()).toBe("Example");
+    expect(editor?.isActive("link")).toBe(true);
+  });
+
+  it("should parse html h2 heading", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("<h2>Heading 2</h2>");
+    expect(editor?.getText()).toBe("Heading 2");
+    expect(editor?.isActive("heading", { level: 2 })).toBe(true);
+  });
+
+  it("should parse html h3 heading", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("<h3>Heading 3</h3>");
+    expect(editor?.getText()).toBe("Heading 3");
+    expect(editor?.isActive("heading", { level: 3 })).toBe(true);
+  });
+
+  it("should parse html blockquote", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("<blockquote>This is a quote</blockquote>");
+    expect(editor?.getText()).toContain("This is a quote");
+    expect(editor?.isActive("blockquote")).toBe(true);
+  });
+
+  it("should parse html bullet list", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("<ul><li>Item 1</li><li>Item 2</li></ul>");
+    expect(editor?.getText()).toContain("Item 1");
+    expect(editor?.getText()).toContain("Item 2");
+    expect(editor?.isActive("bulletList")).toBe(true);
+  });
+
+  it("should parse html ordered list", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent(
+      "<ol><li>First item</li><li>Second item</li></ol>",
+    );
+    expect(editor?.getText()).toContain("First item");
+    expect(editor?.getText()).toContain("Second item");
+    expect(editor?.isActive("orderedList")).toBe(true);
+  });
+
+  it("should parse html code block", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("<pre><code>const x = 1;</code></pre>");
+    expect(editor?.getText()).toContain("const x = 1;");
+    expect(editor?.isActive("codeBlock")).toBe(true);
+  });
+
+  it("should parse html horizontal rule", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent("<hr>");
+    const output = getMarkdownOutput();
+    expect(output).toBe("---");
+  });
+
+  it("should parse html image", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+    editor?.commands.setContent(
+      '<img src="https://example.com/image.png" alt="Test image">',
+    );
+    const output = getMarkdownOutput();
+    expect(output).toContain("![Test image](https://example.com/image.png)");
+  });
+});
+
 describe("editor tiptap - embeds", () => {
   beforeEach(() => {
     useEditorStore.setState({ editor: undefined });
