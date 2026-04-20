@@ -1,3 +1,4 @@
+import type { Editor } from "@tiptap/core";
 import {
   IconBold,
   IconCode,
@@ -6,7 +7,7 @@ import {
   IconStrikethrough,
   IconUnderline,
 } from "@tabler/icons-react";
-import { type Editor, isTextSelection, useEditorState } from "@tiptap/react";
+import { isTextSelection, useEditorState } from "@tiptap/react";
 import { BubbleMenu as TipTapBubbleMenu } from "@tiptap/react/menus";
 import { useEffect } from "react";
 import { cn } from "@/lib/cn";
@@ -87,7 +88,6 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
 
   return (
     <TipTapBubbleMenu
-      className="bg-gray-12 rounded-3 text-gray-1 flex gap-3 px-4 py-3"
       updateDelay={100}
       options={{
         placement: "top",
@@ -98,7 +98,7 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
       }}
       shouldShow={({ editor, state, from, to, view, element }) => {
         // Take the initial implementation of the plugin and extends it
-        // https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bubble-menu/src/bubble-menu-plugin.ts#L173
+        // https://github.com/ueberdosis/tiptap/blob/main/packages/extension-bubble-menu/src/bubble-menu-plugin.ts#L195
         const { doc, selection } = state;
         const { empty } = selection;
 
@@ -149,48 +149,50 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
       }}
       editor={editor}
     >
-      {!linkOpen ? (
-        <>
-          <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleBold().run()}
-            active={isActiveBold}
-          >
-            <IconBold size={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleItalic().run()}
-            active={isActiveItalic}
-          >
-            <IconItalic size={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleUnderline().run()}
-            active={isActiveUnderline}
-          >
-            <IconUnderline size={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleStrike().run()}
-            active={isActiveStrike}
-          >
-            <IconStrikethrough size={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() => editor.chain().focus().toggleCode().run()}
-            active={isActiveCode}
-          >
-            <IconCode size={18} />
-          </BubbleMenuButton>
-          <BubbleMenuButton
-            onClick={() => onSelectLink()}
-            active={isActiveLink}
-          >
-            <IconLink size={18} />
-          </BubbleMenuButton>
-        </>
-      ) : (
-        <EditorBubbleMenuLink editor={editor} />
-      )}
+      <div className="flex gap-3 rounded-md bg-foreground px-4 py-3">
+        {!linkOpen ? (
+          <>
+            <BubbleMenuButton
+              onClick={() => editor.chain().focus().toggleBold().run()}
+              active={isActiveBold}
+            >
+              <IconBold size={18} />
+            </BubbleMenuButton>
+            <BubbleMenuButton
+              onClick={() => editor.chain().focus().toggleItalic().run()}
+              active={isActiveItalic}
+            >
+              <IconItalic size={18} />
+            </BubbleMenuButton>
+            <BubbleMenuButton
+              onClick={() => editor.chain().focus().toggleUnderline().run()}
+              active={isActiveUnderline}
+            >
+              <IconUnderline size={18} />
+            </BubbleMenuButton>
+            <BubbleMenuButton
+              onClick={() => editor.chain().focus().toggleStrike().run()}
+              active={isActiveStrike}
+            >
+              <IconStrikethrough size={18} />
+            </BubbleMenuButton>
+            <BubbleMenuButton
+              onClick={() => editor.chain().focus().toggleCode().run()}
+              active={isActiveCode}
+            >
+              <IconCode size={18} />
+            </BubbleMenuButton>
+            <BubbleMenuButton
+              onClick={() => onSelectLink()}
+              active={isActiveLink}
+            >
+              <IconLink size={18} />
+            </BubbleMenuButton>
+          </>
+        ) : (
+          <EditorBubbleMenuLink editor={editor} />
+        )}
+      </div>
     </TipTapBubbleMenu>
   );
 };
