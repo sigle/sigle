@@ -1,9 +1,5 @@
 @reference "#global.css";
 
-/* Tippyjs theme used by the slash command */
-.tippy-box[data-theme~="sigle-editor"] {
-  @apply bg-background;
-}
-.tippy-box[data-theme~="sigle-editor"] .tippy-content {
+.slash-command-popup {
   @apply min-w-[280px] overflow-hidden rounded-md bg-background p-0 shadow-md;
 }
