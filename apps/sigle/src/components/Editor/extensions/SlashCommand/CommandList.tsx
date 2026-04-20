@@ -57,22 +57,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
       const $ele = $div.querySelector(
         `[data-index="${selectedIndex}"]`,
       ) as HTMLButtonElement;
-      if (!$ele) {
-        return;
-      }
-      const top = $div.scrollTop;
-
-      const min = $ele.offsetTop;
-      if (min < top) {
-        $div.scrollTop = min;
-        return;
-      }
-      const max = min + $ele.clientHeight;
-      const h = $div.clientHeight;
-      if (max > top + h) {
-        $div.scrollTop = max - h;
-        return;
-      }
+      $ele?.scrollIntoView({ block: "nearest" });
     }, [selectedIndex]);
 
     const selectItem = (index: number) => {
