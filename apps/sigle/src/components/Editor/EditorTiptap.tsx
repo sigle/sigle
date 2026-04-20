@@ -23,6 +23,7 @@ import {
   Dropcursor as TipTapDropcursor,
   UndoRedo as TipTapUndoRedo,
 } from "@tiptap/extensions";
+import { Markdown } from "@tiptap/markdown";
 import {
   EditorContent,
   type Extensions,
@@ -34,7 +35,6 @@ import { useParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { Markdown } from "tiptap-markdown";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "./EditorFormProvider";
@@ -156,17 +156,18 @@ export const EditorTipTap = () => {
         : undefined,
       isMobile ? TipTapMobileScroll : undefined,
     ] as Extensions,
-    content: getValues().content,
+    content: getValues().content || "<p></p>",
+    contentType: getValues().content ? "markdown" : "html",
     // Expose the editor to the parent so we can use it to get the content
     onCreate: ({ editor }) => {
-      const contentMarkdown = editor.storage.markdown.getMarkdown();
+      const contentMarkdown = editor.getMarkdown();
       if (getValues("content") !== contentMarkdown) {
         setValue("content", contentMarkdown);
       }
       setEditor(editor);
     },
     onUpdate: ({ editor }) => {
-      const contentMarkdown = editor.storage.markdown.getMarkdown();
+      const contentMarkdown = editor.getMarkdown();
       setValue("content", contentMarkdown);
     },
   });
