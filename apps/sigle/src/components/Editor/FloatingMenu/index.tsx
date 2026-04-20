@@ -1,4 +1,3 @@
-import "./style.css";
 import type { Editor } from "@tiptap/react";
 import { IconPlus } from "@tabler/icons-react";
 import { FloatingMenu as TipTapFloatingMenu } from "@tiptap/react/menus";
@@ -19,7 +18,6 @@ export const EditorFloatingMenu = ({ editor }: EditorFloatingMenuProps) => {
       editor={editor}
       pluginKey="inline-add-menu"
       options={{
-        theme: "sigle-editor-floating-menu",
         placement: "left",
         arrow: false,
       }}
