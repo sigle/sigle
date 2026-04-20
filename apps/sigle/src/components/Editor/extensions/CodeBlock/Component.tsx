@@ -51,6 +51,7 @@ export const CodeBlockComponent = (props: NodeViewProps) => {
         </Select>
       </div>
 
+      {/* @ts-expect-error as pre is working, tiptap types are incorrect */}
       <NodeViewContent as="pre" />
     </NodeViewWrapper>
   );
