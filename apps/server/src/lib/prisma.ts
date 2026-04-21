@@ -49,7 +49,6 @@ export const SELECT_PUBLIC_POST_FIELDS = {
   excerpt: true,
   tags: true,
   canonicalUri: true,
-  txId: true,
   blockHeight: true,
   metadataUri: true,
   createdAt: true,

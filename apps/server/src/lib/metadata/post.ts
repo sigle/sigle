@@ -6,7 +6,6 @@ import { fetchMetadata } from "./fetch";
 
 interface PostMetadata {
   version: string;
-  id: string;
   title: string;
   content: string;
   metaTitle?: string;
@@ -59,7 +58,6 @@ export async function getMetadataFromUri(
   const version = versionSplit[versionSplit.length - 1].replace(".json", "");
   const metadata: PostMetadata = {
     version,
-    id: postData.content.id,
     title: postData.content.title,
     content: postData.content.content,
     metaTitle,
