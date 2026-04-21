@@ -6,6 +6,8 @@ import { indexerJob } from "@/jobs/indexer";
 import { JobManager } from "@/lib/jobs";
 
 export default definePlugin(async () => {
+  if (import.meta.test) return;
+
   const boss = new PgBoss(env.DATABASE_URL);
   const jobs = new JobManager(boss)
     .register(indexerJob)

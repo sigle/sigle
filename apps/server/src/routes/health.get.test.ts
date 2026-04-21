@@ -1,19 +1,11 @@
-import type { H3Event } from "nitro/h3";
-import { describe, expect, it, vi } from "vitest";
-
-// oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("nitro")>(import("nitro"), () => ({
-  defineRouteMeta: vi.fn(),
-}));
-
-const { default: handler } = await import("./health.get");
+import { $fetchRaw } from "nitro-test-utils/e2e";
+import { describe, expect, it } from "vitest";
 
 describe("health.get", () => {
   it("returns success true", async () => {
-    const mockEvent = {} as unknown as H3Event;
+    const { data, status } = await $fetchRaw("/health");
 
-    const result = handler(mockEvent);
-
-    expect(result).toStrictEqual({ success: true });
+    expect(status).toBe(200);
+    expect(data).toStrictEqual({ success: true });
   });
 });

@@ -1,3 +1,5 @@
+/// <reference types="nitro-test-utils/env" />
+
 import type * as Sentry from "@sentry/node";
 import type { PostHog } from "posthog-node";
 import type { AuthenticatedUser } from "./middleware/3.auth-user";

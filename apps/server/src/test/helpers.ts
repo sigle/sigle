@@ -1,7 +1,7 @@
-import type { H3Event } from "nitro/h3";
 import type { User, Profile, Post, Draft } from "@/__generated__/prisma/client";
 import type { UserFlag } from "@/__generated__/prisma/enums";
 import { prisma } from "@/lib/prisma";
+import { createTestDatabase, type TestDatabase } from "@/test/database";
 
 interface CreateTestUserOptions {
   id?: string;
@@ -103,17 +103,4 @@ export async function createTestDraft(
   });
 }
 
-export function createMockEvent(
-  userId: string,
-  overrides: Partial<H3Event> = {},
-): H3Event {
-  return {
-    context: {
-      user: { id: userId },
-    },
-    path: "/api/protected/test",
-    method: "GET",
-    headers: {},
-    ...overrides,
-  } as unknown as H3Event;
-}
+export { createTestDatabase, type TestDatabase };

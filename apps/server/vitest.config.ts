@@ -1,10 +1,16 @@
+import { defineConfig } from "nitro-test-utils/config";
 import tsconfigPaths from "vite-tsconfig-paths";
-import { defineConfig } from "vitest/config";
 
-export default defineConfig({
-  plugins: [tsconfigPaths()],
-  test: {
-    environment: "node",
-    include: ["src/**/*.test.ts"],
+export default defineConfig(
+  {
+    plugins: [tsconfigPaths()],
+    test: {
+      environment: "node",
+      include: ["src/**/*.test.ts"],
+      // setupFiles: ["./src/test/setup-e2e.ts"],
+    },
   },
-});
+  {
+    global: true,
+  },
+);
