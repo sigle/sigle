@@ -82,6 +82,10 @@ const Embed = Node.create({
     ];
   },
 
+  renderHTML() {
+    return ["span"];
+  },
+
   parseHTML() {
     return [
       {
