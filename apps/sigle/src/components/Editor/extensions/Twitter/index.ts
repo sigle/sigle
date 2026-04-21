@@ -110,6 +110,19 @@ const Embed = Node.create({
     },
 
     tokenize(src: string) {
+      const markdownLinkMatch = /^\[([^\]]+)\]\(([^)]+)\)/.exec(src);
+      if (markdownLinkMatch) {
+        const url = markdownLinkMatch[1].trim();
+        if (isValidUrl(url)) {
+          return {
+            type: "embed",
+            raw: markdownLinkMatch[0],
+            url,
+            embedType: getEmbedType(url),
+          };
+        }
+      }
+
       const match = EMBED_URL_REGEX.exec(src);
 
       if (!match) {
@@ -143,7 +156,7 @@ const Embed = Node.create({
 
   renderMarkdown(node) {
     if (!node.attrs?.url) return "";
-    return `${node.attrs.url}\n\n`;
+    return `[${node.attrs.url}](${node.attrs.url})`;
   },
 
   addNodeView() {
