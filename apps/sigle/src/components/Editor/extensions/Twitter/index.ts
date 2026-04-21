@@ -12,8 +12,6 @@ declare module "@tiptap/core" {
   }
 }
 
-const EMBED_URL_REGEX = /^(https?:\/\/[^\s]+)\s*$/;
-
 function getEmbedType(url: string): "twitter" | "video" {
   if (TWITTER_REGEX.test(url)) return "twitter";
   if (YOUTUBE_REGEX.test(url)) return "video";
