@@ -744,7 +744,9 @@ describe("editor tiptap - embeds", () => {
       },
     });
     const output = getMarkdownOutput();
-    expect(output).toContain("https://twitter.com/user/status/1234567890");
+    expect(output).toContain(
+      "[https://twitter.com/user/status/1234567890](https://twitter.com/user/status/1234567890)",
+    );
   });
 
   it("should export youtube embed as link", async () => {
@@ -764,7 +766,9 @@ describe("editor tiptap - embeds", () => {
       },
     });
     const output = getMarkdownOutput();
-    expect(output).toContain("https://youtube.com/watch?v=abc123");
+    expect(output).toContain(
+      "[https://youtube.com/watch?v=abc123](https://youtube.com/watch?v=abc123)",
+    );
   });
 
   it("should preserve twitter embed through round-trip", async () => {
@@ -776,7 +780,8 @@ describe("editor tiptap - embeds", () => {
     await waitForEditor();
     const editor = useEditorStore.getState().editor;
     expect(editor).toBeDefined();
-    const original = "https://twitter.com/user/status/1234567890\n\n";
+    const original =
+      "[https://twitter.com/user/status/1234567890](https://twitter.com/user/status/1234567890)";
     editor?.commands.setContent(original, { contentType: "markdown" });
     const exported = editor?.getMarkdown();
     expect(exported).toBe(original);
@@ -791,7 +796,8 @@ describe("editor tiptap - embeds", () => {
     await waitForEditor();
     const editor = useEditorStore.getState().editor;
     expect(editor).toBeDefined();
-    const original = "https://youtube.com/watch?v=abc123\n\n";
+    const original =
+      "[https://youtube.com/watch?v=abc123](https://youtube.com/watch?v=abc123)";
     editor?.commands.setContent(original, { contentType: "markdown" });
     const exported = editor?.getMarkdown();
     expect(exported).toBe(original);
