@@ -123,24 +123,7 @@ const Embed = Node.create({
         }
       }
 
-      const match = EMBED_URL_REGEX.exec(src);
-
-      if (!match) {
-        return undefined;
-      }
-
-      const url = match[1].trim();
-
-      if (!isValidUrl(url)) {
-        return undefined;
-      }
-
-      return {
-        type: "embed",
-        raw: match[0],
-        url,
-        embedType: getEmbedType(url),
-      };
+      return undefined;
     },
   },
 
