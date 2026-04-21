@@ -1,11 +1,15 @@
-// https://github.com/ueberdosis/tiptap/issues/1508#issuecomment-877348787
-
 import "./style.css";
 import type { IconProps } from "@tabler/icons-react";
+import {
+  autoUpdate,
+  computePosition,
+  flip,
+  offset,
+  type VirtualElement,
+} from "@floating-ui/dom";
 import { type Editor, Extension } from "@tiptap/core";
 import { type Range, ReactRenderer } from "@tiptap/react";
 import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion";
-import tippy, { type Instance } from "tippy.js";
 import { CommandList, type CommandListRef } from "./CommandList";
 
 export interface SlashCommandsCommand {
@@ -62,9 +66,46 @@ export const SlashCommands = Extension.create<{
           props.command({ editor, range });
         },
         render: () => {
-          // oxlint-disable-next-line init-declarations
-          let reactRenderer: ReactRenderer<CommandListRef>;
-          let popup: Instance[] = [];
+          let reactRenderer: ReactRenderer<CommandListRef> | null = null;
+          let container: HTMLDivElement | null = null;
+          let cleanup: (() => void) | null = null;
+
+          const getVirtualElement = (
+            clientRect: (() => DOMRect | null) | null | undefined,
+          ): VirtualElement => ({
+            getBoundingClientRect: () => {
+              const rect = clientRect?.();
+              return (
+                rect ?? {
+                  x: 0,
+                  y: 0,
+                  width: 0,
+                  height: 0,
+                  top: 0,
+                  right: 0,
+                  bottom: 0,
+                  left: 0,
+                }
+              );
+            },
+          });
+
+          const updatePosition = (
+            clientRect: (() => DOMRect | null) | null | undefined,
+          ) => {
+            if (!container) return;
+            const virtualEl = getVirtualElement(clientRect);
+            computePosition(virtualEl, container, {
+              placement: "bottom-start",
+              middleware: [offset(4), flip()],
+            }).then(({ x, y }) => {
+              if (!container) return;
+              Object.assign(container.style, {
+                left: `${x}px`,
+                top: `${y}px`,
+              });
+            });
+          };
 
           return {
             onStart: (props) => {
@@ -73,40 +114,47 @@ export const SlashCommands = Extension.create<{
                 editor: props.editor,
               });
 
-              popup = tippy("body", {
-                // oxlint-disable-next-line no-explicit-any
-                getReferenceClientRect: props.clientRect as any,
-                appendTo: () =>
-                  // oxlint-disable-next-line no-explicit-any
-                  document.getElementsByClassName("root")[0] as any,
-                content: reactRenderer.element,
-                showOnCreate: true,
-                interactive: true,
-                trigger: "manual",
-                placement: "bottom-start",
-                theme: "sigle-editor",
-                arrow: false,
-              });
+              container = document.createElement("div");
+              container.classList.add("slash-command-popup");
+              container.style.position = "absolute";
+              container.style.zIndex = "50";
+              container.appendChild(reactRenderer?.element as HTMLElement);
+
+              const appendTo =
+                document.getElementsByClassName("root")[0] ?? document.body;
+              appendTo.appendChild(container);
+
+              updatePosition(props.clientRect);
+              const virtualEl = getVirtualElement(props.clientRect);
+              cleanup = autoUpdate(virtualEl, container, () =>
+                updatePosition(props.clientRect),
+              );
             },
             onUpdate: (props) => {
-              reactRenderer.updateProps(props);
-
-              popup[0]?.setProps({
-                // oxlint-disable-next-line no-explicit-any
-                getReferenceClientRect: props.clientRect as any,
-              });
+              reactRenderer?.updateProps(props);
+              cleanup?.();
+              updatePosition(props.clientRect);
+              if (container) {
+                const virtualEl = getVirtualElement(props.clientRect);
+                cleanup = autoUpdate(virtualEl, container, () =>
+                  updatePosition(props.clientRect),
+                );
+              }
             },
             onKeyDown(props) {
               if (props.event.key === "Escape") {
-                popup[0]?.hide();
                 return true;
               }
 
               return reactRenderer?.ref?.onKeyDown(props) ?? false;
             },
             onExit() {
-              popup[0]?.destroy();
-              reactRenderer.destroy();
+              cleanup?.();
+              if (container) {
+                container.remove();
+                container = null;
+              }
+              reactRenderer?.destroy();
             },
           };
         },

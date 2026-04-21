@@ -1,7 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { IconDotsVertical } from "@tabler/icons-react";
+import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -15,6 +15,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
 import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
@@ -55,12 +63,22 @@ export default function DashboardDrafts() {
           ) : null}
 
           {drafts?.length === 0 ? (
-            <div className="flex flex-col items-center justify-center gap-4 py-7">
-              <p className="text-sm text-muted-foreground">No drafts yet</p>
-              <Button variant="secondary" render={<NextLink href="/p/new" />}>
-                Write a post
-              </Button>
-            </div>
+            <Empty>
+              <EmptyHeader>
+                <EmptyMedia variant="icon">
+                  <IconPencil size={20} />
+                </EmptyMedia>
+                <EmptyTitle>No Drafts</EmptyTitle>
+                <EmptyDescription className="max-w-xs text-pretty">
+                  Create a new draft to get started.
+                </EmptyDescription>
+              </EmptyHeader>
+              <EmptyContent>
+                <Button
+                  render={<NextLink href="/p/new">Create a new draft</NextLink>}
+                />
+              </EmptyContent>
+            </Empty>
           ) : null}
 
           {drafts?.map((draft) => (
