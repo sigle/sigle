@@ -106,7 +106,6 @@ const Embed = Node.create({
     level: "block",
 
     start(src: string) {
-      console.log("src", src);
       return src.indexOf("http");
     },
 
