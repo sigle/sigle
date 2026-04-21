@@ -1,6 +1,8 @@
-import { Node, nodePasteRule } from "@tiptap/core";
+import { type JSONContent, Node, nodePasteRule } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import { EmbedComponent, globalPasteRegex, isValidUrl } from "./component";
+import { TWITTER_REGEX } from "./twitter";
+import { YOUTUBE_REGEX } from "./video";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -8,6 +10,14 @@ declare module "@tiptap/core" {
       setEmbed: (type: "twitter" | "video") => ReturnType;
     };
   }
+}
+
+const EMBED_URL_REGEX = /^(https?:\/\/[^\s]+)\s*$/;
+
+function getEmbedType(url: string): "twitter" | "video" {
+  if (TWITTER_REGEX.test(url)) return "twitter";
+  if (YOUTUBE_REGEX.test(url)) return "video";
+  return "twitter";
 }
 
 const Embed = Node.create({
@@ -87,90 +97,50 @@ const Embed = Node.create({
     ];
   },
 
-  renderHTML({ HTMLAttributes }) {
-    if (!HTMLAttributes.url) {
-      // temporary solution as we cannot currently return null
-      return ["span"];
-    }
+  markdownTokenizer: {
+    name: "embed",
+    level: "block",
 
-    return [
-      "div",
-      {
-        "data-embed": HTMLAttributes.url,
-        "data-embed-type": HTMLAttributes.embedType,
-      },
-    ];
+    start(src: string) {
+      console.log("src", src);
+      return src.indexOf("http");
+    },
+
+    tokenize(src: string) {
+      const match = EMBED_URL_REGEX.exec(src);
+
+      if (!match) {
+        return undefined;
+      }
+
+      const url = match[1].trim();
+
+      if (!isValidUrl(url)) {
+        return undefined;
+      }
+
+      return {
+        type: "embed",
+        raw: match[0],
+        url,
+        embedType: getEmbedType(url),
+      };
+    },
   },
 
-  addStorage() {
+  parseMarkdown(token): JSONContent {
     return {
-      markdown: {
-        parse: {
-          /**
-           * When parsing convert the twitter link to a tweet node. We do this so we can bypass
-           * the link plugin.
-           */
-
-          // oxlint-disable-next-line no-explicit-any
-          setup(markdownit: any) {
-            // oxlint-disable-next-line no-explicit-any
-            function twitterTransformer(state: any) {
-              for (let i = 0; i < state.tokens.length; i++) {
-                // We check for all links inside a full paragraph
-                // token needs to be a paragraph_open
-                // token +1 needs to be a inline
-                // token +2 needs to be a paragraph_close
-                // Then we remove the paragraph and inlines and replace it with a html_block
-                if (
-                  state.tokens[i].type === "paragraph_open" &&
-                  state.tokens[i + 1] &&
-                  state.tokens[i + 1].type === "inline" &&
-                  state.tokens[i + 2] &&
-                  state.tokens[i + 2].type === "paragraph_close"
-                ) {
-                  const inlineTokens = state.tokens[i + 1].children;
-                  if (
-                    inlineTokens.length === 3 &&
-                    inlineTokens[0].type === "link_open" &&
-                    inlineTokens[1].type === "text" &&
-                    inlineTokens[2].type === "link_close" &&
-                    isValidUrl(inlineTokens[1].content)
-                  ) {
-                    const url = inlineTokens[0].attrGet("href");
-                    const token = new state.Token("html_block", "", 0);
-                    token.content = `<div data-embed="${url}"></div>`;
-                    // remove the paragraph and inlines and replace it with a html_block
-                    state.tokens.splice(i, 3, token);
-                  }
-                }
-              }
-            }
-
-            // oxlint-disable-next-line no-explicit-any
-            const parser = (md: any) => {
-              md.core.ruler.push("twitter_transformer", twitterTransformer);
-            };
-
-            markdownit.use(parser);
-            return markdownit;
-          },
-        },
-
-        /**
-         * When we serialize the node, we want to add a simple link representing the tweet.
-         * We serialize it as a link so it can be rendered as a link in other clients.
-         */
-
-        // oxlint-disable-next-line no-explicit-any
-        serialize(state: any, node: any) {
-          // If url is not defined, we don't want to serialize the node
-          if (!node.attrs.url) return;
-
-          state.write(`[${node.attrs.url}](${node.attrs.url})`);
-          state.closeBlock(node);
-        },
+      type: "embed",
+      attrs: {
+        url: token.url,
+        embedType: token.embedType ?? "twitter",
       },
     };
+  },
+
+  renderMarkdown(node) {
+    if (!node.attrs?.url) return "";
+    return `${node.attrs.url}\n\n`;
   },
 
   addNodeView() {

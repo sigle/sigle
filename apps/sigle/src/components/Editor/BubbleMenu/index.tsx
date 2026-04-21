@@ -141,7 +141,7 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
         }
 
         // Do not show on twitter embed
-        if (editor.isActive("twitter")) {
+        if (editor.isActive("embed")) {
           return false;
         }
 
