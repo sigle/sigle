@@ -1,6 +1,6 @@
-import "./style.css";
+import type { Editor } from "@tiptap/react";
 import { IconPlus } from "@tabler/icons-react";
-import { type Editor, FloatingMenu as TipTapFloatingMenu } from "@tiptap/react";
+import { FloatingMenu as TipTapFloatingMenu } from "@tiptap/react/menus";
 import { Button } from "@/components/ui/button";
 
 interface EditorFloatingMenuProps {
@@ -17,8 +17,7 @@ export const EditorFloatingMenu = ({ editor }: EditorFloatingMenuProps) => {
     <TipTapFloatingMenu
       editor={editor}
       pluginKey="inline-add-menu"
-      tippyOptions={{
-        theme: "sigle-editor-floating-menu",
+      options={{
         placement: "left",
         arrow: false,
       }}

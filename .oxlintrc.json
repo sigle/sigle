@@ -44,6 +44,7 @@
     "vitest/prefer-to-be-truthy": "off",
     "vitest/prefer-to-be-falsy": "off",
     "vitest/require-test-timeout": "off",
+    "jest/prefer-ending-with-an-expect": "off",
 
     "no-hooks": "off",
     "require-hook": "off",

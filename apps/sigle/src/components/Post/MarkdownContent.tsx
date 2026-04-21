@@ -1,5 +1,6 @@
 import ReactMarkdown from "react-markdown";
 import { Tweet } from "react-tweet";
+import remarkGfm from "remark-gfm";
 import { resolveImageUrl } from "@/lib/images";
 import {
   getTweetIdFromUrl,
@@ -18,6 +19,7 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
   return (
     <div className="prose lg:prose-lg dark:prose-invert">
       <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
         components={{
           // oxlint-disable-next-line no-unused-vars
           img: ({ node, src, ...props }) => {

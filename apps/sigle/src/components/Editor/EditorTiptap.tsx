@@ -3,14 +3,11 @@ import "./editor-tiptap.css";
 import TipTapBlockquote from "@tiptap/extension-blockquote";
 import TipTapBold from "@tiptap/extension-bold";
 import TipTapBulletList from "@tiptap/extension-bullet-list";
-import CharacterCount from "@tiptap/extension-character-count";
 import TipTapCode from "@tiptap/extension-code";
 import TipTapCodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import TipTapDocument from "@tiptap/extension-document";
-import TipTapDropcursor from "@tiptap/extension-dropcursor";
 import TipTapHardBreak from "@tiptap/extension-hard-break";
 import TipTapHeading from "@tiptap/extension-heading";
-import TipTapHistory from "@tiptap/extension-history";
 import TipTapHorizontalRule from "@tiptap/extension-horizontal-rule";
 import TipTapItalic from "@tiptap/extension-italic";
 import TipTapLink from "@tiptap/extension-link";
@@ -22,6 +19,12 @@ import TipTapText from "@tiptap/extension-text";
 import TipTapTypography from "@tiptap/extension-typography";
 import TipTapUnderline from "@tiptap/extension-underline";
 import {
+  CharacterCount as TipTapCharacterCount,
+  Dropcursor as TipTapDropcursor,
+  UndoRedo as TipTapUndoRedo,
+} from "@tiptap/extensions";
+import { Markdown } from "@tiptap/markdown";
+import {
   EditorContent,
   type Extensions,
   ReactNodeViewRenderer,
@@ -32,7 +35,6 @@ import { useParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
-import { Markdown } from "tiptap-markdown";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "./EditorFormProvider";
@@ -64,9 +66,9 @@ export const EditorTipTap = () => {
   );
 
   const editor = useEditor({
-    immediatelyRender: false,
+    immediatelyRender: true,
     extensions: [
-      CharacterCount,
+      TipTapCharacterCount,
       // Nodes
       TipTapDocument,
       TipTapParagraph,
@@ -142,7 +144,7 @@ export const EditorTipTap = () => {
         class: "bg-primary",
         width: 2,
       }),
-      TipTapHistory,
+      TipTapUndoRedo,
       TipTapPlaceholder(isMobile),
       TipTapTypography,
       // Custom extensions
@@ -154,17 +156,18 @@ export const EditorTipTap = () => {
         : undefined,
       isMobile ? TipTapMobileScroll : undefined,
     ] as Extensions,
-    content: getValues().content,
+    content: getValues().content || "<p></p>",
+    contentType: getValues().content ? "markdown" : "html",
     // Expose the editor to the parent so we can use it to get the content
     onCreate: ({ editor }) => {
-      const contentMarkdown = editor.storage.markdown.getMarkdown();
+      const contentMarkdown = editor.getMarkdown();
       if (getValues("content") !== contentMarkdown) {
         setValue("content", contentMarkdown);
       }
       setEditor(editor);
     },
     onUpdate: ({ editor }) => {
-      const contentMarkdown = editor.storage.markdown.getMarkdown();
+      const contentMarkdown = editor.getMarkdown();
       setValue("content", contentMarkdown);
     },
   });
