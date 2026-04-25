@@ -45,6 +45,7 @@
     "vitest/prefer-to-be-falsy": "off",
     "vitest/require-test-timeout": "off",
     "jest/prefer-ending-with-an-expect": "off",
+    "typescript/explicit-member-accessibility": "off",
 
     "no-hooks": "off",
     "require-hook": "off",

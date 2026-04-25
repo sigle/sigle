@@ -54,7 +54,7 @@ export const EditorHeader = () => {
         `sticky z-10 flex h-[80px] items-center border-b border-border bg-background px-6 transition-all duration-500`,
         {
           "top-0": scrollDirection === "up",
-          "-top-[80px]": scrollDirection === "down",
+          "top-[-80px]": scrollDirection === "down",
         },
       )}
     >
