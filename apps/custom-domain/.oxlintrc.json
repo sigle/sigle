@@ -5,7 +5,8 @@
   "ignorePatterns": [".next/**", "out/**", "build/**", "next-env.d.ts"],
   "settings": {
     "better-tailwindcss": {
-      "entryPoint": "./apps/custom-domain/src/app/globals.css"
+      "cwd": "./apps/custom-domain",
+      "entryPoint": "./src/app/globals.css"
     }
   },
   "rules": {

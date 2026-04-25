@@ -5,7 +5,8 @@
   "ignorePatterns": [".next/**", "out/**", "build/**", "next-env.d.ts"],
   "settings": {
     "better-tailwindcss": {
-      "entryPoint": "./apps/sigle/src/app/globals.css"
+      "cwd": "./apps/sigle",
+      "entryPoint": "./src/app/globals.css"
     }
   },
   "rules": {

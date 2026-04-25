@@ -15,8 +15,8 @@
   "devDependencies": {
     "@changesets/cli": "2.31.0",
     "lefthook": "2.1.6",
-    "oxfmt": "0.45.0",
-    "oxlint": "1.60.0",
+    "oxfmt": "0.46.0",
+    "oxlint": "1.61.0",
     "syncpack": "14.3.0",
     "turbo": "2.9.6"
   },
