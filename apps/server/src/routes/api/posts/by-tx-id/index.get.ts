@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
       },
     },
     where: {
-      txId,
+      id: txId,
     },
   });
 

@@ -53,7 +53,6 @@ describe("post metadata", () => {
       expect(result).toStrictEqual(
         Result.ok({
           version: "1.0.0",
-          id: "post-123",
           title: "Test Post",
           content: "# Hello World",
           metaTitle: "SEO Title",

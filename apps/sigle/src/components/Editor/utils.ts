@@ -157,7 +157,6 @@ export const generateSigleMetadataFromForm = async ({
     $schema: PostMetadataSchemaId.LATEST,
     name: post.title,
     description,
-    external_url: `${env.NEXT_PUBLIC_APP_URL}/p/${postId}`,
     image: await uploadNftImage(
       { postId, type },
       {

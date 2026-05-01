@@ -129,7 +129,7 @@ describe("executeIndexerIndexPostsJob", () => {
     const result = await executeIndexerIndexPostsJob({});
 
     expect(result.toProcess).toBe(0);
-    expect(result.lastProcessedTxId).toBeUndefined();
+    expect(result.lastProcessedId).toBeUndefined();
     expect(mockEmit).not.toHaveBeenCalled();
   });
 
@@ -170,7 +170,7 @@ describe("executeIndexerIndexPostsJob", () => {
     const result = await executeIndexerIndexPostsJob({});
 
     expect(result.toProcess).toBe(2);
-    expect(result.lastProcessedTxId).toBeUndefined();
+    expect(result.lastProcessedId).toBeUndefined();
     expect(mockEmit).toHaveBeenCalledTimes(2);
     expect(mockEmit).toHaveBeenNthCalledWith(1, {
       action: "indexer-publish-post",
@@ -194,12 +194,11 @@ describe("executeIndexerIndexPostsJob", () => {
     });
   });
 
-  it("stops processing when reaching lastProcessedTxId", async () => {
+  it("stops processing when reaching lastProcessedId", async () => {
     await createTestUser({ id: userId });
     await createTestPost({
-      id: "post-existing",
+      id: "0xtx2",
       userId,
-      txId: "0xtx2",
       blockHeight: 102,
     });
 
@@ -219,7 +218,7 @@ describe("executeIndexerIndexPostsJob", () => {
     const result = await executeIndexerIndexPostsJob({});
 
     expect(result.toProcess).toBe(1);
-    expect(result.lastProcessedTxId).toBe("0xtx2");
+    expect(result.lastProcessedId).toBe("0xtx2");
     expect(mockEmit).toHaveBeenCalledTimes(1);
     expect(mockEmit).toHaveBeenCalledWith({
       action: "indexer-publish-post",

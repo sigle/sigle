@@ -143,16 +143,13 @@ export const executeNewPostJob = async (
     const post = await tx.post.findUnique({
       select: {
         id: true,
-        txId: true,
       },
       where: {
-        id: metadata.id,
+        id: data.txId,
       },
     });
-    if (post && post.txId !== data.txId) {
-      throw new Error(
-        `Post id ${metadata.id} already exists with txId ${post.txId}`,
-      );
+    if (post) {
+      throw new Error(`Post id ${data.txId} already exists`);
     }
 
     const user = await tx.user.findUnique({
@@ -173,17 +170,14 @@ export const executeNewPostJob = async (
 
     const updatedPost = await tx.post.upsert({
       where: {
-        id: metadata.id,
-        txId: data.txId,
+        id: data.txId,
       },
       update: {
-        txId: data.txId,
         version: data.version,
         blockHeight: data.blockHeight,
       },
       create: {
-        id: metadata.id,
-        txId: data.txId,
+        id: data.txId,
         version: data.version,
         blockHeight: data.blockHeight,
         userId,
@@ -271,8 +265,7 @@ export const executeNewPostJob = async (
   }
 
   consola.info("post.newPost", {
-    id: metadata.id,
-    txId: data.txId,
+    id: data.txId,
     address: data.address,
   });
 };

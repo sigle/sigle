@@ -221,7 +221,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
         router.push(
           Routes.post(
-            { postId },
+            { postId: txId },
             {
               search: {
                 published: true,

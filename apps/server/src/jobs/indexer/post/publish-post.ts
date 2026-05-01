@@ -43,20 +43,15 @@ export const executePublishPostJob = async (
     const post = await tx.post.findUnique({
       select: {
         id: true,
-        txId: true,
         coverImageId: true,
       },
       where: {
-        id: metadata.id,
+        id: data.txId,
       },
     });
-    if (post && post.txId !== data.txId) {
-      console.warn(
-        `Post id ${metadata.id} already exists with a different txId. Existing txId: ${post.txId}, new txId: ${data.txId}`,
-      );
-      throw new Error(
-        `Post id ${metadata.id} already exists with txId ${post.txId}`,
-      );
+    if (post) {
+      consola.warn(`Post id ${data.txId} already exists`);
+      throw new Error(`Post id ${data.txId} already exists`);
     }
 
     const user = await tx.user.findUnique({
@@ -77,17 +72,14 @@ export const executePublishPostJob = async (
 
     const updatedPost = await tx.post.upsert({
       where: {
-        id: metadata.id,
-        txId: data.txId,
+        id: data.txId,
       },
       update: {
-        txId: data.txId,
         version: metadata.version,
         blockHeight: data.blockHeight,
       },
       create: {
-        id: metadata.id,
-        txId: data.txId,
+        id: data.txId,
         version: metadata.version,
         blockHeight: data.blockHeight,
         userId,
@@ -105,8 +97,8 @@ export const executePublishPostJob = async (
       },
     });
 
-    // Only reprocess the image if it changed
-    if (metadata.coverImage && post?.coverImageId !== metadata.coverImage.url) {
+    // Always process the image for new posts
+    if (metadata.coverImage) {
       shouldProcessImage = true;
     }
 
@@ -149,8 +141,7 @@ export const executePublishPostJob = async (
   }
 
   consola.info("post.publishPost", {
-    id: metadata.id,
-    txId: data.txId,
+    id: data.txId,
     author: data.author,
   });
 };
