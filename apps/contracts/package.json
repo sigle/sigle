@@ -10,7 +10,7 @@
   },
   "devDependencies": {
     "@sigle/sdk": "workspace:*",
-    "@stacks/clarinet-sdk": "3.12.0",
+    "@stacks/clarinet-sdk": "3.17.0",
     "@stacks/network": "7.3.1",
     "@stacks/transactions": "7.3.1",
     "chokidar-cli": "3.0.0",
