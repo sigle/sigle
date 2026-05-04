@@ -44,8 +44,12 @@
     "vitest/prefer-to-be-truthy": "off",
     "vitest/prefer-to-be-falsy": "off",
     "vitest/require-test-timeout": "off",
+    "vitest/no-hooks": "off",
     "jest/prefer-ending-with-an-expect": "off",
+    "jest/prefer-expect-assertions": "off",
+    "vitest/prefer-expect-assertions": "off",
     "typescript/explicit-member-accessibility": "off",
+    "react/forbid-component-props": "off",
 
     "no-hooks": "off",
     "require-hook": "off",
@@ -68,6 +72,8 @@
     "no-use-before-define": "off",
     "no-shadow": "off",
     "vitest/require-mock-type-parameters": "off",
-    "no-useless-assignment": "off"
+    "vitest/valid-title": "off",
+    "no-useless-assignment": "off",
+    "no-underscore-dangle": "off"
   }
 }
