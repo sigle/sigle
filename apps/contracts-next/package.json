@@ -1,5 +1,5 @@
 {
-  "name": "@sigle/contracts",
+  "name": "@sigle/contracts-next",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -9,6 +9,7 @@
     "test:watch": "chokidar \"tests/**/*.ts\" \"contracts/**/*.clar\" -c \"npm run test:report\""
   },
   "devDependencies": {
+    "@sigle/sdk": "workspace:*",
     "@stacks/clarinet-sdk": "3.12.0",
     "@stacks/network": "7.3.1",
     "@stacks/transactions": "7.3.1",
