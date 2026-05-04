@@ -16,7 +16,7 @@ sigle/
 │   └── contracts/      - Clarity smart contracts
 ├── packages/
 │   ├── sdk/            - Shared TypeScript SDK
-│   ├── contracts-source/
+│   └── contracts-source-next/
 │   └── testnet-seed/
 └── docker-compose.yaml - Local dev services (PostgreSQL)
 ```

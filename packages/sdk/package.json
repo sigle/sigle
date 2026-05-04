@@ -18,7 +18,7 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@sigle/contracts-source": "workspace:*",
+    "@sigle/contracts-source-next": "workspace:*",
     "zod-validation-error": "5.0.0"
   },
   "devDependencies": {

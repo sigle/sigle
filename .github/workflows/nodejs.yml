@@ -45,7 +45,12 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: "Check contract syntax"
+      - name: "Check contract syntax (contracts)"
         uses: docker://hirosystems/clarinet:3.5.0
         with:
           args: check --manifest-path ./apps/contracts/Clarinet.toml
+
+      - name: "Check contract syntax (contracts-next)"
+        uses: docker://hirosystems/clarinet:3.5.0
+        with:
+          args: check --manifest-path ./apps/contracts-next/Clarinet.toml

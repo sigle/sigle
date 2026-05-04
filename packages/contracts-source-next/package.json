@@ -1,5 +1,5 @@
 {
-  "name": "@sigle/contracts-source",
+  "name": "@sigle/contracts-source-next",
   "version": "0.0.0",
   "type": "module",
   "main": "dist/index.js",
