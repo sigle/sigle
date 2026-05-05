@@ -14,7 +14,7 @@ export const resolveImageUrl = (
     image =
       options.gateway && env.NEXT_PUBLIC_IPFS_GATEWAY_URL
         ? `${env.NEXT_PUBLIC_IPFS_GATEWAY_URL}/${cid}`
-        : `https://${cid}.ipfs.w3s.link/`;
+        : `https://ipfs.filebase.io/ipfs/${cid}`;
   }
   if (image?.startsWith("ar://")) {
     image = `${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${image.slice(5)}`;

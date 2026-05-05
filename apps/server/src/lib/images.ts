@@ -11,7 +11,7 @@ export const resolveImageUrl = (image: string) => {
     if (cid.startsWith("Qm")) {
       cid = convertCIDv0toCIDv1(cid);
     }
-    image = `https://${cid}.ipfs.w3s.link/`;
+    image = `${env.S3_IPFS_GATEWAY_URL}/${cid}`;
   }
   if (image?.startsWith("ar://")) {
     image = `${env.ARWEAVE_GATEWAY_URL}/${image.slice(5)}`;

@@ -15,7 +15,7 @@ export const resolveImageUrl = (
     image =
       options.gateway && env.NEXT_PUBLIC_IPFS_GATEWAY_URL
         ? `${env.NEXT_PUBLIC_IPFS_GATEWAY_URL}/${cid}`
-        : `https://${cid}.ipfs.w3s.link/`;
+        : `https://ipfs.filebase.io/ipfs/${cid}`;
   }
   if (image?.startsWith("ar://")) {
     // oxlint-disable-next-line no-param-reassign
