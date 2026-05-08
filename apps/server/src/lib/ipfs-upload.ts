@@ -18,8 +18,10 @@ export const ipfsUploadFile = async (
   event: H3Event,
   {
     content,
+    contentType,
   }: {
     content: Buffer;
+    contentType: string;
   },
 ) => {
   try {
@@ -31,6 +33,7 @@ export const ipfsUploadFile = async (
         Bucket: env.S3_BUCKET,
         Key,
         Body: content,
+        ContentType: contentType,
       }),
     );
 
