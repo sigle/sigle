@@ -1,7 +1,13 @@
+import { createId } from "@paralleldrive/cuid2";
 import { HTTPError } from "nitro/h3";
 import { env } from "@/env";
 import { prisma } from "./prisma";
 
+/**
+ * Verifies that a user has not exceeded their daily
+ * or total upload quota before allowing an upload.
+ * Throws an HTTPError 429 if either limit would be exceeded.
+ */
 export async function checkUploadQuota(userId: string, sizeBytes: number) {
   const startOfToday = new Date();
   startOfToday.setUTCHours(0, 0, 0, 0);
@@ -38,6 +44,10 @@ export async function checkUploadQuota(userId: string, sizeBytes: number) {
   }
 }
 
+/**
+ * Persists an upload record after a successful
+ * S3 upload so future quota checks can account for it.
+ */
 export async function recordUpload({
   userId,
   cid,
@@ -49,7 +59,6 @@ export async function recordUpload({
   sizeBytes: number;
   contentType: string;
 }) {
-  const { createId } = await import("@paralleldrive/cuid2");
   await prisma.userUpload.create({
     data: {
       id: createId(),
