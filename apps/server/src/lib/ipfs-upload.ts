@@ -1,38 +1,62 @@
-import { create } from "@storacha/client";
-import * as Proof from "@storacha/client/proof";
-import * as Signer from "@ucanto/principal/ed25519";
+import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { HTTPError, type H3Event } from "nitro/h3";
 import { env } from "@/env";
 import { consola } from "./consola";
+import { createCIDv1FromBuffer } from "./ipfs";
 
-const principal = Signer.parse(env.STORACHA_AGENT_KEY);
-const storachaClient = await create({ principal });
-const proof = await Proof.parse(env.STORACHA_AGENT_PROOF);
-const space = await storachaClient.addSpace(proof);
-await storachaClient.setCurrentSpace(space.did());
+const s3Client = new S3Client({
+  endpoint: env.S3_ENDPOINT,
+  region: env.S3_REGION,
+  credentials: {
+    accessKeyId: env.S3_ACCESS_KEY_ID,
+    secretAccessKey: env.S3_SECRET_ACCESS_KEY,
+  },
+  forcePathStyle: true,
+});
 
 export const ipfsUploadFile = async (
   event: H3Event,
   {
     content,
+    contentType,
   }: {
     content: Buffer;
+    contentType: string;
   },
 ) => {
   try {
-    const response = await storachaClient.uploadFile(
-      new Blob([new Uint8Array(content)]),
-    );
-    const cid = response.toString();
+    const computedCid = await createCIDv1FromBuffer(content);
+    const Key = `u/${event.context.user.id}/${computedCid}`;
 
-    if (!cid) {
+    const response = await s3Client.send(
+      new PutObjectCommand({
+        Bucket: env.S3_BUCKET,
+        Key,
+        Body: content,
+        ContentType: contentType,
+      }),
+    );
+
+    const serverCid = (
+      response.$metadata as { httpHeaders?: Record<string, string> }
+    ).httpHeaders?.["x-amz-meta-cid"];
+
+    if (serverCid && serverCid !== computedCid) {
+      consola.warn("CID mismatch", { serverCid, computedCid });
+      throw new HTTPError({
+        status: 500,
+        message: "CID mismatch between client and server",
+      });
+    }
+
+    if (!computedCid) {
       throw new HTTPError({
         status: 500,
         message: "Failed to upload to IPFS, no cid found",
       });
     }
 
-    return { cid };
+    return { cid: computedCid };
   } catch (error) {
     consola.error(error);
     const sentryId = event.context.$sentry.captureException(error);

@@ -1,37 +1,26 @@
 # @sigle/server
 
-## Setup new Storacha Agent
+## Setup IPFS Storage (S3-compatible)
 
-First, install the Storacha cli:
+Sigle uses an S3-compatible API to pin files to IPFS. Supported providers include [Filebase](https://filebase.com/) and others.
 
-```bash
-pnpm add -g @storacha/cli
+### Filebase Setup
+
+1. Create an account on [Filebase](https://filebase.com/).
+2. Create a bucket for Sigle uploads.
+3. Generate API access keys from the Filebase dashboard.
+
+### Environment Variables
+
+Set the following environment variables:
+
+```env
+S3_ENDPOINT="https://s3.filebase.com"
+S3_REGION="us-east-1"
+S3_ACCESS_KEY_ID="your-access-key"
+S3_SECRET_ACCESS_KEY="your-secret-key"
+S3_BUCKET="your-bucket-name"
+IPFS_GATEWAY_URL="https://ipfs.filebase.io/ipfs"
 ```
 
-Then, login to your Storacha account:
-
-```bash
-storacha login <your_email>
-```
-
-Create a new agent:
-
-```bash
-storacha key create
-```
-
-Set the `STORACHA_AGENT_KEY` environment variable to the key provided.
-
-Tell the agent to use the space:
-
-```bash
-storacha space use <your_space_name>
-```
-
-Create the proof for the agent, replace the did with the agent did you got previously
-
-```bash
-storacha delegation create <your_agent_did> --base64
-```
-
-Set the `STORACHA_AGENT_PROOF` with the base64 encoded proof that you got from the previous step.
+For other S3-compatible IPFS providers, replace the endpoint and gateway URL accordingly.

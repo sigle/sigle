@@ -34,7 +34,17 @@ export const env = createEnv({
     SENTRY_DSN: z.url().optional(),
     POSTHOG_API_KEY: z.string().optional(),
     POSTHOG_API_HOST: z.string().optional(),
-    STORACHA_AGENT_KEY: z.string(),
-    STORACHA_AGENT_PROOF: z.string(),
+    // The S3-compatible endpoint for IPFS storage (e.g. https://s3.filebase.com)
+    S3_ENDPOINT: z.string(),
+    // The S3 region (e.g. us-east-1)
+    S3_REGION: z.string(),
+    // The S3 access key ID
+    S3_ACCESS_KEY_ID: z.string(),
+    // The S3 secret access key
+    S3_SECRET_ACCESS_KEY: z.string(),
+    // The S3 bucket name
+    S3_BUCKET: z.string(),
+    // The IPFS gateway URL to use when serving files (e.g. https://ipfs.filebase.io/ipfs)
+    IPFS_GATEWAY_URL: z.url().default("https://ipfs.filebase.io/ipfs"),
   },
 });

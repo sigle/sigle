@@ -121,6 +121,7 @@ export default defineEventHandler(async (event) => {
 
   const { cid } = await ipfsUploadFile(event, {
     content: optimizedBuffer,
+    contentType: parsedFile.data.type,
   });
 
   event.context.$posthog.capture({

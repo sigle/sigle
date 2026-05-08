@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "*.ipfs.w3s.link",
+        hostname: "ipfs.filebase.io",
         port: "",
         search: "",
       },
