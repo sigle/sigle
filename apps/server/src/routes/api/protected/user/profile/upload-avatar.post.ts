@@ -4,6 +4,7 @@ import { z } from "zod";
 import { allowedFormats, optimizeImage } from "@/lib/images";
 import { ipfsUploadFile } from "@/lib/ipfs-upload";
 import { readFormData } from "@/lib/nitro";
+import { checkUploadQuota, recordUpload } from "@/lib/quota";
 
 defineRouteMeta({
   openAPI: {
@@ -93,8 +94,17 @@ export default defineEventHandler(async (event) => {
     width: 600,
   });
 
+  await checkUploadQuota(event.context.user.id, optimizedBuffer.length);
+
   const { cid } = await ipfsUploadFile(event, {
     content: optimizedBuffer,
+    contentType: parsedFile.data.type,
+  });
+
+  await recordUpload({
+    userId: event.context.user.id,
+    cid,
+    sizeBytes: optimizedBuffer.length,
     contentType: parsedFile.data.type,
   });
 

@@ -46,5 +46,9 @@ export const env = createEnv({
     S3_BUCKET: z.string(),
     // The IPFS gateway URL to use when serving files (e.g. https://ipfs.filebase.io/ipfs)
     IPFS_GATEWAY_URL: z.url().default("https://ipfs.filebase.io/ipfs"),
+    // Total upload quota per user in bytes
+    UPLOAD_QUOTA_TOTAL_BYTES: z.coerce.number(),
+    // Daily upload quota per user in bytes
+    UPLOAD_QUOTA_DAILY_BYTES: z.coerce.number(),
   },
 });
