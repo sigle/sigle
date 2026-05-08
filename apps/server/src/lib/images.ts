@@ -6,7 +6,7 @@ import { blurHashToDataURL } from "./blurhash";
 export const resolveImageUrl = (image: string) => {
   if (image?.startsWith("ipfs://")) {
     const cid = image.slice(7);
-    image = `${env.S3_IPFS_GATEWAY_URL}/${cid}`;
+    image = `${env.IPFS_GATEWAY_URL}/${cid}`;
   }
   if (image?.startsWith("ar://")) {
     image = `${env.ARWEAVE_GATEWAY_URL}/${image.slice(5)}`;

@@ -45,6 +45,6 @@ export const env = createEnv({
     // The S3 bucket name
     S3_BUCKET: z.string(),
     // The IPFS gateway URL to use when serving files (e.g. https://ipfs.filebase.io/ipfs)
-    S3_IPFS_GATEWAY_URL: z.url().default("https://ipfs.filebase.io/ipfs"),
+    IPFS_GATEWAY_URL: z.url().default("https://ipfs.filebase.io/ipfs"),
   },
 });

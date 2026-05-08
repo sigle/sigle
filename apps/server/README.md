@@ -20,7 +20,7 @@ S3_REGION="us-east-1"
 S3_ACCESS_KEY_ID="your-access-key"
 S3_SECRET_ACCESS_KEY="your-secret-key"
 S3_BUCKET="your-bucket-name"
-S3_IPFS_GATEWAY_URL="https://ipfs.filebase.io/ipfs"
+IPFS_GATEWAY_URL="https://ipfs.filebase.io/ipfs"
 ```
 
 For other S3-compatible IPFS providers, replace the endpoint and gateway URL accordingly.
