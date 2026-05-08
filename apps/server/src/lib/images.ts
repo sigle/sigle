@@ -2,15 +2,10 @@ import { encode } from "blurhash";
 import sharp from "sharp";
 import { env } from "../env";
 import { blurHashToDataURL } from "./blurhash";
-import { convertCIDv0toCIDv1 } from "./ipfs";
 
 export const resolveImageUrl = (image: string) => {
   if (image?.startsWith("ipfs://")) {
-    let cid = image.slice(7);
-    // We convert the CID to a v1 CID if it's a v0 CID so that images can be served by subdomain gateways
-    if (cid.startsWith("Qm")) {
-      cid = convertCIDv0toCIDv1(cid);
-    }
+    const cid = image.slice(7);
     image = `${env.S3_IPFS_GATEWAY_URL}/${cid}`;
   }
   if (image?.startsWith("ar://")) {

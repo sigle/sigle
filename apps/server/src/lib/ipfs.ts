@@ -8,7 +8,3 @@ export const createCIDv1FromBuffer = async (buffer: Buffer) => {
   const cidv1 = CID.create(1, code, hash);
   return cidv1.toString();
 };
-
-export const convertCIDv0toCIDv1 = (cidv0: string) => {
-  return parse(cidv0).toV1().toString();
-};
