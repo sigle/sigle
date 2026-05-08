@@ -5,6 +5,7 @@ import { allowedFormats, optimizeImage } from "@/lib/images";
 import { ipfsUploadFile } from "@/lib/ipfs-upload";
 import { readFormData } from "@/lib/nitro";
 import { prisma } from "@/lib/prisma";
+import { checkUploadQuota, recordUpload } from "@/lib/quota";
 import { isUserWhitelisted } from "@/lib/users";
 
 defineRouteMeta({
@@ -119,8 +120,17 @@ export default defineEventHandler(async (event) => {
     width: 700,
   });
 
+  await checkUploadQuota(event.context.user.id, optimizedBuffer.length);
+
   const { cid } = await ipfsUploadFile(event, {
     content: optimizedBuffer,
+    contentType: parsedFile.data.type,
+  });
+
+  await recordUpload({
+    userId: event.context.user.id,
+    cid,
+    sizeBytes: optimizedBuffer.length,
     contentType: parsedFile.data.type,
   });
 

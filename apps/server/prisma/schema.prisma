@@ -35,6 +35,7 @@ model User {
   mintedNfts PostNft[] @relation("minter")
   sessions   Session[]
   accounts   Account[]
+  uploads    UserUpload[]
 
   @@unique([email])
   @@map("user")
@@ -216,6 +217,21 @@ model MediaImage {
   profileCoverPicture Profile[] @relation(name: "Profile_cover_picture_uri_id_fkey")
 
   @@map("media_image")
+}
+
+model UserUpload {
+  id          String   @id @map("id")
+  userId      String   @map("user_id")
+  cid         String   @map("cid")
+  sizeBytes   Int      @map("size_bytes")
+  contentType String   @map("content_type")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([userId, createdAt])
+  @@map("user_upload")
 }
 
 model PostNft {
