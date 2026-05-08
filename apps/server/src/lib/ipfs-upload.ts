@@ -24,7 +24,7 @@ export const ipfsUploadFile = async (
 ) => {
   try {
     const computedCid = await createCIDv1FromBuffer(content);
-    const Key = `u/${event.context.userId}/${computedCid}`;
+    const Key = `u/${event.context.user.id}/${computedCid}`;
 
     const response = await s3Client.send(
       new PutObjectCommand({
