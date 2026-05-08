@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { BlurImage } from "@/components/ui/blur-image";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { getDefaultAvatarUrl } from "@/lib/users";
@@ -29,12 +29,11 @@ export const ProfileAvatar = ({
       })}
     >
       {user.profile?.pictureUri ? (
-        <Image
+        <BlurImage
           src={resolveImageUrl(user.profile.pictureUri.id)}
           alt={user.id}
           className="size-full object-cover"
-          placeholder={user.profile.pictureUri.blurhash ? "blur" : "empty"}
-          blurDataURL={user.profile.pictureUri.blurhash}
+          blurhash={user.profile.pictureUri.blurhash}
           width={user.profile.pictureUri.width}
           height={user.profile.pictureUri.height}
         />

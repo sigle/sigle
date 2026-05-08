@@ -2,8 +2,8 @@
 
 import type { paths } from "@sigle/sdk";
 import { format } from "date-fns";
-import Image from "next/image";
 import { useState } from "react";
+import { BlurImage } from "@/components/ui/blur-image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/cn";
@@ -30,12 +30,11 @@ export const PostCard = ({ post, className }: PostCardProps) => {
       <div className="absolute inset-0 aspect-video bg-muted" />
       {post.coverImage ? (
         <NextLink href={Routes.post({ postId: post.id })}>
-          <Image
+          <BlurImage
             src={resolveImageUrl(post.coverImage.id)}
             alt="Cover card"
             className="relative aspect-video w-full object-cover"
-            placeholder={post.coverImage.blurhash ? "blur" : "empty"}
-            blurDataURL={post.coverImage.blurhash}
+            blurhash={post.coverImage.blurhash}
             width={post.coverImage.width}
             height={post.coverImage.height}
           />

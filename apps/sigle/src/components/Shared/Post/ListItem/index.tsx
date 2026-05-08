@@ -3,8 +3,8 @@
 import type { paths } from "@sigle/sdk";
 import { IconDotsVertical } from "@tabler/icons-react";
 import { format } from "date-fns";
-import Image from "next/image";
 import { useState } from "react";
+import { BlurImage } from "@/components/ui/blur-image";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -89,12 +89,11 @@ export const PostListItem = ({ post }: PostListItemProps) => {
             <NextLink href={Routes.post({ postId: post.id })}>
               <div className="w-[100px] max-w-full overflow-hidden md:w-[200px]">
                 <div className="aspect-16/10">
-                  <Image
+                  <BlurImage
                     src={resolveImageUrl(post.coverImage.id)}
                     alt="Cover card"
                     className="size-full rounded-md object-cover"
-                    placeholder={post.coverImage.blurhash ? "blur" : "empty"}
-                    blurDataURL={post.coverImage.blurhash}
+                    blurhash={post.coverImage.blurhash}
                     width={post.coverImage.width}
                     height={post.coverImage.height}
                   />

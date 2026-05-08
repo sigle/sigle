@@ -1,7 +1,6 @@
 "use client";
 
 import { IconArrowLeft } from "@tabler/icons-react";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { use } from "react";
 import { PostCollectCard } from "@/components/Post/CollectCard";
@@ -12,6 +11,7 @@ import { PostUserInfoCard } from "@/components/Post/UserInfoCard";
 import { NextLink } from "@/components/Shared/NextLink";
 import { FadeSlideBottom } from "@/components/ui";
 import { Badge } from "@/components/ui/badge";
+import { BlurImage } from "@/components/ui/blur-image";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { resolveImageUrl } from "@/lib/images";
@@ -45,12 +45,11 @@ export function PostClientPage(props: Props) {
     <FadeSlideBottom>
       {post.coverImage ? (
         <div className="mx-auto mt-6 max-w-4xl px-4">
-          <Image
+          <BlurImage
             src={resolveImageUrl(post.coverImage.id)}
             alt="Cover post"
             className="size-full rounded-lg object-cover"
-            placeholder={post.coverImage.blurhash ? "blur" : "empty"}
-            blurDataURL={post.coverImage.blurhash}
+            blurhash={post.coverImage.blurhash}
             width={post.coverImage.width}
             height={post.coverImage.height}
           />

@@ -2,8 +2,8 @@
 
 import type { paths } from "@sigle/sdk";
 import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
-import Image from "next/image";
 import { usePostHog } from "posthog-js/react";
+import { BlurImage } from "@/components/ui/blur-image";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -50,15 +50,12 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
         })}
       >
         {user?.profile?.coverPictureUri ? (
-          <Image
+          <BlurImage
             src={resolveImageUrl(user.profile.coverPictureUri.id)}
             alt="Banner"
             sizes="100vw"
             className="size-full object-cover"
-            placeholder={
-              user.profile.coverPictureUri.blurhash ? "blur" : "empty"
-            }
-            blurDataURL={user.profile.coverPictureUri.blurhash}
+            blurhash={user.profile.coverPictureUri.blurhash}
             width={user.profile.coverPictureUri.width}
             height={user.profile.coverPictureUri.height}
           />

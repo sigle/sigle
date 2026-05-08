@@ -1,7 +1,7 @@
 import sharp from "sharp";
 import { z } from "zod";
 import { consola } from "@/lib/consola";
-import { generateBlurhashURI, resolveImageUrl } from "@/lib/images";
+import { generateBlurhash, resolveImageUrl } from "@/lib/images";
 import { defineJob } from "@/lib/jobs";
 import { prisma } from "@/lib/prisma";
 
@@ -36,7 +36,7 @@ export const generateImageBlurhashJob = defineJob("generate-image-blurhash")
       Buffer.from(imageBuffer),
     ).metadata();
 
-    const blurhash = await generateBlurhashURI({ buffer: imageBuffer });
+    const blurhash = await generateBlurhash({ buffer: imageBuffer });
 
     await prisma.mediaImage.update({
       where: {
