@@ -37,6 +37,11 @@ import { useSession } from "@/lib/auth-hooks";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleClient } from "@/lib/sigle";
+import {
+  formatReadableAddress,
+  getExplorerTransactionUrl,
+  getPromiseTransactionConfirmation,
+} from "@/lib/stacks";
 import { ProfileAvatar } from "../Profile/ProfileAvatar";
 
 interface PostCollectDialogProps {
