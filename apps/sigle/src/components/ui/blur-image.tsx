@@ -8,7 +8,13 @@ type BlurImageProps = Omit<ImageProps, "placeholder" | "blurDataURL"> & {
   blurhash?: string | null;
 };
 
-export function BlurImage({ blurhash, alt, ...props }: BlurImageProps) {
+export function BlurImage({
+  blurhash,
+  alt,
+  width,
+  height,
+  ...props
+}: BlurImageProps) {
   const blurDataURL = useMemo(() => {
     if (!blurhash) return undefined;
     const pixels = decode(blurhash, 32, 32);
@@ -31,6 +37,8 @@ export function BlurImage({ blurhash, alt, ...props }: BlurImageProps) {
     <Image
       {...props}
       alt={alt}
+      width={width ?? undefined}
+      height={height ?? undefined}
       placeholder={blurDataURL ? "blur" : "empty"}
       blurDataURL={blurDataURL}
     />
