@@ -17,7 +17,11 @@ export function BlurImage({ blurhash, alt, ...props }: BlurImageProps) {
     canvas.height = 32;
     const ctx = canvas.getContext("2d");
     if (ctx) {
-      ctx.putImageData(new ImageData(pixels, 32, 32), 0, 0);
+      ctx.putImageData(
+        new ImageData(new Uint8ClampedArray(pixels), 32, 32),
+        0,
+        0,
+      );
       return canvas.toDataURL();
     }
     return undefined;
