@@ -112,6 +112,8 @@ export default defineConfig({
       "no-shadow": "off",
       "vitest/require-mock-type-parameters": "off",
       "no-useless-assignment": "off",
+      // TODO: remove when vite-plus/test imports are supported by this rule
+      "vitest/prefer-importing-vitest-globals": "off",
     },
   },
 });
