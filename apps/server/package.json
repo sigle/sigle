@@ -46,7 +46,6 @@
     "nitro": "3.0.260415-beta",
     "pglite-prisma-adapter": "0.7.2",
     "typescript": "5.9.3",
-    "vite-tsconfig-paths": "6.1.1",
     "vitest": "4.1.5"
   },
   "packageManager": "pnpm@10.30.2"
