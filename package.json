@@ -3,10 +3,6 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "format": "vp fmt",
-    "format:fix": "vp fmt --fix",
-    "lint": "vp lint",
-    "lint:fix": "vp lint --fix",
     "release": "pnpm changeset publish",
     "test": "turbo test",
     "check-types": "turbo check-types",
