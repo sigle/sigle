@@ -3,22 +3,21 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "format": "oxfmt --check",
-    "format:fix": "oxfmt .",
-    "lint": "oxlint .",
-    "lint:fix": "oxlint --fix .",
+    "format": "vp fmt",
+    "format:fix": "vp fmt --fix",
+    "lint": "vp lint",
+    "lint:fix": "vp lint --fix",
     "release": "pnpm changeset publish",
     "test": "turbo test",
     "check-types": "turbo check-types",
+    "prepare": "vp config",
     "version": "pnpm changeset version && pnpm install --lockfile-only"
   },
   "devDependencies": {
     "@changesets/cli": "2.31.0",
-    "lefthook": "2.1.6",
-    "oxfmt": "0.46.0",
-    "oxlint": "1.61.0",
     "syncpack": "14.3.0",
-    "turbo": "2.9.6"
+    "turbo": "2.9.6",
+    "vite-plus": "0.1.20"
   },
   "engines": {
     "node": ">=24"
