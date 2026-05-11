@@ -1,6 +1,7 @@
 import { defineRouteMeta } from "nitro";
 import { HTTPError, defineEventHandler } from "nitro/h3";
 import { z } from "zod";
+import { env } from "@/env";
 import { allowedFormats, optimizeImage } from "@/lib/images";
 import { ipfsUploadFile } from "@/lib/ipfs-upload";
 import { readFormData } from "@/lib/nitro";
@@ -90,8 +91,8 @@ export default defineEventHandler(async (event) => {
   const optimizedBuffer = await optimizeImage({
     buffer: Buffer.from(await file.arrayBuffer()),
     contentType: parsedFile.data.type,
-    quality: 75,
-    width: 600,
+    quality: env.STACKS_ENV === "mainnet" ? 85 : 75,
+    width: env.STACKS_ENV === "mainnet" ? 1000 : 600,
   });
 
   await checkUploadQuota(event.context.user.id, optimizedBuffer.length);
