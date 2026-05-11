@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { publishPost } from "./publish-post.js";
 
 describe("publish-post", () => {

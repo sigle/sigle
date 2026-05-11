@@ -24,8 +24,8 @@ jobs:
       - name: Check dependencies consistency
         run: pnpm syncpack lint
 
-      - name: Check format and lint
-        run: pnpm turbo run quality
+      - name: Check formatting, linting and type checks.
+        run: pnpm vp check
 
       - name: Check types
         run: pnpm turbo run check-types

@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { describe, expect, it, vi, expectTypeOf } from "vitest";
+import { describe, expect, it, vi, expectTypeOf } from "vite-plus/test";
 import type { SlashCommandsCommand } from "./SlashCommands";
 
 const filterCommands = (

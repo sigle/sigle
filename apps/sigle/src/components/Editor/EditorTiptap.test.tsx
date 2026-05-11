@@ -1,7 +1,7 @@
 import type * as nextNavigationModule from "next/navigation";
 import type * as posthogModule from "posthog-js/react";
 import { render, waitFor } from "@testing-library/react";
-import { describe, expect, it, beforeEach, vi } from "vitest";
+import { describe, expect, it, beforeEach, vi } from "vite-plus/test";
 import type * as sigleModule from "@/lib/sigle";
 import { EditorFormProvider } from "./EditorFormProvider";
 import { EditorTipTap } from "./EditorTiptap";

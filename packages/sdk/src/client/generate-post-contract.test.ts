@@ -1,5 +1,5 @@
 import { STACKS_MOCKNET } from "@stacks/network";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 import { generatePostContract } from "./generate-post-contract.js";
 
 describe("generate-post-contract", () => {

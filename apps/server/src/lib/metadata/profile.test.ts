@@ -1,6 +1,6 @@
 import { ProfileMetadataSchemaId } from "@sigle/sdk";
 import { Result } from "better-result";
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi, beforeEach } from "vite-plus/test";
 import { InvalidMetadataError, MetadataFetchFailedError } from "./errors";
 import { getProfileMetadataFromUri } from "./profile";
 
