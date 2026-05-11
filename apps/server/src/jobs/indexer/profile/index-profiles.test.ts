@@ -8,7 +8,7 @@ import {
   expect,
   it,
   vi,
-} from "vitest";
+} from "vite-plus/test";
 import { sigleConfig } from "@/lib/sigle";
 import { createTestDatabase, type TestDatabase } from "@/test/database";
 import { createTestUser } from "@/test/helpers";

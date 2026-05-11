@@ -7,7 +7,7 @@ import {
   expect,
   it,
   vi,
-} from "vitest";
+} from "vite-plus/test";
 import { isUserWhitelisted } from "@/lib/users";
 import { createTestDatabase, type TestDatabase } from "@/test/database";
 import { createTestUser } from "@/test/helpers";

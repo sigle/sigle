@@ -1,5 +1,5 @@
 import type { H3Event } from "nitro/h3";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vite-plus/test";
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro")>(import("nitro"), () => ({

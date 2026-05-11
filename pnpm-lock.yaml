@@ -290,9 +290,9 @@ importers:
       typescript:
         specifier: 5.9.3
         version: 5.9.3
-      vitest:
-        specifier: 4.1.5
-        version: 4.1.5(@opentelemetry/api@1.9.1)(@types/node@25.6.2)(happy-dom@20.9.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(msw@2.13.6(@types/node@25.6.2)(typescript@5.9.3))(vite@7.3.1(@types/node@25.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.47.1)(tsx@4.21.0)(yaml@2.8.2))
+      vite-plus:
+        specifier: 0.1.20
+        version: 0.1.20(@opentelemetry/api@1.9.1)(@types/node@25.6.2)(bufferutil@4.1.0)(esbuild@0.27.7)(happy-dom@20.9.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(terser@5.47.1)(tsx@4.21.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(vite@7.3.1(@types/node@25.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.47.1)(tsx@4.21.0)(yaml@2.8.2))(yaml@2.8.2)
 
   apps/sigle:
     dependencies:
@@ -18549,6 +18549,22 @@ snapshots:
       typescript: 5.9.3
       yaml: 2.8.2
 
+  '@voidzero-dev/vite-plus-core@0.1.20(@types/node@25.6.2)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.47.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)':
+    dependencies:
+      '@oxc-project/runtime': 0.127.0
+      '@oxc-project/types': 0.127.0
+      lightningcss: 1.32.0
+      postcss: 8.5.10
+    optionalDependencies:
+      '@types/node': 25.6.2
+      esbuild: 0.27.7
+      fsevents: 2.3.3
+      jiti: 2.7.0
+      terser: 5.47.1
+      tsx: 4.21.0
+      typescript: 5.9.3
+      yaml: 2.8.2
+
   '@voidzero-dev/vite-plus-darwin-arm64@0.1.20':
     optional: true
 
@@ -18587,6 +18603,47 @@ snapshots:
       '@opentelemetry/api': 1.9.1
       '@types/node': 25.6.0
       happy-dom: 20.9.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+    transitivePeerDependencies:
+      - '@arethetypeswrong/core'
+      - '@tsdown/css'
+      - '@tsdown/exe'
+      - '@vitejs/devtools'
+      - bufferutil
+      - esbuild
+      - jiti
+      - less
+      - publint
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - typescript
+      - unplugin-unused
+      - utf-8-validate
+      - yaml
+
+  '@voidzero-dev/vite-plus-test@0.1.20(@opentelemetry/api@1.9.1)(@types/node@25.6.2)(bufferutil@4.1.0)(esbuild@0.27.7)(happy-dom@20.9.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(terser@5.47.1)(tsx@4.21.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(vite@7.3.1(@types/node@25.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.47.1)(tsx@4.21.0)(yaml@2.8.2))(yaml@2.8.2)':
+    dependencies:
+      '@standard-schema/spec': 1.1.0
+      '@types/chai': 5.2.3
+      '@voidzero-dev/vite-plus-core': 0.1.20(@types/node@25.6.2)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.47.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      es-module-lexer: 1.7.0
+      obug: 2.1.1
+      pixelmatch: 7.2.0
+      pngjs: 7.0.0
+      sirv: 3.0.2
+      std-env: 4.1.0
+      tinybench: 2.9.0
+      tinyexec: 1.1.1
+      tinyglobby: 0.2.16
+      vite: 7.3.1(@types/node@25.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.47.1)(tsx@4.21.0)(yaml@2.8.2)
+      ws: 8.20.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+    optionalDependencies:
+      '@opentelemetry/api': 1.9.1
+      '@types/node': 25.6.2
+      happy-dom: 20.9.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - '@arethetypeswrong/core'
       - '@tsdown/css'
@@ -26277,6 +26334,53 @@ snapshots:
       '@oxc-project/types': 0.127.0
       '@voidzero-dev/vite-plus-core': 0.1.20(@types/node@25.6.0)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.47.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
       '@voidzero-dev/vite-plus-test': 0.1.20(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(bufferutil@4.1.0)(esbuild@0.27.7)(happy-dom@20.9.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(terser@5.47.1)(tsx@4.21.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(vite@7.3.1(@types/node@25.6.0)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.47.1)(tsx@4.21.0)(yaml@2.8.2))(yaml@2.8.2)
+      oxfmt: 0.46.0
+      oxlint: 1.61.0(oxlint-tsgolint@0.22.0)
+      oxlint-tsgolint: 0.22.0
+    optionalDependencies:
+      '@voidzero-dev/vite-plus-darwin-arm64': 0.1.20
+      '@voidzero-dev/vite-plus-darwin-x64': 0.1.20
+      '@voidzero-dev/vite-plus-linux-arm64-gnu': 0.1.20
+      '@voidzero-dev/vite-plus-linux-arm64-musl': 0.1.20
+      '@voidzero-dev/vite-plus-linux-x64-gnu': 0.1.20
+      '@voidzero-dev/vite-plus-linux-x64-musl': 0.1.20
+      '@voidzero-dev/vite-plus-win32-arm64-msvc': 0.1.20
+      '@voidzero-dev/vite-plus-win32-x64-msvc': 0.1.20
+    transitivePeerDependencies:
+      - '@arethetypeswrong/core'
+      - '@edge-runtime/vm'
+      - '@opentelemetry/api'
+      - '@tsdown/css'
+      - '@tsdown/exe'
+      - '@types/node'
+      - '@vitejs/devtools'
+      - '@vitest/coverage-istanbul'
+      - '@vitest/coverage-v8'
+      - '@vitest/ui'
+      - bufferutil
+      - esbuild
+      - happy-dom
+      - jiti
+      - jsdom
+      - less
+      - publint
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - terser
+      - tsx
+      - typescript
+      - unplugin-unused
+      - utf-8-validate
+      - vite
+      - yaml
+
+  vite-plus@0.1.20(@opentelemetry/api@1.9.1)(@types/node@25.6.2)(bufferutil@4.1.0)(esbuild@0.27.7)(happy-dom@20.9.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(terser@5.47.1)(tsx@4.21.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(vite@7.3.1(@types/node@25.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.47.1)(tsx@4.21.0)(yaml@2.8.2))(yaml@2.8.2):
+    dependencies:
+      '@oxc-project/types': 0.127.0
+      '@voidzero-dev/vite-plus-core': 0.1.20(@types/node@25.6.2)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.47.1)(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2)
+      '@voidzero-dev/vite-plus-test': 0.1.20(@opentelemetry/api@1.9.1)(@types/node@25.6.2)(bufferutil@4.1.0)(esbuild@0.27.7)(happy-dom@20.9.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(terser@5.47.1)(tsx@4.21.0)(typescript@5.9.3)(utf-8-validate@6.0.6)(vite@7.3.1(@types/node@25.6.2)(jiti@2.7.0)(lightningcss@1.32.0)(terser@5.47.1)(tsx@4.21.0)(yaml@2.8.2))(yaml@2.8.2)
       oxfmt: 0.46.0
       oxlint: 1.61.0(oxlint-tsgolint@0.22.0)
       oxlint-tsgolint: 0.22.0
