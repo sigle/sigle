@@ -4,6 +4,9 @@ export default defineConfig({
   staged: {
     "*": "vp check --fix",
   },
+  run: {
+    cache: true,
+  },
   fmt: {
     ignorePatterns: [],
     printWidth: 80,
