@@ -7,11 +7,11 @@ import {
   IconMinus,
   IconPlus,
 } from "@tabler/icons-react";
-import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { BlurImage } from "@/components/ui/blur-image";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -186,12 +186,11 @@ export const PostCollectDialog = ({
               // oxlint-disable-next-line jsx-curly-brace-presence
               className={"h-[160px] w-full overflow-hidden rounded-md bg-muted"}
             >
-              <Image
+              <BlurImage
                 src={resolveImageUrl(post.coverImage.id)}
                 alt={post.title}
                 className="size-full object-cover"
-                placeholder={post.coverImage.blurhash ? "blur" : "empty"}
-                blurDataURL={post.coverImage.blurhash}
+                blurhash={post.coverImage.blurhash}
                 width={post.coverImage.width}
                 height={post.coverImage.height}
               />

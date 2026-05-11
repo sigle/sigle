@@ -13,6 +13,7 @@
     "@sigle/sdk": "workspace:*",
     "@t3-oss/env-nextjs": "0.13.11",
     "@tabler/icons-react": "3.41.1",
+    "blurhash": "2.0.5",
     "cheerio": "1.2.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",

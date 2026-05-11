@@ -1,7 +1,6 @@
 import { encode } from "blurhash";
 import sharp from "sharp";
 import { env } from "../env";
-import { blurHashToDataURL } from "./blurhash";
 
 export const resolveImageUrl = (image: string) => {
   if (image?.startsWith("ipfs://")) {
@@ -70,7 +69,7 @@ export function mimeTypeToExtension(mimeType: string): string {
   throw new Error("Unsupported mimeType");
 }
 
-export async function generateBlurhashURI({
+export async function generateBlurhash({
   buffer,
   size = 20,
 }: {
@@ -84,14 +83,8 @@ export async function generateBlurhashURI({
       .resize(size, size, { fit: "inside" })
       .toBuffer((err, buffer, { width, height }) => {
         if (err) return reject(err);
-        const encoded = encode(
-          new Uint8ClampedArray(buffer),
-          width,
-          height,
-          4,
-          4,
-        );
-        resolve(blurHashToDataURL(encoded));
+        const hash = encode(new Uint8ClampedArray(buffer), width, height, 4, 4);
+        resolve(hash);
       });
   });
 }

@@ -68,23 +68,34 @@ export async function waitForTransaction(options: {
    * @default 180_000
    */
   timeout?: number;
+  /**
+   * Grace period (in ms) during which API errors (e.g. 404 from
+   * an unindexed transaction) are tolerated and retried.
+   * @default 10_000
+   */
+  retryErrorDelay?: number | undefined;
 }): Promise<
   Result<
     stacksApiPaths["/extended/v1/tx/{tx_id}"]["get"]["responses"]["200"]["content"]["application/json"],
     StacksApiError | TransactionTimeoutError
   >
 > {
-  const { txId, pollingInterval = 2_000, timeout = 180_000 } = options;
+  const {
+    txId,
+    pollingInterval = 2_000,
+    timeout = 180_000,
+    retryErrorDelay = 10_000,
+  } = options;
   const startTime = Date.now();
 
   while (Date.now() - startTime < timeout) {
     const txResult = await getStacksTransaction(txId);
 
-    if (txResult.isErr()) {
+    if (txResult.isOk() && txResult.value.tx_status !== "pending") {
       return txResult;
     }
 
-    if (txResult.value.tx_status !== "pending") {
+    if (txResult.isErr() && Date.now() - startTime >= retryErrorDelay) {
       return txResult;
     }
 
