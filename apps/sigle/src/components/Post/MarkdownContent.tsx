@@ -23,9 +23,10 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
         components={{
           // oxlint-disable-next-line no-unused-vars
           img: ({ node, src, ...props }) => {
-            src = src ? resolveImageUrl(src as string) : undefined;
+            if (!src) return null;
+            const resolvedSrc = resolveImageUrl(src as string);
             // oxlint-disable-next-line no-img-element
-            return <img src={src} {...props} />;
+            return <img src={resolvedSrc} {...props} />;
           },
           // oxlint-disable-next-line no-unused-vars
           a: ({ node, href, ...props }) => {
