@@ -554,12 +554,14 @@ describe("sigle-post-v001", () => {
       expect(result).toBeOk(Cl.uint(1));
 
       // Check NFT minting events - should be 3 nft_mint_events
-      const mintEvents = events.filter((e) => e.event === "nft_mint_event");
+      const mintEvents = events.filter(
+        (e: any) => e.event === "nft_mint_event",
+      );
       expect(mintEvents).toHaveLength(1);
 
       // Important: Verify that NO sBTC transfer events occurred (free mint)
       const transferEvents = events.filter(
-        (e) => e.event === "ft_transfer_event",
+        (e: any) => e.event === "ft_transfer_event",
       );
       expect(transferEvents).toHaveLength(0);
 
@@ -586,7 +588,9 @@ describe("sigle-post-v001", () => {
       expect(result).toBeOk(Cl.uint(1));
 
       // Check NFT minting events
-      const mintEvents = events.filter((e) => e.event === "nft_mint_event");
+      const mintEvents = events.filter(
+        (e: any) => e.event === "nft_mint_event",
+      );
       expect(mintEvents).toHaveLength(1);
 
       // Check that tokens were minted to wallet3

@@ -32,8 +32,8 @@ pnpm install
 # Build
 pnpm build
 
-# check-types
-pnpm check-types
+# check (format, lint, typecheck)
+pnpm vp check
 
 # Run all tests
 pnpm test

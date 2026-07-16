@@ -43,7 +43,11 @@ export default defineConfig({
     ],
   },
   lint: {
-    plugins: ["typescript", "vitest"],
+    options: {
+      typeAware: true,
+      typeCheck: true,
+    },
+    plugins: ["vitest"],
     ignorePatterns: ["__generated__"],
     categories: {
       correctness: "error",

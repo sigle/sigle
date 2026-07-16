@@ -24,17 +24,14 @@ jobs:
       - name: Check dependencies consistency
         run: pnpm syncpack lint
 
-      - name: Check formatting, linting and type checks.
-        run: pnpm vp check
-
-      - name: Check types
-        run: pnpm turbo run check-types
-
       - name: Build
         run: |
           cp apps/sigle/.env.development apps/sigle/.env.production.local
           cp apps/custom-domain/.env.development apps/custom-domain/.env.production.local
           pnpm build
+
+      - name: Check formatting, linting and type checks.
+        run: pnpm vp check
 
       - name: Test
         run: pnpm test
