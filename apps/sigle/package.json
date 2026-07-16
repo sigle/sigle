@@ -94,7 +94,7 @@
     "zustand": "5.0.12"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "1.62.0",
+    "@dotenvx/dotenvx": "2.9.0",
     "@tailwindcss/postcss": "4.2.4",
     "@tailwindcss/typography": "0.5.19",
     "@testing-library/jest-dom": "6.9.1",

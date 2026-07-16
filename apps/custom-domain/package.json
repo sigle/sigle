@@ -28,7 +28,7 @@
     "zod": "4.3.6"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "1.62.0",
+    "@dotenvx/dotenvx": "2.9.0",
     "@tailwindcss/typography": "0.5.19",
     "@types/node": "25.6.0",
     "@types/react": "19.2.14",
