@@ -12,7 +12,7 @@
   "devDependencies": {
     "@changesets/cli": "2.31.0",
     "syncpack": "14.3.0",
-    "turbo": "2.9.6",
+    "turbo": "2.10.5",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },
