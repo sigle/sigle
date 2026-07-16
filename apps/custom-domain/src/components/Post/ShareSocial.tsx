@@ -40,64 +40,72 @@ export const ShareSocial = ({
           Share this article
         </p>
         <div className="mt-3 flex gap-3">
-          <Tooltip delayDuration={200}>
-            <TooltipTrigger asChild>
-              {/* eslint-disable-next-line eslint-plugin-next/no-html-link-for-pages */}
-              <a
-                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                  post.title,
-                )}&url=${websiteUrl}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <TwitterFilledIcon />
-              </a>
-            </TooltipTrigger>
+          <Tooltip>
+            <TooltipTrigger
+              delay={200}
+              render={
+                /* eslint-disable-next-line eslint-plugin-next/no-html-link-for-pages */
+                <a
+                  href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                    post.title,
+                  )}&url=${websiteUrl}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <TwitterFilledIcon />
+                </a>
+              }
+            />
             <TooltipContent>
               <p>Share on Twitter</p>
             </TooltipContent>
           </Tooltip>
-          <Tooltip delayDuration={200}>
-            <TooltipTrigger asChild>
-              {/* eslint-disable-next-line eslint-plugin-next/no-html-link-for-pages */}
-              <a
-                href={`https://www.facebook.com/sharer/sharer.php?u=${websiteUrl}&quote=${post.title}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <FacebookLogoIcon />
-              </a>
-            </TooltipTrigger>
+          <Tooltip>
+            <TooltipTrigger
+              delay={200}
+              render={
+                /* eslint-disable-next-line eslint-plugin-next/no-html-link-for-pages */
+                <a
+                  href={`https://www.facebook.com/sharer/sharer.php?u=${websiteUrl}&quote=${post.title}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <FacebookLogoIcon />
+                </a>
+              }
+            />
             <TooltipContent>
               <p>Share on Facebook</p>
             </TooltipContent>
           </Tooltip>
-          <Tooltip delayDuration={200}>
-            <TooltipTrigger asChild>
-              {/* eslint-disable-next-line eslint-plugin-next/no-html-link-for-pages */}
-              <a
-                href={`https://www.linkedin.com/sharing/share-offsite/?url=${websiteUrl}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <LinkedinIcon size={15} />
-              </a>
-            </TooltipTrigger>
+          <Tooltip>
+            <TooltipTrigger
+              delay={200}
+              render={
+                /* eslint-disable-next-line eslint-plugin-next/no-html-link-for-pages */
+                <a
+                  href={`https://www.linkedin.com/sharing/share-offsite/?url=${websiteUrl}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <LinkedinIcon size={15} />
+                </a>
+              }
+            />
             <TooltipContent>
               <p>Share on LinkedIn</p>
             </TooltipContent>
           </Tooltip>
-          <Tooltip
-            open={isOpen}
-            onOpenChange={() => setIsOpen(!isOpen)}
-            delayDuration={200}
-          >
-            <TooltipTrigger asChild>
-              {/* eslint-disable-next-line eslint-plugin-next/no-html-link-for-pages */}
-              <a href={websiteUrl} onClick={handleClickCopy}>
-                <IconLink size={15} />
-              </a>
-            </TooltipTrigger>
+          <Tooltip open={isOpen} onOpenChange={setIsOpen}>
+            <TooltipTrigger
+              delay={200}
+              render={
+                /* eslint-disable-next-line eslint-plugin-next/no-html-link-for-pages */
+                <a href={websiteUrl} onClick={handleClickCopy}>
+                  <IconLink size={15} />
+                </a>
+              }
+            />
             <TooltipContent>
               <p>{isCopied ? "Copied!" : "Copy link"}</p>
             </TooltipContent>

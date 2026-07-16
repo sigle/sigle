@@ -75,15 +75,17 @@ export const Header = ({ site }: HeaderProps) => {
           </div>
 
           <Sheet>
-            <SheetTrigger asChild>
-              <button
-                className="p-2 md:hidden"
-                aria-label="Open mobile menu"
-                type="button"
-              >
-                <IconMenu2 size={15} />
-              </button>
-            </SheetTrigger>
+            <SheetTrigger
+              render={
+                <button
+                  className="p-2 md:hidden"
+                  aria-label="Open mobile menu"
+                  type="button"
+                >
+                  <IconMenu2 size={15} />
+                </button>
+              }
+            />
             <SheetContent position="top" size="content">
               <SheetHeader>
                 <SheetTitle>
