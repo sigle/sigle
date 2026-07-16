@@ -54,7 +54,7 @@ export const EditorCoverImage = () => {
               draftId: postId,
             },
           },
-          // oxlint-disable-next-line no-explicit-any
+          // oxlint-disable-next-line typescript/no-explicit-any
           body: formData as any,
         },
         {

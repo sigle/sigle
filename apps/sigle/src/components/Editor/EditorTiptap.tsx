@@ -111,7 +111,7 @@ export const EditorTipTap = () => {
                   draftId: postId,
                 },
               },
-              // oxlint-disable-next-line no-explicit-any
+              // oxlint-disable-next-line typescript/no-explicit-any
               body: formData as any,
             });
 
@@ -119,7 +119,7 @@ export const EditorTipTap = () => {
               postId,
             });
             return data.url;
-            // oxlint-disable-next-line no-explicit-any
+            // oxlint-disable-next-line typescript/no-explicit-any
           } catch (error: any) {
             toast.error("Failed to upload image", {
               description: error.message,

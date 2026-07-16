@@ -30,7 +30,7 @@ export const CollectEdition = () => {
     });
   };
 
-  // oxlint-disable-next-line no-explicit-any
+  // oxlint-disable-next-line typescript/no-explicit-any
   const limitErrorMessage = (errors?.collect?.collectLimit as any)?.limit
     ?.message;
 

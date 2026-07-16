@@ -122,11 +122,11 @@ export const betterAuthSiws = () =>
               });
             }
 
-            // oxlint-disable-next-line no-explicit-any
+            // oxlint-disable-next-line typescript/no-explicit-any
             await setSessionCookie(ctx, { session, user: user as any });
 
             return ctx.json({ token: session.token });
-            // oxlint-disable-next-line no-explicit-any
+            // oxlint-disable-next-line typescript/no-explicit-any
           } catch (error: any) {
             if (error instanceof APIError) throw error;
             Sentry.captureException(error);

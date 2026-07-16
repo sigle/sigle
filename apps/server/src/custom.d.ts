@@ -12,6 +12,6 @@ declare module "nitro/h3" {
 
 declare global {
   interface BigInt {
-    toJSON(): string;
+    toJSON: () => string;
   }
 }

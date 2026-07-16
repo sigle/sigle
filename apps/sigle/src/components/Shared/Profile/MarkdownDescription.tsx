@@ -22,7 +22,7 @@ export const ProfileMarkdownDescription = ({
                 target="_blank"
                 rel="noreferrer"
                 className="text-muted-foreground underline underline-offset-2 hover:text-foreground"
-                // oxlint-disable-next-line no-explicit-any
+                // oxlint-disable-next-line typescript/no-explicit-any
                 {...(props as any)}
               />
             );

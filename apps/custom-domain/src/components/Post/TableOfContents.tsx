@@ -73,7 +73,7 @@ interface TableOfContentsProps {
 export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
   const router = useRouter();
   const [activeId, setActiveId] = useState();
-  // oxlint-disable-next-line no-explicit-any
+  // oxlint-disable-next-line typescript/no-explicit-any
   useIntersectionObserver(setActiveId as any);
 
   return (
