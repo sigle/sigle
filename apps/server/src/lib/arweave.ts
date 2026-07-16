@@ -1,5 +1,6 @@
 import { TurboFactory } from "@ardrive/turbo-sdk";
-import { HTTPError, type H3Event } from "nitro/h3";
+import { Result, TaggedError } from "better-result";
+import { type H3Event } from "nitro/h3";
 import { env } from "@/env";
 import { createCIDv1FromBuffer } from "./ipfs";
 
@@ -13,7 +14,13 @@ interface ArweaveTag {
   value: string;
 }
 
-export const aerweaveUploadFile = async (
+export class ArweaveUploadFailedError extends TaggedError(
+  "ArweaveUploadFailedError",
+)<{
+  sentryId: string;
+}>() {}
+
+export const arweaveUploadFile = async (
   event: H3Event,
   {
     metadata,
@@ -22,7 +29,7 @@ export const aerweaveUploadFile = async (
     metadata: object;
     tags?: ArweaveTag[];
   },
-) => {
+): Promise<Result<{ id: string }, ArweaveUploadFailedError>> => {
   const file = Buffer.from(JSON.stringify(metadata));
   const fileSize = file.byteLength;
   const cid = await createCIDv1FromBuffer(file);
@@ -40,26 +47,26 @@ export const aerweaveUploadFile = async (
     ...tags,
   ];
 
-  try {
-    const uploadResult = await turboClient.uploadFile({
-      fileStreamFactory: () => file,
-      fileSizeFactory: () => fileSize,
-      dataItemOpts: {
-        tags: arweaveTags,
-      },
-    });
+  return Result.tryPromise({
+    try: async () => {
+      const uploadResult = await turboClient.uploadFile({
+        fileStreamFactory: () => file,
+        fileSizeFactory: () => fileSize,
+        dataItemOpts: {
+          tags: arweaveTags,
+        },
+      });
 
-    return { id: uploadResult.id };
-  } catch (error) {
-    const sentryId = event.context.$sentry.captureException(error, {
-      level: "error",
-      extra: {
-        metadata,
-      },
-    });
-    throw new HTTPError({
-      status: 500,
-      message: `Failed to upload to Arweave, error: ${sentryId}`,
-    });
-  }
+      return { id: uploadResult.id };
+    },
+    catch: (error) => {
+      const sentryId = event.context.$sentry.captureException(error, {
+        level: "error",
+        extra: {
+          metadata,
+        },
+      });
+      return new ArweaveUploadFailedError({ sentryId });
+    },
+  });
 };

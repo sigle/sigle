@@ -3,7 +3,7 @@ import { defineRouteMeta } from "nitro";
 import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
-import { aerweaveUploadFile } from "@/lib/arweave";
+import { arweaveUploadFile } from "@/lib/arweave";
 import { readValidatedBodyZod } from "@/lib/nitro";
 import { prisma } from "@/lib/prisma";
 import { isUserWhitelisted } from "@/lib/users";
@@ -134,9 +134,18 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const { id } = await aerweaveUploadFile(event, {
+  const uploadResult = await arweaveUploadFile(event, {
     metadata: parsedMetadata.data,
   });
+
+  if (uploadResult.isErr()) {
+    throw new HTTPError({
+      status: 500,
+      message: `Failed to upload to Arweave, error: ${uploadResult.error.sentryId}`,
+    });
+  }
+
+  const { id } = uploadResult.value;
 
   event.context.$posthog.capture({
     distinctId: event.context.user.id,
