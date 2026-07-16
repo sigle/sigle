@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const url = request.nextUrl;
   const hostname = request.headers.get("host");
 
@@ -11,7 +11,6 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  runtime: "nodejs",
   matcher: [
     /*
      * Match all paths except for:
