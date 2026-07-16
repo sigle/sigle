@@ -10,6 +10,7 @@ ENV APP_NAME="sigle"
 # Install pnpm
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME/bin:$PATH"
+RUN apk add --no-cache git
 COPY --link ./package.json ./
 RUN corepack enable pnpm
 RUN TURBO_VERSION=$(grep -o '"turbo": "[^"]*' package.json | cut -d'"' -f4) && \
