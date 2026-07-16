@@ -127,7 +127,6 @@ export default defineConfig({
       "vitest/prefer-importing-vitest-globals": "off",
 
       "typescript/no-unsafe-assignment": "off",
-      "typescript/no-unsafe-call": "off",
     },
   },
 });
