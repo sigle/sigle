@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "vitest run",
-    "test:report": "vitest run -- --coverage --costs",
+    "test": "vp test run",
+    "test:report": "vp test run -- --coverage --costs",
     "test:watch": "chokidar \"tests/**/*.ts\" \"contracts/**/*.clar\" -c \"npm run test:report\""
   },
   "devDependencies": {
@@ -15,7 +15,7 @@
     "@stacks/transactions": "7.3.1",
     "chokidar-cli": "3.0.0",
     "typescript": "5.9.3",
-    "vitest": "4.1.5",
+    "vitest": "catalog:",
     "vitest-environment-clarinet": "3.0.2"
   }
 }

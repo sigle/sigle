@@ -106,7 +106,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           },
           body: {
             type,
-            // oxlint-disable-next-line no-explicit-any
+            // oxlint-disable-next-line typescript/no-explicit-any
             metadata: metadata as any,
           },
         })

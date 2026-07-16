@@ -37,7 +37,7 @@ export const UploadProfilePicture = ({
       formData.append("file", file);
       uploadImage(
         {
-          // oxlint-disable-next-line no-explicit-any
+          // oxlint-disable-next-line typescript/no-explicit-any
           body: formData as any,
         },
         {

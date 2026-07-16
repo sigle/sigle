@@ -1,10 +1,11 @@
+// oxlint-disable no-underscore-dangle
 import type PgBoss from "pg-boss";
 import type { SendOptions, WorkHandler } from "pg-boss";
 import type { z } from "zod";
 import * as Sentry from "@sentry/node";
 import { consola } from "./consola";
 
-// oxlint-disable-next-line no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 class JobBuilder<TInput = any> {
   private _name: string;
   private _inputSchema?: z.ZodType<TInput>;
@@ -20,9 +21,9 @@ class JobBuilder<TInput = any> {
   }
 
   input<T>(schema: z.ZodType<T>): JobBuilder<T> {
-    // oxlint-disable-next-line no-explicit-any
+    // oxlint-disable-next-line typescript/no-explicit-any
     this._inputSchema = schema as any;
-    // oxlint-disable-next-line no-explicit-any
+    // oxlint-disable-next-line typescript/no-explicit-any
     return this as any;
   }
 
@@ -69,7 +70,7 @@ class JobBuilder<TInput = any> {
     }
 
     consola.debug("Job emitted", { name: this._name });
-    // oxlint-disable-next-line no-explicit-any: this is safe
+    // oxlint-disable-next-line typescript/no-explicit-any this is safe
     return this._boss.send(this._name, data as any, this._options);
   }
 

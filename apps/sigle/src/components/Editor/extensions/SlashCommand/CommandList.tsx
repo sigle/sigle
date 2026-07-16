@@ -16,7 +16,7 @@ export interface CommandListRef {
 
 interface CommandListProps {
   items: SlashCommandsCommand[];
-  command(item: SlashCommandsCommand): void;
+  command: (item: SlashCommandsCommand) => void;
   currentNodeName?: string;
 }
 
@@ -128,7 +128,7 @@ const CommandListItem = ({
   title: string;
   description: string;
   icon: Icon;
-  selectItem(index: number): void;
+  selectItem: (index: number) => void;
 }) => {
   return (
     <div

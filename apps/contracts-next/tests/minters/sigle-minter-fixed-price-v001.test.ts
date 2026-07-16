@@ -2,7 +2,7 @@
 import { createClient, fixedMintFee } from "@sigle/sdk";
 import { STACKS_MOCKNET } from "@stacks/network";
 import { Cl } from "@stacks/transactions";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vite-plus/test";
 
 const contract = "sigle-minter-fixed-price-v001";
 const accounts = simnet.getAccounts();

@@ -1,6 +1,6 @@
 // oxlint-disable no-non-null-assertion
 import { Cl } from "@stacks/transactions";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it } from "vite-plus/test";
 
 const contract = "sigle-registry-v001";
 const accounts = simnet.getAccounts();

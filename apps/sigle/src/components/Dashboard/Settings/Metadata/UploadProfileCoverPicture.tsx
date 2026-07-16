@@ -37,7 +37,7 @@ export const UploadProfileCoverPicture = ({
       formData.append("file", file);
       uploadImage(
         {
-          // oxlint-disable-next-line no-explicit-any: wrong type returned by nitro
+          // oxlint-disable-next-line typescript/no-explicit-any wrong type returned by nitro
           body: formData as any,
         },
         {

@@ -87,6 +87,10 @@ export default defineConfig({
       "vitest/prefer-to-be-truthy": "off",
       "vitest/prefer-to-be-falsy": "off",
       "vitest/require-test-timeout": "off",
+      "vitest/no-hooks": "off",
+      "vitest/require-hook": "off",
+      "vitest/valid-title": "off",
+      "vitest/prefer-expect-assertions": "off",
       "jest/prefer-ending-with-an-expect": "off",
       "typescript/explicit-member-accessibility": "off",
 
@@ -112,6 +116,9 @@ export default defineConfig({
       "no-shadow": "off",
       "vitest/require-mock-type-parameters": "off",
       "no-useless-assignment": "off",
+      "require-unicode-regexp": "off",
+      "prefer-named-capture-group": "off",
+      "no-underscore-dangle": "off",
       // TODO: remove when vite-plus/test imports are supported by this rule
       "vitest/prefer-importing-vitest-globals": "off",
     },
