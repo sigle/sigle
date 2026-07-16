@@ -1,3 +1,4 @@
+import { Result, TaggedError } from "better-result";
 import { encode } from "blurhash";
 import sharp from "sharp";
 import { env } from "../env";
@@ -18,6 +19,12 @@ const PNG = "image/png";
 const JPEG = "image/jpeg";
 export const allowedFormats = [WEBP, PNG, JPEG] as const;
 
+export class ImageOptimizationFailedError extends TaggedError(
+  "ImageOptimizationFailedError",
+)<{
+  cause: unknown;
+}>() {}
+
 export async function optimizeImage({
   buffer,
   contentType,
@@ -30,31 +37,36 @@ export async function optimizeImage({
   quality: number;
   width: number;
   height?: number;
-}): Promise<Buffer> {
-  const transformer = sharp(buffer, {
-    sequentialRead: true,
+}): Promise<Result<Buffer, ImageOptimizationFailedError>> {
+  return Result.tryPromise({
+    try: async () => {
+      const transformer = sharp(buffer, {
+        sequentialRead: true,
+      });
+
+      transformer.rotate();
+
+      if (height) {
+        transformer.resize(width, height);
+      } else {
+        transformer.resize(width, undefined, {
+          withoutEnlargement: true,
+        });
+      }
+
+      if (contentType === WEBP) {
+        transformer.webp({ quality });
+      } else if (contentType === PNG) {
+        transformer.png({ quality });
+      } else if (contentType === JPEG) {
+        transformer.jpeg({ quality, progressive: true });
+      }
+
+      const optimizedBuffer = await transformer.toBuffer();
+      return optimizedBuffer;
+    },
+    catch: (cause) => new ImageOptimizationFailedError({ cause }),
   });
-
-  transformer.rotate();
-
-  if (height) {
-    transformer.resize(width, height);
-  } else {
-    transformer.resize(width, undefined, {
-      withoutEnlargement: true,
-    });
-  }
-
-  if (contentType === WEBP) {
-    transformer.webp({ quality });
-  } else if (contentType === PNG) {
-    transformer.png({ quality });
-  } else if (contentType === JPEG) {
-    transformer.jpeg({ quality, progressive: true });
-  }
-
-  const optimizedBuffer = await transformer.toBuffer();
-  return optimizedBuffer;
 }
 
 export function mimeTypeToExtension(mimeType: string): string {
@@ -69,22 +81,39 @@ export function mimeTypeToExtension(mimeType: string): string {
   throw new Error("Unsupported mimeType");
 }
 
+export class BlurhashGenerationFailedError extends TaggedError(
+  "BlurhashGenerationFailedError",
+)<{
+  cause: unknown;
+}>() {}
+
 export async function generateBlurhash({
   buffer,
   size = 20,
 }: {
   buffer: Buffer | ArrayBuffer;
   size?: number;
-}): Promise<string> {
-  return new Promise((resolve, reject) => {
-    sharp(buffer)
-      .raw()
-      .ensureAlpha()
-      .resize(size, size, { fit: "inside" })
-      .toBuffer((err, buffer, { width, height }) => {
-        if (err) return reject(err);
-        const hash = encode(new Uint8ClampedArray(buffer), width, height, 4, 4);
-        resolve(hash);
+}): Promise<Result<string, BlurhashGenerationFailedError>> {
+  return Result.tryPromise({
+    try: async () => {
+      return new Promise<string>((resolve, reject) => {
+        sharp(buffer)
+          .raw()
+          .ensureAlpha()
+          .resize(size, size, { fit: "inside" })
+          .toBuffer((err, buffer, { width, height }) => {
+            if (err) return reject(err);
+            const hash = encode(
+              new Uint8ClampedArray(buffer),
+              width,
+              height,
+              4,
+              4,
+            );
+            resolve(hash);
+          });
       });
+    },
+    catch: (cause) => new BlurhashGenerationFailedError({ cause }),
   });
 }

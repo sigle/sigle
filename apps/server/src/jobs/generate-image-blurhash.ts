@@ -36,7 +36,11 @@ export const generateImageBlurhashJob = defineJob("generate-image-blurhash")
       Buffer.from(imageBuffer),
     ).metadata();
 
-    const blurhash = await generateBlurhash({ buffer: imageBuffer });
+    const blurhashResult = await generateBlurhash({ buffer: imageBuffer });
+    if (blurhashResult.isErr()) {
+      throw blurhashResult.error;
+    }
+    const blurhash = blurhashResult.value;
 
     await prisma.mediaImage.update({
       where: {
