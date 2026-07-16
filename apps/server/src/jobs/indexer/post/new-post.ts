@@ -1,15 +1,8 @@
 import { MAX_UINT, PostMetadataSchema } from "@sigle/sdk";
 import { z } from "zod";
 import { env } from "@/env";
-import {
-  createChainhook,
-  createPredicate,
-  getChainhooks,
-  preparePredicate,
-} from "@/lib/chainhook";
 import { minifyClarity } from "@/lib/clarity";
 import { consola } from "@/lib/consola";
-import { siglePostPrintPredicate } from "@/lib/predicates";
 import { prisma } from "@/lib/prisma";
 import { sigleClient } from "@/lib/sigle";
 import { generateImageBlurhashJob } from "../../generate-image-blurhash";
@@ -249,25 +242,6 @@ export const executeNewPostJob = async (
     await generateImageBlurhashJob.emit({
       imageId: metadata.coverImage.url,
     });
-  }
-
-  const chainhooks = await getChainhooks();
-  const predicateName = `${env.SIGLE_ENV}-${env.STACKS_ENV}.${siglePostPrintPredicate.name}.${data.address}`;
-  const hasContractDeploymentChainhook = chainhooks.find(
-    (chainhook) => chainhook.name === predicateName,
-  );
-  if (!hasContractDeploymentChainhook) {
-    const newPredicate = {
-      ...siglePostPrintPredicate,
-      name: predicateName,
-    };
-    newPredicate.networks.testnet.if_this.contract_identifier = data.address;
-    // We add 1 here to skip the deployment block logs
-    newPredicate.networks.testnet.start_block = data.blockHeight + 1;
-    const response = await createChainhook(
-      preparePredicate(createPredicate(newPredicate)),
-    );
-    consola.info(`new-post: Registered chainhook ${response.chainhookUuid}`);
   }
 
   consola.info("post.newPost", {
