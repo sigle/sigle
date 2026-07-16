@@ -27,13 +27,11 @@ export class ImageOptimizationFailedError extends TaggedError(
 
 export async function optimizeImage({
   buffer,
-  contentType,
   quality,
   width,
   height,
 }: {
   buffer: Buffer | ArrayBuffer;
-  contentType: string;
   quality: number;
   width: number;
   height?: number;
@@ -54,13 +52,7 @@ export async function optimizeImage({
         });
       }
 
-      if (contentType === WEBP) {
-        transformer.webp({ quality });
-      } else if (contentType === PNG) {
-        transformer.png({ quality });
-      } else if (contentType === JPEG) {
-        transformer.jpeg({ quality, progressive: true });
-      }
+      transformer.webp({ quality });
 
       const optimizedBuffer = await transformer.toBuffer();
       return optimizedBuffer;

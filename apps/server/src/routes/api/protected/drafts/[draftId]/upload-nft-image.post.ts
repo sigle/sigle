@@ -135,7 +135,6 @@ export default defineEventHandler(async (event) => {
 
   const optimizeResult = await optimizeImage({
     buffer: Buffer.from(await file.arrayBuffer()),
-    contentType: parsedFile.data.file.type,
     quality: env.STACKS_ENV === "mainnet" ? 85 : 75,
     width: env.STACKS_ENV === "mainnet" ? 800 : 500,
   });
@@ -163,7 +162,7 @@ export default defineEventHandler(async (event) => {
 
   const uploadResult = await ipfsUploadFile(event, {
     content: optimizedBuffer,
-    contentType: parsedFile.data.type,
+    contentType: "image/webp",
   });
 
   if (uploadResult.isErr()) {
@@ -179,7 +178,7 @@ export default defineEventHandler(async (event) => {
     userId: event.context.user.id,
     cid,
     sizeBytes: optimizedBuffer.length,
-    contentType: parsedFile.data.file.type,
+    contentType: "image/webp",
   });
 
   event.context.$posthog.capture({
