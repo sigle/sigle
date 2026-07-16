@@ -13,7 +13,7 @@
     "@stacks/network": "7.3.1",
     "@stacks/transactions": "7.3.1",
     "chokidar-cli": "3.0.0",
-    "typescript": "5.9.3",
+    "typescript": "6.0.3",
     "vitest": "catalog:",
     "vitest-environment-clarinet": "3.0.2"
   }
