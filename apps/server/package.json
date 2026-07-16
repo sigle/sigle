@@ -2,6 +2,7 @@
   "name": "@sigle/server",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "nitro build",
     "db:generate": "dotenvx run --env-file=.env.development -- prisma generate",
