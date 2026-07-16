@@ -43,7 +43,11 @@ export default defineConfig({
     ],
   },
   lint: {
-    plugins: ["typescript", "vitest"],
+    options: {
+      typeAware: true,
+      typeCheck: true,
+    },
+    plugins: ["vitest"],
     ignorePatterns: ["__generated__"],
     categories: {
       correctness: "error",
@@ -121,6 +125,11 @@ export default defineConfig({
       "no-underscore-dangle": "off",
       // TODO: remove when vite-plus/test imports are supported by this rule
       "vitest/prefer-importing-vitest-globals": "off",
+
+      "typescript/no-unsafe-assignment": "off",
+      "typescript/no-unsafe-call": "off",
+      "typescript/no-unsafe-member-access": "off",
+      "typescript/no-unsafe-argument": "off",
     },
   },
 });

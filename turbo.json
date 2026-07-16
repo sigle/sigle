@@ -8,9 +8,6 @@
     "test": {
       "dependsOn": ["^build"]
     },
-    "check-types": {
-      "dependsOn": ["db:generate", "^build"]
-    },
     "lint": {},
     "dev": {
       "dependsOn": ["^build"],

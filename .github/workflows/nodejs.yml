@@ -27,9 +27,6 @@ jobs:
       - name: Check formatting, linting and type checks.
         run: pnpm vp check
 
-      - name: Check types
-        run: pnpm turbo run check-types
-
       - name: Build
         run: |
           cp apps/sigle/.env.development apps/sigle/.env.production.local

@@ -6,7 +6,6 @@
     "build": "turbo build",
     "release": "pnpm changeset publish",
     "test": "turbo test",
-    "check-types": "turbo check-types",
     "prepare": "vp config",
     "version": "pnpm changeset version && pnpm install --lockfile-only"
   },

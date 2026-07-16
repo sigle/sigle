@@ -14,8 +14,7 @@
   "scripts": {
     "build": "vp pack",
     "codegen": "openapi-typescript http://localhost:3001/_openapi.json --output ./src/__generated__/sigle-api-openapi.ts",
-    "test": "vp test",
-    "check-types": "tsc --noEmit"
+    "test": "vp test"
   },
   "dependencies": {
     "@sigle/contracts-source-next": "workspace:*",
