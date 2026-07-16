@@ -123,10 +123,19 @@ export default defineEventHandler(async (event) => {
 
   await checkUploadQuota(event.context.user.id, optimizedBuffer.length);
 
-  const { cid } = await ipfsUploadFile(event, {
+  const uploadResult = await ipfsUploadFile(event, {
     content: optimizedBuffer,
     contentType: parsedFile.data.type,
   });
+
+  if (uploadResult.isErr()) {
+    throw new HTTPError({
+      status: 500,
+      message: uploadResult.error.message,
+    });
+  }
+
+  const { cid } = uploadResult.value;
 
   await recordUpload({
     userId: event.context.user.id,
