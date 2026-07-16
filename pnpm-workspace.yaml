@@ -8,7 +8,6 @@ allowBuilds:
   "core-js": false
   "esbuild": false
   "keccak": false
-  "lefthook": true
   msw: false
   "prisma": false
   "protobufjs": false
