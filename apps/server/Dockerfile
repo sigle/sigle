@@ -36,6 +36,7 @@ COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+RUN npm pkg delete scripts.prepare
 RUN pnpm install --frozen-lockfile --prod=false
 
 COPY --from=builder /app/out/full/ .
@@ -69,6 +70,7 @@ COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/prisma ./prisma
 COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/src/__generated__/prisma ./apps/$APP_NAME/src/__generated__/prisma
 COPY --from=builder --chown=nitro:nodejs /app/apps/$APP_NAME/.env.testnet.local ./.env.testnet.local
 RUN node scripts/prod-deps.js
+RUN npm pkg delete scripts.prepare
 RUN pnpm install --dangerously-allow-all-builds
 
 USER nitro

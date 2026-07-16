@@ -36,6 +36,7 @@ RUN apk update && \
 # First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
+RUN npm pkg delete scripts.prepare
 RUN pnpm install --frozen-lockfile --prod=false
 
 COPY --from=builder /app/out/full/ .
