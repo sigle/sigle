@@ -9,17 +9,19 @@ export default defineConfig({
     extensions: [".ts"],
   },
   target: "es2020",
-  experiments: {
-    outputModule: true,
-  },
   output: {
     filename: "index.js",
+    module: true,
     library: {
       type: "module",
     },
   },
   module: {
     rules: [
+      {
+        test: /\.clar$/,
+        type: "asset/source",
+      },
       {
         test: /\.ts$/,
         exclude: [/node_modules/],
