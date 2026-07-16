@@ -52,7 +52,7 @@ export async function optimizeImage({
         });
       }
 
-      transformer.webp({ quality });
+      transformer.webp({ quality, effort: 6, smartSubsample: true });
 
       const optimizedBuffer = await transformer.toBuffer();
       return optimizedBuffer;
