@@ -1,14 +1,22 @@
 import { createId } from "@paralleldrive/cuid2";
-import { HTTPError } from "nitro/h3";
+import { Result, TaggedError } from "better-result";
 import { env } from "@/env";
 import { prisma } from "./prisma";
+
+export class QuotaExceededError extends TaggedError("QuotaExceededError")<{
+  message: string;
+  type: "daily" | "total";
+}>() {}
 
 /**
  * Verifies that a user has not exceeded their daily
  * or total upload quota before allowing an upload.
- * Throws an HTTPError 429 if either limit would be exceeded.
+ * Returns a Result with QuotaExceededError if either limit is exceeded.
  */
-export async function checkUploadQuota(userId: string, sizeBytes: number) {
+export async function checkUploadQuota(
+  userId: string,
+  sizeBytes: number,
+): Promise<Result<void, QuotaExceededError>> {
   const startOfToday = new Date();
   startOfToday.setUTCHours(0, 0, 0, 0);
 
@@ -30,18 +38,24 @@ export async function checkUploadQuota(userId: string, sizeBytes: number) {
   const currentDaily = dailyAgg._sum.sizeBytes ?? 0;
 
   if (currentDaily + sizeBytes > env.UPLOAD_QUOTA_DAILY_BYTES) {
-    throw new HTTPError({
-      status: 429,
-      message: `Daily upload quota of ${formatBytes(env.UPLOAD_QUOTA_DAILY_BYTES)} exceeded.`,
-    });
+    return Result.err(
+      new QuotaExceededError({
+        type: "daily",
+        message: `Daily upload quota of ${formatBytes(env.UPLOAD_QUOTA_DAILY_BYTES)} exceeded.`,
+      }),
+    );
   }
 
   if (currentTotal + sizeBytes > env.UPLOAD_QUOTA_TOTAL_BYTES) {
-    throw new HTTPError({
-      status: 429,
-      message: `Total upload quota of ${formatBytes(env.UPLOAD_QUOTA_TOTAL_BYTES)} exceeded.`,
-    });
+    return Result.err(
+      new QuotaExceededError({
+        type: "total",
+        message: `Total upload quota of ${formatBytes(env.UPLOAD_QUOTA_TOTAL_BYTES)} exceeded.`,
+      }),
+    );
   }
+
+  return Result.ok(undefined);
 }
 
 /**
