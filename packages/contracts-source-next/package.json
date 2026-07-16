@@ -21,6 +21,6 @@
     "@rspack/cli": "1.7.8",
     "@rspack/core": "1.7.8",
     "raw-loader": "4.0.2",
-    "typescript": "5.9.3"
+    "typescript": "6.0.3"
   }
 }
