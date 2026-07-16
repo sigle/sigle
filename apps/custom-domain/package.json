@@ -8,8 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@radix-ui/react-dialog": "1.1.15",
-    "@radix-ui/react-tooltip": "1.2.8",
+    "@base-ui/react": "1.4.1",
     "@sigle/sdk": "workspace:*",
     "@t3-oss/env-nextjs": "0.13.11",
     "@tabler/icons-react": "3.41.1",
