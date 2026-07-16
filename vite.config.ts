@@ -125,8 +125,6 @@ export default defineConfig({
       "no-underscore-dangle": "off",
       // TODO: remove when vite-plus/test imports are supported by this rule
       "vitest/prefer-importing-vitest-globals": "off",
-
-      "typescript/no-unsafe-assignment": "off",
     },
   },
 });
