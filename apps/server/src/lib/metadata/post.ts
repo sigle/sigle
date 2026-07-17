@@ -31,6 +31,61 @@ interface PostMetadata {
   recoveredAddress: string;
 }
 
+export function verifyPostSignature(metadata: {
+  signature: string;
+  content: any;
+}): Result<
+  { recoveredAddress: string; publicKey: string },
+  InvalidSignatureError
+> {
+  const { signature, ...metadataToSign } = metadata;
+
+  if (!signature) {
+    return Result.err(
+      new InvalidSignatureError({
+        error: "Invalid signature: Signature is required",
+      }),
+    );
+  }
+
+  try {
+    const message = JSON.stringify(metadataToSign);
+    const messageHash = bytesToHex(hashMessage(message));
+    const stacksSignature = createMessageSignature(signature);
+    const publicKey = publicKeyFromSignatureRsv(
+      messageHash,
+      stacksSignature.data,
+    );
+    const recoveredAddress = publicKeyToAddress(
+      publicKey,
+      env.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
+    );
+
+    const isSignatureValid = verifyMessageSignatureRsv({
+      signature,
+      message,
+      publicKey,
+    });
+    if (!isSignatureValid) {
+      return Result.err(
+        new InvalidSignatureError({
+          error: "Invalid signature: Signature verification failed",
+        }),
+      );
+    }
+
+    return Result.ok({ recoveredAddress, publicKey });
+  } catch (error) {
+    return Result.err(
+      new InvalidSignatureError({
+        error: `Invalid signature: Failed to recover signature: ${
+          error instanceof Error ? error.message : error
+        }`,
+      }),
+    );
+  }
+}
+
 export async function getMetadataFromUri(
   baseTokenUri: string,
 ): Promise<
@@ -59,42 +114,12 @@ export async function getMetadataFromUri(
   }
   const postData = postMetadata.data;
 
-  const signature = postData.signature;
-  let recoveredAddress = "";
-  try {
-    const message = JSON.stringify(postData.content);
-    const messageHash = bytesToHex(hashMessage(message));
-    const stacksSignature = createMessageSignature(signature);
-    const publicKey = publicKeyFromSignatureRsv(
-      messageHash,
-      stacksSignature.data,
-    );
-    recoveredAddress = publicKeyToAddress(
-      publicKey,
-      env.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
-    );
-
-    const isSignatureValid = verifyMessageSignatureRsv({
-      signature,
-      message,
-      publicKey,
-    });
-    if (!isSignatureValid) {
-      return Result.err(
-        new InvalidSignatureError({
-          error: "Invalid signature: Signature verification failed",
-        }),
-      );
-    }
-  } catch (error) {
-    return Result.err(
-      new InvalidSignatureError({
-        error: `Invalid signature: Failed to recover signature: ${
-          error instanceof Error ? error.message : error
-        }`,
-      }),
-    );
+  const signatureResult = verifyPostSignature(postData);
+  if (signatureResult.isErr()) {
+    return signatureResult;
   }
+  const { recoveredAddress } = signatureResult.value;
+  const signature = postData.signature;
 
   const metaTitle = postData.content.attributes?.find(
     (attribute) => attribute.key === "meta-title",

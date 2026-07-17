@@ -1,18 +1,11 @@
 import { PostMetadataSchema } from "@sigle/sdk";
-import { bytesToHex } from "@stacks/common";
-import { hashMessage, verifyMessageSignatureRsv } from "@stacks/encryption";
-import {
-  createMessageSignature,
-  publicKeyFromSignatureRsv,
-  publicKeyToAddress,
-} from "@stacks/transactions";
 import { defineRouteMeta } from "nitro";
 import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
-import { env } from "@/env";
 import { generateImageBlurhashJob } from "@/jobs/generate-image-blurhash";
 import { arweaveUploadFile } from "@/lib/arweave";
+import { verifyPostSignature } from "@/lib/metadata";
 import { readValidatedBodyZod } from "@/lib/nitro";
 import { prisma } from "@/lib/prisma";
 import { isUserWhitelisted } from "@/lib/users";
@@ -98,39 +91,19 @@ export default defineEventHandler(async (event) => {
   }
 
   // Verify that the signature is valid and resolves to the logged-in user's Stacks address
-  const signature = parsedMetadata.data.signature;
-  let recoveredAddress = "";
-  try {
-    const message = JSON.stringify(parsedMetadata.data.content);
-    const messageHash = bytesToHex(hashMessage(message));
-    const stacksSignature = createMessageSignature(signature);
-    const publicKey = publicKeyFromSignatureRsv(
-      messageHash,
-      stacksSignature.data,
-    );
-    recoveredAddress = publicKeyToAddress(
-      publicKey,
-      env.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
-    );
-
-    const isSignatureValid = verifyMessageSignatureRsv({
-      signature,
-      message,
-      publicKey,
-    });
-    if (!isSignatureValid || recoveredAddress !== event.context.user.id) {
-      throw new HTTPError({
-        status: 400,
-        message:
-          "Invalid signature: Signature verification failed or address mismatch",
-      });
-    }
-  } catch (error) {
+  const signatureResult = verifyPostSignature(parsedMetadata.data);
+  if (signatureResult.isErr()) {
     throw new HTTPError({
       status: 400,
-      message: `Invalid signature: Failed to recover signature: ${
-        error instanceof Error ? error.message : error
-      }`,
+      message: signatureResult.error.error,
+    });
+  }
+  const { recoveredAddress } = signatureResult.value;
+  if (recoveredAddress !== event.context.user.id) {
+    throw new HTTPError({
+      status: 400,
+      message:
+        "Invalid signature: Signature verification failed or address mismatch",
     });
   }
 
