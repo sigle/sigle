@@ -25,6 +25,8 @@ export const executePublishPostJob = async (
     const message = matchError(metadataResult.error, {
       MetadataFetchFailedError: (e) => `Failed to fetch metadata: ${e.error}`,
       InvalidMetadataError: (e) => `Metadata validation failed: ${e.error}`,
+      InvalidSignatureError: (e) =>
+        `Metadata signature validation failed: ${e.error}`,
       UnhandledException: (e) => `Unhandled exception: ${e.message}`,
     });
     consola.error("Can't process metadata", {

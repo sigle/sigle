@@ -9,7 +9,11 @@ import {
 import { Result, type UnhandledException } from "better-result";
 import { env } from "../../env";
 import { resolveImageUrl } from "../images";
-import { InvalidMetadataError, type MetadataFetchFailedError } from "./errors";
+import {
+  InvalidMetadataError,
+  InvalidSignatureError,
+  type MetadataFetchFailedError,
+} from "./errors";
 import { fetchMetadata } from "./fetch";
 
 interface PostMetadata {
@@ -32,7 +36,10 @@ export async function getMetadataFromUri(
 ): Promise<
   Result<
     PostMetadata,
-    MetadataFetchFailedError | InvalidMetadataError | UnhandledException
+    | MetadataFetchFailedError
+    | InvalidMetadataError
+    | InvalidSignatureError
+    | UnhandledException
   >
 > {
   const url = resolveImageUrl(baseTokenUri);
@@ -74,14 +81,14 @@ export async function getMetadataFromUri(
     });
     if (!isSignatureValid) {
       return Result.err(
-        new InvalidMetadataError({
+        new InvalidSignatureError({
           error: "Invalid signature: Signature verification failed",
         }),
       );
     }
   } catch (error) {
     return Result.err(
-      new InvalidMetadataError({
+      new InvalidSignatureError({
         error: `Invalid signature: Failed to recover signature: ${
           error instanceof Error ? error.message : error
         }`,
