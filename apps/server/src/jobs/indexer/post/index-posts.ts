@@ -11,6 +11,7 @@ export const indexerIndexPostsSchema = z.object({
 });
 
 interface GraphQLResponse {
+  errors?: Array<{ message: string }>;
   data?: {
     transactions?: {
       edges?: Array<{
@@ -108,12 +109,17 @@ export const executeIndexerIndexPostsJob = async (
       }
 
       const result = (await response.json()) as GraphQLResponse;
+      if (result.errors && result.errors.length > 0) {
+        throw new Error(
+          `GraphQL error: ${result.errors.map((e) => e.message).join(", ")}`,
+        );
+      }
       edges = result.data?.transactions?.edges || [];
     } catch (error) {
       consola.error("Error fetching transactions from Arweave GraphQL", {
         error,
       });
-      break;
+      throw error;
     }
 
     if (edges.length === 0) {
