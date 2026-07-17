@@ -1,4 +1,5 @@
 import { PostMetadataSchema } from "@sigle/sdk";
+import { bytesToHex } from "@stacks/common";
 import { hashMessage, verifyMessageSignatureRsv } from "@stacks/encryption";
 import {
   createMessageSignature,
@@ -101,7 +102,7 @@ export default defineEventHandler(async (event) => {
   let recoveredAddress = "";
   try {
     const message = JSON.stringify(parsedMetadata.data.content);
-    const messageHash = Buffer.from(hashMessage(message)).toString("hex");
+    const messageHash = bytesToHex(hashMessage(message));
     const stacksSignature = createMessageSignature(signature);
     const publicKey = publicKeyFromSignatureRsv(
       messageHash,

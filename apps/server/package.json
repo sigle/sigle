@@ -22,6 +22,7 @@
     "@sentry/node": "10.50.0",
     "@sigle/sdk": "workspace:*",
     "@stacks/blockchain-api-client": "8.15.3",
+    "@stacks/common": "7.3.1",
     "@stacks/encryption": "7.3.1",
     "@stacks/network": "7.3.1",
     "@stacks/transactions": "7.3.1",

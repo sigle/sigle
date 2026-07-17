@@ -1,4 +1,5 @@
 import { PostMetadataSchema, type MediaImageMetadata } from "@sigle/sdk";
+import { bytesToHex } from "@stacks/common";
 import { hashMessage, verifyMessageSignatureRsv } from "@stacks/encryption";
 import {
   createMessageSignature,
@@ -55,7 +56,7 @@ export async function getMetadataFromUri(
   let recoveredAddress = "";
   try {
     const message = JSON.stringify(postData.content);
-    const messageHash = Buffer.from(hashMessage(message)).toString("hex");
+    const messageHash = bytesToHex(hashMessage(message));
     const stacksSignature = createMessageSignature(signature);
     const publicKey = publicKeyFromSignatureRsv(
       messageHash,
