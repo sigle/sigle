@@ -77,6 +77,7 @@ export const executePublishPostJob = async (
         txId: data.txId,
         version: metadata.version,
         blockHeight: data.blockHeight,
+        createdAt: new Date(data.createdAt),
       },
       create: {
         id: data.txId,
