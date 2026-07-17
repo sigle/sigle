@@ -93,6 +93,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           console.error(error);
           posthog.capture("post_publish_sign_message_error", {
             postId,
+            error,
           });
           toast.error("Failed to sign post");
           setPublishingLoading(false);
