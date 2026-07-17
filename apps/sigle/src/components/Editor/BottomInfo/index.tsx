@@ -16,7 +16,7 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
   const { wordsCount } = useEditorState({
     editor,
     selector: (context) => ({
-      wordsCount: context.editor.storage.characterCount.words(),
+      wordsCount: context.editor.storage.characterCount?.words() || 0,
     }),
   });
 
