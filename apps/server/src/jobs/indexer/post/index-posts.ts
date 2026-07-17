@@ -88,7 +88,7 @@ export const executeIndexerIndexPostsJob = async (
       };
     }> = [];
     try {
-      const response = await fetch("https://arweave.net/graphql", {
+      const response = await fetch(`${env.ARWEAVE_GATEWAY_URL}/graphql`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
