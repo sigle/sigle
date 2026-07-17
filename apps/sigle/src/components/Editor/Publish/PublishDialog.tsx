@@ -134,12 +134,17 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         completeStep("arweave");
         completeStep("indexing");
 
+        const arweaveId = uploadedMetadataResult.value.id;
+        posthog.capture("post_publish_success", {
+          postId,
+          arweaveId,
+        });
+
         // wait 1s for a better UX
         await new Promise((resolve) => {
           setTimeout(resolve, 1000);
         });
 
-        const arweaveId = uploadedMetadataResult.value.id;
         router.push(
           Routes.post(
             { postId: arweaveId },
