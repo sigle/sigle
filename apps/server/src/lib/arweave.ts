@@ -17,6 +17,7 @@ interface ArweaveTag {
 export class ArweaveUploadFailedError extends TaggedError(
   "ArweaveUploadFailedError",
 )<{
+  cause: unknown;
   sentryId: string;
 }>() {}
 
@@ -66,7 +67,7 @@ export const arweaveUploadFile = async (
           metadata,
         },
       });
-      return new ArweaveUploadFailedError({ sentryId });
+      return new ArweaveUploadFailedError({ cause: error, sentryId });
     },
   });
 };

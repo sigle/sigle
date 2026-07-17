@@ -1,5 +1,12 @@
 import { PostMetadataSchema, type MediaImageMetadata } from "@sigle/sdk";
+import { hashMessage, verifyMessageSignatureRsv } from "@stacks/encryption";
+import {
+  createMessageSignature,
+  publicKeyFromSignatureRsv,
+  publicKeyToAddress,
+} from "@stacks/transactions";
 import { Result, type UnhandledException } from "better-result";
+import { env } from "../../env";
 import { resolveImageUrl } from "../images";
 import { InvalidMetadataError, type MetadataFetchFailedError } from "./errors";
 import { fetchMetadata } from "./fetch";
@@ -15,6 +22,8 @@ interface PostMetadata {
   coverImage?: MediaImageMetadata;
   tags?: string[];
   canonicalUri?: string;
+  signature: string;
+  recoveredAddress: string;
 }
 
 export async function getMetadataFromUri(
@@ -42,6 +51,43 @@ export async function getMetadataFromUri(
   }
   const postData = postMetadata.data;
 
+  const signature = postData.signature;
+  let recoveredAddress = "";
+  try {
+    const message = JSON.stringify(postData.content);
+    const messageHash = Buffer.from(hashMessage(message)).toString("hex");
+    const stacksSignature = createMessageSignature(signature);
+    const publicKey = publicKeyFromSignatureRsv(
+      messageHash,
+      stacksSignature.data,
+    );
+    recoveredAddress = publicKeyToAddress(
+      publicKey,
+      env.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
+    );
+
+    const isSignatureValid = verifyMessageSignatureRsv({
+      signature,
+      message,
+      publicKey,
+    });
+    if (!isSignatureValid) {
+      return Result.err(
+        new InvalidMetadataError({
+          error: "Invalid signature: Signature verification failed",
+        }),
+      );
+    }
+  } catch (error) {
+    return Result.err(
+      new InvalidMetadataError({
+        error: `Invalid signature: Failed to recover signature: ${
+          error instanceof Error ? error.message : error
+        }`,
+      }),
+    );
+  }
+
   const metaTitle = postData.content.attributes?.find(
     (attribute) => attribute.key === "meta-title",
   )?.value;
@@ -68,6 +114,8 @@ export async function getMetadataFromUri(
     coverImage: postData.content.coverImage,
     tags: postData.content.tags,
     canonicalUri,
+    signature,
+    recoveredAddress,
   };
 
   return Result.ok(metadata);

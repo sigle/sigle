@@ -47,17 +47,9 @@ export const executePublishPostJob = async (
         coverImageId: true,
       },
       where: {
-        id: metadata.id,
+        id: data.txId,
       },
     });
-    if (post && post.txId !== data.txId) {
-      console.warn(
-        `Post id ${metadata.id} already exists with a different txId. Existing txId: ${post.txId}, new txId: ${data.txId}`,
-      );
-      throw new Error(
-        `Post id ${metadata.id} already exists with txId ${post.txId}`,
-      );
-    }
 
     const user = await tx.user.findUnique({
       select: {
@@ -77,8 +69,7 @@ export const executePublishPostJob = async (
 
     const updatedPost = await tx.post.upsert({
       where: {
-        id: metadata.id,
-        txId: data.txId,
+        id: data.txId,
       },
       update: {
         txId: data.txId,
@@ -86,7 +77,7 @@ export const executePublishPostJob = async (
         blockHeight: data.blockHeight,
       },
       create: {
-        id: metadata.id,
+        id: data.txId,
         txId: data.txId,
         version: metadata.version,
         blockHeight: data.blockHeight,

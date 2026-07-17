@@ -1,8 +1,16 @@
 import { PostMetadataSchema } from "@sigle/sdk";
+import { hashMessage, verifyMessageSignatureRsv } from "@stacks/encryption";
+import {
+  createMessageSignature,
+  publicKeyFromSignatureRsv,
+  publicKeyToAddress,
+} from "@stacks/transactions";
 import { defineRouteMeta } from "nitro";
 import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
+import { env } from "@/env";
+import { generateImageBlurhashJob } from "@/jobs/generate-image-blurhash";
 import { arweaveUploadFile } from "@/lib/arweave";
 import { readValidatedBodyZod } from "@/lib/nitro";
 import { prisma } from "@/lib/prisma";
@@ -88,6 +96,43 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  // Verify that the signature is valid and resolves to the logged-in user's Stacks address
+  const signature = parsedMetadata.data.signature;
+  let recoveredAddress = "";
+  try {
+    const message = JSON.stringify(parsedMetadata.data.content);
+    const messageHash = Buffer.from(hashMessage(message)).toString("hex");
+    const stacksSignature = createMessageSignature(signature);
+    const publicKey = publicKeyFromSignatureRsv(
+      messageHash,
+      stacksSignature.data,
+    );
+    recoveredAddress = publicKeyToAddress(
+      publicKey,
+      env.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
+    );
+
+    const isSignatureValid = verifyMessageSignatureRsv({
+      signature,
+      message,
+      publicKey,
+    });
+    if (!isSignatureValid || recoveredAddress !== event.context.user.id) {
+      throw new HTTPError({
+        status: 400,
+        message:
+          "Invalid signature: Signature verification failed or address mismatch",
+      });
+    }
+  } catch (error) {
+    throw new HTTPError({
+      status: 400,
+      message: `Invalid signature: Failed to recover signature: ${
+        error instanceof Error ? error.message : error
+      }`,
+    });
+  }
+
   const draft =
     body.type === "draft"
       ? await prisma.draft.findUnique({
@@ -109,7 +154,24 @@ export default defineEventHandler(async (event) => {
           },
         });
 
-  if (!draft) {
+  if (!draft && body.type === "published") {
+    // Also allow finding from Draft if we are publishing a draft
+    const draftFromDrafts = await prisma.draft.findUnique({
+      select: {
+        id: true,
+      },
+      where: {
+        id: draftId,
+        userId: event.context.user.id,
+      },
+    });
+    if (!draftFromDrafts) {
+      throw new HTTPError({
+        status: 404,
+        message: "Draft not found.",
+      });
+    }
+  } else if (!draft) {
     throw new HTTPError({
       status: 404,
       message: "Draft not found.",
@@ -146,6 +208,94 @@ export default defineEventHandler(async (event) => {
   }
 
   const { id } = uploadResult.value;
+
+  // If the type is published, index it immediately in the database
+  if (body.type === "published") {
+    const postData = parsedMetadata.data;
+    const metaTitle = postData.content.attributes?.find(
+      (attribute) => attribute.key === "meta-title",
+    )?.value;
+    const metaDescription = postData.content.attributes?.find(
+      (attribute) => attribute.key === "meta-description",
+    )?.value;
+    const excerpt = postData.content.attributes?.find(
+      (attribute) => attribute.key === "excerpt",
+    )?.value;
+    const canonicalUri = postData.content.attributes?.find(
+      (attribute) => attribute.key === "canonical-uri",
+    )?.value;
+
+    const versionSplit = postData.$schema.split("/");
+    const version = versionSplit[versionSplit.length - 1].replace(".json", "");
+
+    await prisma.$transaction(async (tx) => {
+      const userId = event.context.user.id;
+
+      const updatedPost = await tx.post.upsert({
+        where: {
+          id, // Use Arweave TX ID as post ID
+        },
+        update: {
+          txId: id,
+          version,
+          blockHeight: 0,
+        },
+        create: {
+          id,
+          txId: id,
+          version,
+          blockHeight: 0,
+          userId,
+          createdAt: new Date(),
+
+          // Metadata fields
+          metadataUri: `ar://${id}`,
+          title: postData.content.title,
+          content: postData.content.content,
+          metaTitle,
+          metaDescription,
+          excerpt: excerpt || "",
+          tags: postData.content.tags,
+          canonicalUri,
+        },
+      });
+
+      if (postData.content.coverImage) {
+        await tx.post.update({
+          where: {
+            id: updatedPost.id,
+          },
+          data: {
+            coverImage: {
+              connectOrCreate: {
+                where: {
+                  id: postData.content.coverImage.url,
+                },
+                create: {
+                  id: postData.content.coverImage.url,
+                  mimeType: postData.content.coverImage.type,
+                },
+              },
+            },
+          },
+        });
+      }
+    });
+
+    // Delete the associated draft
+    await prisma.draft.deleteMany({
+      where: {
+        id: draftId,
+        userId: event.context.user.id,
+      },
+    });
+
+    if (postData.content.coverImage) {
+      await generateImageBlurhashJob.emit({
+        imageId: postData.content.coverImage.url,
+      });
+    }
+  }
 
   event.context.$posthog.capture({
     distinctId: event.context.user.id,

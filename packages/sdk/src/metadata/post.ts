@@ -89,13 +89,13 @@ export type PostMetadata = MarketplaceMetadata & {
   /**
    * A cryptographic signature of the `content` data.
    */
-  signature?: string;
+  signature: string;
 };
 
 export const PostMetadataSchema = MarketplaceMetadataSchema.extend({
   $schema: z.literal(PostMetadataSchemaId.LATEST),
   content: PostMetadataDetailsSchema,
-  signature: SignatureSchema.optional(),
+  signature: SignatureSchema,
 });
 
 export function createPostMetadata(data: PostMetadata): PostMetadata {

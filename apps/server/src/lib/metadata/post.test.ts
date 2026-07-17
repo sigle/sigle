@@ -2,14 +2,29 @@ import { PostMetadataSchemaId } from "@sigle/sdk";
 import { Result } from "better-result";
 import { describe, expect, it, vi, beforeEach } from "vite-plus/test";
 import { InvalidMetadataError, MetadataFetchFailedError } from "./errors";
-import { getMetadataFromUri } from "./post";
+
+vi.mock(import("@stacks/encryption"), () => ({
+  hashMessage: vi.fn().mockReturnValue(new Uint8Array(32)),
+  verifyMessageSignatureRsv: vi.fn().mockReturnValue(true),
+}));
+
+vi.mock(import("@stacks/transactions"), () => ({
+  createMessageSignature: vi.fn().mockReturnValue({ data: "sig-data" }),
+  publicKeyFromSignatureRsv: vi.fn().mockReturnValue("pub-key"),
+  publicKeyToAddress: vi
+    .fn()
+    .mockReturnValue("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM"),
+}));
 
 const mockFetch = vi.fn();
 
 vi.stubGlobal("fetch", mockFetch);
 
+const { getMetadataFromUri } = await import("./post");
+
 const validMetadata = {
   $schema: PostMetadataSchemaId.LATEST,
+  signature: "mock-signature",
   content: {
     id: "post-123",
     title: "Test Post",
@@ -65,6 +80,8 @@ describe("post metadata", () => {
           },
           tags: ["tag1", "tag2"],
           canonicalUri: "https://example.com/post",
+          signature: "mock-signature",
+          recoveredAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
         }),
       );
     });
