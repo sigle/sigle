@@ -174,4 +174,93 @@ describe("executeIndexerIndexPostsJob", () => {
     expect(result.toProcess).toBe(0);
     expect(mockEmit).not.toHaveBeenCalled();
   });
+
+  it("handles pagination with multiple pages correctly using cursors", async () => {
+    await createTestUser({ id: userId });
+
+    // Mock first page of 100 transactions ending with cursor "cursor-100"
+    const page1Edges = Array.from({ length: 100 }, (_, i) => ({
+      cursor: `cursor-${i + 1}`,
+      node: {
+        id: `arweave-tx-${i + 1}`,
+        block: {
+          height: 1000 + i,
+          timestamp: 1672531199,
+        },
+      },
+    }));
+
+    // Mock second page with 5 transactions
+    const page2Edges = Array.from({ length: 5 }, () => ({
+      cursor: `cursor-101`,
+      node: {
+        id: `arweave-tx-101`,
+        block: {
+          height: 1100,
+          timestamp: 1672531199,
+        },
+      },
+    }));
+
+    mockFetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          data: {
+            transactions: {
+              edges: page1Edges,
+            },
+          },
+        }),
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          data: {
+            transactions: {
+              edges: page2Edges,
+            },
+          },
+        }),
+      } as Response);
+
+    const mockGetMetadata = getMetadataFromUri as any;
+    mockGetMetadata.mockResolvedValue(
+      Result.ok({
+        version: "v1",
+        id: "post-id-1",
+        title: "Test Post",
+        content: "Hello world",
+        excerpt: "Hello",
+        recoveredAddress: userId,
+        signature: "sig",
+      }),
+    );
+
+    const result = await executeIndexerIndexPostsJob({});
+
+    expect({
+      toProcess: result.toProcess,
+      emitCalls: mockEmit.mock.calls.length,
+    }).toStrictEqual({
+      toProcess: 105,
+      emitCalls: 105,
+    });
+
+    // Verify first fetch query contained min block: 0, no after cursor
+    const firstCallBody = JSON.parse(
+      mockFetch.mock.calls[0][1]?.body as string,
+    );
+    expect(firstCallBody.query).toContain("block: { min: 0 }");
+    expect(firstCallBody.query).not.toContain("after:");
+
+    // Verify second fetch query contained min block: 0, and cursor "cursor-100"
+    const secondCallBody = JSON.parse(
+      mockFetch.mock.calls[1][1]?.body as string,
+    );
+    expect([
+      secondCallBody.query.includes("block: { min: 0 }"),
+      secondCallBody.query.includes('after: "cursor-100"'),
+    ]).toStrictEqual([true, true]);
+  });
 });

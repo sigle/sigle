@@ -14,6 +14,7 @@ interface GraphQLResponse {
   data?: {
     transactions?: {
       edges?: Array<{
+        cursor: string;
         node: {
           id: string;
           block?: {
@@ -47,12 +48,15 @@ export const executeIndexerIndexPostsJob = async (
   consola.info("Starting indexer run from block height", { minBlockHeight });
 
   let toProcess = 0;
-  let currentMinBlockHeight = minBlockHeight;
+  let currentCursor = "";
   let hasMore = true;
+  let maxBlockHeightSeen = minBlockHeight;
 
   while (hasMore) {
+    const afterParam = currentCursor ? `, after: "${currentCursor}"` : "";
     consola.info("Fetching events from Arweave GraphQL", {
-      currentMinBlockHeight,
+      minBlockHeight,
+      currentCursor,
     });
 
     const query = `
@@ -61,11 +65,13 @@ export const executeIndexerIndexPostsJob = async (
           tags: [
             { name: "App-Name", values: ["${env.APP_ID}"] }
           ]
-          block: { min: ${currentMinBlockHeight} }
+          block: { min: ${minBlockHeight} }
           first: 100
           sort: HEIGHT_ASC
+          ${afterParam}
         ) {
           edges {
+            cursor
             node {
               id
               block {
@@ -79,6 +85,7 @@ export const executeIndexerIndexPostsJob = async (
     `;
 
     let edges: Array<{
+      cursor: string;
       node: {
         id: string;
         block?: {
@@ -116,6 +123,8 @@ export const executeIndexerIndexPostsJob = async (
 
     if (edges.length < 100) {
       hasMore = false;
+    } else {
+      currentCursor = edges[edges.length - 1].cursor;
     }
 
     for (const edge of edges) {
@@ -167,22 +176,21 @@ export const executeIndexerIndexPostsJob = async (
       toProcess++;
     }
 
-    if (hasMore) {
-      const minedEdges = edges.filter((e) => e.node.block);
-      if (minedEdges.length > 0) {
-        const maxBlockHeight = Math.max(
-          ...minedEdges.map((e) => e.node.block!.height),
-        );
-        currentMinBlockHeight = maxBlockHeight + 1;
-      } else {
-        hasMore = false;
-      }
+    const minedEdges = edges.filter((e) => e.node.block);
+    if (minedEdges.length > 0) {
+      maxBlockHeightSeen = Math.max(
+        maxBlockHeightSeen,
+        ...minedEdges.map((e) => e.node.block!.height),
+      );
     }
   }
 
   const returnData = {
     toProcess,
   };
-  consola.info("Index posts job complete", returnData);
+  consola.info("Index posts job complete", {
+    ...returnData,
+    maxBlockHeightSeen,
+  });
   return returnData;
 };
