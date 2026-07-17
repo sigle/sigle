@@ -100,8 +100,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         }
 
         // Add the signature to the metadata
-        // oxlint-disable-next-line typescript/no-explicit-any
-        (metadata as any).signature = signature;
+        metadata.signature = signature;
 
         const uploadedMetadataResult = await uploadMetadata({
           params: {

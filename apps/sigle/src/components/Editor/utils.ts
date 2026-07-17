@@ -175,7 +175,6 @@ export const generateSigleMetadataFromForm = async ({
       coverImage,
       tags: (post.tags?.length || 0) > 0 ? post.tags : undefined,
     },
-    signature: "dummy",
   });
 
   return metadata;

@@ -32,10 +32,10 @@ interface PostMetadata {
 }
 
 export function verifyPostSignature(metadata: {
-  signature: string;
+  signature?: string;
   content: any;
 }): Result<
-  { recoveredAddress: string; publicKey: string },
+  { recoveredAddress: string; publicKey: string; signature: string },
   InvalidSignatureError
 > {
   const { signature, ...metadataToSign } = metadata;
@@ -74,7 +74,7 @@ export function verifyPostSignature(metadata: {
       );
     }
 
-    return Result.ok({ recoveredAddress, publicKey });
+    return Result.ok({ recoveredAddress, publicKey, signature });
   } catch (error) {
     return Result.err(
       new InvalidSignatureError({
@@ -118,8 +118,7 @@ export async function getMetadataFromUri(
   if (signatureResult.isErr()) {
     return signatureResult;
   }
-  const { recoveredAddress } = signatureResult.value;
-  const signature = postData.signature;
+  const { recoveredAddress, signature } = signatureResult.value;
 
   const metaTitle = postData.content.attributes?.find(
     (attribute) => attribute.key === "meta-title",
