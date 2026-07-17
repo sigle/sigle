@@ -137,6 +137,12 @@ export default defineEventHandler(async (event) => {
 
   const uploadResult = await arweaveUploadFile(event, {
     metadata: parsedMetadata.data,
+    tags: [
+      {
+        name: "Author",
+        value: event.context.user.id,
+      },
+    ],
   });
 
   if (uploadResult.isErr()) {
