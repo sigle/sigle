@@ -128,46 +128,11 @@ export default defineEventHandler(async (event) => {
           },
         });
 
-  if (!draft && body.type === "published") {
-    // Also allow finding from Draft if we are publishing a draft
-    const draftFromDrafts = await prisma.draft.findUnique({
-      select: {
-        id: true,
-      },
-      where: {
-        id: draftId,
-        userId: event.context.user.id,
-      },
-    });
-    if (!draftFromDrafts) {
-      throw new HTTPError({
-        status: 404,
-        message: "Draft not found.",
-      });
-    }
-  } else if (!draft) {
+  if (!draft) {
     throw new HTTPError({
       status: 404,
-      message: "Draft not found.",
+      message: body.type === "draft" ? "Draft not found." : "Post not found.",
     });
-  }
-
-  if (body.type === "draft") {
-    // Check that a published post with the same id does not exist to ensure id uniqueness
-    const post = await prisma.post.findUnique({
-      select: {
-        id: true,
-      },
-      where: {
-        id: draftId,
-      },
-    });
-    if (post) {
-      throw new HTTPError({
-        status: 400,
-        message: "A post with this ID already exists.",
-      });
-    }
   }
 
   const uploadResult = await arweaveUploadFile(event, {
@@ -183,92 +148,89 @@ export default defineEventHandler(async (event) => {
 
   const { id } = uploadResult.value;
 
-  // If the type is published, index it immediately in the database
-  if (body.type === "published") {
-    const postData = parsedMetadata.data;
-    const metaTitle = postData.content.attributes?.find(
-      (attribute) => attribute.key === "meta-title",
-    )?.value;
-    const metaDescription = postData.content.attributes?.find(
-      (attribute) => attribute.key === "meta-description",
-    )?.value;
-    const excerpt = postData.content.attributes?.find(
-      (attribute) => attribute.key === "excerpt",
-    )?.value;
-    const canonicalUri = postData.content.attributes?.find(
-      (attribute) => attribute.key === "canonical-uri",
-    )?.value;
+  const postData = parsedMetadata.data;
+  const metaTitle = postData.content.attributes?.find(
+    (attribute) => attribute.key === "meta-title",
+  )?.value;
+  const metaDescription = postData.content.attributes?.find(
+    (attribute) => attribute.key === "meta-description",
+  )?.value;
+  const excerpt = postData.content.attributes?.find(
+    (attribute) => attribute.key === "excerpt",
+  )?.value;
+  const canonicalUri = postData.content.attributes?.find(
+    (attribute) => attribute.key === "canonical-uri",
+  )?.value;
 
-    const versionSplit = postData.$schema.split("/");
-    const version = versionSplit[versionSplit.length - 1].replace(".json", "");
+  const versionSplit = postData.$schema.split("/");
+  const version = versionSplit[versionSplit.length - 1].replace(".json", "");
 
-    await prisma.$transaction(async (tx) => {
-      const userId = event.context.user.id;
+  await prisma.$transaction(async (tx) => {
+    const userId = event.context.user.id;
 
-      const updatedPost = await tx.post.upsert({
-        where: {
-          id, // Use Arweave TX ID as post ID
-        },
-        update: {
-          txId: id,
-          version,
-          blockHeight: 0,
-        },
-        create: {
-          id,
-          txId: id,
-          version,
-          blockHeight: 0,
-          userId,
-          createdAt: new Date(),
-
-          // Metadata fields
-          metadataUri: `ar://${id}`,
-          title: postData.content.title,
-          content: postData.content.content,
-          metaTitle,
-          metaDescription,
-          excerpt: excerpt || "",
-          tags: postData.content.tags,
-          canonicalUri,
-        },
-      });
-
-      if (postData.content.coverImage) {
-        await tx.post.update({
-          where: {
-            id: updatedPost.id,
-          },
-          data: {
-            coverImage: {
-              connectOrCreate: {
-                where: {
-                  id: postData.content.coverImage.url,
-                },
-                create: {
-                  id: postData.content.coverImage.url,
-                  mimeType: postData.content.coverImage.type,
-                },
-              },
-            },
-          },
-        });
-      }
-    });
-
-    // Delete the associated draft
-    await prisma.draft.deleteMany({
+    const updatedPost = await tx.post.upsert({
       where: {
-        id: draftId,
-        userId: event.context.user.id,
+        id, // Use Arweave TX ID as post ID
+      },
+      update: {
+        txId: id,
+        version,
+        blockHeight: 0,
+      },
+      create: {
+        id,
+        txId: id,
+        version,
+        blockHeight: 0,
+        userId,
+        createdAt: new Date(),
+
+        // Metadata fields
+        metadataUri: `ar://${id}`,
+        title: postData.content.title,
+        content: postData.content.content,
+        metaTitle,
+        metaDescription,
+        excerpt: excerpt || "",
+        tags: postData.content.tags,
+        canonicalUri,
       },
     });
 
     if (postData.content.coverImage) {
-      await generateImageBlurhashJob.emit({
-        imageId: postData.content.coverImage.url,
+      await tx.post.update({
+        where: {
+          id: updatedPost.id,
+        },
+        data: {
+          coverImage: {
+            connectOrCreate: {
+              where: {
+                id: postData.content.coverImage.url,
+              },
+              create: {
+                id: postData.content.coverImage.url,
+                mimeType: postData.content.coverImage.type,
+              },
+            },
+          },
+        },
       });
     }
+  });
+
+  // Delete the associated draft
+  await prisma.draft.deleteMany({
+    where: {
+      id: draftId,
+      userId: event.context.user.id,
+    },
+  });
+
+  if (postData.content.coverImage) {
+    await generateImageBlurhashJob.emit({
+      imageId: postData.content.coverImage.url,
+    });
   }
 
   event.context.$posthog.capture({
