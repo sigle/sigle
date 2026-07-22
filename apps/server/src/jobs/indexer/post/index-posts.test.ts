@@ -319,4 +319,17 @@ describe("executeIndexerIndexPostsJob", () => {
       emitCalls: 0,
     });
   });
+
+  it("throws an error when GraphQL response is missing transactions edges", async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        data: {},
+      }),
+    } as Response);
+
+    await expect(executeIndexerIndexPostsJob({})).rejects.toThrow(
+      "Invalid GraphQL response: transactions.edges is missing",
+    );
+  });
 });

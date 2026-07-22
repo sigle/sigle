@@ -114,7 +114,12 @@ export const executeIndexerIndexPostsJob = async (
           `GraphQL error: ${result.errors.map((e) => e.message).join(", ")}`,
         );
       }
-      edges = result.data?.transactions?.edges || [];
+      if (!result.data?.transactions?.edges) {
+        throw new Error(
+          "Invalid GraphQL response: transactions.edges is missing",
+        );
+      }
+      edges = result.data.transactions.edges;
     } catch (error) {
       consola.error("Error fetching transactions from Arweave GraphQL", {
         error,
