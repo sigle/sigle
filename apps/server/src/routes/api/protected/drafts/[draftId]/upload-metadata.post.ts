@@ -98,12 +98,27 @@ export default defineEventHandler(async (event) => {
       message: signatureResult.error.error,
     });
   }
-  const { recoveredAddress } = signatureResult.value;
+  const { recoveredAddress, signature } = signatureResult.value;
   if (recoveredAddress !== event.context.user.id) {
     throw new HTTPError({
       status: 400,
       message:
         "Invalid signature: Signature verification failed or address mismatch",
+    });
+  }
+
+  const existingPostWithSignature = await prisma.post.findUnique({
+    select: {
+      id: true,
+    },
+    where: {
+      signature,
+    },
+  });
+  if (existingPostWithSignature) {
+    throw new HTTPError({
+      status: 400,
+      message: "Metadata signature has already been published.",
     });
   }
 
@@ -182,12 +197,14 @@ export default defineEventHandler(async (event) => {
         txId: id,
         version,
         blockHeight: 0,
+        signature,
       },
       create: {
         id,
         txId: id,
         version,
         blockHeight: 0,
+        signature,
         userId,
         createdAt: new Date(),
 

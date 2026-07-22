@@ -39,6 +39,26 @@ export const executePublishPostJob = async (
   }
   const metadata = metadataResult.value;
 
+  const existingPostWithSignature = await prisma.post.findUnique({
+    select: {
+      id: true,
+    },
+    where: {
+      signature: metadata.signature,
+    },
+  });
+  if (existingPostWithSignature && existingPostWithSignature.id !== data.txId) {
+    consola.warn(
+      "Signature already indexed under a different post ID, skipping replay",
+      {
+        txId: data.txId,
+        existingId: existingPostWithSignature.id,
+        signature: metadata.signature,
+      },
+    );
+    return;
+  }
+
   let shouldProcessImage = false;
   await prisma.$transaction(async (tx) => {
     const userId = data.author;
@@ -78,12 +98,14 @@ export const executePublishPostJob = async (
         version: metadata.version,
         blockHeight: data.blockHeight,
         createdAt: new Date(data.createdAt),
+        signature: metadata.signature,
       },
       create: {
         id: data.txId,
         txId: data.txId,
         version: metadata.version,
         blockHeight: data.blockHeight,
+        signature: metadata.signature,
         userId,
         createdAt: new Date(data.createdAt),
 

@@ -163,6 +163,25 @@ export const executeIndexerIndexPostsJob = async (
       }
 
       const metadata = metadataResult.value;
+      const signatureExists = await prisma.post.findUnique({
+        select: {
+          id: true,
+        },
+        where: {
+          signature: metadata.signature,
+        },
+      });
+
+      if (signatureExists && signatureExists.id !== txId) {
+        consola.warn("Skipping indexing replayed signed metadata", {
+          txId,
+          existingId: signatureExists.id,
+          signature: metadata.signature,
+        });
+        // oxlint-disable-next-line no-continue
+        continue;
+      }
+
       const blockHeight = edge.node.block ? edge.node.block.height : 0;
       const createdAt = edge.node.block
         ? new Date(edge.node.block.timestamp * 1000)

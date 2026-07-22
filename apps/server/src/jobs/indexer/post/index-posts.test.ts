@@ -263,4 +263,60 @@ describe("executeIndexerIndexPostsJob", () => {
       secondCallBody.query.includes('after: "cursor-100"'),
     ]).toStrictEqual([true, true]);
   });
+
+  it("skips indexing when a signed metadata signature has already been indexed under another post ID", async () => {
+    await createTestUser({ id: userId });
+    await createTestPost({
+      id: "arweave-tx-original",
+      txId: "arweave-tx-original",
+      userId,
+      title: "Original Post",
+      content: "Hello",
+      signature: "duplicate-sig-123",
+    });
+
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        data: {
+          transactions: {
+            edges: [
+              {
+                node: {
+                  id: "arweave-tx-replayed",
+                  block: {
+                    height: 12346,
+                    timestamp: 1672531200,
+                  },
+                },
+              },
+            ],
+          },
+        },
+      }),
+    } as Response);
+
+    const mockGetMetadata = getMetadataFromUri as any;
+    mockGetMetadata.mockResolvedValue(
+      Result.ok({
+        version: "v1",
+        id: "post-id-1",
+        title: "Test Post",
+        content: "Hello world",
+        excerpt: "Hello",
+        recoveredAddress: userId,
+        signature: "duplicate-sig-123",
+      }),
+    );
+
+    const result = await executeIndexerIndexPostsJob({});
+
+    expect({
+      toProcess: result.toProcess,
+      emitCalls: mockEmit.mock.calls.length,
+    }).toStrictEqual({
+      toProcess: 0,
+      emitCalls: 0,
+    });
+  });
 });
