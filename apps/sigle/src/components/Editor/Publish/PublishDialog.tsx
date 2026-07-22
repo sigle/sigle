@@ -1,5 +1,6 @@
 "use client";
 
+import { request } from "@stacks/connect";
 import { Result } from "better-result";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
@@ -15,11 +16,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useContractCall } from "@/hooks/useContractCall";
 import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
-import { sigleApiClient, sigleApiFetchClient, sigleClient } from "@/lib/sigle";
-import { waitForTransaction } from "@/lib/stacks";
+import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 import { generateSigleMetadataFromForm } from "../utils";
@@ -39,30 +38,14 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   const publishOpen = useEditorStore((state) => state.publishOpen);
   const setPublishOpen = useEditorStore((state) => state.setPublishOpen);
   const [publishingLoading, setPublishingLoading] = useState(false);
-  const { contractCall } = useContractCall();
   const { mutateAsync: uploadMetadata } = sigleApiClient.useMutation(
     "post",
     "/api/protected/drafts/{draftId}/upload-metadata",
   );
-  const { mutateAsync: updateTxId } = sigleApiClient.useMutation(
-    "post",
-    "/api/protected/drafts/{draftId}/set-tx-id",
-  );
-
-  const getPostByTxId = async (txId: string) => {
-    return sigleApiFetchClient.GET("/api/posts/by-tx-id", {
-      params: {
-        query: {
-          txId,
-        },
-      },
-    });
-  };
 
   const { steps, start, completeStep, setStepError } = useMultiStep({
     steps: [
       { id: "arweave", title: "Uploading data to Arweave" },
-      { id: "transaction", title: "Waiting for blockchain confirmation" },
       { id: "indexing", title: "Indexing new post" },
     ],
   });
@@ -98,6 +81,28 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           return;
         }
 
+        let signature = "";
+        try {
+          const { signature: _, ...metadataToSign } = metadata;
+          const message = JSON.stringify(metadataToSign);
+          const response = await request("stx_signMessage", {
+            message,
+          });
+          signature = response.signature;
+        } catch (error) {
+          console.error(error);
+          posthog.capture("post_publish_sign_message_error", {
+            postId,
+            error,
+          });
+          toast.error("Failed to sign post");
+          setPublishingLoading(false);
+          return;
+        }
+
+        // Add the signature to the metadata
+        metadata.signature = signature;
+
         const uploadedMetadataResult = await uploadMetadata({
           params: {
             path: {
@@ -127,92 +132,13 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         }
 
         completeStep("arweave");
-
-        const arweaveUrl = `ar://${uploadedMetadataResult.value.id}`;
-        const { parameters } = sigleClient.publishPost({
-          metadataUri: arweaveUrl,
-        });
-        const contractCallResult = await contractCall(parameters);
-        if (contractCallResult.isErr()) {
-          posthog.capture("post_publish_cancel", {
-            postId,
-            error: contractCallResult.error,
-          });
-          setStepError("transaction", contractCallResult.error.message);
-          return;
-        }
-
-        const txId = contractCallResult.value;
-        posthog.capture("post_publish_transaction_submitted", {
-          postId,
-          txId,
-        });
-
-        const transactionResult = await waitForTransaction({ txId });
-        if (transactionResult.isErr()) {
-          posthog.capture("post_publish_wait_transaction_error", {
-            postId,
-            error: transactionResult.error,
-          });
-          setStepError("transaction", transactionResult.error.message);
-          return;
-        }
-        if (transactionResult.value.tx_status !== "success") {
-          posthog.capture("post_publish_transaction_failed", {
-            postId,
-            tx_status: transactionResult.value.tx_status,
-          });
-          setStepError("transaction", "Transaction failed");
-          return;
-        }
-        completeStep("transaction");
-
-        try {
-          await updateTxId({
-            params: {
-              path: {
-                draftId: postId,
-              },
-            },
-            body: {
-              txId,
-            },
-          });
-        } catch (error) {
-          setStepError(
-            "indexing",
-            error instanceof Error ? error.message : "Failed to index",
-          );
-          return;
-        }
-
-        const pollingInterval = 2_000;
-        const timeout = 180_000;
-        const startTime = Date.now();
-
-        let isIndexed = false;
-        while (Date.now() - startTime < timeout) {
-          const result = await getPostByTxId(txId);
-
-          if (!result.error && result.data) {
-            isIndexed = true;
-            break;
-          }
-
-          await new Promise((resolve) => {
-            setTimeout(resolve, pollingInterval);
-          });
-        }
-
-        if (!isIndexed) {
-          setStepError(
-            "indexing",
-            "Post indexing timed out. Please refresh the page.",
-          );
-          return;
-        }
-
         completeStep("indexing");
+
+        const arweaveId = uploadedMetadataResult.value.id;
+        posthog.capture("post_publish_success", {
+          postId,
+          arweaveId,
+        });
 
         // wait 1s for a better UX
         await new Promise((resolve) => {
@@ -221,7 +147,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
         router.push(
           Routes.post(
-            { postId },
+            { postId: arweaveId },
             {
               search: {
                 published: true,

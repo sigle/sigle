@@ -1,3 +1,3 @@
 export { InvalidMetadataError, MetadataFetchFailedError } from "./errors";
-export { getMetadataFromUri } from "./post";
+export { getMetadataFromUri, verifyPostSignature } from "./post";
 export { getProfileMetadataFromUri } from "./profile";

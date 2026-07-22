@@ -1,9 +1,8 @@
-import { cvToJSON, hexToCV } from "@stacks/transactions";
 import { z } from "zod";
+import { env } from "@/env";
 import { consola } from "@/lib/consola";
+import { getMetadataFromUri } from "@/lib/metadata";
 import { prisma } from "@/lib/prisma";
-import { sigleConfig } from "@/lib/sigle";
-import { getStacksTransaction, stacksApiClient } from "@/lib/stacks";
 import { indexerJob } from "..";
 
 export const indexerIndexPostsSchema = z.object({
@@ -11,160 +10,212 @@ export const indexerIndexPostsSchema = z.object({
   data: z.object({}),
 });
 
-const API_LIMIT = 50;
-
-const eventLogSchema = z.object({
-  value: z.object({
-    a: z.object({
-      value: z.literal("publish-post"),
-    }),
-    author: z.object({
-      value: z.string(),
-    }),
-    uri: z.object({
-      value: z.string(),
-    }),
-  }),
-});
+interface GraphQLResponse {
+  errors?: Array<{ message: string }>;
+  data?: {
+    transactions?: {
+      edges?: Array<{
+        cursor: string;
+        node: {
+          id: string;
+          block?: {
+            height: number;
+            timestamp: number;
+          } | null;
+        };
+      }>;
+    };
+  };
+}
 
 export const executeIndexerIndexPostsJob = async (
   _data: z.TypeOf<typeof indexerIndexPostsSchema>["data"],
 ) => {
-  const latestPost = await prisma.post.findFirst({
+  const latestMinedPost = await prisma.post.findFirst({
     select: {
-      txId: true,
+      blockHeight: true,
+    },
+    where: {
+      blockHeight: {
+        gt: 0,
+      },
     },
     orderBy: {
-      createdAt: "desc",
+      blockHeight: "desc",
     },
   });
 
-  const lastProcessedTxId = latestPost?.txId;
+  const minBlockHeight = latestMinedPost ? latestMinedPost.blockHeight : 0;
+  consola.info("Starting indexer run from block height", { minBlockHeight });
 
-  let offset = 0;
+  let toProcess = 0;
+  let currentCursor = "";
   let hasMore = true;
-  let caughtUp = false;
-  const posts: {
-    txId: string;
-    blockHeight: number;
-    author: string;
-    uri: string;
-    createdAt: Date;
-  }[] = [];
+  let maxBlockHeightSeen = minBlockHeight;
 
-  while (hasMore && !caughtUp) {
-    console.debug("Fetching events from Stacks API", {
-      offset,
-      limit: API_LIMIT,
+  while (hasMore) {
+    const afterParam = currentCursor ? `, after: "${currentCursor}"` : "";
+    consola.info("Fetching events from Arweave GraphQL", {
+      minBlockHeight,
+      currentCursor,
     });
-    const resultEvents = await stacksApiClient.GET(
-      "/extended/v1/contract/{contract_id}/events",
-      {
-        params: {
-          path: {
-            contract_id: sigleConfig.registryAddress,
-          },
-          query: {
-            limit: API_LIMIT,
-            offset,
-          },
+
+    const query = `
+      query {
+        transactions(
+          tags: [
+            { name: "App-Name", values: ["${env.APP_ID}"] }
+          ]
+          block: { min: ${minBlockHeight} }
+          first: 100
+          sort: HEIGHT_ASC
+          ${afterParam}
+        ) {
+          edges {
+            cursor
+            node {
+              id
+              block {
+                height
+                timestamp
+              }
+            }
+          }
+        }
+      }
+    `;
+
+    let edges: Array<{
+      cursor: string;
+      node: {
+        id: string;
+        block?: {
+          height: number;
+          timestamp: number;
+        } | null;
+      };
+    }> = [];
+    try {
+      const response = await fetch(`${env.ARWEAVE_GATEWAY_URL}/graphql`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      },
-    );
-
-    if (resultEvents.error) {
-      // TODO handle error (retry with backoff, alert, etc.)
-      consola.error("Error fetching events from Stacks API", {
-        error: resultEvents.error,
+        body: JSON.stringify({ query }),
       });
-      break;
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = (await response.json()) as GraphQLResponse;
+      if (result.errors && result.errors.length > 0) {
+        throw new Error(
+          `GraphQL error: ${result.errors.map((e) => e.message).join(", ")}`,
+        );
+      }
+      edges = result.data?.transactions?.edges || [];
+    } catch (error) {
+      consola.error("Error fetching transactions from Arweave GraphQL", {
+        error,
+      });
+      throw error;
     }
 
-    const events = resultEvents.data.results;
-
-    if (!events || events.length === 0) {
+    if (edges.length === 0) {
       hasMore = false;
       break;
     }
 
-    if (events.length < API_LIMIT) {
+    if (edges.length < 100) {
       hasMore = false;
+    } else {
+      currentCursor = edges[edges.length - 1].cursor;
     }
 
-    for (const event of events) {
-      if (lastProcessedTxId && event.tx_id === lastProcessedTxId) {
-        consola.info("Caught up to last processed txId, stopping", {
-          txId: lastProcessedTxId,
-        });
-        caughtUp = true;
-        break;
+    for (const edge of edges) {
+      const txId = edge.node.id;
+
+      // Check if post already exists in database
+      const postExists = await prisma.post.findUnique({
+        select: {
+          id: true,
+        },
+        where: {
+          txId,
+        },
+      });
+
+      if (postExists) {
+        // oxlint-disable-next-line no-continue
+        continue;
       }
 
-      if (
-        event.event_type === "smart_contract_log" &&
-        event.contract_log &&
-        event.contract_log.topic === "print"
-      ) {
-        const eventValue = cvToJSON(hexToCV(event.contract_log.value.hex));
-        const eventLog = eventLogSchema.safeParse(eventValue);
-        if (!eventLog.success) {
-          consola.error("Failed to parse event log with schema", {
-            txId: event.tx_id,
-            error: eventLog.error,
-            value: eventValue,
-          });
-          // oxlint-disable-next-line no-continue
-          continue;
-        }
-
-        const transaction = await getStacksTransaction(event.tx_id);
-        if (transaction.isErr()) {
-          consola.error("Failed to fetch transaction for event log", {
-            txId: event.tx_id,
-            error: transaction.error,
-          });
-          // oxlint-disable-next-line no-continue
-          continue;
-        }
-        if (transaction.value.tx_status !== "success") {
-          consola.error("Transaction for event log is not successful", {
-            txId: event.tx_id,
-            status: transaction.value.tx_status,
-          });
-          // oxlint-disable-next-line no-continue
-          continue;
-        }
-        const txTimestamp = new Date(transaction.value.burn_block_time * 1000);
-        const txBlockHeight = transaction.value.block_height;
-
-        posts.push({
-          txId: event.tx_id,
-          blockHeight: txBlockHeight,
-          author: eventLog.data.value.author.value,
-          uri: eventLog.data.value.uri.value,
-          createdAt: txTimestamp,
+      const uri = `ar://${txId}`;
+      const metadataResult = await getMetadataFromUri(uri);
+      if (metadataResult.isErr()) {
+        consola.error("Failed to fetch/validate metadata for transaction", {
+          txId,
+          error: metadataResult.error,
         });
+        // oxlint-disable-next-line no-continue
+        continue;
       }
-    }
 
-    offset += API_LIMIT;
-  }
+      const metadata = metadataResult.value;
+      const signatureExists = await prisma.post.findUnique({
+        select: {
+          id: true,
+        },
+        where: {
+          signature: metadata.signature,
+        },
+      });
 
-  if (posts.length > 0) {
-    // Process oldest posts first
-    posts.reverse();
-    for (const post of posts) {
+      if (signatureExists && signatureExists.id !== txId) {
+        consola.warn("Skipping indexing replayed signed metadata", {
+          txId,
+          existingId: signatureExists.id,
+          signature: metadata.signature,
+        });
+        // oxlint-disable-next-line no-continue
+        continue;
+      }
+
+      const blockHeight = edge.node.block ? edge.node.block.height : 0;
+      const createdAt = edge.node.block
+        ? new Date(edge.node.block.timestamp * 1000)
+        : new Date();
+
       await indexerJob.emit({
         action: "indexer-publish-post",
-        data: post,
+        data: {
+          txId,
+          blockHeight,
+          author: metadata.recoveredAddress,
+          uri,
+          createdAt,
+        },
       });
+
+      toProcess++;
+    }
+
+    const minedEdges = edges.filter((e) => e.node.block);
+    if (minedEdges.length > 0) {
+      maxBlockHeightSeen = Math.max(
+        maxBlockHeightSeen,
+        ...minedEdges.map((e) => e.node.block!.height),
+      );
     }
   }
 
   const returnData = {
-    toProcess: posts.length,
-    lastProcessedTxId,
+    toProcess,
   };
-  consola.info("Index posts job complete", returnData);
+  consola.info("Index posts job complete", {
+    ...returnData,
+    maxBlockHeightSeen,
+  });
   return returnData;
 };

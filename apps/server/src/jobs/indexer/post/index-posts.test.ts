@@ -1,4 +1,3 @@
-import { serializeCV, stringAsciiCV, tupleCV } from "@stacks/transactions";
 import { Result } from "better-result";
 import {
   afterAll,
@@ -9,13 +8,12 @@ import {
   it,
   vi,
 } from "vite-plus/test";
-import { sigleConfig } from "@/lib/sigle";
+import { getMetadataFromUri } from "@/lib/metadata";
 import { createTestDatabase, type TestDatabase } from "@/test/database";
 import { createTestPost, createTestUser } from "@/test/helpers";
 
 const mockEmit = vi.fn();
 
-// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("../index")>(
   import("../index"),
   () =>
@@ -23,41 +21,17 @@ vi.mock<typeof import("../index")>(
       indexerJob: {
         emit: (...args: unknown[]) => mockEmit(...args),
       },
-      // oxlint-disable-next-line consistent-type-imports
     }) as unknown as typeof import("../index"),
 );
 
-const mockStacksApiClientGET = vi.fn();
-const mockGetStacksTransaction = vi.fn();
-
-// oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("@/lib/stacks")>(
-  import("@/lib/stacks"),
+vi.mock<typeof import("@/lib/metadata")>(
+  import("@/lib/metadata"),
   () =>
     ({
-      stacksNetwork: "testnet",
-      stacksApiClient: {
-        GET: (...args: unknown[]) => mockStacksApiClientGET(...args),
-      },
-      getStacksTransaction: (...args: unknown[]) =>
-        mockGetStacksTransaction(...args),
-      // oxlint-disable-next-line consistent-type-imports
-    }) as unknown as typeof import("@/lib/stacks"),
+      getMetadataFromUri: vi.fn(),
+    }) as unknown as typeof import("@/lib/metadata"),
 );
 
-// oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("@/lib/sigle")>(
-  import("@/lib/sigle"),
-  () =>
-    ({
-      sigleConfig: {
-        registryAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
-      },
-      // oxlint-disable-next-line consistent-type-imports
-    }) as unknown as typeof import("@/lib/sigle"),
-);
-
-// oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("@/lib/consola")>(
   import("@/lib/consola"),
   () =>
@@ -68,15 +42,15 @@ vi.mock<typeof import("@/lib/consola")>(
         error: vi.fn(),
         warn: vi.fn(),
       },
-      // oxlint-disable-next-line consistent-type-imports
     }) as unknown as typeof import("@/lib/consola"),
 );
+
+const mockFetch = vi.spyOn(globalThis, "fetch");
 
 const { executeIndexerIndexPostsJob } = await import("./index-posts");
 
 describe("executeIndexerIndexPostsJob", () => {
-  // oxlint-disable-next-line init-declarations
-  let testDb: TestDatabase;
+  let testDb: TestDatabase | undefined = undefined;
   const userId = "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM";
 
   beforeAll(async () => {
@@ -84,375 +58,265 @@ describe("executeIndexerIndexPostsJob", () => {
   });
 
   beforeEach(async () => {
-    await testDb.cleanup();
+    if (testDb) {
+      await testDb.cleanup();
+    }
     vi.clearAllMocks();
   });
 
   afterAll(async () => {
-    await testDb.close();
+    if (testDb) {
+      await testDb.close();
+    }
   });
 
-  const createPublishEvent = (txId: string, author: string, uri: string) => {
-    const clarityValue = tupleCV({
-      a: stringAsciiCV("publish-post"),
-      author: stringAsciiCV(author),
-      uri: stringAsciiCV(uri),
-    });
-    return {
-      tx_id: txId,
-      event_type: "smart_contract_log" as const,
-      contract_log: {
-        topic: "print" as const,
-        value: {
-          hex: serializeCV(clarityValue),
+  it("returns 0 posts when no Arweave transactions exist", async () => {
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        data: {
+          transactions: {
+            edges: [],
+          },
         },
-      },
-    };
-  };
-
-  const createSuccessTransaction = (
-    txId: string,
-    blockHeight: number,
-    timestamp: number,
-  ) => ({
-    tx_id: txId,
-    tx_status: "success" as const,
-    block_height: blockHeight,
-    burn_block_time: timestamp,
-  });
-
-  it("returns 0 posts when no events exist", async () => {
-    mockStacksApiClientGET.mockResolvedValue({
-      data: { results: [] },
-    });
+      }),
+    } as Response);
 
     const result = await executeIndexerIndexPostsJob({});
 
     expect(result.toProcess).toBe(0);
-    expect(result.lastProcessedTxId).toBeUndefined();
     expect(mockEmit).not.toHaveBeenCalled();
   });
 
-  it("returns 1 post when API returns less than limit", async () => {
-    mockStacksApiClientGET.mockResolvedValue({
-      data: {
-        results: [
-          createPublishEvent("0xabc", userId, "https://example.com/post-1"),
-        ],
-      },
-    });
-    mockGetStacksTransaction.mockResolvedValue(
-      Result.ok(createSuccessTransaction("0xabc", 100, 1700000000)),
+  it("processes new posts successfully", async () => {
+    await createTestUser({ id: userId });
+
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        data: {
+          transactions: {
+            edges: [
+              {
+                node: {
+                  id: "arweave-tx-1",
+                  block: {
+                    height: 12345,
+                    timestamp: 1672531199,
+                  },
+                },
+              },
+            ],
+          },
+        },
+      }),
+    } as Response);
+
+    const mockGetMetadata = getMetadataFromUri as any;
+    mockGetMetadata.mockResolvedValue(
+      Result.ok({
+        version: "v1",
+        id: "post-id-1",
+        title: "Test Post",
+        content: "Hello world",
+        excerpt: "Hello",
+        recoveredAddress: userId,
+        signature: "sig",
+      }),
     );
 
     const result = await executeIndexerIndexPostsJob({});
 
     expect(result.toProcess).toBe(1);
-  });
-
-  it("emits jobs for new posts when no existing posts", async () => {
-    mockStacksApiClientGET.mockResolvedValue({
-      data: {
-        results: [
-          createPublishEvent("0xtx2", userId, "https://example.com/post-2"),
-          createPublishEvent("0xtx1", userId, "https://example.com/post-1"),
-        ],
-      },
-    });
-    mockGetStacksTransaction.mockImplementation((txId: string) => {
-      // oxlint-disable-next-line vitest/no-conditional-in-test
-      if (txId === "0xtx1") {
-        return Result.ok(createSuccessTransaction(txId, 101, 1700000000));
-      }
-      return Result.ok(createSuccessTransaction(txId, 102, 1700000010));
-    });
-
-    const result = await executeIndexerIndexPostsJob({});
-
-    expect(result.toProcess).toBe(2);
-    expect(result.lastProcessedTxId).toBeUndefined();
-    expect(mockEmit).toHaveBeenCalledTimes(2);
-    expect(mockEmit).toHaveBeenNthCalledWith(1, {
+    expect(mockEmit).toHaveBeenCalledTimes(1);
+    expect(mockEmit).toHaveBeenCalledWith({
       action: "indexer-publish-post",
       data: {
-        txId: "0xtx1",
-        blockHeight: 101,
+        txId: "arweave-tx-1",
+        blockHeight: 12345,
         author: userId,
-        uri: "https://example.com/post-1",
-        createdAt: expect.any(Date),
-      },
-    });
-    expect(mockEmit).toHaveBeenNthCalledWith(2, {
-      action: "indexer-publish-post",
-      data: {
-        txId: "0xtx2",
-        blockHeight: 102,
-        author: userId,
-        uri: "https://example.com/post-2",
-        createdAt: expect.any(Date),
+        uri: "ar://arweave-tx-1",
+        createdAt: new Date(1672531199 * 1000),
       },
     });
   });
 
-  it("stops processing when reaching lastProcessedTxId", async () => {
+  it("skips posts that are already indexed in the database", async () => {
     await createTestUser({ id: userId });
     await createTestPost({
-      id: "post-existing",
+      id: "arweave-tx-1",
+      txId: "arweave-tx-1",
       userId,
-      txId: "0xtx2",
-      blockHeight: 102,
+      title: "Existing Post",
+      content: "Hello",
     });
 
-    mockStacksApiClientGET.mockResolvedValue({
-      data: {
-        results: [
-          createPublishEvent("0xtx1", userId, "https://example.com/post-1"),
-          createPublishEvent("0xtx2", userId, "https://example.com/post-2"),
-          createPublishEvent("0xtx3", userId, "https://example.com/post-3"),
-        ],
-      },
-    });
-    mockGetStacksTransaction.mockReturnValue(
-      Result.ok(createSuccessTransaction("0xtx1", 101, 1700000000)),
-    );
-
-    const result = await executeIndexerIndexPostsJob({});
-
-    expect(result.toProcess).toBe(1);
-    expect(result.lastProcessedTxId).toBe("0xtx2");
-    expect(mockEmit).toHaveBeenCalledTimes(1);
-    expect(mockEmit).toHaveBeenCalledWith({
-      action: "indexer-publish-post",
-      data: expect.objectContaining({
-        txId: "0xtx1",
-        author: userId,
-        uri: "https://example.com/post-1",
-      }),
-    });
-  });
-
-  it("skips events that are not smart_contract_log type", async () => {
-    mockStacksApiClientGET.mockResolvedValue({
-      data: {
-        results: [
-          {
-            tx_id: "0xtx1",
-            event_type: "coinbase",
-          },
-          createPublishEvent("0xtx2", userId, "https://example.com/post-1"),
-        ],
-      },
-    });
-    mockGetStacksTransaction.mockReturnValue(
-      Result.ok(createSuccessTransaction("0xtx2", 102, 1700000010)),
-    );
-
-    const result = await executeIndexerIndexPostsJob({});
-
-    expect(result.toProcess).toBe(1);
-    expect(mockGetStacksTransaction).toHaveBeenCalledTimes(1);
-  });
-
-  it("skips events with invalid event log schema", async () => {
-    const invalidClarityValue = tupleCV({
-      a: stringAsciiCV("unknown-action"),
-    });
-    mockStacksApiClientGET.mockResolvedValue({
-      data: {
-        results: [
-          {
-            tx_id: "0xtx1",
-            event_type: "smart_contract_log",
-            contract_log: {
-              topic: "print",
-              value: {
-                hex: serializeCV(invalidClarityValue),
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        data: {
+          transactions: {
+            edges: [
+              {
+                node: {
+                  id: "arweave-tx-1",
+                  block: null,
+                },
               },
+            ],
+          },
+        },
+      }),
+    } as Response);
+
+    const result = await executeIndexerIndexPostsJob({});
+
+    expect(result.toProcess).toBe(0);
+    expect(mockEmit).not.toHaveBeenCalled();
+  });
+
+  it("handles pagination with multiple pages correctly using cursors", async () => {
+    await createTestUser({ id: userId });
+
+    // Mock first page of 100 transactions ending with cursor "cursor-100"
+    const page1Edges = Array.from({ length: 100 }, (_, i) => ({
+      cursor: `cursor-${i + 1}`,
+      node: {
+        id: `arweave-tx-${i + 1}`,
+        block: {
+          height: 1000 + i,
+          timestamp: 1672531199,
+        },
+      },
+    }));
+
+    // Mock second page with 5 transactions
+    const page2Edges = Array.from({ length: 5 }, () => ({
+      cursor: `cursor-101`,
+      node: {
+        id: `arweave-tx-101`,
+        block: {
+          height: 1100,
+          timestamp: 1672531199,
+        },
+      },
+    }));
+
+    mockFetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          data: {
+            transactions: {
+              edges: page1Edges,
             },
           },
-          createPublishEvent("0xtx2", userId, "https://example.com/post-1"),
-        ],
-      },
-    });
-    mockGetStacksTransaction.mockReturnValue(
-      Result.ok(createSuccessTransaction("0xtx2", 102, 1700000010)),
-    );
-
-    const result = await executeIndexerIndexPostsJob({});
-
-    expect(result.toProcess).toBe(1);
-    expect(mockGetStacksTransaction).toHaveBeenCalledTimes(1);
-  });
-
-  it("skips events when getStacksTransaction fails", async () => {
-    mockStacksApiClientGET.mockResolvedValue({
-      data: {
-        results: [
-          createPublishEvent("0xtx1", userId, "https://example.com/post-1"),
-          createPublishEvent("0xtx2", userId, "https://example.com/post-2"),
-        ],
-      },
-    });
-    mockGetStacksTransaction.mockImplementation((txId: string) => {
-      // oxlint-disable-next-line vitest/no-conditional-in-test
-      if (txId === "0xtx1") {
-        return Result.err(new Error("Transaction not found"));
-      }
-      return Result.ok(createSuccessTransaction(txId, 102, 1700000010));
-    });
-
-    const result = await executeIndexerIndexPostsJob({});
-
-    expect(result.toProcess).toBe(1);
-    expect(mockEmit).toHaveBeenCalledTimes(1);
-    expect(mockEmit).toHaveBeenCalledWith({
-      action: "indexer-publish-post",
-      data: expect.objectContaining({
-        txId: "0xtx2",
-      }),
-    });
-  });
-
-  it("skips events when transaction status is not success", async () => {
-    mockStacksApiClientGET.mockResolvedValue({
-      data: {
-        results: [
-          createPublishEvent("0xtx1", userId, "https://example.com/post-1"),
-          createPublishEvent("0xtx2", userId, "https://example.com/post-2"),
-        ],
-      },
-    });
-    mockGetStacksTransaction.mockImplementation((txId: string) => {
-      // oxlint-disable-next-line vitest/no-conditional-in-test
-      if (txId === "0xtx1") {
-        return Result.ok({
-          ...createSuccessTransaction(txId, 101, 1700000000),
-          tx_status: "abort_by_response",
-        });
-      }
-      return Result.ok(createSuccessTransaction(txId, 102, 1700000010));
-    });
-
-    const result = await executeIndexerIndexPostsJob({});
-
-    expect(result.toProcess).toBe(1);
-    expect(mockEmit).toHaveBeenCalledTimes(1);
-    expect(mockEmit).toHaveBeenCalledWith({
-      action: "indexer-publish-post",
-      data: expect.objectContaining({
-        txId: "0xtx2",
-      }),
-    });
-  });
-
-  it("breaks loop on API error", async () => {
-    mockStacksApiClientGET.mockResolvedValue({
-      error: { error: "Internal server error" },
-    });
-
-    const result = await executeIndexerIndexPostsJob({});
-
-    expect(result.toProcess).toBe(0);
-    expect(mockEmit).not.toHaveBeenCalled();
-  });
-
-  it("handles pagination with multiple pages", async () => {
-    const eventsPage1 = Array.from({ length: 50 }, (_, i) =>
-      createPublishEvent(`0xtx${i}`, userId, `https://example.com/post-${i}`),
-    );
-    const eventsPage2 = [
-      createPublishEvent("0xtx50", userId, "https://example.com/post-50"),
-      createPublishEvent("0xtx51", userId, "https://example.com/post-51"),
-    ];
-
-    mockStacksApiClientGET
-      .mockResolvedValueOnce({ data: { results: eventsPage1 } })
-      .mockResolvedValueOnce({ data: { results: eventsPage2 } });
-
-    mockGetStacksTransaction.mockImplementation((txId: string) =>
-      Result.ok(createSuccessTransaction(txId, 100, 1700000000)),
-    );
-
-    const result = await executeIndexerIndexPostsJob({});
-
-    expect(mockStacksApiClientGET).toHaveBeenCalledTimes(2);
-    expect(mockStacksApiClientGET).toHaveBeenNthCalledWith(
-      1,
-      "/extended/v1/contract/{contract_id}/events",
-      expect.objectContaining({
-        params: {
-          path: {
-            contract_id: sigleConfig.registryAddress,
+        }),
+      } as Response)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({
+          data: {
+            transactions: {
+              edges: page2Edges,
+            },
           },
-          query: { limit: 50, offset: 0 },
+        }),
+      } as Response);
+
+    const mockGetMetadata = getMetadataFromUri as any;
+    mockGetMetadata.mockResolvedValue(
+      Result.ok({
+        version: "v1",
+        id: "post-id-1",
+        title: "Test Post",
+        content: "Hello world",
+        excerpt: "Hello",
+        recoveredAddress: userId,
+        signature: "sig",
+      }),
+    );
+
+    const result = await executeIndexerIndexPostsJob({});
+
+    expect({
+      toProcess: result.toProcess,
+      emitCalls: mockEmit.mock.calls.length,
+    }).toStrictEqual({
+      toProcess: 105,
+      emitCalls: 105,
+    });
+
+    // Verify first fetch query contained min block: 0, no after cursor
+    const firstCallBody = JSON.parse(
+      mockFetch.mock.calls[0][1]?.body as string,
+    );
+    expect(firstCallBody.query).toContain("block: { min: 0 }");
+    expect(firstCallBody.query).not.toContain("after:");
+
+    // Verify second fetch query contained min block: 0, and cursor "cursor-100"
+    const secondCallBody = JSON.parse(
+      mockFetch.mock.calls[1][1]?.body as string,
+    );
+    expect([
+      secondCallBody.query.includes("block: { min: 0 }"),
+      secondCallBody.query.includes('after: "cursor-100"'),
+    ]).toStrictEqual([true, true]);
+  });
+
+  it("skips indexing when a signed metadata signature has already been indexed under another post ID", async () => {
+    await createTestUser({ id: userId });
+    await createTestPost({
+      id: "arweave-tx-original",
+      txId: "arweave-tx-original",
+      userId,
+      title: "Original Post",
+      content: "Hello",
+      signature: "duplicate-sig-123",
+    });
+
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        data: {
+          transactions: {
+            edges: [
+              {
+                node: {
+                  id: "arweave-tx-replayed",
+                  block: {
+                    height: 12346,
+                    timestamp: 1672531200,
+                  },
+                },
+              },
+            ],
+          },
         },
       }),
-    );
-    expect(mockStacksApiClientGET).toHaveBeenNthCalledWith(
-      2,
-      "/extended/v1/contract/{contract_id}/events",
-      expect.objectContaining({
-        params: {
-          path: {
-            contract_id: sigleConfig.registryAddress,
-          },
-          query: { limit: 50, offset: 50 },
-        },
+    } as Response);
+
+    const mockGetMetadata = getMetadataFromUri as any;
+    mockGetMetadata.mockResolvedValue(
+      Result.ok({
+        version: "v1",
+        id: "post-id-1",
+        title: "Test Post",
+        content: "Hello world",
+        excerpt: "Hello",
+        recoveredAddress: userId,
+        signature: "duplicate-sig-123",
       }),
     );
-    expect(result.toProcess).toBe(52);
-    expect(mockEmit).toHaveBeenCalledTimes(52);
-  });
-
-  it("processes oldest posts first (reversed order)", async () => {
-    mockStacksApiClientGET.mockResolvedValue({
-      data: {
-        results: [
-          createPublishEvent("0xtx2", userId, "https://example.com/post-2"),
-          createPublishEvent("0xtx1", userId, "https://example.com/post-1"),
-        ],
-      },
-    });
-    mockGetStacksTransaction.mockImplementation((txId: string) => {
-      const heights: Record<string, number> = {
-        "0xtx1": 100,
-        "0xtx2": 101,
-      };
-      const timestamps: Record<string, number> = {
-        "0xtx1": 1700000000,
-        "0xtx2": 1700000010,
-      };
-      return Result.ok(
-        createSuccessTransaction(txId, heights[txId], timestamps[txId]),
-      );
-    });
-
-    await executeIndexerIndexPostsJob({});
-
-    expect(mockEmit).toHaveBeenNthCalledWith(1, {
-      action: "indexer-publish-post",
-      data: expect.objectContaining({
-        txId: "0xtx1",
-        blockHeight: 100,
-      }),
-    });
-    expect(mockEmit).toHaveBeenNthCalledWith(2, {
-      action: "indexer-publish-post",
-      data: expect.objectContaining({
-        txId: "0xtx2",
-        blockHeight: 101,
-      }),
-    });
-  });
-
-  it("handles empty API response with undefined events", async () => {
-    mockStacksApiClientGET.mockResolvedValue({
-      data: { results: undefined },
-    });
 
     const result = await executeIndexerIndexPostsJob({});
 
-    expect(result.toProcess).toBe(0);
-    expect(mockEmit).not.toHaveBeenCalled();
+    expect({
+      toProcess: result.toProcess,
+      emitCalls: mockEmit.mock.calls.length,
+    }).toStrictEqual({
+      toProcess: 0,
+      emitCalls: 0,
+    });
   });
 });
