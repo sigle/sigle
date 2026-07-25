@@ -1,3 +1,4 @@
+import { Result, TaggedError } from "better-result";
 import { z } from "zod";
 import { env } from "@/env";
 import { consola } from "@/lib/consola";
@@ -10,22 +11,98 @@ export const indexerIndexPostsSchema = z.object({
   data: z.object({}),
 });
 
+export class FetchArweaveTransactionsFailedError extends TaggedError(
+  "FetchArweaveTransactionsFailedError",
+)<{
+  error: string;
+}>() {}
+
+export interface ArweavePostEdge {
+  cursor: string;
+  node: {
+    id: string;
+    block?: {
+      height: number;
+      timestamp: number;
+    } | null;
+  };
+}
+
 interface GraphQLResponse {
   errors?: Array<{ message: string }>;
   data?: {
     transactions?: {
-      edges?: Array<{
-        cursor: string;
-        node: {
-          id: string;
-          block?: {
-            height: number;
-            timestamp: number;
-          } | null;
-        };
-      }>;
+      edges?: ArweavePostEdge[];
     };
   };
+}
+
+export async function fetchArweavePostTransactions({
+  minBlockHeight,
+  afterCursor,
+}: {
+  minBlockHeight: number;
+  afterCursor?: string;
+}): Promise<Result<ArweavePostEdge[], FetchArweaveTransactionsFailedError>> {
+  const afterParam = afterCursor ? `, after: "${afterCursor}"` : "";
+  const query = `
+    query {
+      transactions(
+        tags: [
+          { name: "App-Name", values: ["${env.APP_ID}"] }
+        ]
+        block: { min: ${minBlockHeight} }
+        first: 100
+        sort: HEIGHT_ASC
+        ${afterParam}
+      ) {
+        edges {
+          cursor
+          node {
+            id
+            block {
+              height
+              timestamp
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  return Result.tryPromise({
+    try: async () => {
+      const response = await fetch(`${env.ARWEAVE_GATEWAY_URL}/graphql`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = (await response.json()) as GraphQLResponse;
+      if (result.errors && result.errors.length > 0) {
+        throw new Error(
+          `GraphQL error: ${result.errors.map((e) => e.message).join(", ")}`,
+        );
+      }
+      if (!result.data?.transactions?.edges) {
+        throw new Error(
+          "Invalid GraphQL response: transactions.edges is missing",
+        );
+      }
+      return result.data.transactions.edges;
+    },
+    catch: (error) => {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+      return new FetchArweaveTransactionsFailedError({ error: errorMessage });
+    },
+  });
 }
 
 export const executeIndexerIndexPostsJob = async (
@@ -54,78 +131,24 @@ export const executeIndexerIndexPostsJob = async (
   let maxBlockHeightSeen = minBlockHeight;
 
   while (hasMore) {
-    const afterParam = currentCursor ? `, after: "${currentCursor}"` : "";
     consola.info("Fetching events from Arweave GraphQL", {
       minBlockHeight,
       currentCursor,
     });
 
-    const query = `
-      query {
-        transactions(
-          tags: [
-            { name: "App-Name", values: ["${env.APP_ID}"] }
-          ]
-          block: { min: ${minBlockHeight} }
-          first: 100
-          sort: HEIGHT_ASC
-          ${afterParam}
-        ) {
-          edges {
-            cursor
-            node {
-              id
-              block {
-                height
-                timestamp
-              }
-            }
-          }
-        }
-      }
-    `;
+    const fetchResult = await fetchArweavePostTransactions({
+      minBlockHeight,
+      afterCursor: currentCursor,
+    });
 
-    let edges: Array<{
-      cursor: string;
-      node: {
-        id: string;
-        block?: {
-          height: number;
-          timestamp: number;
-        } | null;
-      };
-    }> = [];
-    try {
-      const response = await fetch(`${env.ARWEAVE_GATEWAY_URL}/graphql`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ query }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = (await response.json()) as GraphQLResponse;
-      if (result.errors && result.errors.length > 0) {
-        throw new Error(
-          `GraphQL error: ${result.errors.map((e) => e.message).join(", ")}`,
-        );
-      }
-      if (!result.data?.transactions?.edges) {
-        throw new Error(
-          "Invalid GraphQL response: transactions.edges is missing",
-        );
-      }
-      edges = result.data.transactions.edges;
-    } catch (error) {
+    if (fetchResult.isErr()) {
       consola.error("Error fetching transactions from Arweave GraphQL", {
-        error,
+        error: fetchResult.error,
       });
-      throw error;
+      throw new Error(fetchResult.error.error);
     }
+
+    const edges = fetchResult.value;
 
     if (edges.length === 0) {
       hasMore = false;
