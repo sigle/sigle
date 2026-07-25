@@ -164,6 +164,7 @@ model Post {
   coverImage      MediaImage? @relation(fields: [coverImageId], references: [id])
   tags            String[]    @map("tags")
   canonicalUri    String?     @map("canonical_uri")
+  signature       String?     @unique @map("signature")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

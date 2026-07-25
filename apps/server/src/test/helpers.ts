@@ -59,6 +59,7 @@ interface CreateTestPostOptions {
   metadataUri?: string;
   version?: string;
   blockHeight?: number;
+  signature?: string;
 }
 
 export async function createTestPost(
@@ -76,6 +77,7 @@ export async function createTestPost(
       content: options.content ?? "Test content",
       excerpt: options.excerpt ?? "Test excerpt",
       metadataUri: options.metadataUri ?? "ipfs://QmTest",
+      signature: options.signature,
       createdAt: now,
       updatedAt: now,
       userId: options.userId,

@@ -3,7 +3,9 @@ import { defineRouteMeta } from "nitro";
 import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
+import { generateImageBlurhashJob } from "@/jobs/generate-image-blurhash";
 import { arweaveUploadFile } from "@/lib/arweave";
+import { verifyPostSignature } from "@/lib/metadata";
 import { readValidatedBodyZod } from "@/lib/nitro";
 import { prisma } from "@/lib/prisma";
 import { isUserWhitelisted } from "@/lib/users";
@@ -88,6 +90,38 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  // Verify that the signature is valid and resolves to the logged-in user's Stacks address
+  const signatureResult = verifyPostSignature(parsedMetadata.data);
+  if (signatureResult.isErr()) {
+    throw new HTTPError({
+      status: 400,
+      message: signatureResult.error.error,
+    });
+  }
+  const { recoveredAddress, signature } = signatureResult.value;
+  if (recoveredAddress !== event.context.user.id) {
+    throw new HTTPError({
+      status: 400,
+      message:
+        "Invalid signature: Signature verification failed or address mismatch",
+    });
+  }
+
+  const existingPostWithSignature = await prisma.post.findUnique({
+    select: {
+      id: true,
+    },
+    where: {
+      signature,
+    },
+  });
+  if (existingPostWithSignature) {
+    throw new HTTPError({
+      status: 400,
+      message: "Metadata signature has already been published.",
+    });
+  }
+
   const draft =
     body.type === "draft"
       ? await prisma.draft.findUnique({
@@ -112,30 +146,18 @@ export default defineEventHandler(async (event) => {
   if (!draft) {
     throw new HTTPError({
       status: 404,
-      message: "Draft not found.",
+      message: body.type === "draft" ? "Draft not found." : "Post not found.",
     });
-  }
-
-  if (body.type === "draft") {
-    // Check that a published post with the same id does not exist to ensure id uniqueness
-    const post = await prisma.post.findUnique({
-      select: {
-        id: true,
-      },
-      where: {
-        id: draftId,
-      },
-    });
-    if (post) {
-      throw new HTTPError({
-        status: 400,
-        message: "A post with this ID already exists.",
-      });
-    }
   }
 
   const uploadResult = await arweaveUploadFile(event, {
     metadata: parsedMetadata.data,
+    tags: [
+      {
+        name: "Author",
+        value: event.context.user.id,
+      },
+    ],
   });
 
   if (uploadResult.isErr()) {
@@ -146,6 +168,93 @@ export default defineEventHandler(async (event) => {
   }
 
   const { id } = uploadResult.value;
+
+  const postData = parsedMetadata.data;
+  const metaTitle = postData.content.attributes?.find(
+    (attribute) => attribute.key === "meta-title",
+  )?.value;
+  const metaDescription = postData.content.attributes?.find(
+    (attribute) => attribute.key === "meta-description",
+  )?.value;
+  const excerpt = postData.content.attributes?.find(
+    (attribute) => attribute.key === "excerpt",
+  )?.value;
+  const canonicalUri = postData.content.attributes?.find(
+    (attribute) => attribute.key === "canonical-uri",
+  )?.value;
+
+  const versionSplit = postData.$schema.split("/");
+  const version = versionSplit[versionSplit.length - 1].replace(".json", "");
+
+  await prisma.$transaction(async (tx) => {
+    const userId = event.context.user.id;
+
+    const updatedPost = await tx.post.upsert({
+      where: {
+        id, // Use Arweave TX ID as post ID
+      },
+      update: {
+        txId: id,
+        version,
+        blockHeight: 0,
+        signature,
+      },
+      create: {
+        id,
+        txId: id,
+        version,
+        blockHeight: 0,
+        signature,
+        userId,
+        createdAt: new Date(),
+
+        // Metadata fields
+        metadataUri: `ar://${id}`,
+        title: postData.content.title,
+        content: postData.content.content,
+        metaTitle,
+        metaDescription,
+        excerpt: excerpt || "",
+        tags: postData.content.tags,
+        canonicalUri,
+      },
+    });
+
+    if (postData.content.coverImage) {
+      await tx.post.update({
+        where: {
+          id: updatedPost.id,
+        },
+        data: {
+          coverImage: {
+            connectOrCreate: {
+              where: {
+                id: postData.content.coverImage.url,
+              },
+              create: {
+                id: postData.content.coverImage.url,
+                mimeType: postData.content.coverImage.type,
+              },
+            },
+          },
+        },
+      });
+    }
+  });
+
+  // Delete the associated draft
+  await prisma.draft.deleteMany({
+    where: {
+      id: draftId,
+      userId: event.context.user.id,
+    },
+  });
+
+  if (postData.content.coverImage) {
+    await generateImageBlurhashJob.emit({
+      imageId: postData.content.coverImage.url,
+    });
+  }
 
   event.context.$posthog.capture({
     distinctId: event.context.user.id,

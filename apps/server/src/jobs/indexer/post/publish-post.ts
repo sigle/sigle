@@ -25,6 +25,8 @@ export const executePublishPostJob = async (
     const message = matchError(metadataResult.error, {
       MetadataFetchFailedError: (e) => `Failed to fetch metadata: ${e.error}`,
       InvalidMetadataError: (e) => `Metadata validation failed: ${e.error}`,
+      InvalidSignatureError: (e) =>
+        `Metadata signature validation failed: ${e.error}`,
       UnhandledException: (e) => `Unhandled exception: ${e.message}`,
     });
     consola.error("Can't process metadata", {
@@ -37,6 +39,30 @@ export const executePublishPostJob = async (
   }
   const metadata = metadataResult.value;
 
+  const existingPostWithSignature = await prisma.post.findUnique({
+    select: {
+      id: true,
+      txId: true,
+    },
+    where: {
+      signature: metadata.signature,
+    },
+  });
+  if (
+    existingPostWithSignature &&
+    existingPostWithSignature.txId !== data.txId
+  ) {
+    consola.warn(
+      "Signature already indexed under a different post ID, skipping replay",
+      {
+        txId: data.txId,
+        existingTxId: existingPostWithSignature.txId,
+        signature: metadata.signature,
+      },
+    );
+    return;
+  }
+
   let shouldProcessImage = false;
   await prisma.$transaction(async (tx) => {
     const userId = data.author;
@@ -47,17 +73,9 @@ export const executePublishPostJob = async (
         coverImageId: true,
       },
       where: {
-        id: metadata.id,
+        txId: data.txId,
       },
     });
-    if (post && post.txId !== data.txId) {
-      console.warn(
-        `Post id ${metadata.id} already exists with a different txId. Existing txId: ${post.txId}, new txId: ${data.txId}`,
-      );
-      throw new Error(
-        `Post id ${metadata.id} already exists with txId ${post.txId}`,
-      );
-    }
 
     const user = await tx.user.findUnique({
       select: {
@@ -77,19 +95,21 @@ export const executePublishPostJob = async (
 
     const updatedPost = await tx.post.upsert({
       where: {
-        id: metadata.id,
         txId: data.txId,
       },
       update: {
         txId: data.txId,
         version: metadata.version,
         blockHeight: data.blockHeight,
+        createdAt: new Date(data.createdAt),
+        signature: metadata.signature,
       },
       create: {
-        id: metadata.id,
+        id: data.txId,
         txId: data.txId,
         version: metadata.version,
         blockHeight: data.blockHeight,
+        signature: metadata.signature,
         userId,
         createdAt: new Date(data.createdAt),
 
