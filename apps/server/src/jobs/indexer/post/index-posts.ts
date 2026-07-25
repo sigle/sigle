@@ -194,16 +194,17 @@ export const executeIndexerIndexPostsJob = async (
       const signatureExists = await prisma.post.findUnique({
         select: {
           id: true,
+          txId: true,
         },
         where: {
           signature: metadata.signature,
         },
       });
 
-      if (signatureExists && signatureExists.id !== txId) {
+      if (signatureExists && signatureExists.txId !== txId) {
         consola.warn("Skipping indexing replayed signed metadata", {
           txId,
-          existingId: signatureExists.id,
+          existingTxId: signatureExists.txId,
           signature: metadata.signature,
         });
         // oxlint-disable-next-line no-continue
