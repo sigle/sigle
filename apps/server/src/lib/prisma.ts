@@ -52,6 +52,7 @@ export const SELECT_PUBLIC_POST_FIELDS = {
   txId: true,
   blockHeight: true,
   metadataUri: true,
+  revisionsCount: true,
   createdAt: true,
   updatedAt: true,
   // Relations

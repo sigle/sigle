@@ -80,6 +80,12 @@ export default defineEventHandler(async (event) => {
   }
 
   const draftId = getRouterParam(event, "draftId");
+  if (!draftId) {
+    throw new HTTPError({
+      status: 400,
+      message: "Bad Request",
+    });
+  }
   const body = await readValidatedBodyZod(event, uploadMetadataDraftSchema);
 
   const parsedMetadata = PostMetadataSchema.safeParse(body.metadata);
@@ -150,14 +156,22 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const tags: Array<{ name: string; value: string }> = [
+    {
+      name: "Author",
+      value: event.context.user.id,
+    },
+  ];
+  if (body.type === "published") {
+    tags.push({
+      name: "Root-TX",
+      value: draftId,
+    });
+  }
+
   const uploadResult = await arweaveUploadFile(event, {
     metadata: parsedMetadata.data,
-    tags: [
-      {
-        name: "Author",
-        value: event.context.user.id,
-      },
-    ],
+    tags,
   });
 
   if (uploadResult.isErr()) {
@@ -186,37 +200,67 @@ export default defineEventHandler(async (event) => {
   const versionSplit = postData.$schema.split("/");
   const version = versionSplit[versionSplit.length - 1].replace(".json", "");
 
+  const targetPostId = body.type === "published" ? draftId : id;
+
   await prisma.$transaction(async (tx) => {
     const userId = event.context.user.id;
 
-    const updatedPost = await tx.post.upsert({
+    const existingPost = await tx.post.findUnique({
       where: {
-        id, // Use Arweave TX ID as post ID
+        id: targetPostId,
       },
-      update: {
-        txId: id,
-        version,
-        blockHeight: 0,
-        signature,
-      },
-      create: {
-        id,
-        txId: id,
-        version,
-        blockHeight: 0,
-        signature,
-        userId,
-        createdAt: new Date(),
+    });
 
-        // Metadata fields
-        metadataUri: `ar://${id}`,
-        title: postData.content.title,
-        content: postData.content.content,
-        metaTitle,
-        metaDescription,
-        excerpt: excerpt || "",
-        tags: postData.content.tags,
-        canonicalUri,
+    const updatedPost = existingPost
+      ? await tx.post.update({
+          where: {
+            id: targetPostId,
+          },
+          data: {
+            txId: id,
+            version,
+            blockHeight: 0,
+            signature,
+            metadataUri: `ar://${id}`,
+            title: postData.content.title,
+            content: postData.content.content,
+            metaTitle,
+            metaDescription,
+            excerpt: excerpt || "",
+            tags: postData.content.tags,
+            canonicalUri,
+            revisionsCount: {
+              increment: 1,
+            },
+          },
+        })
+      : await tx.post.create({
+          data: {
+            id: targetPostId,
+            txId: id,
+            version,
+            blockHeight: 0,
+            signature,
+            userId,
+            createdAt: new Date(),
+
+            // Metadata fields
+            metadataUri: `ar://${id}`,
+            title: postData.content.title,
+            content: postData.content.content,
+            metaTitle,
+            metaDescription,
+            excerpt: excerpt || "",
+            tags: postData.content.tags,
+            canonicalUri,
+            revisionsCount: 1,
+          },
+        });
+
+    await tx.postRevision.create({
+      data: {
+        postId: targetPostId,
+        txId: id,
       },
     });
 
@@ -266,5 +310,5 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  return { id };
+  return { id: targetPostId };
 });

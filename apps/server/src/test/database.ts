@@ -53,6 +53,7 @@ export async function createTestDatabase(): Promise<TestDatabase> {
       await client.exec(`
         TRUNCATE TABLE
           "post_nft",
+          "post_revision",
           "minter_fixed_price",
           "collectible",
           "post",

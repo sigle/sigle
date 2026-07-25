@@ -9,6 +9,7 @@ export const indexerPublishPostSchema = z.object({
   action: z.literal("indexer-publish-post"),
   data: z.object({
     txId: z.string(),
+    rootTxId: z.string().optional(),
     blockHeight: z.number(),
     author: z.string(),
     uri: z.string(),
@@ -64,6 +65,8 @@ export const executePublishPostJob = async (
   }
 
   let shouldProcessImage = false;
+  const targetPostId = data.rootTxId || data.txId;
+
   await prisma.$transaction(async (tx) => {
     const userId = data.author;
     const post = await tx.post.findUnique({
@@ -73,7 +76,7 @@ export const executePublishPostJob = async (
         coverImageId: true,
       },
       where: {
-        txId: data.txId,
+        id: targetPostId,
       },
     });
 
@@ -93,37 +96,76 @@ export const executePublishPostJob = async (
       });
     }
 
-    const updatedPost = await tx.post.upsert({
-      where: {
-        txId: data.txId,
-      },
-      update: {
-        txId: data.txId,
-        version: metadata.version,
-        blockHeight: data.blockHeight,
-        createdAt: new Date(data.createdAt),
-        signature: metadata.signature,
-      },
-      create: {
-        id: data.txId,
-        txId: data.txId,
-        version: metadata.version,
-        blockHeight: data.blockHeight,
-        signature: metadata.signature,
-        userId,
-        createdAt: new Date(data.createdAt),
+    const isNewTx = !post || post.txId !== data.txId;
 
-        // Metadata fields
-        metadataUri: data.uri,
-        title: metadata.title,
-        content: metadata.content,
-        metaTitle: metadata.metaTitle,
-        metaDescription: metadata.metaDescription,
-        excerpt: metadata.excerpt,
-        tags: metadata.tags,
-        canonicalUri: metadata.canonicalUri,
+    const updatedPost = post
+      ? await tx.post.update({
+          where: {
+            id: targetPostId,
+          },
+          data: {
+            txId: data.txId,
+            version: metadata.version,
+            blockHeight: data.blockHeight,
+            createdAt: new Date(data.createdAt),
+            signature: metadata.signature,
+
+            // Metadata fields
+            metadataUri: data.uri,
+            title: metadata.title,
+            content: metadata.content,
+            metaTitle: metadata.metaTitle,
+            metaDescription: metadata.metaDescription,
+            excerpt: metadata.excerpt,
+            tags: metadata.tags,
+            canonicalUri: metadata.canonicalUri,
+            ...(isNewTx
+              ? {
+                  revisionsCount: {
+                    increment: 1,
+                  },
+                }
+              : {}),
+          },
+        })
+      : await tx.post.create({
+          data: {
+            id: targetPostId,
+            txId: data.txId,
+            version: metadata.version,
+            blockHeight: data.blockHeight,
+            signature: metadata.signature,
+            userId,
+            createdAt: new Date(data.createdAt),
+
+            // Metadata fields
+            metadataUri: data.uri,
+            title: metadata.title,
+            content: metadata.content,
+            metaTitle: metadata.metaTitle,
+            metaDescription: metadata.metaDescription,
+            excerpt: metadata.excerpt,
+            tags: metadata.tags,
+            canonicalUri: metadata.canonicalUri,
+            revisionsCount: 1,
+          },
+        });
+
+    const revisionExists = await tx.postRevision.findFirst({
+      where: {
+        postId: targetPostId,
+        txId: data.txId,
       },
     });
+    if (!revisionExists) {
+      await tx.postRevision.create({
+        data: {
+          postId: targetPostId,
+          txId: data.txId,
+          createdAt: new Date(data.createdAt),
+        },
+      });
+    }
 
     // Only reprocess the image if it changed
     if (metadata.coverImage && post?.coverImageId !== metadata.coverImage.url) {
