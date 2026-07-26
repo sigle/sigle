@@ -190,6 +190,7 @@ model PostRevision {
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   txId   String @map("tx_id")
 
+  @@unique([postId, txId])
   @@index([postId])
   @@map("post_revision")
 }

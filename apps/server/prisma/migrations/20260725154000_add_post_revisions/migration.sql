@@ -14,5 +14,8 @@ CREATE TABLE "post_revision" (
 -- CreateIndex
 CREATE INDEX "post_revision_post_id_idx" ON "post_revision"("post_id");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "post_revision_post_id_tx_id_key" ON "post_revision"("post_id", "tx_id");
+
 -- AddForeignKey
 ALTER TABLE "post_revision" ADD CONSTRAINT "post_revision_post_id_fkey" FOREIGN KEY ("post_id") REFERENCES "post"("id") ON DELETE CASCADE ON UPDATE CASCADE;
