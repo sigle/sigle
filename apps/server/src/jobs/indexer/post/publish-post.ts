@@ -150,21 +150,20 @@ export const executePublishPostJob = async (
           },
         });
 
-    const revisionExists = await tx.postRevision.findFirst({
+    await tx.postRevision.upsert({
       where: {
-        postId: targetPostId,
-        txId: data.txId,
-      },
-    });
-    if (!revisionExists) {
-      await tx.postRevision.create({
-        data: {
+        postId_txId: {
           postId: targetPostId,
           txId: data.txId,
-          createdAt: new Date(data.createdAt),
         },
-      });
-    }
+      },
+      update: {},
+      create: {
+        postId: targetPostId,
+        txId: data.txId,
+        createdAt: new Date(data.createdAt),
+      },
+    });
 
     // Only reprocess the image if it changed
     if (metadata.coverImage && post?.coverImageId !== metadata.coverImage.url) {

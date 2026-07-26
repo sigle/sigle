@@ -265,8 +265,15 @@ export default defineEventHandler(async (event) => {
           },
         });
 
-    await tx.postRevision.create({
-      data: {
+    await tx.postRevision.upsert({
+      where: {
+        postId_txId: {
+          postId: targetPostId,
+          txId: id,
+        },
+      },
+      update: {},
+      create: {
         postId: targetPostId,
         txId: id,
       },
