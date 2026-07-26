@@ -107,18 +107,17 @@ export const executePublishPostJob = async (
             txId: data.txId,
             version: metadata.version,
             blockHeight: data.blockHeight,
-            createdAt: new Date(data.createdAt),
             signature: metadata.signature,
 
             // Metadata fields
             metadataUri: data.uri,
             title: metadata.title,
             content: metadata.content,
-            metaTitle: metadata.metaTitle,
-            metaDescription: metadata.metaDescription,
+            metaTitle: metadata.metaTitle ?? null,
+            metaDescription: metadata.metaDescription ?? null,
             excerpt: metadata.excerpt,
             tags: metadata.tags,
-            canonicalUri: metadata.canonicalUri,
+            canonicalUri: metadata.canonicalUri ?? null,
             ...(isNewTx
               ? {
                   revisionsCount: {
