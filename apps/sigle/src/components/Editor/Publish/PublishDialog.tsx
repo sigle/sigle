@@ -134,9 +134,9 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         completeStep("arweave");
         completeStep("indexing");
 
-        const arweaveId = uploadedMetadataResult.value.id;
+        const { id: targetPostId, arweaveId } = uploadedMetadataResult.value;
         posthog.capture("post_publish_success", {
-          postId,
+          postId: targetPostId,
           arweaveId,
         });
 
@@ -147,7 +147,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
         router.push(
           Routes.post(
-            { postId: arweaveId },
+            { postId: targetPostId },
             {
               search: {
                 published: true,

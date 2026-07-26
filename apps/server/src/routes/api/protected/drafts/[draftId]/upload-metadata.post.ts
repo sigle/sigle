@@ -41,10 +41,18 @@ defineRouteMeta({
           "application/json": {
             schema: {
               type: "object",
-              required: ["id"],
+              required: ["id", "postId", "arweaveId"],
               properties: {
                 id: {
-                  description: "Arweave ID.",
+                  description: "Post ID.",
+                  type: "string",
+                },
+                postId: {
+                  description: "Post ID.",
+                  type: "string",
+                },
+                arweaveId: {
+                  description: "Arweave transaction ID.",
                   type: "string",
                 },
               },
@@ -310,5 +318,9 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  return { id: targetPostId };
+  return {
+    id: targetPostId,
+    postId: targetPostId,
+    arweaveId: id,
+  };
 });

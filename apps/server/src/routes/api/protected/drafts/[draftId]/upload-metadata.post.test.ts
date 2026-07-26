@@ -127,7 +127,11 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
 
     const result = await handler(mockEvent);
 
-    expect(result).toStrictEqual({ id: "arweave-tx-draft" });
+    expect(result).toStrictEqual({
+      id: "arweave-tx-draft",
+      postId: "arweave-tx-draft",
+      arweaveId: "arweave-tx-draft",
+    });
     expect(arweaveUploadFile).toHaveBeenCalledWith(mockEvent, {
       metadata: mockMetadata,
       tags: [{ name: "Author", value: userId }],
@@ -203,7 +207,11 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
 
     const result = await handler(mockEvent);
 
-    expect(result).toStrictEqual({ id: originalPost.id });
+    expect(result).toStrictEqual({
+      id: originalPost.id,
+      postId: originalPost.id,
+      arweaveId: "arweave-tx-edit-1",
+    });
 
     // Verify Root-TX tag was included
     expect(arweaveUploadFile).toHaveBeenCalledWith(mockEvent, {

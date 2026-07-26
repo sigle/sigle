@@ -602,8 +602,12 @@ export interface paths {
           };
           content: {
             "application/json": {
-              /** @description Arweave ID. */
+              /** @description Post ID. */
               id: string;
+              /** @description Post ID. */
+              postId: string;
+              /** @description Arweave transaction ID. */
+              arweaveId: string;
             };
           };
         };
