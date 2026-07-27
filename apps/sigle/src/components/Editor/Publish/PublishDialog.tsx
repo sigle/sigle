@@ -68,13 +68,29 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           postId,
         });
 
-        const metadata = await generateSigleMetadataFromForm({
-          userAddress: session.user.id,
-          type: data.type,
-          editor,
-          postId,
-          post: data,
-        });
+        // oxlint-disable-next-line init-declarations
+        let metadata;
+        try {
+          metadata = await generateSigleMetadataFromForm({
+            userAddress: session.user.id,
+            type: data.type,
+            editor,
+            postId,
+            post: data,
+          });
+        } catch (error) {
+          console.error(error);
+          posthog.capture("post_publish_metadata_preparation_error", {
+            postId,
+            error,
+          });
+          const errorMessage =
+            error instanceof Error
+              ? error.message
+              : "Failed to prepare post metadata";
+          setStepError("preparing", errorMessage);
+          return;
+        }
 
         if (metadata.content.content.includes("blob:")) {
           posthog.capture("post_publish_images_uploading_error", {
