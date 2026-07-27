@@ -74,6 +74,7 @@ export const executePublishPostJob = async (
       select: {
         id: true,
         txId: true,
+        createdAt: true,
         coverImageId: true,
       },
       where: {
@@ -98,6 +99,23 @@ export const executePublishPostJob = async (
     }
 
     const isNewTx = !post || post.txId !== data.txId;
+
+    if (post && isNewTx) {
+      await tx.postRevision.upsert({
+        where: {
+          postId_txId: {
+            postId: targetPostId,
+            txId: post.txId,
+          },
+        },
+        update: {},
+        create: {
+          postId: targetPostId,
+          txId: post.txId,
+          createdAt: post.createdAt,
+        },
+      });
+    }
 
     const updatedPost = post
       ? await tx.post.update({

@@ -167,13 +167,6 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
       content: "Original content",
     });
 
-    await testDb.db.postRevision.create({
-      data: {
-        postId: originalPost.id,
-        txId: originalPost.txId,
-      },
-    });
-
     mockGetRouterParam.mockReturnValue(originalPost.id);
 
     const editedMetadata = {
