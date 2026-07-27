@@ -216,11 +216,28 @@ export default defineEventHandler(async (event) => {
     const existingPost = await tx.post.findUnique({
       select: {
         id: true,
+        txId: true,
       },
       where: {
         id: targetPostId,
       },
     });
+
+    if (existingPost && existingPost.txId !== id) {
+      await tx.postRevision.upsert({
+        where: {
+          postId_txId: {
+            postId: targetPostId,
+            txId: existingPost.txId,
+          },
+        },
+        update: {},
+        create: {
+          postId: targetPostId,
+          txId: existingPost.txId,
+        },
+      });
+    }
 
     const sharedMetadata = {
       metadataUri: `ar://${id}`,

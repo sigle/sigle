@@ -67,7 +67,7 @@ export async function createTestPost(
 ): Promise<Post> {
   const now = new Date();
 
-  return prisma.post.create({
+  const post = await prisma.post.create({
     data: {
       id: options.id ?? `post-${Date.now()}`,
       version: options.version ?? "1.0.0",
@@ -83,6 +83,23 @@ export async function createTestPost(
       userId: options.userId,
     },
   });
+
+  await prisma.postRevision.upsert({
+    where: {
+      postId_txId: {
+        postId: post.id,
+        txId: post.txId,
+      },
+    },
+    update: {},
+    create: {
+      postId: post.id,
+      txId: post.txId,
+      createdAt: now,
+    },
+  });
+
+  return post;
 }
 
 interface CreateTestDraftOptions {

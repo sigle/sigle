@@ -98,6 +98,22 @@ export const executePublishPostJob = async (
 
     const isNewTx = !post || post.txId !== data.txId;
 
+    if (post && isNewTx) {
+      await tx.postRevision.upsert({
+        where: {
+          postId_txId: {
+            postId: targetPostId,
+            txId: post.txId,
+          },
+        },
+        update: {},
+        create: {
+          postId: targetPostId,
+          txId: post.txId,
+        },
+      });
+    }
+
     const updatedPost = post
       ? await tx.post.update({
           where: {
