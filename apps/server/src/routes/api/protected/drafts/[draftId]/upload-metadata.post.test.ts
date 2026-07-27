@@ -107,11 +107,15 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
       metadata: mockMetadata,
     });
 
-    (verifyPostSignature as any).mockReturnValue(
-      Result.ok({ recoveredAddress: userId, signature: "sig-draft-1" }),
+    vi.mocked(verifyPostSignature).mockReturnValue(
+      Result.ok({
+        recoveredAddress: userId,
+        publicKey: "pubkey-draft-1",
+        signature: "sig-draft-1",
+      }),
     );
 
-    (arweaveUploadFile as any).mockResolvedValue(
+    vi.mocked(arweaveUploadFile).mockResolvedValue(
       Result.ok({ id: "arweave-tx-draft" }),
     );
 
@@ -187,11 +191,15 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
       metadata: editedMetadata,
     });
 
-    (verifyPostSignature as any).mockReturnValue(
-      Result.ok({ recoveredAddress: userId, signature: "sig-edit-1" }),
+    vi.mocked(verifyPostSignature).mockReturnValue(
+      Result.ok({
+        recoveredAddress: userId,
+        publicKey: "pubkey-edit-1",
+        signature: "sig-edit-1",
+      }),
     );
 
-    (arweaveUploadFile as any).mockResolvedValue(
+    vi.mocked(arweaveUploadFile).mockResolvedValue(
       Result.ok({ id: "arweave-tx-edit-1" }),
     );
 

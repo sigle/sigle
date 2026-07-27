@@ -214,10 +214,24 @@ export default defineEventHandler(async (event) => {
     const userId = event.context.user.id;
 
     const existingPost = await tx.post.findUnique({
+      select: {
+        id: true,
+      },
       where: {
         id: targetPostId,
       },
     });
+
+    const sharedMetadata = {
+      metadataUri: `ar://${id}`,
+      title: postData.content.title,
+      content: postData.content.content,
+      metaTitle: metaTitle ?? null,
+      metaDescription: metaDescription ?? null,
+      excerpt: excerpt || "",
+      tags: postData.content.tags,
+      canonicalUri: canonicalUri ?? null,
+    };
 
     const updatedPost = existingPost
       ? await tx.post.update({
@@ -225,18 +239,11 @@ export default defineEventHandler(async (event) => {
             id: targetPostId,
           },
           data: {
+            ...sharedMetadata,
             txId: id,
             version,
             blockHeight: 0,
             signature,
-            metadataUri: `ar://${id}`,
-            title: postData.content.title,
-            content: postData.content.content,
-            metaTitle: metaTitle ?? null,
-            metaDescription: metaDescription ?? null,
-            excerpt: excerpt || "",
-            tags: postData.content.tags,
-            canonicalUri: canonicalUri ?? null,
             revisionsCount: {
               increment: 1,
             },
@@ -244,6 +251,7 @@ export default defineEventHandler(async (event) => {
         })
       : await tx.post.create({
           data: {
+            ...sharedMetadata,
             id: targetPostId,
             txId: id,
             version,
@@ -251,16 +259,6 @@ export default defineEventHandler(async (event) => {
             signature,
             userId,
             createdAt: new Date(),
-
-            // Metadata fields
-            metadataUri: `ar://${id}`,
-            title: postData.content.title,
-            content: postData.content.content,
-            metaTitle,
-            metaDescription,
-            excerpt: excerpt || "",
-            tags: postData.content.tags,
-            canonicalUri,
             revisionsCount: 1,
           },
         });
