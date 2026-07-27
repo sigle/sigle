@@ -48,12 +48,26 @@ describe("executePublishPostJob", () => {
       await testDb.cleanup();
     }
     vi.clearAllMocks();
+
+    const mockFetch = vi.fn(() =>
+      Promise.resolve(
+        new Response(
+          JSON.stringify({ data: { transactions: { edges: [] } } }),
+          {
+            status: 200,
+            headers: { "Content-Type": "application/json" },
+          },
+        ),
+      ),
+    );
+    vi.stubGlobal("fetch", mockFetch);
   });
 
   afterAll(async () => {
     if (testDb) {
       await testDb.close();
     }
+    vi.unstubAllGlobals();
   });
 
   it("publishes initial post and creates revision 1", async () => {

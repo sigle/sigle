@@ -172,7 +172,7 @@ model Post {
   revisionsCount Int            @default(1) @map("revisions_count")
   revisions      PostRevision[]
 
-  ots              PostOts[]
+  ots              PostOts?
   userId           String            @map("user_id")
   user             User              @relation(fields: [userId], references: [id])
   nfts             PostNft[]
@@ -288,7 +288,7 @@ model PostOts {
   updatedAt    DateTime      @updatedAt @map("updated_at")
 
   postRevision PostRevision @relation(fields: [postId, postTxId], references: [postId, txId], onDelete: Cascade)
-  post         Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  post         Post?        @relation(fields: [postTxId], references: [txId], onDelete: Cascade)
 
   @@unique([postId, postTxId])
   @@index([status])

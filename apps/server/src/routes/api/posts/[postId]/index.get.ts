@@ -66,7 +66,6 @@ export default defineEventHandler(async (event) => {
 
   return {
     ...post,
-    ...(post ? { ots: post.ots?.[0] ?? null } : {}),
     collectorsCount: collectorsCount.length,
   };
 });

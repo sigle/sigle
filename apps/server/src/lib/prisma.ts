@@ -62,10 +62,6 @@ export const SELECT_PUBLIC_POST_FIELDS = {
       status: true,
       otsTxId: true,
     },
-    orderBy: {
-      createdAt: "desc" as const,
-    },
-    take: 1,
   },
   collectible: {
     select: {
