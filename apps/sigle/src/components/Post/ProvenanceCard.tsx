@@ -6,6 +6,7 @@ import {
   IconCopy,
   IconDatabase,
   IconExternalLink,
+  IconHistory,
 } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -102,6 +103,11 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
+                  {post.revisionsCount && post.revisionsCount > 1 ? (
+                    <Badge variant="outline" className="text-xs font-medium">
+                      Rev #{post.revisionsCount}
+                    </Badge>
+                  ) : null}
                   <Badge
                     variant="secondary"
                     className="text-xs font-medium capitalize"
@@ -210,6 +216,25 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                     </div>
                   </div>
                 </div>
+
+                {post.revisionsCount && post.revisionsCount > 1 ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-xs font-medium tracking-wider text-muted-foreground uppercase">
+                      <IconHistory size={14} />
+                      <span>Revision History</span>
+                    </div>
+                    <div className="flex items-center justify-between rounded-lg bg-secondary/50 px-3 py-2.5">
+                      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                        <span className="text-xs text-muted-foreground">
+                          Published Revisions
+                        </span>
+                        <span className="font-mono text-sm text-foreground">
+                          {post.revisionsCount} revisions on Arweave
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
 
                 <p className="pt-1 text-xs/relaxed text-muted-foreground">
                   This post&apos;s content is permanently stored on Arweave,

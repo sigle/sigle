@@ -1271,6 +1271,7 @@ export interface components {
       canonicalUri?: string;
       txId: string;
       blockHeight: number;
+      revisionsCount?: number;
       collectorsCount?: number;
       metadataUri: string;
       createdAt: string;
