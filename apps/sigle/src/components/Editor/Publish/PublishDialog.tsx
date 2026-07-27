@@ -1,6 +1,7 @@
 "use client";
 
 import { request } from "@stacks/connect";
+import { IconArrowLeft, IconRefresh } from "@tabler/icons-react";
 import { Result } from "better-result";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
@@ -9,6 +10,7 @@ import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { MultiStep } from "@/components/Shared/MultiStep";
 import { useMultiStep } from "@/components/Shared/MultiStepToast";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -43,12 +45,17 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     "/api/protected/drafts/{draftId}/upload-metadata",
   );
 
-  const { steps, start, completeStep, setStepError } = useMultiStep({
+  const { steps, start, completeStep, setStepError, reset } = useMultiStep({
     steps: [
+      { id: "preparing", title: "Preparing metadata & cover image" },
+      { id: "signature", title: "Signing with Stacks wallet" },
       { id: "arweave", title: "Uploading data to Arweave" },
-      { id: "indexing", title: "Indexing new post" },
-    ],
+    ] as const,
   });
+
+  const hasError = steps.some((step) => step.status === "error");
+  const isSignaturePending =
+    steps.find((s) => s.id === "signature")?.status === "pending";
 
   const onSubmit = () => {
     handleSubmit(
@@ -78,8 +85,11 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
               "Please wait for all images to finish uploading before publishing",
           });
           setPublishingLoading(false);
+          reset();
           return;
         }
+
+        completeStep("preparing");
 
         let signature = "";
         try {
@@ -95,13 +105,16 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             postId,
             error,
           });
-          toast.error("Failed to sign post");
-          setPublishingLoading(false);
+          setStepError(
+            "signature",
+            "Wallet signature request was cancelled or failed.",
+          );
           return;
         }
 
         // Add the signature to the metadata
         metadata.signature = signature;
+        completeStep("signature");
 
         const uploadedMetadataResult = await uploadMetadata({
           params: {
@@ -111,8 +124,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           },
           body: {
             type,
-            // oxlint-disable-next-line typescript/no-explicit-any
-            metadata: metadata as any,
+            metadata: metadata as unknown as Record<string, never>,
           },
         })
           .then((result) => Result.ok(result))
@@ -126,13 +138,12 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             "arweave",
             uploadedMetadataResult.error.message
               ? uploadedMetadataResult.error.message
-              : uploadedMetadataResult.error,
+              : "Failed to upload metadata to Arweave",
           );
           return;
         }
 
         completeStep("arweave");
-        completeStep("indexing");
 
         const { id: targetPostId, arweaveId } = uploadedMetadataResult.value;
         posthog.capture("post_publish_success", {
@@ -165,6 +176,11 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     )();
   };
 
+  const handleBackToReview = () => {
+    setPublishingLoading(false);
+    reset();
+  };
+
   const onOpenChange = (open: boolean) => {
     if (!publishingLoading) {
       setPublishOpen(open);
@@ -173,16 +189,60 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
   return (
     <Dialog open={publishOpen} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Publish</DialogTitle>
-          <DialogDescription>Publish your post</DialogDescription>
+          <DialogTitle>
+            {publishingLoading
+              ? type === "draft"
+                ? "Publishing post"
+                : "Updating post"
+              : "Review & Publish"}
+          </DialogTitle>
+          <DialogDescription>
+            {publishingLoading
+              ? hasError
+                ? "An error occurred during publishing. You can retry or return to review."
+                : "Your post is being processed and published."
+              : "Review your post details before publishing."}
+          </DialogDescription>
         </DialogHeader>
+
         {!publishingLoading ? (
           <PublishReview onPublish={onSubmit} />
         ) : (
-          <div className="flex flex-col gap-3 py-4">
+          <div className="space-y-4 py-2">
             <MultiStep steps={steps} />
+
+            {isSignaturePending && !hasError && (
+              <div className="flex items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 p-3.5 text-xs font-medium text-primary">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
+                </span>
+                <span>
+                  Action Required: Approve the signature request in your Stacks
+                  wallet.
+                </span>
+              </div>
+            )}
+
+            {hasError && (
+              <div className="mt-4 flex items-center justify-end gap-2 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={handleBackToReview}
+                >
+                  <IconArrowLeft size={14} className="mr-1.5" />
+                  Back to review
+                </Button>
+                <Button type="button" size="sm" onClick={onSubmit}>
+                  <IconRefresh size={14} className="mr-1.5" />
+                  Retry
+                </Button>
+              </div>
+            )}
           </div>
         )}
       </DialogContent>

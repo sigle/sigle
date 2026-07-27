@@ -116,8 +116,10 @@ const uploadNftImage = async (
           draftId: postId,
         },
       },
-      // oxlint-disable-next-line typescript/no-explicit-any
-      body: formData as any,
+      body: formData as unknown as {
+        file: string;
+        type: "draft" | "published";
+      },
     },
   );
   if (!data.data) {
