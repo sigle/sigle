@@ -57,6 +57,16 @@ export const SELECT_PUBLIC_POST_FIELDS = {
   updatedAt: true,
   // Relations
   minterFixedPrice: true,
+  ots: {
+    select: {
+      status: true,
+      otsTxId: true,
+    },
+    orderBy: {
+      createdAt: "desc" as const,
+    },
+    take: 1,
+  },
   collectible: {
     select: {
       id: true,

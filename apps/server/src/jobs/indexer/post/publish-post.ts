@@ -4,6 +4,7 @@ import { consola } from "@/lib/consola";
 import { getMetadataFromUri } from "@/lib/metadata";
 import { prisma } from "@/lib/prisma";
 import { generateImageBlurhashJob } from "../../generate-image-blurhash";
+import { indexOtsForPost } from "./index-ots";
 
 export const indexerPublishPostSchema = z.object({
   action: z.literal("indexer-publish-post"),
@@ -207,6 +208,11 @@ export const executePublishPostJob = async (
       imageId: metadata.coverImage.url,
     });
   }
+
+  await indexOtsForPost({
+    postId: targetPostId,
+    txId: data.txId,
+  });
 
   consola.info("post.publishPost", {
     id: metadata.id,

@@ -71,3 +71,43 @@ export const arweaveUploadFile = async (
     },
   });
 };
+
+export const arweaveUploadRawFile = async ({
+  file,
+  tags = [],
+}: {
+  file: Buffer;
+  tags?: ArweaveTag[];
+}): Promise<Result<{ id: string }, ArweaveUploadFailedError>> => {
+  const fileSize = file.byteLength;
+  const cid = await createCIDv1FromBuffer(file);
+
+  const arweaveTags: ArweaveTag[] = [
+    {
+      name: "App-Name",
+      value: env.APP_ID,
+    },
+    { name: "IPFS-CID", value: cid },
+    ...tags,
+  ];
+
+  return Result.tryPromise({
+    try: async () => {
+      const uploadResult = await turboClient.uploadFile({
+        fileStreamFactory: () => file,
+        fileSizeFactory: () => fileSize,
+        dataItemOpts: {
+          tags: arweaveTags,
+        },
+      });
+
+      return { id: uploadResult.id };
+    },
+    catch: (error) => {
+      return new ArweaveUploadFailedError({
+        cause: error,
+        sentryId: "raw-upload-failed",
+      });
+    },
+  });
+};
