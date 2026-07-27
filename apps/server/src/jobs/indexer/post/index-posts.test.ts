@@ -133,10 +133,70 @@ describe("executeIndexerIndexPostsJob", () => {
       action: "indexer-publish-post",
       data: {
         txId: "arweave-tx-1",
+        rootTxId: undefined,
         blockHeight: 12345,
         author: userId,
         uri: "ar://arweave-tx-1",
         createdAt: new Date(1672531199 * 1000),
+      },
+    });
+  });
+
+  it("extracts Root-TX tag and passes rootTxId when present", async () => {
+    await createTestUser({ id: userId });
+
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        data: {
+          transactions: {
+            edges: [
+              {
+                node: {
+                  id: "arweave-tx-2",
+                  tags: [
+                    {
+                      name: "Root-TX",
+                      value: "original-tx-id",
+                    },
+                  ],
+                  block: {
+                    height: 12346,
+                    timestamp: 1672531200,
+                  },
+                },
+              },
+            ],
+          },
+        },
+      }),
+    } as Response);
+
+    const mockGetMetadata = getMetadataFromUri as any;
+    mockGetMetadata.mockResolvedValue(
+      Result.ok({
+        version: "v1",
+        id: "post-id-1",
+        title: "Edited Test Post",
+        content: "Hello world updated",
+        excerpt: "Hello",
+        recoveredAddress: userId,
+        signature: "sig-2",
+      }),
+    );
+
+    const result = await executeIndexerIndexPostsJob({});
+
+    expect(result.toProcess).toBe(1);
+    expect(mockEmit).toHaveBeenCalledWith({
+      action: "indexer-publish-post",
+      data: {
+        txId: "arweave-tx-2",
+        rootTxId: "original-tx-id",
+        blockHeight: 12346,
+        author: userId,
+        uri: "ar://arweave-tx-2",
+        createdAt: new Date(1672531200 * 1000),
       },
     });
   });

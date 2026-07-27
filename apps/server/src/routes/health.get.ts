@@ -193,6 +193,9 @@ defineRouteMeta({
               metadataUri: {
                 type: "string",
               },
+              revisionsCount: {
+                type: "number",
+              },
               createdAt: {
                 type: "string",
               },
