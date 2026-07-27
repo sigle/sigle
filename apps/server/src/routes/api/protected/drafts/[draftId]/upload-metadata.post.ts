@@ -217,6 +217,7 @@ export default defineEventHandler(async (event) => {
       select: {
         id: true,
         txId: true,
+        createdAt: true,
       },
       where: {
         id: targetPostId,
@@ -235,6 +236,7 @@ export default defineEventHandler(async (event) => {
         create: {
           postId: targetPostId,
           txId: existingPost.txId,
+          createdAt: existingPost.createdAt,
         },
       });
     }

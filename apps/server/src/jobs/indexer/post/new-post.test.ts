@@ -44,6 +44,7 @@ describe(executeNewPostJob, () => {
   });
 
   afterAll(async () => {
+    mockFetch.mockRestore();
     if (testDb) {
       await testDb.close();
     }

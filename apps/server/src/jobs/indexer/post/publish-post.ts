@@ -73,6 +73,7 @@ export const executePublishPostJob = async (
       select: {
         id: true,
         txId: true,
+        createdAt: true,
         coverImageId: true,
       },
       where: {
@@ -110,6 +111,7 @@ export const executePublishPostJob = async (
         create: {
           postId: targetPostId,
           txId: post.txId,
+          createdAt: post.createdAt,
         },
       });
     }
