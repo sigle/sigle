@@ -205,6 +205,21 @@ export const executeNewPostJob = async (
       },
     });
 
+    await tx.postRevision.upsert({
+      where: {
+        postId_txId: {
+          postId: metadata.id,
+          txId: data.txId,
+        },
+      },
+      update: {},
+      create: {
+        postId: metadata.id,
+        txId: data.txId,
+        createdAt: new Date(data.createdAt),
+      },
+    });
+
     if (metadata.coverImage) {
       await tx.post.update({
         where: {
