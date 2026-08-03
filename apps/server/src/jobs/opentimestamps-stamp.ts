@@ -21,25 +21,13 @@ export const opentimestampsStampJob = defineJob("opentimestamps-stamp")
   .work(async ([job]) => {
     const { postId, txId } = job.data;
 
-    let contentBuffer: Buffer = Buffer.from("");
-    try {
-      const response = await fetch(`${env.ARWEAVE_GATEWAY_URL}/${txId}`);
-      if (response.ok) {
-        contentBuffer = Buffer.from(await response.arrayBuffer());
-      } else {
-        const post = await prisma.post.findUnique({ where: { id: postId } });
-        if (!post) {
-          throw new Error(`Post not found for id ${postId}`);
-        }
-        contentBuffer = Buffer.from(JSON.stringify(post));
-      }
-    } catch {
-      const post = await prisma.post.findUnique({ where: { id: postId } });
-      if (!post) {
-        throw new Error(`Post not found for id ${postId}`);
-      }
-      contentBuffer = Buffer.from(JSON.stringify(post));
+    const response = await fetch(`${env.ARWEAVE_GATEWAY_URL}/${txId}`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch content from Arweave gateway for txId ${txId}: ${response.statusText}`,
+      );
     }
+    const contentBuffer = Buffer.from(await response.arrayBuffer());
 
     const stampResult = await stampWithFallback(contentBuffer);
     if (stampResult.isErr()) {
