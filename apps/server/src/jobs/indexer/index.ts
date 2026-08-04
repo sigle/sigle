@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { consola } from "@/lib/consola";
-import { withStepSentry } from "@/lib/jobs";
+import { defineWorkflow, withStepSentry } from "@/lib/jobs";
 import {
   executeIndexerInitMintDetailsJob,
   indexerInitMintDetailsSchema,
@@ -106,10 +106,10 @@ export async function processIndexerStep(
   });
 }
 
-export async function indexerWorkflow(
-  jobData: z.infer<typeof indexerInputSchema>,
-) {
-  "use workflow";
-  await processIndexerStep(jobData);
-}
-indexerWorkflow.schema = indexerInputSchema;
+export const indexerWorkflow = defineWorkflow(
+  indexerInputSchema,
+  async (jobData: z.infer<typeof indexerInputSchema>) => {
+    "use workflow";
+    await processIndexerStep(jobData);
+  },
+);

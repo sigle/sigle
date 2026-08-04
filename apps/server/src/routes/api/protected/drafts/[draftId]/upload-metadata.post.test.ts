@@ -52,10 +52,17 @@ vi.mock<typeof import("@/lib/metadata")>(import("@/lib/metadata"), () => ({
   verifyPostSignature: vi.fn(),
 }));
 
-vi.mock<typeof import("@/lib/jobs")>(import("@/lib/jobs"), () => ({
-  triggerWorkflow: vi.fn(),
-  withStepSentry: vi.fn((_name, fn) => fn()),
-}));
+vi.mock<typeof import("@/lib/jobs")>(
+  import("@/lib/jobs"),
+  async (importOriginal) => {
+    const actual = await importOriginal();
+    return {
+      ...actual,
+      triggerWorkflow: vi.fn(),
+      withStepSentry: vi.fn((_name, fn) => fn()),
+    };
+  },
+);
 
 const { default: handler } = await import("./upload-metadata.post");
 

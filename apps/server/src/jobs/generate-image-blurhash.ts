@@ -2,7 +2,7 @@ import sharp from "sharp";
 import { z } from "zod";
 import { consola } from "@/lib/consola";
 import { generateBlurhash, resolveImageUrl } from "@/lib/images";
-import { withStepSentry } from "@/lib/jobs";
+import { defineWorkflow, withStepSentry } from "@/lib/jobs";
 import { prisma } from "@/lib/prisma";
 
 export const generateImageBlurhashSchema = z.object({
@@ -55,10 +55,10 @@ export async function processImageBlurhashStep(imageId: string) {
   });
 }
 
-export async function generateImageBlurhashWorkflow(
-  data: z.infer<typeof generateImageBlurhashSchema>,
-) {
-  "use workflow";
-  await processImageBlurhashStep(data.imageId);
-}
-generateImageBlurhashWorkflow.schema = generateImageBlurhashSchema;
+export const generateImageBlurhashWorkflow = defineWorkflow(
+  generateImageBlurhashSchema,
+  async (data: z.infer<typeof generateImageBlurhashSchema>) => {
+    "use workflow";
+    await processImageBlurhashStep(data.imageId);
+  },
+);

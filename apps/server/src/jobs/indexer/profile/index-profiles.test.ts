@@ -15,10 +15,17 @@ import { createTestUser } from "@/test/helpers";
 
 const mockEmit = vi.fn();
 
-vi.mock<typeof import("@/lib/jobs")>(import("@/lib/jobs"), () => ({
-  triggerWorkflow: vi.fn((_workflowFn, payload) => mockEmit(payload)),
-  withStepSentry: vi.fn((_name, fn) => fn()),
-}));
+vi.mock<typeof import("@/lib/jobs")>(
+  import("@/lib/jobs"),
+  async (importOriginal) => {
+    const actual = await importOriginal();
+    return {
+      ...actual,
+      triggerWorkflow: vi.fn((_workflowFn, payload) => mockEmit(payload)),
+      withStepSentry: vi.fn((_name, fn) => fn()),
+    };
+  },
+);
 
 const mockStacksApiClientGET = vi.fn();
 const mockGetStacksTransaction = vi.fn();

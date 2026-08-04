@@ -6,17 +6,28 @@ import { consola } from "./consola";
 
 // oxlint-disable-next-line typescript/no-explicit-any
 export type WorkflowFn<T = any> = ((input: T) => Promise<any>) & {
-  schema?: z.ZodType<T>;
+  schema: z.ZodType<T>;
 };
 
 /**
+ * Defines a durable workflow function by binding an input Zod schema.
+ * Enforces that every workflow has a schema defined.
+ */
+export function defineWorkflow<T>(
+  schema: z.ZodType<T>,
+  workflowFn: (input: T) => Promise<any>,
+): WorkflowFn<T> {
+  const fn = workflowFn as WorkflowFn<T>;
+  fn.schema = schema;
+  return fn;
+}
+
+/**
  * Triggers a durable Vercel Workflow SDK workflow function.
- * Automatically validates input if `.schema` is attached to the workflow function.
+ * Enforces and parses the workflow's input schema.
  */
 export async function triggerWorkflow<T>(workflowFn: WorkflowFn<T>, input: T) {
-  if (workflowFn.schema) {
-    workflowFn.schema.parse(input);
-  }
+  workflowFn.schema.parse(input);
 
   consola.debug(`Triggering workflow ${workflowFn.name}`, { input });
 
