@@ -184,6 +184,9 @@ defineRouteMeta({
               txId: {
                 type: "string",
               },
+              arweaveL1TxId: {
+                type: "string",
+              },
               blockHeight: {
                 type: "number",
               },

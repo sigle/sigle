@@ -133,11 +133,69 @@ describe("executeIndexerIndexPostsJob", () => {
       action: "indexer-publish-post",
       data: {
         txId: "arweave-tx-1",
+        arweaveL1TxId: undefined,
         rootTxId: undefined,
         blockHeight: 12345,
         author: userId,
         uri: "ar://arweave-tx-1",
         createdAt: new Date(1672531199 * 1000),
+      },
+    });
+  });
+
+  it("extracts bundledIn id as arweaveL1TxId when present", async () => {
+    await createTestUser({ id: userId });
+
+    mockFetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        data: {
+          transactions: {
+            edges: [
+              {
+                node: {
+                  id: "arweave-tx-bundled",
+                  bundledIn: {
+                    id: "l1-arweave-tx-123",
+                  },
+                  block: {
+                    height: 12347,
+                    timestamp: 1672531201,
+                  },
+                },
+              },
+            ],
+          },
+        },
+      }),
+    } as Response);
+
+    const mockGetMetadata = getMetadataFromUri as any;
+    mockGetMetadata.mockResolvedValue(
+      Result.ok({
+        version: "v1",
+        id: "post-id-bundled",
+        title: "Bundled Post",
+        content: "Hello world",
+        excerpt: "Hello",
+        recoveredAddress: userId,
+        signature: "sig-bundled",
+      }),
+    );
+
+    const result = await executeIndexerIndexPostsJob({});
+
+    expect(result.toProcess).toBe(1);
+    expect(mockEmit).toHaveBeenCalledWith({
+      action: "indexer-publish-post",
+      data: {
+        txId: "arweave-tx-bundled",
+        arweaveL1TxId: "l1-arweave-tx-123",
+        rootTxId: undefined,
+        blockHeight: 12347,
+        author: userId,
+        uri: "ar://arweave-tx-bundled",
+        createdAt: new Date(1672531201 * 1000),
       },
     });
   });
@@ -192,6 +250,7 @@ describe("executeIndexerIndexPostsJob", () => {
       action: "indexer-publish-post",
       data: {
         txId: "arweave-tx-2",
+        arweaveL1TxId: undefined,
         rootTxId: "original-tx-id",
         blockHeight: 12346,
         author: userId,
