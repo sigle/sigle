@@ -61,3 +61,4 @@ export async function generateImageBlurhashWorkflow(
   "use workflow";
   await processImageBlurhashStep(data.imageId);
 }
+generateImageBlurhashWorkflow.schema = generateImageBlurhashSchema;

@@ -4,10 +4,7 @@ import { consola } from "@/lib/consola";
 import { triggerWorkflow } from "@/lib/jobs";
 import { getMetadataFromUri } from "@/lib/metadata";
 import { prisma } from "@/lib/prisma";
-import {
-  generateImageBlurhashSchema,
-  generateImageBlurhashWorkflow,
-} from "../../generate-image-blurhash";
+import { generateImageBlurhashWorkflow } from "../../generate-image-blurhash";
 
 export const indexerPublishPostSchema = z.object({
   action: z.literal("indexer-publish-post"),
@@ -231,11 +228,9 @@ export const executePublishPostJob = async (
   });
 
   if (shouldProcessImage && metadata.coverImage) {
-    await triggerWorkflow(
-      generateImageBlurhashWorkflow,
-      { imageId: metadata.coverImage.url },
-      generateImageBlurhashSchema,
-    );
+    await triggerWorkflow(generateImageBlurhashWorkflow, {
+      imageId: metadata.coverImage.url,
+    });
   }
 
   consola.info("post.publishPost", {

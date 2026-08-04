@@ -2,10 +2,7 @@ import { z } from "zod";
 import { consola } from "@/lib/consola";
 import { triggerWorkflow } from "@/lib/jobs";
 import { prisma } from "@/lib/prisma";
-import {
-  generateImageBlurhashSchema,
-  generateImageBlurhashWorkflow,
-} from "../../generate-image-blurhash";
+import { generateImageBlurhashWorkflow } from "../../generate-image-blurhash";
 import { getMetadataFromUri } from "./new-post";
 
 export const indexerSetBaseTokenUriSchema = z.object({
@@ -76,11 +73,9 @@ export const executeIndexerSetBaseTokenUriJob = async (
       },
     });
 
-    await triggerWorkflow(
-      generateImageBlurhashWorkflow,
-      { imageId: metadata.coverImage.url },
-      generateImageBlurhashSchema,
-    );
+    await triggerWorkflow(generateImageBlurhashWorkflow, {
+      imageId: metadata.coverImage.url,
+    });
   }
 
   consola.info("post.setBaseTokenUri", {

@@ -112,3 +112,4 @@ export async function indexerWorkflow(
   "use workflow";
   await processIndexerStep(jobData);
 }
+indexerWorkflow.schema = indexerInputSchema;

@@ -5,7 +5,7 @@ import { consola } from "@/lib/consola";
 import { triggerWorkflow } from "@/lib/jobs";
 import { getMetadataFromUri } from "@/lib/metadata";
 import { prisma } from "@/lib/prisma";
-import { indexerInputSchema, indexerWorkflow } from "..";
+import { indexerWorkflow } from "..";
 
 export const indexerIndexPostsSchema = z.object({
   action: z.literal("indexer-index-posts"),
@@ -235,22 +235,18 @@ export const executeIndexerIndexPostsJob = async (
       const rootTxId = rootTxTag?.value;
       const arweaveL1TxId = edge.node.bundledIn?.id;
 
-      await triggerWorkflow(
-        indexerWorkflow,
-        {
-          action: "indexer-publish-post",
-          data: {
-            txId,
-            arweaveL1TxId,
-            rootTxId,
-            blockHeight,
-            author: metadata.recoveredAddress,
-            uri,
-            createdAt,
-          },
+      await triggerWorkflow(indexerWorkflow, {
+        action: "indexer-publish-post",
+        data: {
+          txId,
+          arweaveL1TxId,
+          rootTxId,
+          blockHeight,
+          author: metadata.recoveredAddress,
+          uri,
+          createdAt,
         },
-        indexerInputSchema,
-      );
+      });
 
       toProcess++;
     }

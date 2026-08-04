@@ -4,17 +4,18 @@ import { getStepMetadata } from "workflow";
 import { start } from "workflow/api";
 import { consola } from "./consola";
 
+// oxlint-disable-next-line typescript/no-explicit-any
+export type WorkflowFn<T = any> = ((input: T) => Promise<any>) & {
+  schema?: z.ZodType<T>;
+};
+
 /**
- * Triggers a durable Vercel Workflow SDK workflow function with optional Zod schema validation.
+ * Triggers a durable Vercel Workflow SDK workflow function.
+ * Automatically validates input if `.schema` is attached to the workflow function.
  */
-export async function triggerWorkflow<T>(
-  // oxlint-disable-next-line typescript/no-explicit-any
-  workflowFn: (...args: any[]) => Promise<any>,
-  input: T,
-  schema?: z.ZodType<T>,
-) {
-  if (schema) {
-    schema.parse(input);
+export async function triggerWorkflow<T>(workflowFn: WorkflowFn<T>, input: T) {
+  if (workflowFn.schema) {
+    workflowFn.schema.parse(input);
   }
 
   consola.debug(`Triggering workflow ${workflowFn.name}`, { input });
