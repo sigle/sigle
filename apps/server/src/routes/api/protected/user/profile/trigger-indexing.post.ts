@@ -1,6 +1,7 @@
 import { defineRouteMeta } from "nitro";
 import { defineEventHandler } from "nitro/h3";
-import { indexerJob } from "@/jobs/indexer";
+import { indexerInputSchema, indexerWorkflow } from "@/jobs/indexer";
+import { triggerWorkflow } from "@/lib/jobs";
 
 defineRouteMeta({
   openAPI: {
@@ -25,10 +26,14 @@ defineRouteMeta({
 });
 
 export default defineEventHandler(async () => {
-  await indexerJob.emit({
-    action: "indexer-index-profiles",
-    data: {},
-  });
+  await triggerWorkflow(
+    indexerWorkflow,
+    {
+      action: "indexer-index-profiles",
+      data: {},
+    },
+    indexerInputSchema,
+  );
 
   return { success: true };
 });

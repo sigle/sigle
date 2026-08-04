@@ -52,15 +52,10 @@ vi.mock<typeof import("@/lib/metadata")>(import("@/lib/metadata"), () => ({
   verifyPostSignature: vi.fn(),
 }));
 
-vi.mock<typeof import("@/jobs/generate-image-blurhash")>(
-  import("@/jobs/generate-image-blurhash"),
-  () =>
-    ({
-      generateImageBlurhashJob: {
-        emit: vi.fn(),
-      },
-    }) as unknown as typeof import("@/jobs/generate-image-blurhash"),
-);
+vi.mock<typeof import("@/lib/jobs")>(import("@/lib/jobs"), () => ({
+  triggerWorkflow: vi.fn(),
+  withStepSentry: vi.fn((_name, fn) => fn()),
+}));
 
 const { default: handler } = await import("./upload-metadata.post");
 

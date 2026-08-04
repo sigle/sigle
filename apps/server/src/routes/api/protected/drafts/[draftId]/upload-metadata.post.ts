@@ -3,8 +3,12 @@ import { defineRouteMeta } from "nitro";
 import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
-import { generateImageBlurhashJob } from "@/jobs/generate-image-blurhash";
+import {
+  generateImageBlurhashSchema,
+  generateImageBlurhashWorkflow,
+} from "@/jobs/generate-image-blurhash";
 import { arweaveUploadFile } from "@/lib/arweave";
+import { triggerWorkflow } from "@/lib/jobs";
 import { verifyPostSignature } from "@/lib/metadata";
 import { readValidatedBodyZod } from "@/lib/nitro";
 import { prisma } from "@/lib/prisma";
@@ -327,9 +331,11 @@ export default defineEventHandler(async (event) => {
   });
 
   if (postData.content.coverImage) {
-    await generateImageBlurhashJob.emit({
-      imageId: postData.content.coverImage.url,
-    });
+    await triggerWorkflow(
+      generateImageBlurhashWorkflow,
+      { imageId: postData.content.coverImage.url },
+      generateImageBlurhashSchema,
+    );
   }
 
   event.context.$posthog.capture({

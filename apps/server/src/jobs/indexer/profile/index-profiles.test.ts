@@ -15,17 +15,10 @@ import { createTestUser } from "@/test/helpers";
 
 const mockEmit = vi.fn();
 
-// oxlint-disable-next-line consistent-type-imports
-vi.mock<typeof import("..")>(
-  import(".."),
-  () =>
-    ({
-      indexerJob: {
-        emit: (...args: unknown[]) => mockEmit(...args),
-      },
-      // oxlint-disable-next-line consistent-type-imports
-    }) as unknown as typeof import(".."),
-);
+vi.mock<typeof import("@/lib/jobs")>(import("@/lib/jobs"), () => ({
+  triggerWorkflow: vi.fn((_workflowFn, payload) => mockEmit(payload)),
+  withStepSentry: vi.fn((_name, fn) => fn()),
+}));
 
 const mockStacksApiClientGET = vi.fn();
 const mockGetStacksTransaction = vi.fn();

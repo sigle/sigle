@@ -1,10 +1,11 @@
 import { cvToJSON, hexToCV } from "@stacks/transactions";
 import { z } from "zod";
 import { consola } from "@/lib/consola";
+import { triggerWorkflow } from "@/lib/jobs";
 import { prisma } from "@/lib/prisma";
 import { sigleConfig } from "@/lib/sigle";
 import { getStacksTransaction, stacksApiClient } from "@/lib/stacks";
-import { indexerJob } from "..";
+import { indexerInputSchema, indexerWorkflow } from "..";
 
 export const indexerIndexProfilesSchema = z.object({
   action: z.literal("indexer-index-profiles"),
@@ -149,10 +150,14 @@ export const executeIndexerIndexProfilesJob = async (
   if (profiles.length > 0) {
     profiles.reverse();
     for (const profile of profiles) {
-      await indexerJob.emit({
-        action: "indexer-set-profile",
-        data: profile,
-      });
+      await triggerWorkflow(
+        indexerWorkflow,
+        {
+          action: "indexer-set-profile",
+          data: profile,
+        },
+        indexerInputSchema,
+      );
     }
   }
 
