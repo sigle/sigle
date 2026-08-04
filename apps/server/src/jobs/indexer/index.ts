@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { consola } from "@/lib/consola";
-import { defineJob } from "@/lib/jobs";
+import { defineWorkflow, withStepSentry } from "@/lib/jobs";
 import {
   executeIndexerInitMintDetailsJob,
   indexerInitMintDetailsSchema,
@@ -43,63 +43,60 @@ import {
   indexerSetProfileSchema,
 } from "./profile/set-profile";
 
-export const indexerJob = defineJob("indexer")
-  .input(
-    z.union([
-      indexerNewPostSchema,
-      indexerMintEnabledSchema,
-      indexerMintSchema,
-      indexerReduceSupplySchema,
-      indexerSetBaseTokenUriSchema,
-      indexerInitMintDetailsSchema,
-      indexerSetMintDetailsSchema,
+export const indexerInputSchema = z.union([
+  indexerNewPostSchema,
+  indexerMintEnabledSchema,
+  indexerMintSchema,
+  indexerReduceSupplySchema,
+  indexerSetBaseTokenUriSchema,
+  indexerInitMintDetailsSchema,
+  indexerSetMintDetailsSchema,
 
-      indexerSetProfileSchema,
-      indexerIndexPostsSchema,
-      indexerIndexProfilesSchema,
-      indexerPublishPostSchema,
-    ]),
-  )
-  .options({
-    priority: 100,
-  })
-  .work(async (jobs) => {
-    const job = jobs[0];
+  indexerSetProfileSchema,
+  indexerIndexPostsSchema,
+  indexerIndexProfilesSchema,
+  indexerPublishPostSchema,
+]);
 
-    switch (job.data.action) {
+export async function processIndexerStep(
+  jobData: z.infer<typeof indexerInputSchema>,
+) {
+  "use step";
+  return withStepSentry("processIndexerStep", async () => {
+    switch (jobData.action) {
       case "indexer-new-post":
-        await executeNewPostJob(job.data.data);
+        await executeNewPostJob(jobData.data);
         break;
       case "indexer-mint-enabled":
-        await executeIndexerMintEnabledJob(job.data.data);
+        await executeIndexerMintEnabledJob(jobData.data);
         break;
       case "indexer-mint":
-        await executeIndexerMintJob(job.data.data);
+        await executeIndexerMintJob(jobData.data);
         break;
       case "indexer-reduce-supply":
-        await executeIndexerReduceSupplyJob(job.data.data);
+        await executeIndexerReduceSupplyJob(jobData.data);
         break;
       case "indexer-set-base-token-uri":
-        await executeIndexerSetBaseTokenUriJob(job.data.data);
+        await executeIndexerSetBaseTokenUriJob(jobData.data);
         break;
       case "indexer-init-mint-details":
-        await executeIndexerInitMintDetailsJob(job.data.data);
+        await executeIndexerInitMintDetailsJob(jobData.data);
         break;
       case "indexer-set-mint-details":
-        await executeIndexerSetMintDetailsJob(job.data.data);
+        await executeIndexerSetMintDetailsJob(jobData.data);
         break;
 
       case "indexer-index-posts":
-        await executeIndexerIndexPostsJob(job.data.data);
+        await executeIndexerIndexPostsJob(jobData.data);
         break;
       case "indexer-publish-post":
-        await executePublishPostJob(job.data.data);
+        await executePublishPostJob(jobData.data);
         break;
       case "indexer-index-profiles":
-        await executeIndexerIndexProfilesJob(job.data.data);
+        await executeIndexerIndexProfilesJob(jobData.data);
         break;
       case "indexer-set-profile":
-        await executeIndexerSetProfileJob(job.data.data);
+        await executeIndexerSetProfileJob(jobData.data);
         break;
 
       default:
@@ -107,3 +104,12 @@ export const indexerJob = defineJob("indexer")
         break;
     }
   });
+}
+
+export const indexerWorkflow = defineWorkflow(
+  indexerInputSchema,
+  async (jobData: z.infer<typeof indexerInputSchema>) => {
+    "use workflow";
+    await processIndexerStep(jobData);
+  },
+);

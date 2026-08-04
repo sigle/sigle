@@ -14,14 +14,16 @@ import { createTestPost, createTestUser } from "@/test/helpers";
 
 const mockEmit = vi.fn();
 
-vi.mock<typeof import("../index")>(
-  import("../index"),
-  () =>
-    ({
-      indexerJob: {
-        emit: (...args: unknown[]) => mockEmit(...args),
-      },
-    }) as unknown as typeof import("../index"),
+vi.mock<typeof import("@/lib/jobs")>(
+  import("@/lib/jobs"),
+  async (importOriginal) => {
+    const actual = await importOriginal();
+    return {
+      ...actual,
+      triggerWorkflow: vi.fn((_workflowFn, payload) => mockEmit(payload)),
+      withStepSentry: vi.fn((_name, fn) => fn()),
+    };
+  },
 );
 
 vi.mock<typeof import("@/lib/metadata")>(

@@ -2,9 +2,10 @@ import { Result, TaggedError } from "better-result";
 import { z } from "zod";
 import { env } from "@/env";
 import { consola } from "@/lib/consola";
+import { triggerWorkflow } from "@/lib/jobs";
 import { getMetadataFromUri } from "@/lib/metadata";
 import { prisma } from "@/lib/prisma";
-import { indexerJob } from "..";
+import { indexerWorkflow } from "..";
 
 export const indexerIndexPostsSchema = z.object({
   action: z.literal("indexer-index-posts"),
@@ -234,7 +235,7 @@ export const executeIndexerIndexPostsJob = async (
       const rootTxId = rootTxTag?.value;
       const arweaveL1TxId = edge.node.bundledIn?.id;
 
-      await indexerJob.emit({
+      await triggerWorkflow(indexerWorkflow, {
         action: "indexer-publish-post",
         data: {
           txId,

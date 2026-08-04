@@ -2,24 +2,19 @@ import sharp from "sharp";
 import { z } from "zod";
 import { consola } from "@/lib/consola";
 import { generateBlurhash, resolveImageUrl } from "@/lib/images";
-import { defineJob } from "@/lib/jobs";
+import { defineWorkflow, withStepSentry } from "@/lib/jobs";
 import { prisma } from "@/lib/prisma";
 
-export const generateImageBlurhashJob = defineJob("generate-image-blurhash")
-  .input(
-    z.object({
-      imageId: z.string(),
-    }),
-  )
-  .options({
-    priority: 1,
-    retryLimit: 2,
-    retryDelay: 60000,
-  })
-  .work(async ([job]) => {
+export const generateImageBlurhashSchema = z.object({
+  imageId: z.string(),
+});
+
+export async function processImageBlurhashStep(imageId: string) {
+  "use step";
+  return withStepSentry("processImageBlurhashStep", async () => {
     const mediaImage = await prisma.mediaImage.findUnique({
       where: {
-        id: job.data.imageId,
+        id: imageId,
       },
     });
     if (!mediaImage) {
@@ -55,6 +50,15 @@ export const generateImageBlurhashJob = defineJob("generate-image-blurhash")
     });
 
     consola.debug("generate-image-blurhash", {
-      imageId: job.data.imageId,
+      imageId,
     });
   });
+}
+
+export const generateImageBlurhashWorkflow = defineWorkflow(
+  generateImageBlurhashSchema,
+  async (data: z.infer<typeof generateImageBlurhashSchema>) => {
+    "use workflow";
+    await processImageBlurhashStep(data.imageId);
+  },
+);

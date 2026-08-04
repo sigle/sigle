@@ -3,9 +3,10 @@ import { z } from "zod";
 import { env } from "@/env";
 import { minifyClarity } from "@/lib/clarity";
 import { consola } from "@/lib/consola";
+import { triggerWorkflow } from "@/lib/jobs";
 import { prisma } from "@/lib/prisma";
 import { sigleClient } from "@/lib/sigle";
-import { generateImageBlurhashJob } from "../../generate-image-blurhash";
+import { generateImageBlurhashWorkflow } from "../../generate-image-blurhash";
 
 function extractBaseTokenUri(contractString: string): string | null {
   const regex =
@@ -254,7 +255,7 @@ export const executeNewPostJob = async (
 
   // Process cover image if there is one
   if (metadata.coverImage) {
-    await generateImageBlurhashJob.emit({
+    await triggerWorkflow(generateImageBlurhashWorkflow, {
       imageId: metadata.coverImage.url,
     });
   }

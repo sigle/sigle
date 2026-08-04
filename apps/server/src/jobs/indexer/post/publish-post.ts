@@ -1,9 +1,10 @@
 import { matchError } from "better-result";
 import { z } from "zod";
 import { consola } from "@/lib/consola";
+import { triggerWorkflow } from "@/lib/jobs";
 import { getMetadataFromUri } from "@/lib/metadata";
 import { prisma } from "@/lib/prisma";
-import { generateImageBlurhashJob } from "../../generate-image-blurhash";
+import { generateImageBlurhashWorkflow } from "../../generate-image-blurhash";
 
 export const indexerPublishPostSchema = z.object({
   action: z.literal("indexer-publish-post"),
@@ -227,7 +228,7 @@ export const executePublishPostJob = async (
   });
 
   if (shouldProcessImage && metadata.coverImage) {
-    await generateImageBlurhashJob.emit({
+    await triggerWorkflow(generateImageBlurhashWorkflow, {
       imageId: metadata.coverImage.url,
     });
   }
