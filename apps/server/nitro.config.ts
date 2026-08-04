@@ -1,6 +1,7 @@
 import { defineNitroConfig } from "nitro/config";
 
 export default defineNitroConfig({
+  modules: ["@workflow/nitro"],
   serverDir: "src",
   imports: false,
   openAPI: {

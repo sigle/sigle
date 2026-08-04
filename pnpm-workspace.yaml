@@ -3,8 +3,10 @@ allowBuilds:
   "@prisma/engines": true
   "@reown/appkit": false
   "@sentry/cli": false
+  "@swc/core": true
   "bigint-buffer": false
   "bufferutil": false
+  cbor-extract: true
   "core-js": false
   "esbuild": false
   "keccak": false

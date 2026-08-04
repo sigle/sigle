@@ -43,67 +43,73 @@ import {
   indexerSetProfileSchema,
 } from "./profile/set-profile";
 
+const indexerInputSchema = z.union([
+  indexerNewPostSchema,
+  indexerMintEnabledSchema,
+  indexerMintSchema,
+  indexerReduceSupplySchema,
+  indexerSetBaseTokenUriSchema,
+  indexerInitMintDetailsSchema,
+  indexerSetMintDetailsSchema,
+
+  indexerSetProfileSchema,
+  indexerIndexPostsSchema,
+  indexerIndexProfilesSchema,
+  indexerPublishPostSchema,
+]);
+
+export async function processIndexerStep(
+  jobData: z.infer<typeof indexerInputSchema>,
+) {
+  "use step";
+  switch (jobData.action) {
+    case "indexer-new-post":
+      await executeNewPostJob(jobData.data);
+      break;
+    case "indexer-mint-enabled":
+      await executeIndexerMintEnabledJob(jobData.data);
+      break;
+    case "indexer-mint":
+      await executeIndexerMintJob(jobData.data);
+      break;
+    case "indexer-reduce-supply":
+      await executeIndexerReduceSupplyJob(jobData.data);
+      break;
+    case "indexer-set-base-token-uri":
+      await executeIndexerSetBaseTokenUriJob(jobData.data);
+      break;
+    case "indexer-init-mint-details":
+      await executeIndexerInitMintDetailsJob(jobData.data);
+      break;
+    case "indexer-set-mint-details":
+      await executeIndexerSetMintDetailsJob(jobData.data);
+      break;
+
+    case "indexer-index-posts":
+      await executeIndexerIndexPostsJob(jobData.data);
+      break;
+    case "indexer-publish-post":
+      await executePublishPostJob(jobData.data);
+      break;
+    case "indexer-index-profiles":
+      await executeIndexerIndexProfilesJob(jobData.data);
+      break;
+    case "indexer-set-profile":
+      await executeIndexerSetProfileJob(jobData.data);
+      break;
+
+    default:
+      consola.error("Unknown action");
+      break;
+  }
+}
+
+// oxlint-disable-next-line typescript/no-explicit-any
+export async function indexerWorkflow(jobData: any) {
+  "use workflow";
+  await processIndexerStep(jobData);
+}
+
 export const indexerJob = defineJob("indexer")
-  .input(
-    z.union([
-      indexerNewPostSchema,
-      indexerMintEnabledSchema,
-      indexerMintSchema,
-      indexerReduceSupplySchema,
-      indexerSetBaseTokenUriSchema,
-      indexerInitMintDetailsSchema,
-      indexerSetMintDetailsSchema,
-
-      indexerSetProfileSchema,
-      indexerIndexPostsSchema,
-      indexerIndexProfilesSchema,
-      indexerPublishPostSchema,
-    ]),
-  )
-  .options({
-    priority: 100,
-  })
-  .work(async (jobs) => {
-    const job = jobs[0];
-
-    switch (job.data.action) {
-      case "indexer-new-post":
-        await executeNewPostJob(job.data.data);
-        break;
-      case "indexer-mint-enabled":
-        await executeIndexerMintEnabledJob(job.data.data);
-        break;
-      case "indexer-mint":
-        await executeIndexerMintJob(job.data.data);
-        break;
-      case "indexer-reduce-supply":
-        await executeIndexerReduceSupplyJob(job.data.data);
-        break;
-      case "indexer-set-base-token-uri":
-        await executeIndexerSetBaseTokenUriJob(job.data.data);
-        break;
-      case "indexer-init-mint-details":
-        await executeIndexerInitMintDetailsJob(job.data.data);
-        break;
-      case "indexer-set-mint-details":
-        await executeIndexerSetMintDetailsJob(job.data.data);
-        break;
-
-      case "indexer-index-posts":
-        await executeIndexerIndexPostsJob(job.data.data);
-        break;
-      case "indexer-publish-post":
-        await executePublishPostJob(job.data.data);
-        break;
-      case "indexer-index-profiles":
-        await executeIndexerIndexProfilesJob(job.data.data);
-        break;
-      case "indexer-set-profile":
-        await executeIndexerSetProfileJob(job.data.data);
-        break;
-
-      default:
-        consola.error("Unknown action");
-        break;
-    }
-  });
+  .input(indexerInputSchema)
+  .work(indexerWorkflow);
