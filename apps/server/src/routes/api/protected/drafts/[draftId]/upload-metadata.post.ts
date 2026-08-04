@@ -4,6 +4,7 @@ import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
 import { generateImageBlurhashJob } from "@/jobs/generate-image-blurhash";
+import { opentimestampsStampJob } from "@/jobs/opentimestamps-stamp";
 import { arweaveUploadFile } from "@/lib/arweave";
 import { verifyPostSignature } from "@/lib/metadata";
 import { readValidatedBodyZod } from "@/lib/nitro";
@@ -331,6 +332,11 @@ export default defineEventHandler(async (event) => {
       imageId: postData.content.coverImage.url,
     });
   }
+
+  await opentimestampsStampJob.emit({
+    postId: targetPostId,
+    txId: id,
+  });
 
   event.context.$posthog.capture({
     distinctId: event.context.user.id,
