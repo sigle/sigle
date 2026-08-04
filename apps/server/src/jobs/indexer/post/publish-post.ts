@@ -10,6 +10,7 @@ export const indexerPublishPostSchema = z.object({
   action: z.literal("indexer-publish-post"),
   data: z.object({
     txId: z.string(),
+    arweaveL1TxId: z.string().optional(),
     rootTxId: z.string().optional(),
     blockHeight: z.number(),
     author: z.string(),
@@ -124,6 +125,7 @@ export const executePublishPostJob = async (
           },
           data: {
             txId: data.txId,
+            arweaveL1TxId: data.arweaveL1TxId ?? null,
             version: metadata.version,
             blockHeight: data.blockHeight,
             signature: metadata.signature,
@@ -150,6 +152,7 @@ export const executePublishPostJob = async (
           data: {
             id: targetPostId,
             txId: data.txId,
+            arweaveL1TxId: data.arweaveL1TxId ?? null,
             version: metadata.version,
             blockHeight: data.blockHeight,
             signature: metadata.signature,
@@ -176,10 +179,13 @@ export const executePublishPostJob = async (
           txId: data.txId,
         },
       },
-      update: {},
+      update: {
+        ...(data.arweaveL1TxId ? { arweaveL1TxId: data.arweaveL1TxId } : {}),
+      },
       create: {
         postId: targetPostId,
         txId: data.txId,
+        arweaveL1TxId: data.arweaveL1TxId ?? null,
         createdAt: new Date(data.createdAt),
       },
     });

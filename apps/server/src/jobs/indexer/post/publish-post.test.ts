@@ -89,6 +89,7 @@ describe("executePublishPostJob", () => {
 
     await executePublishPostJob({
       txId: "tx-1",
+      arweaveL1TxId: "l1-tx-1",
       blockHeight: 100,
       author: userId,
       uri: "ar://tx-1",
@@ -102,6 +103,7 @@ describe("executePublishPostJob", () => {
     expect(post).toMatchObject({
       id: "tx-1",
       txId: "tx-1",
+      arweaveL1TxId: "l1-tx-1",
       title: "Initial Post Title",
       revisionsCount: 1,
     });
@@ -113,6 +115,7 @@ describe("executePublishPostJob", () => {
     expect(revisions?.[0]).toMatchObject({
       postId: "tx-1",
       txId: "tx-1",
+      arweaveL1TxId: "l1-tx-1",
     });
   });
 

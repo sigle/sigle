@@ -50,6 +50,7 @@ export const SELECT_PUBLIC_POST_FIELDS = {
   tags: true,
   canonicalUri: true,
   txId: true,
+  arweaveL1TxId: true,
   blockHeight: true,
   metadataUri: true,
   revisionsCount: true,

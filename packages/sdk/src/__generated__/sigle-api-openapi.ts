@@ -1270,6 +1270,7 @@ export interface components {
       tags?: string[];
       canonicalUri?: string;
       txId: string;
+      arweaveL1TxId?: string;
       blockHeight: number;
       revisionsCount?: number;
       collectorsCount?: number;

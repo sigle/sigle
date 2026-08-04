@@ -148,11 +148,12 @@ model Draft {
 }
 
 model Post {
-  id          String @id @map("id")
-  version     String @map("version")
-  txId        String @unique @map("tx_id")
-  blockHeight Int    @map("block_height")
-  metadataUri String @map("metadata_uri")
+  id            String  @id @map("id")
+  version       String  @map("version")
+  txId          String  @unique @map("tx_id")
+  arweaveL1TxId String? @map("arweave_l1_tx_id")
+  blockHeight   Int     @map("block_height")
+  metadataUri   String  @map("metadata_uri")
 
   // Metadata fields
   title           String      @map("title")
@@ -190,6 +191,7 @@ model PostRevision {
   postId String   @map("post_id")
   post   Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   txId   String   @map("tx_id")
+  arweaveL1TxId String? @map("arweave_l1_tx_id")
   ots    PostOts?
 
   @@unique([postId, txId])
@@ -294,4 +296,3 @@ model PostOts {
   @@index([status])
   @@map("post_ots")
 }
-

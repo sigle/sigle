@@ -168,6 +168,58 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                   </div>
                 </div>
 
+                {post.arweaveL1TxId ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-xs font-medium tracking-wider text-muted-foreground uppercase">
+                      <IconDatabase size={14} />
+                      <span>Arweave L1 Block Proof</span>
+                    </div>
+                    <div className="flex items-center justify-between rounded-lg bg-secondary/50 px-3 py-2.5">
+                      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
+                        <span className="text-xs text-muted-foreground">
+                          L1 Transaction ID
+                        </span>
+                        {/* oxlint-disable-next-line better-tailwindcss/enforce-consistent-line-wrapping */}
+                        <span className="truncate font-mono text-sm text-foreground">
+                          {truncateId(post.arweaveL1TxId, 12, 8)}
+                        </span>
+                      </div>
+                      <div className="ml-3 flex items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="size-8 p-0 text-muted-foreground hover:text-foreground"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            copyToClipboard(post.arweaveL1TxId!);
+                          }}
+                        >
+                          <IconCopy size={14} />
+                        </Button>
+                        <Button
+                          nativeButton={false}
+                          variant="ghost"
+                          size="sm"
+                          className="size-8 p-0 text-muted-foreground hover:text-foreground"
+                          render={
+                            <a
+                              href={`https://viewblock.io/arweave/tx/${post.arweaveL1TxId}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                            />
+                          }
+                        >
+                          <IconExternalLink size={14} />
+                          <span className="sr-only">
+                            View on Viewblock (Arweave L1)
+                          </span>
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ) : null}
+
                 {/* Stacks Transaction */}
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-xs font-medium tracking-wider text-muted-foreground uppercase">
