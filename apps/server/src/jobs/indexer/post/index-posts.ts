@@ -21,6 +21,9 @@ export interface ArweavePostEdge {
   cursor: string;
   node: {
     id: string;
+    bundledIn?: {
+      id: string;
+    } | null;
     tags?: Array<{
       name: string;
       value: string;
@@ -64,6 +67,9 @@ export async function fetchArweavePostTransactions({
           cursor
           node {
             id
+            bundledIn {
+              id
+            }
             tags {
               name
               value
@@ -226,11 +232,13 @@ export const executeIndexerIndexPostsJob = async (
 
       const rootTxTag = edge.node.tags?.find((t) => t.name === "Root-TX");
       const rootTxId = rootTxTag?.value;
+      const arweaveL1TxId = edge.node.bundledIn?.id;
 
       await indexerJob.emit({
         action: "indexer-publish-post",
         data: {
           txId,
+          arweaveL1TxId,
           rootTxId,
           blockHeight,
           author: metadata.recoveredAddress,
