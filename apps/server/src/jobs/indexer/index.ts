@@ -35,6 +35,10 @@ import {
   indexerSetBaseTokenUriSchema,
 } from "./post/set-base-token-uri";
 import {
+  executeIndexerSyncArweaveL1TxIdsJob,
+  indexerSyncArweaveL1TxIdsSchema,
+} from "./post/sync-arweave-l1-tx-ids";
+import {
   executeIndexerIndexProfilesJob,
   indexerIndexProfilesSchema,
 } from "./profile/index-profiles";
@@ -58,6 +62,7 @@ export const indexerJob = defineJob("indexer")
       indexerIndexPostsSchema,
       indexerIndexProfilesSchema,
       indexerPublishPostSchema,
+      indexerSyncArweaveL1TxIdsSchema,
     ]),
   )
   .options({
@@ -94,6 +99,9 @@ export const indexerJob = defineJob("indexer")
         break;
       case "indexer-publish-post":
         await executePublishPostJob(job.data.data);
+        break;
+      case "indexer-sync-arweave-l1-tx-ids":
+        await executeIndexerSyncArweaveL1TxIdsJob(job.data.data);
         break;
       case "indexer-index-profiles":
         await executeIndexerIndexProfilesJob(job.data.data);
