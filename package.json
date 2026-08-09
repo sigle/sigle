@@ -10,14 +10,14 @@
     "version": "pnpm changeset version && pnpm install --lockfile-only"
   },
   "devDependencies": {
-    "@changesets/cli": "2.31.0",
+    "@changesets/cli": "2.31.1",
     "syncpack": "15.3.2",
-    "turbo": "2.10.5",
+    "turbo": "2.10.9",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },
   "engines": {
     "node": ">=24"
   },
-  "packageManager": "pnpm@11.13.1"
+  "packageManager": "pnpm@11.20.0"
 }
