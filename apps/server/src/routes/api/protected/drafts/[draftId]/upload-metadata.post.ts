@@ -179,7 +179,8 @@ export default defineEventHandler(async (event) => {
   }
 
   const uploadResult = await arweaveUploadFile(event, {
-    metadata: parsedMetadata.data,
+    file: Buffer.from(JSON.stringify(parsedMetadata.data)),
+    contentType: "application/json",
     tags,
   });
 

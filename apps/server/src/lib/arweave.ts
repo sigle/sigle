@@ -9,6 +9,8 @@ const turboClient = TurboFactory.authenticated({
   token: "solana",
 });
 
+export type ArweaveContentType = "application/json";
+
 interface ArweaveTag {
   name: string;
   value: string;
@@ -24,21 +26,22 @@ export class ArweaveUploadFailedError extends TaggedError(
 export const arweaveUploadFile = async (
   event: H3Event,
   {
-    metadata,
+    file,
+    contentType,
     tags = [],
   }: {
-    metadata: object;
+    file: Buffer;
+    contentType: ArweaveContentType;
     tags?: ArweaveTag[];
   },
 ): Promise<Result<{ id: string }, ArweaveUploadFailedError>> => {
-  const file = Buffer.from(JSON.stringify(metadata));
   const fileSize = file.byteLength;
   const cid = await createCIDv1FromBuffer(file);
 
   const arweaveTags: ArweaveTag[] = [
     {
-      name: "content-type",
-      value: "application/json",
+      name: "Content-Type",
+      value: contentType,
     },
     {
       name: "App-Name",
@@ -64,7 +67,8 @@ export const arweaveUploadFile = async (
       const sentryId = event.context.$sentry.captureException(error, {
         level: "error",
         extra: {
-          metadata,
+          contentType,
+          tags: arweaveTags,
         },
       });
       return new ArweaveUploadFailedError({ cause: error, sentryId });
