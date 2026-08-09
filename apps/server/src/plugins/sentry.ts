@@ -5,6 +5,7 @@ import { HTTPError } from "nitro/h3";
 import { env } from "@/env";
 
 const ignoreErrors = [
+  400, // Bad Request
   401, // Unauthorized
   404, // Not Found
   422, // Unprocessable Entity
