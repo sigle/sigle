@@ -50,11 +50,20 @@ cd packages/sdk && pnpm test -- test-file.spec.ts
 ### Docker Development
 
 ```bash
-# Start all services with hot reload
-docker compose up --build --watch
+# Start backend & database with hot reload
+pnpm docker:dev
 
-# Reset database
-docker exec $(docker container ls -q -f "name=sigle-server") pnpm prisma migrate reset
+# Start full stack (server + sigle + custom-domain)
+pnpm docker:dev:full
+
+# Reset database (one-off server container)
+pnpm db:reset
+
+# Create Prisma migration (one-off server container)
+pnpm db:migrate --name <migration-name>
+
+# Open Prisma Studio GUI
+pnpm db:studio
 ```
 
 ## Code Style Guidelines
