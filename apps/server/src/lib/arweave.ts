@@ -40,7 +40,7 @@ export const arweaveUploadFile = async (
 
   const arweaveTags: ArweaveTag[] = [
     {
-      name: "content-type",
+      name: "Content-Type",
       value: contentType,
     },
     {
