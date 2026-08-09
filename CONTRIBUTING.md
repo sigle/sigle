@@ -6,7 +6,7 @@ We're open to all community contributions! This includes bug reports, feature re
 
 - [Node](https://nodejs.org/en/) 24+
 - [pnpm](https://pnpm.io/) 10+
-- [Docker](https://www.docker.com/)
+- [Docker](https://www.docker.com/) (Docker Compose 2.22.0+)
 
 ## Pull Requests
 
@@ -41,50 +41,73 @@ Now you can run the following command to install the dependencies:
 pnpm install
 ```
 
-To start the project in development/watch mode run:
+To start the database and backend server in development/watch mode:
 
 ```sh
-docker compose up --build --watch
+pnpm docker:dev
 ```
 
-This will start the databases and the applications services. You can now open your browser and go to http://localhost:3000 to see the app.
+To run the complete full-stack environment in Docker (including Next.js apps):
+
+```sh
+pnpm docker:dev:full
+```
+
+Alternatively, to run only PostgreSQL in Docker while developing apps locally:
+
+```sh
+pnpm db:up
+```
 
 ### Docker services
 
-| Name                 | Link                  |
-| -------------------- | --------------------- |
-| @sigle/app           | http://localhost:3000 |
-| @sigle/server        | http://localhost:3001 |
-| @sigle/custom-domain | http://localhost:3002 |
+| Name                 | Link                  | Profile |
+| -------------------- | --------------------- | ------- |
+| @sigle/server        | http://localhost:3001 | Default |
+| @sigle/sigle         | http://localhost:3000 | `full`  |
+| @sigle/custom-domain | http://localhost:3002 | `full`  |
+| Prisma Studio        | http://localhost:5555 | `tools` |
 
 ### Seed the database (optional)
 
-To apply the schemas and seed the database with some data, run the following command in the `apps/server` directory:
+To apply schemas and seed the database using a one-off server container, run:
 
 ```sh
-docker exec $(docker container ls --all | grep -w sigle-server | awk '{print $1}') pnpm prisma migrate reset
+pnpm db:reset
+```
+
+Or run directly via Docker Compose:
+
+```sh
+docker compose run --rm --build server pnpm prisma migrate reset --force
 ```
 
 ### Create prisma migration
 
-To create a new prisma migration, run the following command in the `apps/server` directory:
+To create a new Prisma migration using a one-off server container:
 
 ```sh
-docker exec $(docker container ls --all | grep -w sigle-server | awk '{print $1}') pnpm prisma migrate dev --name <migration-name>
+pnpm db:migrate --name <migration-name>
+```
+
+Or run directly via Docker Compose:
+
+```sh
+docker compose run --rm --build server pnpm prisma migrate dev --name <migration-name>
 ```
 
 ### Update the e2e tests snapshots
 
-To update the e2e tests snapshots, run the following command in the sigle directory:
+To update the e2e tests snapshots, run the following command from the root directory:
 
 ```sh
-docker build -t local-playwright-docker --file Dockerfile.e2e ../../
-docker run -v "./e2e:/app/apps/sigle/e2e" -it local-playwright-docker:latest
+docker build -t local-playwright-docker --file apps/sigle/Dockerfile.dev .
+docker run -v "./apps/sigle/e2e:/app/apps/sigle/e2e" -it local-playwright-docker:latest
 ```
 
-To update the custom domain e2e tests snapshots, run the following command in the apps/custom-domain directory:
+To update the custom domain e2e tests snapshots:
 
 ```sh
-docker build -t local-custom-domain-playwright-docker --file Dockerfile.e2e ../../
-docker run -v "./e2e:/app/apps/custom-domain/e2e" -it local-custom-domain-playwright-docker:latest
+docker build -t local-playwright-docker --file apps/custom-domain/Dockerfile.dev .
+docker run -v "./apps/custom-domain/e2e:/app/apps/custom-domain/e2e" -it local-playwright-docker:latest
 ```
