@@ -136,7 +136,7 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
       postId: "arweave-tx-draft",
       arweaveId: "arweave-tx-draft",
     });
-    expect(arweaveUploadFile).toHaveBeenCalledWith(mockEvent, {
+    expect(arweaveUploadFile).toHaveBeenCalledWith({
       file: Buffer.from(JSON.stringify(mockMetadata)),
       contentType: "application/json",
       tags: [{ name: "Author", value: userId }],
@@ -216,7 +216,7 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
     });
 
     // Verify Root-TX tag was included
-    expect(arweaveUploadFile).toHaveBeenCalledWith(mockEvent, {
+    expect(arweaveUploadFile).toHaveBeenCalledWith({
       file: Buffer.from(JSON.stringify(editedMetadata)),
       contentType: "application/json",
       tags: [

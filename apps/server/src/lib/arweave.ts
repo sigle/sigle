@@ -1,6 +1,6 @@
 import { TurboFactory } from "@ardrive/turbo-sdk";
+import * as Sentry from "@sentry/node";
 import { Result, TaggedError } from "better-result";
-import { type H3Event } from "nitro/h3";
 import { env } from "@/env";
 import { createCIDv1FromBuffer } from "./ipfs";
 
@@ -23,18 +23,15 @@ export class ArweaveUploadFailedError extends TaggedError(
   sentryId: string;
 }>() {}
 
-export const arweaveUploadFile = async (
-  event: H3Event,
-  {
-    file,
-    contentType,
-    tags = [],
-  }: {
-    file: Buffer;
-    contentType: ArweaveContentType;
-    tags?: ArweaveTag[];
-  },
-): Promise<Result<{ id: string }, ArweaveUploadFailedError>> => {
+export const arweaveUploadFile = async ({
+  file,
+  contentType,
+  tags = [],
+}: {
+  file: Buffer;
+  contentType: ArweaveContentType;
+  tags?: ArweaveTag[];
+}): Promise<Result<{ id: string }, ArweaveUploadFailedError>> => {
   const fileSize = file.byteLength;
   const cid = await createCIDv1FromBuffer(file);
 
@@ -64,7 +61,7 @@ export const arweaveUploadFile = async (
       return { id: uploadResult.id };
     },
     catch: (error) => {
-      const sentryId = event.context.$sentry.captureException(error, {
+      const sentryId = Sentry.captureException(error, {
         level: "error",
         extra: {
           contentType,
