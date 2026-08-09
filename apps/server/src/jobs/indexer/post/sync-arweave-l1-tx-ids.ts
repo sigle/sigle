@@ -59,36 +59,44 @@ export async function fetchArweaveL1TxIds(
 
   return Result.tryPromise({
     try: async () => {
-      const response = await fetch(`${env.ARWEAVE_GATEWAY_URL}/graphql`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ query }),
-      });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      try {
+        const response = await fetch(`${env.ARWEAVE_GATEWAY_URL}/graphql`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ query }),
+          signal: controller.signal,
+        });
 
-      const result = (await response.json()) as ArweaveL1GraphQLResponse;
-      if (result.errors && result.errors.length > 0) {
-        throw new Error(
-          `GraphQL error: ${result.errors.map((e) => e.message).join(", ")}`,
-        );
-      }
-
-      const edges = result.data?.transactions?.edges ?? [];
-      const mapping: Record<string, string> = {};
-
-      for (const edge of edges) {
-        const l1TxId = edge.node.bundledIn?.id;
-        if (l1TxId) {
-          mapping[edge.node.id] = l1TxId;
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-      }
 
-      return mapping;
+        const result = (await response.json()) as ArweaveL1GraphQLResponse;
+        if (result.errors && result.errors.length > 0) {
+          throw new Error(
+            `GraphQL error: ${result.errors.map((e) => e.message).join(", ")}`,
+          );
+        }
+
+        const edges = result.data?.transactions?.edges ?? [];
+        const mapping: Record<string, string> = {};
+
+        for (const edge of edges) {
+          const l1TxId = edge.node.bundledIn?.id;
+          if (l1TxId) {
+            mapping[edge.node.id] = l1TxId;
+          }
+        }
+
+        return mapping;
+      } finally {
+        clearTimeout(timeoutId);
+      }
     },
     catch: (error) => {
       const errorMessage =
@@ -114,14 +122,19 @@ export const executeIndexerSyncArweaveL1TxIdsJob = async (
   });
 
   const txIdsSet = new Set<string>();
-  for (const p of postsWithoutL1) {
-    txIdsSet.add(p.txId);
-  }
-  for (const r of revisionsWithoutL1) {
-    txIdsSet.add(r.txId);
+  const maxLen = Math.max(postsWithoutL1.length, revisionsWithoutL1.length);
+  for (let i = 0; i < maxLen; i++) {
+    if (i < postsWithoutL1.length) {
+      txIdsSet.add(postsWithoutL1[i].txId);
+      if (txIdsSet.size >= 100) break;
+    }
+    if (i < revisionsWithoutL1.length) {
+      txIdsSet.add(revisionsWithoutL1[i].txId);
+      if (txIdsSet.size >= 100) break;
+    }
   }
 
-  const txIds = Array.from(txIdsSet).slice(0, 100);
+  const txIds = Array.from(txIdsSet);
 
   if (txIds.length === 0) {
     consola.debug("No posts or revisions missing arweaveL1TxId found");

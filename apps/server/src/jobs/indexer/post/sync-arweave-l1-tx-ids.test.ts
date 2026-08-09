@@ -171,5 +171,79 @@ describe("sync-arweave-l1-tx-ids", () => {
 
       expect(mockFetch).not.toHaveBeenCalled();
     });
+
+    it("includes revision in batch when 100 unmapped posts and 1 mappable revision exist", async () => {
+      await createTestUser({ id: userId });
+
+      const postCreates = [];
+      for (let i = 0; i < 100; i++) {
+        postCreates.push({
+          id: `unmapped-post-${i}`,
+          txId: `unmapped-post-tx-${i}`,
+          version: "1.0.0",
+          blockHeight: 100,
+          title: `Post ${i}`,
+          content: "Content",
+          excerpt: "Excerpt",
+          metadataUri: `ar://unmapped-post-tx-${i}`,
+          userId,
+        });
+      }
+      await testDb?.db.post.createMany({ data: postCreates });
+
+      const hostPost = await createTestPost({
+        id: "host-post-for-revision",
+        txId: "host-post-tx",
+        userId,
+      });
+      await testDb?.db.post.update({
+        where: { id: hostPost.id },
+        data: { arweaveL1TxId: "host-l1-id" },
+      });
+
+      const revisionTxId = "unmapped-revision-tx-1";
+      await testDb?.db.postRevision.create({
+        data: {
+          postId: hostPost.id,
+          txId: revisionTxId,
+        },
+      });
+
+      const mockFetch = vi.fn((_url, options) => {
+        const bodyStr = (options as RequestInit | undefined)?.body as string;
+        expect(bodyStr).toContain(revisionTxId);
+
+        return Promise.resolve(
+          new Response(
+            JSON.stringify({
+              data: {
+                transactions: {
+                  edges: [
+                    {
+                      node: {
+                        id: revisionTxId,
+                        bundledIn: { id: "l1-revision-tx-1" },
+                      },
+                    },
+                  ],
+                },
+              },
+            }),
+            {
+              status: 200,
+              headers: { "Content-Type": "application/json" },
+            },
+          ),
+        );
+      });
+      vi.stubGlobal("fetch", mockFetch);
+
+      await executeIndexerSyncArweaveL1TxIdsJob({});
+
+      const updatedRevision = await testDb?.db.postRevision.findFirst({
+        where: { txId: revisionTxId },
+      });
+      expect(updatedRevision?.arweaveL1TxId).toBe("l1-revision-tx-1");
+    });
   });
 });
