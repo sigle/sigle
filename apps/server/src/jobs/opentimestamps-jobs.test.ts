@@ -7,7 +7,7 @@ import {
   it,
   vi,
 } from "vite-plus/test";
-import { arweaveUploadRawFile } from "@/lib/arweave";
+import { arweaveUploadFile } from "@/lib/arweave";
 import {
   BITCOIN_ATTESTATION_TAG,
   buildOtsFileBuffer,
@@ -22,7 +22,7 @@ vi.mock<typeof import("@/lib/arweave")>(
   import("@/lib/arweave"),
   () =>
     ({
-      arweaveUploadRawFile: vi.fn(),
+      arweaveUploadFile: vi.fn(),
     }) as unknown as typeof import("@/lib/arweave"),
 );
 
@@ -152,7 +152,7 @@ describe("openTimestamps jobs", () => {
     );
     vi.stubGlobal("fetch", mockFetch);
 
-    vi.mocked(arweaveUploadRawFile).mockResolvedValue({
+    vi.mocked(arweaveUploadFile).mockResolvedValue({
       isOk: () => true,
       isErr: () => false,
       value: { id: "ots-arweave-tx-123" },

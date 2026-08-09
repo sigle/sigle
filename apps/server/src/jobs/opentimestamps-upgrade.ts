@@ -1,6 +1,5 @@
 import { z } from "zod";
-import { env } from "@/env";
-import { arweaveUploadRawFile } from "@/lib/arweave";
+import { arweaveUploadFile } from "@/lib/arweave";
 import { consola } from "@/lib/consola";
 import { defineJob } from "@/lib/jobs";
 import { upgradeOtsProof } from "@/lib/opentimestamps";
@@ -67,16 +66,14 @@ export const opentimestampsUpgradeJob = defineJob("opentimestamps-upgrade")
 
     // Proof upgraded! Upload .ots file to Arweave
     const tags = [
-      { name: "content-type", value: "application/vnd.opentimestamps.ots" },
-      { name: "Content-Type", value: "application/vnd.opentimestamps.ots" },
       { name: "Original-Tx", value: txId },
       { name: "Root-TX", value: txId },
-      { name: "App-Name", value: env.APP_ID },
       { name: "Type", value: "opentimestamps" },
     ];
 
-    const arweaveResult = await arweaveUploadRawFile({
+    const arweaveResult = await arweaveUploadFile(undefined, {
       file: proof,
+      contentType: "application/vnd.opentimestamps.ots",
       tags,
     });
 
