@@ -3,7 +3,7 @@ FROM node:${NODE_VERSION}-alpine AS base
 
 WORKDIR /app
 
-ENV APP_NAME="server"
+ENV APP_NAME="custom-domain"
 
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME/bin:$PATH"
@@ -13,24 +13,20 @@ RUN corepack enable pnpm
 RUN TURBO_VERSION=$(grep -o '"turbo": "[^"]*' package.json | cut -d'"' -f4) && \
     pnpm install turbo@${TURBO_VERSION} --global
 RUN pnpm install @dotenvx/dotenvx@^2 --global
-RUN apk update; \
-    apk add --no-cache openssl;
 
 # --- Turbo stage ---
 
 FROM base AS builder
-# Set working directory
 WORKDIR /app
 COPY . .
 RUN turbo prune @sigle/$APP_NAME --docker
 
 # --- Build stage ---
 
-# Add lockfile and package.json's of isolated subworkspace
 FROM base AS installer
 WORKDIR /app
 
-# First install dependencies (as they change less often)
+# First install dependencies
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
@@ -38,9 +34,8 @@ COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 RUN npm pkg delete scripts.prepare
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
-# Build the project and its dependencies
+# Copy full sources
 COPY --from=builder /app/out/full/ .
-# Copy contracts source to avoid cyclic dependency
 COPY --from=builder /app/apps/contracts ./apps/contracts
 COPY --from=builder /app/apps/contracts-next ./apps/contracts-next
 COPY ./apps/$APP_NAME/.env.development* ./apps/$APP_NAME/
@@ -48,6 +43,4 @@ COPY turbo.json turbo.json
 
 WORKDIR /app/apps/$APP_NAME
 
-RUN pnpm db:generate
-
-CMD pnpm prisma migrate deploy && turbo run dev
+CMD turbo run dev
