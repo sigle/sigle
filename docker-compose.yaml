@@ -39,6 +39,9 @@ services:
           action: rebuild
         - path: ./apps/server/prisma
           action: rebuild
+        - path: ./apps/server/.env.development
+          target: /app/apps/server/.env.development
+          action: sync+restart
         - path: ./apps/server/.env.development.local
           target: /app/apps/server/.env.development.local
           action: sync+restart
@@ -47,6 +50,12 @@ services:
           action: sync
         - path: ./packages/
           target: /app/packages
+          action: sync
+        - path: ./apps/contracts/
+          target: /app/apps/contracts
+          action: sync
+        - path: ./apps/contracts-next/
+          target: /app/apps/contracts-next
           action: sync
     depends_on:
       postgres:
@@ -80,6 +89,12 @@ services:
         - path: ./packages/
           target: /app/packages
           action: sync
+        - path: ./apps/contracts/
+          target: /app/apps/contracts
+          action: sync
+        - path: ./apps/contracts-next/
+          target: /app/apps/contracts-next
+          action: sync
     depends_on:
       - server
     networks:
@@ -111,6 +126,12 @@ services:
         - path: ./packages/
           target: /app/packages
           action: sync
+        - path: ./apps/contracts/
+          target: /app/apps/contracts
+          action: sync
+        - path: ./apps/contracts-next/
+          target: /app/apps/contracts-next
+          action: sync
     depends_on:
       - server
     networks:
@@ -123,6 +144,7 @@ services:
     build:
       context: ./
       dockerfile: ./apps/server/Dockerfile.dev
+    user: node
     ports:
       - "5555:5555"
     environment:

@@ -6,7 +6,7 @@ We're open to all community contributions! This includes bug reports, feature re
 
 - [Node](https://nodejs.org/en/) 24+
 - [pnpm](https://pnpm.io/) 10+
-- [Docker](https://www.docker.com/)
+- [Docker](https://www.docker.com/) (Docker Compose 2.22.0+)
 
 ## Pull Requests
 
@@ -64,24 +64,36 @@ pnpm db:up
 | Name                 | Link                  | Profile |
 | -------------------- | --------------------- | ------- |
 | @sigle/server        | http://localhost:3001 | Default |
-| @sigle/app           | http://localhost:3000 | `full`  |
+| @sigle/sigle         | http://localhost:3000 | `full`  |
 | @sigle/custom-domain | http://localhost:3002 | `full`  |
 | Prisma Studio        | http://localhost:5555 | `tools` |
 
 ### Seed the database (optional)
 
-To apply schemas and seed the database, run:
+To apply schemas and seed the database using a one-off server container, run:
 
 ```sh
 pnpm db:reset
 ```
 
+Or run directly via Docker Compose:
+
+```sh
+docker compose run --rm --build server pnpm prisma migrate reset --force
+```
+
 ### Create prisma migration
 
-To create a new Prisma migration:
+To create a new Prisma migration using a one-off server container:
 
 ```sh
 pnpm db:migrate --name <migration-name>
+```
+
+Or run directly via Docker Compose:
+
+```sh
+docker compose run --rm --build server pnpm prisma migrate dev --name <migration-name>
 ```
 
 ### Update the e2e tests snapshots
@@ -89,13 +101,13 @@ pnpm db:migrate --name <migration-name>
 To update the e2e tests snapshots, run the following command from the root directory:
 
 ```sh
-docker build -t local-playwright-docker --file Dockerfile.e2e .
+docker build -t local-playwright-docker --file apps/sigle/Dockerfile.dev .
 docker run -v "./apps/sigle/e2e:/app/apps/sigle/e2e" -it local-playwright-docker:latest
 ```
 
 To update the custom domain e2e tests snapshots:
 
 ```sh
-docker build -t local-playwright-docker --file Dockerfile.e2e .
+docker build -t local-playwright-docker --file apps/custom-domain/Dockerfile.dev .
 docker run -v "./apps/custom-domain/e2e:/app/apps/custom-domain/e2e" -it local-playwright-docker:latest
 ```

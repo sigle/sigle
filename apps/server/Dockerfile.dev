@@ -50,4 +50,7 @@ WORKDIR /app/apps/$APP_NAME
 
 RUN pnpm db:generate
 
+RUN chown -R node:node /app
+USER node
+
 CMD pnpm prisma migrate deploy && turbo run dev

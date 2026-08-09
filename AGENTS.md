@@ -56,8 +56,11 @@ pnpm docker:dev
 # Start full stack (server + sigle + custom-domain)
 pnpm docker:dev:full
 
-# Reset database
+# Reset database (one-off server container)
 pnpm db:reset
+
+# Create Prisma migration (one-off server container)
+pnpm db:migrate --name <migration-name>
 
 # Open Prisma Studio GUI
 pnpm db:studio

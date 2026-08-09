@@ -43,4 +43,7 @@ COPY turbo.json turbo.json
 
 WORKDIR /app/apps/$APP_NAME
 
+RUN chown -R node:node /app
+USER node
+
 CMD turbo run dev
