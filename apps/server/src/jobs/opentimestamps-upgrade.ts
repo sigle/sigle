@@ -71,7 +71,7 @@ export const opentimestampsUpgradeJob = defineJob("opentimestamps-upgrade")
       { name: "Type", value: "opentimestamps" },
     ];
 
-    const arweaveResult = await arweaveUploadFile(undefined, {
+    const arweaveResult = await arweaveUploadFile({
       file: proof,
       contentType: "application/vnd.opentimestamps.ots",
       tags,
