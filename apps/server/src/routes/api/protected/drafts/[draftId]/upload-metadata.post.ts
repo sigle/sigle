@@ -1,4 +1,4 @@
-import { PostMetadataSchema } from "@sigle/sdk";
+import { PostMetadataSchema, verifyPostSignature } from "@sigle/sdk";
 import { defineRouteMeta } from "nitro";
 import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
@@ -6,7 +6,6 @@ import { fromError } from "zod-validation-error";
 import { env } from "@/env";
 import { generateImageBlurhashJob } from "@/jobs/generate-image-blurhash";
 import { arweaveUploadFile } from "@/lib/arweave";
-import { verifyPostSignature } from "@/lib/metadata";
 import { readValidatedBodyZod } from "@/lib/nitro";
 import { prisma } from "@/lib/prisma";
 import { isUserWhitelisted } from "@/lib/users";

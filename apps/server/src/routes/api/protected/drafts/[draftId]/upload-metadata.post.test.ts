@@ -1,4 +1,5 @@
 import type { H3Event } from "nitro/h3";
+import { verifyPostSignature } from "@sigle/sdk";
 import { Result } from "better-result";
 import {
   afterAll,
@@ -10,7 +11,6 @@ import {
   vi,
 } from "vite-plus/test";
 import { arweaveUploadFile } from "@/lib/arweave";
-import { verifyPostSignature } from "@/lib/metadata";
 import { createTestDatabase, type TestDatabase } from "@/test/database";
 import {
   createTestDraft,
@@ -48,9 +48,13 @@ vi.mock<typeof import("@/lib/arweave")>(import("@/lib/arweave"), () => ({
   arweaveUploadFile: vi.fn(),
 }));
 
-vi.mock<typeof import("@/lib/metadata")>(import("@/lib/metadata"), () => ({
-  verifyPostSignature: vi.fn(),
-}));
+vi.mock<typeof import("@sigle/sdk")>(import("@sigle/sdk"), async () => {
+  const actual = await vi.importActual("@sigle/sdk");
+  return {
+    ...actual,
+    verifyPostSignature: vi.fn(),
+  };
+});
 
 vi.mock<typeof import("@/jobs/generate-image-blurhash")>(
   import("@/jobs/generate-image-blurhash"),
