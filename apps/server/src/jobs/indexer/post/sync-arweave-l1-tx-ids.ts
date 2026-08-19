@@ -13,7 +13,7 @@ export class FetchArweaveL1TxIdsFailedError extends TaggedError(
   "FetchArweaveL1TxIdsFailedError",
 )<{
   error: string;
-}>() {}
+}> {}
 
 interface ArweaveL1GraphQLResponse {
   errors?: Array<{ message: string }>;

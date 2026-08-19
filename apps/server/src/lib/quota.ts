@@ -6,7 +6,7 @@ import { prisma } from "./prisma";
 export class QuotaExceededError extends TaggedError("QuotaExceededError")<{
   message: string;
   type: "daily" | "total";
-}>() {}
+}> {}
 
 /**
  * Verifies that a user has not exceeded their daily

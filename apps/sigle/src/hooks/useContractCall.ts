@@ -5,7 +5,9 @@ import { useCallback, useState } from "react";
 
 export class TransactionUserRejectedError extends TaggedError(
   "TransactionUserRejectedError",
-)() {
+)<{
+  message: string;
+}> {
   constructor() {
     super({ message: "User rejected the request" });
   }
@@ -13,7 +15,7 @@ export class TransactionUserRejectedError extends TaggedError(
 
 export class ContractCallError extends TaggedError("ContractCallError")<{
   message: string;
-}>() {}
+}> {}
 
 interface UseContractCallOptions {
   onSuccess?: (data: { txId: string }) => void;

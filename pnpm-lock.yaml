@@ -243,8 +243,8 @@ importers:
         specifier: 1.5.5
         version: 1.5.5(@prisma/client@7.9.1(prisma@7.9.1(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@18.3.1))(react@18.3.1)(typescript@6.0.3))(typescript@6.0.3))(mongodb@7.1.0)(mysql2@3.15.3)(next@16.3.0(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@25.6.2)(react-dom@19.2.8(react@18.3.1))(react@18.3.1))(pg@8.20.0)(prisma@7.9.1(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@18.3.1))(react@18.3.1)(typescript@6.0.3))(react-dom@19.2.8(react@18.3.1))(react@18.3.1)(vitest@4.1.10)
       better-result:
-        specifier: 2.7.0
-        version: 2.7.0
+        specifier: 3.0.1
+        version: 3.0.1
       blurhash:
         specifier: 2.0.5
         version: 2.0.5
@@ -436,8 +436,8 @@ importers:
         specifier: 1.5.5
         version: 1.5.5(@prisma/client@7.9.1(prisma@7.9.1(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(typescript@6.0.3))(mongodb@7.1.0)(mysql2@3.15.3)(next@16.3.0(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(react-dom@19.2.8(react@19.2.8))(react@19.2.8))(pg@8.20.0)(prisma@7.9.1(@types/react-dom@19.2.4(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(typescript@6.0.3))(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(vitest@4.1.10)
       better-result:
-        specifier: 2.7.0
-        version: 2.7.0
+        specifier: 3.0.1
+        version: 3.0.1
       blurhash:
         specifier: 2.0.5
         version: 2.0.5
@@ -6076,6 +6076,9 @@ packages:
   better-result@2.7.0:
     resolution: {integrity: sha512-7zrmXjAK8u8Z6SOe4R65XObOR5X+Y2I/VVku3t5cPOGQ8/WsBcfFmfnIPiEl5EBMDOzPHRwbiPbMtQBKYdw7RA==}
     hasBin: true
+
+  better-result@3.0.1:
+    resolution: {integrity: sha512-rnCeqEXkKPHmz5MO5ZroPRDyHe4YvlNPyy7qj8cVcWs/GnvSvC3086G74/220W+wWcIWlXgzvcjskFV0A4blUQ==}
 
   big.js@6.2.2:
     resolution: {integrity: sha512-y/ie+Faknx7sZA5MfGA2xKlu0GDv8RWrXGsmlteyJQ2lvoKv9GBK/fpRMc2qlSoBAgNxrixICFCBefIq8WCQpQ==}
@@ -19363,6 +19366,8 @@ snapshots:
   better-result@2.7.0:
     dependencies:
       '@clack/prompts': 0.11.0
+
+  better-result@3.0.1: {}
 
   big.js@6.2.2: {}
 

@@ -20,7 +20,7 @@ export class IpfsUploadFailedError extends TaggedError(
 )<{
   message: string;
   sentryId?: string;
-}>() {}
+}> {}
 
 export const ipfsUploadFile = async (
   event: H3Event,

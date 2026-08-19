@@ -23,7 +23,7 @@ export class ImageOptimizationFailedError extends TaggedError(
   "ImageOptimizationFailedError",
 )<{
   cause: unknown;
-}>() {}
+}> {}
 
 export async function optimizeImage({
   buffer,
@@ -77,7 +77,7 @@ export class BlurhashGenerationFailedError extends TaggedError(
   "BlurhashGenerationFailedError",
 )<{
   cause: unknown;
-}>() {}
+}> {}
 
 export async function generateBlurhash({
   buffer,
