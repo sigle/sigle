@@ -3,6 +3,7 @@ import { defineRouteMeta } from "nitro";
 import { HTTPError, defineEventHandler, getRouterParam } from "nitro/h3";
 import { z } from "zod";
 import { fromError } from "zod-validation-error";
+import { env } from "@/env";
 import { generateImageBlurhashJob } from "@/jobs/generate-image-blurhash";
 import { arweaveUploadFile } from "@/lib/arweave";
 import { verifyPostSignature } from "@/lib/metadata";
@@ -105,7 +106,9 @@ export default defineEventHandler(async (event) => {
   }
 
   // Verify that the signature is valid and resolves to the logged-in user's Stacks address
-  const signatureResult = verifyPostSignature(parsedMetadata.data);
+  const signatureResult = verifyPostSignature(parsedMetadata.data, {
+    network: env.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
+  });
   if (signatureResult.isErr()) {
     throw new HTTPError({
       status: 400,
