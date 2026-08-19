@@ -21,7 +21,7 @@ export class ArweaveUploadFailedError extends TaggedError(
 )<{
   cause: unknown;
   sentryId: string;
-}>() {}
+}> {}
 
 export const arweaveUploadFile = async ({
   file,

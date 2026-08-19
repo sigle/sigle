@@ -28,7 +28,7 @@
     "@stacks/transactions": "7.3.1",
     "@t3-oss/env-core": "0.13.11",
     "better-auth": "1.5.5",
-    "better-result": "2.7.0",
+    "better-result": "3.0.1",
     "blurhash": "2.0.5",
     "consola": "3.4.2",
     "multiformats": "13.4.2",

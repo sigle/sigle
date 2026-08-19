@@ -15,7 +15,7 @@ export class FetchArweaveTransactionsFailedError extends TaggedError(
   "FetchArweaveTransactionsFailedError",
 )<{
   error: string;
-}>() {}
+}> {}
 
 export interface ArweavePostEdge {
   cursor: string;
