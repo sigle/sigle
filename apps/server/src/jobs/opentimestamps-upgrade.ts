@@ -1,9 +1,12 @@
-import { UpgradeError } from "@otskit/client";
+import { matchError } from "better-result";
 import { z } from "zod";
 import { arweaveUploadFile } from "@/lib/arweave";
 import { consola } from "@/lib/consola";
 import { defineJob } from "@/lib/jobs";
-import { openTimestampsClient } from "@/lib/opentimestamps";
+import {
+  OtsProofNotAnchoredError,
+  upgradeOtsProof,
+} from "@/lib/opentimestamps";
 import { prisma } from "@/lib/prisma";
 
 export const opentimestampsUpgradeJob = defineJob("opentimestamps-upgrade")
@@ -35,36 +38,46 @@ export const opentimestampsUpgradeJob = defineJob("opentimestamps-upgrade")
     if (!postOts.pendingProof) {
       throw new Error(`Missing pending proof for txId ${txId}`);
     }
-    const pendingProof = Buffer.from(postOts.pendingProof);
 
-    const upgradePendingProof = async (): Promise<Buffer> => {
-      try {
-        return await openTimestampsClient.upgrade(pendingProof);
-      } catch (error) {
-        await prisma.postOts.update({
-          where: { postTxId: txId },
-          data: {
-            attempts: { increment: 1 },
-            lastAttempt: new Date(),
+    const upgradeResult = await upgradeOtsProof(postOts.pendingProof);
+
+    if (upgradeResult.isErr()) {
+      await prisma.postOts.update({
+        where: { postTxId: txId },
+        data: {
+          attempts: { increment: 1 },
+          lastAttempt: new Date(),
+        },
+      });
+
+      const message = matchError(upgradeResult.error, {
+        OtsProofNotAnchoredError: () =>
+          "OTS proof not yet anchored in Bitcoin block",
+        OtsInvalidProofError: (error) =>
+          `Stored OTS pending proof is invalid: ${error.message}`,
+        OtsUpgradeFailedError: (error) =>
+          `Failed to upgrade OTS proof: ${error.message}`,
+      });
+
+      if (upgradeResult.error instanceof OtsProofNotAnchoredError) {
+        consola.debug(
+          "OTS proof not yet anchored in Bitcoin block, will retry",
+          {
+            txId,
+            attempts: postOts.attempts + 1,
           },
+        );
+      } else {
+        consola.error("OTS proof upgrade attempt failed", {
+          txId,
+          error: upgradeResult.error,
         });
-        if (error instanceof UpgradeError) {
-          consola.debug(
-            "OTS proof not yet anchored in Bitcoin block, will retry",
-            {
-              txId,
-              attempts: postOts.attempts + 1,
-            },
-          );
-          throw new Error("OTS proof not yet anchored in Bitcoin block", {
-            cause: error,
-          });
-        }
-        throw error;
       }
-    };
 
-    const proof = await upgradePendingProof();
+      throw new Error(message, { cause: upgradeResult.error });
+    }
+
+    const proof = upgradeResult.value;
 
     // Proof upgraded! Upload .ots file to Arweave
     const tags = [

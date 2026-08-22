@@ -1,4 +1,9 @@
-import { UpgradeError } from "@otskit/client";
+import {
+  NetworkError,
+  StampError,
+  UpgradeError,
+  ValidationError,
+} from "@otskit/client";
 import {
   afterAll,
   beforeAll,
@@ -40,6 +45,62 @@ vi.mock<typeof import("@/lib/arweave")>(
     }) as unknown as typeof import("@/lib/arweave"),
 );
 
+async function seedPost(suffix: string): Promise<{
+  postId: string;
+  txId: string;
+}> {
+  const postId = `test-post-${suffix}-${Date.now()}`;
+  const txId = `test-tx-${suffix}-${Date.now()}`;
+
+  await prisma.user.create({
+    data: { id: `test-user-${suffix}` },
+  });
+
+  await prisma.post.create({
+    data: {
+      id: postId,
+      txId,
+      version: "1.0",
+      blockHeight: 0,
+      metadataUri: `ar://${txId}`,
+      title: `Test ${suffix} Post`,
+      content: "Content",
+      excerpt: "Excerpt",
+      tags: [],
+      userId: `test-user-${suffix}`,
+    },
+  });
+
+  await prisma.postRevision.create({
+    data: { postId, txId },
+  });
+
+  return { postId, txId };
+}
+
+async function seedPendingPostOts(
+  postId: string,
+  txId: string,
+  pendingProof: Uint8Array,
+) {
+  await prisma.postOts.create({
+    data: {
+      postId,
+      postTxId: txId,
+      status: "PENDING",
+      pendingProof: new Uint8Array(pendingProof),
+    },
+  });
+}
+
+function buildJobHandler(
+  job: typeof opentimestampsStampJob | typeof opentimestampsUpgradeJob,
+  name: string,
+  data: { postId: string; txId: string },
+) {
+  return job.build().handler([{ id: name, name, data } as any]);
+}
+
 describe("openTimestamps jobs", () => {
   let testDb: TestDatabase | undefined = undefined;
 
@@ -58,54 +119,24 @@ describe("openTimestamps jobs", () => {
   });
 
   it("opentimestampsStampJob stamps content and creates PostOts record", async () => {
-    const postId = `test-post-${Date.now()}`;
-    const txId = `test-tx-${Date.now()}`;
-
-    await prisma.user.create({
-      data: { id: "test-user-ots" },
-    });
-
-    await prisma.post.create({
-      data: {
-        id: postId,
-        txId,
-        version: "1.0",
-        blockHeight: 0,
-        metadataUri: `ar://${txId}`,
-        title: "Test OTS Post",
-        content: "Content for OTS test",
-        excerpt: "Excerpt",
-        tags: ["ots"],
-        userId: "test-user-ots",
-      },
-    });
-
-    await prisma.postRevision.create({
-      data: {
-        postId,
-        txId,
-      },
-    });
+    const { postId, txId } = await seedPost("ots");
 
     const mockPendingProof = Buffer.from([0x01, 0x02]);
     otsClientMocks.stamp.mockResolvedValue(mockPendingProof);
 
     const mockFetch = vi.fn(() =>
       Promise.resolve(
-        new Response("Content for OTS test", {
+        new Response("Content", {
           status: 200,
         }),
       ),
     );
     vi.stubGlobal("fetch", mockFetch);
 
-    await opentimestampsStampJob.build().handler([
-      {
-        id: "job-1",
-        name: "opentimestamps-stamp",
-        data: { postId, txId },
-      } as any,
-    ]);
+    await buildJobHandler(opentimestampsStampJob, "opentimestamps-stamp", {
+      postId,
+      txId,
+    });
 
     const createdPostOts = await prisma.postOts.findUnique({
       where: { postTxId: txId },
@@ -121,44 +152,49 @@ describe("openTimestamps jobs", () => {
     vi.unstubAllGlobals();
   });
 
-  it("opentimestampsUpgradeJob uploads upgraded OTS proof to Arweave and updates status", async () => {
-    const postId = `test-post-upgrade-${Date.now()}`;
-    const txId = `test-tx-upgrade-${Date.now()}`;
+  it("opentimestampsStampJob does not create PostOts record when calendars reject the submission", async () => {
+    const { postId, txId } = await seedPost("stamp-failed");
 
-    await prisma.user.create({
-      data: { id: "test-user-upgrade" },
-    });
+    otsClientMocks.stamp.mockRejectedValue(
+      new StampError(
+        "Insufficient successful submissions (0/2 required)",
+        [],
+        [
+          {
+            calendar: "https://a.btc.calendar.opentimestamps.org",
+            error: new Error("HTTP 500"),
+          },
+        ],
+      ),
+    );
 
-    await prisma.post.create({
-      data: {
-        id: postId,
+    const mockFetch = vi.fn(() =>
+      Promise.resolve(new Response("Content", { status: 200 })),
+    );
+    vi.stubGlobal("fetch", mockFetch);
+
+    await expect(
+      buildJobHandler(opentimestampsStampJob, "opentimestamps-stamp", {
+        postId,
         txId,
-        version: "1.0",
-        blockHeight: 0,
-        metadataUri: `ar://${txId}`,
-        title: "Test Upgrade Post",
-        content: "Content",
-        excerpt: "Excerpt",
-        tags: [],
-        userId: "test-user-upgrade",
-      },
-    });
+      }),
+    ).rejects.toThrow("Failed to stamp post metadata with OpenTimestamps");
 
-    await prisma.postRevision.create({
-      data: { postId, txId },
+    const createdPostOts = await prisma.postOts.findUnique({
+      where: { postTxId: txId },
     });
+    expect(createdPostOts).toBeNull();
+
+    vi.unstubAllGlobals();
+  });
+
+  it("opentimestampsUpgradeJob uploads upgraded OTS proof to Arweave and updates status", async () => {
+    const { postId, txId } = await seedPost("upgrade");
 
     const pendingProof = Buffer.from([0x01, 0x02]);
     const upgradedProof = Buffer.concat([pendingProof, Buffer.from([0xff])]);
 
-    await prisma.postOts.create({
-      data: {
-        postId,
-        postTxId: txId,
-        status: "PENDING",
-        pendingProof,
-      },
-    });
+    await seedPendingPostOts(postId, txId, pendingProof);
 
     otsClientMocks.upgrade.mockResolvedValue(upgradedProof);
 
@@ -168,13 +204,10 @@ describe("openTimestamps jobs", () => {
       value: { id: "ots-arweave-tx-123" },
     } as any);
 
-    await opentimestampsUpgradeJob.build().handler([
-      {
-        id: "job-2",
-        name: "opentimestamps-upgrade",
-        data: { postId, txId },
-      } as any,
-    ]);
+    await buildJobHandler(opentimestampsUpgradeJob, "opentimestamps-upgrade", {
+      postId,
+      txId,
+    });
 
     const updatedPostOts = await prisma.postOts.findUnique({
       where: { postTxId: txId },
@@ -188,53 +221,19 @@ describe("openTimestamps jobs", () => {
   });
 
   it("opentimestampsUpgradeJob increments attempts when Bitcoin has not confirmed yet", async () => {
-    const postId = `test-post-pending-${Date.now()}`;
-    const txId = `test-tx-pending-${Date.now()}`;
+    const { postId, txId } = await seedPost("pending");
 
-    await prisma.user.create({
-      data: { id: "test-user-pending" },
-    });
-
-    await prisma.post.create({
-      data: {
-        id: postId,
-        txId,
-        version: "1.0",
-        blockHeight: 0,
-        metadataUri: `ar://${txId}`,
-        title: "Test Pending Post",
-        content: "Content",
-        excerpt: "Excerpt",
-        tags: [],
-        userId: "test-user-pending",
-      },
-    });
-
-    await prisma.postRevision.create({
-      data: { postId, txId },
-    });
-
-    await prisma.postOts.create({
-      data: {
-        postId,
-        postTxId: txId,
-        status: "PENDING",
-        pendingProof: Buffer.from([0x01]),
-      },
-    });
+    await seedPendingPostOts(postId, txId, Buffer.from([0x01]));
 
     otsClientMocks.upgrade.mockRejectedValue(
       new UpgradeError("No calendar has confirmed the timestamp yet"),
     );
 
     await expect(
-      opentimestampsUpgradeJob.build().handler([
-        {
-          id: "job-3",
-          name: "opentimestamps-upgrade",
-          data: { postId, txId },
-        } as any,
-      ]),
+      buildJobHandler(opentimestampsUpgradeJob, "opentimestamps-upgrade", {
+        postId,
+        txId,
+      }),
     ).rejects.toThrow("OTS proof not yet anchored in Bitcoin block");
 
     const updatedPostOts = await prisma.postOts.findUnique({
@@ -244,6 +243,58 @@ describe("openTimestamps jobs", () => {
     expect(updatedPostOts?.status).toBe("PENDING");
     expect(updatedPostOts?.attempts).toBe(1);
     expect(updatedPostOts?.lastAttempt).not.toBeNull();
+
+    vi.unstubAllGlobals();
+  });
+
+  it("opentimestampsUpgradeJob increments attempts when the stored proof is invalid", async () => {
+    const { postId, txId } = await seedPost("invalid-proof");
+
+    await seedPendingPostOts(postId, txId, Buffer.from([0x01]));
+
+    otsClientMocks.upgrade.mockRejectedValue(
+      new ValidationError("Invalid .ots proof format"),
+    );
+
+    await expect(
+      buildJobHandler(opentimestampsUpgradeJob, "opentimestamps-upgrade", {
+        postId,
+        txId,
+      }),
+    ).rejects.toThrow("Stored OTS pending proof is invalid");
+
+    const updatedPostOts = await prisma.postOts.findUnique({
+      where: { postTxId: txId },
+    });
+
+    expect(updatedPostOts?.status).toBe("PENDING");
+    expect(updatedPostOts?.attempts).toBe(1);
+
+    vi.unstubAllGlobals();
+  });
+
+  it("opentimestampsUpgradeJob increments attempts when calendar queries fail", async () => {
+    const { postId, txId } = await seedPost("network-error");
+
+    await seedPendingPostOts(postId, txId, Buffer.from([0x01]));
+
+    otsClientMocks.upgrade.mockRejectedValue(
+      new NetworkError("All retries exhausted", { status: 503 }),
+    );
+
+    await expect(
+      buildJobHandler(opentimestampsUpgradeJob, "opentimestamps-upgrade", {
+        postId,
+        txId,
+      }),
+    ).rejects.toThrow("Failed to upgrade OTS proof");
+
+    const updatedPostOts = await prisma.postOts.findUnique({
+      where: { postTxId: txId },
+    });
+
+    expect(updatedPostOts?.status).toBe("PENDING");
+    expect(updatedPostOts?.attempts).toBe(1);
 
     vi.unstubAllGlobals();
   });

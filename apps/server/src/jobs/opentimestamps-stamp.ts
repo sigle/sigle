@@ -1,9 +1,8 @@
-import { hashBuffer } from "@otskit/client";
 import { z } from "zod";
 import { env } from "@/env";
 import { consola } from "@/lib/consola";
 import { defineJob } from "@/lib/jobs";
-import { openTimestampsClient } from "@/lib/opentimestamps";
+import { stampContent } from "@/lib/opentimestamps";
 import { prisma } from "@/lib/prisma";
 import { opentimestampsUpgradeJob } from "./opentimestamps-upgrade";
 
@@ -30,20 +29,19 @@ export const opentimestampsStampJob = defineJob("opentimestamps-stamp")
     }
     const contentBuffer = Buffer.from(await response.arrayBuffer());
 
-    const contentHash = hashBuffer(contentBuffer);
-
-    const pendingProof = await openTimestampsClient
-      .stamp(contentHash)
-      .catch((error) => {
-        consola.error("Failed to stamp post metadata with OpenTimestamps", {
-          postId,
-          txId,
-          error,
-        });
-        throw error;
+    const stampResult = await stampContent(contentBuffer);
+    if (stampResult.isErr()) {
+      consola.error("Failed to stamp post metadata with OpenTimestamps", {
+        postId,
+        txId,
+        error: stampResult.error,
       });
+      throw new Error("Failed to stamp post metadata with OpenTimestamps", {
+        cause: stampResult.error,
+      });
+    }
 
-    const pendingProofBytes = new Uint8Array(pendingProof);
+    const pendingProof = new Uint8Array(stampResult.value);
 
     await prisma.postOts.upsert({
       where: {
@@ -51,7 +49,7 @@ export const opentimestampsStampJob = defineJob("opentimestamps-stamp")
       },
       update: {
         status: "PENDING",
-        pendingProof: pendingProofBytes,
+        pendingProof,
         attempts: 0,
         lastAttempt: new Date(),
       },
@@ -59,7 +57,7 @@ export const opentimestampsStampJob = defineJob("opentimestamps-stamp")
         postId,
         postTxId: txId,
         status: "PENDING",
-        pendingProof: pendingProofBytes,
+        pendingProof,
         attempts: 0,
         lastAttempt: new Date(),
       },
