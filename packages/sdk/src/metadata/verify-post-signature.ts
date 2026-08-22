@@ -45,13 +45,7 @@ export function verifyPostSignature(
       stacksSignature.data,
     );
 
-    const network = options?.network ?? "mainnet";
-    const stacksNetwork =
-      network === "testnet" || network === "devnet" || network === "mocknet"
-        ? "testnet"
-        : "mainnet";
-
-    const recoveredAddress = publicKeyToAddress(publicKey, stacksNetwork);
+    const recoveredAddress = publicKeyToAddress(publicKey, options?.network);
 
     const isSignatureValid = verifyMessageSignatureRsv({
       signature,
