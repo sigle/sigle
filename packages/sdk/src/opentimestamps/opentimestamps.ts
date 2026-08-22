@@ -1,3 +1,4 @@
+import { bytesToHex } from "@stacks/common";
 import { Result } from "better-result";
 import {
   BITCOIN_ATTESTATION_TAG,
@@ -14,19 +15,24 @@ import {
 import {
   calculateSha256,
   normalizeDataInput,
+  sanitizeAgendaUrls,
   uint8ArrayConcat,
   uint8ArrayEquals,
   uint8ArrayIncludes,
 } from "./utils.js";
 
+export type OtsSubmissionStrategy = "sequential" | "concurrent";
+
 export interface OtsStampOptions {
   agendas?: string[];
   timeoutMs?: number;
+  strategy?: OtsSubmissionStrategy;
 }
 
 export interface OtsUpgradeOptions {
   agendas?: string[];
   timeoutMs?: number;
+  strategy?: OtsSubmissionStrategy;
 }
 
 export interface OtsUpgradeResult {
@@ -38,6 +44,37 @@ export interface OtsVerifyResult {
   hash: Uint8Array;
   upgraded: boolean;
   verified: boolean;
+}
+
+export interface OtsProofInfo {
+  hash: Uint8Array;
+  hashHex: string;
+  isUpgraded: boolean;
+  hasBitcoinAttestation: boolean;
+  rawLength: number;
+  opsLength: number;
+}
+
+export interface OtsClientConfig {
+  agendas?: string[];
+  timeoutMs?: number;
+  strategy?: OtsSubmissionStrategy;
+}
+
+export interface OtsClient {
+  stamp(
+    data: Uint8Array | string,
+    options?: OtsStampOptions,
+  ): Promise<Result<Uint8Array, OtsStampFailedError>>;
+  upgrade(
+    pendingProof: Uint8Array,
+    options?: OtsUpgradeOptions,
+  ): Promise<Result<OtsUpgradeResult, OtsUpgradeFailedError>>;
+  verify(
+    proof: Uint8Array,
+    expectedDataOrHash?: Uint8Array | string,
+  ): Result<OtsVerifyResult, OtsParseError | OtsVerifyError>;
+  getInfo(proof: Uint8Array): Result<OtsProofInfo, OtsParseError>;
 }
 
 /**
@@ -95,6 +132,30 @@ export function parseOtsFileBuffer(
   return Result.ok({ hash, ops });
 }
 
+/**
+ * Inspects an OTS proof and extracts structured metadata without network calls.
+ */
+export function getProofInfo(
+  proof: Uint8Array,
+): Result<OtsProofInfo, OtsParseError> {
+  const parseResult = parseOtsFileBuffer(proof);
+  if (parseResult.isErr()) {
+    return parseResult;
+  }
+
+  const { hash, ops } = parseResult.value;
+  const isUpgraded = isOtsProofUpgraded(proof);
+
+  return Result.ok({
+    hash,
+    hashHex: bytesToHex(hash),
+    isUpgraded,
+    hasBitcoinAttestation: isUpgraded,
+    rawLength: proof.length,
+    opsLength: ops.length,
+  });
+}
+
 async function submitDigestToAgenda(
   agendaUrl: string,
   hash: Uint8Array,
@@ -104,7 +165,7 @@ async function submitDigestToAgenda(
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetch(`${agendaUrl.replace(/\/$/, "")}/digest`, {
+    const response = await fetch(`${agendaUrl}/digest`, {
       method: "POST",
       headers: {
         "Content-Type": "application/octet-stream",
@@ -141,7 +202,7 @@ async function submitTimestampToAgenda(
   const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetch(`${agendaUrl.replace(/\/$/, "")}/timestamp`, {
+    const response = await fetch(`${agendaUrl}/timestamp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/octet-stream",
@@ -168,38 +229,68 @@ async function submitTimestampToAgenda(
 }
 
 /**
- * Submits raw data or string hash to OpenTimestamps agenda servers with sequential fallback.
+ * Submits raw data or string hash to OpenTimestamps agenda servers with sequential or concurrent strategy.
  */
 export async function stampWithFallback(
   data: Uint8Array | string,
   agendasOrOptions?: string[] | OtsStampOptions,
   fetchTimeoutMs = 8000,
 ): Promise<Result<Uint8Array, OtsStampFailedError>> {
-  let agendas = DEFAULT_OTS_AGENDAS;
+  let rawAgendas = DEFAULT_OTS_AGENDAS;
   let timeoutMs = fetchTimeoutMs;
+  let strategy: OtsSubmissionStrategy = "sequential";
 
   if (Array.isArray(agendasOrOptions)) {
-    agendas = agendasOrOptions;
+    rawAgendas = agendasOrOptions;
   } else if (agendasOrOptions && typeof agendasOrOptions === "object") {
-    if (agendasOrOptions.agendas) agendas = agendasOrOptions.agendas;
+    if (agendasOrOptions.agendas) rawAgendas = agendasOrOptions.agendas;
     if (agendasOrOptions.timeoutMs !== undefined)
       timeoutMs = agendasOrOptions.timeoutMs;
+    if (agendasOrOptions.strategy) strategy = agendasOrOptions.strategy;
+  }
+
+  const agendas = sanitizeAgendaUrls(rawAgendas);
+  if (agendas.length === 0) {
+    return Result.err(
+      new OtsStampFailedError({
+        message: "No valid OpenTimestamps agenda URLs provided",
+      }),
+    );
   }
 
   const hash = calculateSha256(data);
   let lastError: unknown = undefined;
 
-  for (const agendaUrl of agendas) {
-    const { ops, error } = await submitDigestToAgenda(
-      agendaUrl,
-      hash,
-      timeoutMs,
+  if (strategy === "concurrent") {
+    const promises = agendas.map((agendaUrl) =>
+      submitDigestToAgenda(agendaUrl, hash, timeoutMs),
     );
-    if (ops) {
-      return Result.ok(buildOtsFileBuffer(hash, ops));
+    const results = await Promise.allSettled(promises);
+    for (let i = 0; i < results.length; i += 1) {
+      const res = results[i];
+      if (res.status === "fulfilled" && res.value.ops) {
+        return Result.ok(buildOtsFileBuffer(hash, res.value.ops));
+      }
+      if (res.status === "fulfilled" && res.value.error) {
+        lastError = res.value.error;
+      } else if (res.status === "rejected") {
+        lastError = res.reason;
+      }
     }
-    if (error) {
-      lastError = error;
+  } else {
+    for (let i = 0; i < agendas.length; i += 1) {
+      const agendaUrl = agendas[i];
+      const { ops, error } = await submitDigestToAgenda(
+        agendaUrl,
+        hash,
+        timeoutMs,
+      );
+      if (ops) {
+        return Result.ok(buildOtsFileBuffer(hash, ops));
+      }
+      if (error) {
+        lastError = error;
+      }
     }
   }
 
@@ -229,15 +320,17 @@ export async function upgradeOtsProof(
   agendasOrOptions?: string[] | OtsUpgradeOptions,
   fetchTimeoutMs = 8000,
 ): Promise<Result<OtsUpgradeResult, OtsUpgradeFailedError>> {
-  let agendas = DEFAULT_OTS_AGENDAS;
+  let rawAgendas = DEFAULT_OTS_AGENDAS;
   let timeoutMs = fetchTimeoutMs;
+  let strategy: OtsSubmissionStrategy = "sequential";
 
   if (Array.isArray(agendasOrOptions)) {
-    agendas = agendasOrOptions;
+    rawAgendas = agendasOrOptions;
   } else if (agendasOrOptions && typeof agendasOrOptions === "object") {
-    if (agendasOrOptions.agendas) agendas = agendasOrOptions.agendas;
+    if (agendasOrOptions.agendas) rawAgendas = agendasOrOptions.agendas;
     if (agendasOrOptions.timeoutMs !== undefined)
       timeoutMs = agendasOrOptions.timeoutMs;
+    if (agendasOrOptions.strategy) strategy = agendasOrOptions.strategy;
   }
 
   if (isOtsProofUpgraded(pendingProof)) {
@@ -255,18 +348,37 @@ export async function upgradeOtsProof(
   }
 
   const { hash, ops } = parseResult.value;
+  const agendas = sanitizeAgendaUrls(rawAgendas);
+  const payload = ops.length > 0 ? ops : hash;
 
-  for (const agendaUrl of agendas) {
-    const upgradedOps = await submitTimestampToAgenda(
-      agendaUrl,
-      ops.length > 0 ? ops : hash,
-      timeoutMs,
+  if (strategy === "concurrent") {
+    const promises = agendas.map((agendaUrl) =>
+      submitTimestampToAgenda(agendaUrl, payload, timeoutMs),
     );
+    const results = await Promise.allSettled(promises);
+    for (let i = 0; i < results.length; i += 1) {
+      const res = results[i];
+      if (res.status === "fulfilled" && res.value) {
+        const upgradedProof = buildOtsFileBuffer(hash, res.value);
+        if (isOtsProofUpgraded(upgradedProof)) {
+          return Result.ok({ upgraded: true, proof: upgradedProof });
+        }
+      }
+    }
+  } else {
+    for (let i = 0; i < agendas.length; i += 1) {
+      const agendaUrl = agendas[i];
+      const upgradedOps = await submitTimestampToAgenda(
+        agendaUrl,
+        payload,
+        timeoutMs,
+      );
 
-    if (upgradedOps) {
-      const upgradedProof = buildOtsFileBuffer(hash, upgradedOps);
-      if (isOtsProofUpgraded(upgradedProof)) {
-        return Result.ok({ upgraded: true, proof: upgradedProof });
+      if (upgradedOps) {
+        const upgradedProof = buildOtsFileBuffer(hash, upgradedOps);
+        if (isOtsProofUpgraded(upgradedProof)) {
+          return Result.ok({ upgraded: true, proof: upgradedProof });
+        }
       }
     }
   }
@@ -309,4 +421,36 @@ export function verifyOtsProof(
     upgraded,
     verified: true,
   });
+}
+
+/**
+ * Creates an OpenTimestamps client configured with default agendas, timeouts, and submission strategies.
+ */
+export function createOtsClient(config: OtsClientConfig = {}): OtsClient {
+  const defaultAgendas = config.agendas ?? DEFAULT_OTS_AGENDAS;
+  const defaultTimeoutMs = config.timeoutMs ?? 8000;
+  const defaultStrategy = config.strategy ?? "sequential";
+
+  return {
+    stamp(data, options) {
+      return stampWithFallback(data, {
+        agendas: options?.agendas ?? defaultAgendas,
+        timeoutMs: options?.timeoutMs ?? defaultTimeoutMs,
+        strategy: options?.strategy ?? defaultStrategy,
+      });
+    },
+    upgrade(pendingProof, options) {
+      return upgradeOtsProof(pendingProof, {
+        agendas: options?.agendas ?? defaultAgendas,
+        timeoutMs: options?.timeoutMs ?? defaultTimeoutMs,
+        strategy: options?.strategy ?? defaultStrategy,
+      });
+    },
+    verify(proof, expectedDataOrHash) {
+      return verifyOtsProof(proof, expectedDataOrHash);
+    },
+    getInfo(proof) {
+      return getProofInfo(proof);
+    },
+  };
 }

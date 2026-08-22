@@ -4,14 +4,19 @@ import {
   buildOtsFileBuffer,
   calculateSha256,
   calculateSha256Hex,
+  createOtsClient,
+  getProofInfo,
   isOtsProofUpgraded,
   type OtsParseError,
+  type OtsProofInfo,
   type OtsStampFailedError,
   type OtsUpgradeFailedError,
   type OtsUpgradeResult,
   type OtsVerifyError,
   type OtsVerifyResult,
   parseOtsFileBuffer,
+  sanitizeAgendaUrl,
+  sanitizeAgendaUrls,
   stamp,
   stampWithFallback,
   uint8ArrayConcat,
@@ -69,6 +74,26 @@ describe("openTimestamps SDK module", () => {
         uint8ArrayIncludes(source, new Uint8Array([10, 20, 30, 40, 50, 60])),
       ).toBe(false);
     });
+
+    it("sanitizeAgendaUrl validates and normalizes URLs", () => {
+      expect(sanitizeAgendaUrl(" https://pool.ots.org/ ")).toBe(
+        "https://pool.ots.org",
+      );
+      expect(sanitizeAgendaUrl("http://localhost:3000/")).toBe(
+        "http://localhost:3000",
+      );
+      expect(sanitizeAgendaUrl("ws://invalid.org")).toBeNull();
+      expect(sanitizeAgendaUrl("invalid-url")).toBeNull();
+    });
+
+    it("sanitizeAgendaUrls filters and deduplicates URLs", () => {
+      const sanitized = sanitizeAgendaUrls([
+        "https://a.pool.org/",
+        "https://a.pool.org",
+        "ftp://invalid.org",
+      ]);
+      expect(sanitized).toStrictEqual(["https://a.pool.org"]);
+    });
   });
 
   describe("proof formatting", () => {
@@ -124,6 +149,28 @@ describe("openTimestamps SDK module", () => {
     });
   });
 
+  describe(getProofInfo, () => {
+    it("extracts structured metadata from valid OTS proof", () => {
+      const hash = calculateSha256("inspectable content");
+      const ops = new Uint8Array([0xaa, 0xbb]);
+      const proof = buildOtsFileBuffer(hash, ops);
+
+      const infoResult = getProofInfo(proof);
+      expect(infoResult.isOk()).toBe(true);
+      const info = (infoResult as unknown as { value: OtsProofInfo }).value;
+      expect(info.hashHex).toBe(calculateSha256Hex("inspectable content"));
+      expect(info.isUpgraded).toBe(false);
+      expect(info.opsLength).toBe(2);
+    });
+
+    it("returns error on invalid proof in getProofInfo", () => {
+      const res = getProofInfo(new Uint8Array([1, 2]));
+      expect(res.isErr()).toBe(true);
+      const err = (res as unknown as { error: OtsParseError }).error;
+      expect(err._tag).toBe("OtsParseError");
+    });
+  });
+
   describe(stampWithFallback, () => {
     it("stamps file with fallback when initial agenda fails", async () => {
       const testBuffer = new TextEncoder().encode("Post content for stamping");
@@ -150,6 +197,29 @@ describe("openTimestamps SDK module", () => {
       expect(result.isOk()).toBe(true);
       const value = (result as unknown as { value: Uint8Array }).value;
       expect(parseOtsFileBuffer(value).isOk()).toBe(true);
+      expect(mockFetch).toHaveBeenCalledTimes(2);
+
+      vi.unstubAllGlobals();
+    });
+
+    it("supports concurrent stamping strategy", async () => {
+      const testBuffer = "Concurrent content";
+      const mockCalendarOps = new Uint8Array([0x55, 0x66]);
+
+      const mockFetch = vi
+        .fn()
+        .mockResolvedValueOnce(new Response("error", { status: 500 }))
+        .mockResolvedValueOnce(
+          new Response(mockCalendarOps as BodyInit, { status: 200 }),
+        );
+      vi.stubGlobal("fetch", mockFetch);
+
+      const result = await stamp(testBuffer, {
+        agendas: ["https://agenda-1.org", "https://agenda-2.org"],
+        strategy: "concurrent",
+      });
+
+      expect(result.isOk()).toBe(true);
       expect(mockFetch).toHaveBeenCalledTimes(2);
 
       vi.unstubAllGlobals();
@@ -317,6 +387,40 @@ describe("openTimestamps SDK module", () => {
       const err = (verifyMismatch as unknown as { error: OtsVerifyError })
         .error;
       expect(err._tag).toBe("OtsVerifyError");
+    });
+  });
+
+  describe(createOtsClient, () => {
+    it("stamps and inspects with configured client instance", async () => {
+      const mockCalendarOps = new Uint8Array([0x12, 0x34]);
+      const mockFetch = vi.fn().mockResolvedValue(
+        new Response(mockCalendarOps as BodyInit, {
+          status: 200,
+          headers: { "Content-Type": "application/octet-stream" },
+        }),
+      );
+      vi.stubGlobal("fetch", mockFetch);
+
+      const ots = createOtsClient({
+        agendas: ["https://custom-agenda.org"],
+        timeoutMs: 4000,
+        strategy: "concurrent",
+      });
+
+      const stampRes = await ots.stamp("Client test");
+      expect(stampRes.isOk()).toBe(true);
+      const proof = (stampRes as unknown as { value: Uint8Array }).value;
+
+      const info = ots.getInfo(proof);
+      expect(info.isOk()).toBe(true);
+      expect((info as unknown as { value: OtsProofInfo }).value.hashHex).toBe(
+        calculateSha256Hex("Client test"),
+      );
+
+      const verifyRes = ots.verify(proof, "Client test");
+      expect(verifyRes.isOk()).toBe(true);
+
+      vi.unstubAllGlobals();
     });
   });
 });

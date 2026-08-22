@@ -27,6 +27,37 @@ export function calculateSha256Hex(data: Uint8Array | string): string {
 }
 
 /**
+ * Validates and sanitizes a calendar agenda URL, ensuring http/https protocol and stripping trailing slashes.
+ */
+export function sanitizeAgendaUrl(url: string): string | null {
+  try {
+    const trimmed = url.trim();
+    if (!trimmed) return null;
+    const parsed = new URL(trimmed);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return null;
+    }
+    return trimmed.replace(/\/+$/, "");
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Validates and sanitizes a list of calendar agenda URLs, deduplicating valid entries.
+ */
+export function sanitizeAgendaUrls(urls: string[]): string[] {
+  const result: string[] = [];
+  for (let i = 0; i < urls.length; i += 1) {
+    const sanitized = sanitizeAgendaUrl(urls[i]);
+    if (sanitized && !result.includes(sanitized)) {
+      result.push(sanitized);
+    }
+  }
+  return result;
+}
+
+/**
  * Checks whether two Uint8Array buffers are byte-for-byte equal.
  */
 export function uint8ArrayEquals(a: Uint8Array, b: Uint8Array): boolean {

@@ -196,6 +196,53 @@ if (upgraded) {
 }
 ```
 
+### Create OpenTimestamps client
+
+For ongoing timestamp operations with persistent configuration (custom calendar pools, timeouts, and submission strategies), use `createOtsClient`:
+
+```tsx
+import { createOtsClient } from "@sigle/sdk";
+
+const ots = createOtsClient({
+  agendas: [
+    "https://a.pool.opentimestamps.org",
+    "https://b.pool.opentimestamps.org",
+  ],
+  timeoutMs: 10000,
+  strategy: "concurrent", // "sequential" | "concurrent"
+});
+
+// Stamp content
+const stampResult = await ots.stamp("My post content");
+
+// Upgrade pending proof
+const upgradeResult = await ots.upgrade(pendingProof);
+
+// Inspect proof structure without network calls
+const infoResult = ots.getInfo(pendingProof);
+
+// Verify proof
+const verifyResult = ots.verify(pendingProof, "My post content");
+```
+
+### Inspect proof info
+
+Use `getProofInfo` to extract structured metadata from any `.ots` binary file without network requests:
+
+```tsx
+import { getProofInfo } from "@sigle/sdk";
+
+const infoResult = getProofInfo(proofBuffer);
+
+if (infoResult.isOk()) {
+  const { hashHex, isUpgraded, hasBitcoinAttestation, rawLength } =
+    infoResult.value;
+  console.log("File SHA-256:", hashHex);
+  console.log("Is Bitcoin Attested:", isUpgraded);
+  console.log("Proof Size:", rawLength, "bytes");
+}
+```
+
 ### Verify OTS proof
 
 Use `verifyOtsProof` to validate the integrity of an OTS file and confirm that it matches expected content or a specific SHA-256 hash:
