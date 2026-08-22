@@ -1,4 +1,5 @@
 import type { H3Event } from "nitro/h3";
+import { verifyPostSignature } from "@sigle/sdk";
 import { Result } from "better-result";
 import {
   afterAll,
@@ -10,7 +11,6 @@ import {
   vi,
 } from "vite-plus/test";
 import { arweaveUploadFile } from "@/lib/arweave";
-import { verifyPostSignature } from "@/lib/metadata";
 import { createTestDatabase, type TestDatabase } from "@/test/database";
 import {
   createTestDraft,
@@ -48,9 +48,28 @@ vi.mock<typeof import("@/lib/arweave")>(import("@/lib/arweave"), () => ({
   arweaveUploadFile: vi.fn(),
 }));
 
-vi.mock<typeof import("@/lib/metadata")>(import("@/lib/metadata"), () => ({
-  verifyPostSignature: vi.fn(),
-}));
+let mockStacksEnv = "testnet";
+
+vi.mock(import("@/env"), async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/env")>();
+  return {
+    ...actual,
+    env: {
+      ...actual.env,
+      get STACKS_ENV() {
+        return mockStacksEnv as "mainnet" | "testnet";
+      },
+    },
+  };
+});
+
+vi.mock<typeof import("@sigle/sdk")>(import("@sigle/sdk"), async () => {
+  const actual = await vi.importActual("@sigle/sdk");
+  return {
+    ...actual,
+    verifyPostSignature: vi.fn(),
+  };
+});
 
 vi.mock<typeof import("@/jobs/generate-image-blurhash")>(
   import("@/jobs/generate-image-blurhash"),
@@ -61,6 +80,10 @@ vi.mock<typeof import("@/jobs/generate-image-blurhash")>(
       },
     }) as unknown as typeof import("@/jobs/generate-image-blurhash"),
 );
+
+vi.mock<typeof import("@/lib/users")>(import("@/lib/users"), () => ({
+  isUserWhitelisted: vi.fn().mockReturnValue(true),
+}));
 
 const { default: handler } = await import("./upload-metadata.post");
 
@@ -76,6 +99,7 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
   beforeEach(async () => {
     await testDb.cleanup();
     vi.clearAllMocks();
+    mockStacksEnv = "testnet";
   });
 
   afterAll(async () => {
@@ -246,5 +270,115 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
       "original-post-id",
       "arweave-tx-edit-1",
     ]);
+  });
+
+  it("passes mainnet network option to verifyPostSignature when STACKS_ENV is mainnet", async () => {
+    mockStacksEnv = "mainnet";
+
+    const user = await createTestUser({ id: userId });
+    await createTestDraft({
+      id: "draft-mainnet",
+      userId: user.id,
+      title: "Mainnet Draft",
+    });
+
+    mockGetRouterParam.mockReturnValue("draft-mainnet");
+
+    const mockMetadata = {
+      $schema: "https://json-schemas.sigle.io/posts/1.0.0.json",
+      content: {
+        id: "draft-mainnet",
+        title: "Mainnet Draft Title",
+        content: "Draft content",
+      },
+    };
+
+    mockReadValidatedBodyZod.mockResolvedValue({
+      type: "draft",
+      metadata: mockMetadata,
+    });
+
+    vi.mocked(verifyPostSignature).mockReturnValue(
+      Result.ok({
+        recoveredAddress: userId,
+        publicKey: "pubkey-mainnet",
+        signature: "sig-mainnet",
+      }),
+    );
+
+    vi.mocked(arweaveUploadFile).mockResolvedValue(
+      Result.ok({ id: "arweave-tx-mainnet" }),
+    );
+
+    const mockEvent = {
+      context: {
+        user: { id: userId },
+        $posthog: { capture: vi.fn() },
+      },
+      path: "/api/protected/drafts/draft-mainnet/upload-metadata",
+      method: "POST",
+      headers: {},
+    } as unknown as H3Event;
+
+    await handler(mockEvent);
+
+    expect(verifyPostSignature).toHaveBeenCalledWith(mockMetadata, {
+      network: "mainnet",
+    });
+  });
+
+  it("passes testnet network option to verifyPostSignature when STACKS_ENV is a non-mainnet value", async () => {
+    mockStacksEnv = "testnet";
+
+    const user = await createTestUser({ id: userId });
+    await createTestDraft({
+      id: "draft-testnet",
+      userId: user.id,
+      title: "Testnet Draft",
+    });
+
+    mockGetRouterParam.mockReturnValue("draft-testnet");
+
+    const mockMetadata = {
+      $schema: "https://json-schemas.sigle.io/posts/1.0.0.json",
+      content: {
+        id: "draft-testnet",
+        title: "Testnet Draft Title",
+        content: "Draft content",
+      },
+    };
+
+    mockReadValidatedBodyZod.mockResolvedValue({
+      type: "draft",
+      metadata: mockMetadata,
+    });
+
+    vi.mocked(verifyPostSignature).mockReturnValue(
+      Result.ok({
+        recoveredAddress: userId,
+        publicKey: "pubkey-testnet",
+        signature: "sig-testnet",
+      }),
+    );
+
+    vi.mocked(arweaveUploadFile).mockResolvedValue(
+      Result.ok({ id: "arweave-tx-testnet" }),
+    );
+
+    const mockEvent = {
+      context: {
+        user: { id: userId },
+        $posthog: { capture: vi.fn() },
+      },
+      path: "/api/protected/drafts/draft-testnet/upload-metadata",
+      method: "POST",
+      headers: {},
+    } as unknown as H3Event;
+
+    await handler(mockEvent);
+
+    expect(verifyPostSignature).toHaveBeenCalledWith(mockMetadata, {
+      network: "testnet",
+    });
   });
 });

@@ -9,9 +9,3 @@ export class MetadataFetchFailedError extends TaggedError(
 export class InvalidMetadataError extends TaggedError("InvalidMetadataError")<{
   error: string;
 }> {}
-
-export class InvalidSignatureError extends TaggedError(
-  "InvalidSignatureError",
-)<{
-  error: string;
-}> {}

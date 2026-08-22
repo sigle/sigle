@@ -613,13 +613,22 @@ importers:
       '@sigle/contracts-source-next':
         specifier: workspace:*
         version: link:../contracts-source-next
+      better-result:
+        specifier: 3.0.1
+        version: 3.0.1
       zod-validation-error:
         specifier: 5.0.0
         version: 5.0.0(zod@4.3.6)
     devDependencies:
+      '@stacks/common':
+        specifier: 7.3.1
+        version: 7.3.1
       '@stacks/connect':
         specifier: 8.2.6
         version: 8.2.6(@types/react@19.2.18)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.4.5)(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.2.8)(typescript@6.0.3)(utf-8-validate@5.0.10)(zod@4.3.6)
+      '@stacks/encryption':
+        specifier: 7.3.1
+        version: 7.3.1
       '@stacks/network':
         specifier: 7.3.1
         version: 7.3.1(encoding@0.1.13)
