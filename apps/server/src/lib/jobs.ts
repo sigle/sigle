@@ -61,10 +61,7 @@ class JobBuilder<TInput = any> {
   // Method to emit/schedule a job
   async emit(data: TInput) {
     if (!this._boss) {
-      consola.warn("Job emitted but not registered with JobManager", {
-        name: this._name,
-      });
-      return null;
+      throw new Error("Job not registered with JobManager");
     }
 
     if (this._inputSchema) {
