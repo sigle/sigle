@@ -56,7 +56,7 @@
     "@tiptap/react": "3.28.0",
     "@tiptap/suggestion": "3.28.0",
     "better-auth": "1.5.5",
-    "better-result": "2.7.0",
+    "better-result": "3.0.1",
     "blurhash": "2.0.5",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",

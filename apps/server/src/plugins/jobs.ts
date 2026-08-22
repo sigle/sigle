@@ -16,6 +16,11 @@ export default definePlugin(async () => {
     .register(opentimestampsUpgradeJob);
   await jobs.start();
 
+  await boss.schedule("indexer", "0 * * * *", {
+    action: "indexer-sync-arweave-l1-tx-ids",
+    data: {},
+  });
+
   // await indexerJob.emit({
   //   action: "indexer-index-posts",
   //   data: {},

@@ -3,7 +3,7 @@ import { TaggedError } from "better-result";
 export class StacksApiError extends TaggedError("StacksApiError")<{
   cause: unknown;
   message: string;
-}>() {
+}> {
   constructor(params: { cause: unknown }) {
     const { cause } = params;
     let causeText: string | undefined = undefined;

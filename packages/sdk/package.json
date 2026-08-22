@@ -18,10 +18,13 @@
   },
   "dependencies": {
     "@sigle/contracts-source-next": "workspace:*",
+    "better-result": "3.0.1",
     "zod-validation-error": "5.0.0"
   },
   "devDependencies": {
+    "@stacks/common": "7.3.1",
     "@stacks/connect": "8.2.6",
+    "@stacks/encryption": "7.3.1",
     "@stacks/network": "7.3.1",
     "@stacks/transactions": "7.3.1",
     "@tsconfig/recommended": "1.0.13",
@@ -34,7 +37,9 @@
     "zod": "4.3.6"
   },
   "peerDependencies": {
+    "@stacks/common": "^7.0.0",
     "@stacks/connect": "^8.0.0",
+    "@stacks/encryption": "^7.0.0",
     "@stacks/network": "^7.0.0",
     "@stacks/transactions": "^7.0.0",
     "zod": "^4.0.0"
