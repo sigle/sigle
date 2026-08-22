@@ -101,7 +101,7 @@ To verify the cryptographic signature of post metadata, use the `verifyPostSigna
 import { verifyPostSignature } from "@sigle/sdk";
 
 const result = verifyPostSignature(postMetadata, {
-  // Optional: defaults to "mainnet". Supports "testnet", "devnet", "mocknet", or a StacksNetwork instance.
+  // Optional: defaults to "mainnet". Can also be "testnet", "devnet", or "mocknet".
   network: "mainnet",
 });
 

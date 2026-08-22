@@ -1,6 +1,5 @@
 import { bytesToHex } from "@stacks/common";
 import { hashMessage } from "@stacks/encryption";
-import { STACKS_MOCKNET, STACKS_TESTNET } from "@stacks/network";
 import {
   privateKeyToPublic,
   publicKeyToAddress,
@@ -96,26 +95,6 @@ describe(verifyPostSignature, () => {
     const value = (result as unknown as { value: VerifyPostSignatureResult })
       .value;
     expect(value.recoveredAddress).toBe(EXPECTED_TESTNET_ADDRESS);
-  });
-
-  it("should recover testnet address when StacksNetwork object is passed", () => {
-    const signedMetadata = createSignedPostMetadata();
-
-    const resultTestnet = verifyPostSignature(signedMetadata, {
-      network: STACKS_TESTNET,
-    });
-    const valTestnet = (
-      resultTestnet as unknown as { value: VerifyPostSignatureResult }
-    ).value;
-    expect(valTestnet.recoveredAddress).toBe(EXPECTED_TESTNET_ADDRESS);
-
-    const resultMocknet = verifyPostSignature(signedMetadata, {
-      network: STACKS_MOCKNET,
-    });
-    const valMocknet = (
-      resultMocknet as unknown as { value: VerifyPostSignatureResult }
-    ).value;
-    expect(valMocknet.recoveredAddress).toBe(EXPECTED_TESTNET_ADDRESS);
   });
 
   it("should return InvalidSignatureError when signature is missing", () => {

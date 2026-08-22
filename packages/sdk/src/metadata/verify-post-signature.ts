@@ -1,10 +1,6 @@
 import { bytesToHex } from "@stacks/common";
 import { hashMessage, verifyMessageSignatureRsv } from "@stacks/encryption";
-import {
-  STACKS_MAINNET,
-  type StacksNetwork,
-  type StacksNetworkName,
-} from "@stacks/network";
+import { type StacksNetworkName } from "@stacks/network";
 import {
   createMessageSignature,
   publicKeyFromSignatureRsv,
@@ -14,7 +10,7 @@ import { Result } from "better-result";
 import { InvalidSignatureError } from "./errors.js";
 
 export interface VerifyPostSignatureOptions {
-  network?: "mainnet" | "testnet" | StacksNetworkName | StacksNetwork;
+  network?: StacksNetworkName;
 }
 
 export interface VerifyPostSignatureResult {
@@ -49,20 +45,11 @@ export function verifyPostSignature(
       stacksSignature.data,
     );
 
-    let stacksNetwork: "mainnet" | "testnet" = "mainnet";
-    if (typeof options?.network === "string") {
-      stacksNetwork =
-        options.network === "testnet" ||
-        options.network === "devnet" ||
-        options.network === "mocknet"
-          ? "testnet"
-          : "mainnet";
-    } else if (options?.network) {
-      stacksNetwork =
-        options.network.chainId === STACKS_MAINNET.chainId
-          ? "mainnet"
-          : "testnet";
-    }
+    const network = options?.network ?? "mainnet";
+    const stacksNetwork =
+      network === "testnet" || network === "devnet" || network === "mocknet"
+        ? "testnet"
+        : "mainnet";
 
     const recoveredAddress = publicKeyToAddress(publicKey, stacksNetwork);
 
