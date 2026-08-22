@@ -1,8 +1,9 @@
-import { stampWithFallback } from "@sigle/sdk";
+import { hashBuffer } from "@otskit/client";
 import { z } from "zod";
 import { env } from "@/env";
 import { consola } from "@/lib/consola";
 import { defineJob } from "@/lib/jobs";
+import { openTimestampsClient } from "@/lib/opentimestamps";
 import { prisma } from "@/lib/prisma";
 import { opentimestampsUpgradeJob } from "./opentimestamps-upgrade";
 
@@ -29,17 +30,20 @@ export const opentimestampsStampJob = defineJob("opentimestamps-stamp")
     }
     const contentBuffer = Buffer.from(await response.arrayBuffer());
 
-    const stampResult = await stampWithFallback(contentBuffer);
-    if (stampResult.isErr()) {
-      consola.error("Failed to stamp post metadata with OpenTimestamps", {
-        postId,
-        txId,
-        error: stampResult.error,
-      });
-      throw stampResult.error;
-    }
+    const contentHash = hashBuffer(contentBuffer);
 
-    const pendingProof = new Uint8Array(stampResult.value);
+    const pendingProof = await openTimestampsClient
+      .stamp(contentHash)
+      .catch((error) => {
+        consola.error("Failed to stamp post metadata with OpenTimestamps", {
+          postId,
+          txId,
+          error,
+        });
+        throw error;
+      });
+
+    const pendingProofBytes = new Uint8Array(pendingProof);
 
     await prisma.postOts.upsert({
       where: {
@@ -47,7 +51,7 @@ export const opentimestampsStampJob = defineJob("opentimestamps-stamp")
       },
       update: {
         status: "PENDING",
-        pendingProof,
+        pendingProof: pendingProofBytes,
         attempts: 0,
         lastAttempt: new Date(),
       },
@@ -55,7 +59,7 @@ export const opentimestampsStampJob = defineJob("opentimestamps-stamp")
         postId,
         postTxId: txId,
         status: "PENDING",
-        pendingProof,
+        pendingProof: pendingProofBytes,
         attempts: 0,
         lastAttempt: new Date(),
       },

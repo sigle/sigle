@@ -1,8 +1,4 @@
-import {
-  BITCOIN_ATTESTATION_TAG,
-  buildOtsFileBuffer,
-  calculateSha256,
-} from "@sigle/sdk";
+import { UpgradeError } from "@otskit/client";
 import {
   afterAll,
   beforeAll,
@@ -17,6 +13,24 @@ import { prisma } from "@/lib/prisma";
 import { createTestDatabase, type TestDatabase } from "@/test/database";
 import { opentimestampsStampJob } from "./opentimestamps-stamp";
 import { opentimestampsUpgradeJob } from "./opentimestamps-upgrade";
+
+const otsClientMocks = vi.hoisted(() => ({
+  stamp: vi.fn(),
+  upgrade: vi.fn(),
+}));
+
+vi.mock<typeof import("@otskit/client")>(import("@otskit/client"), async () => {
+  const actual =
+    await vi.importActual<typeof import("@otskit/client")>("@otskit/client");
+  const MockOpenTimestampsClient = class {
+    stamp = otsClientMocks.stamp;
+    upgrade = otsClientMocks.upgrade;
+  } as unknown as typeof actual.OpenTimestampsClient;
+  return {
+    ...actual,
+    OpenTimestampsClient: MockOpenTimestampsClient,
+  };
+});
 
 vi.mock<typeof import("@/lib/arweave")>(
   import("@/lib/arweave"),
@@ -35,6 +49,8 @@ describe("openTimestamps jobs", () => {
 
   beforeEach(async () => {
     await testDb?.cleanup();
+    otsClientMocks.stamp.mockReset();
+    otsClientMocks.upgrade.mockReset();
   });
 
   afterAll(async () => {
@@ -71,12 +87,13 @@ describe("openTimestamps jobs", () => {
       },
     });
 
-    const mockCalendarOps = Buffer.from([0x01, 0x02]);
+    const mockPendingProof = Buffer.from([0x01, 0x02]);
+    otsClientMocks.stamp.mockResolvedValue(mockPendingProof);
+
     const mockFetch = vi.fn(() =>
       Promise.resolve(
-        new Response(mockCalendarOps, {
+        new Response("Content for OTS test", {
           status: 200,
-          headers: { "Content-Type": "application/octet-stream" },
         }),
       ),
     );
@@ -96,7 +113,10 @@ describe("openTimestamps jobs", () => {
 
     expect(createdPostOts).not.toBeNull();
     expect(createdPostOts?.status).toBe("PENDING");
-    expect(createdPostOts?.pendingProof).not.toBeNull();
+    expect(createdPostOts?.pendingProof).toStrictEqual(
+      new Uint8Array(mockPendingProof),
+    );
+    expect(otsClientMocks.stamp).toHaveBeenCalledTimes(1);
 
     vi.unstubAllGlobals();
   });
@@ -128,9 +148,8 @@ describe("openTimestamps jobs", () => {
       data: { postId, txId },
     });
 
-    const hash = calculateSha256("Content");
-    const pendingOps = Buffer.from([0x01]);
-    const pendingProof = new Uint8Array(buildOtsFileBuffer(hash, pendingOps));
+    const pendingProof = Buffer.from([0x01, 0x02]);
+    const upgradedProof = Buffer.concat([pendingProof, Buffer.from([0xff])]);
 
     await prisma.postOts.create({
       data: {
@@ -141,16 +160,7 @@ describe("openTimestamps jobs", () => {
       },
     });
 
-    const upgradedOps = Buffer.concat([pendingOps, BITCOIN_ATTESTATION_TAG]);
-    const mockFetch = vi.fn(() =>
-      Promise.resolve(
-        new Response(upgradedOps, {
-          status: 200,
-          headers: { "Content-Type": "application/octet-stream" },
-        }),
-      ),
-    );
-    vi.stubGlobal("fetch", mockFetch);
+    otsClientMocks.upgrade.mockResolvedValue(upgradedProof);
 
     vi.mocked(arweaveUploadFile).mockResolvedValue({
       isOk: () => true,
@@ -173,6 +183,67 @@ describe("openTimestamps jobs", () => {
     expect(updatedPostOts?.status).toBe("UPGRADED");
     expect(updatedPostOts?.otsTxId).toBe("ots-arweave-tx-123");
     expect(updatedPostOts?.pendingProof).toBeNull();
+
+    vi.unstubAllGlobals();
+  });
+
+  it("opentimestampsUpgradeJob increments attempts when Bitcoin has not confirmed yet", async () => {
+    const postId = `test-post-pending-${Date.now()}`;
+    const txId = `test-tx-pending-${Date.now()}`;
+
+    await prisma.user.create({
+      data: { id: "test-user-pending" },
+    });
+
+    await prisma.post.create({
+      data: {
+        id: postId,
+        txId,
+        version: "1.0",
+        blockHeight: 0,
+        metadataUri: `ar://${txId}`,
+        title: "Test Pending Post",
+        content: "Content",
+        excerpt: "Excerpt",
+        tags: [],
+        userId: "test-user-pending",
+      },
+    });
+
+    await prisma.postRevision.create({
+      data: { postId, txId },
+    });
+
+    await prisma.postOts.create({
+      data: {
+        postId,
+        postTxId: txId,
+        status: "PENDING",
+        pendingProof: Buffer.from([0x01]),
+      },
+    });
+
+    otsClientMocks.upgrade.mockRejectedValue(
+      new UpgradeError("No calendar has confirmed the timestamp yet"),
+    );
+
+    await expect(
+      opentimestampsUpgradeJob.build().handler([
+        {
+          id: "job-3",
+          name: "opentimestamps-upgrade",
+          data: { postId, txId },
+        } as any,
+      ]),
+    ).rejects.toThrow("OTS proof not yet anchored in Bitcoin block");
+
+    const updatedPostOts = await prisma.postOts.findUnique({
+      where: { postTxId: txId },
+    });
+
+    expect(updatedPostOts?.status).toBe("PENDING");
+    expect(updatedPostOts?.attempts).toBe(1);
+    expect(updatedPostOts?.lastAttempt).not.toBeNull();
 
     vi.unstubAllGlobals();
   });

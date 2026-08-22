@@ -16,6 +16,7 @@
     "@ardrive/turbo-sdk": "1.41.0",
     "@aws-sdk/client-s3": "3.782.0",
     "@dotenvx/dotenvx": "2.20.1",
+    "@otskit/client": "0.7.1",
     "@paralleldrive/cuid2": "3.3.0",
     "@prisma/adapter-pg": "7.9.1",
     "@prisma/client": "7.9.1",
