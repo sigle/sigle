@@ -9,7 +9,9 @@ const turboClient = TurboFactory.authenticated({
   token: "solana",
 });
 
-export type ArweaveContentType = "application/json";
+export type ArweaveContentType =
+  | "application/json"
+  | "application/vnd.opentimestamps.ots";
 
 interface ArweaveTag {
   name: string;

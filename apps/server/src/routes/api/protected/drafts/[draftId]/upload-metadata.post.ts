@@ -5,6 +5,7 @@ import { z } from "zod";
 import { fromError } from "zod-validation-error";
 import { env } from "@/env";
 import { generateImageBlurhashJob } from "@/jobs/generate-image-blurhash";
+import { opentimestampsStampJob } from "@/jobs/opentimestamps-stamp";
 import { arweaveUploadFile } from "@/lib/arweave";
 import { readValidatedBodyZod } from "@/lib/nitro";
 import { prisma } from "@/lib/prisma";
@@ -334,6 +335,11 @@ export default defineEventHandler(async (event) => {
       imageId: postData.content.coverImage.url,
     });
   }
+
+  await opentimestampsStampJob.emit({
+    postId: targetPostId,
+    txId: id,
+  });
 
   event.context.$posthog.capture({
     distinctId: event.context.user.id,

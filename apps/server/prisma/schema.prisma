@@ -173,6 +173,7 @@ model Post {
   revisionsCount Int            @default(1) @map("revisions_count")
   revisions      PostRevision[]
 
+  ots              PostOts?
   userId           String            @map("user_id")
   user             User              @relation(fields: [userId], references: [id])
   nfts             PostNft[]
@@ -187,10 +188,11 @@ model PostRevision {
 
   createdAt DateTime @default(now()) @map("created_at")
 
-  postId        String  @map("post_id")
-  post          Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
-  txId          String  @map("tx_id")
+  postId String   @map("post_id")
+  post   Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  txId   String   @map("tx_id")
   arweaveL1TxId String? @map("arweave_l1_tx_id")
+  ots    PostOts?
 
   @@unique([postId, txId])
   @@index([postId])
@@ -267,4 +269,30 @@ model PostNft {
   minter   User   @relation(name: "minter", fields: [minterId], references: [id])
 
   @@map("post_nft")
+}
+
+enum PostOtsStatus {
+  PENDING
+  UPGRADED
+  FAILED
+}
+
+model PostOts {
+  id           String        @id @default(cuid()) @map("id")
+  postId       String        @map("post_id")
+  postTxId     String        @unique @map("post_tx_id")
+  otsTxId      String?       @map("ots_tx_id")
+  status       PostOtsStatus @default(PENDING) @map("status")
+  pendingProof Bytes?        @map("pending_proof")
+  attempts     Int           @default(0) @map("attempts")
+  lastAttempt  DateTime?     @map("last_attempt")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+
+  postRevision PostRevision @relation(fields: [postId, postTxId], references: [postId, txId], onDelete: Cascade)
+  post         Post?        @relation(fields: [postTxId], references: [txId], onDelete: Cascade)
+
+  @@unique([postId, postTxId])
+  @@index([status])
+  @@map("post_ots")
 }

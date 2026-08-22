@@ -206,6 +206,9 @@ importers:
       '@dotenvx/dotenvx':
         specifier: 2.20.1
         version: 2.20.1
+      '@otskit/client':
+        specifier: 0.7.1
+        version: 0.7.1
       '@paralleldrive/cuid2':
         specifier: 3.3.0
         version: 3.3.0
@@ -2476,6 +2479,14 @@ packages:
     engines: {node: ^18.19.0 || >=20.6.0}
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
+
+  '@otskit/client@0.7.1':
+    resolution: {integrity: sha512-sMSDBb872o1QEa4yyYS4rJ3hjmasR/t1eWyTH0VkwKXfDjyXtX5+//FqVrlquXxcvuRRs//Q+CgRuAUdSJjwOQ==}
+    engines: {node: '>=20.0.0'}
+
+  '@otskit/core@0.2.0':
+    resolution: {integrity: sha512-2VQ6XYdwpsKPOTn29Qr7Bo6nIbnqYDWc1EG78yHIEddJKJCFk+rRCo2eg12nBsBtyiI3IT+VmS5dLN/xU6zIiA==}
+    engines: {node: '>=20.0.0'}
 
   '@oxc-project/runtime@0.142.0':
     resolution: {integrity: sha512-Dv3jRrcXFdvUBUEljUu9kusrEo9G0iiqZFZNg3yCg+mkET4DD4S2Ow6Q6shFWDJwPidSa980d6YVXBlErUGADw==}
@@ -14217,6 +14228,12 @@ snapshots:
     dependencies:
       '@opentelemetry/api': 1.9.1
       '@opentelemetry/core': 2.7.0(@opentelemetry/api@1.9.1)
+
+  '@otskit/client@0.7.1':
+    dependencies:
+      '@otskit/core': 0.2.0
+
+  '@otskit/core@0.2.0': {}
 
   '@oxc-project/runtime@0.142.0': {}
 

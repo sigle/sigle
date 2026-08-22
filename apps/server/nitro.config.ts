@@ -3,6 +3,7 @@ import { defineNitroConfig } from "nitro/config";
 export default defineNitroConfig({
   serverDir: "src",
   imports: false,
+  sourcemap: true,
   openAPI: {
     production: "runtime",
   },
