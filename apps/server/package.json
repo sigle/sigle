@@ -33,7 +33,7 @@
     "consola": "3.4.2",
     "multiformats": "13.4.2",
     "nitro-cors": "0.7.1",
-    "pg-boss": "10.3.2",
+    "pg-boss": "12.27.0",
     "posthog-node": "5.30.2",
     "prisma": "7.9.1",
     "rate-limiter-flexible": "9.1.1",

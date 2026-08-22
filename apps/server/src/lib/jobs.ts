@@ -1,6 +1,5 @@
 // oxlint-disable no-underscore-dangle
-import type PgBoss from "pg-boss";
-import type { SendOptions, WorkHandler } from "pg-boss";
+import type { SendOptions, WorkHandler, PgBoss } from "pg-boss";
 import type { z } from "zod";
 import * as Sentry from "@sentry/node";
 import { consola } from "./consola";
