@@ -97,6 +97,8 @@ const response = await request("stx_callContract", {
 
 To verify the cryptographic signature of post metadata, use the `verifyPostSignature` function. It returns a typed `Result` from `better-result` containing the recovered Stacks address, public key, and signature on success, or an `InvalidSignatureError` on failure.
 
+> **Important**: `verifyPostSignature` verifies that the metadata was signed and recovers the signer's Stacks address. You must always check that `recoveredAddress` matches the expected author's address to ensure the post was signed by the intended author.
+
 ```tsx
 import { verifyPostSignature } from "@sigle/sdk";
 
@@ -111,5 +113,12 @@ if (result.isErr()) {
 }
 
 const { recoveredAddress, publicKey, signature } = result.value;
+
+// Ensure the recovered address matches the expected post author
+if (recoveredAddress !== expectedAuthorAddress) {
+  console.error("Author mismatch: post was not signed by the expected author");
+  return;
+}
+
 console.log("Verified post author:", recoveredAddress);
 ```
