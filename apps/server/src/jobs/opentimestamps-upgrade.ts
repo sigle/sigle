@@ -1,8 +1,8 @@
+import { upgradeOtsProof } from "@sigle/sdk";
 import { z } from "zod";
 import { arweaveUploadFile } from "@/lib/arweave";
 import { consola } from "@/lib/consola";
 import { defineJob } from "@/lib/jobs";
-import { upgradeOtsProof } from "@/lib/opentimestamps";
 import { prisma } from "@/lib/prisma";
 
 export const opentimestampsUpgradeJob = defineJob("opentimestamps-upgrade")
@@ -72,7 +72,7 @@ export const opentimestampsUpgradeJob = defineJob("opentimestamps-upgrade")
     ];
 
     const arweaveResult = await arweaveUploadFile({
-      file: proof,
+      file: Buffer.from(proof),
       contentType: "application/vnd.opentimestamps.ots",
       tags,
     });

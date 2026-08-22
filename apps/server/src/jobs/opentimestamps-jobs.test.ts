@@ -1,4 +1,9 @@
 import {
+  BITCOIN_ATTESTATION_TAG,
+  buildOtsFileBuffer,
+  calculateSha256,
+} from "@sigle/sdk";
+import {
   afterAll,
   beforeAll,
   beforeEach,
@@ -8,11 +13,6 @@ import {
   vi,
 } from "vite-plus/test";
 import { arweaveUploadFile } from "@/lib/arweave";
-import {
-  BITCOIN_ATTESTATION_TAG,
-  buildOtsFileBuffer,
-  calculateSha256,
-} from "@/lib/opentimestamps";
 import { prisma } from "@/lib/prisma";
 import { createTestDatabase, type TestDatabase } from "@/test/database";
 import { opentimestampsStampJob } from "./opentimestamps-stamp";

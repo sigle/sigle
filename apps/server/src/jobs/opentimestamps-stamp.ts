@@ -1,8 +1,8 @@
+import { stampWithFallback } from "@sigle/sdk";
 import { z } from "zod";
 import { env } from "@/env";
 import { consola } from "@/lib/consola";
 import { defineJob } from "@/lib/jobs";
-import { stampWithFallback } from "@/lib/opentimestamps";
 import { prisma } from "@/lib/prisma";
 import { opentimestampsUpgradeJob } from "./opentimestamps-upgrade";
 
