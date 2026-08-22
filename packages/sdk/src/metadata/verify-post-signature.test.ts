@@ -10,11 +10,11 @@ import { matchError } from "better-result";
 import { describe, expect, it } from "vite-plus/test";
 import { PostMetadataSchemaId } from "./config.js";
 import { InvalidSignatureError } from "./errors.js";
+import { type PostMetadata } from "./post.js";
 import {
-  type PostMetadata,
   type VerifyPostSignatureResult,
   verifyPostSignature,
-} from "./post.js";
+} from "./verify-post-signature.js";
 
 // Consistent test private key (valid 32-byte hex + compressed byte)
 const TEST_PRIVATE_KEY =
