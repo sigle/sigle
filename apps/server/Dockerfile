@@ -12,7 +12,7 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME/bin:$PATH"
 RUN apk add --no-cache git
 COPY --link ./package.json ./
-RUN PNPM_VERSION=$(node -p "require('./package.json').packageManager.split('@').pop()") && \
+RUN PNPM_VERSION=$(grep -o '"packageManager": "[^"]*' package.json | cut -d'"' -f4 | cut -d'@' -f2) && \
     npm install -g pnpm@${PNPM_VERSION}
 RUN TURBO_VERSION=$(grep -o '"turbo": "[^"]*' package.json | cut -d'"' -f4) && \
     pnpm install turbo@${TURBO_VERSION} --global

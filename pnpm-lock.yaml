@@ -186,7 +186,7 @@ importers:
         specifier: 2.31.1
         version: 2.31.1(@types/node@25.6.2)
       node:
-        specifier: runtime:26.9.0
+        specifier: runtime:^26.9.0
         version: runtime:26.9.0
       syncpack:
         specifier: 15.3.2
@@ -17975,6 +17975,7 @@ snapshots:
   '@types/node@25.6.2':
     dependencies:
       undici-types: 7.19.2
+    optional: true
 
   '@types/node@26.6.2':
     dependencies:
@@ -18006,7 +18007,7 @@ snapshots:
 
   '@types/set-cookie-parser@2.4.10':
     dependencies:
-      '@types/node': 25.6.2
+      '@types/node': 26.6.2
     optional: true
 
   '@types/statuses@2.0.6':
@@ -21895,7 +21896,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 25.6.2
+      '@types/node': 26.6.2
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
