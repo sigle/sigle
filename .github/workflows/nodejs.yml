@@ -16,9 +16,9 @@ concurrency:
 jobs:
   build:
     name: Build and Test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-monorepo
 
       - name: Check dependencies consistency
@@ -38,16 +38,16 @@ jobs:
 
   test-contracts:
     name: "Test contracts"
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: "Check contract syntax (contracts)"
-        uses: docker://hirosystems/clarinet:3.5.0
+        uses: docker://ghcr.io/stx-labs/clarinet:3.12.0
         with:
           args: check --manifest-path ./apps/contracts/Clarinet.toml
 
       - name: "Check contract syntax (contracts-next)"
-        uses: docker://hirosystems/clarinet:3.5.0
+        uses: docker://ghcr.io/stx-labs/clarinet:3.12.0
         with:
           args: check --manifest-path ./apps/contracts-next/Clarinet.toml
