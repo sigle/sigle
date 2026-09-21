@@ -1,4 +1,4 @@
-ARG NODE_VERSION=24
+ARG NODE_VERSION=26
 FROM node:${NODE_VERSION}-alpine AS base
 
 WORKDIR /app
@@ -12,7 +12,8 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME/bin:$PATH"
 RUN apk add --no-cache git
 COPY --link ./package.json ./
-RUN corepack enable pnpm
+RUN PNPM_VERSION=$(node -p "require('./package.json').packageManager.split('@').pop()") && \
+    npm install -g pnpm@${PNPM_VERSION}
 RUN TURBO_VERSION=$(grep -o '"turbo": "[^"]*' package.json | cut -d'"' -f4) && \
     pnpm install turbo@${TURBO_VERSION} --global
 RUN pnpm install @dotenvx/dotenvx@^2 --global
