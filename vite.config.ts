@@ -97,6 +97,7 @@ export default defineConfig({
       "vitest/prefer-expect-assertions": "off",
       "jest/prefer-ending-with-an-expect": "off",
       "typescript/explicit-member-accessibility": "off",
+      "one-var": "off",
 
       "no-hooks": "off",
       "require-hook": "off",
