@@ -13,13 +13,12 @@ runs:
         restore-keys: |
           ${{ runner.os }}-turbo-
 
-    - uses: pnpm/action-setup@v6
-
-    - name: Use Node.js 24
-      uses: actions/setup-node@v7
+    - name: Use Node.js 24 and pnpm
+      uses: pnpm/setup@v2
       with:
-        node-version: 24
-        cache: "pnpm"
+        runtime: node@24
+        cache: true
+        install: false
 
     - name: Install dependencies
       shell: bash
