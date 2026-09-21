@@ -13,10 +13,9 @@ runs:
         restore-keys: |
           ${{ runner.os }}-turbo-
 
-    - name: Use Node.js 24 and pnpm
+    - name: Use Node.js and pnpm
       uses: pnpm/setup@v2
       with:
-        runtime: node@24
         cache: true
         install: false
 
