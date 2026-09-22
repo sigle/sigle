@@ -1,4 +1,7 @@
-# Technical Architecture
+---
+title: Technical Architecture
+description: Technical architecture of the Sigle protocol and monorepo.
+---
 
 Sigle is a monorepo that contains multiple packages. The main packages are:
 
@@ -29,7 +32,6 @@ flowchart LR
         end
     end
 
-    %% Define external storage systems
     subgraph Storage[" Storage Layer "]
         direction TB
         Arweave["Arweave<br/>Content"]
@@ -46,17 +48,6 @@ flowchart LR
     Indexer --> Contracts
     Indexer --> Arweave
     Indexer --> Ordinals
-
-    %% Styling
-    classDef client fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef core fill:#f5f5f5,stroke:#424242,stroke-width:2px
-    classDef storage fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
-    classDef database fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-
-    class UI client
-    class Contracts,API,Indexer core
-    class Arweave,Ordinals storage
-    class DB database
 ```
 
 ## Storage
