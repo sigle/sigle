@@ -2,20 +2,17 @@
   "name": "@sigle/docs",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "build": "next build",
-    "dev": "next",
-    "postbuild": "pagefind --site .next/server/app --output-path out/_pagefind"
+    "build": "astro build",
+    "dev": "astro dev",
+    "preview": "astro preview"
   },
   "dependencies": {
+    "@astrojs/sitemap": "3.7.4",
+    "@astrojs/starlight": "0.42.2",
     "@sigle/sdk": "workspace:*",
-    "next": "16.3.0",
-    "nextra": "4.6.1",
-    "nextra-theme-docs": "4.6.1",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
-  },
-  "devDependencies": {
-    "pagefind": "1.5.2"
+    "astro": "7.3.3",
+    "sharp": "0.35.3"
   }
 }

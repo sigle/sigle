@@ -1,7 +1,10 @@
-import { Callout } from "nextra/components";
-import { fixedMintFee, formatBTC } from "@sigle/sdk";
+---
+title: Monetization
+description: How payments and the fee structure work on Sigle when readers collect posts.
+---
 
-# Monetization
+import { Aside } from "@astrojs/starlight/components";
+import { fixedMintFee, formatBTC } from "@sigle/sdk";
 
 When readers collect your posts on Sigle, you receive payment directly in Bitcoin through sBTC.
 
@@ -19,9 +22,9 @@ When readers collect your posts on Sigle, you receive payment directly in Bitcoi
 
 ## Fee Structure
 
-<Callout type="warning" emoji="⚠️">
+<Aside type="caution">
   Fees are subject to change during the testnet phase.
-</Callout>
+</Aside>
 
 Collectors can decide to mint any content created on Sigle as a NFT. If a collector decides to mint the article, the following Base fee will be required in order to create a mint
 

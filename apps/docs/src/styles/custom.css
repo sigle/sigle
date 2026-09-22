@@ -1,0 +1,13 @@
+.mermaid-diagram {
+  display: flex;
+  justify-content: center;
+}
+
+.mermaid-diagram img {
+  max-width: 100%;
+  height: auto;
+}
+
+[data-theme="dark"] .mermaid-diagram img {
+  filter: invert(1) hue-rotate(180deg);
+}
