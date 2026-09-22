@@ -29,6 +29,7 @@ export default defineConfig({
       editLink: {
         baseUrl: "https://github.com/sigle/sigle/edit/main/apps/docs/",
       },
+      customCss: ["./src/styles/custom.css"],
       components: {
         Footer: "./src/components/Footer.astro",
       },

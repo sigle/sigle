@@ -1,0 +1,35 @@
+@import "@fontsource-variable/inter/index.css";
+
+:root {
+  --sl-color-white: hsl(0, 0%, 100%);
+  --sl-color-gray-1: hsl(0, 0%, 94%);
+  --sl-color-gray-2: hsl(0, 0%, 77%);
+  --sl-color-gray-3: hsl(0, 0%, 56%);
+  --sl-color-gray-4: hsl(0, 0%, 36%);
+  --sl-color-gray-5: hsl(0, 0%, 23%);
+  --sl-color-gray-6: hsl(0, 0%, 16%);
+  --sl-color-black: hsl(0, 0%, 10%);
+
+  --sl-color-accent-low: hsl(25, 60%, 18%);
+  --sl-color-accent: oklch(0.72 0.17 55);
+  --sl-color-accent-high: hsl(30, 100%, 82%);
+
+  --sl-font: "Inter Variable";
+  --sl-content-width: 48rem;
+}
+
+:root[data-theme="light"] {
+  --sl-color-white: hsl(0, 0%, 10%);
+  --sl-color-gray-1: hsl(0, 0%, 16%);
+  --sl-color-gray-2: hsl(0, 0%, 23%);
+  --sl-color-gray-3: hsl(0, 0%, 36%);
+  --sl-color-gray-4: hsl(0, 0%, 56%);
+  --sl-color-gray-5: hsl(0, 0%, 77%);
+  --sl-color-gray-6: hsl(0, 0%, 94%);
+  --sl-color-gray-7: hsl(0, 0%, 97%);
+  --sl-color-black: hsl(0, 0%, 100%);
+
+  --sl-color-accent-low: hsl(30, 100%, 90%);
+  --sl-color-accent: hsl(23, 100%, 40%);
+  --sl-color-accent-high: hsl(20, 80%, 25%);
+}
