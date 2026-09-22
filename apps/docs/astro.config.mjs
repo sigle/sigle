@@ -1,12 +1,14 @@
 // @ts-check
 import sitemap from "@astrojs/sitemap";
 import starlight from "@astrojs/starlight";
+import mermaid from "astro-mermaid";
 import { defineConfig } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://docs.sigle.io",
   integrations: [
+    mermaid({ autoTheme: true }),
     starlight({
       title: "Sigle",
       description:
@@ -27,7 +29,6 @@ export default defineConfig({
       editLink: {
         baseUrl: "https://github.com/sigle/sigle/edit/main/apps/docs/",
       },
-      customCss: ["./src/styles/custom.css"],
       components: {
         Footer: "./src/components/Footer.astro",
       },
@@ -50,4 +51,9 @@ export default defineConfig({
     }),
     sitemap(),
   ],
+  vite: {
+    build: {
+      chunkSizeWarningLimit: 700,
+    },
+  },
 });

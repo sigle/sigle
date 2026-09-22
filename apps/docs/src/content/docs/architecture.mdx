@@ -12,12 +12,43 @@ Sigle is a monorepo that contains multiple packages. The main packages are:
 
 ## Overview
 
-<div class="mermaid-diagram">
-  <img
-    src="/architecture-diagram.svg"
-    alt="Sigle technical architecture diagram"
-  />
-</div>
+```mermaid
+flowchart LR
+    %% Define core application components
+    subgraph Client[" Client Layer "]
+        direction TB
+        UI["Web Application<br/>(@sigle/sigle)"]
+    end
+
+    subgraph Core[" Core Layer "]
+        direction TB
+        Contracts["Smart Contracts<br/>(@sigle/contracts)"]
+
+        subgraph Backend[" Backend Services "]
+            direction TB
+            API["REST API<br/>(@sigle/server)"]
+            Indexer["Blockchain<br/>Indexer<br/>(@sigle/server)"]
+            DB[(Database<br/>PostgreSQL)]
+        end
+    end
+
+    subgraph Storage[" Storage Layer "]
+        direction TB
+        Arweave["Arweave<br/>Content"]
+        Ordinals["Bitcoin<br/>Ordinals"]
+    end
+
+    %% Define connections
+    UI --> Contracts
+    UI --> API
+
+    API --> DB
+    Indexer --> DB
+
+    Indexer --> Contracts
+    Indexer --> Arweave
+    Indexer --> Ordinals
+```
 
 ## Storage
 
