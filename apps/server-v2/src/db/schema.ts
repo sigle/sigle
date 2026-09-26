@@ -1,5 +1,6 @@
 import {
   boolean,
+  doublePrecision,
   index,
   pgEnum,
   pgTable,
@@ -84,3 +85,11 @@ export const verification = pgTable(
 // --
 // End of better-auth models
 // --
+
+// Backing store for the persistent rate limiter (`RateLimiterFlexible` in the
+// legacy Prisma schema).
+export const rateLimiterFlexible = pgTable("rate_limiter_flexible", {
+  key: text("key").primaryKey(),
+  points: doublePrecision("points").notNull(),
+  expire: timestamp("expire", { precision: 3 }),
+});

@@ -73,6 +73,34 @@ describe("config service", () => {
     }),
   );
 
+  it.effect("fails with ConfigError for non-positive rate limits", () =>
+    Effect.gen(function* () {
+      const exit = yield* Effect.exit(
+        Effect.gen(function* () {
+          return yield* AppConfig;
+        }).pipe(
+          Effect.provide(AppConfig.layer),
+          Effect.provide(
+            ConfigProvider.layer(
+              ConfigProvider.fromUnknown({
+                STACKS_ENV: "testnet",
+                SIGLE_ENV: "local",
+                APP_ID: "sigle-test",
+                APP_URL: "http://localhost:3000",
+                API_URL: "http://localhost:3001",
+                DATABASE_KIND: "pglite",
+                DATABASE_URL: "memory://",
+                RATE_LIMIT_POINTS: 0,
+              }),
+            ),
+          ),
+        ),
+      );
+
+      expect(exit._tag).toBe("Failure");
+    }),
+  );
+
   it.effect("provides test layer with overrides", () =>
     Effect.gen(function* () {
       const config = yield* AppConfig;
