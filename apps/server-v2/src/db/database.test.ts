@@ -50,6 +50,7 @@ describe("database", () => {
         });
 
         yield* db.delete(user).where(eq(user.id, created.id));
+
         const remaining = yield* db
           .select()
           .from(user)
@@ -92,6 +93,7 @@ describe("database", () => {
           .select()
           .from(session)
           .where(eq(session.id, sessionId));
+
         const [foundVerification] = yield* db
           .select()
           .from(verification)
@@ -124,6 +126,7 @@ describe("database", () => {
           .select()
           .from(session)
           .where(eq(session.userId, created.id));
+
         const remainingAccounts = yield* db
           .select()
           .from(account)
