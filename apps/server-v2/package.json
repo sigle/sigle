@@ -1,0 +1,29 @@
+{
+  "name": "@sigle/server-v2",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vp pack",
+    "dev": "dotenvx run --env-file=.env.development --env-file=.env.development.local -- tsx watch src/main.ts",
+    "test": "dotenvx run --env-file=.env.test -- vp test"
+  },
+  "dependencies": {
+    "@dotenvx/dotenvx": "2.20.1",
+    "@effect/platform-node": "4.0.0-rc.117",
+    "@effect/platform-node-shared": "4.0.0-rc.117",
+    "@sentry/effect": "10.50.0",
+    "effect": "4.0.0-rc.117",
+    "posthog-node": "5.30.2"
+  },
+  "devDependencies": {
+    "@effect/vitest": "4.0.0-rc.117",
+    "@tsconfig/recommended": "1.0.13",
+    "@types/node": "26.6.2",
+    "tsx": "4.21.0",
+    "typescript": "6.0.3",
+    "vite": "catalog:",
+    "vite-plus": "catalog:"
+  },
+  "packageManager": "pnpm@12.5.1"
+}

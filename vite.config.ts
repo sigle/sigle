@@ -126,6 +126,18 @@ export default defineConfig({
       "no-underscore-dangle": "off",
       // TODO: remove when vite-plus/test imports are supported by this rule
       "vitest/prefer-importing-vitest-globals": "off",
+      "func-names": "off",
+      "vitest/no-standalone-expect": [
+        "error",
+        {
+          additionalTestBlockFunctions: [
+            "it.effect",
+            "it.live",
+            "it.scoped",
+            "it.scopedLive",
+          ],
+        },
+      ],
     },
   },
 });
