@@ -2,6 +2,7 @@ import { describe, expect, it } from "@effect/vitest";
 import { Data, Effect, ErrorReporter } from "effect";
 import { AppConfig } from "@/config";
 import {
+  type ErrorAttributes,
   TelemetryLayer,
   isIgnoredHttpStatusError,
   makeSentryErrorReporter,
@@ -31,8 +32,8 @@ describe("telemetry service", () => {
     () =>
       Effect.gen(function* () {
         const captured: Array<{
-          readonly error: unknown;
-          readonly attributes: Record<string, unknown>;
+          readonly error: Error;
+          readonly attributes: ErrorAttributes;
         }> = [];
 
         const reporter = makeSentryErrorReporter({

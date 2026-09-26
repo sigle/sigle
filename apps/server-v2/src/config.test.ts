@@ -66,6 +66,7 @@ describe("config service", () => {
           Effect.provide(ConfigProvider.layer(ConfigProvider.fromUnknown({}))),
         ),
       );
+
       expect(exit._tag).toBe("Failure");
     }),
   );

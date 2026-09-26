@@ -31,9 +31,9 @@ export const appConfig = Config.all({
   POSTHOG_API_HOST: OptionalNonEmptyString("POSTHOG_API_HOST"),
 });
 
-export type AppConfigShape = Config.Success<typeof appConfig>;
+export type AppConfigValues = Config.Success<typeof appConfig>;
 
-export const defaultTestConfig: AppConfigShape = {
+export const defaultTestConfig: AppConfigValues = {
   NODE_ENV: "test",
   STACKS_ENV: "testnet",
   SIGLE_ENV: "local",
@@ -46,14 +46,14 @@ export const defaultTestConfig: AppConfigShape = {
   POSTHOG_API_HOST: Option.none(),
 };
 
-export class AppConfig extends Context.Service<AppConfig, AppConfigShape>()(
+export class AppConfig extends Context.Service<AppConfig, AppConfigValues>()(
   "sigle/AppConfig",
 ) {
   static readonly layer: Layer.Layer<AppConfig, Config.ConfigError> =
     Layer.effect(AppConfig, appConfig);
 
   static readonly layerTest = (
-    overrides?: Partial<AppConfigShape>,
+    overrides?: Partial<AppConfigValues>,
   ): Layer.Layer<AppConfig> =>
     Layer.succeed(AppConfig, {
       ...defaultTestConfig,

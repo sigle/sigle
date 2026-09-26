@@ -6,6 +6,7 @@ import { type PostHogEvent, PostHogService } from "@/services/posthog";
 describe("posthog service", () => {
   it.effect("records events in layerTest", () => {
     const events: Array<PostHogEvent> = [];
+
     return Effect.gen(function* () {
       const posthog = yield* PostHogService;
 

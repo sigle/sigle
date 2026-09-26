@@ -2,19 +2,29 @@ import { Context, Effect, Layer, Option, Redacted } from "effect";
 import { PostHog } from "posthog-node";
 import { AppConfig } from "@/config";
 
+export type PostHogPropertyValue =
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | ReadonlyArray<string | number | boolean>;
+
+export type PostHogProperties = Readonly<Record<string, PostHogPropertyValue>>;
+
 export interface PostHogEvent {
   readonly distinctId: string;
   readonly event: string;
-  readonly properties?: Record<string, unknown> | undefined;
+  readonly properties?: PostHogProperties | undefined;
 }
 
-export interface PostHogServiceShape {
+export interface PostHogClient {
   readonly capture: (event: PostHogEvent) => Effect.Effect<void>;
 }
 
 export class PostHogService extends Context.Service<
   PostHogService,
-  PostHogServiceShape
+  PostHogClient
 >()("sigle/PostHogService") {
   static readonly layer: Layer.Layer<PostHogService, never, AppConfig> =
     Layer.effect(

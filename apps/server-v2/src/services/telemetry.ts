@@ -5,8 +5,10 @@ import {
   ErrorReporter,
   Layer,
   Logger,
+  Match,
   Option,
   References,
+  Schema,
   Tracer,
 } from "effect";
 import { AppConfig } from "@/config";
@@ -25,37 +27,43 @@ BigInt.prototype.toJSON = function toJSON() {
 
 const IGNORED_HTTP_STATUSES = new Set([401, 404, 422]);
 
-const extractStatus = (value: unknown): number | undefined => {
-  if (typeof value === "object" && value !== null && "status" in value) {
-    const status = (value as { readonly status?: unknown }).status;
-    if (typeof status === "number") {
-      return status;
-    }
-  }
-  return undefined;
-};
+const HttpStatusStruct = Schema.Struct({
+  status: Schema.Number,
+});
+
+const decodeHttpStatus = Schema.decodeUnknownOption(HttpStatusStruct);
+
+export interface HttpStatusCandidate {
+  readonly status?: number | string | undefined;
+  readonly message?: string | undefined;
+}
 
 export const isIgnoredHttpStatusError = (
-  error: unknown,
+  error: HttpStatusCandidate,
   cause?: Cause.Cause<unknown>,
 ): boolean => {
-  const directStatus = extractStatus(error);
-  if (directStatus !== undefined && IGNORED_HTTP_STATUSES.has(directStatus)) {
+  const directStatus = decodeHttpStatus(error);
+
+  if (
+    Option.isSome(directStatus) &&
+    IGNORED_HTTP_STATUSES.has(directStatus.value.status)
+  ) {
     return true;
   }
 
   if (cause) {
     for (const reason of cause.reasons) {
-      const original =
-        reason._tag === "Fail"
-          ? reason.error
-          : reason._tag === "Die"
-            ? reason.defect
-            : undefined;
-      const reasonStatus = extractStatus(original);
+      const original = Match.value(reason).pipe(
+        Match.tag("Fail", (fail) => fail.error),
+        Match.tag("Die", (die) => die.defect),
+        Match.orElse(() => undefined),
+      );
+
+      const reasonStatus = decodeHttpStatus(original);
+
       if (
-        reasonStatus !== undefined &&
-        IGNORED_HTTP_STATUSES.has(reasonStatus)
+        Option.isSome(reasonStatus) &&
+        IGNORED_HTTP_STATUSES.has(reasonStatus.value.status)
       ) {
         return true;
       }
@@ -65,10 +73,12 @@ export const isIgnoredHttpStatusError = (
   return false;
 };
 
+export type ErrorAttributes = ReturnType<typeof ErrorReporter.getAttributes>;
+
 export interface ErrorCaptureTarget {
   readonly captureException: (
-    error: unknown,
-    attributes: Record<string, unknown>,
+    error: Error,
+    attributes: ErrorAttributes,
   ) => void;
 }
 
@@ -76,7 +86,7 @@ export const makeSentryErrorReporter = (
   target: ErrorCaptureTarget = {
     captureException: (error, attributes) => {
       Sentry.withScope((scope) => {
-        scope.setExtras(attributes);
+        scope.setExtras({ ...attributes });
         Sentry.captureException(error);
       });
     },
@@ -86,7 +96,8 @@ export const makeSentryErrorReporter = (
     if (isIgnoredHttpStatusError(error, cause)) {
       return;
     }
-    target.captureException(error, { ...attributes });
+
+    target.captureException(error, attributes);
   });
 
 export const SentryErrorReporter: ErrorReporter.ErrorReporter =
@@ -102,10 +113,12 @@ export const TelemetryLayer: Layer.Layer<never, never, AppConfig> =
   Layer.unwrap(
     Effect.gen(function* () {
       const config = yield* AppConfig;
+
       const consoleLogger =
         config.NODE_ENV === "production"
           ? Logger.consoleJson
           : Logger.consolePretty();
+
       const minLogLevel = config.NODE_ENV === "test" ? "Error" : "Info";
 
       if (Option.isSome(config.SENTRY_DSN)) {
