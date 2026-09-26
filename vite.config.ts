@@ -8,7 +8,7 @@ export default defineConfig({
     cache: true,
   },
   fmt: {
-    ignorePatterns: ["repos/**"],
+    ignorePatterns: ["repos/**", "**/drizzle/**"],
     printWidth: 80,
     experimentalSortImports: {
       newlinesBetween: false,

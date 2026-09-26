@@ -48,6 +48,8 @@ describe("config service", () => {
             APP_ID: "sigle-test",
             APP_URL: "http://localhost:3000",
             API_URL: "http://localhost:3001",
+            DATABASE_KIND: "pglite",
+            DATABASE_URL: "memory://",
             POSTHOG_API_KEY: "phc_secret_key",
             POSTHOG_API_HOST: "",
           }),
