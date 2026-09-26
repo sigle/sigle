@@ -8,7 +8,7 @@ export default defineConfig({
     cache: true,
   },
   fmt: {
-    ignorePatterns: [],
+    ignorePatterns: ["repos/**"],
     printWidth: 80,
     experimentalSortImports: {
       newlinesBetween: false,
@@ -48,7 +48,7 @@ export default defineConfig({
       typeCheck: true,
     },
     plugins: ["vitest"],
-    ignorePatterns: ["__generated__"],
+    ignorePatterns: ["__generated__", "repos/**"],
     categories: {
       correctness: "error",
       nursery: "error",

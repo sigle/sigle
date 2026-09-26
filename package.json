@@ -13,6 +13,7 @@
     "docker:dev:full": "docker compose --profile full up --build --watch",
     "docker:down": "docker compose --profile '*' down",
     "release": "pnpm changeset publish",
+    "repos:sync": "./scripts/sync-repos.sh",
     "test": "turbo test",
     "prepare": "vp config",
     "version": "pnpm changeset version && pnpm install --lockfile-only"

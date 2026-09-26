@@ -41,6 +41,12 @@ Now you can run the following command to install the dependencies:
 pnpm install
 ```
 
+If you are using AI coding agents, sync the reference repositories (such as Effect) into `./repos` so agents have local access to library source code:
+
+```sh
+pnpm repos:sync
+```
+
 To start the database and backend server in development/watch mode:
 
 ```sh
