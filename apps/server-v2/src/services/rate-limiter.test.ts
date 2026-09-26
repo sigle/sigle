@@ -14,6 +14,7 @@ describe("rate-limiter drizzle store", () => {
   it.effect("enforces the fixed window limit", () =>
     Effect.gen(function* () {
       const limiter = yield* RateLimiter.RateLimiter;
+
       const options = {
         algorithm: "fixed-window" as const,
         onExceeded: "fail" as const,
@@ -41,6 +42,7 @@ describe("rate-limiter drizzle store", () => {
   it.effect("resets the fixed window once it expires", () =>
     Effect.gen(function* () {
       const limiter = yield* RateLimiter.RateLimiter;
+
       const options = {
         algorithm: "fixed-window" as const,
         onExceeded: "fail" as const,
@@ -61,6 +63,7 @@ describe("rate-limiter drizzle store", () => {
   it.effect("enforces the token bucket limit", () =>
     Effect.gen(function* () {
       const limiter = yield* RateLimiter.RateLimiter;
+
       const options = {
         algorithm: "token-bucket" as const,
         onExceeded: "fail" as const,

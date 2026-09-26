@@ -70,13 +70,16 @@ export const makeDrizzleRateLimiterStore = Effect.gen(function* () {
                 }
 
                 const points = existing.points + options.tokens;
+
                 const expire = new Date(
                   existing.expire.getTime() + refillMillis * options.tokens,
                 );
+
                 yield* tx
                   .update(rateLimiterFlexible)
                   .set({ points, expire })
                   .where(eq(rateLimiterFlexible.key, options.key));
+
                 return [points, expire.getTime() - now] as const;
               }
 
@@ -89,6 +92,7 @@ export const makeDrizzleRateLimiterStore = Effect.gen(function* () {
                   target: rateLimiterFlexible.key,
                   set: { points, expire },
                 });
+
               return [points, refillMillis * options.tokens] as const;
             }),
           ),
@@ -120,15 +124,18 @@ export const makeDrizzleRateLimiterStore = Effect.gen(function* () {
               }
 
               const tokensToAdd = Math.floor((now - lastRefill) / refillMillis);
+
               if (tokensToAdd > 0) {
                 tokens = Math.min(options.limit, tokens + tokensToAdd);
                 lastRefill += tokensToAdd * refillMillis;
               }
+
               if (tokens >= options.limit) {
                 lastRefill = now;
               }
 
               const remaining = tokens - options.tokens;
+
               if (options.allowOverflow || remaining >= 0) {
                 tokens = remaining;
               }

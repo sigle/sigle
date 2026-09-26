@@ -139,6 +139,7 @@ describe("http server", () => {
       const remaining = Option.getOrUndefined(
         Headers.get(second.headers, "x-ratelimit-remaining"),
       );
+
       expect(remaining).toBe("0");
     }).pipe(
       Effect.provide(

@@ -1,4 +1,4 @@
-import { Duration, Effect, Layer, Option } from "effect";
+import { Duration, Effect, Layer, Option, Predicate } from "effect";
 import { HttpServerRequest, HttpServerResponse } from "effect/unstable/http";
 import { HttpApiMiddleware } from "effect/unstable/httpapi";
 import { RateLimiter } from "effect/unstable/persistence";
@@ -12,6 +12,7 @@ export class RateLimitMiddleware extends HttpApiMiddleware.Service<RateLimitMidd
 
 const clientKey = (request: HttpServerRequest.HttpServerRequest): string => {
   const address = request.remoteAddress;
+
   const ip =
     address !== undefined && Option.isSome(address) ? address.value : "unknown";
 
@@ -42,7 +43,7 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
           })
           .pipe(
             Effect.mapError((error) =>
-              error.reason._tag === "RateLimitExceeded"
+              Predicate.isTagged(error.reason, "RateLimitExceeded")
                 ? new TooManyRequests({
                     message: "Rate limit exceeded",
                     retryAfterMillis: Math.max(
