@@ -1,4 +1,4 @@
-import { Config, Context, Layer, Option, Redacted } from "effect";
+import { Config, Context, Layer, Option, Redacted, Schema } from "effect";
 
 const OptionalNonEmptyString = (
   name: string,
@@ -14,6 +14,9 @@ const OptionalNonEmptyRedacted = (
   name: string,
 ): Config.Config<Option.Option<Redacted.Redacted>> =>
   OptionalNonEmptyString(name).pipe(Config.map(Option.map(Redacted.make)));
+
+const PositiveInt = (name: string): Config.Config<number> =>
+  Config.schema(Schema.Int.check(Schema.isGreaterThan(0)), name);
 
 export const appConfig = Config.all({
   NODE_ENV: Config.Literals(
@@ -33,10 +36,10 @@ export const appConfig = Config.all({
   SENTRY_DSN: OptionalNonEmptyString("SENTRY_DSN"),
   POSTHOG_API_KEY: OptionalNonEmptyRedacted("POSTHOG_API_KEY"),
   POSTHOG_API_HOST: OptionalNonEmptyString("POSTHOG_API_HOST"),
-  RATE_LIMIT_POINTS: Config.Int("RATE_LIMIT_POINTS").pipe(
+  RATE_LIMIT_POINTS: PositiveInt("RATE_LIMIT_POINTS").pipe(
     Config.withDefault(60),
   ),
-  RATE_LIMIT_WINDOW_MS: Config.Int("RATE_LIMIT_WINDOW_MS").pipe(
+  RATE_LIMIT_WINDOW_MS: PositiveInt("RATE_LIMIT_WINDOW_MS").pipe(
     Config.withDefault(60_000),
   ),
 });

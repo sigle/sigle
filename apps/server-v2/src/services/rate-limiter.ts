@@ -48,6 +48,11 @@ export const makeDrizzleRateLimiterStore = Effect.gen(function* () {
         return yield* withStoreError(
           db.transaction((tx) =>
             Effect.gen(function* () {
+              yield* tx
+                .insert(rateLimiterFlexible)
+                .values({ key: options.key, points: 0, expire: null })
+                .onConflictDoNothing();
+
               const [existing] = yield* tx
                 .select()
                 .from(rateLimiterFlexible)
@@ -84,14 +89,13 @@ export const makeDrizzleRateLimiterStore = Effect.gen(function* () {
               }
 
               const points = options.tokens;
+
               const expire = new Date(now + refillMillis * options.tokens);
+
               yield* tx
-                .insert(rateLimiterFlexible)
-                .values({ key: options.key, points, expire })
-                .onConflictDoUpdate({
-                  target: rateLimiterFlexible.key,
-                  set: { points, expire },
-                });
+                .update(rateLimiterFlexible)
+                .set({ points, expire })
+                .where(eq(rateLimiterFlexible.key, options.key));
 
               return [points, refillMillis * options.tokens] as const;
             }),
@@ -109,6 +113,11 @@ export const makeDrizzleRateLimiterStore = Effect.gen(function* () {
         return yield* withStoreError(
           db.transaction((tx) =>
             Effect.gen(function* () {
+              yield* tx
+                .insert(rateLimiterFlexible)
+                .values({ key, points: options.limit, expire: new Date(now) })
+                .onConflictDoNothing();
+
               const [existing] = yield* tx
                 .select()
                 .from(rateLimiterFlexible)
@@ -141,13 +150,11 @@ export const makeDrizzleRateLimiterStore = Effect.gen(function* () {
               }
 
               const expire = new Date(lastRefill);
+
               yield* tx
-                .insert(rateLimiterFlexible)
-                .values({ key, points: tokens, expire })
-                .onConflictDoUpdate({
-                  target: rateLimiterFlexible.key,
-                  set: { points: tokens, expire },
-                });
+                .update(rateLimiterFlexible)
+                .set({ points: tokens, expire })
+                .where(eq(rateLimiterFlexible.key, key));
 
               return [remaining, Math.max(0, now - lastRefill)] as const;
             }),
