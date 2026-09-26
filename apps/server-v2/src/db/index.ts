@@ -40,12 +40,14 @@ export const makePgliteDatabase = Effect.gen(function* () {
 
 const postgresLayer = (config: AppConfigValues) =>
   Layer.effect(Database, makePostgresDatabase).pipe(
-    Layer.provide(PgClient.layer({ url: Redacted.make(config.DATABASE_URL) })),
+    Layer.provide(PgClient.layer({ url: config.DATABASE_URL })),
   );
 
 const pgliteLayer = (config: AppConfigValues) =>
   Layer.effect(Database, makePgliteDatabase).pipe(
-    Layer.provide(PgliteClient.layer({ dataDir: config.DATABASE_URL })),
+    Layer.provide(
+      PgliteClient.layer({ dataDir: Redacted.value(config.DATABASE_URL) }),
+    ),
   );
 
 export class Database extends Context.Service<Database, DatabaseClient>()(
