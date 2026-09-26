@@ -33,6 +33,12 @@ export const appConfig = Config.all({
   SENTRY_DSN: OptionalNonEmptyString("SENTRY_DSN"),
   POSTHOG_API_KEY: OptionalNonEmptyRedacted("POSTHOG_API_KEY"),
   POSTHOG_API_HOST: OptionalNonEmptyString("POSTHOG_API_HOST"),
+  RATE_LIMIT_POINTS: Config.Int("RATE_LIMIT_POINTS").pipe(
+    Config.withDefault(60),
+  ),
+  RATE_LIMIT_WINDOW_MS: Config.Int("RATE_LIMIT_WINDOW_MS").pipe(
+    Config.withDefault(60_000),
+  ),
 });
 
 export type AppConfigValues = Config.Success<typeof appConfig>;
@@ -50,6 +56,8 @@ export const defaultTestConfig: AppConfigValues = {
   SENTRY_DSN: Option.none(),
   POSTHOG_API_KEY: Option.none(),
   POSTHOG_API_HOST: Option.none(),
+  RATE_LIMIT_POINTS: 60,
+  RATE_LIMIT_WINDOW_MS: 60_000,
 };
 
 export class AppConfig extends Context.Service<AppConfig, AppConfigValues>()(
