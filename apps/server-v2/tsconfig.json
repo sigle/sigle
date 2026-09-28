@@ -8,6 +8,12 @@
     "strict": true,
     "noUncheckedIndexedAccess": false,
     "noEmit": true,
+    "plugins": [
+      {
+        "name": "@effect/language-service",
+        "diagnostics": false
+      }
+    ],
     "paths": {
       "@/*": ["./src/*"]
     }

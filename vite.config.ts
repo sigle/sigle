@@ -1,3 +1,4 @@
+import { recommended } from "@effect/tsgo/oxlint-presets";
 import { defineConfig } from "vite-plus";
 
 export default defineConfig({
@@ -139,5 +140,52 @@ export default defineConfig({
         },
       ],
     },
+    overrides: [
+      {
+        files: ["apps/server-v2/**"],
+        plugins: ["effecttsgo"],
+        rules: {
+          ...recommended.rules,
+          // The root `categories` setting switches on every effecttsgo rule,
+          // including the ones the recommended preset intentionally leaves off.
+          "effecttsgo/any-unknown-in-error-context": "off",
+          "effecttsgo/async-function": "off",
+          "effecttsgo/crypto-random-uuid": "off",
+          "effecttsgo/crypto-random-uuid-in-effect": "off",
+          "effecttsgo/deterministic-keys": "off",
+          "effecttsgo/effect-do-notation": "off",
+          "effecttsgo/extends-native-error": "off",
+          "effecttsgo/global-console": "off",
+          "effecttsgo/global-console-in-effect": "off",
+          "effecttsgo/global-date": "off",
+          "effecttsgo/global-date-in-effect": "off",
+          "effecttsgo/global-fetch": "off",
+          "effecttsgo/global-fetch-in-effect": "off",
+          "effecttsgo/global-random": "off",
+          "effecttsgo/global-random-in-effect": "off",
+          "effecttsgo/global-timers": "off",
+          "effecttsgo/global-timers-in-effect": "off",
+          "effecttsgo/instance-of-schema": "off",
+          "effecttsgo/missed-pipeable-opportunity": "off",
+          "effecttsgo/missing-effect-service-dependency": "off",
+          "effecttsgo/missing-pipeable-signature": "off",
+          "effecttsgo/nested-effect-gen-yield": "off",
+          "effecttsgo/new-promise": "off",
+          "effecttsgo/new-schema-class": "off",
+          "effecttsgo/node-builtin-import": "off",
+          "effecttsgo/prefer-schema-over-json": "off",
+          "effecttsgo/prefer-schema-type-property": "off",
+          "effecttsgo/process-env": "off",
+          "effecttsgo/process-env-in-effect": "off",
+          "effecttsgo/schema-sync": "off",
+          "effecttsgo/schema-union-of-literals": "off",
+          "effecttsgo/service-not-as-class": "off",
+          "effecttsgo/strict-boolean-expressions": "off",
+          "effecttsgo/strict-effect-provide": "off",
+          "effecttsgo/unnecessary-arrow-block": "off",
+          "effecttsgo/unsafe-effect-type-assertion": "off",
+        },
+      },
+    ],
   },
 });

@@ -15,13 +15,15 @@
     "release": "pnpm changeset publish",
     "repos:sync": "./scripts/sync-repos.sh",
     "test": "turbo test",
-    "prepare": "vp config",
+    "prepare": "vp config && effect-tsgo patch --oxlint",
     "version": "pnpm changeset version && pnpm install --lockfile-only"
   },
   "devDependencies": {
     "@changesets/cli": "2.31.1",
+    "@effect/tsgo": "0.46.1",
     "syncpack": "15.3.2",
     "turbo": "2.11.2",
+    "typescript": "7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:"
   },
