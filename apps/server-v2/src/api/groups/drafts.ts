@@ -15,6 +15,28 @@ const DateTime = Schema.DateTimeUtcFromString.pipe(
   Schema.annotateEncoded({ format: "date-time" }),
 );
 
+/**
+ * PATCH field: omit to leave the current value unchanged.
+ */
+const Patch = <S extends Schema.Top>(schema: S) =>
+  Schema.optionalKey(schema).pipe(
+    Schema.annotateEncoded({
+      description: "Omit to keep the current value unchanged.",
+    }),
+  );
+
+/**
+ * PATCH field following JSON Merge Patch semantics: omit to keep the current
+ * value unchanged, set to `null` to clear it.
+ */
+const Clearable = <S extends Schema.Top>(schema: S) =>
+  Schema.optionalKey(Schema.NullOr(schema)).pipe(
+    Schema.annotateEncoded({
+      description:
+        "Omit to keep the current value unchanged, set to null to clear it.",
+    }),
+  );
+
 export const Draft = Schema.Struct({
   id: Schema.String,
   title: Schema.String,
@@ -74,13 +96,13 @@ export const CreateDraftPayload = Schema.Struct({
 }).annotate({ identifier: "CreateDraftPayload" });
 
 export const UpdateDraftPayload = Schema.Struct({
-  title: Schema.optionalKey(Schema.String),
-  content: Schema.optionalKey(Schema.String),
-  metaTitle: Schema.optionalKey(Schema.NullOr(Schema.String)),
-  metaDescription: Schema.optionalKey(Schema.NullOr(Schema.String)),
-  coverImage: Schema.optionalKey(Schema.NullOr(Schema.String)),
-  tags: Schema.optionalKey(Schema.Array(Schema.String)),
-  canonicalUri: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  title: Patch(Schema.String),
+  content: Patch(Schema.String),
+  metaTitle: Clearable(Schema.String),
+  metaDescription: Clearable(Schema.String),
+  coverImage: Clearable(Schema.String),
+  tags: Clearable(Schema.mutable(Schema.Array(Schema.String))),
+  canonicalUri: Clearable(Schema.String),
 }).annotate({ identifier: "UpdateDraftPayload" });
 
 export const DraftsGroup = HttpApiGroup.make("drafts")
@@ -123,7 +145,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       .annotate(OpenApi.Summary, "Update a draft")
       .annotate(
         OpenApi.Description,
-        "Partially update a draft. Omitted fields are left unchanged, `null` clears nullable fields.",
+        "Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields.",
       ),
     HttpApiEndpoint.delete("delete", "/:draftId", {
       params: {

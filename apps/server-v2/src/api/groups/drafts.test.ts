@@ -8,7 +8,11 @@ import {
   HttpClientResponse,
 } from "effect/unstable/http";
 import type { PostHogEvent } from "@/services/posthog";
-import { Draft, DraftListResponse } from "@/api/groups/drafts";
+import {
+  Draft,
+  DraftListResponse,
+  UpdateDraftPayload,
+} from "@/api/groups/drafts";
 import { Database } from "@/db";
 import { draft } from "@/db/schema";
 import { createAuthenticatedClient, createTestDraft } from "@/test/helpers";
@@ -418,4 +422,34 @@ describe("drafts", () => {
       ]);
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
+});
+
+describe("update draft payload", () => {
+  it("treats omitted fields as unchanged", () => {
+    const decoded = Schema.decodeSync(UpdateDraftPayload)({});
+
+    expect(decoded).toStrictEqual({});
+  });
+
+  it("clears nullable fields with null", () => {
+    const decoded = Schema.decodeSync(UpdateDraftPayload)({
+      metaTitle: null,
+      coverImage: null,
+      tags: [],
+      canonicalUri: null,
+    });
+
+    expect(decoded).toStrictEqual({
+      metaTitle: null,
+      coverImage: null,
+      tags: [],
+      canonicalUri: null,
+    });
+  });
+
+  it("rejects null for non-nullable fields", () => {
+    expect(() =>
+      Schema.decodeSync(UpdateDraftPayload)({ title: null } as never),
+    ).toThrow("Expected string");
+  });
 });

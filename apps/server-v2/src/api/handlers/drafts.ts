@@ -131,6 +131,23 @@ export const getDraft = (draftId: string) =>
     return toDraft(foundDraft);
   });
 
+/**
+ * Maps the PATCH payload to a Drizzle update set. Drizzle ignores `undefined`
+ * values, which is how JSON Merge Patch "omitted" fields are left unchanged.
+ * Listing the columns explicitly keeps non-column payload keys out of the
+ * update.
+ */
+const toUpdateSet = (payload: typeof UpdateDraftPayload.Type) => ({
+  title: payload.title,
+  content: payload.content,
+  metaTitle: payload.metaTitle,
+  metaDescription: payload.metaDescription,
+  coverImage: payload.coverImage,
+  tags: payload.tags,
+  canonicalUri: payload.canonicalUri,
+  updatedAt: new Date(),
+});
+
 export const updateDraft = (
   draftId: string,
   payload: typeof UpdateDraftPayload.Type,
@@ -141,24 +158,7 @@ export const updateDraft = (
 
     const [updatedDraft] = yield* db
       .update(draft)
-      .set({
-        ...(payload.title === undefined ? {} : { title: payload.title }),
-        ...(payload.content === undefined ? {} : { content: payload.content }),
-        ...(payload.metaTitle === undefined
-          ? {}
-          : { metaTitle: payload.metaTitle }),
-        ...(payload.metaDescription === undefined
-          ? {}
-          : { metaDescription: payload.metaDescription }),
-        ...(payload.coverImage === undefined
-          ? {}
-          : { coverImage: payload.coverImage }),
-        ...(payload.tags === undefined ? {} : { tags: [...payload.tags] }),
-        ...(payload.canonicalUri === undefined
-          ? {}
-          : { canonicalUri: payload.canonicalUri }),
-        updatedAt: new Date(),
-      })
+      .set(toUpdateSet(payload))
       .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
       .returning()
       .pipe(Effect.orDie);
