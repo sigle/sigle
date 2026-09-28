@@ -57,11 +57,8 @@ describe("http server", () => {
         expect.arrayContaining([
           "/health",
           "/api/protected/me",
-          "/api/protected/drafts/create",
-          "/api/protected/drafts/list",
+          "/api/protected/drafts",
           "/api/protected/drafts/{draftId}",
-          "/api/protected/drafts/{draftId}/update",
-          "/api/protected/drafts/{draftId}/delete",
         ]),
       );
       expect(

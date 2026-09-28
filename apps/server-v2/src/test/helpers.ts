@@ -38,6 +38,8 @@ export const createTestDraft = (options: {
   readonly userId: string;
   readonly title?: string;
   readonly content?: string;
+  readonly createdAt?: Date;
+  readonly updatedAt?: Date;
 }) =>
   Effect.gen(function* () {
     const db = yield* Database;
@@ -48,6 +50,8 @@ export const createTestDraft = (options: {
         id: options.id ?? crypto.randomUUID(),
         title: options.title ?? "Test Draft",
         content: options.content ?? "Test content",
+        createdAt: options.createdAt,
+        updatedAt: options.updatedAt,
         userId: options.userId,
       })
       .returning();
