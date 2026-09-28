@@ -31,7 +31,7 @@
     "@types/node": "26.6.2",
     "openapi-typescript": "7.13.0",
     "tsx": "4.21.0",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:",
     "zod": "4.3.6"

@@ -20,6 +20,6 @@
   "devDependencies": {
     "@rspack/cli": "2.1.8",
     "@rspack/core": "2.1.8",
-    "typescript": "6.0.3"
+    "typescript": "7.0.2"
   }
 }
