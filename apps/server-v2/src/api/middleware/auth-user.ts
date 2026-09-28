@@ -5,13 +5,13 @@ import { Forbidden, Unauthorized } from "@/api/schemas";
 import { AuthService } from "@/services/auth";
 import { UserWhitelistService } from "@/services/users";
 
-export interface CurrentUserShape {
+export interface AuthenticatedUser {
   readonly id: string;
 }
 
 export class CurrentUser extends Context.Service<
   CurrentUser,
-  CurrentUserShape
+  AuthenticatedUser
 >()("sigle/CurrentUser") {}
 
 export class UserAuthMiddleware extends HttpApiMiddleware.Service<

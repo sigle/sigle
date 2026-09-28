@@ -55,7 +55,7 @@ export interface AuthSession {
   };
 }
 
-export interface AuthServiceShape {
+export interface AuthApi {
   readonly handler: (request: Request) => Effect.Effect<Response>;
   readonly getSession: (headers: Headers) => Effect.Effect<AuthSession | null>;
 }
@@ -73,13 +73,12 @@ export const makeAuthService = Effect.gen(function* () {
 
         return session ? { user: { id: session.user.id } } : null;
       }),
-  } satisfies AuthServiceShape;
+  } satisfies AuthApi;
 });
 
-export class AuthService extends Context.Service<
-  AuthService,
-  AuthServiceShape
->()("sigle/AuthService") {
+export class AuthService extends Context.Service<AuthService, AuthApi>()(
+  "sigle/AuthService",
+) {
   static readonly layer: Layer.Layer<
     AuthService,
     never,

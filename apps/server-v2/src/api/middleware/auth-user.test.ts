@@ -14,10 +14,13 @@ import {
 import { makeTestServerLayer } from "@/test/server";
 
 const NonceResponse = Schema.Struct({ nonce: Schema.String });
+
 const VerifyResponse = Schema.Struct({
   user: Schema.Struct({ id: Schema.String }),
 });
+
 const CurrentUserResponse = Schema.Struct({ id: Schema.String });
+
 const ErrorResponse = Schema.Struct({ message: Schema.String });
 
 const withCookies = Effect.gen(function* () {
@@ -38,6 +41,7 @@ const authenticate = (
         HttpClientRequest.bodyJsonUnsafe({}),
       ),
     );
+
     const { nonce } =
       yield* HttpClientResponse.schemaBodyJson(NonceResponse)(nonceResponse);
 
@@ -46,6 +50,7 @@ const authenticate = (
       nonce,
       chainId: credentials.chainId,
     });
+
     const signature = signTestSiwsMessage(message, credentials.privateKey);
 
     const verifyResponse = yield* client.execute(
@@ -66,6 +71,7 @@ describe("userAuthMiddleware", () => {
       const client = yield* HttpClient.HttpClient;
 
       const response = yield* client.get("/api/protected/me");
+
       const body =
         yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
 
@@ -82,6 +88,7 @@ describe("userAuthMiddleware", () => {
       yield* authenticate(client, credentials);
 
       const response = yield* client.get("/api/protected/me");
+
       const body =
         yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
 
@@ -98,6 +105,7 @@ describe("userAuthMiddleware", () => {
       const userId = yield* authenticate(client, credentials);
 
       const response = yield* client.get("/api/protected/me");
+
       const body =
         yield* HttpClientResponse.schemaBodyJson(CurrentUserResponse)(response);
 

@@ -81,6 +81,8 @@ export const makePgliteDatabases = Effect.gen(function* () {
 
   yield* migratePglite(db, { migrationsFolder });
 
+  // SAFETY: PgliteClient exposes the live PGlite instance it owns, and the
+  // drizzle pglite driver only accepts the concrete PGlite class.
   const authDb = makeAuthPgliteDatabase(db.$client.pglite as PGlite);
 
   return { db, authDb };

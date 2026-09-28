@@ -30,6 +30,7 @@ export const createTestUser = (
   });
 
 const STACKS_MAINNET_CHAIN_ID = 1;
+
 const STACKS_TESTNET_CHAIN_ID = 2_147_483_648;
 
 export interface TestSiwsCredentials {

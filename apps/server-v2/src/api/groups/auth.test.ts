@@ -16,6 +16,7 @@ import {
 import { makeTestServerLayer } from "@/test/server";
 
 const NonceResponse = Schema.Struct({ nonce: Schema.String });
+
 const VerifyResponse = Schema.Struct({
   token: Schema.String,
   success: Schema.Boolean,
@@ -25,9 +26,12 @@ const VerifyResponse = Schema.Struct({
     chainId: Schema.Number,
   }),
 });
+
 const ErrorResponse = Schema.Struct({ message: Schema.String });
 
-const postJson = (url: string, body: unknown) =>
+type SiwsRequestBody = Record<string, string>;
+
+const postJson = (url: string, body: SiwsRequestBody) =>
   HttpClientRequest.post(url).pipe(HttpClientRequest.bodyJsonUnsafe(body));
 
 const requestNonce = (client: HttpClient.HttpClient) =>
@@ -49,6 +53,7 @@ describe("auth siws", () => {
       const response = yield* client.execute(
         postJson("/api/auth/siws/nonce", {}),
       );
+
       const body =
         yield* HttpClientResponse.schemaBodyJson(NonceResponse)(response);
 
@@ -90,6 +95,7 @@ describe("auth siws", () => {
         const signature = signTestSiwsMessage(message, privateKey);
 
         const response = yield* requestVerify(client, { message, signature });
+
         const body =
           yield* HttpClientResponse.schemaBodyJson(VerifyResponse)(response);
 
@@ -97,14 +103,17 @@ describe("auth siws", () => {
           .select()
           .from(user)
           .where(eq(user.id, body.user.id));
+
         const [createdWallet] = yield* db
           .select()
           .from(walletAddress)
           .where(eq(walletAddress.userId, body.user.id));
+
         const [createdSession] = yield* db
           .select()
           .from(session)
           .where(eq(session.token, body.token));
+
         const remainingNonces = yield* db
           .select()
           .from(verification)
@@ -156,6 +165,7 @@ describe("auth siws", () => {
 
       const first = yield* requestVerify(client, { message, signature });
       const second = yield* requestVerify(client, { message, signature });
+
       const body =
         yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(second);
 
@@ -176,6 +186,7 @@ describe("auth siws", () => {
       const signature = signTestSiwsMessage(message, otherPrivateKey);
 
       const response = yield* requestVerify(client, { message, signature });
+
       const body =
         yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
 
