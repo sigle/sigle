@@ -199,13 +199,23 @@ describe("drafts", () => {
 
       const zero = yield* client.get("/api/protected/drafts?limit=0");
       const tooBig = yield* client.get("/api/protected/drafts?limit=101");
+      const fractionalLimit = yield* client.get(
+        "/api/protected/drafts?limit=2.5",
+      );
       const negativeOffset = yield* client.get(
         "/api/protected/drafts?offset=-1",
       );
-
-      expect([zero.status, tooBig.status, negativeOffset.status]).toStrictEqual(
-        [400, 400, 400],
+      const fractionalOffset = yield* client.get(
+        "/api/protected/drafts?offset=0.5",
       );
+
+      expect([
+        zero.status,
+        tooBig.status,
+        fractionalLimit.status,
+        negativeOffset.status,
+        fractionalOffset.status,
+      ]).toStrictEqual([400, 400, 400, 400, 400]);
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 

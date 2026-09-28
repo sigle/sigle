@@ -73,6 +73,7 @@ export const DraftListQuery = Schema.Struct({
   limit: Schema.optionalKey(
     Schema.FiniteFromString.pipe(
       Schema.check(
+        Schema.isInt(),
         Schema.isGreaterThanOrEqualTo(1),
         Schema.isLessThanOrEqualTo(DRAFT_LIST_MAX_LIMIT),
       ),
@@ -80,7 +81,7 @@ export const DraftListQuery = Schema.Struct({
   ),
   offset: Schema.optionalKey(
     Schema.FiniteFromString.pipe(
-      Schema.check(Schema.isGreaterThanOrEqualTo(0)),
+      Schema.check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(0)),
     ),
   ),
 }).annotate({ identifier: "DraftListQuery" });
