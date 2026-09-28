@@ -117,3 +117,29 @@ export const rateLimiterFlexible = pgTable("rate_limiter_flexible", {
   points: doublePrecision("points").notNull(),
   expire: timestamp("expire", { precision: 3 }),
 });
+
+// --
+// Drafts
+// --
+
+export const draft = pgTable(
+  "draft",
+  {
+    id: text("id").primaryKey(),
+    title: text("title").notNull(),
+    content: text("content").notNull(),
+    metaTitle: text("meta_title"),
+    metaDescription: text("meta_description"),
+    coverImage: text("cover_image"),
+    canonicalUri: text("canonical_uri"),
+    txId: text("tx_id"),
+    txStatus: text("tx_status"),
+    tags: text("tags").array(),
+    createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id),
+  },
+  (table) => [index("draft_user_id_idx").on(table.userId)],
+);

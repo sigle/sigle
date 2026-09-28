@@ -4,10 +4,16 @@ import {
   makeRandomPrivKey,
   signMessageHashRsv,
 } from "@stacks/transactions";
-import { Effect } from "effect";
+import { Effect, Ref, Schema } from "effect";
+import {
+  Cookies,
+  HttpClient,
+  HttpClientRequest,
+  HttpClientResponse,
+} from "effect/unstable/http";
 import { createSiwsMessage } from "sign-in-with-stacks";
 import { Database } from "@/db";
-import { user } from "@/db/schema";
+import { draft, user } from "@/db/schema";
 
 export const createTestUser = (
   overrides: Partial<typeof user.$inferInsert> = {},
@@ -23,6 +29,28 @@ export const createTestUser = (
         name: "Test User",
         email: `${id}@test.sigle.io`,
         ...overrides,
+      })
+      .returning();
+
+    return created;
+  });
+
+export const createTestDraft = (options: {
+  readonly id?: string;
+  readonly userId: string;
+  readonly title?: string;
+  readonly content?: string;
+}) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+
+    const [created] = yield* db
+      .insert(draft)
+      .values({
+        id: options.id ?? crypto.randomUUID(),
+        title: options.title ?? "Test Draft",
+        content: options.content ?? "Test content",
+        userId: options.userId,
       })
       .returning();
 
@@ -74,4 +102,59 @@ export const signTestSiwsMessage = (
   signMessageHashRsv({
     messageHash: Buffer.from(hashMessage(message)).toString("hex"),
     privateKey,
+  });
+
+const NonceResponse = Schema.Struct({ nonce: Schema.String });
+
+const VerifyResponse = Schema.Struct({
+  user: Schema.Struct({ id: Schema.String }),
+});
+
+/**
+ * Creates an HTTP client that persists the session cookies set by
+ * `better-auth` during the SIWS handshake.
+ */
+export const createAuthenticatedClient = Effect.gen(function* () {
+  const cookies = yield* Ref.make(Cookies.empty);
+
+  return (yield* HttpClient.HttpClient).pipe(
+    HttpClient.withCookiesRef(cookies),
+  );
+});
+
+/**
+ * Signs in with the SIWS endpoints and returns the authenticated user id.
+ */
+export const signInWithStacks = (
+  client: HttpClient.HttpClient,
+  credentials: TestSiwsCredentials,
+) =>
+  Effect.gen(function* () {
+    const nonceResponse = yield* client.execute(
+      HttpClientRequest.post("/api/auth/siws/nonce").pipe(
+        HttpClientRequest.bodyJsonUnsafe({}),
+      ),
+    );
+
+    const { nonce } =
+      yield* HttpClientResponse.schemaBodyJson(NonceResponse)(nonceResponse);
+
+    const message = createTestSiwsMessage({
+      address: credentials.address,
+      nonce,
+      chainId: credentials.chainId,
+    });
+
+    const signature = signTestSiwsMessage(message, credentials.privateKey);
+
+    const verifyResponse = yield* client.execute(
+      HttpClientRequest.post("/api/auth/siws/verify").pipe(
+        HttpClientRequest.bodyJsonUnsafe({ message, signature }),
+      ),
+    );
+
+    const body =
+      yield* HttpClientResponse.schemaBodyJson(VerifyResponse)(verifyResponse);
+
+    return body.user.id;
   });
