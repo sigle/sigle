@@ -18,6 +18,6 @@ export const makeTestServerLayer = (
     Layer.provideMerge(NodeHttpServer.layerTest),
     Layer.provide(RateLimiterTest),
     Layer.provideMerge(TestDatabaseLayer),
-    Layer.provide(AppConfig.layerTest(overrides)),
+    Layer.provideMerge(AppConfig.layerTest(overrides)),
     Layer.provide(PostHogService.layerTest(posthogEvents)),
   );

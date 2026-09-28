@@ -10,12 +10,7 @@ import type { PostHogEvent } from "@/services/posthog";
 import { DraftListItem, Draft, UpdateDraftResponse } from "@/api/groups/drafts";
 import { Database } from "@/db";
 import { draft } from "@/db/schema";
-import {
-  createAuthenticatedClient,
-  createTestDraft,
-  createTestSiwsCredentials,
-  signInWithStacks,
-} from "@/test/helpers";
+import { createAuthenticatedClient, createTestDraft } from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 
 const CreateDraftResponse = Schema.Struct({ id: Schema.String });
@@ -36,12 +31,8 @@ describe("drafts", () => {
     const events: Array<PostHogEvent> = [];
 
     return Effect.gen(function* () {
-      const client = yield* createAuthenticatedClient;
+      const { client, userId } = yield* createAuthenticatedClient();
       const db = yield* Database;
-      const userId = yield* signInWithStacks(
-        client,
-        createTestSiwsCredentials(),
-      );
 
       const response = yield* client.execute(
         HttpClientRequest.post("/api/protected/drafts/create"),
@@ -74,11 +65,7 @@ describe("drafts", () => {
 
   it.effect("GET /api/protected/drafts/list returns list of drafts", () =>
     Effect.gen(function* () {
-      const client = yield* createAuthenticatedClient;
-      const userId = yield* signInWithStacks(
-        client,
-        createTestSiwsCredentials(),
-      );
+      const { client, userId } = yield* createAuthenticatedClient();
 
       yield* createTestDraft({ id: "draft-1", userId, title: "Draft 1" });
       yield* createTestDraft({ id: "draft-2", userId, title: "Draft 2" });
@@ -97,8 +84,7 @@ describe("drafts", () => {
     "GET /api/protected/drafts/list returns empty list when no drafts",
     () =>
       Effect.gen(function* () {
-        const client = yield* createAuthenticatedClient;
-        yield* signInWithStacks(client, createTestSiwsCredentials());
+        const { client } = yield* createAuthenticatedClient();
 
         const drafts = yield* listDrafts(client, 10);
 
@@ -108,11 +94,7 @@ describe("drafts", () => {
 
   it.effect("GET /api/protected/drafts/list respects limit parameter", () =>
     Effect.gen(function* () {
-      const client = yield* createAuthenticatedClient;
-      const userId = yield* signInWithStacks(
-        client,
-        createTestSiwsCredentials(),
-      );
+      const { client, userId } = yield* createAuthenticatedClient();
 
       yield* createTestDraft({ id: "draft-1", userId, title: "Draft 1" });
       yield* createTestDraft({ id: "draft-2", userId, title: "Draft 2" });
@@ -128,9 +110,7 @@ describe("drafts", () => {
     "GET /api/protected/drafts/list returns 403 when user is not whitelisted",
     () =>
       Effect.gen(function* () {
-        const client = yield* createAuthenticatedClient;
-        const credentials = createTestSiwsCredentials("mainnet");
-        yield* signInWithStacks(client, credentials);
+        const { client } = yield* createAuthenticatedClient();
 
         const response = yield* client.get(
           "/api/protected/drafts/list?limit=10",
@@ -146,11 +126,7 @@ describe("drafts", () => {
 
   it.effect("GET /api/protected/drafts/:draftId returns draft by id", () =>
     Effect.gen(function* () {
-      const client = yield* createAuthenticatedClient;
-      const userId = yield* signInWithStacks(
-        client,
-        createTestSiwsCredentials(),
-      );
+      const { client, userId } = yield* createAuthenticatedClient();
 
       const created = yield* createTestDraft({
         id: "draft-1",
@@ -177,8 +153,7 @@ describe("drafts", () => {
     "GET /api/protected/drafts returns 404 when draftId is missing",
     () =>
       Effect.gen(function* () {
-        const client = yield* createAuthenticatedClient;
-        yield* signInWithStacks(client, createTestSiwsCredentials());
+        const { client } = yield* createAuthenticatedClient();
 
         const response = yield* client.get("/api/protected/drafts/");
 
@@ -190,8 +165,7 @@ describe("drafts", () => {
     "GET /api/protected/drafts/:draftId returns 404 when draft not found",
     () =>
       Effect.gen(function* () {
-        const client = yield* createAuthenticatedClient;
-        yield* signInWithStacks(client, createTestSiwsCredentials());
+        const { client } = yield* createAuthenticatedClient();
 
         const response = yield* client.get(
           "/api/protected/drafts/non-existent",
@@ -207,12 +181,8 @@ describe("drafts", () => {
 
   it.effect("POST /api/protected/drafts/:draftId/update updates a draft", () =>
     Effect.gen(function* () {
-      const client = yield* createAuthenticatedClient;
+      const { client, userId } = yield* createAuthenticatedClient();
       const db = yield* Database;
-      const userId = yield* signInWithStacks(
-        client,
-        createTestSiwsCredentials(),
-      );
 
       yield* createTestDraft({
         id: "draft-1",
@@ -251,8 +221,7 @@ describe("drafts", () => {
     "POST /api/protected/drafts/:draftId/update returns 404 when draft not found",
     () =>
       Effect.gen(function* () {
-        const client = yield* createAuthenticatedClient;
-        yield* signInWithStacks(client, createTestSiwsCredentials());
+        const { client } = yield* createAuthenticatedClient();
 
         const response = yield* client.execute(
           HttpClientRequest.post(
@@ -277,8 +246,7 @@ describe("drafts", () => {
     "POST /api/protected/drafts/:draftId/delete returns 404 when draft not found",
     () =>
       Effect.gen(function* () {
-        const client = yield* createAuthenticatedClient;
-        yield* signInWithStacks(client, createTestSiwsCredentials());
+        const { client } = yield* createAuthenticatedClient();
 
         const response = yield* client.execute(
           HttpClientRequest.post("/api/protected/drafts/non-existent/delete"),
@@ -298,12 +266,8 @@ describe("drafts", () => {
       const events: Array<PostHogEvent> = [];
 
       return Effect.gen(function* () {
-        const client = yield* createAuthenticatedClient;
+        const { client, userId } = yield* createAuthenticatedClient();
         const db = yield* Database;
-        const userId = yield* signInWithStacks(
-          client,
-          createTestSiwsCredentials(),
-        );
 
         yield* createTestDraft({
           id: "draft-1",

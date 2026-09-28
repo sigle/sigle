@@ -1,11 +1,7 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Effect, Schema } from "effect";
-import { HttpClientResponse } from "effect/unstable/http";
-import {
-  createAuthenticatedClient,
-  createTestSiwsCredentials,
-  signInWithStacks,
-} from "@/test/helpers";
+import { HttpClient, HttpClientResponse } from "effect/unstable/http";
+import { createAuthenticatedClient } from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 
 const CurrentUserResponse = Schema.Struct({ id: Schema.String });
@@ -15,7 +11,7 @@ const ErrorResponse = Schema.Struct({ message: Schema.String });
 describe("userAuthMiddleware", () => {
   it.effect("returns 401 when no session is provided", () =>
     Effect.gen(function* () {
-      const client = yield* createAuthenticatedClient;
+      const client = yield* HttpClient.HttpClient;
 
       const response = yield* client.get("/api/protected/me");
 
@@ -29,10 +25,7 @@ describe("userAuthMiddleware", () => {
 
   it.effect("returns 403 when the user is not whitelisted", () =>
     Effect.gen(function* () {
-      const client = yield* createAuthenticatedClient;
-      const credentials = createTestSiwsCredentials("mainnet");
-
-      yield* signInWithStacks(client, credentials);
+      const { client } = yield* createAuthenticatedClient();
 
       const response = yield* client.get("/api/protected/me");
 
@@ -46,10 +39,7 @@ describe("userAuthMiddleware", () => {
 
   it.effect("provides the current user for whitelisted users", () =>
     Effect.gen(function* () {
-      const client = yield* createAuthenticatedClient;
-      const credentials = createTestSiwsCredentials();
-
-      const userId = yield* signInWithStacks(client, credentials);
+      const { client, userId } = yield* createAuthenticatedClient();
 
       const response = yield* client.get("/api/protected/me");
 

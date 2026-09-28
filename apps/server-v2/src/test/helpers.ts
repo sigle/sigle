@@ -4,16 +4,14 @@ import {
   makeRandomPrivKey,
   signMessageHashRsv,
 } from "@stacks/transactions";
-import { Effect, Ref, Schema } from "effect";
-import {
-  Cookies,
-  HttpClient,
-  HttpClientRequest,
-  HttpClientResponse,
-} from "effect/unstable/http";
+import { makeSignature } from "better-auth/crypto";
+import { Effect, Redacted, Ref } from "effect";
+import { Cookies, HttpClient } from "effect/unstable/http";
 import { createSiwsMessage } from "sign-in-with-stacks";
+import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { draft, user } from "@/db/schema";
+import { draft, session, user } from "@/db/schema";
+import { SESSION_COOKIE_NAME } from "@/services/auth";
 
 export const createTestUser = (
   overrides: Partial<typeof user.$inferInsert> = {},
@@ -104,57 +102,48 @@ export const signTestSiwsMessage = (
     privateKey,
   });
 
-const NonceResponse = Schema.Struct({ nonce: Schema.String });
-
-const VerifyResponse = Schema.Struct({
-  user: Schema.Struct({ id: Schema.String }),
-});
+const TEST_SESSION_DURATION_MILLIS = 7 * 24 * 60 * 60 * 1000;
 
 /**
- * Creates an HTTP client that persists the session cookies set by
- * `better-auth` during the SIWS handshake.
+ * Creates a user, a session row and an HTTP client carrying the signed
+ * `better-auth` session cookie.
+ *
+ * This skips the SIWS handshake so protected routes can be tested without
+ * signing a message, while still exercising the real session middleware.
  */
-export const createAuthenticatedClient = Effect.gen(function* () {
-  const cookies = yield* Ref.make(Cookies.empty);
-
-  return (yield* HttpClient.HttpClient).pipe(
-    HttpClient.withCookiesRef(cookies),
-  );
-});
-
-/**
- * Signs in with the SIWS endpoints and returns the authenticated user id.
- */
-export const signInWithStacks = (
-  client: HttpClient.HttpClient,
-  credentials: TestSiwsCredentials,
-) =>
+export const createAuthenticatedClient = (options: { userId?: string } = {}) =>
   Effect.gen(function* () {
-    const nonceResponse = yield* client.execute(
-      HttpClientRequest.post("/api/auth/siws/nonce").pipe(
-        HttpClientRequest.bodyJsonUnsafe({}),
-      ),
+    const db = yield* Database;
+    const config = yield* AppConfig;
+    const user = yield* createTestUser(
+      options.userId === undefined ? {} : { id: options.userId },
     );
 
-    const { nonce } =
-      yield* HttpClientResponse.schemaBodyJson(NonceResponse)(nonceResponse);
+    const token = crypto.randomUUID();
+    const now = new Date();
 
-    const message = createTestSiwsMessage({
-      address: credentials.address,
-      nonce,
-      chainId: credentials.chainId,
+    yield* db.insert(session).values({
+      id: crypto.randomUUID(),
+      token,
+      userId: user.id,
+      expiresAt: new Date(now.getTime() + TEST_SESSION_DURATION_MILLIS),
+      createdAt: now,
+      updatedAt: now,
     });
 
-    const signature = signTestSiwsMessage(message, credentials.privateKey);
-
-    const verifyResponse = yield* client.execute(
-      HttpClientRequest.post("/api/auth/siws/verify").pipe(
-        HttpClientRequest.bodyJsonUnsafe({ message, signature }),
-      ),
+    const signature = yield* Effect.promise(() =>
+      makeSignature(token, Redacted.value(config.AUTH_SECRET)),
     );
 
-    const body =
-      yield* HttpClientResponse.schemaBodyJson(VerifyResponse)(verifyResponse);
+    const cookies = Cookies.setUnsafe(
+      SESSION_COOKIE_NAME,
+      `${token}.${signature}`,
+    )(Cookies.empty);
 
-    return body.user.id;
+    return {
+      client: (yield* HttpClient.HttpClient).pipe(
+        HttpClient.withCookiesRef(yield* Ref.make(cookies)),
+      ),
+      userId: user.id,
+    };
   });
