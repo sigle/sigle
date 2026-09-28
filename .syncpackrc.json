@@ -21,6 +21,11 @@
       ],
       "dependencyTypes": ["peer"],
       "isIgnored": true
+    },
+    {
+      "label": "server-v2 auth deps ahead until v1 and the client migrate",
+      "dependencies": ["better-auth", "sign-in-with-stacks"],
+      "isIgnored": true
     }
   ]
 }
