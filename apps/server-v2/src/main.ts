@@ -8,13 +8,18 @@ import { HttpRouter } from "effect/unstable/http";
 import { HttpApiBuilder, HttpApiScalar } from "effect/unstable/httpapi";
 import { createServer } from "node:http";
 import { SigleApi } from "@/api";
+import { AuthRoutesLayer } from "@/api/groups/auth";
 import { HealthHandlersLayer } from "@/api/handlers/health";
+import { ProtectedHandlersLayer } from "@/api/handlers/protected";
+import { UserAuthMiddlewareLayer } from "@/api/middleware/auth-user";
 import { RateLimitMiddlewareLayer } from "@/api/middleware/rate-limit";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
+import { AuthService } from "@/services/auth";
 import { PostHogService } from "@/services/posthog";
 import { RateLimiterLive } from "@/services/rate-limiter";
 import { TelemetryLayer } from "@/services/telemetry";
+import { UserWhitelistService } from "@/services/users";
 
 export const CoreServicesLayer = Layer.mergeAll(
   AppConfig.layer,
@@ -22,7 +27,20 @@ export const CoreServicesLayer = Layer.mergeAll(
   PostHogService.layer,
 ).pipe(Layer.provideMerge(AppConfig.layer), Layer.provide(NodeServices.layer));
 
-export const ApiHandlersLayer = HealthHandlersLayer;
+export const ApiHandlersLayer = Layer.mergeAll(
+  HealthHandlersLayer,
+  ProtectedHandlersLayer,
+);
+
+export const ApiMiddlewareLayer = Layer.mergeAll(
+  RateLimitMiddlewareLayer,
+  UserAuthMiddlewareLayer,
+);
+
+export const AuthLayer = Layer.mergeAll(
+  AuthService.layer,
+  UserWhitelistService.layer,
+);
 
 export const CorsLayer = Layer.unwrap(
   Effect.map(AppConfig, (config) =>
@@ -36,10 +54,12 @@ export const CorsLayer = Layer.unwrap(
 export const ApiRoutesLayer = Layer.mergeAll(
   HttpApiBuilder.layer(SigleApi, { openapiPath: "/_openapi.json" }),
   HttpApiScalar.layer(SigleApi, { path: "/_scalar" }),
+  AuthRoutesLayer,
   CorsLayer,
 ).pipe(
   Layer.provide(ApiHandlersLayer),
-  Layer.provide(RateLimitMiddlewareLayer),
+  Layer.provide(ApiMiddlewareLayer),
+  Layer.provide(AuthLayer),
 );
 
 export const HttpServerLayer = Layer.unwrap(

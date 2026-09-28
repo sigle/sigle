@@ -43,6 +43,7 @@ describe("config service", () => {
       Effect.provide(
         ConfigProvider.layer(
           ConfigProvider.fromUnknown({
+            AUTH_SECRET: "sigle-test-auth-secret",
             STACKS_ENV: "testnet",
             SIGLE_ENV: "local",
             APP_ID: "sigle-test",
@@ -83,6 +84,7 @@ describe("config service", () => {
           Effect.provide(
             ConfigProvider.layer(
               ConfigProvider.fromUnknown({
+                AUTH_SECRET: "sigle-test-auth-secret",
                 STACKS_ENV: "testnet",
                 SIGLE_ENV: "local",
                 APP_ID: "sigle-test",
