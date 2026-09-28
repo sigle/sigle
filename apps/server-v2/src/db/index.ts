@@ -16,6 +16,7 @@ import {
 } from "drizzle-orm/pglite";
 import { Context, Effect, Layer, Redacted } from "effect";
 import { fileURLToPath } from "node:url";
+import { Pool } from "pg";
 import { AppConfig, type AppConfigValues } from "@/config";
 import { relations } from "@/db/relations";
 import * as schema from "@/db/schema";
@@ -24,8 +25,8 @@ export type DatabaseClient = PgDrizzle.EffectPgDatabase<typeof relations>;
 
 /**
  * Promise-based Drizzle database used by better-auth through
- * `drizzleAdapter`. It shares the underlying connection with the Effect
- * database.
+ * `drizzleAdapter`. On PGlite it shares the underlying instance with the
+ * Effect database, while Postgres uses a dedicated connection pool.
  */
 export type AuthDatabaseClient =
   | PgliteDatabase<typeof relations>
@@ -38,6 +39,8 @@ const migrationsFolder = fileURLToPath(
 );
 
 const POSTGRES_MIGRATION_LOCK_ID = 1_936_287_596;
+
+const AUTH_DATABASE_POOL_MAX_CONNECTIONS = 10;
 
 const makeAuthPgliteDatabase = (client: PGlite) =>
   drizzlePglite({
@@ -62,12 +65,18 @@ const makePostgresDatabases = (config: AppConfigValues) =>
     );
 
     const authDb = yield* Effect.acquireRelease(
-      Effect.sync(() =>
-        drizzleNodePg({
-          connection: Redacted.value(config.DATABASE_URL),
-          relations,
-        }),
-      ),
+      Effect.sync(() => {
+        const pool = new Pool({
+          connectionString: Redacted.value(config.DATABASE_URL),
+          max: AUTH_DATABASE_POOL_MAX_CONNECTIONS,
+        });
+
+        pool.on("error", (error) => {
+          Effect.runSync(Effect.logError("Postgres auth pool error", error));
+        });
+
+        return drizzleNodePg({ client: pool, relations });
+      }),
       (instance) => Effect.promise(() => instance.$client.end()),
     );
 

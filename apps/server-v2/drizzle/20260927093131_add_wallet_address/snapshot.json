@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "6c20e6ad-5324-46c6-8d32-b7d2a1da1521",
+  "id": "e05244d0-abe3-46fa-98e8-466ff15ff9c5",
   "prevIds": [
     "463d2138-a60a-4831-aa75-bce782ee452d"
   ],
@@ -716,6 +716,34 @@
       "method": "btree",
       "concurrently": false,
       "name": "wallet_address_user_id_idx",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "wallet_address"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
+          "value": "address",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        },
+        {
+          "value": "chain_id",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "wallet_address_address_chain_id_unique",
       "entityType": "indexes",
       "schema": "public",
       "table": "wallet_address"

@@ -7,6 +7,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 export const userFlagEnum = pgEnum("UserFlag", ["NONE", "VERIFIED"]);
@@ -96,7 +97,13 @@ export const walletAddress = pgTable(
     isPrimary: boolean("is_primary").default(false).notNull(),
     createdAt: timestamp("created_at", { precision: 3 }).notNull(),
   },
-  (table) => [index("wallet_address_user_id_idx").on(table.userId)],
+  (table) => [
+    index("wallet_address_user_id_idx").on(table.userId),
+    uniqueIndex("wallet_address_address_chain_id_unique").on(
+      table.address,
+      table.chainId,
+    ),
+  ],
 );
 
 // --

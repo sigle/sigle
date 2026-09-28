@@ -25,13 +25,10 @@ export const makeUserWhitelistService = Effect.gen(function* () {
           .select({ address: walletAddress.address })
           .from(walletAddress)
           .where(eq(walletAddress.userId, userId))
-          .limit(1)
           .pipe(Effect.orDie);
 
-        const [wallet] = wallets;
-
-        return (
-          wallet !== undefined && WHITELISTED_ADDRESSES.includes(wallet.address)
+        return wallets.some((wallet) =>
+          WHITELISTED_ADDRESSES.includes(wallet.address),
         );
       }),
   } satisfies UserWhitelist;
