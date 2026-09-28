@@ -1,15 +1,8 @@
-import { NodeHttpServer } from "@effect/platform-node";
 import { describe, expect, it } from "@effect/vitest";
-import { Effect, Layer, Option, Schema } from "effect";
-import {
-  Headers,
-  HttpClient,
-  HttpClientResponse,
-  HttpRouter,
-} from "effect/unstable/http";
-import { AppConfig, type AppConfigValues } from "@/config";
-import { ApiRoutesLayer } from "@/main";
-import { RateLimiterTest } from "@/services/rate-limiter";
+import { Effect, Option, Schema } from "effect";
+import { Headers, HttpClient, HttpClientResponse } from "effect/unstable/http";
+import type { AppConfigValues } from "@/config";
+import { makeTestServerLayer } from "@/test/server";
 
 const HealthResponse = Schema.Struct({
   success: Schema.Boolean,
@@ -34,14 +27,7 @@ const TooManyRequestsResponse = Schema.Struct({
 });
 
 const serverLayer = (overrides: Partial<AppConfigValues> = {}) =>
-  HttpRouter.serve(ApiRoutesLayer, {
-    disableListenLog: true,
-    disableLogger: true,
-  }).pipe(
-    Layer.provideMerge(NodeHttpServer.layerTest),
-    Layer.provide(RateLimiterTest),
-    Layer.provide(AppConfig.layerTest(overrides)),
-  );
+  makeTestServerLayer(overrides);
 
 describe("http server", () => {
   it.effect("GET /health returns 200", () =>
@@ -65,9 +51,15 @@ describe("http server", () => {
 
       expect(response.status).toBe(200);
       expect(body.openapi.startsWith("3.")).toBe(true);
-      expect(Object.keys(body.paths)).toContain("/health");
-      expect(Object.keys(body.paths["/health"].get.responses)).toContain("200");
-      expect(Object.keys(body.paths["/health"].get.responses)).toContain("429");
+      expect(Object.keys(body.paths)).toStrictEqual(
+        expect.arrayContaining(["/health", "/api/protected/me"]),
+      );
+      expect(Object.keys(body.paths["/health"].get.responses)).toStrictEqual(
+        expect.arrayContaining(["200", "429"]),
+      );
+      expect(
+        Object.keys(body.paths["/api/protected/me"].get.responses),
+      ).toStrictEqual(expect.arrayContaining(["200", "401", "403"]));
     }).pipe(Effect.provide(serverLayer())),
   );
 

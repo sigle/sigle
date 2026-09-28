@@ -26,6 +26,9 @@ export const appConfig = Config.all({
   STACKS_ENV: Config.Literals(["mainnet", "testnet"], "STACKS_ENV"),
   SIGLE_ENV: Config.Literals(["production", "staging", "local"], "SIGLE_ENV"),
   PORT: Config.Port("PORT").pipe(Config.withDefault(3001)),
+  AUTH_SECRET: Config.NonEmptyString("AUTH_SECRET").pipe(
+    Config.map(Redacted.make),
+  ),
   APP_ID: Config.NonEmptyString("APP_ID"),
   APP_URL: Config.NonEmptyString("APP_URL"),
   API_URL: Config.NonEmptyString("API_URL"),
@@ -51,6 +54,7 @@ export const defaultTestConfig: AppConfigValues = {
   STACKS_ENV: "testnet",
   SIGLE_ENV: "local",
   PORT: 3001,
+  AUTH_SECRET: Redacted.make("sigle-test-auth-secret-change-me"),
   APP_ID: "sigle-test",
   APP_URL: "http://localhost:3000",
   API_URL: "http://localhost:3001",

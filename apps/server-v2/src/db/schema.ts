@@ -1,4 +1,5 @@
 import {
+  bigint,
   boolean,
   doublePrecision,
   index,
@@ -6,6 +7,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 export const userFlagEnum = pgEnum("UserFlag", ["NONE", "VERIFIED"]);
@@ -80,6 +82,28 @@ export const verification = pgTable(
     updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow(),
   },
   (table) => [index("verification_identifier_idx").on(table.identifier)],
+);
+
+// Wallet identity model added by the sign-in-with-stacks better-auth plugin.
+export const walletAddress = pgTable(
+  "wallet_address",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    address: text("address").notNull(),
+    chainId: bigint("chain_id", { mode: "number" }).notNull(),
+    isPrimary: boolean("is_primary").default(false).notNull(),
+    createdAt: timestamp("created_at", { precision: 3 }).notNull(),
+  },
+  (table) => [
+    index("wallet_address_user_id_idx").on(table.userId),
+    uniqueIndex("wallet_address_address_chain_id_unique").on(
+      table.address,
+      table.chainId,
+    ),
+  ],
 );
 
 // --
