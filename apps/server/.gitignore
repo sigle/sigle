@@ -11,3 +11,4 @@ src/__generated__/prisma
 !.env.testnet
 !.env.testnet.local
 dev.db*
+.vitest/

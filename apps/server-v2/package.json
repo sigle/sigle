@@ -35,7 +35,8 @@
     "tsx": "4.21.0",
     "typescript": "6.0.3",
     "vite": "catalog:",
-    "vite-plus": "catalog:"
+    "vite-plus": "catalog:",
+    "vitest": "catalog:"
   },
   "packageManager": "pnpm@12.5.1"
 }
