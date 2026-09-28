@@ -6,3 +6,4 @@ dist
 !.env.test
 !.env.testnet
 !.env.testnet.local
+.vitest/

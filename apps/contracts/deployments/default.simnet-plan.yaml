@@ -1,6 +1,5 @@
----
 id: 0
-name: "Simulated deployment, used as a default for `clarinet console`, `clarinet test` and `clarinet check`"
+name: Simulated deployment, used as a default for `clarinet console`, `clarinet test` and `clarinet check`
 network: simnet
 genesis:
   wallets:
@@ -59,18 +58,19 @@ genesis:
     - signers
     - signers-voting
     - costs-4
+    - pox-5
 plan:
   batches:
     - id: 0
       transactions:
-        - emulated-contract-publish:
-            contract-name: sigle-profiles-v001
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/sigle-profiles-v001.clar
-            clarity-version: 3
-        - emulated-contract-publish:
-            contract-name: sigle-registry-v001
-            emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
-            path: contracts/sigle-registry-v001.clar
-            clarity-version: 3
+        - transaction-type: emulated-contract-publish
+          contract-name: sigle-profiles-v001
+          emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+          path: contracts/sigle-profiles-v001.clar
+          clarity-version: 3
+        - transaction-type: emulated-contract-publish
+          contract-name: sigle-registry-v001
+          emulated-sender: ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM
+          path: contracts/sigle-registry-v001.clar
+          clarity-version: 3
       epoch: "3.0"
