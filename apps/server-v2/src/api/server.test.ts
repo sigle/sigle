@@ -8,14 +8,17 @@ const HealthResponse = Schema.Struct({
   success: Schema.Boolean,
 });
 
+const OpenApiOperation = Schema.Struct({
+  responses: Schema.Record(Schema.String, Schema.Unknown),
+});
+
 const OpenApiResponse = Schema.Struct({
   openapi: Schema.String,
   paths: Schema.Record(
     Schema.String,
     Schema.Struct({
-      get: Schema.Struct({
-        responses: Schema.Record(Schema.String, Schema.Unknown),
-      }),
+      get: Schema.optionalKey(OpenApiOperation),
+      post: Schema.optionalKey(OpenApiOperation),
     }),
   ),
 });
@@ -51,13 +54,18 @@ describe("http server", () => {
       expect(response.status).toBe(200);
       expect(body.openapi.startsWith("3.")).toBe(true);
       expect(Object.keys(body.paths)).toStrictEqual(
-        expect.arrayContaining(["/health", "/api/protected/me"]),
-      );
-      expect(Object.keys(body.paths["/health"].get.responses)).toStrictEqual(
-        expect.arrayContaining(["200", "429"]),
+        expect.arrayContaining([
+          "/health",
+          "/api/protected/me",
+          "/api/protected/drafts",
+          "/api/protected/drafts/{draftId}",
+        ]),
       );
       expect(
-        Object.keys(body.paths["/api/protected/me"].get.responses),
+        Object.keys(body.paths["/health"].get?.responses ?? {}),
+      ).toStrictEqual(expect.arrayContaining(["200", "429"]));
+      expect(
+        Object.keys(body.paths["/api/protected/me"].get?.responses ?? {}),
       ).toStrictEqual(expect.arrayContaining(["200", "401", "403"]));
     }).pipe(Effect.provide(serverLayer())),
   );

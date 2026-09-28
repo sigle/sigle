@@ -7,6 +7,10 @@ import { AppConfig, type AppConfigValues } from "@/config";
 import { AuthDatabase, type AuthDatabaseClient } from "@/db";
 import * as schema from "@/db/schema";
 
+export const AUTH_COOKIE_PREFIX = "sigle";
+
+export const SESSION_COOKIE_NAME = `${AUTH_COOKIE_PREFIX}.session_token`;
+
 export const createAuth = (config: AppConfigValues, db: AuthDatabaseClient) => {
   const useSecureCookies = config.APP_URL.startsWith("https://");
   const hostname = new URL(config.APP_URL).hostname;
@@ -22,7 +26,7 @@ export const createAuth = (config: AppConfigValues, db: AuthDatabaseClient) => {
     baseURL: config.APP_URL,
     trustedOrigins: [config.APP_URL],
     advanced: {
-      cookiePrefix: "sigle",
+      cookiePrefix: AUTH_COOKIE_PREFIX,
       useSecureCookies,
       crossSubDomainCookies: {
         enabled: true,

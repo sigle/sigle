@@ -9,6 +9,7 @@ import { HttpApiBuilder, HttpApiScalar } from "effect/unstable/httpapi";
 import { createServer } from "node:http";
 import { SigleApi } from "@/api";
 import { AuthRoutesLayer } from "@/api/groups/auth";
+import { DraftsHandlersLayer } from "@/api/handlers/drafts";
 import { HealthHandlersLayer } from "@/api/handlers/health";
 import { ProtectedHandlersLayer } from "@/api/handlers/protected";
 import { UserAuthMiddlewareLayer } from "@/api/middleware/auth-user";
@@ -29,6 +30,7 @@ export const CoreServicesLayer = Layer.mergeAll(
 export const ApiHandlersLayer = Layer.mergeAll(
   HealthHandlersLayer,
   ProtectedHandlersLayer,
+  DraftsHandlersLayer,
 );
 
 export const ApiMiddlewareLayer = Layer.mergeAll(

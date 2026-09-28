@@ -62,7 +62,12 @@ export class PostHogService extends Context.Service<
                 event: event.event,
                 properties: event.properties,
               });
-            }),
+            }).pipe(
+              // Analytics must never fail the request it instruments.
+              Effect.catchDefect((defect) =>
+                Effect.logWarning("Failed to capture PostHog event", defect),
+              ),
+            ),
         };
       }),
     );
