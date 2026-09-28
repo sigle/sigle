@@ -42,17 +42,13 @@ export const UserAuthMiddlewareLayer: Layer.Layer<
         const session = yield* auth.getSession(headers);
 
         if (!session) {
-          return yield* Effect.fail(
-            new Unauthorized({ message: "Unauthorized" }),
-          );
+          return yield* new Unauthorized({ message: "Unauthorized" });
         }
 
         const whitelisted = yield* users.isUserWhitelisted(session.user.id);
 
         if (!whitelisted) {
-          return yield* Effect.fail(
-            new Forbidden({ message: "User is not whitelisted" }),
-          );
+          return yield* new Forbidden({ message: "User is not whitelisted" });
         }
 
         return yield* Effect.provideService(httpEffect, CurrentUser, {

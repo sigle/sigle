@@ -72,11 +72,8 @@ describe("telemetry service", () => {
   );
 
   it.effect("initializes TelemetryLayer cleanly with test config", () =>
-    Effect.gen(function* () {
-      yield* Effect.logInfo("Test log message").pipe(
-        Effect.withSpan("test-span"),
-      );
-    }).pipe(
+    Effect.logInfo("Test log message").pipe(
+      Effect.withSpan("test-span"),
       Effect.provide(TelemetryLayer),
       Effect.provide(AppConfig.layerTest()),
     ),

@@ -64,6 +64,8 @@ const makePostgresDatabases = (config: AppConfigValues) =>
       }),
     );
 
+    const context = yield* Effect.context<never>();
+
     const authDb = yield* Effect.acquireRelease(
       Effect.sync(() => {
         const pool = new Pool({
@@ -72,7 +74,9 @@ const makePostgresDatabases = (config: AppConfigValues) =>
         });
 
         pool.on("error", (error) => {
-          Effect.runSync(Effect.logError("Postgres auth pool error", error));
+          Effect.runSyncWith(context)(
+            Effect.logError("Postgres auth pool error", error),
+          );
         });
 
         return drizzleNodePg({ client: pool, relations });

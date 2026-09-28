@@ -23,7 +23,7 @@ const VerifyResponse = Schema.Struct({
   user: Schema.Struct({
     id: Schema.String,
     walletAddress: Schema.String,
-    chainId: Schema.Number,
+    chainId: Schema.Finite,
   }),
 });
 

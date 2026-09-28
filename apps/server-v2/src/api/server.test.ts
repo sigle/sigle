@@ -20,10 +20,9 @@ const OpenApiResponse = Schema.Struct({
   ),
 });
 
-const TooManyRequestsResponse = Schema.Struct({
-  _tag: Schema.Literal("TooManyRequests"),
+const TooManyRequestsResponse = Schema.TaggedStruct("TooManyRequests", {
   message: Schema.String,
-  retryAfterMillis: Schema.Number,
+  retryAfterMillis: Schema.Finite,
 });
 
 const serverLayer = (overrides: Partial<AppConfigValues> = {}) =>

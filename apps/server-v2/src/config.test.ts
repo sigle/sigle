@@ -62,9 +62,7 @@ describe("config service", () => {
   it.effect("fails with ConfigError when required variables are missing", () =>
     Effect.gen(function* () {
       const exit = yield* Effect.exit(
-        Effect.gen(function* () {
-          return yield* AppConfig;
-        }).pipe(
+        AppConfig.pipe(
           Effect.provide(AppConfig.layer),
           Effect.provide(ConfigProvider.layer(ConfigProvider.fromUnknown({}))),
         ),
@@ -77,9 +75,7 @@ describe("config service", () => {
   it.effect("fails with ConfigError for non-positive rate limits", () =>
     Effect.gen(function* () {
       const exit = yield* Effect.exit(
-        Effect.gen(function* () {
-          return yield* AppConfig;
-        }).pipe(
+        AppConfig.pipe(
           Effect.provide(AppConfig.layer),
           Effect.provide(
             ConfigProvider.layer(

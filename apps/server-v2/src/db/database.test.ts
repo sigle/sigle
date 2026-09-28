@@ -1,10 +1,12 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
-import { Effect, Result } from "effect";
+import { Data, Effect, Result } from "effect";
 import { Database } from "@/db";
 import { account, session, user, verification } from "@/db/schema";
 import { createTestUser } from "@/test/helpers";
 import { TestDatabaseLayer } from "@/test/layer";
+
+class RollbackTestError extends Data.TaggedError("RollbackTestError") {}
 
 describe("database", () => {
   it.layer(TestDatabaseLayer)((it) => {
@@ -162,7 +164,7 @@ describe("database", () => {
                 email: `${rollbackId}@test.sigle.io`,
               });
 
-              return yield* Effect.fail(new Error("force rollback"));
+              return yield* new RollbackTestError();
             }),
           )
           .pipe(Effect.result);
