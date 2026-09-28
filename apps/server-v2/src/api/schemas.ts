@@ -61,7 +61,7 @@ export class TooManyRequests extends Schema.Error<TooManyRequests>(
   {
     _tag: Schema.tag("TooManyRequests"),
     message: Schema.String,
-    retryAfterMillis: Schema.Number,
+    retryAfterMillis: Schema.Finite,
   },
   {
     description: "Too Many Requests",

@@ -28,7 +28,7 @@ BigInt.prototype.toJSON = function toJSON() {
 const IGNORED_HTTP_STATUSES = new Set([401, 404, 422]);
 
 const HttpStatusStruct = Schema.Struct({
-  status: Schema.Number,
+  status: Schema.Finite,
 });
 
 const decodeHttpStatus = Schema.decodeUnknownOption(HttpStatusStruct);

@@ -169,6 +169,7 @@ export default defineConfig({
           "effecttsgo/missed-pipeable-opportunity": "off",
           "effecttsgo/missing-effect-service-dependency": "off",
           "effecttsgo/missing-pipeable-signature": "off",
+          "effecttsgo/multiple-effect-provide": "off",
           "effecttsgo/nested-effect-gen-yield": "off",
           "effecttsgo/new-promise": "off",
           "effecttsgo/new-schema-class": "off",

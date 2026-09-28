@@ -22,7 +22,6 @@ import { TelemetryLayer } from "@/services/telemetry";
 import { UserWhitelistService } from "@/services/users";
 
 export const CoreServicesLayer = Layer.mergeAll(
-  AppConfig.layer,
   TelemetryLayer,
   PostHogService.layer,
 ).pipe(Layer.provideMerge(AppConfig.layer), Layer.provide(NodeServices.layer));

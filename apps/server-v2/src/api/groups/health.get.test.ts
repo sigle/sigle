@@ -5,7 +5,7 @@ import { getHealth } from "@/api/handlers/health";
 describe("health.get", () => {
   it.effect("returns success true", () =>
     Effect.gen(function* () {
-      const result = yield* getHealth();
+      const result = yield* getHealth;
 
       expect(result).toStrictEqual({ success: true });
     }),
