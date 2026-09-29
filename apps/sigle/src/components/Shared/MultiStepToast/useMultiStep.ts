@@ -49,7 +49,14 @@ export function useMultiStep<T extends string>(
     if (currentIndex !== -1) {
       const nextStep = steps[currentIndex + 1];
       updateStep(nextStep.id, { status: "pending" });
-      onStepChange?.(nextStep.id as T, "pending");
+
+      const nextStepDefinition = stepDefinitions.find(
+        (step) => step.id === nextStep.id,
+      );
+
+      if (nextStepDefinition) {
+        onStepChange?.(nextStepDefinition.id, "pending");
+      }
     }
   };
 

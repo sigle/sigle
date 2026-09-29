@@ -7,7 +7,7 @@ import { consola } from "./consola";
 // oxlint-disable-next-line typescript/no-explicit-any
 class JobBuilder<TInput = any> {
   private _name: string;
-  private _inputSchema?: z.ZodType<TInput>;
+  private _inputSchema?: z.ZodType;
   private _options: SendOptions = {
     retryLimit: 3,
     retryDelay: 1000,
@@ -20,9 +20,10 @@ class JobBuilder<TInput = any> {
   }
 
   input<T>(schema: z.ZodType<T>): JobBuilder<T> {
-    // oxlint-disable-next-line typescript/no-explicit-any
-    this._inputSchema = schema as any;
+    this._inputSchema = schema;
 
+    // SAFETY: the builder rebinds its input type to `T` at this point in the
+    // chain; the schema stored above is the value `emit` validates against.
     // oxlint-disable-next-line typescript/no-explicit-any
     return this as any;
   }
@@ -75,6 +76,8 @@ class JobBuilder<TInput = any> {
 
     consola.debug("Job emitted", { name: this._name });
 
+    // SAFETY: pg-boss `send` cannot express the generic `TInput`; the payload
+    // was just validated against `_inputSchema` when one is configured.
     // oxlint-disable-next-line typescript/no-explicit-any this is safe
     return this._boss.send(this._name, data as any, this._options);
   }

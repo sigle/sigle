@@ -5,7 +5,7 @@ import {
   setResponseHeaders,
   type H3Event,
 } from "nitro/h3";
-import { RateLimiterPrisma, type RateLimiterRes } from "rate-limiter-flexible";
+import { RateLimiterPrisma, RateLimiterRes } from "rate-limiter-flexible";
 import { addRoute, createRouter, findRoute } from "rou3";
 import { prisma } from "@/lib/prisma";
 
@@ -129,7 +129,9 @@ export default defineEventHandler(async (event) => {
     // Handle rate limit exceeded
     if (rateLimiterRes instanceof Error) throw rateLimiterRes;
 
-    const res = rateLimiterRes as RateLimiterRes;
+    if (!(rateLimiterRes instanceof RateLimiterRes)) throw rateLimiterRes;
+
+    const res = rateLimiterRes;
 
     setResponseHeaders(event, {
       "X-RateLimit-Limit": String(config.points),

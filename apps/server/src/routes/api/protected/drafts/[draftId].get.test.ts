@@ -1,4 +1,4 @@
-import type { H3Event } from "nitro/h3";
+import { H3Event, type getRouterParam } from "nitro/h3";
 import {
   afterAll,
   beforeAll,
@@ -25,13 +25,9 @@ vi.mock<typeof import("@/lib/users")>(import("@/lib/users"), () => ({
   isUserWhitelisted: vi.fn().mockReturnValue(true),
 }));
 
-const mockGetRouterParam = vi.fn((event: unknown, name: string) => {
-  if (name === "draftId") {
-    return (event as { draftId?: string }).draftId ?? undefined;
-  }
-
-  return undefined;
-});
+const { mockGetRouterParam } = vi.hoisted(() => ({
+  mockGetRouterParam: vi.fn<typeof getRouterParam>(),
+}));
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro/h3")>(import("nitro/h3"), async () => {
@@ -74,12 +70,11 @@ describe("api/protected/drafts/[draftId].get", () => {
 
     mockGetRouterParam.mockReturnValue("draft-1");
 
-    const mockEvent = {
-      context: { user: { id: userId } },
-      path: "/api/protected/drafts/draft-1",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event<Request>;
+    const mockEvent = new H3Event<Request>(
+      new Request("http://localhost/api/protected/drafts/draft-1"),
+    );
+
+    mockEvent.context.user = { id: userId };
 
     const result = await handler(mockEvent);
 
@@ -93,12 +88,11 @@ describe("api/protected/drafts/[draftId].get", () => {
   it("returns 400 when draftId is missing", async () => {
     mockGetRouterParam.mockReturnValue(undefined);
 
-    const mockEvent = {
-      context: { user: { id: userId } },
-      path: "/api/protected/drafts/",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event<Request>;
+    const mockEvent = new H3Event<Request>(
+      new Request("http://localhost/api/protected/drafts/"),
+    );
+
+    mockEvent.context.user = { id: userId };
 
     await expect(handler(mockEvent)).rejects.toThrow("Bad Request");
   });
@@ -106,12 +100,11 @@ describe("api/protected/drafts/[draftId].get", () => {
   it("returns 404 when draft not found", async () => {
     mockGetRouterParam.mockReturnValue("non-existent");
 
-    const mockEvent = {
-      context: { user: { id: userId } },
-      path: "/api/protected/drafts/non-existent",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event<Request>;
+    const mockEvent = new H3Event<Request>(
+      new Request("http://localhost/api/protected/drafts/non-existent"),
+    );
+
+    mockEvent.context.user = { id: userId };
 
     await expect(handler(mockEvent)).rejects.toThrow("Not Found");
   });
@@ -126,12 +119,11 @@ describe("api/protected/drafts/[draftId].get", () => {
 
     mockGetRouterParam.mockReturnValue("post-1");
 
-    const mockEvent = {
-      context: { user: { id: userId } },
-      path: "/api/protected/drafts/post-1",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event<Request>;
+    const mockEvent = new H3Event<Request>(
+      new Request("http://localhost/api/protected/drafts/post-1"),
+    );
+
+    mockEvent.context.user = { id: userId };
 
     const result = await handler(mockEvent);
 

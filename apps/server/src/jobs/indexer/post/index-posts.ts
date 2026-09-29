@@ -35,14 +35,28 @@ export interface ArweavePostEdge {
   };
 }
 
-interface GraphQLResponse {
-  errors?: Array<{ message: string }>;
-  data?: {
-    transactions?: {
-      edges?: ArweavePostEdge[];
-    };
-  };
-}
+const arweavePostEdgeSchema = z.object({
+  cursor: z.string(),
+  node: z.object({
+    id: z.string(),
+    bundledIn: z.object({ id: z.string() }).nullish(),
+    tags: z.array(z.object({ name: z.string(), value: z.string() })).optional(),
+    block: z.object({ height: z.number(), timestamp: z.number() }).nullish(),
+  }),
+});
+
+const graphQLResponseSchema = z.object({
+  errors: z.array(z.object({ message: z.string() })).optional(),
+  data: z
+    .object({
+      transactions: z
+        .object({
+          edges: z.array(arweavePostEdgeSchema),
+        })
+        .optional(),
+    })
+    .optional(),
+});
 
 export async function fetchArweavePostTransactions({
   minBlockHeight,
@@ -99,7 +113,7 @@ export async function fetchArweavePostTransactions({
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const result = (await response.json()) as GraphQLResponse;
+      const result = graphQLResponseSchema.parse(await response.json());
 
       if (result.errors && result.errors.length > 0) {
         throw new Error(

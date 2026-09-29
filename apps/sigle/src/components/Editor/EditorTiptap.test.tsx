@@ -1,8 +1,5 @@
-import type * as nextNavigationModule from "next/navigation";
-import type * as posthogModule from "posthog-js/react";
 import { render, waitFor } from "@testing-library/react";
 import { describe, expect, it, beforeEach, vi } from "vite-plus/test";
-import type * as sigleModule from "@/lib/sigle";
 import { EditorFormProvider } from "./EditorFormProvider";
 import { EditorTipTap } from "./EditorTiptap";
 import { useEditorStore } from "./store";
@@ -11,35 +8,29 @@ vi.mock(import("react-tweet"), () => ({
   Tweet: () => null,
 }));
 
-vi.mock(
-  import("@/lib/sigle"),
-  () =>
-    ({
-      sigleApiClient: {
-        useMutation: vi.fn(() => ({
-          mutateAsync: vi.fn(),
-        })),
-      },
-    }) as unknown as Partial<typeof sigleModule>,
-);
+vi.mock(import("@/lib/sigle"), async (importOriginal) => {
+  const actual = await importOriginal();
 
-vi.mock(
-  import("next/navigation"),
-  () =>
-    ({
-      useParams: () => ({ postId: "test-post-id" }),
-    }) as unknown as Partial<typeof nextNavigationModule>,
-);
-
-vi.mock(
-  import("posthog-js/react"),
-  () =>
-    ({
-      usePostHog: () => ({
-        capture: vi.fn(),
+  return {
+    ...actual,
+    sigleApiClient: {
+      ...actual.sigleApiClient,
+      useMutation: vi.fn().mockReturnValue({
+        mutateAsync: vi.fn(),
       }),
-    }) as unknown as Partial<typeof posthogModule>,
-);
+    },
+  };
+});
+
+vi.mock(import("next/navigation"), () => ({
+  useParams: vi.fn().mockReturnValue({ postId: "test-post-id" }),
+}));
+
+vi.mock(import("posthog-js/react"), () => ({
+  usePostHog: vi.fn().mockReturnValue({
+    capture: vi.fn(),
+  }),
+}));
 
 vi.mock(import("@/hooks/useWindowSize"), () => ({
   useWindowSize: () => ({ width: 1024, height: 768 }),

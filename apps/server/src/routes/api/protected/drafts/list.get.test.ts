@@ -1,4 +1,4 @@
-import type { H3Event } from "nitro/h3";
+import { H3Event } from "nitro/h3";
 import {
   afterAll,
   beforeAll,
@@ -57,12 +57,11 @@ describe("api/protected/drafts/list.get", () => {
 
     mockGetValidatedQueryZod.mockResolvedValue({ limit: 10 });
 
-    const mockEvent = {
-      context: { user: { id: userId } },
-      path: "/api/protected/drafts",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request("http://localhost/api/protected/drafts"),
+    );
+
+    mockEvent.context.user = { id: userId };
 
     const result = await handler(mockEvent);
 
@@ -74,12 +73,11 @@ describe("api/protected/drafts/list.get", () => {
 
     mockGetValidatedQueryZod.mockResolvedValue({ limit: 10 });
 
-    const mockEvent = {
-      context: { user: { id: userId } },
-      path: "/api/protected/drafts",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request("http://localhost/api/protected/drafts"),
+    );
+
+    mockEvent.context.user = { id: userId };
 
     const result = await handler(mockEvent);
 
@@ -94,12 +92,11 @@ describe("api/protected/drafts/list.get", () => {
 
     mockGetValidatedQueryZod.mockResolvedValue({ limit: 2 });
 
-    const mockEvent = {
-      context: { user: { id: userId } },
-      path: "/api/protected/drafts",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request("http://localhost/api/protected/drafts"),
+    );
+
+    mockEvent.context.user = { id: userId };
 
     const result = await handler(mockEvent);
 
@@ -111,12 +108,11 @@ describe("api/protected/drafts/list.get", () => {
 
     mockGetValidatedQueryZod.mockResolvedValue({ limit: 10 });
 
-    const mockEvent = {
-      context: { user: { id: userId } },
-      path: "/api/protected/drafts",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request("http://localhost/api/protected/drafts"),
+    );
+
+    mockEvent.context.user = { id: userId };
 
     await expect(handler(mockEvent)).rejects.toThrow("User is not whitelisted");
   });

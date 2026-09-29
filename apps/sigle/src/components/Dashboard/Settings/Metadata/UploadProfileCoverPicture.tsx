@@ -40,8 +40,8 @@ export const UploadProfileCoverPicture = ({
       formData.append("file", file);
       uploadImage(
         {
-          // oxlint-disable-next-line typescript/no-explicit-any wrong type returned by nitro
-          body: formData as any,
+          body: { file: file.name },
+          bodySerializer: () => formData,
         },
         {
           onSuccess: (data) => {

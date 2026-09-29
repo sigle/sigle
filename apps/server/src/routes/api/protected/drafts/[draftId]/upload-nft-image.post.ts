@@ -76,7 +76,7 @@ export default defineEventHandler(async (event) => {
   const formData = await readFormData(event, "5mb");
 
   const file = formData.get("file");
-  const type = formData.get("type");
+  const type = z.string().min(1).safeParse(formData.get("type"));
 
   if (!file || !(file instanceof File)) {
     throw new HTTPError({
@@ -85,7 +85,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  if (!type || typeof type !== "string") {
+  if (!type.success) {
     throw new HTTPError({
       status: 400,
       message: "Missing or invalid type field",
@@ -98,7 +98,7 @@ export default defineEventHandler(async (event) => {
       filename: file.name,
       type: file.type,
     },
-    type,
+    type: type.data,
   });
 
   if (!parsedFile.success) {

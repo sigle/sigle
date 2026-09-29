@@ -15,21 +15,25 @@ export class FetchArweaveL1TxIdsFailedError extends TaggedError(
   error: string;
 }> {}
 
-interface ArweaveL1GraphQLResponse {
-  errors?: Array<{ message: string }>;
-  data?: {
-    transactions?: {
-      edges?: Array<{
-        node: {
-          id: string;
-          bundledIn?: {
-            id: string;
-          } | null;
-        };
-      }>;
-    };
-  };
-}
+const arweaveL1EdgeSchema = z.object({
+  node: z.object({
+    id: z.string(),
+    bundledIn: z.object({ id: z.string() }).nullish(),
+  }),
+});
+
+const arweaveL1GraphQLResponseSchema = z.object({
+  errors: z.array(z.object({ message: z.string() })).optional(),
+  data: z
+    .object({
+      transactions: z
+        .object({
+          edges: z.array(arweaveL1EdgeSchema),
+        })
+        .optional(),
+    })
+    .optional(),
+});
 
 export async function fetchArweaveL1TxIds(
   txIds: string[],
@@ -77,7 +81,9 @@ export async function fetchArweaveL1TxIds(
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const result = (await response.json()) as ArweaveL1GraphQLResponse;
+        const result = arweaveL1GraphQLResponseSchema.parse(
+          await response.json(),
+        );
 
         if (result.errors && result.errors.length > 0) {
           throw new Error(

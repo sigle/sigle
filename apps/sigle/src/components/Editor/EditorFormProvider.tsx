@@ -50,9 +50,7 @@ export const EditorFormProvider = ({
       collect: {
         collectPrice: {
           type: post.collectPriceType || "free",
-          price: post.collectPrice
-            ? (formatBTC(BigInt(post.collectPrice)) as unknown as number)
-            : 0,
+          price: post.collectPrice ? formatBTC(BigInt(post.collectPrice)) : 0,
         },
         collectLimit: {
           type: post.collectLimitType || "open",

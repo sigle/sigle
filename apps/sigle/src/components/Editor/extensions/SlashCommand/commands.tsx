@@ -80,9 +80,8 @@ export const slashCommands: SlashCommandsCommand[] = [
       input.type = "file";
       input.accept = "image/jpeg,image/png,image/gif";
 
-      input.onchange = async (e) => {
-        // oxlint-disable-next-line typescript/no-explicit-any
-        const file: File | undefined = (e.target as any)?.files?.[0];
+      input.onchange = async () => {
+        const file = input.files?.[0];
 
         if (!file) return;
         const [mime] = file.type.split("/");

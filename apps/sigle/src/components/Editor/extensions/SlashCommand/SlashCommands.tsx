@@ -119,7 +119,7 @@ export const SlashCommands = Extension.create<{
               container.classList.add("slash-command-popup");
               container.style.position = "absolute";
               container.style.zIndex = "50";
-              container.appendChild(reactRenderer?.element as HTMLElement);
+              container.appendChild(reactRenderer.element);
 
               const appendTo =
                 document.getElementsByClassName("root")[0] ?? document.body;

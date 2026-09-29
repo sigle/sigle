@@ -2,13 +2,6 @@
 import { Extension } from "@tiptap/core";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 
-const options: {
-  scrollerElement?: HTMLElement;
-  computeScrollTop?: () => number;
-  delay?: number;
-  debugMode?: boolean;
-} = {};
-
 const DEFAULT_DELAY = 10;
 
 const DEFAULT_OFFSET_BOTTOM = 80;
@@ -37,24 +30,12 @@ const MobileScroll = Extension.create({
 
             if (timeoutScroll) clearTimeout(timeoutScroll);
             timeoutScroll = setTimeout(() => {
-              const top =
-                view.coordsAtPos(view.state.selection.$head.pos).top -
-                (options?.scrollerElement?.getBoundingClientRect().top ?? 0);
+              const top = view.coordsAtPos(view.state.selection.$head.pos).top;
 
-              const scrollTop = options?.computeScrollTop
-                ? options.computeScrollTop()
-                : (options?.scrollerElement?.scrollTop ??
-                  (window.pageYOffset ||
-                    document.documentElement.scrollTop ||
-                    document.body.scrollTop) ??
-                  -1);
-
-              if (scrollTop === -1) {
-                if (options?.debugMode)
-                  console.error("The plugin could not determine scrollTop");
-
-                return;
-              }
+              const scrollTop =
+                window.pageYOffset ||
+                document.documentElement.scrollTop ||
+                document.body.scrollTop;
 
               const offBottom = top + offsetBottom - scrollerHeight;
 
@@ -69,7 +50,7 @@ const MobileScroll = Extension.create({
               if (offTop < 0) {
                 scrollTo(0, scrollTop + offTop - scrollDistance);
               }
-            }, options?.delay ?? DEFAULT_DELAY);
+            }, DEFAULT_DELAY);
 
             return true;
           },

@@ -1,4 +1,4 @@
-import type { H3Event } from "nitro/h3";
+import { H3Event, type getRouterParam } from "nitro/h3";
 import {
   afterAll,
   beforeAll,
@@ -16,13 +16,9 @@ vi.mock<typeof import("nitro")>(import("nitro"), () => ({
   defineRouteMeta: vi.fn(),
 }));
 
-const mockGetRouterParam = vi.fn((event: unknown, name: string) => {
-  if (name === "domain") {
-    return (event as { domain?: string }).domain ?? undefined;
-  }
-
-  return undefined;
-});
+const { mockGetRouterParam } = vi.hoisted(() => ({
+  mockGetRouterParam: vi.fn<typeof getRouterParam>(),
+}));
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro/h3")>(import("nitro/h3"), async () => {
@@ -77,12 +73,9 @@ describe("api/sites/[domain]/index.get", () => {
 
     mockGetRouterParam.mockReturnValue("blog.sigle.io");
 
-    const mockEvent = {
-      context: {},
-      path: "/api/sites/blog.sigle.io",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request("http://localhost/api/sites/blog.sigle.io"),
+    );
 
     const result = await handler(mockEvent);
 
@@ -101,12 +94,7 @@ describe("api/sites/[domain]/index.get", () => {
   it("returns 400 when domain is missing", async () => {
     mockGetRouterParam.mockReturnValue(undefined);
 
-    const mockEvent = {
-      context: {},
-      path: "/api/sites/",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(new Request("http://localhost/api/sites/"));
 
     await expect(handler(mockEvent)).rejects.toThrow("Bad Request");
   });
@@ -114,12 +102,9 @@ describe("api/sites/[domain]/index.get", () => {
   it("returns 404 when site not found", async () => {
     mockGetRouterParam.mockReturnValue("nonexistent.com");
 
-    const mockEvent = {
-      context: {},
-      path: "/api/sites/nonexistent.com",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request("http://localhost/api/sites/nonexistent.com"),
+    );
 
     await expect(handler(mockEvent)).rejects.toThrow("Site not found");
   });
@@ -128,12 +113,9 @@ describe("api/sites/[domain]/index.get", () => {
     // Site exists but user doesn't exist in DB
     mockGetRouterParam.mockReturnValue("blog.sigle.io");
 
-    const mockEvent = {
-      context: {},
-      path: "/api/sites/blog.sigle.io",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request("http://localhost/api/sites/blog.sigle.io"),
+    );
 
     await expect(handler(mockEvent)).rejects.toThrow("User not found");
   });
@@ -144,12 +126,9 @@ describe("api/sites/[domain]/index.get", () => {
     // Simulate URL encoded domain
     mockGetRouterParam.mockReturnValue("blog.sigle.io");
 
-    const mockEvent = {
-      context: {},
-      path: "/api/sites/blog.sigle.io",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request("http://localhost/api/sites/blog.sigle.io"),
+    );
 
     const result = await handler(mockEvent);
 

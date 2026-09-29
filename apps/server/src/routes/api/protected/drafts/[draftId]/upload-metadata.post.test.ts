@@ -1,6 +1,7 @@
-import type { H3Event } from "nitro/h3";
 import { verifyPostSignature } from "@sigle/sdk";
 import { Result } from "better-result";
+import { H3Event, type getRouterParam } from "nitro/h3";
+import { PostHog } from "posthog-node";
 import {
   afterAll,
   beforeAll,
@@ -10,6 +11,7 @@ import {
   it,
   vi,
 } from "vite-plus/test";
+import { generateImageBlurhashJob } from "@/jobs/generate-image-blurhash";
 import { arweaveUploadFile } from "@/lib/arweave";
 import { createTestDatabase, type TestDatabase } from "@/test/database";
 import {
@@ -22,13 +24,9 @@ vi.mock<typeof import("nitro")>(import("nitro"), () => ({
   defineRouteMeta: vi.fn(),
 }));
 
-const mockGetRouterParam = vi.fn((event: unknown, name: string) => {
-  if (name === "draftId") {
-    return (event as { draftId?: string }).draftId ?? undefined;
-  }
-
-  return undefined;
-});
+const { mockGetRouterParam } = vi.hoisted(() => ({
+  mockGetRouterParam: vi.fn<typeof getRouterParam>(),
+}));
 
 const mockReadValidatedBodyZod = vi.fn();
 
@@ -50,7 +48,7 @@ vi.mock<typeof import("@/lib/arweave")>(import("@/lib/arweave"), () => ({
   arweaveUploadFile: vi.fn(),
 }));
 
-let mockStacksEnv = "testnet";
+let mockStacksEnv: "mainnet" | "testnet" = "testnet";
 
 vi.mock(import("@/env"), async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/env")>();
@@ -60,7 +58,7 @@ vi.mock(import("@/env"), async (importOriginal) => {
     env: {
       ...actual.env,
       get STACKS_ENV() {
-        return mockStacksEnv as "mainnet" | "testnet";
+        return mockStacksEnv;
       },
     },
   };
@@ -75,21 +73,22 @@ vi.mock<typeof import("@sigle/sdk")>(import("@sigle/sdk"), async () => {
   };
 });
 
-vi.mock<typeof import("@/jobs/generate-image-blurhash")>(
-  import("@/jobs/generate-image-blurhash"),
-  () =>
-    ({
-      generateImageBlurhashJob: {
-        emit: vi.fn(),
-      },
-    }) as unknown as typeof import("@/jobs/generate-image-blurhash"),
-);
-
 vi.mock<typeof import("@/lib/users")>(import("@/lib/users"), () => ({
   isUserWhitelisted: vi.fn().mockReturnValue(true),
 }));
 
+// The job's pg-boss emit has no registered boss in tests, so stub it.
+vi.spyOn(generateImageBlurhashJob, "emit").mockResolvedValue(null);
+
 const { default: handler } = await import("./upload-metadata.post");
+
+function createMockPosthog(): PostHog {
+  const posthog = new PostHog("test-api-key", { host: "http://localhost" });
+
+  vi.spyOn(posthog, "capture").mockReturnValue(undefined);
+
+  return posthog;
+}
 
 describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
   // oxlint-disable-next-line init-declarations
@@ -147,15 +146,14 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
       Result.ok({ id: "arweave-tx-draft" }),
     );
 
-    const mockEvent = {
-      context: {
-        user: { id: userId },
-        $posthog: { capture: vi.fn() },
-      },
-      path: "/api/protected/drafts/draft-1/upload-metadata",
-      method: "POST",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request(
+        "http://localhost/api/protected/drafts/draft-1/upload-metadata",
+      ),
+    );
+
+    mockEvent.context.user = { id: userId };
+    mockEvent.context.$posthog = createMockPosthog();
 
     const result = await handler(mockEvent);
 
@@ -228,15 +226,14 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
       Result.ok({ id: "arweave-tx-edit-1" }),
     );
 
-    const mockEvent = {
-      context: {
-        user: { id: userId },
-        $posthog: { capture: vi.fn() },
-      },
-      path: `/api/protected/drafts/${originalPost.id}/upload-metadata`,
-      method: "POST",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request(
+        `http://localhost/api/protected/drafts/${originalPost.id}/upload-metadata`,
+      ),
+    );
+
+    mockEvent.context.user = { id: userId };
+    mockEvent.context.$posthog = createMockPosthog();
 
     const result = await handler(mockEvent);
 
@@ -319,15 +316,14 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
       Result.ok({ id: "arweave-tx-mainnet" }),
     );
 
-    const mockEvent = {
-      context: {
-        user: { id: userId },
-        $posthog: { capture: vi.fn() },
-      },
-      path: "/api/protected/drafts/draft-mainnet/upload-metadata",
-      method: "POST",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request(
+        "http://localhost/api/protected/drafts/draft-mainnet/upload-metadata",
+      ),
+    );
+
+    mockEvent.context.user = { id: userId };
+    mockEvent.context.$posthog = createMockPosthog();
 
     await handler(mockEvent);
 
@@ -374,15 +370,14 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
       Result.ok({ id: "arweave-tx-testnet" }),
     );
 
-    const mockEvent = {
-      context: {
-        user: { id: userId },
-        $posthog: { capture: vi.fn() },
-      },
-      path: "/api/protected/drafts/draft-testnet/upload-metadata",
-      method: "POST",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request(
+        "http://localhost/api/protected/drafts/draft-testnet/upload-metadata",
+      ),
+    );
+
+    mockEvent.context.user = { id: userId };
+    mockEvent.context.$posthog = createMockPosthog();
 
     await handler(mockEvent);
 

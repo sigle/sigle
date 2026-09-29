@@ -1,4 +1,4 @@
-import type { H3Event } from "nitro/h3";
+import { H3Event } from "nitro/h3";
 import {
   afterAll,
   beforeAll,
@@ -47,12 +47,11 @@ describe("api/protected/user/whitelisted.get", () => {
 
     vi.mocked(isUserWhitelisted).mockReturnValue(true);
 
-    const mockEvent = {
-      context: { user: { id: userId } },
-      path: "/api/protected/user/whitelisted",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request("http://localhost/api/protected/user/whitelisted"),
+    );
+
+    mockEvent.context.user = { id: userId };
 
     const result = await handler(mockEvent);
 
@@ -64,12 +63,11 @@ describe("api/protected/user/whitelisted.get", () => {
 
     vi.mocked(isUserWhitelisted).mockReturnValue(false);
 
-    const mockEvent = {
-      context: { user: { id: userId } },
-      path: "/api/protected/user/whitelisted",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request("http://localhost/api/protected/user/whitelisted"),
+    );
+
+    mockEvent.context.user = { id: userId };
 
     const result = await handler(mockEvent);
 

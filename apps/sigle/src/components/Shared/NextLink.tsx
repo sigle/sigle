@@ -5,7 +5,9 @@ import type { ComponentProps } from "react";
 import Link, { type LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 
-export type NextLinkProps = ComponentProps<typeof Link>;
+export type NextLinkProps = Omit<ComponentProps<typeof Link>, "href"> & {
+  href: string;
+};
 
 export type { LinkProps };
 
@@ -26,7 +28,7 @@ export function NextLink({
       {...props}
       prefetch={prefetch}
       onMouseEnter={() => {
-        router.prefetch(props.href as string);
+        router.prefetch(props.href);
       }}
     >
       {children}

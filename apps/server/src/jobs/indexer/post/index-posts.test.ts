@@ -14,6 +14,8 @@ import { createTestPost, createTestUser } from "@/test/helpers";
 
 const mockEmit = vi.fn();
 
+// SAFETY: vitest swaps this module at runtime and the job under test only
+// calls `indexerJob.emit`, which the factory below implements.
 vi.mock<typeof import("../index")>(
   import("../index"),
   () =>
@@ -21,28 +23,25 @@ vi.mock<typeof import("../index")>(
       indexerJob: {
         emit: (...args: unknown[]) => mockEmit(...args),
       },
-    }) as unknown as typeof import("../index"),
+    }) as Partial<typeof import("../index")>,
 );
 
-vi.mock<typeof import("@/lib/metadata")>(
-  import("@/lib/metadata"),
-  () =>
-    ({
-      getMetadataFromUri: vi.fn(),
-    }) as unknown as typeof import("@/lib/metadata"),
-);
+vi.mock<typeof import("@/lib/metadata")>(import("@/lib/metadata"), () => ({
+  getMetadataFromUri: vi.fn(),
+}));
 
 vi.mock<typeof import("@/lib/consola")>(
   import("@/lib/consola"),
-  () =>
-    ({
-      consola: {
-        debug: vi.fn(),
-        info: vi.fn(),
-        error: vi.fn(),
-        warn: vi.fn(),
-      },
-    }) as unknown as typeof import("@/lib/consola"),
+  async (importOriginal) => {
+    const { consola } = await importOriginal();
+
+    vi.spyOn(consola, "debug").mockReturnValue(undefined);
+    vi.spyOn(consola, "info").mockReturnValue(undefined);
+    vi.spyOn(consola, "error").mockReturnValue(undefined);
+    vi.spyOn(consola, "warn").mockReturnValue(undefined);
+
+    return { consola };
+  },
 );
 
 const mockFetch = vi.spyOn(globalThis, "fetch");
@@ -72,16 +71,15 @@ describe("executeIndexerIndexPostsJob", () => {
   });
 
   it("returns 0 posts when no Arweave transactions exist", async () => {
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({
+    mockFetch.mockResolvedValue(
+      Response.json({
         data: {
           transactions: {
             edges: [],
           },
         },
       }),
-    } as Response);
+    );
 
     const result = await executeIndexerIndexPostsJob({});
 
@@ -92,13 +90,13 @@ describe("executeIndexerIndexPostsJob", () => {
   it("processes new posts successfully", async () => {
     await createTestUser({ id: userId });
 
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({
+    mockFetch.mockResolvedValue(
+      Response.json({
         data: {
           transactions: {
             edges: [
               {
+                cursor: "cursor-1",
                 node: {
                   id: "arweave-tx-1",
                   block: {
@@ -111,9 +109,9 @@ describe("executeIndexerIndexPostsJob", () => {
           },
         },
       }),
-    } as Response);
+    );
 
-    const mockGetMetadata = getMetadataFromUri as any;
+    const mockGetMetadata = vi.mocked(getMetadataFromUri);
     mockGetMetadata.mockResolvedValue(
       Result.ok({
         version: "v1",
@@ -147,13 +145,13 @@ describe("executeIndexerIndexPostsJob", () => {
   it("extracts bundledIn id as arweaveL1TxId when present", async () => {
     await createTestUser({ id: userId });
 
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({
+    mockFetch.mockResolvedValue(
+      Response.json({
         data: {
           transactions: {
             edges: [
               {
+                cursor: "cursor-bundled",
                 node: {
                   id: "arweave-tx-bundled",
                   bundledIn: {
@@ -169,9 +167,9 @@ describe("executeIndexerIndexPostsJob", () => {
           },
         },
       }),
-    } as Response);
+    );
 
-    const mockGetMetadata = getMetadataFromUri as any;
+    const mockGetMetadata = vi.mocked(getMetadataFromUri);
     mockGetMetadata.mockResolvedValue(
       Result.ok({
         version: "v1",
@@ -204,13 +202,13 @@ describe("executeIndexerIndexPostsJob", () => {
   it("extracts Root-TX tag and passes rootTxId when present", async () => {
     await createTestUser({ id: userId });
 
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({
+    mockFetch.mockResolvedValue(
+      Response.json({
         data: {
           transactions: {
             edges: [
               {
+                cursor: "cursor-root",
                 node: {
                   id: "arweave-tx-2",
                   tags: [
@@ -229,9 +227,9 @@ describe("executeIndexerIndexPostsJob", () => {
           },
         },
       }),
-    } as Response);
+    );
 
-    const mockGetMetadata = getMetadataFromUri as any;
+    const mockGetMetadata = vi.mocked(getMetadataFromUri);
     mockGetMetadata.mockResolvedValue(
       Result.ok({
         version: "v1",
@@ -271,13 +269,13 @@ describe("executeIndexerIndexPostsJob", () => {
       content: "Hello",
     });
 
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({
+    mockFetch.mockResolvedValue(
+      Response.json({
         data: {
           transactions: {
             edges: [
               {
+                cursor: "cursor-existing",
                 node: {
                   id: "arweave-tx-1",
                   block: null,
@@ -287,7 +285,7 @@ describe("executeIndexerIndexPostsJob", () => {
           },
         },
       }),
-    } as Response);
+    );
 
     const result = await executeIndexerIndexPostsJob({});
 
@@ -323,28 +321,26 @@ describe("executeIndexerIndexPostsJob", () => {
     }));
 
     mockFetch
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
+      .mockResolvedValueOnce(
+        Response.json({
           data: {
             transactions: {
               edges: page1Edges,
             },
           },
         }),
-      } as Response)
-      .mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({
+      )
+      .mockResolvedValueOnce(
+        Response.json({
           data: {
             transactions: {
               edges: page2Edges,
             },
           },
         }),
-      } as Response);
+      );
 
-    const mockGetMetadata = getMetadataFromUri as any;
+    const mockGetMetadata = vi.mocked(getMetadataFromUri);
     mockGetMetadata.mockResolvedValue(
       Result.ok({
         version: "v1",
@@ -368,17 +364,13 @@ describe("executeIndexerIndexPostsJob", () => {
     });
 
     // Verify first fetch query contained min block: 0, no after cursor
-    const firstCallBody = JSON.parse(
-      mockFetch.mock.calls[0][1]?.body as string,
-    );
+    const firstCallBody = JSON.parse(String(mockFetch.mock.calls[0][1]?.body));
 
     expect(firstCallBody.query).toContain("block: { min: 0 }");
     expect(firstCallBody.query).not.toContain("after:");
 
     // Verify second fetch query contained min block: 0, and cursor "cursor-100"
-    const secondCallBody = JSON.parse(
-      mockFetch.mock.calls[1][1]?.body as string,
-    );
+    const secondCallBody = JSON.parse(String(mockFetch.mock.calls[1][1]?.body));
 
     expect([
       secondCallBody.query.includes("block: { min: 0 }"),
@@ -397,13 +389,13 @@ describe("executeIndexerIndexPostsJob", () => {
       signature: "duplicate-sig-123",
     });
 
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({
+    mockFetch.mockResolvedValue(
+      Response.json({
         data: {
           transactions: {
             edges: [
               {
+                cursor: "cursor-replayed",
                 node: {
                   id: "arweave-tx-replayed",
                   block: {
@@ -416,9 +408,9 @@ describe("executeIndexerIndexPostsJob", () => {
           },
         },
       }),
-    } as Response);
+    );
 
-    const mockGetMetadata = getMetadataFromUri as any;
+    const mockGetMetadata = vi.mocked(getMetadataFromUri);
     mockGetMetadata.mockResolvedValue(
       Result.ok({
         version: "v1",
@@ -443,12 +435,11 @@ describe("executeIndexerIndexPostsJob", () => {
   });
 
   it("throws an error when GraphQL response is missing transactions edges", async () => {
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => ({
+    mockFetch.mockResolvedValue(
+      Response.json({
         data: {},
       }),
-    } as Response);
+    );
 
     await expect(executeIndexerIndexPostsJob({})).rejects.toThrow(
       "Invalid GraphQL response: transactions.edges is missing",

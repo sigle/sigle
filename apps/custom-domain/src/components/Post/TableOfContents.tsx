@@ -57,8 +57,8 @@ const useIntersectionObserver = (setActiveId: (id: string) => void) => {
     });
 
     const headingElements = Array.from(
-      document.querySelectorAll("h2, h3"),
-    ) as HTMLElement[];
+      document.querySelectorAll<HTMLElement>("h2, h3"),
+    );
 
     for (const element of headingElements) {
       observer.observe(element);
@@ -78,9 +78,8 @@ interface TableOfContentsProps {
 
 export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
   const router = useRouter();
-  const [activeId, setActiveId] = useState();
-  // oxlint-disable-next-line typescript/no-explicit-any
-  useIntersectionObserver(setActiveId as any);
+  const [activeId, setActiveId] = useState<string>();
+  useIntersectionObserver(setActiveId);
 
   return (
     <nav className="overflow-auto md:sticky md:top-20">

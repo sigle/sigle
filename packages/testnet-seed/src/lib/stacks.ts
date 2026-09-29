@@ -108,6 +108,8 @@ export const publishPost = async ({
     ...parameters,
     contractAddress: parameters.contract.split(".")[0],
     contractName: parameters.contract.split(".")[1],
+    // SAFETY: sigleClient.publishPost builds functionArgs with stringAsciiCV, so
+    // every entry is a ClarityValue rather than the string[] variant.
     functionArgs: parameters.functionArgs as ClarityValue[],
     network,
     senderKey: privateKey,

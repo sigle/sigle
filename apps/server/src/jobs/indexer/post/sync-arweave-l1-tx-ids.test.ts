@@ -12,15 +12,16 @@ import { createTestPost, createTestUser } from "@/test/helpers";
 
 vi.mock<typeof import("@/lib/consola")>(
   import("@/lib/consola"),
-  () =>
-    ({
-      consola: {
-        debug: vi.fn(),
-        info: vi.fn(),
-        error: vi.fn(),
-        warn: vi.fn(),
-      },
-    }) as unknown as typeof import("@/lib/consola"),
+  async (importOriginal) => {
+    const { consola } = await importOriginal();
+
+    vi.spyOn(consola, "debug").mockReturnValue(undefined);
+    vi.spyOn(consola, "info").mockReturnValue(undefined);
+    vi.spyOn(consola, "error").mockReturnValue(undefined);
+    vi.spyOn(consola, "warn").mockReturnValue(undefined);
+
+    return { consola };
+  },
 );
 
 const { fetchArweaveL1TxIds, executeIndexerSyncArweaveL1TxIdsJob } =
@@ -219,33 +220,35 @@ describe("sync-arweave-l1-tx-ids", () => {
         },
       });
 
-      const mockFetch = vi.fn((_url, options) => {
-        const bodyStr = (options as RequestInit | undefined)?.body as string;
-        expect(bodyStr).toContain(revisionTxId);
+      const mockFetch = vi.fn(
+        (_url: RequestInfo | URL, options?: RequestInit) => {
+          const bodyStr = String(options?.body);
+          expect(bodyStr).toContain(revisionTxId);
 
-        return Promise.resolve(
-          new Response(
-            JSON.stringify({
-              data: {
-                transactions: {
-                  edges: [
-                    {
-                      node: {
-                        id: revisionTxId,
-                        bundledIn: { id: "l1-revision-tx-1" },
+          return Promise.resolve(
+            new Response(
+              JSON.stringify({
+                data: {
+                  transactions: {
+                    edges: [
+                      {
+                        node: {
+                          id: revisionTxId,
+                          bundledIn: { id: "l1-revision-tx-1" },
+                        },
                       },
-                    },
-                  ],
+                    ],
+                  },
                 },
+              }),
+              {
+                status: 200,
+                headers: { "Content-Type": "application/json" },
               },
-            }),
-            {
-              status: 200,
-              headers: { "Content-Type": "application/json" },
-            },
-          ),
-        );
-      });
+            ),
+          );
+        },
+      );
 
       vi.stubGlobal("fetch", mockFetch);
 

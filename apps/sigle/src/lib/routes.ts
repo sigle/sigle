@@ -50,12 +50,28 @@ interface RouteBuilder<Params extends z.ZodSchema, Search extends z.ZodSchema> {
   params: z.output<Params>;
 }
 
+function findRouteName<Params extends z.ZodSchema, Search extends z.ZodSchema>(
+  routeBuilder: RouteBuilder<Params, Search>,
+): string {
+  return (
+    Object.entries(Routes).find(([, route]) =>
+      Object.is(route, routeBuilder),
+    )?.[0] ?? "(unknown route)"
+  );
+}
+
 function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
   fn: (p: z.input<Params>) => string,
+  // SAFETY: routes without params default to a type-only placeholder schema;
+  // parse/useParams are only invoked on routes that declare a real schema.
   paramsSchema: Params = {} as Params,
+  // SAFETY: routes without search params default to a type-only placeholder
+  // schema; parse/useSearchParams are only invoked on routes that declare one.
   search: Search = {} as Search,
 ): RouteBuilder<Params, Search> {
   const routeBuilder: RouteBuilder<Params, Search> = (params, options) => {
+    // SAFETY: `params` is optional so parameterless routes can call the
+    // builder; only routes whose `fn` reads params are called with one.
     const baseUrl = fn(params as z.input<Params>);
 
     const searchString =
@@ -68,13 +84,10 @@ function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
     const res = paramsSchema.safeParse(args);
 
     if (!res.success) {
-      const routeName =
-        Object.entries(Routes).find(
-          ([, route]) => (route as unknown) === routeBuilder,
-        )?.[0] || "(unknown route)";
+      const routeName = findRouteName(routeBuilder);
 
       throw new Error(
-        `Invalid route params for route ${routeName}: ${res.error.message}`,
+        `Invalid search params for route ${routeName}: ${res.error.message}`,
       );
     }
 
@@ -85,10 +98,7 @@ function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
     const res = paramsSchema.safeParse(useNextParams());
 
     if (!res.success) {
-      const routeName =
-        Object.entries(Routes).find(
-          ([, route]) => (route as unknown) === routeBuilder,
-        )?.[0] || "(unknown route)";
+      const routeName = findRouteName(routeBuilder);
 
       throw new Error(
         `Invalid route params for route ${routeName}: ${res.error.message}`,
@@ -104,20 +114,18 @@ function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
     );
 
     if (!res.success) {
-      const routeName =
-        Object.entries(Routes).find(
-          ([, route]) => (route as unknown) === routeBuilder,
-        )?.[0] || "(unknown route)";
+      const routeName = findRouteName(routeBuilder);
 
       throw new Error(
-        `Invalid search params for route ${routeName}: ${res.error.message}`,
+        `Invalid route params for route ${routeName}: ${res.error.message}`,
       );
     }
 
     return res.data;
   };
 
-  // set the type
+  // SAFETY: `params` is a type-level placeholder; the runtime getter installed
+  // immediately below throws for every access, so this value is never read.
   routeBuilder.params = undefined as z.output<Params>;
   // set the runtime getter
   Object.defineProperty(routeBuilder, "params", {
@@ -138,15 +146,13 @@ export function convertURLSearchParamsToObject(
     return {};
   }
 
-  const obj: Record<string, string | string[]> = {};
+  const entries: [string, string | string[]][] = [];
 
-  for (const [key, value] of params.entries()) {
-    if (params.getAll(key).length > 1) {
-      obj[key] = params.getAll(key);
-    } else {
-      obj[key] = value;
-    }
+  for (const key of params.keys()) {
+    const values = params.getAll(key);
+
+    entries.push([key, values.length > 1 ? values : (values[0] ?? "")]);
   }
 
-  return obj;
+  return Object.fromEntries(entries);
 }

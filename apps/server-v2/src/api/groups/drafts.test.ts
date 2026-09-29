@@ -20,9 +20,18 @@ import { makeTestServerLayer } from "@/test/server";
 
 const ErrorResponse = Schema.Struct({ message: Schema.String });
 
+const RawDraftListResponse = Schema.Struct({
+  results: Schema.Array(Schema.Unknown),
+  limit: Schema.Int,
+  offset: Schema.Int,
+  total: Schema.Int,
+});
+
+type DraftRequestBody = (typeof UpdateDraftPayload)["Encoded"];
+
 const createDraftRequest = (
   client: HttpClient.HttpClient,
-  body: Record<string, unknown> = {},
+  body: DraftRequestBody = {},
 ) =>
   client.execute(
     HttpClientRequest.post("/api/protected/drafts").pipe(
@@ -33,7 +42,7 @@ const createDraftRequest = (
 const updateDraftRequest = (
   client: HttpClient.HttpClient,
   draftId: string,
-  body: Record<string, unknown>,
+  body: DraftRequestBody,
 ) =>
   client.execute(
     HttpClientRequest.patch(`/api/protected/drafts/${draftId}`).pipe(
@@ -132,16 +141,13 @@ describe("drafts", () => {
       yield* createTestDraft({ id: "draft-2", userId, title: "Draft 2" });
       const response = yield* client.get("/api/protected/drafts");
 
-      const raw = (yield* response.json) as {
-        limit: number;
-        offset: number;
-        total: number;
-        results: Array<Record<string, unknown>>;
-      };
+      const rawJson = yield* response.json;
 
-      const body = yield* Schema.decodeEffect(DraftListResponse)(
-        raw as unknown as (typeof DraftListResponse)["Encoded"],
-      );
+      const raw =
+        yield* Schema.decodeUnknownEffect(RawDraftListResponse)(rawJson);
+
+      const body =
+        yield* Schema.decodeUnknownEffect(DraftListResponse)(rawJson);
 
       expect(response.status).toBe(200);
       expect(body).toMatchObject({ limit: 20, offset: 0, total: 2 });
@@ -468,7 +474,7 @@ describe("update draft payload", () => {
 
   it("rejects null for non-nullable fields", () => {
     expect(() =>
-      Schema.decodeSync(UpdateDraftPayload)({ title: null } as never),
+      Schema.decodeUnknownSync(UpdateDraftPayload)({ title: null }),
     ).toThrow("Expected string");
   });
 });

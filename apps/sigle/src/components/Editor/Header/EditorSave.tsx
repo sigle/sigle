@@ -9,9 +9,15 @@ import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 
+const saveStateLabels = {
+  idle: "",
+  saving: "Saving...",
+  saved: "Saved",
+};
+
 export const EditorSave = () => {
-  const params = useParams();
-  const postId = params.postId as string;
+  const params = useParams<{ postId: string }>();
+  const postId = params.postId;
   const searchParams = useSearchParams();
   const forceSave = searchParams.get("forceSave") === "true";
 
@@ -98,13 +104,5 @@ export const EditorSave = () => {
     );
   }
 
-  return (
-    <p className="text-sm">
-      {saveState === "idle"
-        ? ""
-        : saveState === "saved"
-          ? "Saved"
-          : "Saving..."}
-    </p>
-  );
+  return <p className="text-sm">{saveStateLabels[saveState]}</p>;
 };

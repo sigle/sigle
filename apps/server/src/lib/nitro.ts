@@ -24,7 +24,7 @@ export const readValidatedBodyZod = async <T, Event extends H3Event = H3Event>(
   event: Event,
   schema: z.ZodType<T>,
 ) => {
-  let body: unknown = null;
+  let body: unknown = undefined;
 
   try {
     body = await event.req.json();

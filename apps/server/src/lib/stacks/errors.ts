@@ -8,8 +8,8 @@ export class StacksApiError extends TaggedError("StacksApiError")<{
     const { cause } = params;
     let causeText: string | undefined = undefined;
 
-    if (typeof cause === "string") {
-      causeText = cause;
+    if (Object.prototype.toString.call(cause) === "[object String]") {
+      causeText = String(cause);
     } else if (cause instanceof Error) {
       causeText = cause.message;
     } else if (cause !== null) {

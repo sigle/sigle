@@ -1,16 +1,16 @@
 import type { paths as stacksApiPaths } from "@stacks/blockchain-api-client/lib/generated/schema";
 import { createClient } from "@stacks/blockchain-api-client";
-import { STACKS_DEVNET, STACKS_MAINNET, STACKS_TESTNET } from "@stacks/network";
+import { STACKS_MAINNET, STACKS_TESTNET } from "@stacks/network";
 import { Result } from "better-result";
 import { env } from "@/env";
 import { StacksApiError, TransactionTimeoutError } from "./errors";
 
-export const stacksNetwork =
-  env.NEXT_PUBLIC_STACKS_ENV === "mainnet"
-    ? STACKS_MAINNET
-    : env.NEXT_PUBLIC_STACKS_ENV === "testnet"
-      ? STACKS_TESTNET
-      : STACKS_DEVNET;
+const stacksNetworks = {
+  mainnet: STACKS_MAINNET,
+  testnet: STACKS_TESTNET,
+};
+
+export const stacksNetwork = stacksNetworks[env.NEXT_PUBLIC_STACKS_ENV];
 
 export const stacksApiClient = createClient({
   baseUrl: `https://api.${env.NEXT_PUBLIC_STACKS_ENV}.hiro.so`,

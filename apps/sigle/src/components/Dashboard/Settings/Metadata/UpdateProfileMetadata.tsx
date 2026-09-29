@@ -130,9 +130,8 @@ export const UpdateProfileMetadata = ({
 
     const data = await uploadProfileMetadata
       .mutateAsync({
-        body: {
-          metadata: metadata as unknown as Record<string, never>,
-        },
+        body: {},
+        bodySerializer: () => JSON.stringify({ metadata }),
       })
       .then((result) => Result.ok(result))
       .catch((error) => Result.err(error));

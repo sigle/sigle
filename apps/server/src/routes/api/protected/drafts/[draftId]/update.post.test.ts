@@ -1,4 +1,5 @@
-import type { H3Event } from "nitro/h3";
+import { H3Event, type getRouterParam } from "nitro/h3";
+import { PostHog } from "posthog-node";
 import {
   afterAll,
   beforeAll,
@@ -24,13 +25,9 @@ vi.mock<typeof import("@/lib/nitro")>(import("@/lib/nitro"), () => ({
     mockReadValidatedBodyZod(...args),
 }));
 
-const mockGetRouterParam = vi.fn((event: unknown, name: string) => {
-  if (name === "draftId") {
-    return (event as { draftId?: string }).draftId ?? undefined;
-  }
-
-  return undefined;
-});
+const { mockGetRouterParam } = vi.hoisted(() => ({
+  mockGetRouterParam: vi.fn<typeof getRouterParam>(),
+}));
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro/h3")>(import("nitro/h3"), async () => {
@@ -80,15 +77,15 @@ describe("api/protected/drafts/[draftId]/update.post", () => {
     });
     mockGetRouterParam.mockReturnValue("draft-1");
 
-    const mockEvent = {
-      context: {
-        user: { id: userId },
-        $posthog: { capture: vi.fn() },
-      },
-      path: "/api/protected/drafts/draft-1/update",
-      method: "POST",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request("http://localhost/api/protected/drafts/draft-1/update"),
+    );
+
+    const posthog = new PostHog("test-api-key", { host: "http://localhost" });
+
+    vi.spyOn(posthog, "capture").mockReturnValue(undefined);
+    mockEvent.context.user = { id: userId };
+    mockEvent.context.$posthog = posthog;
 
     const result = await handler(mockEvent);
 

@@ -12,25 +12,22 @@ import { getMetadataFromUri } from "@/lib/metadata";
 import { createTestDatabase, type TestDatabase } from "@/test/database";
 import { createTestUser } from "@/test/helpers";
 
-vi.mock<typeof import("@/lib/metadata")>(
-  import("@/lib/metadata"),
-  () =>
-    ({
-      getMetadataFromUri: vi.fn(),
-    }) as unknown as typeof import("@/lib/metadata"),
-);
+vi.mock<typeof import("@/lib/metadata")>(import("@/lib/metadata"), () => ({
+  getMetadataFromUri: vi.fn(),
+}));
 
 vi.mock<typeof import("@/lib/consola")>(
   import("@/lib/consola"),
-  () =>
-    ({
-      consola: {
-        debug: vi.fn(),
-        info: vi.fn(),
-        error: vi.fn(),
-        warn: vi.fn(),
-      },
-    }) as unknown as typeof import("@/lib/consola"),
+  async (importOriginal) => {
+    const { consola } = await importOriginal();
+
+    vi.spyOn(consola, "debug").mockReturnValue(undefined);
+    vi.spyOn(consola, "info").mockReturnValue(undefined);
+    vi.spyOn(consola, "error").mockReturnValue(undefined);
+    vi.spyOn(consola, "warn").mockReturnValue(undefined);
+
+    return { consola };
+  },
 );
 
 const { executePublishPostJob } = await import("./publish-post");
@@ -60,7 +57,7 @@ describe("executePublishPostJob", () => {
   it("publishes initial post and creates revision 1", async () => {
     await createTestUser({ id: userId });
 
-    const mockGetMetadata = getMetadataFromUri as any;
+    const mockGetMetadata = vi.mocked(getMetadataFromUri);
     mockGetMetadata.mockResolvedValue(
       Result.ok({
         version: "v1",
@@ -110,7 +107,7 @@ describe("executePublishPostJob", () => {
   it("updates post metadata and increments revisionsCount when rootTxId is provided", async () => {
     await createTestUser({ id: userId });
 
-    const mockGetMetadata = getMetadataFromUri as any;
+    const mockGetMetadata = vi.mocked(getMetadataFromUri);
 
     // Publish initial post
     mockGetMetadata.mockResolvedValueOnce(

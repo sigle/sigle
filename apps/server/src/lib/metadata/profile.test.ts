@@ -4,6 +4,25 @@ import { describe, expect, it, vi, beforeEach } from "vite-plus/test";
 import { InvalidMetadataError, MetadataFetchFailedError } from "./errors";
 import { getProfileMetadataFromUri } from "./profile";
 
+function unwrapErr<T, E>(result: Result<T, E>): E {
+  if (result.isErr()) return result.error;
+
+  throw new Error("Expected an error result");
+}
+
+function expectInstanceOf<T, C extends new (...args: never[]) => T>(
+  value: T,
+  type: C,
+): InstanceType<C> {
+  if (value instanceof type) {
+    // SAFETY: `instanceof type` guarantees the runtime match; TypeScript
+    // cannot express the generic narrowing from `T` to the instance type.
+    return value as InstanceType<C>;
+  }
+
+  throw new Error(`Expected instance of ${type.name}`);
+}
+
 const mockFetch = vi.fn();
 
 vi.stubGlobal("fetch", mockFetch);
@@ -51,10 +70,11 @@ describe("profile metadata", () => {
 
       expect(result.isOk()).toBe(false);
 
-      const error = (result as unknown as { error: MetadataFetchFailedError })
-        .error;
+      const error = expectInstanceOf(
+        unwrapErr(result),
+        MetadataFetchFailedError,
+      );
 
-      expect(error).toBeInstanceOf(MetadataFetchFailedError);
       expect(error._tag).toBe("MetadataFetchFailedError");
       expect(error.error).toContain("Network error");
     });
@@ -71,8 +91,7 @@ describe("profile metadata", () => {
 
       expect(result.isOk()).toBe(false);
 
-      const error = (result as unknown as { error: MetadataFetchFailedError })
-        .error;
+      const error = unwrapErr(result);
 
       expect(error).toBeInstanceOf(MetadataFetchFailedError);
     });
@@ -89,10 +108,7 @@ describe("profile metadata", () => {
 
       expect(result.isOk()).toBe(false);
 
-      const error = (result as unknown as { error: InvalidMetadataError })
-        .error;
-
-      expect(error).toBeInstanceOf(InvalidMetadataError);
+      const error = expectInstanceOf(unwrapErr(result), InvalidMetadataError);
       expect(error._tag).toBe("InvalidMetadataError");
       expect(error.error).toBeDefined();
     });
@@ -111,8 +127,7 @@ describe("profile metadata", () => {
 
       expect(result.isOk()).toBe(false);
 
-      const error = (result as unknown as { error: MetadataFetchFailedError })
-        .error;
+      const error = unwrapErr(result);
 
       expect(error).toBeInstanceOf(MetadataFetchFailedError);
     });
@@ -132,8 +147,7 @@ describe("profile metadata", () => {
 
       expect(result.isOk()).toBe(false);
 
-      const error = (result as unknown as { error: InvalidMetadataError })
-        .error;
+      const error = unwrapErr(result);
 
       expect(error).toBeInstanceOf(InvalidMetadataError);
       expect(error._tag).toBe("InvalidMetadataError");
@@ -183,8 +197,7 @@ describe("profile metadata", () => {
 
       expect(result.isOk()).toBe(false);
 
-      const error = (result as unknown as { error: InvalidMetadataError })
-        .error;
+      const error = unwrapErr(result);
 
       expect(error).toBeInstanceOf(InvalidMetadataError);
     });

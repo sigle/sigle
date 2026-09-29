@@ -31,9 +31,7 @@ export const CollectEdition = () => {
     });
   };
 
-  // oxlint-disable-next-line typescript/no-explicit-any
-  const limitErrorMessage = (errors?.collect?.collectLimit as any)?.limit
-    ?.message;
+  const limitErrorMessage = errors?.collect?.collectLimit?.limit?.message;
 
   return (
     <Field>

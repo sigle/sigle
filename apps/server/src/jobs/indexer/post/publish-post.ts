@@ -145,13 +145,7 @@ export const executePublishPostJob = async (
             excerpt: metadata.excerpt,
             tags: metadata.tags,
             canonicalUri: metadata.canonicalUri ?? null,
-            ...(isNewTx
-              ? {
-                  revisionsCount: {
-                    increment: 1,
-                  },
-                }
-              : {}),
+            revisionsCount: isNewTx ? { increment: 1 } : undefined,
           },
         })
       : await tx.post.create({
@@ -186,7 +180,7 @@ export const executePublishPostJob = async (
         },
       },
       update: {
-        ...(data.arweaveL1TxId ? { arweaveL1TxId: data.arweaveL1TxId } : {}),
+        arweaveL1TxId: data.arweaveL1TxId || undefined,
       },
       create: {
         postId: targetPostId,

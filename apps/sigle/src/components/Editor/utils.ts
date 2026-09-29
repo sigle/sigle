@@ -116,6 +116,9 @@ const uploadNftImage = async (
   formData.append("file", await response.blob());
   formData.append("type", type);
 
+  // SAFETY: openapi-fetch passes FormData instances through untouched for
+  // multipart/form-data, so the generated `{ file: string; type }` request
+  // type only describes the server-side form fields.
   const data = await sigleApiFetchClient.POST(
     "/api/protected/drafts/{draftId}/upload-nft-image",
     {
@@ -124,7 +127,7 @@ const uploadNftImage = async (
           draftId: postId,
         },
       },
-      body: formData as unknown as {
+      body: formData as FormData & {
         file: string;
         type: "draft" | "published";
       },

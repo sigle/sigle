@@ -1,5 +1,6 @@
 "use client";
 
+import type { PostMetadata } from "@sigle/sdk";
 import { request } from "@stacks/connect";
 import { IconArrowLeft, IconRefresh } from "@tabler/icons-react";
 import { Result } from "better-result";
@@ -143,6 +144,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         metadata.signature = signature;
         completeStep("signature");
 
+        // SAFETY: the endpoint accepts the serialized PostMetadata payload, but its generated schema types metadata as an empty object; the intersection keeps the payload's real type assignable to the generated request type.
         const uploadedMetadataResult = await uploadMetadata({
           params: {
             path: {
@@ -151,7 +153,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           },
           body: {
             type,
-            metadata: metadata as unknown as Record<string, never>,
+            metadata: metadata as PostMetadata & Record<string, never>,
           },
         })
           .then((result) => Result.ok(result))

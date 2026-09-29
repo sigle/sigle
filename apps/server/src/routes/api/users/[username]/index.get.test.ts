@@ -1,4 +1,4 @@
-import type { H3Event } from "nitro/h3";
+import { H3Event, type getRouterParam } from "nitro/h3";
 import {
   afterAll,
   beforeAll,
@@ -16,13 +16,9 @@ vi.mock<typeof import("nitro")>(import("nitro"), () => ({
   defineRouteMeta: vi.fn(),
 }));
 
-const mockGetRouterParam = vi.fn((event: unknown, name: string) => {
-  if (name === "username") {
-    return (event as { username?: string }).username ?? undefined;
-  }
-
-  return undefined;
-});
+const { mockGetRouterParam } = vi.hoisted(() => ({
+  mockGetRouterParam: vi.fn<typeof getRouterParam>(),
+}));
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro/h3")>(import("nitro/h3"), async () => {
@@ -57,12 +53,7 @@ describe("api/users/[username]/index.get", () => {
   it("returns 400 when username is missing", async () => {
     mockGetRouterParam.mockReturnValue(undefined);
 
-    const mockEvent = {
-      context: {},
-      path: "/api/users/",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(new Request("http://localhost/api/users/"));
 
     await expect(handler(mockEvent)).rejects.toThrow("Bad Request");
   });
@@ -72,12 +63,11 @@ describe("api/users/[username]/index.get", () => {
       "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZ99",
     );
 
-    const mockEvent = {
-      context: {},
-      path: "/api/users/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZ99",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request(
+        "http://localhost/api/users/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZ99",
+      ),
+    );
 
     await expect(handler(mockEvent)).rejects.toThrow("User not found");
   });
@@ -98,12 +88,11 @@ describe("api/users/[username]/index.get", () => {
     await createTestPost({ id: "post-1", userId, title: "Test Post" });
     await createTestPost({ id: "post-2", userId, title: "Test Post 2" });
 
-    const mockEvent = {
-      context: {},
-      path: "/api/users/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
-      method: "GET",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request(
+        "http://localhost/api/users/ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+      ),
+    );
 
     const result = await handler(mockEvent);
 

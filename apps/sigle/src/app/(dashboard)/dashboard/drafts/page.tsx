@@ -1,6 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
+import type { QueryObserverResult } from "@tanstack/react-query";
 import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
@@ -95,7 +96,7 @@ const Draft = ({
   refetchDrafts,
 }: {
   draft: paths["/api/protected/drafts/list"]["get"]["responses"][200]["content"]["application/json"][0];
-  refetchDrafts: () => Promise<unknown>;
+  refetchDrafts: () => Promise<QueryObserverResult<unknown, unknown>>;
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
 

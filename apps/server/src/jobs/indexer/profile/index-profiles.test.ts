@@ -15,6 +15,8 @@ import { createTestUser } from "@/test/helpers";
 
 const mockEmit = vi.fn();
 
+// SAFETY: vitest swaps this module at runtime and the job under test only
+// calls `indexerJob.emit`, which the factory below implements.
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("..")>(
   import(".."),
@@ -23,8 +25,7 @@ vi.mock<typeof import("..")>(
       indexerJob: {
         emit: (...args: unknown[]) => mockEmit(...args),
       },
-      // oxlint-disable-next-line consistent-type-imports
-    }) as unknown as typeof import(".."),
+    }) as Partial<typeof import("..")>,
 );
 
 const mockStacksApiClientGET = vi.fn();
@@ -34,44 +35,51 @@ const mockGetStacksTransaction = vi.fn();
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("@/lib/stacks")>(
   import("@/lib/stacks"),
-  () =>
-    ({
-      stacksNetwork: "testnet",
+  async (importOriginal) => {
+    const stacksModule = await importOriginal();
+
+    return {
+      ...stacksModule,
       stacksApiClient: {
+        ...stacksModule.stacksApiClient,
         GET: (...args: unknown[]) => mockStacksApiClientGET(...args),
       },
       getStacksTransaction: (...args: unknown[]) =>
         mockGetStacksTransaction(...args),
-      // oxlint-disable-next-line consistent-type-imports
-    }) as unknown as typeof import("@/lib/stacks"),
+    };
+  },
 );
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("@/lib/sigle")>(
   import("@/lib/sigle"),
-  () =>
-    ({
+  async (importOriginal) => {
+    const sigleModule = await importOriginal();
+
+    return {
+      ...sigleModule,
       sigleConfig: {
+        ...sigleModule.sigleConfig,
         profilesRegistryAddress:
           "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.sigle-profiles-v001",
       },
-      // oxlint-disable-next-line consistent-type-imports
-    }) as unknown as typeof import("@/lib/sigle"),
+    };
+  },
 );
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("@/lib/consola")>(
   import("@/lib/consola"),
-  () =>
-    ({
-      consola: {
-        debug: vi.fn(),
-        info: vi.fn(),
-        error: vi.fn(),
-        warn: vi.fn(),
-      },
-      // oxlint-disable-next-line consistent-type-imports
-    }) as unknown as typeof import("@/lib/consola"),
+  async (importOriginal) => {
+    const { consola } = await importOriginal();
+
+    vi.spyOn(consola, "debug").mockReturnValue(undefined);
+    vi.spyOn(consola, "info").mockReturnValue(undefined);
+    vi.spyOn(consola, "error").mockReturnValue(undefined);
+    vi.spyOn(consola, "warn").mockReturnValue(undefined);
+
+    return { consola };
+  },
 );
 
 const { executeIndexerIndexProfilesJob } = await import("./index-profiles");
@@ -482,18 +490,22 @@ describe("executeIndexerIndexProfilesJob", () => {
       },
     });
     mockGetStacksTransaction.mockImplementation((txId: string) => {
-      const heights: Record<string, number> = {
-        "0xtx1": 100,
-        "0xtx2": 101,
-      };
+      const heights = new Map([
+        ["0xtx1", 100],
+        ["0xtx2", 101],
+      ]);
 
-      const timestamps: Record<string, number> = {
-        "0xtx1": 1700000000,
-        "0xtx2": 1700000010,
-      };
+      const timestamps = new Map([
+        ["0xtx1", 1700000000],
+        ["0xtx2", 1700000010],
+      ]);
 
       return Result.ok(
-        createSuccessTransaction(txId, heights[txId], timestamps[txId]),
+        createSuccessTransaction(
+          txId,
+          heights.get(txId)!,
+          timestamps.get(txId)!,
+        ),
       );
     });
 

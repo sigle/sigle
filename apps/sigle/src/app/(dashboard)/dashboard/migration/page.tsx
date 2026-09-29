@@ -179,7 +179,7 @@ export default function MigrationPage() {
       );
     } catch (error) {
       console.error(error);
-      toast.error(error as string);
+      toast.error(error instanceof Error ? error.message : String(error));
     } finally {
       setLoadingPostId(null);
     }
