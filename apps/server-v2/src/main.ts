@@ -12,7 +12,10 @@ import { AuthRoutesLayer } from "@/api/groups/auth";
 import { DraftsHandlersLayer } from "@/api/handlers/drafts";
 import { HealthHandlersLayer } from "@/api/handlers/health";
 import { ProtectedHandlersLayer } from "@/api/handlers/protected";
-import { UserAuthMiddlewareLayer } from "@/api/middleware/auth-user";
+import {
+  UserAuthMiddlewareLayer,
+  WhitelistedUserMiddlewareLayer,
+} from "@/api/middleware/auth-user";
 import { RateLimitMiddlewareLayer } from "@/api/middleware/rate-limit";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
@@ -36,6 +39,7 @@ export const ApiHandlersLayer = Layer.mergeAll(
 export const ApiMiddlewareLayer = Layer.mergeAll(
   RateLimitMiddlewareLayer,
   UserAuthMiddlewareLayer,
+  WhitelistedUserMiddlewareLayer,
 );
 
 export const AuthLayer = Layer.mergeAll(

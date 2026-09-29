@@ -5,7 +5,10 @@ import {
   HttpApiSchema,
   OpenApi,
 } from "effect/unstable/httpapi";
-import { UserAuthMiddleware } from "@/api/middleware/auth-user";
+import {
+  UserAuthMiddleware,
+  WhitelistedUserMiddleware,
+} from "@/api/middleware/auth-user";
 import { NotFound } from "@/api/schemas";
 
 export const DRAFT_LIST_DEFAULT_LIMIT = 20;
@@ -157,4 +160,5 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
     }).annotate(OpenApi.Summary, "Delete a draft"),
   )
   .prefix("/api/protected/drafts")
+  .middleware(WhitelistedUserMiddleware)
   .middleware(UserAuthMiddleware);

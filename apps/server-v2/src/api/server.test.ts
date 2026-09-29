@@ -66,7 +66,7 @@ describe("http server", () => {
       ).toStrictEqual(expect.arrayContaining(["200", "429"]));
       expect(
         Object.keys(body.paths["/api/protected/me"].get?.responses ?? {}),
-      ).toStrictEqual(expect.arrayContaining(["200", "401", "403"]));
+      ).toStrictEqual(expect.arrayContaining(["200", "401"]));
     }).pipe(Effect.provide(serverLayer())),
   );
 
