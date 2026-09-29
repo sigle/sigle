@@ -3,5 +3,6 @@
  */
 export const prettifyUrl = (url: string) => {
   const prettyUrl = url.replace(/(^\w+:|^)\/\//, "").replace(/\/$/, "");
+
   return prettyUrl;
 };

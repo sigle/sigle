@@ -6,10 +6,12 @@ const Placeholder = (isMobile: boolean) => {
     includeChildren: true,
     placeholder: ({ editor, node, pos }) => {
       if (node.type.name === "heading") {
-        const level = node.attrs.level as number;
+        const level = node.attrs.level;
+
         if (level === 2) {
           return "Big Heading";
         }
+
         if (level === 3) {
           return "Small Heading";
         }
@@ -17,6 +19,7 @@ const Placeholder = (isMobile: boolean) => {
 
       if (node.type.name === "paragraph") {
         const parentNode = editor.state.doc.resolve(pos).parent;
+
         // When user start to write, only show this when the content is empty
         if (
           parentNode.type.name === "doc" &&
@@ -34,6 +37,7 @@ const Placeholder = (isMobile: boolean) => {
           if (parentNode.content.childCount > 1) {
             return "Type or hit enter to exit quote";
           }
+
           return "Quote";
         }
 

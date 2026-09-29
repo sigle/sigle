@@ -14,6 +14,7 @@ describe("generate-post-contract", () => {
         metadata: "ipfs://whatever",
       },
     });
+
     expect(data.contract).toMatchSnapshot();
   });
 
@@ -29,6 +30,7 @@ describe("generate-post-contract", () => {
         metadata: "ipfs://whatever",
       },
     });
+
     expect(data.contract).toMatchSnapshot();
   });
 
@@ -44,6 +46,7 @@ describe("generate-post-contract", () => {
         metadata: "ipfs://whatever",
       },
     });
+
     expect(data.contract).toMatchSnapshot();
   });
 
@@ -60,6 +63,7 @@ describe("generate-post-contract", () => {
         metadata: "ipfs://whatever",
       },
     });
+
     expect(data.contract).toMatchSnapshot();
   });
 });

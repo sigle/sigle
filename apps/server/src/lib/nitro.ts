@@ -24,7 +24,8 @@ export const readValidatedBodyZod = async <T, Event extends H3Event = H3Event>(
   event: Event,
   schema: z.ZodType<T>,
 ) => {
-  let body: unknown = null;
+  let body: unknown = undefined;
+
   try {
     body = await event.req.json();
   } catch (error) {
@@ -57,11 +58,13 @@ export const readFormData = async (
   maxSize: keyof typeof possibleMaxSizes,
 ): Promise<FormData> => {
   const maxSizeValue = possibleMaxSizes[maxSize];
+
   if (!maxSizeValue) {
     throw new Error(`Invalid maxSize: ${maxSize}`);
   }
 
   const contentLength = event.req.headers.get("content-length");
+
   if (!contentLength) {
     throw new HTTPError({
       status: 411,
@@ -70,6 +73,7 @@ export const readFormData = async (
   }
 
   const parsedContentLength = Number(contentLength);
+
   if (!Number.isFinite(parsedContentLength) || parsedContentLength < 0) {
     throw new HTTPError({
       status: 400,

@@ -3,9 +3,13 @@ import { Cl } from "@stacks/transactions";
 import { describe, expect, it } from "vite-plus/test";
 
 const contract = "sigle-protocol-v001";
+
 const accounts = simnet.getAccounts();
+
 const deployer = accounts.get("deployer")!;
+
 const wallet1 = accounts.get("wallet_1")!;
+
 const wallet2 = accounts.get("wallet_2")!;
 
 describe(contract, () => {
@@ -17,6 +21,7 @@ describe(contract, () => {
         [],
         deployer,
       );
+
       expect(result).toBePrincipal(deployer);
     });
 
@@ -27,6 +32,7 @@ describe(contract, () => {
         [],
         deployer,
       );
+
       expect(result).toBePrincipal(deployer);
     });
   });
@@ -39,6 +45,7 @@ describe(contract, () => {
         [Cl.principal(wallet1)],
         deployer,
       );
+
       expect(result).toBeOk(Cl.bool(true));
 
       // Verify the new owner
@@ -48,6 +55,7 @@ describe(contract, () => {
         [],
         deployer,
       );
+
       expect(newOwner).toBePrincipal(wallet1);
     });
 
@@ -58,6 +66,7 @@ describe(contract, () => {
         [Cl.principal(wallet2)],
         wallet2,
       );
+
       expect(result).toBeErr(Cl.uint(403)); // ERR-NOT-AUTHORIZED
     });
   });
@@ -70,6 +79,7 @@ describe(contract, () => {
         [Cl.principal(wallet1)],
         deployer,
       );
+
       expect(result).toBeOk(Cl.bool(true));
 
       // Verify the new payout address
@@ -79,6 +89,7 @@ describe(contract, () => {
         [],
         deployer,
       );
+
       expect(newPayoutAddress).toBePrincipal(wallet1);
     });
 
@@ -89,6 +100,7 @@ describe(contract, () => {
         [Cl.principal(wallet2)],
         wallet2,
       );
+
       expect(result).toBeErr(Cl.uint(403)); // ERR-NOT-AUTHORIZED
     });
   });
@@ -101,6 +113,7 @@ describe(contract, () => {
         [],
         deployer,
       );
+
       expect(result).toBePrincipal(deployer);
     });
 
@@ -111,6 +124,7 @@ describe(contract, () => {
         [],
         deployer,
       );
+
       expect(result).toBePrincipal(deployer);
     });
   });
@@ -140,6 +154,7 @@ describe(contract, () => {
         [],
         deployer,
       );
+
       expect(result).toBePrincipal(wallet2);
     });
 
@@ -167,6 +182,7 @@ describe(contract, () => {
         [],
         deployer,
       );
+
       expect(result).toBePrincipal(wallet2);
     });
   });

@@ -27,8 +27,10 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
     | "loading"
     | { valid: true }
   >("loading");
+
   const { handleSubmit, formState, watch } =
     useFormContext<EditorPostFormData>();
+
   const type = watch("type");
 
   // Validate form on mount so we can show the various error messages in the callout

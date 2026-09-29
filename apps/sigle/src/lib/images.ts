@@ -7,17 +7,21 @@ export const resolveImageUrl = (
 ) => {
   if (image?.startsWith("ipfs://")) {
     let cid = image.slice(7);
+
     // We convert the CID to a v1 CID if it's a v0 CID so that images can be served by subdomain gateways
     if (cid.startsWith("Qm")) {
       cid = parse(cid).toV1().toString();
     }
+
     image =
       options.gateway && env.NEXT_PUBLIC_IPFS_GATEWAY_URL
         ? `${env.NEXT_PUBLIC_IPFS_GATEWAY_URL}/${cid}`
         : `https://ipfs.filebase.io/ipfs/${cid}`;
   }
+
   if (image?.startsWith("ar://")) {
     image = `${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${image.slice(5)}`;
   }
+
   return image;
 };

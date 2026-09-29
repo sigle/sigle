@@ -21,12 +21,12 @@ import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "./EditorFormProvider";
 
 export const EditorCoverImage = () => {
-  const params = useParams();
-  const postId = params.postId as string;
+  const postId = useParams<{ postId: string }>().postId;
   const posthog = usePostHog();
   const [preview, setPreview] = useState<string | null>(null);
   const { setValue, watch } = useFormContext<EditorPostFormData>();
   const watchCoverImage = watch("coverImage");
+
   const { mutateAsync: uploadMedia, isPending: loadingUploadImage } =
     sigleApiClient.useMutation(
       "post",
@@ -36,7 +36,9 @@ export const EditorCoverImage = () => {
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
+
       if (!file) return;
+
       if (loadingUploadImage) return;
 
       const previewBlobUrl = URL.createObjectURL(file);
@@ -47,6 +49,7 @@ export const EditorCoverImage = () => {
       });
       const formData = new FormData();
       formData.append("file", file);
+      // SAFETY: openapi-fetch passes FormData instances through untouched for multipart/form-data, so the generated `{ file: string }` request type only describes the server-side form field.
       uploadMedia(
         {
           params: {
@@ -54,8 +57,7 @@ export const EditorCoverImage = () => {
               draftId: postId,
             },
           },
-          // oxlint-disable-next-line typescript/no-explicit-any
-          body: formData as any,
+          body: formData as FormData & { file: string },
         },
         {
           onSuccess: (data) => {

@@ -24,6 +24,7 @@ export async function generateMetadata({
       },
     },
   });
+
   if (!site) {
     notFound();
   }
@@ -35,12 +36,14 @@ export async function generateMetadata({
       },
     },
   });
+
   if (!post || post.user.id !== site.user.id) {
     notFound();
   }
 
   const title = post.metaTitle || post.title;
   const description = post.metaDescription;
+
   const seoImage = post.coverImage
     ? resolveImageUrl(post.coverImage.id)
     : site.user.profile?.pictureUri
@@ -87,6 +90,7 @@ export default async function Post({
       },
     },
   });
+
   if (!site) {
     notFound();
   }
@@ -98,6 +102,7 @@ export default async function Post({
       },
     },
   });
+
   if (!post || post.user.id !== site.user.id) {
     notFound();
   }
@@ -114,6 +119,7 @@ export default async function Post({
   const tableOfContent = post.content
     ? extractTableOfContents(post.content)
     : [];
+
   const posthtml = post.content ? addIdsToHeadings(post.content) : "";
 
   const filteredPosts =

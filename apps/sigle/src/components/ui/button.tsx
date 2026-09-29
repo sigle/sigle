@@ -51,6 +51,7 @@ function Button({
 }: ButtonPrimitive.Props &
   VariantProps<typeof buttonVariants> & { loading?: boolean }) {
   let child = children;
+
   if (loading) {
     child = renderLoadingButtonContents(children);
   }

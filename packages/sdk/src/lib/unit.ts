@@ -1,6 +1,7 @@
 import { InvalidDecimalNumberError } from "../errors/unit.js";
 
 const STACKS_DECIMALS = 6;
+
 const BTC_DECIMALS = 8;
 
 /**
@@ -15,6 +16,7 @@ export function parseUnits(value: string, decimals: number): bigint {
   let [integer, fraction = "0"] = value.split(".");
 
   const negative = integer.startsWith("-");
+
   if (negative) integer = integer.slice(1);
 
   // trim trailing zeros.
@@ -33,6 +35,7 @@ export function parseUnits(value: string, decimals: number): bigint {
     ];
 
     const rounded = Math.round(Number(`${unit}.${right}`));
+
     if (rounded > 9)
       fraction = `${BigInt(left) + BigInt(1)}0`.padStart(left.length + 1, "0");
     else fraction = `${left}${rounded}`;
@@ -59,6 +62,7 @@ export function formatUnits(value: bigint, decimals: number) {
   let display = value.toString();
 
   const negative = display.startsWith("-");
+
   if (negative) display = display.slice(1);
 
   display = display.padStart(decimals, "0");
@@ -66,6 +70,7 @@ export function formatUnits(value: bigint, decimals: number) {
   const integer = display.slice(0, display.length - decimals);
   let fraction = display.slice(display.length - decimals);
   fraction = fraction.replace(/(0+)$/, "");
+
   return `${negative ? "-" : ""}${integer || "0"}${fraction ? `.${fraction}` : ""}`;
 }
 

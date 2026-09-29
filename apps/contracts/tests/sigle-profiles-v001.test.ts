@@ -3,20 +3,25 @@ import { Cl } from "@stacks/transactions";
 import { describe, expect, it } from "vite-plus/test";
 
 const contract = "sigle-profiles-v001";
+
 const accounts = simnet.getAccounts();
+
 const wallet1 = accounts.get("wallet_1")!;
+
 const wallet2 = accounts.get("wallet_2")!;
 
 describe(contract, () => {
   describe("set-profile", () => {
     it("allows setting a profile URI", () => {
       const uri = "https://example.com/profile";
+
       const { result } = simnet.callPublicFn(
         contract,
         "set-profile",
         [Cl.stringAscii(uri)],
         wallet1,
       );
+
       expect(result).toBeOk(Cl.bool(true));
 
       // Verify the profile was set correctly
@@ -26,6 +31,7 @@ describe(contract, () => {
         [Cl.principal(wallet1)],
         wallet1,
       );
+
       expect(profile).toBeOk(Cl.some(Cl.stringAscii(uri)));
     });
 
@@ -48,6 +54,7 @@ describe(contract, () => {
         [Cl.stringAscii(updatedUri)],
         wallet1,
       );
+
       expect(result).toBeOk(Cl.bool(true));
 
       // Verify the profile was updated
@@ -57,17 +64,20 @@ describe(contract, () => {
         [Cl.principal(wallet1)],
         wallet1,
       );
+
       expect(profile).toBeOk(Cl.some(Cl.stringAscii(updatedUri)));
     });
 
     it("handles empty URI", () => {
       const emptyUri = "";
+
       const { result } = simnet.callPublicFn(
         contract,
         "set-profile",
         [Cl.stringAscii(emptyUri)],
         wallet1,
       );
+
       expect(result).toBeOk(Cl.bool(true));
     });
   });
@@ -80,6 +90,7 @@ describe(contract, () => {
         [Cl.principal(wallet2)],
         wallet2,
       );
+
       expect(result).toBeOk(Cl.none());
     });
 
@@ -101,6 +112,7 @@ describe(contract, () => {
         [Cl.principal(wallet1)],
         wallet1,
       );
+
       expect(result).toBeOk(Cl.some(Cl.stringAscii(uri)));
     });
   });

@@ -46,6 +46,8 @@ export const ipfsUploadFile = async (
         }),
       );
 
+      // SAFETY: the S3 response's `$metadata.httpHeaders` is populated at
+      // runtime, but the SDK's `ResponseMetadata` type omits it.
       const serverCid = (
         response.$metadata as { httpHeaders?: Record<string, string> }
       ).httpHeaders?.["x-amz-meta-cid"];
@@ -69,8 +71,10 @@ export const ipfsUploadFile = async (
       if (error instanceof IpfsUploadFailedError) {
         return error;
       }
+
       consola.error(error);
       const sentryId = event.context.$sentry.captureException(error);
+
       return new IpfsUploadFailedError({
         message: `Failed to upload to IPFS, error: ${sentryId}`,
         sentryId,

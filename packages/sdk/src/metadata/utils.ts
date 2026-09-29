@@ -12,5 +12,6 @@ export function evaluate<Output>(result: z.ZodSafeParseResult<Output>): Output {
   if (result.success) {
     return result.data;
   }
+
   throw new ValidationError(fromError(result.error).toString());
 }

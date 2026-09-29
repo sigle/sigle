@@ -78,11 +78,13 @@ export const TipTapImage = TipTapImageBase.extend<
                     src: imageUrl,
                     uploadId: undefined,
                   };
+
                   const newNode = node.type.create(
                     attrs,
                     node.content,
                     node.marks,
                   );
+
                   transaction.replaceWith(pos, pos + node.nodeSize, newNode);
                 }
               });
@@ -120,6 +122,7 @@ export const TipTapImage = TipTapImageBase.extend<
         node.attrs.src?.startsWith("https://gaia.blockstack.org/hub/")
       ) {
         const uploadId = nanoid();
+
         const attrs = {
           ...node.attrs,
           uploadId,
@@ -132,6 +135,7 @@ export const TipTapImage = TipTapImageBase.extend<
           .then((response) => response.blob())
           .then((blob) => {
             const file = new File([blob], "image", { type: blob.type });
+
             return this.options.uploadFile(file);
           })
           .then((imageUrl) => {
@@ -146,11 +150,13 @@ export const TipTapImage = TipTapImageBase.extend<
                   src: imageUrl,
                   uploadId: undefined,
                 };
+
                 const updatedNode = innerNode.type.create(
                   updatedAttrs,
                   innerNode.content,
                   innerNode.marks,
                 );
+
                 updateTransaction.replaceWith(
                   innerPos,
                   innerPos + innerNode.nodeSize,

@@ -53,12 +53,15 @@ export const generatePostContract = ({
   if (params.collectInfo.amount < 0) {
     throw new Error("collectInfo.amount must be > 0");
   }
+
   if (params.collectInfo.amount > MAX_UINT) {
     throw new Error("collectInfo.amount must be < MAX_UINT");
   }
+
   const maxSupply = params.collectInfo.maxSupply
     ? `u${params.collectInfo.maxSupply}`
     : `u${MAX_UINT}`;
+
   contract = contract.replace(
     "(define-data-var max-supply uint u0)",
     `(define-data-var max-supply uint ${maxSupply})`,

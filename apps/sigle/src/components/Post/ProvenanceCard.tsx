@@ -32,7 +32,9 @@ type StorageType = "arweave" | "ipfs" | "external";
 
 function getStorageType(metadataUri: string): StorageType {
   if (metadataUri.startsWith("ar://")) return "arweave";
+
   if (metadataUri.startsWith("ipfs://")) return "ipfs";
+
   return "external";
 }
 
@@ -51,9 +53,11 @@ function getMetadataLink(metadataUri: string): string {
   if (metadataUri.startsWith("ar://")) {
     return `${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${metadataUri.slice(5)}`;
   }
+
   if (metadataUri.startsWith("ipfs://")) {
     return `${env.NEXT_PUBLIC_IPFS_GATEWAY_URL}/${metadataUri.slice(7)}`;
   }
+
   return metadataUri;
 }
 
@@ -61,11 +65,13 @@ function getMetadataId(metadataUri: string): string {
   if (metadataUri.startsWith("ar://") || metadataUri.startsWith("ipfs://")) {
     return metadataUri.split("://")[1];
   }
+
   return metadataUri;
 }
 
 function truncateId(id: string, startChars = 8, endChars = 6): string {
   if (id.length <= startChars + endChars + 3) return id;
+
   return `${id.slice(0, startChars)}...${id.slice(-endChars)}`;
 }
 

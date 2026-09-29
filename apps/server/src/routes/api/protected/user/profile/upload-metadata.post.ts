@@ -1,6 +1,7 @@
 import { ProfileMetadataSchema } from "@sigle/sdk";
 import { defineRouteMeta } from "nitro";
 import { HTTPError, defineEventHandler } from "nitro/h3";
+import { z } from "zod";
 import { fromError } from "zod-validation-error";
 import { arweaveUploadFile } from "@/lib/arweave";
 
@@ -57,11 +58,14 @@ defineRouteMeta({
 });
 
 export default defineEventHandler(async (event) => {
-  const body = (await event.req.json()) as { metadata?: object };
+  const body = z
+    .object({ metadata: z.unknown() })
+    .safeParse(await event.req.json());
 
   const parsedMetadata = ProfileMetadataSchema.safeParse(
-    body ? body.metadata : {},
+    body.success ? body.data.metadata : {},
   );
+
   if (!parsedMetadata.success) {
     throw new HTTPError({
       status: 400,

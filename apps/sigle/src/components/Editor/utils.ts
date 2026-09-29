@@ -30,6 +30,7 @@ const generateMetadataAttributesFromForm = ({
       key: "excerpt",
     },
   ];
+
   if (post.metaTitle) {
     attributes.push({
       type: MetadataAttributeType.STRING,
@@ -37,6 +38,7 @@ const generateMetadataAttributesFromForm = ({
       key: "meta-title",
     });
   }
+
   if (post.metaDescription) {
     attributes.push({
       type: MetadataAttributeType.STRING,
@@ -44,6 +46,7 @@ const generateMetadataAttributesFromForm = ({
       key: "meta-description",
     });
   }
+
   if (post.canonicalUri) {
     attributes.push({
       type: MetadataAttributeType.STRING,
@@ -63,6 +66,7 @@ const getImageMediaMetadata = async (
   const buffer = Buffer.from(arrayBuffer);
   const contentType = await fileTypeFromBuffer(buffer);
   let type: MediaImageMimeType | null = null;
+
   switch (contentType?.mime) {
     case "image/jpeg":
       type = MediaImageMimeType.JPEG;
@@ -73,9 +77,11 @@ const getImageMediaMetadata = async (
     case "image/webp":
       type = MediaImageMimeType.WEBP;
   }
+
   if (!type) {
     throw new Error(`Image type "${contentType?.mime}" is not supported`);
   }
+
   return {
     url,
     type,
@@ -93,11 +99,13 @@ const uploadNftImage = async (
   params: CreatePostNftParams,
 ) => {
   const url = new URL(`${env.NEXT_PUBLIC_APP_URL}/api/post/nft-image`);
+
   for (const [key, value] of Object.entries(params)) {
     if (value !== undefined) {
       url.searchParams.append(key, String(value));
     }
   }
+
   const response = await fetch(url.toString());
 
   if (!response.ok) {
@@ -108,6 +116,9 @@ const uploadNftImage = async (
   formData.append("file", await response.blob());
   formData.append("type", type);
 
+  // SAFETY: openapi-fetch passes FormData instances through untouched for
+  // multipart/form-data, so the generated `{ file: string; type }` request
+  // type only describes the server-side form fields.
   const data = await sigleApiFetchClient.POST(
     "/api/protected/drafts/{draftId}/upload-nft-image",
     {
@@ -116,15 +127,17 @@ const uploadNftImage = async (
           draftId: postId,
         },
       },
-      body: formData as unknown as {
+      body: formData as FormData & {
         file: string;
         type: "draft" | "published";
       },
     },
   );
+
   if (!data.data) {
     throw new Error("Failed to upload NFT image");
   }
+
   return data.data.url;
 };
 
@@ -142,10 +155,12 @@ export const generateSigleMetadataFromForm = async ({
   post: EditorPostFormData;
 }): Promise<PostMetadata> => {
   const editorText = editor?.getText() || "";
+
   const metadataAttributes = generateMetadataAttributesFromForm({
     editorText,
     post,
   });
+
   const coverImage = post.coverImage
     ? await getImageMediaMetadata(post.coverImage)
     : undefined;
@@ -153,6 +168,7 @@ export const generateSigleMetadataFromForm = async ({
   let description =
     metadataAttributes.find((attribute) => attribute.key === "excerpt")
       ?.value || "";
+
   description = `${description}...\n\nWritten on www.sigle.io`;
 
   const metadata = createPostMetadata({

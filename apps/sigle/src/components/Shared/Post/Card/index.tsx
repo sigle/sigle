@@ -20,6 +20,7 @@ interface PostCardProps {
 
 export const PostCard = ({ post, className }: PostCardProps) => {
   const [collectDialogOpen, setCollectDialogOpen] = useState(false);
+
   const canCollect =
     post.collectible &&
     (post.collectible.maxSupply === 0 ||

@@ -12,6 +12,7 @@ import { UpdateProfileMetadata } from "./UpdateProfileMetadata";
 export const SettingsProfileMetadata = () => {
   const [editingProfileMetadata, setEditingProfileMetadata] = useState(false);
   const { data: session } = useSession();
+
   const { data: user } = sigleApiClient.useSuspenseQuery(
     "get",
     "/api/users/{username}",
@@ -23,6 +24,7 @@ export const SettingsProfileMetadata = () => {
       },
     },
   );
+
   if (!user) {
     return null;
   }

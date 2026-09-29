@@ -9,6 +9,7 @@ import { makePgliteTemplateDump } from "@/test/pglite-template";
 const migrationsFolder = fileURLToPath(
   new URL("../../drizzle", import.meta.url),
 );
+
 const templatePath = fileURLToPath(
   new URL("../../.vitest/pglite-template.tar.gz", import.meta.url),
 );
@@ -42,6 +43,7 @@ const loadTemplateFromDisk = Effect.promise(async () => {
   }
 
   const bytes = await readFile(templatePath);
+
   return new File([bytes], "pglite-template.tar.gz");
 });
 

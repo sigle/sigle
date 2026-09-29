@@ -47,6 +47,7 @@ export const executeIndexerIndexProfilesJob = async (
   let offset = 0;
   let hasMore = true;
   let caughtUp = false;
+
   const profiles: {
     txId: string;
     address: string;
@@ -58,6 +59,7 @@ export const executeIndexerIndexProfilesJob = async (
       offset,
       limit: API_LIMIT,
     });
+
     const resultEvents = await stacksApiClient.GET(
       "/extended/v1/contract/{contract_id}/events",
       {
@@ -107,6 +109,7 @@ export const executeIndexerIndexProfilesJob = async (
       ) {
         const eventValue = cvToJSON(hexToCV(event.contract_log.value.hex));
         const eventLog = eventLogSchema.safeParse(eventValue);
+
         if (!eventLog.success) {
           consola.error("Failed to parse event log with schema", {
             txId: event.tx_id,
@@ -118,6 +121,7 @@ export const executeIndexerIndexProfilesJob = async (
         }
 
         const transaction = await getStacksTransaction(event.tx_id);
+
         if (transaction.isErr()) {
           consola.error("Failed to fetch transaction for event log", {
             txId: event.tx_id,
@@ -126,6 +130,7 @@ export const executeIndexerIndexProfilesJob = async (
           // oxlint-disable-next-line no-continue
           continue;
         }
+
         if (transaction.value.tx_status !== "success") {
           consola.error("Transaction for event log is not successful", {
             txId: event.tx_id,
@@ -148,6 +153,7 @@ export const executeIndexerIndexProfilesJob = async (
 
   if (profiles.length > 0) {
     profiles.reverse();
+
     for (const profile of profiles) {
       await indexerJob.emit({
         action: "indexer-set-profile",
@@ -160,6 +166,8 @@ export const executeIndexerIndexProfilesJob = async (
     toProcess: profiles.length,
     lastProcessedTxId,
   };
+
   consola.info("Index profiles job complete", returnData);
+
   return returnData;
 };

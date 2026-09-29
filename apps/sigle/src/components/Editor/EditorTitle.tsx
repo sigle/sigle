@@ -3,6 +3,7 @@ import type { EditorPostFormData } from "./EditorFormProvider";
 
 export const EditorTitle = () => {
   const { register } = useFormContext<EditorPostFormData>();
+
   const { errors } = useFormState<EditorPostFormData>({
     name: "title",
   });

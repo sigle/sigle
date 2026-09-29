@@ -5,10 +5,15 @@ import { Cl } from "@stacks/transactions";
 import { beforeEach, describe, expect, it } from "vite-plus/test";
 
 const contract = "sigle-minter-fixed-price-v001";
+
 const accounts = simnet.getAccounts();
+
 const deployer = accounts.get("deployer")!;
+
 const wallet1 = accounts.get("wallet_1")!;
+
 const wallet2 = accounts.get("wallet_2")!;
+
 const wallet3 = accounts.get("wallet_3")!;
 
 const sigleClient = createClient({
@@ -24,6 +29,7 @@ describe(contract, () => {
     },
     metadata: "ipfs://anything",
   });
+
   const defaultContractName = `${wallet1}.default-contract`;
 
   describe("update-fees", () => {
@@ -183,6 +189,7 @@ describe(contract, () => {
         },
         metadata: "ipfs://anything",
       });
+
       const defaultContractName = `${wallet1}.default-contract`;
 
       simnet.deployContract(
@@ -259,6 +266,7 @@ describe(contract, () => {
         },
         metadata: "ipfs://anything",
       });
+
       const defaultContractName = `${wallet1}.default-contract`;
 
       simnet.deployContract(

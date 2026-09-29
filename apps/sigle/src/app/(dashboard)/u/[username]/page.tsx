@@ -23,11 +23,13 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       },
     },
   );
+
   if (!user) {
     notFound();
   }
 
   const title = user.id;
+
   const description = user.profile?.description
     ? user.profile.description
     : `Read ${title} publications on Sigle.`;

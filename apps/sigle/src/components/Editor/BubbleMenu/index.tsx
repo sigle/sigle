@@ -67,6 +67,7 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
     }
 
     window.addEventListener("keydown", onKeyDown);
+
     return () => window.removeEventListener("keydown", onKeyDown);
     // oxlint-disable-next-line exhaustive-deps
   }, []);
