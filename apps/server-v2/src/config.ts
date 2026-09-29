@@ -37,6 +37,18 @@ export const appConfig = Config.all({
   ARWEAVE_GATEWAY_URL: Config.NonEmptyString("ARWEAVE_GATEWAY_URL").pipe(
     Config.withDefault("https://turbo-gateway.com"),
   ),
+  // The S3-compatible endpoint of the Cloudflare R2 bucket
+  R2_ENDPOINT: Config.NonEmptyString("R2_ENDPOINT"),
+  // The R2 access key id
+  R2_ACCESS_KEY_ID: Config.NonEmptyString("R2_ACCESS_KEY_ID"),
+  // The R2 secret access key
+  R2_SECRET_ACCESS_KEY: Config.NonEmptyString("R2_SECRET_ACCESS_KEY").pipe(
+    Config.map(Redacted.make),
+  ),
+  // The R2 bucket name
+  R2_BUCKET: Config.NonEmptyString("R2_BUCKET"),
+  // The public base URL used to serve uploaded files
+  R2_PUBLIC_URL: Config.NonEmptyString("R2_PUBLIC_URL"),
   DATABASE_KIND: Config.Literals(["postgres", "pglite"], "DATABASE_KIND"),
   DATABASE_URL: Config.NonEmptyString("DATABASE_URL").pipe(
     Config.map(Redacted.make),
@@ -59,6 +71,11 @@ export const defaultTestConfig: AppConfigValues = {
   API_URL: "http://localhost:3001",
   ARWEAVE_PRIVATE_KEY: Redacted.make("sigle-test-arweave-private-key"),
   ARWEAVE_GATEWAY_URL: "https://turbo-gateway.com",
+  R2_ENDPOINT: "https://r2.test",
+  R2_ACCESS_KEY_ID: "r2-test-access-key-id",
+  R2_SECRET_ACCESS_KEY: Redacted.make("r2-test-secret-access-key"),
+  R2_BUCKET: "sigle-test",
+  R2_PUBLIC_URL: "https://cdn.test",
   DATABASE_KIND: "pglite",
   DATABASE_URL: Redacted.make("memory://"),
   SENTRY_DSN: Option.none(),

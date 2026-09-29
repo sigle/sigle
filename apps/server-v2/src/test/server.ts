@@ -6,12 +6,18 @@ import { ApiRoutesLayer } from "@/main";
 import { ArweaveService } from "@/services/arweave";
 import { PostHogService, type PostHogEvent } from "@/services/posthog";
 import { RateLimiterTest } from "@/services/rate-limiter";
+import { StorageService } from "@/services/storage";
 import { TestDatabaseLayer } from "@/test/layer";
+
+export interface TestServerLayers {
+  readonly arweave?: Layer.Layer<ArweaveService>;
+  readonly storage?: Layer.Layer<StorageService>;
+}
 
 export const makeTestServerLayer = (
   overrides: Partial<AppConfigValues> = {},
   posthogEvents: Array<PostHogEvent> = [],
-  arweaveLayer: Layer.Layer<ArweaveService> = ArweaveService.layerTest(),
+  layers: TestServerLayers = {},
 ) =>
   HttpRouter.serve(ApiRoutesLayer, {
     disableListenLog: true,
@@ -22,5 +28,6 @@ export const makeTestServerLayer = (
     Layer.provideMerge(TestDatabaseLayer),
     Layer.provideMerge(AppConfig.layerTest(overrides)),
     Layer.provide(PostHogService.layerTest(posthogEvents)),
-    Layer.provide(arweaveLayer),
+    Layer.provide(layers.arweave ?? ArweaveService.layerTest()),
+    Layer.provide(layers.storage ?? StorageService.layerTest()),
   );

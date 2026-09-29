@@ -55,6 +55,19 @@ export class NotFound extends Schema.Error<NotFound>("sigle/api/NotFound")(
   },
 ) {}
 
+export class PayloadTooLarge extends Schema.Error<PayloadTooLarge>(
+  "sigle/api/PayloadTooLarge",
+)(
+  {
+    _tag: Schema.tag("PayloadTooLarge"),
+    message: Schema.String,
+  },
+  {
+    description: "Payload Too Large",
+    httpApiStatus: 413,
+  },
+) {}
+
 export class TooManyRequests extends Schema.Error<TooManyRequests>(
   "sigle/api/TooManyRequests",
 )(

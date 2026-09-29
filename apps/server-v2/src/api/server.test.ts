@@ -52,23 +52,38 @@ describe("http server", () => {
       const body =
         yield* HttpClientResponse.schemaBodyJson(OpenApiResponse)(response);
 
-      expect(response.status).toBe(200);
-      expect(body.openapi.startsWith("3.")).toBe(true);
-      expect(Object.keys(body.paths)).toStrictEqual(
-        expect.arrayContaining([
+      expect({
+        status: response.status,
+        openapi: body.openapi.startsWith("3."),
+        paths: Object.keys(body.paths),
+        health: Object.keys(body.paths["/health"].get?.responses ?? {}),
+        me: Object.keys(body.paths["/api/protected/me"].get?.responses ?? {}),
+        uploadAvatar: Object.keys(
+          body.paths["/api/protected/user/profile/upload-avatar"].post
+            ?.responses ?? {},
+        ),
+      }).toStrictEqual({
+        status: 200,
+        openapi: true,
+        paths: expect.arrayContaining([
           "/health",
           "/api/protected/me",
           "/api/protected/drafts",
           "/api/protected/drafts/{draftId}",
           "/api/protected/user/profile/upload-metadata",
+          "/api/protected/user/profile/upload-avatar",
+          "/api/protected/user/profile/upload-cover",
         ]),
-      );
-      expect(
-        Object.keys(body.paths["/health"].get?.responses ?? {}),
-      ).toStrictEqual(expect.arrayContaining(["200", "429"]));
-      expect(
-        Object.keys(body.paths["/api/protected/me"].get?.responses ?? {}),
-      ).toStrictEqual(expect.arrayContaining(["200", "401"]));
+        health: expect.arrayContaining(["200", "429"]),
+        me: expect.arrayContaining(["200", "401"]),
+        uploadAvatar: expect.arrayContaining([
+          "200",
+          "400",
+          "413",
+          "429",
+          "500",
+        ]),
+      });
     }).pipe(Effect.provide(serverLayer())),
   );
 
