@@ -59,6 +59,7 @@ describe("http server", () => {
           "/api/protected/me",
           "/api/protected/drafts",
           "/api/protected/drafts/{draftId}",
+          "/api/protected/user/profile/upload-metadata",
         ]),
       );
       expect(

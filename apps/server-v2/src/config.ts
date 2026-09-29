@@ -32,6 +32,10 @@ export const appConfig = Config.all({
   APP_ID: Config.NonEmptyString("APP_ID"),
   APP_URL: Config.NonEmptyString("APP_URL"),
   API_URL: Config.NonEmptyString("API_URL"),
+  // Private key used to send transactions on Arweave
+  ARWEAVE_PRIVATE_KEY: Config.NonEmptyString("ARWEAVE_PRIVATE_KEY").pipe(
+    Config.map(Redacted.make),
+  ),
   DATABASE_KIND: Config.Literals(["postgres", "pglite"], "DATABASE_KIND"),
   DATABASE_URL: Config.NonEmptyString("DATABASE_URL").pipe(
     Config.map(Redacted.make),
@@ -58,6 +62,7 @@ export const defaultTestConfig: AppConfigValues = {
   APP_ID: "sigle-test",
   APP_URL: "http://localhost:3000",
   API_URL: "http://localhost:3001",
+  ARWEAVE_PRIVATE_KEY: Redacted.make("sigle-test-arweave-private-key"),
   DATABASE_KIND: "pglite",
   DATABASE_URL: Redacted.make("memory://"),
   SENTRY_DSN: Option.none(),

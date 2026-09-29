@@ -11,6 +11,7 @@ import { SigleApi } from "@/api";
 import { AuthRoutesLayer } from "@/api/groups/auth";
 import { DraftsHandlersLayer } from "@/api/handlers/drafts";
 import { HealthHandlersLayer } from "@/api/handlers/health";
+import { ProfileHandlersLayer } from "@/api/handlers/profile";
 import { ProtectedHandlersLayer } from "@/api/handlers/protected";
 import {
   UserAuthMiddlewareLayer,
@@ -19,6 +20,7 @@ import {
 import { RateLimitMiddlewareLayer } from "@/api/middleware/rate-limit";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
+import { ArweaveService } from "@/services/arweave";
 import { AuthService } from "@/services/auth";
 import { PostHogService } from "@/services/posthog";
 import { RateLimiterLive } from "@/services/rate-limiter";
@@ -28,12 +30,14 @@ import { UserWhitelistService } from "@/services/users";
 export const CoreServicesLayer = Layer.mergeAll(
   TelemetryLayer,
   PostHogService.layer,
+  ArweaveService.layer,
 ).pipe(Layer.provideMerge(AppConfig.layer), Layer.provide(NodeServices.layer));
 
 export const ApiHandlersLayer = Layer.mergeAll(
   HealthHandlersLayer,
   ProtectedHandlersLayer,
   DraftsHandlersLayer,
+  ProfileHandlersLayer,
 );
 
 export const ApiMiddlewareLayer = Layer.mergeAll(

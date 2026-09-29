@@ -1,4 +1,4 @@
-import { Duration, Effect, Layer, Option, Predicate } from "effect";
+import { Context, Duration, Effect, Layer, Option, Predicate } from "effect";
 import { HttpServerRequest, HttpServerResponse } from "effect/unstable/http";
 import { HttpApiMiddleware } from "effect/unstable/httpapi";
 import { RateLimiter } from "effect/unstable/persistence";
@@ -9,6 +9,20 @@ export class RateLimitMiddleware extends HttpApiMiddleware.Service<RateLimitMidd
   "sigle/RateLimitMiddleware",
   { error: [TooManyRequests, InternalServerError] },
 ) {}
+
+export interface RateLimitOptionsValue {
+  readonly points: number;
+  readonly windowMs: number;
+}
+
+/**
+ * Optional endpoint annotation overriding the global rate limit for that
+ * endpoint.
+ */
+export class RateLimitOptions extends Context.Service<
+  RateLimitOptions,
+  RateLimitOptionsValue
+>()("sigle/RateLimitOptions") {}
 
 const clientKey = (request: HttpServerRequest.HttpServerRequest): string => {
   const address = request.remoteAddress;
@@ -32,14 +46,19 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
     return (httpEffect, { endpoint }) =>
       Effect.gen(function* () {
         const request = yield* HttpServerRequest.HttpServerRequest;
+        const override = Option.getOrUndefined(
+          Context.getOption(endpoint.annotations, RateLimitOptions),
+        );
 
         const result = yield* limiter
           .consume({
             algorithm: "fixed-window",
             onExceeded: "fail",
             key: `${endpoint.method}:${endpoint.path}:${clientKey(request)}`,
-            limit: config.RATE_LIMIT_POINTS,
-            window: Duration.millis(config.RATE_LIMIT_WINDOW_MS),
+            limit: override?.points ?? config.RATE_LIMIT_POINTS,
+            window: Duration.millis(
+              override?.windowMs ?? config.RATE_LIMIT_WINDOW_MS,
+            ),
           })
           .pipe(
             Effect.mapError((error) =>
