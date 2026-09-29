@@ -41,21 +41,39 @@ describe("arweave service", () => {
           tags: [{ name: "Root-TX", value: "root-tx-1" }],
         });
 
-        expect(result).toStrictEqual({ id: "arweave-tx-1" });
-        expect(uploadFileMock).toHaveBeenCalledTimes(1);
-
         const options = uploadFileMock.mock.calls[0]?.[0];
-        expect(options?.dataItemOpts.tags).toStrictEqual([
-          { name: "Content-Type", value: "application/json" },
-          { name: "App-Name", value: "Sigle-Test" },
-          { name: "IPFS-CID", value: TEST_FILE_CID },
-          { name: "Root-TX", value: "root-tx-1" },
-        ]);
-        expect(options?.fileStreamFactory()).toStrictEqual(TEST_FILE);
-        expect(options?.fileSizeFactory()).toBe(TEST_FILE.byteLength);
+
+        expect({
+          result,
+          calls: uploadFileMock.mock.calls.length,
+          tags: options?.dataItemOpts.tags,
+          stream: options?.fileStreamFactory(),
+          size: options?.fileSizeFactory(),
+        }).toStrictEqual({
+          result: {
+            id: "arweave-tx-1",
+            cid: TEST_FILE_CID,
+            uri: "ar://arweave-tx-1",
+            gatewayUrl: "https://turbo-gateway.test/arweave-tx-1",
+          },
+          calls: 1,
+          tags: [
+            { name: "Content-Type", value: "application/json" },
+            { name: "App-Name", value: "Sigle-Test" },
+            { name: "IPFS-CID", value: TEST_FILE_CID },
+            { name: "Root-TX", value: "root-tx-1" },
+          ],
+          stream: TEST_FILE,
+          size: TEST_FILE.byteLength,
+        });
       }).pipe(
         Effect.provide(ArweaveService.layer),
-        Effect.provide(AppConfig.layerTest({ APP_ID: "Sigle-Test" })),
+        Effect.provide(
+          AppConfig.layerTest({
+            APP_ID: "Sigle-Test",
+            ARWEAVE_GATEWAY_URL: "https://turbo-gateway.test/",
+          }),
+        ),
       );
     },
   );

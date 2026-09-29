@@ -6,14 +6,11 @@ import {
   OpenApi,
 } from "effect/unstable/httpapi";
 import { UserAuthMiddleware } from "@/api/middleware/auth-user";
-import { RateLimitOptions } from "@/api/middleware/rate-limit";
+import {
+  RateLimitMiddleware,
+  RateLimitPolicy,
+} from "@/api/middleware/rate-limit";
 import { InternalServerError } from "@/api/schemas";
-
-// Matches the legacy server rate limit for this route.
-const UploadProfileMetadataRateLimit = {
-  points: 4,
-  windowMs: 60_000,
-} as const;
 
 /**
  * Profile metadata is a shared wire format defined in `@sigle/sdk` (and
@@ -42,6 +39,9 @@ export const UploadProfileMetadataPayload = Schema.Struct({
 
 export const UploadProfileMetadataResponse = Schema.Struct({
   id: Schema.String,
+  uri: Schema.String,
+  cid: Schema.String,
+  gatewayUrl: Schema.String,
 }).annotate({ identifier: "UploadProfileMetadataResponse" });
 
 export const ProfileGroup = HttpApiGroup.make("profile")
@@ -56,7 +56,8 @@ export const ProfileGroup = HttpApiGroup.make("profile")
         OpenApi.Description,
         "Upload the profile metadata to Arweave and return the transaction id.",
       )
-      .annotate(RateLimitOptions, UploadProfileMetadataRateLimit),
+      .annotate(RateLimitPolicy, "profileMetadataUpload"),
   )
   .prefix("/api/protected/user/profile")
+  .middleware(RateLimitMiddleware)
   .middleware(UserAuthMiddleware);

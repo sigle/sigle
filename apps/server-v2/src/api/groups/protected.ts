@@ -1,6 +1,7 @@
 import { Schema } from "effect";
 import { HttpApiEndpoint, HttpApiGroup } from "effect/unstable/httpapi";
 import { UserAuthMiddleware } from "@/api/middleware/auth-user";
+import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 
 export const CurrentUserResponse = Schema.Struct({
   id: Schema.String,
@@ -14,4 +15,5 @@ export const ProtectedGroup = HttpApiGroup.make("protected")
     }),
   )
   .prefix("/api/protected")
+  .middleware(RateLimitMiddleware)
   .middleware(UserAuthMiddleware);

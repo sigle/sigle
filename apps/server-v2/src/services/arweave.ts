@@ -18,6 +18,13 @@ export interface ArweaveUploadOptions {
   readonly tags?: ReadonlyArray<ArweaveTag>;
 }
 
+export interface ArweaveUploadResult {
+  readonly id: string;
+  readonly cid: string;
+  readonly uri: string;
+  readonly gatewayUrl: string;
+}
+
 export class ArweaveUploadError extends Data.TaggedError("ArweaveUploadError")<{
   readonly cause: unknown;
   readonly message: string;
@@ -26,7 +33,7 @@ export class ArweaveUploadError extends Data.TaggedError("ArweaveUploadError")<{
 export interface ArweaveClient {
   readonly uploadFile: (
     options: ArweaveUploadOptions,
-  ) => Effect.Effect<{ readonly id: string }, ArweaveUploadError>;
+  ) => Effect.Effect<ArweaveUploadResult, ArweaveUploadError>;
 }
 
 const createCIDv1FromBuffer = async (buffer: Uint8Array): Promise<string> => {
@@ -36,13 +43,14 @@ const createCIDv1FromBuffer = async (buffer: Uint8Array): Promise<string> => {
 
 export const makeArweaveService = Effect.gen(function* () {
   const config = yield* AppConfig;
+  const gatewayUrl = config.ARWEAVE_GATEWAY_URL.replace(/\/+$/, "");
   const turbo = TurboFactory.authenticated({
     privateKey: Redacted.value(config.ARWEAVE_PRIVATE_KEY),
     token: "solana",
   });
 
   return {
-    uploadFile: ({ file, contentType, tags = [] }) =>
+    uploadFile: ({ file, contentType, tags = [] }: ArweaveUploadOptions) =>
       Effect.gen(function* () {
         const data = Buffer.from(file);
         const cid = yield* Effect.promise(() => createCIDv1FromBuffer(data));
@@ -54,7 +62,7 @@ export const makeArweaveService = Effect.gen(function* () {
           ...tags,
         ];
 
-        return yield* Effect.tryPromise({
+        const { id } = yield* Effect.tryPromise({
           try: async () => {
             const upload = await turbo.uploadFile({
               fileStreamFactory: () => data,
@@ -80,11 +88,25 @@ export const makeArweaveService = Effect.gen(function* () {
             }),
           ),
         );
+
+        return {
+          id,
+          cid,
+          uri: `ar://${id}`,
+          gatewayUrl: `${gatewayUrl}/${id}`,
+        };
       }),
   } satisfies ArweaveClient;
 });
 
 export const ARWEAVE_TEST_UPLOAD_ID = "arweave-test-upload-id";
+
+export const ARWEAVE_TEST_UPLOAD: ArweaveUploadResult = {
+  id: ARWEAVE_TEST_UPLOAD_ID,
+  cid: "bafkreietui4xdkiu4xvmx4fi2jivjtndbhb4drzpxomrjvd4mdz4w2avra",
+  uri: `ar://${ARWEAVE_TEST_UPLOAD_ID}`,
+  gatewayUrl: `https://turbo-gateway.com/${ARWEAVE_TEST_UPLOAD_ID}`,
+};
 
 export class ArweaveService extends Context.Service<
   ArweaveService,
@@ -97,8 +119,8 @@ export class ArweaveService extends Context.Service<
     uploads: Array<ArweaveUploadOptions> = [],
     uploadFile: (
       options: ArweaveUploadOptions,
-    ) => Effect.Effect<{ readonly id: string }, ArweaveUploadError> = () =>
-      Effect.succeed({ id: ARWEAVE_TEST_UPLOAD_ID }),
+    ) => Effect.Effect<ArweaveUploadResult, ArweaveUploadError> = () =>
+      Effect.succeed(ARWEAVE_TEST_UPLOAD),
   ): Layer.Layer<ArweaveService> =>
     Layer.succeed(ArweaveService, {
       uploadFile: (options) =>

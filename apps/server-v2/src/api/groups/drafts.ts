@@ -9,6 +9,7 @@ import {
   UserAuthMiddleware,
   WhitelistedUserMiddleware,
 } from "@/api/middleware/auth-user";
+import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 import { NotFound } from "@/api/schemas";
 
 export const DRAFT_LIST_DEFAULT_LIMIT = 20;
@@ -160,5 +161,6 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
     }).annotate(OpenApi.Summary, "Delete a draft"),
   )
   .prefix("/api/protected/drafts")
+  .middleware(RateLimitMiddleware)
   .middleware(WhitelistedUserMiddleware)
   .middleware(UserAuthMiddleware);

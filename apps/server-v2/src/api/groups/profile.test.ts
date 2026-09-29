@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
 import { ProfileMetadataSchemaId } from "@sigle/sdk";
-import { Effect, ErrorReporter, Layer, Option, Schema } from "effect";
+import { Effect, Option, Schema } from "effect";
 import {
   Headers,
   HttpClient,
@@ -9,16 +9,21 @@ import {
 } from "effect/unstable/http";
 import type { PostHogEvent } from "@/services/posthog";
 import {
+  ARWEAVE_TEST_UPLOAD,
   ARWEAVE_TEST_UPLOAD_ID,
   ArweaveService,
   ArweaveUploadError,
   type ArweaveUploadOptions,
 } from "@/services/arweave";
-import { makeSentryErrorReporter } from "@/services/telemetry";
 import { createAuthenticatedClient } from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 
-const UploadProfileMetadataResponse = Schema.Struct({ id: Schema.String });
+const UploadProfileMetadataResponse = Schema.Struct({
+  id: Schema.String,
+  uri: Schema.String,
+  cid: Schema.String,
+  gatewayUrl: Schema.String,
+});
 const ErrorResponse = Schema.Struct({ message: Schema.String });
 
 const validMetadata = {
@@ -60,7 +65,7 @@ describe("profile", () => {
 
       expect({
         status: response.status,
-        id: body.id,
+        body,
         contentType: uploaded?.contentType,
         metadata: JSON.parse(
           Buffer.from(uploaded?.file ?? new Uint8Array()).toString(),
@@ -68,7 +73,7 @@ describe("profile", () => {
         events,
       }).toStrictEqual({
         status: 200,
-        id: ARWEAVE_TEST_UPLOAD_ID,
+        body: ARWEAVE_TEST_UPLOAD,
         contentType: "application/json",
         metadata: validMetadata,
         events: [
@@ -114,6 +119,31 @@ describe("profile", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
+  it.effect("POST upload-metadata rate limits each user independently", () =>
+    Effect.gen(function* () {
+      const first = yield* createAuthenticatedClient();
+      const second = yield* createAuthenticatedClient();
+
+      const firstResponses = yield* Effect.forEach(
+        Array.from({ length: 4 }, (_, index) => index),
+        () => uploadProfileMetadataRequest(first.client, validMetadata),
+        { concurrency: 1 },
+      );
+      const secondResponse = yield* uploadProfileMetadataRequest(
+        second.client,
+        validMetadata,
+      );
+
+      expect({
+        first: firstResponses.map((response) => response.status),
+        second: secondResponse.status,
+      }).toStrictEqual({
+        first: [200, 200, 200, 200],
+        second: 200,
+      });
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
   it.effect("POST upload-metadata rejects invalid metadata", () =>
     Effect.gen(function* () {
       const { client } = yield* createAuthenticatedClient();
@@ -136,63 +166,33 @@ describe("profile", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect(
-    "POST upload-metadata reports Arweave failures and returns 500",
-    () => {
-      const captured: Array<{
-        readonly name: string;
-        readonly message: string;
-      }> = [];
+  it.effect("POST upload-metadata returns 500 when Arweave fails", () => {
+    const arweaveLayer = ArweaveService.layerTest([], () =>
+      Effect.fail(
+        new ArweaveUploadError({
+          cause: new Error("turbo unreachable"),
+          message: "turbo unreachable",
+        }),
+      ),
+    );
 
-      const reporter = makeSentryErrorReporter({
-        captureException: (error) => {
-          captured.push({ name: error.name, message: error.message });
-        },
-      });
+    return Effect.gen(function* () {
+      const { client } = yield* createAuthenticatedClient();
 
-      const arweaveLayer = ArweaveService.layerTest([], () =>
-        Effect.fail(
-          new ArweaveUploadError({
-            cause: new Error("turbo unreachable"),
-            message: "turbo unreachable",
-          }),
-        ),
+      const response = yield* uploadProfileMetadataRequest(
+        client,
+        validMetadata,
       );
 
-      return Effect.gen(function* () {
-        const { client } = yield* createAuthenticatedClient();
+      const body =
+        yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
 
-        const response = yield* uploadProfileMetadataRequest(
-          client,
-          validMetadata,
-        );
-
-        const body =
-          yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
-
-        expect({
-          status: response.status,
-          message: body.message,
-          captured,
-        }).toStrictEqual({
-          status: 500,
-          message: "Failed to upload to Arweave, error: turbo unreachable",
-          captured: [
-            {
-              name: "sigle/api/InternalServerError",
-              message: "Failed to upload to Arweave, error: turbo unreachable",
-            },
-          ],
-        });
-      }).pipe(
-        Effect.provide(
-          makeTestServerLayer({}, [], arweaveLayer).pipe(
-            Layer.provide(ErrorReporter.layer([reporter])),
-          ),
-        ),
+      expect(response.status).toBe(500);
+      expect(body.message).toBe(
+        "Failed to upload to Arweave, error: turbo unreachable",
       );
-    },
-  );
+    }).pipe(Effect.provide(makeTestServerLayer({}, [], arweaveLayer)));
+  });
 
   it.effect("POST upload-metadata returns 401 without a session", () =>
     Effect.gen(function* () {

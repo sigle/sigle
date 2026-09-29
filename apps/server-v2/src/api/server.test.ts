@@ -2,6 +2,7 @@ import { describe, expect, it } from "@effect/vitest";
 import { Effect, Option, Schema } from "effect";
 import { Headers, HttpClient, HttpClientResponse } from "effect/unstable/http";
 import type { AppConfigValues } from "@/config";
+import { RATE_LIMITS } from "@/api/middleware/rate-limit";
 import { makeTestServerLayer } from "@/test/server";
 
 const HealthResponse = Schema.Struct({
@@ -123,28 +124,40 @@ describe("http server", () => {
 
   it.effect("returns 429 once the rate limit is exceeded", () =>
     Effect.gen(function* () {
-      const first = yield* HttpClient.get("/health");
-      const second = yield* HttpClient.get("/health");
-      const third = yield* HttpClient.get("/health");
+      const limit = RATE_LIMITS.default.points;
 
-      const body = yield* HttpClientResponse.schemaBodyJson(
-        TooManyRequestsResponse,
-      )(third);
-
-      expect([first.status, second.status, third.status]).toStrictEqual([
-        200, 200, 429,
-      ]);
-      expect(body.message).toBe("Rate limit exceeded");
-
-      const remaining = Option.getOrUndefined(
-        Headers.get(second.headers, "x-ratelimit-remaining"),
+      const responses = yield* Effect.forEach(
+        Array.from({ length: limit + 1 }, (_, index) => index),
+        () => HttpClient.get("/health"),
+        { concurrency: 1 },
       );
 
-      expect(remaining).toBe("0");
-    }).pipe(
-      Effect.provide(
-        serverLayer({ RATE_LIMIT_POINTS: 2, RATE_LIMIT_WINDOW_MS: 60_000 }),
-      ),
-    ),
+      const previous = responses[limit - 1];
+      const last = responses[limit];
+
+      const body =
+        last === undefined
+          ? undefined
+          : yield* HttpClientResponse.schemaBodyJson(TooManyRequestsResponse)(
+              last,
+            );
+
+      expect({
+        before: previous?.status,
+        last: last?.status,
+        message: body?.message,
+        remaining:
+          previous === undefined
+            ? undefined
+            : Option.getOrUndefined(
+                Headers.get(previous.headers, "x-ratelimit-remaining"),
+              ),
+      }).toStrictEqual({
+        before: 200,
+        last: 429,
+        message: "Rate limit exceeded",
+        remaining: "0",
+      });
+    }).pipe(Effect.provide(serverLayer())),
   );
 });

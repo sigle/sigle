@@ -15,9 +15,11 @@ export const uploadProfileMetadata = (
     const arweave = yield* ArweaveService;
     const posthog = yield* PostHogService;
 
-    const { id } = yield* arweave
+    const file = Buffer.from(JSON.stringify(payload.metadata));
+
+    const result = yield* arweave
       .uploadFile({
-        file: Buffer.from(JSON.stringify(payload.metadata)),
+        file,
         contentType: "application/json",
       })
       .pipe(
@@ -33,11 +35,11 @@ export const uploadProfileMetadata = (
       distinctId: user.id,
       event: "profile metadata uploaded",
       properties: {
-        arweaveId: id,
+        arweaveId: result.id,
       },
     });
 
-    return { id };
+    return result;
   });
 
 export const ProfileHandlersLayer = HttpApiBuilder.group(
