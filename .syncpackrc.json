@@ -23,7 +23,7 @@
       "isIgnored": true
     },
     {
-      "label": "server-v2 auth deps ahead until v1 and the client migrate",
+      "label": "server-v2 auth deps ahead until v1 migrates",
       "dependencies": ["better-auth", "sign-in-with-stacks"],
       "isIgnored": true
     }

@@ -6,7 +6,6 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
 import { NextLink } from "@/components/Shared/NextLink";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -26,7 +25,6 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
-import { getExplorerTransactionUrl } from "@/lib/stacks";
 
 export default function DashboardDrafts() {
   const {
@@ -34,10 +32,10 @@ export default function DashboardDrafts() {
     isLoading: loadingDrafts,
     error: errorDrafts,
     refetch: refetchDrafts,
-  } = sigleApiClient.useQuery("get", "/api/protected/drafts/list", {
+  } = sigleApiClient.useQuery("get", "/api/protected/drafts", {
     params: {
       query: {
-        limit: 50,
+        limit: "50",
       },
     },
   });
@@ -62,7 +60,7 @@ export default function DashboardDrafts() {
             </div>
           ) : null}
 
-          {drafts?.length === 0 ? (
+          {drafts?.results.length === 0 ? (
             <Empty>
               <EmptyHeader>
                 <EmptyMedia variant="icon">
@@ -81,7 +79,7 @@ export default function DashboardDrafts() {
             </Empty>
           ) : null}
 
-          {drafts?.map((draft) => (
+          {drafts?.results.map((draft) => (
             <Draft key={draft.id} draft={draft} refetchDrafts={refetchDrafts} />
           ))}
         </CardContent>
@@ -94,13 +92,13 @@ const Draft = ({
   draft,
   refetchDrafts,
 }: {
-  draft: paths["/api/protected/drafts/list"]["get"]["responses"][200]["content"]["application/json"][0];
+  draft: paths["/api/protected/drafts"]["get"]["responses"][200]["content"]["application/json"]["results"][number];
   refetchDrafts: () => Promise<unknown>;
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
   const { mutateAsync: deletePost } = sigleApiClient.useMutation(
-    "post",
-    "/api/protected/drafts/{draftId}/delete",
+    "delete",
+    "/api/protected/drafts/{draftId}",
     {
       onError: (error: { message: string }) => {
         toast.error("Failed to upload metadata", {
@@ -127,8 +125,6 @@ const Draft = ({
     toast.message("Draft deleted");
   };
 
-  const isTxPending = draft.txStatus === "pending";
-
   const heading =
     draft.metaTitle || draft.title ? (
       <h3 className="line-clamp-2 text-lg font-medium">
@@ -142,34 +138,16 @@ const Draft = ({
 
   return (
     <div className="border-b border-solid border-border py-5 first:pt-0 last:border-b-0 last:pb-0">
-      {draft.txStatus === "pending" && draft.txId && (
-        <Badge
-          className="mb-2"
-          render={
-            <a
-              href={getExplorerTransactionUrl(draft.txId)}
-              target="_blank"
-              rel="noreferrer"
-            />
-          }
-        >
-          Publishing: Transaction pending
-        </Badge>
-      )}
-      {draft.txStatus === "pending" ? (
-        heading
-      ) : (
-        <NextLink href={Routes.editPost({ postId: draft.id })}>
-          {heading}
-        </NextLink>
-      )}
+      <NextLink href={Routes.editPost({ postId: draft.id })}>
+        {heading}
+      </NextLink>
       <div className="flex items-center justify-between">
         <p className="mt-3 text-xs text-muted-foreground">
           Created {format(new Date(draft.createdAt), "MMM dd, yyyy")} • Last
           updated {format(new Date(draft.updatedAt), "MMM dd, yyyy h:mm a")}
         </p>
         {isDeleting ? <Spinner /> : null}
-        {!isDeleting && !isTxPending ? (
+        {!isDeleting ? (
           <DropdownMenu>
             <DropdownMenuTrigger
               render={

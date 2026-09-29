@@ -12,7 +12,7 @@ export default function PostCreate() {
   const router = useRouter();
   const { mutate: createPost } = sigleApiClient.useMutation(
     "post",
-    "/api/protected/drafts/create",
+    "/api/protected/drafts",
     {
       onSuccess: (data) => {
         router.push(Routes.editPost({ postId: data.id }));
@@ -27,7 +27,7 @@ export default function PostCreate() {
   );
 
   useEffect(() => {
-    createPost({});
+    createPost({ body: {} });
   }, [createPost]);
 
   return <PageEditorSkeleton />;

@@ -1,5 +1,5 @@
+import type { paths } from "@sigle/sdk";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type paths, formatBTC } from "@sigle/sdk";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -39,7 +39,7 @@ export const EditorFormProvider = ({
     mode: "onBlur",
     resolver: zodResolver(editorPostSchema),
     defaultValues: {
-      type: post.type,
+      type: "draft",
       title: post.title,
       content: post.content || "",
       metaTitle: post.metaTitle || undefined,
@@ -49,14 +49,12 @@ export const EditorFormProvider = ({
       canonicalUri: post.canonicalUri || undefined,
       collect: {
         collectPrice: {
-          type: post.collectPriceType || "free",
-          price: post.collectPrice
-            ? (formatBTC(BigInt(post.collectPrice)) as unknown as number)
-            : 0,
+          type: "free",
+          price: 0,
         },
         collectLimit: {
-          type: post.collectLimitType || "open",
-          limit: post.collectLimit || 100,
+          type: "open",
+          limit: 100,
         },
       },
     },

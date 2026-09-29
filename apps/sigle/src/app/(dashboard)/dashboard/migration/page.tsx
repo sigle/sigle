@@ -112,7 +112,9 @@ export default function MigrationPage() {
 
       // 2. Create a new draft
       const { data: newPost, error: newPostError } =
-        await sigleApiFetchClient.POST("/api/protected/drafts/create", {});
+        await sigleApiFetchClient.POST("/api/protected/drafts", {
+          body: {},
+        });
       if (newPostError) {
         toast.error(newPostError.message);
         return;
@@ -121,34 +123,21 @@ export default function MigrationPage() {
 
       // 3. Update the draft with the content from the old post
       const { data: updatePost, error: updatePostError } =
-        await sigleApiFetchClient.POST(
-          "/api/protected/drafts/{draftId}/update",
-          {
-            params: {
-              path: {
-                draftId: newPost.id,
-              },
-            },
-            body: {
-              title: data.title,
-              content: data.content,
-              metaTitle: data.metaTitle,
-              coverImage: data.coverImage,
-              metaDescription: data.metaDescription,
-              canonicalUri: data.canonicalUrl,
-              collect: {
-                collectPrice: {
-                  type: "free",
-                  price: 0,
-                },
-                collectLimit: {
-                  type: "open",
-                  limit: 100,
-                },
-              },
+        await sigleApiFetchClient.PATCH("/api/protected/drafts/{draftId}", {
+          params: {
+            path: {
+              draftId: newPost.id,
             },
           },
-        );
+          body: {
+            title: data.title,
+            content: data.content,
+            metaTitle: data.metaTitle ?? null,
+            coverImage: data.coverImage ?? null,
+            metaDescription: data.metaDescription ?? null,
+            canonicalUri: data.canonicalUrl ?? null,
+          },
+        });
       console.log("updatePost", updatePost);
       if (updatePostError) {
         toast.error(updatePostError.message);

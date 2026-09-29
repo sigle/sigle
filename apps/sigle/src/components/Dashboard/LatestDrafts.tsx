@@ -2,12 +2,10 @@
 
 import { IconPencil } from "@tabler/icons-react";
 import { format } from "date-fns";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
-import { getExplorerTransactionUrl } from "@/lib/stacks";
 import { NextLink } from "../Shared/NextLink";
 import { Button } from "../ui/button";
 import {
@@ -24,10 +22,10 @@ export const LatestDrafts = () => {
     data: drafts,
     isLoading: loadingDrafts,
     error: errorDrafts,
-  } = sigleApiClient.useQuery("get", "/api/protected/drafts/list", {
+  } = sigleApiClient.useQuery("get", "/api/protected/drafts", {
     params: {
       query: {
-        limit: 5,
+        limit: "5",
       },
     },
   });
@@ -61,7 +59,7 @@ export const LatestDrafts = () => {
             </div>
           ) : null}
 
-          {!loadingDrafts && drafts?.length === 0 ? (
+          {!loadingDrafts && drafts?.results.length === 0 ? (
             <Empty>
               <EmptyHeader>
                 <EmptyMedia variant="icon">
@@ -80,7 +78,7 @@ export const LatestDrafts = () => {
             </Empty>
           ) : null}
 
-          {drafts?.map((draft) => {
+          {drafts?.results.map((draft) => {
             const heading =
               draft.metaTitle || draft.title ? (
                 <h3 className="line-clamp-2 text-lg font-bold">
@@ -97,27 +95,9 @@ export const LatestDrafts = () => {
                 key={draft.id}
                 className="border-b border-solid border-border py-5 first:pt-0 last:border-b-0 last:pb-0"
               >
-                {draft.txStatus === "pending" && draft.txId && (
-                  <Badge
-                    className="mb-2"
-                    render={
-                      <a
-                        href={getExplorerTransactionUrl(draft.txId)}
-                        target="_blank"
-                        rel="noreferrer"
-                      />
-                    }
-                  >
-                    Publishing: Transaction pending
-                  </Badge>
-                )}
-                {draft.txStatus === "pending" ? (
-                  heading
-                ) : (
-                  <NextLink href={Routes.editPost({ postId: draft.id })}>
-                    {heading}
-                  </NextLink>
-                )}
+                <NextLink href={Routes.editPost({ postId: draft.id })}>
+                  {heading}
+                </NextLink>
                 <p className="mt-3 text-xs text-muted-foreground uppercase">
                   {format(new Date(draft.createdAt), "MMM dd")}
                 </p>

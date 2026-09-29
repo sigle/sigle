@@ -4,33 +4,14 @@
  */
 
 export interface paths {
-  "/_nitro/tasks/{*param1}": {
+  "/health": {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          "*param1": string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-      };
-    };
+    get: operations["health.get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -39,31 +20,14 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/_openapi.json": {
+  "/api/protected/me": {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-      };
-    };
+    get: operations["protected.me"];
     put?: never;
     post?: never;
     delete?: never;
@@ -72,252 +36,24 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/_scalar": {
+  "/api/protected/drafts": {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-      };
-    };
+    /**
+     * List drafts
+     * @description List the current user drafts, most recently updated first.
+     */
+    get: operations["drafts.list"];
     put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/_swagger": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/{all}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          all: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/posts/{postId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Get post. */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          postId: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Post entry. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Post"];
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/posts/by-tx-id": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Get post by txId. */
-    get: {
-      parameters: {
-        query: {
-          txId: string;
-        };
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Post entry. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Post"];
-          };
-        };
-        /** @description Post not found */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/posts/list": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Get posts list. */
-    get: {
-      parameters: {
-        query?: {
-          /** @description Limit the number of posts returned. */
-          limit?: number;
-          /** @description The address of the user to get posts for. */
-          username?: string;
-          /** @description The number of posts to skip before starting to collect the result set. */
-          offset?: number;
-        };
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Posts list. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              limit: number;
-              offset: number;
-              total: number;
-              results: components["schemas"]["Post"][];
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
+    /**
+     * Create a draft
+     * @description Create a new draft, optionally seeded with the provided fields.
+     */
+    post: operations["drafts.create"];
     delete?: never;
     options?: never;
     head?: never;
@@ -331,994 +67,122 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** @description Get draft for the current profile. */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          draftId: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Draft entry. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              id: string;
-              /** @enum {string} */
-              type: "draft" | "published";
-              title: string;
-              content?: string;
-              metaTitle?: string;
-              metaDescription?: string;
-              coverImage?: string;
-              tags?: string[];
-              canonicalUri?: string;
-              /** @enum {string} */
-              collectPriceType?: "free" | "paid";
-              collectPrice?: string;
-              /** @enum {string} */
-              collectLimitType?: "open" | "fixed";
-              collectLimit?: number;
-              txId?: string;
-              txStatus?: string;
-              createdAt: string;
-              updatedAt: string;
-            };
-          };
-        };
-        /** @description Draft not found. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              /** @example Draft not found. */
-              message?: string;
-              /** @example 404 */
-              statusCode?: number;
-            };
-          };
-        };
-      };
-    };
+    /** Get a draft */
+    get: operations["drafts.get"];
     put?: never;
     post?: never;
-    delete?: never;
+    /** Delete a draft */
+    delete: operations["drafts.delete"];
     options?: never;
     head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts/{draftId}/delete": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Delete the draft for the current profile. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          draftId: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts/{draftId}/update": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Update the draft for the current profile. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          draftId: string;
-        };
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "application/json": {
-            title: string;
-            content: string;
-            metaTitle?: string;
-            metaDescription?: string;
-            coverImage?: string;
-            collect?: {
-              collectPrice: {
-                /** @enum {string} */
-                type: "free" | "paid";
-                price: number;
-              };
-              collectLimit: {
-                /** @enum {string} */
-                type: "open" | "fixed";
-                limit: number;
-              };
-            };
-            tags?: string[];
-            canonicalUri?: string;
-          };
-        };
-      };
-      responses: {
-        /** @description Draft updated. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              id: string;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts/{draftId}/upload-media": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Upload draft media. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          draftId: string;
-        };
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "multipart/form-data": {
-            /**
-             * Format: binary
-             * @description Profile media
-             */
-            file: string;
-          };
-        };
-      };
-      responses: {
-        /** @description Media uploaded */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              cid: string;
-              url: string;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts/{draftId}/upload-metadata": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Upload draft metadata to Arweave. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          draftId: string;
-        };
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "application/json": {
-            /** @enum {string} */
-            type: "draft" | "published";
-            metadata: Record<string, never>;
-          };
-        };
-      };
-      responses: {
-        /** @description Metadata uploaded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              /** @description Post ID. */
-              id: string;
-              /** @description Post ID. */
-              postId: string;
-              /** @description Arweave transaction ID. */
-              arweaveId: string;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts/{draftId}/upload-nft-image": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Upload nft image to IPFS. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          draftId: string;
-        };
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "multipart/form-data": {
-            /**
-             * Format: binary
-             * @description Profile media
-             */
-            file: string;
-            /** @enum {string} */
-            type: "draft" | "published";
-          };
-        };
-      };
-      responses: {
-        /** @description Media uploaded */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              cid: string;
-              url: string;
-            };
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts/create": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Create a new draft for the current profile. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Draft created. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              id: string;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts/list": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Get drafts for the current profile. */
-    get: {
-      parameters: {
-        query?: {
-          /** @description Limit the number of drafts returned. */
-          limit?: number;
-        };
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Drafts list. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              id: string;
-              title: string;
-              content?: string;
-              metaTitle?: string;
-              metaDescription?: string;
-              coverImage?: string;
-              txId?: string;
-              txStatus?: string;
-              createdAt: string;
-              updatedAt: string;
-            }[];
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/user/profile/trigger-indexing": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Trigger profile indexing. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Indexing triggered. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              success?: boolean;
-            };
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/user/profile/upload-avatar": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Upload avatar for a profile. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "multipart/form-data": {
-            /**
-             * Format: binary
-             * @description Profile media
-             */
-            file: string;
-          };
-        };
-      };
-      responses: {
-        /** @description Avatar uploaded */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              cid: string;
-              url: string;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/user/profile/upload-cover": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Upload cover picture for a profile. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "multipart/form-data": {
-            /**
-             * Format: binary
-             * @description Profile media
-             */
-            file: string;
-          };
-        };
-      };
-      responses: {
-        /** @description Cover uploaded */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              cid: string;
-              url: string;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/user/profile/upload-metadata": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Upload profile metadata to Arweave. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "application/json": {
-            /** @description Profile metadata */
-            metadata?: Record<string, never>;
-          };
-        };
-      };
-      responses: {
-        /** @description Metadata uploaded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              /** @description Arweave ID. */
-              id: string;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/user/whitelisted": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Is user whitelisted. */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Success */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              whitelisted: boolean;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/sites/{domain}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Get user site. */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          domain: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description User site. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              address: string;
-              url: string;
-              banner: string;
-              links: {
-                href: string;
-                label: string;
-              }[];
-              cta?: {
-                href: string;
-                label: string;
-              };
-              user: components["schemas"]["UserProfile"];
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/users/{username}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Get user profile. */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          username: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description User profile. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["UserProfile"];
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/users/trending": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Get trending profiles. */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description User profiles. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["UserProfile"][];
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/health": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
     /**
-     * Health check
-     * @description Check the health of the server
+     * Update a draft
+     * @description Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields.
      */
-    get: operations["healthCheck"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
+    patch: operations["drafts.update"];
     trace?: never;
   };
 }
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
-    BadRequest: {
+    sigle_api_TooManyRequestsEncoded: {
+      /** @enum {string} */
+      _tag: "TooManyRequests";
+      message: string;
+      retryAfterMillis: number;
+    };
+    sigle_api_InternalServerErrorEncoded: {
+      /** @enum {string} */
+      _tag: "InternalServerError";
       message: string;
     };
-    UserProfile: {
-      /** @description The address of the user */
-      id: string;
-      /**
-       * @description The flag of the user
-       * @enum {string}
-       */
-      flag: "NONE" | "VERIFIED";
-      postsCount?: number;
-      createdAt: string;
-      updatedAt: string;
-      profile?: {
-        id: string;
-        txId: string;
-        displayName?: string;
-        description?: string;
-        website?: string;
-        twitter?: string;
-        pictureUri?: {
-          id: string;
-          width?: number;
-          height?: number;
-          blurhash?: string;
-        };
-        coverPictureUri?: {
-          id: string;
-          width?: number;
-          height?: number;
-          blurhash?: string;
-        };
-      };
+    sigle_api_UnauthorizedEncoded: {
+      /** @enum {string} */
+      _tag: "Unauthorized";
+      message: string;
     };
-    Post: {
+    CreateDraftPayload: {
+      title?: string;
+      content?: string;
+      metaTitle?: string | null;
+      metaDescription?: string | null;
+      coverImage?: string | null;
+      tags?: string[];
+      canonicalUri?: string | null;
+    };
+    Draft: {
       id: string;
       title: string;
-      content?: string;
-      metaTitle?: string;
-      metaDescription?: string;
-      coverImage?: {
-        id: string;
-        width?: number;
-        height?: number;
-        blurhash?: string;
-      };
-      excerpt?: string;
-      tags?: string[];
-      canonicalUri?: string;
-      txId: string;
-      arweaveL1TxId?: string;
-      blockHeight: number;
-      revisionsCount?: number;
-      collectorsCount?: number;
-      metadataUri: string;
+      content: string;
+      metaTitle: string | null;
+      metaDescription: string | null;
+      coverImage: string | null;
+      tags: string[];
+      canonicalUri: string | null;
+      /** Format: date-time */
       createdAt: string;
+      /** Format: date-time */
       updatedAt: string;
-      minterFixedPrice?: {
-        id: string;
-        /** @description The price in BigInt format */
-        price: string;
-        /** @description The start block in BigInt format */
-        startBlock: string;
-        /** @description The end block in BigInt format */
-        endBlock: string;
-      };
-      collectible?: {
-        id: string;
-        address: string;
-        maxSupply: number;
-        openEdition: boolean;
-        collected: number;
-        enabled: boolean;
-      };
-      user: {
-        id: string;
-        createdAt: string;
-        updatedAt: string;
-        profile?: {
-          id: string;
-          txId: string;
-          displayName?: string;
-          description?: string;
-          website?: string;
-          twitter?: string;
-          pictureUri?: {
-            id: string;
-            width?: number;
-            height?: number;
-            blurhash?: string;
-          };
-          coverPictureUri?: {
-            id: string;
-            width?: number;
-            height?: number;
-            blurhash?: string;
-          };
-        };
-      };
+    };
+    sigle_api_ForbiddenEncoded: {
+      /** @enum {string} */
+      _tag: "Forbidden";
+      message: string;
+    };
+    DraftListItem: {
+      id: string;
+      title: string;
+      metaTitle: string | null;
+      metaDescription: string | null;
+      coverImage: string | null;
+      tags: string[];
+      canonicalUri: string | null;
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+    };
+    DraftListResponse: {
+      results: components["schemas"]["DraftListItem"][];
+      limit: number;
+      offset: number;
+      total: number;
+    };
+    Draft_1: {
+      id: string;
+      title: string;
+      content: string;
+      metaTitle: string | null;
+      metaDescription: string | null;
+      coverImage: string | null;
+      tags: string[];
+      canonicalUri: string | null;
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+    };
+    sigle_api_NotFoundEncoded: {
+      /** @enum {string} */
+      _tag: "NotFound";
+      message: string;
+    };
+    UpdateDraftPayload: {
+      /** @description Omit to keep the current value unchanged. */
+      title?: string;
+      /** @description Omit to keep the current value unchanged. */
+      content?: string;
+      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      metaTitle?: string | null;
+      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      metaDescription?: string | null;
+      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      coverImage?: string | null;
+      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      tags?: string[] | null;
+      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      canonicalUri?: string | null;
     };
   };
   responses: never;
@@ -1329,7 +193,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  healthCheck: {
+  "health.get": {
     parameters: {
       query?: never;
       header?: never;
@@ -1338,16 +202,406 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description OK */
+      /** @description Success */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           "application/json": {
-            /** @description Whether the server is healthy */
-            success?: boolean;
+            success: boolean;
           };
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "protected.me": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Success */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            id: string;
+            whitelisted: boolean;
+          };
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "drafts.list": {
+    parameters: {
+      query?: {
+        limit?: string;
+        offset?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description DraftListResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["DraftListResponse"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "drafts.create": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateDraftPayload"];
+      };
+    };
+    responses: {
+      /** @description Draft */
+      201: {
+        headers: {
+          location: string;
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Draft"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "drafts.get": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        draftId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Draft */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Draft_1"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "drafts.delete": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        draftId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description <No Content> */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "drafts.update": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        draftId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateDraftPayload"];
+      };
+    };
+    responses: {
+      /** @description Draft */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Draft_1"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
         };
       };
     };
