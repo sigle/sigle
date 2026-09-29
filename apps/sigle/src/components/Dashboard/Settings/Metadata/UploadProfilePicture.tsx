@@ -20,6 +20,7 @@ export const UploadProfilePicture = ({
   setPicture,
 }: UploadProfilePictureProps) => {
   const posthog = usePostHog();
+
   const { mutate: uploadImage, isPending: loadingUploadImage } =
     sigleApiClient.useMutation(
       "post",
@@ -29,7 +30,9 @@ export const UploadProfilePicture = ({
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
+
       if (!file) return;
+
       if (loadingUploadImage) return;
       posthog.capture("profile_image_upload_start", {});
 
@@ -37,8 +40,8 @@ export const UploadProfilePicture = ({
       formData.append("file", file);
       uploadImage(
         {
-          // oxlint-disable-next-line typescript/no-explicit-any
-          body: formData as any,
+          body: { file: file.name },
+          bodySerializer: () => formData,
         },
         {
           onSuccess: (data) => {

@@ -22,24 +22,30 @@ export const generateImageBlurhashJob = defineJob("generate-image-blurhash")
         id: job.data.imageId,
       },
     });
+
     if (!mediaImage) {
       throw new Error("Image not found");
     }
 
     const mediaUrl = resolveImageUrl(mediaImage.id);
     const imageResponse = await fetch(mediaUrl);
+
     if (!imageResponse.ok) {
       throw new Error("Failed to fetch image");
     }
+
     const imageBuffer = await imageResponse.arrayBuffer();
+
     const { width, height, size } = await sharp(
       Buffer.from(imageBuffer),
     ).metadata();
 
     const blurhashResult = await generateBlurhash({ buffer: imageBuffer });
+
     if (blurhashResult.isErr()) {
       throw blurhashResult.error;
     }
+
     const blurhash = blurhashResult.value;
 
     await prisma.mediaImage.update({

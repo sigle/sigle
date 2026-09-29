@@ -24,6 +24,7 @@ export const executeIndexerMintJob = async (
   // Gather all unique user addresses from the event data to create missing users
   const userAddresses = new Set<string>();
   userAddresses.add(data.sender);
+
   for (const event of data.nftMintEvents) {
     userAddresses.add(event.recipient);
   }
@@ -72,6 +73,7 @@ export const executeIndexerMintJob = async (
       },
     },
   });
+
   const updatedPost = updatedCollectible.post;
 
   for (const event of data.nftMintEvents) {
@@ -82,6 +84,7 @@ export const executeIndexerMintJob = async (
       postId: updatedPost.id,
       createdAt: data.timestamp,
     };
+
     await prisma.postNft.upsert({
       where: {
         id: `${updatedPost.id}-${event.asset_identifier}`,

@@ -24,12 +24,7 @@ import {
   UndoRedo as TipTapUndoRedo,
 } from "@tiptap/extensions";
 import { Markdown } from "@tiptap/markdown";
-import {
-  EditorContent,
-  type Extensions,
-  ReactNodeViewRenderer,
-  useEditor,
-} from "@tiptap/react";
+import { EditorContent, ReactNodeViewRenderer, useEditor } from "@tiptap/react";
 import { common, createLowlight } from "lowlight";
 import { useParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
@@ -53,13 +48,13 @@ import { useEditorStore } from "./store";
 const lowlight = createLowlight(common);
 
 export const EditorTipTap = () => {
-  const params = useParams();
-  const postId = params.postId as string;
+  const postId = useParams<{ postId: string }>().postId;
   const posthog = usePostHog();
   const { width } = useWindowSize();
   const isMobile = width ? width < 768 : false;
   const { setValue, getValues } = useFormContext<EditorPostFormData>();
   const setEditor = useEditorStore((state) => state.setEditor);
+
   const { mutateAsync: uploadMedia } = sigleApiClient.useMutation(
     "post",
     "/api/protected/drafts/{draftId}/upload-media",
@@ -105,19 +100,20 @@ export const EditorTipTap = () => {
           formData.append("file", file);
 
           try {
+            // SAFETY: openapi-fetch passes FormData instances through untouched for multipart/form-data, so the generated `{ file: string }` request type only describes the server-side form field.
             const data = await uploadMedia({
               params: {
                 path: {
                   draftId: postId,
                 },
               },
-              // oxlint-disable-next-line typescript/no-explicit-any
-              body: formData as any,
+              body: formData as FormData & { file: string },
             });
 
             posthog.capture("editor_image_upload_success", {
               postId,
             });
+
             return data.url;
             // oxlint-disable-next-line typescript/no-explicit-any
           } catch (error: any) {
@@ -155,15 +151,17 @@ export const EditorTipTap = () => {
           })
         : undefined,
       isMobile ? TipTapMobileScroll : undefined,
-    ] as Extensions,
+    ].filter((extension) => extension !== undefined),
     content: getValues().content || "<p></p>",
     contentType: getValues().content ? "markdown" : "html",
     // Expose the editor to the parent so we can use it to get the content
     onCreate: ({ editor }) => {
       const contentMarkdown = editor.getMarkdown();
+
       if (getValues("content") !== contentMarkdown) {
         setValue("content", contentMarkdown);
       }
+
       setEditor(editor);
     },
     onUpdate: ({ editor }) => {

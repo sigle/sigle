@@ -7,6 +7,7 @@ import { ShareSocial } from "./ShareSocial";
 
 const scrollToElement = (id: string, offset = 16): void => {
   const element = document.getElementById(id);
+
   if (element) {
     const rect = element.getBoundingClientRect();
     const top = rect.top + window.scrollY - offset;
@@ -18,16 +19,20 @@ const useIntersectionObserver = (setActiveId: (id: string) => void) => {
   const headingElementsRef = useRef<Record<string, IntersectionObserverEntry>>(
     {},
   );
+
   useEffect(() => {
     const callback = (headings: IntersectionObserverEntry[]) => {
       headingElementsRef.current = headings.reduce((map, headingElement) => {
         map[headingElement.target.id] = headingElement;
+
         return map;
       }, headingElementsRef.current);
 
       const visibleHeadings: IntersectionObserverEntry[] = [];
+
       for (const key of Object.keys(headingElementsRef.current)) {
         const headingElement = headingElementsRef.current[key];
+
         if (headingElement.isIntersecting) {
           visibleHeadings.push(headingElement);
         }
@@ -42,6 +47,7 @@ const useIntersectionObserver = (setActiveId: (id: string) => void) => {
         const sortedVisibleHeadings = visibleHeadings.sort(
           (a, b) => getIndexFromId(a.target.id) - getIndexFromId(b.target.id),
         );
+
         setActiveId(sortedVisibleHeadings[0].target.id);
       }
     };
@@ -51,8 +57,8 @@ const useIntersectionObserver = (setActiveId: (id: string) => void) => {
     });
 
     const headingElements = Array.from(
-      document.querySelectorAll("h2, h3"),
-    ) as HTMLElement[];
+      document.querySelectorAll<HTMLElement>("h2, h3"),
+    );
 
     for (const element of headingElements) {
       observer.observe(element);
@@ -72,9 +78,8 @@ interface TableOfContentsProps {
 
 export const TableOfContents = ({ items, post }: TableOfContentsProps) => {
   const router = useRouter();
-  const [activeId, setActiveId] = useState();
-  // oxlint-disable-next-line typescript/no-explicit-any
-  useIntersectionObserver(setActiveId as any);
+  const [activeId, setActiveId] = useState<string>();
+  useIntersectionObserver(setActiveId);
 
   return (
     <nav className="overflow-auto md:sticky md:top-20">

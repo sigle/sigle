@@ -37,6 +37,7 @@ defineRouteMeta({
 
 export default defineEventHandler(async (event) => {
   const postId = getRouterParam(event, "postId");
+
   if (!postId) {
     throw new HTTPError({
       status: 400,

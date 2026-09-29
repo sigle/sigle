@@ -1,4 +1,4 @@
-import type { H3Event } from "nitro/h3";
+import { H3Event } from "nitro/h3";
 import {
   afterAll,
   beforeAll,
@@ -62,13 +62,7 @@ describe("api/posts/list.get", () => {
       offset: 0,
     });
 
-    const mockEvent = {
-      context: {},
-      path: "/api/posts",
-      method: "GET",
-      headers: {},
-      query: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(new Request("http://localhost/api/posts"));
 
     const result = await handler(mockEvent);
 
@@ -98,13 +92,7 @@ describe("api/posts/list.get", () => {
       username: user1.id,
     });
 
-    const mockEvent = {
-      context: {},
-      path: "/api/posts",
-      method: "GET",
-      headers: {},
-      query: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(new Request("http://localhost/api/posts"));
 
     const result = await handler(mockEvent);
 
@@ -136,13 +124,7 @@ describe("api/posts/list.get", () => {
       offset: 1,
     });
 
-    const mockEvent = {
-      context: {},
-      path: "/api/posts",
-      method: "GET",
-      headers: {},
-      query: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(new Request("http://localhost/api/posts"));
 
     const result = await handler(mockEvent);
 
@@ -158,13 +140,7 @@ describe("api/posts/list.get", () => {
       offset: 0,
     });
 
-    const mockEvent = {
-      context: {},
-      path: "/api/posts",
-      method: "GET",
-      headers: {},
-      query: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(new Request("http://localhost/api/posts"));
 
     const result = await handler(mockEvent);
 

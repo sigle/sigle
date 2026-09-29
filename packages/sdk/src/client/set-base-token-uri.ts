@@ -22,6 +22,7 @@ export const setBaseTokenUri = ({
   networkName: StacksNetworkName;
 }): SetBaseTokenUriReturn => {
   const [contractAddress, contractName] = params.contract.split(".");
+
   return {
     parameters: {
       contract: `${contractAddress}.${contractName}`,

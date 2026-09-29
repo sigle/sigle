@@ -10,6 +10,7 @@ import { PageEditorSkeleton } from "./loading";
 
 export default function PostCreate() {
   const router = useRouter();
+
   const { mutate: createPost } = sigleApiClient.useMutation(
     "post",
     "/api/protected/drafts",

@@ -68,6 +68,7 @@ export const arweaveUploadFile = async ({
           tags: arweaveTags,
         },
       });
+
       return new ArweaveUploadFailedError({ cause: error, sentryId });
     },
   });

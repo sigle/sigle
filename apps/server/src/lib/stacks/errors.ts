@@ -7,8 +7,9 @@ export class StacksApiError extends TaggedError("StacksApiError")<{
   constructor(params: { cause: unknown }) {
     const { cause } = params;
     let causeText: string | undefined = undefined;
-    if (typeof cause === "string") {
-      causeText = cause;
+
+    if (Object.prototype.toString.call(cause) === "[object String]") {
+      causeText = String(cause);
     } else if (cause instanceof Error) {
       causeText = cause.message;
     } else if (cause !== null) {
@@ -18,6 +19,7 @@ export class StacksApiError extends TaggedError("StacksApiError")<{
         causeText = String(cause);
       }
     }
+
     const message = `Stacks API error ${causeText ? `: ${causeText}` : ""}`;
     super({ cause, message });
   }

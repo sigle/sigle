@@ -9,5 +9,6 @@ import { makePgliteDatabases } from "@/db";
 export const makePgliteTemplateDump = Effect.gen(function* () {
   const client = yield* PgliteClient.PgliteClient;
   yield* makePgliteDatabases;
+
   return yield* client.dumpDataDir("gzip");
 }).pipe(Effect.provide(PgliteClient.layer()), Effect.scoped);

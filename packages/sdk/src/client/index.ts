@@ -63,4 +63,5 @@ export const createClient = (options: CreateClientOptions) => {
       }),
   };
 };
+
 export { config as sigleConfig, fixedMintFee };

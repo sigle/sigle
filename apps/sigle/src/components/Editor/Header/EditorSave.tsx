@@ -8,20 +8,30 @@ import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 
+const saveStateLabels = {
+  idle: "",
+  saving: "Saving...",
+  saved: "Saved",
+};
+
 export const EditorSave = () => {
-  const params = useParams();
-  const postId = params.postId as string;
+  const params = useParams<{ postId: string }>();
+  const postId = params.postId;
   const searchParams = useSearchParams();
   const forceSave = searchParams.get("forceSave") === "true";
+
   const [saveState, setSaveState] = useState<
     "idle" | "saving" | "error" | "saved"
   >("idle");
+
   const { watch, getValues } = useFormContext<EditorPostFormData>();
   const type = watch("type");
+
   const { mutate: updatePost } = sigleApiClient.useMutation(
     "patch",
     "/api/protected/drafts/{draftId}",
   );
+
   const editor = useEditorStore((state) => state.editor);
 
   const onAutoSave = useDebouncedCallback(
@@ -71,11 +81,13 @@ export const EditorSave = () => {
   // We wait for the editor to be ready before listening to changes
   useEffect(() => {
     if (!editor) return;
+
     const subscription = watch(() => {
       if (type === "published") return;
       setSaveState("saving");
       onAutoSave();
     });
+
     return () => subscription.unsubscribe();
   }, [watch, type, editor, onAutoSave]);
 
@@ -88,13 +100,5 @@ export const EditorSave = () => {
     );
   }
 
-  return (
-    <p className="text-sm">
-      {saveState === "idle"
-        ? ""
-        : saveState === "saved"
-          ? "Saved"
-          : "Saving..."}
-    </p>
-  );
+  return <p className="text-sm">{saveStateLabels[saveState]}</p>;
 };

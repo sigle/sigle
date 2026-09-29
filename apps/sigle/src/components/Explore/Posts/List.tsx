@@ -25,6 +25,7 @@ export const ExplorePostsList = () => {
   const [page, setPage] = useState(2); // Start from page 2 since page 1 is already fetched
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+
   const { ref, inView } = useInView({
     threshold: 1.0,
   });
@@ -32,6 +33,7 @@ export const ExplorePostsList = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       setIsLoading(true);
+
       try {
         const response = await sigleApiFetchClient.GET("/api/posts/list", {
           params: {
@@ -42,6 +44,7 @@ export const ExplorePostsList = () => {
             },
           },
         });
+
         const newPosts = response.data?.results || [];
         setPosts((prevPosts) => [...prevPosts, ...newPosts]);
         setHasMore(newPosts.length > 0); // If no more posts, stop loading

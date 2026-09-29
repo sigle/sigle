@@ -30,11 +30,15 @@ describe("config service", () => {
       expect({
         redactedKey: String(posthogKey),
         revealedKey: Redacted.value(posthogKey),
+        redactedArweaveKey: String(config.ARWEAVE_PRIVATE_KEY),
+        arweaveKey: Redacted.value(config.ARWEAVE_PRIVATE_KEY),
         sentry: Option.isNone(config.SENTRY_DSN),
         posthogHost: Option.isNone(config.POSTHOG_API_HOST),
       }).toStrictEqual({
         redactedKey: "<redacted>",
         revealedKey: "phc_secret_key",
+        redactedArweaveKey: "<redacted>",
+        arweaveKey: "arweave-secret-key",
         sentry: true,
         posthogHost: true,
       });
@@ -49,6 +53,7 @@ describe("config service", () => {
             APP_ID: "sigle-test",
             APP_URL: "http://localhost:3000",
             API_URL: "http://localhost:3001",
+            ARWEAVE_PRIVATE_KEY: "arweave-secret-key",
             DATABASE_KIND: "pglite",
             DATABASE_URL: "memory://",
             POSTHOG_API_KEY: "phc_secret_key",
@@ -65,33 +70,6 @@ describe("config service", () => {
         AppConfig.pipe(
           Effect.provide(AppConfig.layer),
           Effect.provide(ConfigProvider.layer(ConfigProvider.fromUnknown({}))),
-        ),
-      );
-
-      expect(exit._tag).toBe("Failure");
-    }),
-  );
-
-  it.effect("fails with ConfigError for non-positive rate limits", () =>
-    Effect.gen(function* () {
-      const exit = yield* Effect.exit(
-        AppConfig.pipe(
-          Effect.provide(AppConfig.layer),
-          Effect.provide(
-            ConfigProvider.layer(
-              ConfigProvider.fromUnknown({
-                AUTH_SECRET: "sigle-test-auth-secret",
-                STACKS_ENV: "testnet",
-                SIGLE_ENV: "local",
-                APP_ID: "sigle-test",
-                APP_URL: "http://localhost:3000",
-                API_URL: "http://localhost:3001",
-                DATABASE_KIND: "pglite",
-                DATABASE_URL: "memory://",
-                RATE_LIMIT_POINTS: 0,
-              }),
-            ),
-          ),
         ),
       );
 

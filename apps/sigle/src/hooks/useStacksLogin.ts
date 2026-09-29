@@ -40,16 +40,20 @@ export const useStacksLogin = () => {
     if (isConnected()) {
       const data = getLocalStorage();
       const stxAddress = data?.addresses.stx[0];
+
       if (!stxAddress) return;
+
       const user = {
         stxAddress: stxAddress.address,
       };
+
       setUser(user);
     }
   }, [setUser]);
 
   const login = async () => {
     posthog.capture("user_login_start");
+
     try {
       const response = await connect({
         forceWalletSelect: true,
@@ -63,12 +67,15 @@ export const useStacksLogin = () => {
           ? address.address.startsWith("SP")
           : address.address.startsWith("ST"),
       );
+
       if (!stxAddress) {
         throw new Error("No STX address found");
       }
+
       const user = {
         stxAddress: stxAddress.address,
       };
+
       posthog.capture("user_login_wallet_success", {
         stxAddress: user.stxAddress,
       });
@@ -84,8 +91,10 @@ export const useStacksLogin = () => {
     posthog.capture("user_login_sign_message");
 
     const nonceData = await authClient.siws.nonce();
+
     if (!nonceData.data?.nonce) {
       toast.error("Nonce not found");
+
       return;
     }
 
@@ -100,15 +109,18 @@ export const useStacksLogin = () => {
     });
 
     let signature = "";
+
     try {
       const response = await request("stx_signMessage", {
         message,
       });
+
       signature = response.signature;
     } catch (error) {
       console.error(error);
       posthog.capture("user_login_sign_message_error");
       toast.error("Failed to login");
+
       return;
     }
 
@@ -116,14 +128,17 @@ export const useStacksLogin = () => {
       message,
       signature,
     });
+
     if (signInResult.error) {
       posthog.capture("user_login_sign_message_error", {
         code: signInResult.error.code,
         error: signInResult.error.message,
       });
       toast.error("Failed to login");
+
       return;
     }
+
     refetchSession();
     posthog.capture("user_login_sign_message_success");
     toast.success("You are now logged in");

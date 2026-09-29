@@ -15,21 +15,25 @@ export class FetchArweaveL1TxIdsFailedError extends TaggedError(
   error: string;
 }> {}
 
-interface ArweaveL1GraphQLResponse {
-  errors?: Array<{ message: string }>;
-  data?: {
-    transactions?: {
-      edges?: Array<{
-        node: {
-          id: string;
-          bundledIn?: {
-            id: string;
-          } | null;
-        };
-      }>;
-    };
-  };
-}
+const arweaveL1EdgeSchema = z.object({
+  node: z.object({
+    id: z.string(),
+    bundledIn: z.object({ id: z.string() }).nullish(),
+  }),
+});
+
+const arweaveL1GraphQLResponseSchema = z.object({
+  errors: z.array(z.object({ message: z.string() })).optional(),
+  data: z
+    .object({
+      transactions: z
+        .object({
+          edges: z.array(arweaveL1EdgeSchema),
+        })
+        .optional(),
+    })
+    .optional(),
+});
 
 export async function fetchArweaveL1TxIds(
   txIds: string[],
@@ -39,6 +43,7 @@ export async function fetchArweaveL1TxIds(
   }
 
   const idsJson = JSON.stringify(txIds);
+
   const query = `
     query {
       transactions(
@@ -76,7 +81,10 @@ export async function fetchArweaveL1TxIds(
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
-        const result = (await response.json()) as ArweaveL1GraphQLResponse;
+        const result = arweaveL1GraphQLResponseSchema.parse(
+          await response.json(),
+        );
+
         if (result.errors && result.errors.length > 0) {
           throw new Error(
             `GraphQL error: ${result.errors.map((e) => e.message).join(", ")}`,
@@ -88,6 +96,7 @@ export async function fetchArweaveL1TxIds(
 
         for (const edge of edges) {
           const l1TxId = edge.node.bundledIn?.id;
+
           if (l1TxId) {
             mapping[edge.node.id] = l1TxId;
           }
@@ -101,6 +110,7 @@ export async function fetchArweaveL1TxIds(
     catch: (error) => {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
+
       return new FetchArweaveL1TxIdsFailedError({ error: errorMessage });
     },
   });
@@ -123,13 +133,17 @@ export const executeIndexerSyncArweaveL1TxIdsJob = async (
 
   const txIdsSet = new Set<string>();
   const maxLen = Math.max(postsWithoutL1.length, revisionsWithoutL1.length);
+
   for (let i = 0; i < maxLen; i++) {
     if (i < postsWithoutL1.length) {
       txIdsSet.add(postsWithoutL1[i].txId);
+
       if (txIdsSet.size >= 100) break;
     }
+
     if (i < revisionsWithoutL1.length) {
       txIdsSet.add(revisionsWithoutL1[i].txId);
+
       if (txIdsSet.size >= 100) break;
     }
   }
@@ -138,6 +152,7 @@ export const executeIndexerSyncArweaveL1TxIdsJob = async (
 
   if (txIds.length === 0) {
     consola.debug("No posts or revisions missing arweaveL1TxId found");
+
     return;
   }
 
@@ -146,6 +161,7 @@ export const executeIndexerSyncArweaveL1TxIdsJob = async (
   });
 
   const fetchResult = await fetchArweaveL1TxIds(txIds);
+
   if (fetchResult.isErr()) {
     consola.error("Failed to fetch L1 tx IDs from Arweave GraphQL", {
       error: fetchResult.error,
@@ -158,6 +174,7 @@ export const executeIndexerSyncArweaveL1TxIdsJob = async (
 
   if (updatedTxIds.length === 0) {
     consola.info("No new L1 transaction IDs found on Arweave yet");
+
     return;
   }
 
@@ -169,12 +186,14 @@ export const executeIndexerSyncArweaveL1TxIdsJob = async (
       where: { txId, arweaveL1TxId: null },
       data: { arweaveL1TxId },
     });
+
     updatedPostsCount += postRes.count;
 
     const revRes = await prisma.postRevision.updateMany({
       where: { txId, arweaveL1TxId: null },
       data: { arweaveL1TxId },
     });
+
     updatedRevisionsCount += revRes.count;
   }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
+import type { QueryObserverResult } from "@tanstack/react-query";
 import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
@@ -93,9 +94,10 @@ const Draft = ({
   refetchDrafts,
 }: {
   draft: paths["/api/protected/drafts"]["get"]["responses"][200]["content"]["application/json"]["results"][number];
-  refetchDrafts: () => Promise<unknown>;
+  refetchDrafts: () => Promise<QueryObserverResult<unknown, unknown>>;
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
+
   const { mutateAsync: deletePost } = sigleApiClient.useMutation(
     "delete",
     "/api/protected/drafts/{draftId}",
@@ -111,6 +113,7 @@ const Draft = ({
   const onDelete = async () => {
     // oxlint-disable-next-line no-alert
     const ok = confirm("Are you sure you want to delete this draft?");
+
     if (!ok) return;
 
     setIsDeleting(true);

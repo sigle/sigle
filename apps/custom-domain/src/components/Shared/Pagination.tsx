@@ -62,6 +62,7 @@ export function Pagination({ page, total, itemsPerPage }: PaginationProps) {
       for (let i = 1; i <= Math.min(maxPagesToShow, totalPages); i++) {
         items.push(renderPageItem(i));
       }
+
       if (totalPages > maxPagesToShow) {
         items.push(renderDots());
         items.push(renderPageItem(totalPages));
@@ -71,15 +72,18 @@ export function Pagination({ page, total, itemsPerPage }: PaginationProps) {
         items.push(renderPageItem(1));
         items.push(renderDots());
       }
+
       for (let i = totalPages - maxPagesToShow + 1; i <= totalPages; i++) {
         items.push(renderPageItem(i));
       }
     } else {
       items.push(renderPageItem(1));
       items.push(renderDots());
+
       for (let i = page - sidePagesToShow; i <= page + sidePagesToShow; i++) {
         items.push(renderPageItem(i));
       }
+
       items.push(renderDots());
       items.push(renderPageItem(totalPages));
     }
