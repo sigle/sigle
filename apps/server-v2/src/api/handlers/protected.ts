@@ -6,7 +6,7 @@ import { CurrentUser } from "@/api/middleware/auth-user";
 export const getMe = Effect.gen(function* () {
   const user = yield* CurrentUser;
 
-  return { id: user.id };
+  return { id: user.id, whitelisted: user.whitelisted };
 });
 
 export const ProtectedHandlersLayer = HttpApiBuilder.group(

@@ -4,6 +4,7 @@ import { UserAuthMiddleware } from "@/api/middleware/auth-user";
 
 export const CurrentUserResponse = Schema.Struct({
   id: Schema.String,
+  whitelisted: Schema.Boolean,
 });
 
 export const ProtectedGroup = HttpApiGroup.make("protected")

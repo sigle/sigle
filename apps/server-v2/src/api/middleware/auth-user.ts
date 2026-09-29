@@ -7,6 +7,7 @@ import { UserWhitelistService } from "@/services/users";
 
 export interface AuthenticatedUser {
   readonly id: string;
+  readonly whitelisted: boolean;
 }
 
 export class CurrentUser extends Context.Service<
@@ -21,7 +22,7 @@ export class UserAuthMiddleware extends HttpApiMiddleware.Service<
     requires: AuthService | UserWhitelistService;
   }
 >()("sigle/UserAuthMiddleware", {
-  error: [Unauthorized, Forbidden],
+  error: [Unauthorized],
 }) {}
 
 export const UserAuthMiddlewareLayer: Layer.Layer<
@@ -47,13 +48,32 @@ export const UserAuthMiddlewareLayer: Layer.Layer<
 
         const whitelisted = yield* users.isUserWhitelisted(session.user.id);
 
-        if (!whitelisted) {
-          return yield* new Forbidden({ message: "User is not whitelisted" });
-        }
-
         return yield* Effect.provideService(httpEffect, CurrentUser, {
           id: session.user.id,
+          whitelisted,
         });
       });
   }),
 );
+
+export class WhitelistedUserMiddleware extends HttpApiMiddleware.Service<
+  WhitelistedUserMiddleware,
+  {
+    requires: CurrentUser;
+  }
+>()("sigle/WhitelistedUserMiddleware", {
+  error: [Forbidden],
+}) {}
+
+export const WhitelistedUserMiddlewareLayer: Layer.Layer<WhitelistedUserMiddleware> =
+  Layer.succeed(WhitelistedUserMiddleware, (httpEffect) =>
+    Effect.gen(function* () {
+      const user = yield* CurrentUser;
+
+      if (!user.whitelisted) {
+        return yield* new Forbidden({ message: "User is not whitelisted" });
+      }
+
+      return yield* httpEffect;
+    }),
+  );
