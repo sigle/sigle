@@ -29,6 +29,7 @@ export function UserClientPage(props: Props) {
       },
     },
   );
+
   if (!user) {
     notFound();
   }

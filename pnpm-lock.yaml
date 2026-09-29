@@ -178,7 +178,7 @@ overrides:
   vite@*: npm:@voidzero-dev/vite-plus-core@1.0.0
   vitest@*: 5.0.1
 
-pnpmfileChecksum: sha256-YFbYjabTHUlM1oqh4w9JvoO0rDkHOaO4zVti8Ff6esU=
+pnpmfileChecksum: sha256-wWAZsa1mq+ussz0e9l66gzMBAwGhD4c3Li25Ws5CwoU=
 
 importers:
 

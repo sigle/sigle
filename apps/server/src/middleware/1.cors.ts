@@ -7,6 +7,7 @@ export default corsEventHandler((_event) => {}, {
     if (origin === env.APP_URL) {
       return true;
     }
+
     return false;
   },
   methods: "*",

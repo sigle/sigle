@@ -12,15 +12,16 @@ import { createTestPost, createTestUser } from "@/test/helpers";
 
 vi.mock<typeof import("@/lib/consola")>(
   import("@/lib/consola"),
-  () =>
-    ({
-      consola: {
-        debug: vi.fn(),
-        info: vi.fn(),
-        error: vi.fn(),
-        warn: vi.fn(),
-      },
-    }) as unknown as typeof import("@/lib/consola"),
+  async (importOriginal) => {
+    const { consola } = await importOriginal();
+
+    vi.spyOn(consola, "debug").mockReturnValue(undefined);
+    vi.spyOn(consola, "info").mockReturnValue(undefined);
+    vi.spyOn(consola, "error").mockReturnValue(undefined);
+    vi.spyOn(consola, "warn").mockReturnValue(undefined);
+
+    return { consola };
+  },
 );
 
 const { fetchArweaveL1TxIds, executeIndexerSyncArweaveL1TxIdsJob } =
@@ -38,6 +39,7 @@ describe("sync-arweave-l1-tx-ids", () => {
     if (testDb) {
       await testDb.cleanup();
     }
+
     vi.clearAllMocks();
   });
 
@@ -45,6 +47,7 @@ describe("sync-arweave-l1-tx-ids", () => {
     if (testDb) {
       await testDb.close();
     }
+
     vi.unstubAllGlobals();
   });
 
@@ -85,12 +88,14 @@ describe("sync-arweave-l1-tx-ids", () => {
           ),
         ),
       );
+
       vi.stubGlobal("fetch", mockFetch);
 
       const result = await fetchArweaveL1TxIds([
         "arweave-tx-1",
         "arweave-tx-2",
       ]);
+
       expect(result.unwrap()).toStrictEqual({
         "arweave-tx-1": "l1-tx-1",
       });
@@ -131,6 +136,7 @@ describe("sync-arweave-l1-tx-ids", () => {
           ),
         ),
       );
+
       vi.stubGlobal("fetch", mockFetch);
 
       await executeIndexerSyncArweaveL1TxIdsJob({});
@@ -138,11 +144,13 @@ describe("sync-arweave-l1-tx-ids", () => {
       const updatedPost = await testDb?.db.post.findUnique({
         where: { id: post1.id },
       });
+
       expect(updatedPost?.arweaveL1TxId).toBe("l1-bundle-tx-1");
 
       const updatedRevision = await testDb?.db.postRevision.findFirst({
         where: { postId: post1.id, txId: "tx-arweave-1" },
       });
+
       expect(updatedRevision?.arweaveL1TxId).toBe("l1-bundle-tx-1");
     });
 
@@ -176,6 +184,7 @@ describe("sync-arweave-l1-tx-ids", () => {
       await createTestUser({ id: userId });
 
       const postCreates = [];
+
       for (let i = 0; i < 100; i++) {
         postCreates.push({
           id: `unmapped-post-${i}`,
@@ -189,6 +198,7 @@ describe("sync-arweave-l1-tx-ids", () => {
           userId,
         });
       }
+
       await testDb?.db.post.createMany({ data: postCreates });
 
       const hostPost = await createTestPost({
@@ -196,6 +206,7 @@ describe("sync-arweave-l1-tx-ids", () => {
         txId: "host-post-tx",
         userId,
       });
+
       await testDb?.db.post.update({
         where: { id: hostPost.id },
         data: { arweaveL1TxId: "host-l1-id" },
@@ -209,33 +220,36 @@ describe("sync-arweave-l1-tx-ids", () => {
         },
       });
 
-      const mockFetch = vi.fn((_url, options) => {
-        const bodyStr = (options as RequestInit | undefined)?.body as string;
-        expect(bodyStr).toContain(revisionTxId);
+      const mockFetch = vi.fn(
+        (_url: RequestInfo | URL, options?: RequestInit) => {
+          const bodyStr = String(options?.body);
+          expect(bodyStr).toContain(revisionTxId);
 
-        return Promise.resolve(
-          new Response(
-            JSON.stringify({
-              data: {
-                transactions: {
-                  edges: [
-                    {
-                      node: {
-                        id: revisionTxId,
-                        bundledIn: { id: "l1-revision-tx-1" },
+          return Promise.resolve(
+            new Response(
+              JSON.stringify({
+                data: {
+                  transactions: {
+                    edges: [
+                      {
+                        node: {
+                          id: revisionTxId,
+                          bundledIn: { id: "l1-revision-tx-1" },
+                        },
                       },
-                    },
-                  ],
+                    ],
+                  },
                 },
+              }),
+              {
+                status: 200,
+                headers: { "Content-Type": "application/json" },
               },
-            }),
-            {
-              status: 200,
-              headers: { "Content-Type": "application/json" },
-            },
-          ),
-        );
-      });
+            ),
+          );
+        },
+      );
+
       vi.stubGlobal("fetch", mockFetch);
 
       await executeIndexerSyncArweaveL1TxIdsJob({});
@@ -243,6 +257,7 @@ describe("sync-arweave-l1-tx-ids", () => {
       const updatedRevision = await testDb?.db.postRevision.findFirst({
         where: { txId: revisionTxId },
       });
+
       expect(updatedRevision?.arweaveL1TxId).toBe("l1-revision-tx-1");
     });
   });

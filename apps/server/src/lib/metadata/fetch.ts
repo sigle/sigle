@@ -21,6 +21,7 @@ export function fetchMetadata(
       try: async () => {
         const response = await fetch(url);
         const json = await response.json();
+
         return json;
       },
       catch: (error) => {

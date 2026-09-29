@@ -4,13 +4,16 @@
 function readPackage(pkg) {
   if (pkg.name === "openapi-typescript") {
     pkg.dependencies = { ...pkg.dependencies, typescript: "6.0.3" };
+
     if (pkg.peerDependencies) {
       delete pkg.peerDependencies.typescript;
     }
+
     if (pkg.peerDependenciesMeta) {
       delete pkg.peerDependenciesMeta.typescript;
     }
   }
+
   return pkg;
 }
 

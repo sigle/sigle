@@ -1,4 +1,5 @@
-import type { H3Event } from "nitro/h3";
+import { H3Event } from "nitro/h3";
+import { PostHog } from "posthog-node";
 import {
   afterAll,
   beforeAll,
@@ -50,17 +51,15 @@ describe("api/protected/drafts/create.post", () => {
 
     mockGetValidatedQueryZod.mockResolvedValue({});
 
-    const mockEvent = {
-      context: {
-        user: { id: userId },
-        $posthog: {
-          capture: vi.fn(),
-        },
-      },
-      path: "/api/protected/drafts/create",
-      method: "POST",
-      headers: {},
-    } as unknown as H3Event;
+    const mockEvent = new H3Event(
+      new Request("http://localhost/api/protected/drafts/create"),
+    );
+
+    const posthog = new PostHog("test-api-key", { host: "http://localhost" });
+
+    vi.spyOn(posthog, "capture").mockReturnValue(undefined);
+    mockEvent.context.user = { id: userId };
+    mockEvent.context.$posthog = posthog;
 
     const result = await handler(mockEvent);
 

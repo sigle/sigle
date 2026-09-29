@@ -32,16 +32,19 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
       onKeyDown: ({ event }) => {
         if (event.key === "ArrowUp") {
           setSelectedIndex((selectedIndex + items.length - 1) % items.length);
+
           return true;
         }
 
         if (event.key === "ArrowDown") {
           setSelectedIndex((selectedIndex + 1) % items.length);
+
           return true;
         }
 
         if (event.key === "Enter") {
           selectItem(selectedIndex);
+
           return true;
         }
 
@@ -51,12 +54,13 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
 
     useEffect(() => {
       const $div = containerRef.current;
+
       if (!$div) {
         return;
       }
-      const $ele = $div.querySelector(
-        `[data-index="${selectedIndex}"]`,
-      ) as HTMLButtonElement;
+
+      const $ele = $div.querySelector(`[data-index="${selectedIndex}"]`);
+
       $ele?.scrollIntoView({ block: "nearest" });
     }, [selectedIndex]);
 

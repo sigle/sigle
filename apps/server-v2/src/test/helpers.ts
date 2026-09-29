@@ -119,6 +119,7 @@ export const createAuthenticatedClient = (options: { userId?: string } = {}) =>
   Effect.gen(function* () {
     const db = yield* Database;
     const config = yield* AppConfig;
+
     const user = yield* createTestUser(
       options.userId === undefined ? {} : { id: options.userId },
     );

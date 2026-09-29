@@ -8,15 +8,20 @@ export const resolveImageUrl = (image: string) => {
     const cid = image.slice(7);
     image = `${env.IPFS_GATEWAY_URL}/${cid}`;
   }
+
   if (image?.startsWith("ar://")) {
     image = `${env.ARWEAVE_GATEWAY_URL}/${image.slice(5)}`;
   }
+
   return image;
 };
 
 const WEBP = "image/webp";
+
 const PNG = "image/png";
+
 const JPEG = "image/jpeg";
+
 export const allowedFormats = [WEBP, PNG, JPEG] as const;
 
 export class ImageOptimizationFailedError extends TaggedError(
@@ -55,6 +60,7 @@ export async function optimizeImage({
       transformer.webp({ quality, effort: 6, smartSubsample: true });
 
       const optimizedBuffer = await transformer.toBuffer();
+
       return optimizedBuffer;
     },
     catch: (cause) => new ImageOptimizationFailedError({ cause }),
@@ -70,6 +76,7 @@ export function mimeTypeToExtension(mimeType: string): string {
     case JPEG:
       return "jpeg";
   }
+
   throw new Error("Unsupported mimeType");
 }
 
@@ -95,6 +102,7 @@ export async function generateBlurhash({
           .resize(size, size, { fit: "inside" })
           .toBuffer((err, buffer, { width, height }) => {
             if (err) return reject(err);
+
             const hash = encode(
               new Uint8ClampedArray(buffer),
               width,
@@ -102,6 +110,7 @@ export async function generateBlurhash({
               4,
               4,
             );
+
             resolve(hash);
           });
       });

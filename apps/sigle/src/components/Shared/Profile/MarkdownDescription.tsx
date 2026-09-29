@@ -15,15 +15,14 @@ export const ProfileMarkdownDescription = ({
         allowedElements={["p", "a", "strong", "em"]}
         components={{
           // oxlint-disable-next-line no-unused-vars
-          a: ({ href, ...props }) => {
+          a: ({ node: _node, href, ...props }) => {
             return (
               <a
                 href={href}
                 target="_blank"
                 rel="noreferrer"
                 className="text-muted-foreground underline underline-offset-2 hover:text-foreground"
-                // oxlint-disable-next-line typescript/no-explicit-any
-                {...(props as any)}
+                {...props}
               />
             );
           },

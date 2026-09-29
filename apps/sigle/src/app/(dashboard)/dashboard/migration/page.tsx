@@ -89,34 +89,42 @@ export default function MigrationPage() {
     value: "",
     ready: false,
   });
+
   const [loadingPostId, setLoadingPostId] = useState<string | null>(null);
 
   const fetchPosts = async (): Promise<SubsetStory[]> => {
     const res = await fetch(`/api/migration/list?username=${username.value}`);
     const data = await res.json();
+
     if (!res.ok) {
       throw new Error(data.message);
     }
+
     return data;
   };
 
   const handleMigrate = async (id: string) => {
     setLoadingPostId(id);
+
     try {
       // 1. Fetch the post from old API
       const res = await fetch(
         `/api/migration/${id}?username=${username.value}`,
       );
+
       const data: Story = await res.json();
       console.log("handleMigrate", data);
 
       // 2. Create a new draft
       const { data: newPost, error: newPostError } =
         await sigleApiFetchClient.POST("/api/protected/drafts/create", {});
+
       if (newPostError) {
         toast.error(newPostError.message);
+
         return;
       }
+
       console.log("newPost", newPost);
 
       // 3. Update the draft with the content from the old post
@@ -149,9 +157,12 @@ export default function MigrationPage() {
             },
           },
         );
+
       console.log("updatePost", updatePost);
+
       if (updatePostError) {
         toast.error(updatePostError.message);
+
         return;
       }
 
@@ -168,7 +179,7 @@ export default function MigrationPage() {
       );
     } catch (error) {
       console.error(error);
-      toast.error(error as string);
+      toast.error(error instanceof Error ? error.message : String(error));
     } finally {
       setLoadingPostId(null);
     }

@@ -18,14 +18,17 @@ const apiClient = createClient({
 });
 
 const TX_POLL_INTERVAL_MS = 500;
+
 const TX_MAX_POLL_COUNT = 120;
 
 const waitForTransaction = async (txId: string) => {
   let pollCount = 0;
+
   while (pollCount < TX_MAX_POLL_COUNT) {
     const tx = await apiClient.GET("/extended/v1/tx/{tx_id}", {
       params: { path: { tx_id: txId } },
     });
+
     if (
       tx.response.ok &&
       tx.data &&
@@ -35,11 +38,13 @@ const waitForTransaction = async (txId: string) => {
     ) {
       return tx.data;
     }
+
     pollCount++;
     await new Promise((resolve) => {
       setTimeout(resolve, TX_POLL_INTERVAL_MS);
     });
   }
+
   throw new Error(
     `Transaction ${txId} timed out after ${TX_MAX_POLL_COUNT} polls`,
   );
@@ -49,7 +54,9 @@ const configFile = readFileSync(
   "../../apps/contracts/settings/Testnet.toml",
   "utf-8",
 );
+
 const config = parse(configFile);
+
 // @ts-expect-error Not typed properly
 const mnemonic = config.accounts.deployer.mnemonic;
 
@@ -79,6 +86,7 @@ export const deployContract = async ({
     senderKey: privateKey,
     network,
   });
+
   const broadcastResponse = await broadcastTransaction({ transaction });
   console.log("submitted tx", broadcastResponse);
 };
@@ -100,15 +108,19 @@ export const publishPost = async ({
     ...parameters,
     contractAddress: parameters.contract.split(".")[0],
     contractName: parameters.contract.split(".")[1],
+    // SAFETY: sigleClient.publishPost builds functionArgs with stringAsciiCV, so
+    // every entry is a ClarityValue rather than the string[] variant.
     functionArgs: parameters.functionArgs as ClarityValue[],
     network,
     senderKey: privateKey,
   });
+
   const broadcastResponse = await broadcastTransaction({ transaction });
   console.log("submitted tx", broadcastResponse);
 
   await waitForTransaction(broadcastResponse.txid);
   console.log("transaction confirmed", broadcastResponse.txid);
+
   return broadcastResponse.txid;
 };
 

@@ -30,6 +30,7 @@ export const PostShareDialog = ({
 }: PostShareDialogProps) => {
   const [isCopied, setIsCopied] = useState(false);
   const { data: session } = useSession();
+
   const postLink = `${env.NEXT_PUBLIC_APP_URL}${Routes.post(
     { postId: post.id },
     {

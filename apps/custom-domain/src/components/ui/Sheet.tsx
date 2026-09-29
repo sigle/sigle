@@ -30,6 +30,7 @@ const SheetPortal = ({ position, children, ...props }: SheetPortalProps) => (
     <div className={portalVariants({ position })}>{children}</div>
   </DialogPrimitive.Portal>
 );
+
 SheetPortal.displayName = "SheetPortal";
 
 const SheetOverlay = React.forwardRef<
@@ -45,6 +46,7 @@ const SheetOverlay = React.forwardRef<
     ref={ref}
   />
 ));
+
 SheetOverlay.displayName = "SheetOverlay";
 
 const sheetVariants = cva(
@@ -156,6 +158,7 @@ const SheetContent = React.forwardRef<HTMLDivElement, DialogContentProps>(
     </SheetPortal>
   ),
 );
+
 SheetContent.displayName = "SheetContent";
 
 const SheetHeader = ({
@@ -170,6 +173,7 @@ const SheetHeader = ({
     {...props}
   />
 );
+
 SheetHeader.displayName = "SheetHeader";
 
 const SheetFooter = ({
@@ -184,6 +188,7 @@ const SheetFooter = ({
     {...props}
   />
 );
+
 SheetFooter.displayName = "SheetFooter";
 
 const SheetTitle = React.forwardRef<
@@ -200,6 +205,7 @@ const SheetTitle = React.forwardRef<
     {...props}
   />
 ));
+
 SheetTitle.displayName = "SheetTitle";
 
 const SheetDescription = React.forwardRef<
@@ -212,6 +218,7 @@ const SheetDescription = React.forwardRef<
     {...props}
   />
 ));
+
 SheetDescription.displayName = "SheetDescription";
 
 export {

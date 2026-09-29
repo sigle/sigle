@@ -17,6 +17,7 @@ interface ContractDeployState {
 
 export function useContractDeploy(options: UseContractDeployOptions = {}) {
   const { onSuccess, onError, onCancel } = options;
+
   const [state, setState] = useState<ContractDeployState>({
     loading: false,
     error: null,
@@ -68,6 +69,7 @@ export function useContractDeploy(options: UseContractDeployOptions = {}) {
             loading: false,
           }));
           onCancel?.();
+
           return;
         }
 

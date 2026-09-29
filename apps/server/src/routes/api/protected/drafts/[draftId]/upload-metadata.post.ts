@@ -88,15 +88,18 @@ export default defineEventHandler(async (event) => {
   }
 
   const draftId = getRouterParam(event, "draftId");
+
   if (!draftId) {
     throw new HTTPError({
       status: 400,
       message: "Bad Request",
     });
   }
+
   const body = await readValidatedBodyZod(event, uploadMetadataDraftSchema);
 
   const parsedMetadata = PostMetadataSchema.safeParse(body.metadata);
+
   if (!parsedMetadata.success) {
     throw new HTTPError({
       status: 400,
@@ -108,13 +111,16 @@ export default defineEventHandler(async (event) => {
   const signatureResult = verifyPostSignature(parsedMetadata.data, {
     network: env.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
   });
+
   if (signatureResult.isErr()) {
     throw new HTTPError({
       status: 400,
       message: signatureResult.error.error,
     });
   }
+
   const { recoveredAddress, signature } = signatureResult.value;
+
   if (recoveredAddress !== event.context.user.id) {
     throw new HTTPError({
       status: 400,
@@ -131,6 +137,7 @@ export default defineEventHandler(async (event) => {
       signature,
     },
   });
+
   if (existingPostWithSignature) {
     throw new HTTPError({
       status: 400,
@@ -172,6 +179,7 @@ export default defineEventHandler(async (event) => {
       value: event.context.user.id,
     },
   ];
+
   if (body.type === "published") {
     tags.push({
       name: "Root-TX",
@@ -195,15 +203,19 @@ export default defineEventHandler(async (event) => {
   const { id } = uploadResult.value;
 
   const postData = parsedMetadata.data;
+
   const metaTitle = postData.content.attributes?.find(
     (attribute) => attribute.key === "meta-title",
   )?.value;
+
   const metaDescription = postData.content.attributes?.find(
     (attribute) => attribute.key === "meta-description",
   )?.value;
+
   const excerpt = postData.content.attributes?.find(
     (attribute) => attribute.key === "excerpt",
   )?.value;
+
   const canonicalUri = postData.content.attributes?.find(
     (attribute) => attribute.key === "canonical-uri",
   )?.value;

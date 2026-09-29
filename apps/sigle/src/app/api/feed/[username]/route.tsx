@@ -9,6 +9,7 @@ export async function GET(
   { params }: { params: Promise<{ username: string }> },
 ) {
   const { username } = await params;
+
   const { data: user, error: userError } = await sigleApiFetchClient.GET(
     "/api/users/{username}",
     {
@@ -19,11 +20,13 @@ export async function GET(
       },
     },
   );
+
   if (!user) {
     return new NextResponse("User not found", {
       status: 404,
     });
   }
+
   if (userError) {
     return new NextResponse("Error fetching user", {
       status: 500,
@@ -41,6 +44,7 @@ export async function GET(
       },
     },
   );
+
   if (postsError) {
     return new NextResponse("Error fetching posts", {
       status: 500,
@@ -48,6 +52,7 @@ export async function GET(
   }
 
   const userLink = `${env.NEXT_PUBLIC_APP_URL}/u/${username}`;
+
   const feed = new Feed({
     title: user.profile?.displayName || user.id,
     description: user.profile?.description,

@@ -15,15 +15,16 @@ import { executeNewPostJob } from "./new-post";
 
 vi.mock<typeof import("@/lib/consola")>(
   import("@/lib/consola"),
-  () =>
-    ({
-      consola: {
-        debug: vi.fn(),
-        info: vi.fn(),
-        error: vi.fn(),
-        warn: vi.fn(),
-      },
-    }) as unknown as typeof import("@/lib/consola"),
+  async (importOriginal) => {
+    const { consola } = await importOriginal();
+
+    vi.spyOn(consola, "debug").mockReturnValue(undefined);
+    vi.spyOn(consola, "info").mockReturnValue(undefined);
+    vi.spyOn(consola, "error").mockReturnValue(undefined);
+    vi.spyOn(consola, "warn").mockReturnValue(undefined);
+
+    return { consola };
+  },
 );
 
 const mockFetch = vi.spyOn(globalThis, "fetch");
@@ -40,11 +41,13 @@ describe(executeNewPostJob, () => {
     if (testDb) {
       await testDb.cleanup();
     }
+
     vi.clearAllMocks();
   });
 
   afterAll(async () => {
     mockFetch.mockRestore();
+
     if (testDb) {
       await testDb.close();
     }
@@ -76,10 +79,7 @@ describe(executeNewPostJob, () => {
       },
     };
 
-    mockFetch.mockResolvedValue({
-      ok: true,
-      json: async () => mockPostMetadata,
-    } as Response);
+    mockFetch.mockResolvedValue(Response.json(mockPostMetadata));
 
     await executeNewPostJob({
       address: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM.post-123",
@@ -95,6 +95,7 @@ describe(executeNewPostJob, () => {
     const post = await testDb?.db.post.findUnique({
       where: { id: postId },
     });
+
     expect(post).toMatchObject({
       id: postId,
       txId,
@@ -104,6 +105,7 @@ describe(executeNewPostJob, () => {
     const revisions = await testDb?.db.postRevision.findMany({
       where: { postId },
     });
+
     expect(revisions).toHaveLength(1);
     expect(revisions?.[0]).toMatchObject({
       postId,

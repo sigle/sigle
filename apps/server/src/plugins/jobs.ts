@@ -18,6 +18,7 @@ export default definePlugin(async (nitroApp) => {
   const jobs = new JobManager(boss)
     .register(indexerJob)
     .register(generateImageBlurhashJob);
+
   await jobs.start();
 
   await boss.schedule("indexer", "0 * * * *", {

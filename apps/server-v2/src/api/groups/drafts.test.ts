@@ -20,9 +20,18 @@ import { makeTestServerLayer } from "@/test/server";
 
 const ErrorResponse = Schema.Struct({ message: Schema.String });
 
+const RawDraftListResponse = Schema.Struct({
+  results: Schema.Array(Schema.Unknown),
+  limit: Schema.Int,
+  offset: Schema.Int,
+  total: Schema.Int,
+});
+
+type DraftRequestBody = (typeof UpdateDraftPayload)["Encoded"];
+
 const createDraftRequest = (
   client: HttpClient.HttpClient,
-  body: Record<string, unknown> = {},
+  body: DraftRequestBody = {},
 ) =>
   client.execute(
     HttpClientRequest.post("/api/protected/drafts").pipe(
@@ -33,7 +42,7 @@ const createDraftRequest = (
 const updateDraftRequest = (
   client: HttpClient.HttpClient,
   draftId: string,
-  body: Record<string, unknown>,
+  body: DraftRequestBody,
 ) =>
   client.execute(
     HttpClientRequest.patch(`/api/protected/drafts/${draftId}`).pipe(
@@ -132,15 +141,13 @@ describe("drafts", () => {
       yield* createTestDraft({ id: "draft-2", userId, title: "Draft 2" });
       const response = yield* client.get("/api/protected/drafts");
 
-      const raw = (yield* response.json) as {
-        limit: number;
-        offset: number;
-        total: number;
-        results: Array<Record<string, unknown>>;
-      };
-      const body = yield* Schema.decodeEffect(DraftListResponse)(
-        raw as unknown as (typeof DraftListResponse)["Encoded"],
-      );
+      const rawJson = yield* response.json;
+
+      const raw =
+        yield* Schema.decodeUnknownEffect(RawDraftListResponse)(rawJson);
+
+      const body =
+        yield* Schema.decodeUnknownEffect(DraftListResponse)(rawJson);
 
       expect(response.status).toBe(200);
       expect(body).toMatchObject({ limit: 20, offset: 0, total: 2 });
@@ -173,12 +180,14 @@ describe("drafts", () => {
       });
 
       const first = yield* client.get("/api/protected/drafts?limit=2");
+
       const second = yield* client.get(
         "/api/protected/drafts?limit=2&offset=2",
       );
 
       const firstBody =
         yield* HttpClientResponse.schemaBodyJson(DraftListResponse)(first);
+
       const secondBody =
         yield* HttpClientResponse.schemaBodyJson(DraftListResponse)(second);
 
@@ -199,12 +208,15 @@ describe("drafts", () => {
 
       const zero = yield* client.get("/api/protected/drafts?limit=0");
       const tooBig = yield* client.get("/api/protected/drafts?limit=101");
+
       const fractionalLimit = yield* client.get(
         "/api/protected/drafts?limit=2.5",
       );
+
       const negativeOffset = yield* client.get(
         "/api/protected/drafts?offset=-1",
       );
+
       const fractionalOffset = yield* client.get(
         "/api/protected/drafts?offset=0.5",
       );
@@ -269,9 +281,11 @@ describe("drafts", () => {
       yield* createTestDraft({ id: "draft-1", userId: first.userId });
 
       const get = yield* second.client.get("/api/protected/drafts/draft-1");
+
       const update = yield* updateDraftRequest(second.client, "draft-1", {
         title: "Hijacked",
       });
+
       const remove = yield* deleteDraftRequest(second.client, "draft-1");
 
       expect([get.status, update.status, remove.status]).toStrictEqual([
@@ -331,6 +345,7 @@ describe("drafts", () => {
         coverImage: "cover.png",
         canonicalUri: "https://example.com/post",
       });
+
       const createdBody =
         yield* HttpClientResponse.schemaBodyJson(Draft)(created);
 
@@ -459,7 +474,7 @@ describe("update draft payload", () => {
 
   it("rejects null for non-nullable fields", () => {
     expect(() =>
-      Schema.decodeSync(UpdateDraftPayload)({ title: null } as never),
+      Schema.decodeUnknownSync(UpdateDraftPayload)({ title: null }),
     ).toThrow("Expected string");
   });
 });

@@ -29,6 +29,7 @@ export const betterAuthSiws = () =>
             value: nonce,
             expiresAt: new Date(Date.now() + 15 * 60 * 1000),
           });
+
           return { nonce };
         },
       ),
@@ -122,6 +123,10 @@ export const betterAuthSiws = () =>
               });
             }
 
+            // SAFETY: better-auth types the cookie payload as its own `User`;
+            // this plugin authenticates Stacks users whose Prisma record lacks
+            // the credential fields better-auth models. `setSessionCookie`
+            // serializes the session token, which is what the client consumes.
             // oxlint-disable-next-line typescript/no-explicit-any
             await setSessionCookie(ctx, { session, user: user as any });
 

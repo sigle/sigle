@@ -20,6 +20,7 @@ export const PostCollectCard = ({ post }: PostCollectCardProps) => {
     post.collectible.maxSupply > 0
       ? (post.collectible.collected / post.collectible.maxSupply) * 100
       : 0;
+
   const canCollect =
     post.collectible.maxSupply === 0 ||
     post.collectible.collected < post.collectible.maxSupply;

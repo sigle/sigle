@@ -32,6 +32,7 @@ interface ContractCallState {
 
 export function useContractCall(options: UseContractCallOptions = {}) {
   const { onSuccess, onError, onCancel } = options;
+
   const [state, setState] = useState<ContractCallState>({
     loading: false,
     error: null,
@@ -81,6 +82,7 @@ export function useContractCall(options: UseContractCallOptions = {}) {
         onSuccess?.({
           txId,
         });
+
         return Result.ok(txId);
       } catch (error) {
         const errorMessage =
@@ -93,6 +95,7 @@ export function useContractCall(options: UseContractCallOptions = {}) {
             loading: false,
           }));
           onCancel?.();
+
           return Result.err(new TransactionUserRejectedError());
         }
 
@@ -103,6 +106,7 @@ export function useContractCall(options: UseContractCallOptions = {}) {
           success: false,
         }));
         onError?.(errorMessage);
+
         return Result.err(new ContractCallError({ message: errorMessage }));
       }
     },

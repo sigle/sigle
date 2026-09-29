@@ -1,5 +1,6 @@
 import { defineRouteMeta } from "nitro";
 import { HTTPError, defineEventHandler, getQuery } from "nitro/h3";
+import { z } from "zod";
 import {
   prisma,
   SELECT_PUBLIC_POST_FIELDS,
@@ -46,14 +47,18 @@ defineRouteMeta({
 });
 
 export default defineEventHandler(async (event) => {
-  const { txId } = getQuery(event);
+  const query = z
+    .object({ txId: z.string().min(1) })
+    .safeParse(getQuery(event));
 
-  if (!txId || typeof txId !== "string") {
+  if (!query.success) {
     throw new HTTPError({
       status: 400,
       message: "txId query parameter is required",
     });
   }
+
+  const { txId } = query.data;
 
   const post = await prisma.post.findUnique({
     select: {

@@ -25,14 +25,17 @@ export const executeIndexerSetProfileJob = async (
       InvalidMetadataError: (e) => `Metadata validation failed: ${e.error}`,
       UnhandledException: (e) => `Unhandled exception: ${e.message}`,
     });
+
     consola.error("Can't process profile metadata", {
       txId: data.txId,
       uri: data.uri,
       author: data.address,
       error: message,
     });
+
     return;
   }
+
   const metadata = metadataResult.value;
 
   const {
@@ -51,6 +54,7 @@ export const executeIndexerSetProfileJob = async (
       id: data.address,
     },
   });
+
   if (!user) {
     await prisma.user.create({
       data: {

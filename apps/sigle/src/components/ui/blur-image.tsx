@@ -22,14 +22,17 @@ export function BlurImage({
     canvas.width = 32;
     canvas.height = 32;
     const ctx = canvas.getContext("2d");
+
     if (ctx) {
       ctx.putImageData(
         new ImageData(new Uint8ClampedArray(pixels), 32, 32),
         0,
         0,
       );
+
       return canvas.toDataURL();
     }
+
     return undefined;
   }, [blurhash]);
 
