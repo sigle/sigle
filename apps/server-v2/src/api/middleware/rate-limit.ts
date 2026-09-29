@@ -60,13 +60,16 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
     return (httpEffect, { endpoint }) =>
       Effect.gen(function* () {
         const request = yield* HttpServerRequest.HttpServerRequest;
+
         const user = Option.getOrUndefined(
           yield* Effect.serviceOption(CurrentUser),
         );
+
         const policy =
           Option.getOrUndefined(
             Context.getOption(endpoint.annotations, RateLimitPolicy),
           ) ?? "default";
+
         const { points, windowMs } = RATE_LIMITS[policy];
 
         const result = yield* limiter

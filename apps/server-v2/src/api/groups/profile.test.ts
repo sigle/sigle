@@ -24,6 +24,7 @@ const UploadProfileMetadataResponse = Schema.Struct({
   cid: Schema.String,
   gatewayUrl: Schema.String,
 });
+
 const ErrorResponse = Schema.Struct({ message: Schema.String });
 
 const validMetadata = {
@@ -34,9 +35,14 @@ const validMetadata = {
   },
 };
 
+interface ProfileMetadataInput {
+  readonly $schema?: string;
+  readonly content?: { readonly id?: string };
+}
+
 const uploadProfileMetadataRequest = (
   client: HttpClient.HttpClient,
-  metadata: unknown,
+  metadata: ProfileMetadataInput | undefined,
 ) =>
   client.execute(
     HttpClientRequest.post("/api/protected/user/profile/upload-metadata").pipe(
@@ -102,6 +108,7 @@ describe("profile", () => {
       );
 
       const first = responses[0];
+
       const limit =
         first === undefined
           ? undefined
@@ -129,6 +136,7 @@ describe("profile", () => {
         () => uploadProfileMetadataRequest(first.client, validMetadata),
         { concurrency: 1 },
       );
+
       const secondResponse = yield* uploadProfileMetadataRequest(
         second.client,
         validMetadata,

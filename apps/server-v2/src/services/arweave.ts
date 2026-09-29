@@ -3,7 +3,7 @@ import { Context, Data, Effect, Layer, Redacted } from "effect";
 import { CID } from "multiformats/cid";
 import { code } from "multiformats/codecs/raw";
 import { sha256 } from "multiformats/hashes/sha2";
-import { AppConfig } from "@/config";
+import { AppConfig, type AppConfigValues } from "@/config";
 
 export type ArweaveContentType = "application/json";
 
@@ -25,6 +25,14 @@ export interface ArweaveUploadResult {
   readonly gatewayUrl: string;
 }
 
+/** Minimal Arweave upload port, implemented by the turbo client in production. */
+export interface ArweaveUploader {
+  readonly uploadFile: (options: {
+    readonly file: Buffer;
+    readonly tags: ReadonlyArray<ArweaveTag>;
+  }) => Promise<{ readonly id: string }>;
+}
+
 export class ArweaveUploadError extends Data.TaggedError("ArweaveUploadError")<{
   readonly cause: unknown;
   readonly message: string;
@@ -38,66 +46,72 @@ export interface ArweaveClient {
 
 const createCIDv1FromBuffer = async (buffer: Uint8Array): Promise<string> => {
   const hash = await sha256.digest(buffer);
+
   return CID.create(1, code, hash).toString();
 };
 
-export const makeArweaveService = Effect.gen(function* () {
-  const config = yield* AppConfig;
-  const gatewayUrl = config.ARWEAVE_GATEWAY_URL.replace(/\/+$/, "");
+const makeTurboUploader = (config: AppConfigValues): ArweaveUploader => {
   const turbo = TurboFactory.authenticated({
     privateKey: Redacted.value(config.ARWEAVE_PRIVATE_KEY),
     token: "solana",
   });
 
   return {
-    uploadFile: ({ file, contentType, tags = [] }: ArweaveUploadOptions) =>
-      Effect.gen(function* () {
-        const data = Buffer.from(file);
-        const cid = yield* Effect.promise(() => createCIDv1FromBuffer(data));
-
-        const arweaveTags: ReadonlyArray<ArweaveTag> = [
-          { name: "Content-Type", value: contentType },
-          { name: "App-Name", value: config.APP_ID },
-          { name: "IPFS-CID", value: cid },
-          ...tags,
-        ];
-
-        const { id } = yield* Effect.tryPromise({
-          try: async () => {
-            const upload = await turbo.uploadFile({
-              fileStreamFactory: () => data,
-              fileSizeFactory: () => data.byteLength,
-              dataItemOpts: {
-                tags: [...arweaveTags],
-              },
-            });
-
-            return { id: upload.id };
-          },
-          catch: (cause) =>
-            new ArweaveUploadError({
-              cause,
-              message: cause instanceof Error ? cause.message : String(cause),
-            }),
-        }).pipe(
-          Effect.tapError((error) =>
-            Effect.logError("Failed to upload to Arweave", {
-              cause: error.cause,
-              contentType,
-              tags: arweaveTags,
-            }),
-          ),
-        );
-
-        return {
-          id,
-          cid,
-          uri: `ar://${id}`,
-          gatewayUrl: `${gatewayUrl}/${id}`,
-        };
+    uploadFile: ({ file, tags }) =>
+      turbo.uploadFile({
+        fileStreamFactory: () => file,
+        fileSizeFactory: () => file.byteLength,
+        dataItemOpts: {
+          tags: [...tags],
+        },
       }),
-  } satisfies ArweaveClient;
-});
+  };
+};
+
+export const makeArweaveService = (uploader: ArweaveUploader) =>
+  Effect.gen(function* () {
+    const config = yield* AppConfig;
+    const gatewayUrl = config.ARWEAVE_GATEWAY_URL.replace(/\/+$/, "");
+
+    return {
+      uploadFile: ({ file, contentType, tags = [] }: ArweaveUploadOptions) =>
+        Effect.gen(function* () {
+          const data = Buffer.from(file);
+          const cid = yield* Effect.promise(() => createCIDv1FromBuffer(data));
+
+          const arweaveTags: ReadonlyArray<ArweaveTag> = [
+            { name: "Content-Type", value: contentType },
+            { name: "App-Name", value: config.APP_ID },
+            { name: "IPFS-CID", value: cid },
+            ...tags,
+          ];
+
+          const { id } = yield* Effect.tryPromise({
+            try: () => uploader.uploadFile({ file: data, tags: arweaveTags }),
+            catch: (cause) =>
+              new ArweaveUploadError({
+                cause,
+                message: cause instanceof Error ? cause.message : String(cause),
+              }),
+          }).pipe(
+            Effect.tapError((error) =>
+              Effect.logError("Failed to upload to Arweave", {
+                cause: error.cause,
+                contentType,
+                tags: arweaveTags,
+              }),
+            ),
+          );
+
+          return {
+            id,
+            cid,
+            uri: `ar://${id}`,
+            gatewayUrl: `${gatewayUrl}/${id}`,
+          };
+        }),
+    } satisfies ArweaveClient;
+  });
 
 export const ARWEAVE_TEST_UPLOAD_ID = "arweave-test-upload-id";
 
@@ -113,7 +127,14 @@ export class ArweaveService extends Context.Service<
   ArweaveClient
 >()("sigle/ArweaveService") {
   static readonly layer: Layer.Layer<ArweaveService, never, AppConfig> =
-    Layer.effect(ArweaveService, makeArweaveService);
+    Layer.effect(
+      ArweaveService,
+      Effect.gen(function* () {
+        const config = yield* AppConfig;
+
+        return yield* makeArweaveService(makeTurboUploader(config));
+      }),
+    );
 
   static readonly layerTest = (
     uploads: Array<ArweaveUploadOptions> = [],
