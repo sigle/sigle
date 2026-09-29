@@ -1,4 +1,4 @@
-import { Config, Context, Layer, Option, Redacted, Schema } from "effect";
+import { Config, Context, Layer, Option, Redacted } from "effect";
 
 const OptionalNonEmptyString = (
   name: string,
@@ -15,9 +15,6 @@ const OptionalNonEmptyRedacted = (
 ): Config.Config<Option.Option<Redacted.Redacted>> =>
   OptionalNonEmptyString(name).pipe(Config.map(Option.map(Redacted.make)));
 
-const PositiveInt = (name: string): Config.Config<number> =>
-  Config.schema(Schema.Int.check(Schema.isGreaterThan(0)), name);
-
 export const appConfig = Config.all({
   NODE_ENV: Config.Literals(
     ["production", "development", "test"],
@@ -32,6 +29,14 @@ export const appConfig = Config.all({
   APP_ID: Config.NonEmptyString("APP_ID"),
   APP_URL: Config.NonEmptyString("APP_URL"),
   API_URL: Config.NonEmptyString("API_URL"),
+  // Private key used to send transactions on Arweave
+  ARWEAVE_PRIVATE_KEY: Config.NonEmptyString("ARWEAVE_PRIVATE_KEY").pipe(
+    Config.map(Redacted.make),
+  ),
+  // The gateway URL to use when serving files stored on Arweave
+  ARWEAVE_GATEWAY_URL: Config.NonEmptyString("ARWEAVE_GATEWAY_URL").pipe(
+    Config.withDefault("https://turbo-gateway.com"),
+  ),
   DATABASE_KIND: Config.Literals(["postgres", "pglite"], "DATABASE_KIND"),
   DATABASE_URL: Config.NonEmptyString("DATABASE_URL").pipe(
     Config.map(Redacted.make),
@@ -39,12 +44,6 @@ export const appConfig = Config.all({
   SENTRY_DSN: OptionalNonEmptyString("SENTRY_DSN"),
   POSTHOG_API_KEY: OptionalNonEmptyRedacted("POSTHOG_API_KEY"),
   POSTHOG_API_HOST: OptionalNonEmptyString("POSTHOG_API_HOST"),
-  RATE_LIMIT_POINTS: PositiveInt("RATE_LIMIT_POINTS").pipe(
-    Config.withDefault(60),
-  ),
-  RATE_LIMIT_WINDOW_MS: PositiveInt("RATE_LIMIT_WINDOW_MS").pipe(
-    Config.withDefault(60_000),
-  ),
 });
 
 export type AppConfigValues = Config.Success<typeof appConfig>;
@@ -58,13 +57,13 @@ export const defaultTestConfig: AppConfigValues = {
   APP_ID: "sigle-test",
   APP_URL: "http://localhost:3000",
   API_URL: "http://localhost:3001",
+  ARWEAVE_PRIVATE_KEY: Redacted.make("sigle-test-arweave-private-key"),
+  ARWEAVE_GATEWAY_URL: "https://turbo-gateway.com",
   DATABASE_KIND: "pglite",
   DATABASE_URL: Redacted.make("memory://"),
   SENTRY_DSN: Option.none(),
   POSTHOG_API_KEY: Option.none(),
   POSTHOG_API_HOST: Option.none(),
-  RATE_LIMIT_POINTS: 60,
-  RATE_LIMIT_WINDOW_MS: 60_000,
 };
 
 export class AppConfig extends Context.Service<AppConfig, AppConfigValues>()(
