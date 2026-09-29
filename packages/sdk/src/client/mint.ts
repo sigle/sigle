@@ -39,6 +39,7 @@ export const mint = async ({
 }): Promise<MintReturn> => {
   const sBTCAsset = config[networkName].sBTCAsset;
   const [contractAddress, contractName] = params.contract.split(".");
+
   const minterData = await fetchCallReadOnlyFunction({
     contractAddress,
     contractName,
@@ -51,10 +52,12 @@ export const mint = async ({
   if (!(minterData.type === "ok" && minterData.value.type === "contract")) {
     throw new Error("Invalid minter data");
   }
+
   const minterContract = minterData.value.value;
   const [minterContractAddress, minterContractName] = minterContract.split(".");
 
   const totalFixedMintFee = fixedMintFee.total * BigInt(params.amount);
+
   const totalPrice =
     BigInt(params.price) * BigInt(params.amount) + totalFixedMintFee;
 

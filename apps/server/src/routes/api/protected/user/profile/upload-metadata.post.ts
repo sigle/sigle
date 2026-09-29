@@ -62,6 +62,7 @@ export default defineEventHandler(async (event) => {
   const parsedMetadata = ProfileMetadataSchema.safeParse(
     body ? body.metadata : {},
   );
+
   if (!parsedMetadata.success) {
     throw new HTTPError({
       status: 400,

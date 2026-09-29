@@ -21,6 +21,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     command: ({ editor, range }) => {
       if (!range) {
         editor.chain().focus().setParagraph().run();
+
         return;
       }
 
@@ -36,6 +37,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     command: ({ editor, range }) => {
       if (!range) {
         editor.chain().focus().toggleHeading({ level: 2 }).run();
+
         return;
       }
 
@@ -56,6 +58,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     command: ({ editor, range }) => {
       if (!range) {
         editor.chain().focus().toggleHeading({ level: 3 }).run();
+
         return;
       }
 
@@ -80,8 +83,10 @@ export const slashCommands: SlashCommandsCommand[] = [
       input.onchange = async (e) => {
         // oxlint-disable-next-line typescript/no-explicit-any
         const file: File | undefined = (e.target as any)?.files?.[0];
+
         if (!file) return;
         const [mime] = file.type.split("/");
+
         if (mime !== "image") return;
 
         if (!range) {
@@ -92,8 +97,10 @@ export const slashCommands: SlashCommandsCommand[] = [
               file,
             })
             .run();
+
           return;
         }
+
         editor
           .chain()
           .focus()
@@ -116,8 +123,10 @@ export const slashCommands: SlashCommandsCommand[] = [
     command: ({ editor, range }) => {
       if (!range) {
         editor.chain().focus().toggleBulletList().run();
+
         return;
       }
+
       editor
         .chain()
         .focus()
@@ -135,6 +144,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     command: ({ editor, range }) => {
       if (!range) {
         editor.chain().focus().toggleOrderedList().run();
+
         return;
       }
 
@@ -155,6 +165,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     command: ({ editor, range }) => {
       if (!range) {
         editor.chain().focus().toggleBlockquote().run();
+
         return;
       }
 
@@ -174,9 +185,11 @@ export const slashCommands: SlashCommandsCommand[] = [
     section: "basic",
     command: ({ editor, range }) => {
       let chainCommands = editor.chain().focus();
+
       if (range) {
         chainCommands = chainCommands.deleteRange(range);
       }
+
       chainCommands.setHorizontalRule().createParagraphNear().run();
     },
   },
@@ -188,6 +201,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     command: ({ editor, range }) => {
       if (!range) {
         editor.chain().focus().setCodeBlock().run();
+
         return;
       }
 
@@ -202,6 +216,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     command: ({ editor, range }) => {
       if (!range) {
         editor.commands.setEmbed("twitter");
+
         return;
       }
 
@@ -223,8 +238,10 @@ export const slashCommands: SlashCommandsCommand[] = [
     command: ({ editor, range }) => {
       if (!range) {
         editor.commands.setEmbed("video");
+
         return;
       }
+
       editor
         .chain()
         .focus()

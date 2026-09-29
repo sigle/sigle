@@ -38,6 +38,7 @@ describe("sync-arweave-l1-tx-ids", () => {
     if (testDb) {
       await testDb.cleanup();
     }
+
     vi.clearAllMocks();
   });
 
@@ -45,6 +46,7 @@ describe("sync-arweave-l1-tx-ids", () => {
     if (testDb) {
       await testDb.close();
     }
+
     vi.unstubAllGlobals();
   });
 
@@ -85,12 +87,14 @@ describe("sync-arweave-l1-tx-ids", () => {
           ),
         ),
       );
+
       vi.stubGlobal("fetch", mockFetch);
 
       const result = await fetchArweaveL1TxIds([
         "arweave-tx-1",
         "arweave-tx-2",
       ]);
+
       expect(result.unwrap()).toStrictEqual({
         "arweave-tx-1": "l1-tx-1",
       });
@@ -131,6 +135,7 @@ describe("sync-arweave-l1-tx-ids", () => {
           ),
         ),
       );
+
       vi.stubGlobal("fetch", mockFetch);
 
       await executeIndexerSyncArweaveL1TxIdsJob({});
@@ -138,11 +143,13 @@ describe("sync-arweave-l1-tx-ids", () => {
       const updatedPost = await testDb?.db.post.findUnique({
         where: { id: post1.id },
       });
+
       expect(updatedPost?.arweaveL1TxId).toBe("l1-bundle-tx-1");
 
       const updatedRevision = await testDb?.db.postRevision.findFirst({
         where: { postId: post1.id, txId: "tx-arweave-1" },
       });
+
       expect(updatedRevision?.arweaveL1TxId).toBe("l1-bundle-tx-1");
     });
 
@@ -176,6 +183,7 @@ describe("sync-arweave-l1-tx-ids", () => {
       await createTestUser({ id: userId });
 
       const postCreates = [];
+
       for (let i = 0; i < 100; i++) {
         postCreates.push({
           id: `unmapped-post-${i}`,
@@ -189,6 +197,7 @@ describe("sync-arweave-l1-tx-ids", () => {
           userId,
         });
       }
+
       await testDb?.db.post.createMany({ data: postCreates });
 
       const hostPost = await createTestPost({
@@ -196,6 +205,7 @@ describe("sync-arweave-l1-tx-ids", () => {
         txId: "host-post-tx",
         userId,
       });
+
       await testDb?.db.post.update({
         where: { id: hostPost.id },
         data: { arweaveL1TxId: "host-l1-id" },
@@ -236,6 +246,7 @@ describe("sync-arweave-l1-tx-ids", () => {
           ),
         );
       });
+
       vi.stubGlobal("fetch", mockFetch);
 
       await executeIndexerSyncArweaveL1TxIdsJob({});
@@ -243,6 +254,7 @@ describe("sync-arweave-l1-tx-ids", () => {
       const updatedRevision = await testDb?.db.postRevision.findFirst({
         where: { txId: revisionTxId },
       });
+
       expect(updatedRevision?.arweaveL1TxId).toBe("l1-revision-tx-1");
     });
   });

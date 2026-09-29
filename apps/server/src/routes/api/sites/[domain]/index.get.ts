@@ -62,6 +62,7 @@ defineRouteMeta({
 
 export default defineEventHandler(async (event) => {
   const domain = getRouterParam(event, "domain");
+
   if (!domain) {
     throw new HTTPError({
       status: 400,
@@ -70,6 +71,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const site = sites[decodeURIComponent(domain)];
+
   if (!site) {
     throw new HTTPError({
       status: 404,
@@ -83,6 +85,7 @@ export default defineEventHandler(async (event) => {
       id: site.address,
     },
   });
+
   if (!user) {
     throw new HTTPError({
       status: 404,

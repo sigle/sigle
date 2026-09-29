@@ -20,12 +20,14 @@ const mockGetRouterParam = vi.fn((event: unknown, name: string) => {
   if (name === "postId") {
     return (event as { postId?: string }).postId ?? undefined;
   }
+
   return undefined;
 });
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro/h3")>(import("nitro/h3"), async () => {
   const actual = await vi.importActual("nitro/h3");
+
   return {
     ...actual,
     getRouterParam: mockGetRouterParam,
@@ -54,6 +56,7 @@ describe("api/posts/[postId]/index.get", () => {
 
   it("returns post by id", async () => {
     const user = await createTestUser({ id: userId });
+
     const post = await createTestPost({
       id: "post-1",
       userId: user.id,
@@ -108,6 +111,7 @@ describe("api/posts/[postId]/index.get", () => {
 
   it("returns collectors count", async () => {
     const user = await createTestUser({ id: userId });
+
     const post = await createTestPost({
       id: "post-1",
       userId: user.id,

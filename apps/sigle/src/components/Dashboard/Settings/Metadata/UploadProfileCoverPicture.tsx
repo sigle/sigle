@@ -20,6 +20,7 @@ export const UploadProfileCoverPicture = ({
   setPicture,
 }: UploadProfileCoverPictureProps) => {
   const posthog = usePostHog();
+
   const { mutate: uploadImage, isPending: loadingUploadImage } =
     sigleApiClient.useMutation(
       "post",
@@ -29,7 +30,9 @@ export const UploadProfileCoverPicture = ({
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
+
       if (!file) return;
+
       if (loadingUploadImage) return;
       posthog.capture("profile_cover_image_upload_start", {});
 

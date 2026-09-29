@@ -6,6 +6,7 @@ import React from "react";
 const debounce = (func: any, wait = 200) => {
   // oxlint-disable-next-line init-declarations timeout will be initialized later
   let timeout: NodeJS.Timeout; // for the setTimeout function and so it can be cleared
+
   // oxlint-disable-next-line typescript/no-explicit-any any is fine
   function executedFunction(...args: any) {
     // the function returned from debounce
@@ -14,13 +15,16 @@ const debounce = (func: any, wait = 200) => {
       clearTimeout(timeout); // clears the timeout when the function is called
       func(...args); // calls the function
     };
+
     clearTimeout(timeout); // this clears the timeout each time the function is run again preventing later from running until we stop calling the function
     timeout = setTimeout(later, wait); // this sets the time out to run after the wait period
   }
+
   executedFunction.cancel = () => {
     // so can be cancelled
     clearTimeout(timeout); // clears the timeout
   };
+
   return executedFunction;
 };
 
@@ -39,6 +43,7 @@ export function useDebouncedCallback(
     ...deps,
     // oxlint-disable-next-line exhaustive-deps
   ]); // with the delay
+
   // clean up on unmount or dependency change
   // oxlint-disable-next-line exhaustive-deps
   React.useEffect(() => {
@@ -47,6 +52,7 @@ export function useDebouncedCallback(
     };
     // oxlint-disable-next-line exhaustive-deps
   }, [delay, ...deps]);
+
   // return the debounce function so we can use it
   return debouncedCallback;
 }

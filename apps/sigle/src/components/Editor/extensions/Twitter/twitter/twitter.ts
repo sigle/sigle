@@ -1,5 +1,6 @@
 export const TWITTER_REGEX =
   /^https?:\/\/(?:twitter\.com|x\.com)\/(?:#!\/)?(\w+)\/status(es)?\/(\d+)/;
+
 export const TWITTER_REGEX_GLOBAL =
   /^https?:\/\/(?:twitter\.com|x\.com)\/(?:#!\/)?(\w+)\/status(es)?\/(.+)?$/g;
 
@@ -10,6 +11,7 @@ export const loadTwitterWidget = async (): Promise<void> => {
   if (window.twttr) {
     return;
   }
+
   return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     script.src = WIDGET_SCRIPT_URL;
@@ -18,6 +20,7 @@ export const loadTwitterWidget = async (): Promise<void> => {
     script.onload = () => {
       resolve();
     };
+
     script.onerror = () => {
       reject();
     };

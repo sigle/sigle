@@ -77,6 +77,7 @@ export default defineEventHandler(async (event) => {
 
   const file = formData.get("file");
   const type = formData.get("type");
+
   if (!file || !(file instanceof File)) {
     throw new HTTPError({
       status: 400,
@@ -99,6 +100,7 @@ export default defineEventHandler(async (event) => {
     },
     type,
   });
+
   if (!parsedFile.success) {
     throw new HTTPError({
       status: 400,
@@ -126,6 +128,7 @@ export default defineEventHandler(async (event) => {
             userId: event.context.user.id,
           },
         });
+
   if (!draft) {
     throw new HTTPError({
       status: 404,

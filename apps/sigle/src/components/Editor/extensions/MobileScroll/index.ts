@@ -8,10 +8,15 @@ const options: {
   delay?: number;
   debugMode?: boolean;
 } = {};
+
 const DEFAULT_DELAY = 10;
+
 const DEFAULT_OFFSET_BOTTOM = 80;
+
 const DEFAULT_OFFEST_TOP = 0;
+
 const DEFAULT_SCROLL_DISTANCE = 56;
+
 let timeoutScroll: ReturnType<typeof setTimeout> | null = null;
 
 const MobileScroll = Extension.create({
@@ -47,16 +52,20 @@ const MobileScroll = Extension.create({
               if (scrollTop === -1) {
                 if (options?.debugMode)
                   console.error("The plugin could not determine scrollTop");
+
                 return;
               }
 
               const offBottom = top + offsetBottom - scrollerHeight;
+
               if (offBottom > 0) {
                 scrollTo(0, scrollTop + offBottom + scrollDistance);
+
                 return;
               }
 
               const offTop = top - offsetTop;
+
               if (offTop < 0) {
                 scrollTo(0, scrollTop + offTop - scrollDistance);
               }

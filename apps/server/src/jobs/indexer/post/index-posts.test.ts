@@ -61,6 +61,7 @@ describe("executeIndexerIndexPostsJob", () => {
     if (testDb) {
       await testDb.cleanup();
     }
+
     vi.clearAllMocks();
   });
 
@@ -370,6 +371,7 @@ describe("executeIndexerIndexPostsJob", () => {
     const firstCallBody = JSON.parse(
       mockFetch.mock.calls[0][1]?.body as string,
     );
+
     expect(firstCallBody.query).toContain("block: { min: 0 }");
     expect(firstCallBody.query).not.toContain("after:");
 
@@ -377,6 +379,7 @@ describe("executeIndexerIndexPostsJob", () => {
     const secondCallBody = JSON.parse(
       mockFetch.mock.calls[1][1]?.body as string,
     );
+
     expect([
       secondCallBody.query.includes("block: { min: 0 }"),
       secondCallBody.query.includes('after: "cursor-100"'),

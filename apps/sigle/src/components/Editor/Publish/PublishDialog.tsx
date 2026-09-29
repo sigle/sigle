@@ -40,6 +40,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   const publishOpen = useEditorStore((state) => state.publishOpen);
   const setPublishOpen = useEditorStore((state) => state.setPublishOpen);
   const [publishingLoading, setPublishingLoading] = useState(false);
+
   const { mutateAsync: uploadMetadata } = sigleApiClient.useMutation(
     "post",
     "/api/protected/drafts/{draftId}/upload-metadata",
@@ -54,6 +55,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   });
 
   const hasError = steps.some((step) => step.status === "error");
+
   const isSignaturePending =
     steps.find((s) => s.id === "signature")?.status === "pending";
 
@@ -70,6 +72,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
         // oxlint-disable-next-line init-declarations
         let metadata;
+
         try {
           metadata = await generateSigleMetadataFromForm({
             userAddress: session.user.id,
@@ -84,11 +87,14 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             postId,
             error,
           });
+
           const errorMessage =
             error instanceof Error
               ? error.message
               : "Failed to prepare post metadata";
+
           setStepError("preparing", errorMessage);
+
           return;
         }
 
@@ -102,18 +108,22 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           });
           setPublishingLoading(false);
           reset();
+
           return;
         }
 
         completeStep("preparing");
 
         let signature = "";
+
         try {
           const { signature: _, ...metadataToSign } = metadata;
           const message = JSON.stringify(metadataToSign);
+
           const response = await request("stx_signMessage", {
             message,
           });
+
           signature = response.signature;
         } catch (error) {
           console.error(error);
@@ -125,6 +135,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             "signature",
             "Wallet signature request was cancelled or failed.",
           );
+
           return;
         }
 
@@ -145,6 +156,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         })
           .then((result) => Result.ok(result))
           .catch((error) => Result.err(error));
+
         if (uploadedMetadataResult.isErr()) {
           posthog.capture("post_publish_upload_metadata_error", {
             postId,
@@ -156,6 +168,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
               ? uploadedMetadataResult.error.message
               : "Failed to upload metadata to Arweave",
           );
+
           return;
         }
 

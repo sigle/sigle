@@ -20,12 +20,14 @@ export async function generateMetadata({
       },
     },
   });
+
   if (!site) {
     notFound();
   }
 
   const title = `${site.user.profile?.displayName} | Blog`;
   const description = site.user.profile?.description;
+
   const image = site.user.profile?.pictureUri
     ? resolveImageUrl(site.user.profile.pictureUri.id)
     : undefined;
@@ -71,6 +73,7 @@ export default async function PageLayout({
       },
     },
   });
+
   if (!site) {
     notFound();
   }

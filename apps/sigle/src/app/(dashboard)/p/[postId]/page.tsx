@@ -20,6 +20,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       },
     },
   });
+
   if (!post) {
     notFound();
   }

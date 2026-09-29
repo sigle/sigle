@@ -92,8 +92,10 @@ describe("post metadata", () => {
       const result = await getMetadataFromUri("https://example.com/fail.json");
 
       expect(result.isOk()).toBe(false);
+
       const error = (result as unknown as { error: MetadataFetchFailedError })
         .error;
+
       expect(error).toBeInstanceOf(MetadataFetchFailedError);
       expect(error._tag).toBe("MetadataFetchFailedError");
       expect(error.error).toContain("Network error");
@@ -110,8 +112,10 @@ describe("post metadata", () => {
       );
 
       expect(result.isOk()).toBe(false);
+
       const error = (result as unknown as { error: MetadataFetchFailedError })
         .error;
+
       expect(error).toBeInstanceOf(MetadataFetchFailedError);
     });
 
@@ -126,8 +130,10 @@ describe("post metadata", () => {
       );
 
       expect(result.isOk()).toBe(false);
+
       const error = (result as unknown as { error: InvalidMetadataError })
         .error;
+
       expect(error).toBeInstanceOf(InvalidMetadataError);
       expect(error._tag).toBe("InvalidMetadataError");
       expect(error.error).toBeDefined();
@@ -144,8 +150,10 @@ describe("post metadata", () => {
       const result = await getMetadataFromUri("https://example.com/bad.json");
 
       expect(result.isOk()).toBe(false);
+
       const error = (result as unknown as { error: MetadataFetchFailedError })
         .error;
+
       expect(error).toBeInstanceOf(MetadataFetchFailedError);
     });
   });

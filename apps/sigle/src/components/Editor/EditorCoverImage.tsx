@@ -27,6 +27,7 @@ export const EditorCoverImage = () => {
   const [preview, setPreview] = useState<string | null>(null);
   const { setValue, watch } = useFormContext<EditorPostFormData>();
   const watchCoverImage = watch("coverImage");
+
   const { mutateAsync: uploadMedia, isPending: loadingUploadImage } =
     sigleApiClient.useMutation(
       "post",
@@ -36,7 +37,9 @@ export const EditorCoverImage = () => {
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
+
       if (!file) return;
+
       if (loadingUploadImage) return;
 
       const previewBlobUrl = URL.createObjectURL(file);

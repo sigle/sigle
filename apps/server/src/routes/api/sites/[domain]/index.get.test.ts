@@ -20,12 +20,14 @@ const mockGetRouterParam = vi.fn((event: unknown, name: string) => {
   if (name === "domain") {
     return (event as { domain?: string }).domain ?? undefined;
   }
+
   return undefined;
 });
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro/h3")>(import("nitro/h3"), async () => {
   const actual = await vi.importActual("nitro/h3");
+
   return {
     ...actual,
     getRouterParam: mockGetRouterParam,

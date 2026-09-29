@@ -75,6 +75,7 @@ export const SlashCommands = Extension.create<{
           ): VirtualElement => ({
             getBoundingClientRect: () => {
               const rect = clientRect?.();
+
               return (
                 rect ?? {
                   x: 0,
@@ -122,6 +123,7 @@ export const SlashCommands = Extension.create<{
 
               const appendTo =
                 document.getElementsByClassName("root")[0] ?? document.body;
+
               appendTo.appendChild(container);
 
               updatePosition(props.clientRect);
@@ -134,6 +136,7 @@ export const SlashCommands = Extension.create<{
               reactRenderer?.updateProps(props);
               cleanup?.();
               updatePosition(props.clientRect);
+
               if (container) {
                 const virtualEl = getVirtualElement(props.clientRect);
                 cleanup = autoUpdate(virtualEl, container, () =>
@@ -150,10 +153,12 @@ export const SlashCommands = Extension.create<{
             },
             onExit() {
               cleanup?.();
+
               if (container) {
                 container.remove();
                 container = null;
               }
+
               reactRenderer?.destroy();
             },
           };

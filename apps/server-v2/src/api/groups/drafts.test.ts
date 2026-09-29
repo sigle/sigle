@@ -138,6 +138,7 @@ describe("drafts", () => {
         total: number;
         results: Array<Record<string, unknown>>;
       };
+
       const body = yield* Schema.decodeEffect(DraftListResponse)(
         raw as unknown as (typeof DraftListResponse)["Encoded"],
       );
@@ -173,12 +174,14 @@ describe("drafts", () => {
       });
 
       const first = yield* client.get("/api/protected/drafts?limit=2");
+
       const second = yield* client.get(
         "/api/protected/drafts?limit=2&offset=2",
       );
 
       const firstBody =
         yield* HttpClientResponse.schemaBodyJson(DraftListResponse)(first);
+
       const secondBody =
         yield* HttpClientResponse.schemaBodyJson(DraftListResponse)(second);
 
@@ -199,12 +202,15 @@ describe("drafts", () => {
 
       const zero = yield* client.get("/api/protected/drafts?limit=0");
       const tooBig = yield* client.get("/api/protected/drafts?limit=101");
+
       const fractionalLimit = yield* client.get(
         "/api/protected/drafts?limit=2.5",
       );
+
       const negativeOffset = yield* client.get(
         "/api/protected/drafts?offset=-1",
       );
+
       const fractionalOffset = yield* client.get(
         "/api/protected/drafts?offset=0.5",
       );
@@ -269,9 +275,11 @@ describe("drafts", () => {
       yield* createTestDraft({ id: "draft-1", userId: first.userId });
 
       const get = yield* second.client.get("/api/protected/drafts/draft-1");
+
       const update = yield* updateDraftRequest(second.client, "draft-1", {
         title: "Hijacked",
       });
+
       const remove = yield* deleteDraftRequest(second.client, "draft-1");
 
       expect([get.status, update.status, remove.status]).toStrictEqual([
@@ -331,6 +339,7 @@ describe("drafts", () => {
         coverImage: "cover.png",
         canonicalUri: "https://example.com/post",
       });
+
       const createdBody =
         yield* HttpClientResponse.schemaBodyJson(Draft)(created);
 

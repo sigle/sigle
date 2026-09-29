@@ -28,6 +28,7 @@ vi.mock<typeof import("..")>(
 );
 
 const mockStacksApiClientGET = vi.fn();
+
 const mockGetStacksTransaction = vi.fn();
 
 // oxlint-disable-next-line consistent-type-imports
@@ -103,6 +104,7 @@ describe("executeIndexerIndexProfilesJob", () => {
       address: stringAsciiCV(address),
       uri: stringAsciiCV(uri),
     });
+
     return {
       tx_id: txId,
       event_type: "smart_contract_log" as const,
@@ -181,6 +183,7 @@ describe("executeIndexerIndexProfilesJob", () => {
       if (txId === "0xtx1") {
         return Result.ok(createSuccessTransaction(txId, 101, 1700000000));
       }
+
       return Result.ok(createSuccessTransaction(txId, 102, 1700000010));
     });
 
@@ -286,6 +289,7 @@ describe("executeIndexerIndexProfilesJob", () => {
     const invalidClarityValue = tupleCV({
       a: stringAsciiCV("unknown-action"),
     });
+
     mockStacksApiClientGET.mockResolvedValue({
       data: {
         results: [
@@ -339,6 +343,7 @@ describe("executeIndexerIndexProfilesJob", () => {
       if (txId === "0xtx1") {
         return Result.err(new Error("Transaction not found"));
       }
+
       return Result.ok(createSuccessTransaction(txId, 102, 1700000010));
     });
 
@@ -379,6 +384,7 @@ describe("executeIndexerIndexProfilesJob", () => {
           tx_status: "abort_by_response",
         });
       }
+
       return Result.ok(createSuccessTransaction(txId, 102, 1700000010));
     });
 
@@ -413,6 +419,7 @@ describe("executeIndexerIndexProfilesJob", () => {
         `https://example.com/profile-${i}`,
       ),
     );
+
     const eventsPage2 = [
       createSetProfileEvent("0xtx50", userId, "https://example.com/profile-50"),
       createSetProfileEvent("0xtx51", userId, "https://example.com/profile-51"),
@@ -479,10 +486,12 @@ describe("executeIndexerIndexProfilesJob", () => {
         "0xtx1": 100,
         "0xtx2": 101,
       };
+
       const timestamps: Record<string, number> = {
         "0xtx1": 1700000000,
         "0xtx2": 1700000010,
       };
+
       return Result.ok(
         createSuccessTransaction(txId, heights[txId], timestamps[txId]),
       );
@@ -525,6 +534,7 @@ describe("executeIndexerIndexProfilesJob", () => {
         `https://example.com/profile-${i}`,
       ),
     );
+
     const eventsPage2 = Array.from({ length: 50 }, (_, i) =>
       createSetProfileEvent(
         `0xtx${50 + i}`,
@@ -532,6 +542,7 @@ describe("executeIndexerIndexProfilesJob", () => {
         `https://example.com/profile-${50 + i}`,
       ),
     );
+
     const eventsPage3 = [
       createSetProfileEvent(
         "0xtx100",
@@ -558,6 +569,7 @@ describe("executeIndexerIndexProfilesJob", () => {
     const offsets = mockStacksApiClientGET.mock.calls.map(
       (call) => call[1]?.params?.query?.offset,
     );
+
     expect(offsets).toStrictEqual([0, 50, 100]);
   });
 });

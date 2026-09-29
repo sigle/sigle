@@ -52,6 +52,7 @@ const TooltipContent = React.forwardRef<
     </TooltipPrimitive.Portal>
   ),
 );
+
 TooltipContent.displayName = "TooltipContent";
 
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider };

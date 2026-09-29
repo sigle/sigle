@@ -92,9 +92,11 @@ for (const routeConfig of routeConfigs) {
 // Helper function to get client identifier
 function getClientIdentifier(event: H3Event): string {
   const userId = event.context.user?.id;
+
   if (userId) return `user_${userId}`;
 
   const ip = getRequestIP(event, { xForwardedFor: true }) || "unknown";
+
   return `ip_${ip}`;
 }
 

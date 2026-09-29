@@ -97,6 +97,7 @@ export default defineEventHandler(async (event) => {
   const where = {
     userId: query.username,
   };
+
   const [postsList, total] = await Promise.all([
     prisma.post.findMany({
       select: {

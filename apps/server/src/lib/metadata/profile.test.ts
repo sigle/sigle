@@ -50,8 +50,10 @@ describe("profile metadata", () => {
       );
 
       expect(result.isOk()).toBe(false);
+
       const error = (result as unknown as { error: MetadataFetchFailedError })
         .error;
+
       expect(error).toBeInstanceOf(MetadataFetchFailedError);
       expect(error._tag).toBe("MetadataFetchFailedError");
       expect(error.error).toContain("Network error");
@@ -68,8 +70,10 @@ describe("profile metadata", () => {
       );
 
       expect(result.isOk()).toBe(false);
+
       const error = (result as unknown as { error: MetadataFetchFailedError })
         .error;
+
       expect(error).toBeInstanceOf(MetadataFetchFailedError);
     });
 
@@ -84,8 +88,10 @@ describe("profile metadata", () => {
       );
 
       expect(result.isOk()).toBe(false);
+
       const error = (result as unknown as { error: InvalidMetadataError })
         .error;
+
       expect(error).toBeInstanceOf(InvalidMetadataError);
       expect(error._tag).toBe("InvalidMetadataError");
       expect(error.error).toBeDefined();
@@ -104,8 +110,10 @@ describe("profile metadata", () => {
       );
 
       expect(result.isOk()).toBe(false);
+
       const error = (result as unknown as { error: MetadataFetchFailedError })
         .error;
+
       expect(error).toBeInstanceOf(MetadataFetchFailedError);
     });
 
@@ -123,8 +131,10 @@ describe("profile metadata", () => {
       );
 
       expect(result.isOk()).toBe(false);
+
       const error = (result as unknown as { error: InvalidMetadataError })
         .error;
+
       expect(error).toBeInstanceOf(InvalidMetadataError);
       expect(error._tag).toBe("InvalidMetadataError");
     });
@@ -172,8 +182,10 @@ describe("profile metadata", () => {
       );
 
       expect(result.isOk()).toBe(false);
+
       const error = (result as unknown as { error: InvalidMetadataError })
         .error;
+
       expect(error).toBeInstanceOf(InvalidMetadataError);
     });
   });

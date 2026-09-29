@@ -31,14 +31,17 @@ export const executePublishPostJob = async (
         `Metadata signature validation failed: ${e.error}`,
       UnhandledException: (e) => `Unhandled exception: ${e.message}`,
     });
+
     consola.error("Can't process metadata", {
       txId: data.txId,
       uri: data.uri,
       author: data.author,
       error: message,
     });
+
     return;
   }
+
   const metadata = metadataResult.value;
 
   const existingPostWithSignature = await prisma.post.findUnique({
@@ -50,6 +53,7 @@ export const executePublishPostJob = async (
       signature: metadata.signature,
     },
   });
+
   if (
     existingPostWithSignature &&
     existingPostWithSignature.txId !== data.txId
@@ -62,6 +66,7 @@ export const executePublishPostJob = async (
         signature: metadata.signature,
       },
     );
+
     return;
   }
 
@@ -70,6 +75,7 @@ export const executePublishPostJob = async (
 
   await prisma.$transaction(async (tx) => {
     const userId = data.author;
+
     const post = await tx.post.findUnique({
       select: {
         id: true,
@@ -90,6 +96,7 @@ export const executePublishPostJob = async (
         id: userId,
       },
     });
+
     if (!user) {
       await tx.user.create({
         data: {

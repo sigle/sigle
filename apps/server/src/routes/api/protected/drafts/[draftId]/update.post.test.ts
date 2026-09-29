@@ -28,12 +28,14 @@ const mockGetRouterParam = vi.fn((event: unknown, name: string) => {
   if (name === "draftId") {
     return (event as { draftId?: string }).draftId ?? undefined;
   }
+
   return undefined;
 });
 
 // oxlint-disable-next-line consistent-type-imports
 vi.mock<typeof import("nitro/h3")>(import("nitro/h3"), async () => {
   const actual = await vi.importActual("nitro/h3");
+
   return {
     ...actual,
     getRouterParam: mockGetRouterParam,
@@ -96,6 +98,7 @@ describe("api/protected/drafts/[draftId]/update.post", () => {
     const updatedDraft = await testDb.db.draft.findUnique({
       where: { id: "draft-1" },
     });
+
     expect(updatedDraft).toMatchObject({
       title: "New Title",
       content: "New Content",

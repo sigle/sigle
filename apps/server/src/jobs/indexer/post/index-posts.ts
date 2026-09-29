@@ -52,6 +52,7 @@ export async function fetchArweavePostTransactions({
   afterCursor?: string;
 }): Promise<Result<ArweavePostEdge[], FetchArweaveTransactionsFailedError>> {
   const afterParam = afterCursor ? `, after: "${afterCursor}"` : "";
+
   const query = `
     query {
       transactions(
@@ -99,21 +100,25 @@ export async function fetchArweavePostTransactions({
       }
 
       const result = (await response.json()) as GraphQLResponse;
+
       if (result.errors && result.errors.length > 0) {
         throw new Error(
           `GraphQL error: ${result.errors.map((e) => e.message).join(", ")}`,
         );
       }
+
       if (!result.data?.transactions?.edges) {
         throw new Error(
           "Invalid GraphQL response: transactions.edges is missing",
         );
       }
+
       return result.data.transactions.edges;
     },
     catch: (error) => {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
+
       return new FetchArweaveTransactionsFailedError({ error: errorMessage });
     },
   });
@@ -195,6 +200,7 @@ export const executeIndexerIndexPostsJob = async (
 
       const uri = `ar://${txId}`;
       const metadataResult = await getMetadataFromUri(uri);
+
       if (metadataResult.isErr()) {
         consola.error("Failed to fetch/validate metadata for transaction", {
           txId,
@@ -205,6 +211,7 @@ export const executeIndexerIndexPostsJob = async (
       }
 
       const metadata = metadataResult.value;
+
       const signatureExists = await prisma.post.findUnique({
         select: {
           id: true,
@@ -226,6 +233,7 @@ export const executeIndexerIndexPostsJob = async (
       }
 
       const blockHeight = edge.node.block ? edge.node.block.height : 0;
+
       const createdAt = edge.node.block
         ? new Date(edge.node.block.timestamp * 1000)
         : new Date();
@@ -251,6 +259,7 @@ export const executeIndexerIndexPostsJob = async (
     }
 
     const minedEdges = edges.filter((e) => e.node.block);
+
     if (minedEdges.length > 0) {
       maxBlockHeightSeen = Math.max(
         maxBlockHeightSeen,
@@ -262,9 +271,11 @@ export const executeIndexerIndexPostsJob = async (
   const returnData = {
     toProcess,
   };
+
   consola.info("Index posts job complete", {
     ...returnData,
     maxBlockHeightSeen,
   });
+
   return returnData;
 };

@@ -18,8 +18,11 @@ import {
 // Consistent test private key (valid 32-byte hex + compressed byte)
 const TEST_PRIVATE_KEY =
   "7287ba251d44a4d3fd9276c88ce3476c5aa9c784807a54ec29d5fa0605340d0f01";
+
 const TEST_PUBLIC_KEY = privateKeyToPublic(TEST_PRIVATE_KEY) as string;
+
 const EXPECTED_MAINNET_ADDRESS = publicKeyToAddress(TEST_PUBLIC_KEY, "mainnet");
+
 const EXPECTED_TESTNET_ADDRESS = publicKeyToAddress(TEST_PUBLIC_KEY, "testnet");
 
 function createSignedPostMetadata(
@@ -37,6 +40,7 @@ function createSignedPostMetadata(
 
   const message = JSON.stringify(metadataWithoutSignature);
   const messageHash = bytesToHex(hashMessage(message));
+
   const signature = signMessageHashRsv({
     messageHash,
     privateKey: TEST_PRIVATE_KEY,
@@ -55,8 +59,10 @@ describe(verifyPostSignature, () => {
     const result = verifyPostSignature(signedMetadata);
 
     expect(result.isOk()).toBe(true);
+
     const value = (result as unknown as { value: VerifyPostSignatureResult })
       .value;
+
     expect(value).toStrictEqual<VerifyPostSignatureResult>({
       recoveredAddress: EXPECTED_MAINNET_ADDRESS,
       publicKey: TEST_PUBLIC_KEY,
@@ -70,8 +76,10 @@ describe(verifyPostSignature, () => {
     const result = verifyPostSignature(signedMetadata, { network: "testnet" });
 
     expect(result.isOk()).toBe(true);
+
     const value = (result as unknown as { value: VerifyPostSignatureResult })
       .value;
+
     expect(value.recoveredAddress).toBe(EXPECTED_TESTNET_ADDRESS);
   });
 
@@ -81,8 +89,10 @@ describe(verifyPostSignature, () => {
     const result = verifyPostSignature(signedMetadata, { network: "devnet" });
 
     expect(result.isOk()).toBe(true);
+
     const value = (result as unknown as { value: VerifyPostSignatureResult })
       .value;
+
     expect(value.recoveredAddress).toBe(EXPECTED_TESTNET_ADDRESS);
   });
 
@@ -92,8 +102,10 @@ describe(verifyPostSignature, () => {
     const result = verifyPostSignature(signedMetadata, { network: "mocknet" });
 
     expect(result.isOk()).toBe(true);
+
     const value = (result as unknown as { value: VerifyPostSignatureResult })
       .value;
+
     expect(value.recoveredAddress).toBe(EXPECTED_TESTNET_ADDRESS);
   });
 
@@ -131,8 +143,10 @@ describe(verifyPostSignature, () => {
     const result = verifyPostSignature(tamperedMetadata);
 
     expect(result.isOk()).toBe(true);
+
     const value = (result as unknown as { value: VerifyPostSignatureResult })
       .value;
+
     expect(value.recoveredAddress).not.toBe(EXPECTED_MAINNET_ADDRESS);
   });
 
@@ -169,6 +183,7 @@ describe(verifyPostSignature, () => {
     const formatted = matchError(err, {
       InvalidSignatureError: (e) => `Handled: ${e.message}`,
     });
+
     expect(formatted).toBe("Handled: Invalid signature: Signature is required");
   });
 });

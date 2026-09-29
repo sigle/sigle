@@ -20,6 +20,7 @@ export async function getProfileMetadataFromUri(
   }
 
   const profileMetadata = ProfileMetadataSchema.safeParse(fetchResult.value);
+
   if (!profileMetadata.success) {
     return Result.err(
       new InvalidMetadataError({
@@ -27,6 +28,7 @@ export async function getProfileMetadataFromUri(
       }),
     );
   }
+
   const postData = profileMetadata.data;
 
   return Result.ok(postData);

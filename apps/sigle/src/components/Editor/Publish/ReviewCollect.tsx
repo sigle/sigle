@@ -17,6 +17,7 @@ export const PublishReviewCollect = () => {
     data.collect.collectLimit.limit
       ? data.collect.collectLimit.limit
       : undefined;
+
   const isCollectEnabled = false;
 
   const openCollectSettings = () => {

@@ -68,6 +68,7 @@ export function useMultiStep<T extends string>(
       ...step,
       status: "success" as const,
     }));
+
     setSteps(allCompleteSteps);
   };
 

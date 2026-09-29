@@ -28,6 +28,7 @@ export const executeIndexerMintEnabledJob = async (
       },
     },
   });
+
   const updatedPost = updatedCollectible.post;
 
   consola.info("post.mintEnabled", {

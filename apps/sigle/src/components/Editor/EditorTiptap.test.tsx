@@ -61,6 +61,7 @@ const getMarkdownOutput = (): string => {
   const store = useEditorStore.getState();
   const editor = store.editor;
   expect(editor).toBeDefined();
+
   return editor?.getMarkdown() ?? "";
 };
 
@@ -780,8 +781,10 @@ describe("editor tiptap - embeds", () => {
     await waitForEditor();
     const editor = useEditorStore.getState().editor;
     expect(editor).toBeDefined();
+
     const original =
       "[https://twitter.com/user/status/1234567890](https://twitter.com/user/status/1234567890)";
+
     editor?.commands.setContent(original, { contentType: "markdown" });
     const exported = editor?.getMarkdown();
     expect(exported).toBe(original);
@@ -796,8 +799,10 @@ describe("editor tiptap - embeds", () => {
     await waitForEditor();
     const editor = useEditorStore.getState().editor;
     expect(editor).toBeDefined();
+
     const original =
       "[https://youtube.com/watch?v=abc123](https://youtube.com/watch?v=abc123)";
+
     editor?.commands.setContent(original, { contentType: "markdown" });
     const exported = editor?.getMarkdown();
     expect(exported).toBe(original);

@@ -136,13 +136,16 @@ export const UpdateProfileMetadata = ({
       })
       .then((result) => Result.ok(result))
       .catch((error) => Result.err(error));
+
     if (data.isErr()) {
       setStepError(
         "upload",
         data.error.message ? data.error.message : data.error,
       );
+
       return;
     }
+
     completeStep("upload");
 
     const { parameters } = sigleClient.setProfile({
@@ -150,21 +153,28 @@ export const UpdateProfileMetadata = ({
     });
 
     const contractCallResult = await contractCall(parameters);
+
     if (contractCallResult.isErr()) {
       setStepError("transaction", contractCallResult.error.message);
+
       return;
     }
 
     const txId = contractCallResult.value;
     const transactionResult = await waitForTransaction({ txId });
+
     if (transactionResult.isErr()) {
       setStepError("transaction", transactionResult.error.message);
+
       return;
     }
+
     if (transactionResult.value.tx_status !== "success") {
       setStepError("transaction", "Transaction failed");
+
       return;
     }
+
     completeStep("transaction");
 
     try {
@@ -174,6 +184,7 @@ export const UpdateProfileMetadata = ({
         "index",
         error instanceof Error ? error.message : "Failed to trigger indexing",
       );
+
       return;
     }
 
@@ -182,6 +193,7 @@ export const UpdateProfileMetadata = ({
     const startTime = Date.now();
 
     let isIndexed = false;
+
     while (Date.now() - startTime < timeout) {
       const result = await refetchProfile.refetch();
 
@@ -201,6 +213,7 @@ export const UpdateProfileMetadata = ({
         "index",
         "Profile update timed out. Please refresh the page.",
       );
+
       return;
     }
 
@@ -210,10 +223,12 @@ export const UpdateProfileMetadata = ({
 
   const handleXChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     let value = event.target.value;
+
     // If user pastes a full url, extract the username
     if (value.startsWith("http")) {
       value = value.split("/").pop() || "";
     }
+
     setValue("twitter", value, { shouldValidate: true });
   };
 

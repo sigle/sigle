@@ -5,11 +5,17 @@ import { Cl } from "@stacks/transactions";
 import { beforeEach, describe, expect, it } from "vite-plus/test";
 
 const contract = "sigle-post-v001";
+
 const minterContract = "sigle-minter-fixed-price-v001";
+
 const accounts = simnet.getAccounts();
+
 const deployer = accounts.get("deployer")!;
+
 const wallet1 = accounts.get("wallet_1")!;
+
 const wallet2 = accounts.get("wallet_2")!;
+
 const wallet3 = accounts.get("wallet_3")!;
 
 const sigleClient = createClient({
@@ -25,6 +31,7 @@ describe("sigle-post-v001", () => {
     },
     metadata: "ipfs://anything",
   });
+
   const defaultContractName = `${wallet1}.default-contract`;
 
   describe("initialization", () => {
@@ -44,6 +51,7 @@ describe("sigle-post-v001", () => {
         [],
         wallet1,
       );
+
       expect(result).toBeOk(Cl.principal(wallet1));
     });
 
@@ -54,6 +62,7 @@ describe("sigle-post-v001", () => {
         [],
         deployer,
       );
+
       expect(result).toBeOk(Cl.uint(1));
     });
 
@@ -64,6 +73,7 @@ describe("sigle-post-v001", () => {
         [],
         deployer,
       );
+
       expect(result).toBeOk(
         Cl.principal(
           `ST1JRRZ45G7E528BV1M3PR08093JFZGP1C4EZE4MC.${minterContract}`,
@@ -81,6 +91,7 @@ describe("sigle-post-v001", () => {
         [Cl.some(Cl.principal(wallet1))],
         deployer,
       );
+
       expect(transferResult).toBeOk(Cl.bool(true));
 
       // Accept transfer
@@ -90,6 +101,7 @@ describe("sigle-post-v001", () => {
         [],
         wallet1,
       );
+
       expect(acceptResult).toBeOk(Cl.bool(true));
 
       // Verify new owner
@@ -99,6 +111,7 @@ describe("sigle-post-v001", () => {
         [],
         deployer,
       );
+
       expect(ownerResult).toBeOk(Cl.principal(wallet1));
     });
 
@@ -109,6 +122,7 @@ describe("sigle-post-v001", () => {
         [Cl.some(Cl.principal(wallet2))],
         wallet2,
       );
+
       expect(result).toBeErr(Cl.uint(403)); // ERR-NOT-AUTHORIZED
     });
   });
@@ -116,12 +130,14 @@ describe("sigle-post-v001", () => {
   describe("metadata management", () => {
     it("should allow owner to set base token URI", () => {
       const newUri = "https://api.example.com/tokens/";
+
       const { result } = simnet.callPublicFn(
         contract,
         "set-base-token-uri",
         [Cl.stringAscii(newUri)],
         deployer,
       );
+
       expect(result).toBeOk(Cl.bool(true));
     });
 
@@ -132,6 +148,7 @@ describe("sigle-post-v001", () => {
         [],
         deployer,
       );
+
       expect(result).toBeOk(Cl.bool(true));
 
       // Verify metadata is frozen
@@ -141,6 +158,7 @@ describe("sigle-post-v001", () => {
         [],
         deployer,
       );
+
       expect(frozenStatus).toBeOk(Cl.bool(true));
     });
 
@@ -155,6 +173,7 @@ describe("sigle-post-v001", () => {
         [Cl.stringAscii("new-uri")],
         deployer,
       );
+
       expect(result).toBeErr(Cl.uint(1009)); // ERR-METADATA-FROZEN
     });
   });
@@ -192,6 +211,7 @@ describe("sigle-post-v001", () => {
         [Cl.uint(1), Cl.principal(wallet2), Cl.principal(wallet3)],
         wallet2,
       );
+
       expect(result).toBeOk(Cl.bool(true));
     });
 
@@ -202,6 +222,7 @@ describe("sigle-post-v001", () => {
         [Cl.uint(1)],
         wallet2,
       );
+
       expect(result).toBeOk(Cl.bool(true));
     });
 
@@ -212,6 +233,7 @@ describe("sigle-post-v001", () => {
         [Cl.uint(1), Cl.principal(wallet2), Cl.principal(wallet3)],
         wallet3,
       );
+
       expect(result).toBeErr(Cl.uint(403)); // ERR-NOT-AUTHORIZED
     });
 
@@ -222,6 +244,7 @@ describe("sigle-post-v001", () => {
         [Cl.uint(1)],
         wallet3,
       );
+
       expect(result).toBeErr(Cl.uint(403)); // ERR-NOT-AUTHORIZED
     });
   });
@@ -243,6 +266,7 @@ describe("sigle-post-v001", () => {
         [Cl.uint(50)], // Reduce to 50 tokens
         wallet1,
       );
+
       expect(result).toBeOk(Cl.bool(true));
 
       // Verify new max supply
@@ -252,6 +276,7 @@ describe("sigle-post-v001", () => {
         [],
         wallet1,
       );
+
       expect(maxSupply).toBeOk(Cl.uint(50));
     });
 
@@ -262,6 +287,7 @@ describe("sigle-post-v001", () => {
         [Cl.uint(50)],
         wallet2,
       );
+
       expect(result).toBeErr(Cl.uint(403)); // ERR-NOT-AUTHORIZED
     });
 
@@ -281,6 +307,7 @@ describe("sigle-post-v001", () => {
         [Cl.uint(100)],
         wallet1,
       );
+
       expect(result).toBeErr(Cl.uint(1008)); // ERR-INVALID-LIMIT
     });
 
@@ -322,6 +349,7 @@ describe("sigle-post-v001", () => {
         [Cl.uint(2)],
         wallet1,
       );
+
       expect(result).toBeOk(Cl.bool(true));
     });
 
@@ -363,6 +391,7 @@ describe("sigle-post-v001", () => {
         [Cl.uint(1)], // Try to reduce to 1 when 2 are minted
         wallet1,
       );
+
       expect(result).toBeErr(Cl.uint(1008)); // ERR-INVALID-LIMIT
     });
   });
@@ -408,6 +437,7 @@ describe("sigle-post-v001", () => {
           ],
           wallet2,
         );
+
         expect(result).toBeOk(Cl.bool(true));
       });
 
@@ -425,6 +455,7 @@ describe("sigle-post-v001", () => {
           ],
           wallet3,
         );
+
         expect(result).toBeErr(Cl.uint(403)); // ERR-NOT-AUTHORIZED
       });
 
@@ -458,6 +489,7 @@ describe("sigle-post-v001", () => {
           ],
           wallet2,
         );
+
         expect(result).toBeOk(Cl.bool(true));
 
         // Verify updated price
@@ -467,6 +499,7 @@ describe("sigle-post-v001", () => {
           [Cl.uint(1)],
           deployer,
         );
+
         expect(listing).toStrictEqual(
           Cl.some(
             Cl.tuple({
@@ -507,6 +540,7 @@ describe("sigle-post-v001", () => {
           [Cl.uint(1)],
           wallet2,
         );
+
         expect(result).toBeOk(Cl.bool(true));
 
         // Verify listing is removed
@@ -516,6 +550,7 @@ describe("sigle-post-v001", () => {
           [Cl.uint(1)],
           deployer,
         );
+
         expect(listing).toBeNone();
       });
 
@@ -526,6 +561,7 @@ describe("sigle-post-v001", () => {
           [Cl.uint(1)],
           wallet3,
         );
+
         expect(result).toBeErr(Cl.uint(403)); // ERR-NOT-AUTHORIZED
       });
     });
@@ -557,12 +593,14 @@ describe("sigle-post-v001", () => {
       const mintEvents = events.filter(
         (e: any) => e.event === "nft_mint_event",
       );
+
       expect(mintEvents).toHaveLength(1);
 
       // Important: Verify that NO sBTC transfer events occurred (free mint)
       const transferEvents = events.filter(
         (e: any) => e.event === "ft_transfer_event",
       );
+
       expect(transferEvents).toHaveLength(0);
 
       // Check token ownership after minting
@@ -572,6 +610,7 @@ describe("sigle-post-v001", () => {
         [Cl.uint(1)],
         wallet1,
       );
+
       expect(tokenOwner).toBeOk(Cl.some(Cl.principal(wallet1)));
     });
 
@@ -591,6 +630,7 @@ describe("sigle-post-v001", () => {
       const mintEvents = events.filter(
         (e: any) => e.event === "nft_mint_event",
       );
+
       expect(mintEvents).toHaveLength(1);
 
       // Check that tokens were minted to wallet3
@@ -600,6 +640,7 @@ describe("sigle-post-v001", () => {
         [Cl.uint(1)],
         wallet1,
       );
+
       expect(tokenOwner).toBeOk(Cl.some(Cl.principal(wallet3)));
     });
 
@@ -641,6 +682,7 @@ describe("sigle-post-v001", () => {
           ],
           wallet2,
         );
+
         expect(result).toBeOk(Cl.bool(true));
 
         // Verify token ownership
@@ -650,6 +692,7 @@ describe("sigle-post-v001", () => {
           [Cl.uint(1)],
           wallet2,
         );
+
         expect(ownerResult).toBeOk(Cl.some(Cl.principal(wallet2)));
       });
 
@@ -660,6 +703,7 @@ describe("sigle-post-v001", () => {
           [Cl.principal(wallet2)],
           wallet2, // Non-minter trying to mint
         );
+
         expect(result).toBeErr(Cl.uint(403)); // ERR-NOT-AUTHORIZED
       });
 
@@ -719,6 +763,7 @@ describe("sigle-post-v001", () => {
           ],
           wallet2,
         );
+
         expect(result).toBeErr(Cl.uint(1006)); // ERR-ALL-MINTED
       });
 
@@ -747,6 +792,7 @@ describe("sigle-post-v001", () => {
             ],
             wallet2,
           );
+
           expect(result).toBeErr(Cl.uint(1007)); // ERR-MINT-PAUSED
         });
 
@@ -774,6 +820,7 @@ describe("sigle-post-v001", () => {
             [],
             wallet2,
           );
+
           expect(result).toBeOk(Cl.uint(2));
         });
 
@@ -792,6 +839,7 @@ describe("sigle-post-v001", () => {
             ],
             wallet2,
           );
+
           expect(result).toBeOk(Cl.bool(true));
 
           // Verify token ownership
@@ -801,6 +849,7 @@ describe("sigle-post-v001", () => {
             [Cl.uint(1)],
             wallet2,
           );
+
           expect(ownerResult).toBeOk(Cl.some(Cl.principal(wallet3)));
         });
       });

@@ -55,6 +55,7 @@ export function useMultiStepToast<T extends string>(
         multiStep.reset();
         toast.success(successMessage);
       }, 500);
+
       return;
     }
 

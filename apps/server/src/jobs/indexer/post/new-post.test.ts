@@ -40,11 +40,13 @@ describe(executeNewPostJob, () => {
     if (testDb) {
       await testDb.cleanup();
     }
+
     vi.clearAllMocks();
   });
 
   afterAll(async () => {
     mockFetch.mockRestore();
+
     if (testDb) {
       await testDb.close();
     }
@@ -95,6 +97,7 @@ describe(executeNewPostJob, () => {
     const post = await testDb?.db.post.findUnique({
       where: { id: postId },
     });
+
     expect(post).toMatchObject({
       id: postId,
       txId,
@@ -104,6 +107,7 @@ describe(executeNewPostJob, () => {
     const revisions = await testDb?.db.postRevision.findMany({
       where: { postId },
     });
+
     expect(revisions).toHaveLength(1);
     expect(revisions?.[0]).toMatchObject({
       postId,

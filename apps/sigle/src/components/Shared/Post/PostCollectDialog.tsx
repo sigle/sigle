@@ -59,11 +59,13 @@ export const PostCollectDialog = ({
   const referral = searchParams.get("referral");
   const { data: session } = useSession();
   const { login } = useStacksLogin();
+
   const { data: currencyFiatPrice, isLoading: loadingCurrencyFiatPrice } =
     useCurrencyFiatPrice(
       // We wait for the dialog to be open to fetch the price
       open ? "sBTC" : undefined,
     );
+
   const [editions, setEditions] = useState(1);
   const isPostOwner = session?.user.id === post.user.id;
 
@@ -92,6 +94,7 @@ export const PostCollectDialog = ({
   const onCollect = async () => {
     if (!session) {
       login();
+
       return;
     }
 
@@ -106,6 +109,7 @@ export const PostCollectDialog = ({
       });
 
       await contractCall(parameters);
+
       return;
     }
 
@@ -126,6 +130,7 @@ export const PostCollectDialog = ({
     }
 
     const remainingEditions = post.collectible.maxSupply - editions;
+
     if (
       (post.collectible.openEdition ||
         editions < post.collectible.maxSupply ||

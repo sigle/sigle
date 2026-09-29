@@ -69,8 +69,10 @@ export const ipfsUploadFile = async (
       if (error instanceof IpfsUploadFailedError) {
         return error;
       }
+
       consola.error(error);
       const sentryId = event.context.$sentry.captureException(error);
+
       return new IpfsUploadFailedError({
         message: `Failed to upload to IPFS, error: ${sentryId}`,
         sentryId,

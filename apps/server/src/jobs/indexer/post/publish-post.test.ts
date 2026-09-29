@@ -47,6 +47,7 @@ describe("executePublishPostJob", () => {
     if (testDb) {
       await testDb.cleanup();
     }
+
     vi.clearAllMocks();
   });
 
@@ -97,6 +98,7 @@ describe("executePublishPostJob", () => {
     const revisions = await testDb?.db.postRevision.findMany({
       where: { postId: "tx-1" },
     });
+
     expect(revisions).toHaveLength(1);
     expect(revisions?.[0]).toMatchObject({
       postId: "tx-1",

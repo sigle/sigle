@@ -43,6 +43,7 @@ export async function getStacksTransaction(
           },
         },
       });
+
       if (txResult.error) {
         throw new StacksApiError({
           cause: txResult.error.error,
@@ -86,6 +87,7 @@ export async function waitForTransaction(options: {
     timeout = 180_000,
     retryErrorDelay = 10_000,
   } = options;
+
   const startTime = Date.now();
 
   while (Date.now() - startTime < timeout) {

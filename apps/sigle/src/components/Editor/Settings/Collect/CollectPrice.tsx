@@ -25,9 +25,11 @@ export const CollectPrice = () => {
   const type = watch("type");
   const watchCollectType = watch("collect.collectPrice.type");
   const watchCollectPrice = watch("collect.collectPrice.price");
+
   const { errors } = useFormState<EditorPostFormData>({
     name: ["collect.collectPrice.price"],
   });
+
   const { data: currencyFiatPrice } = useCurrencyFiatPrice("sBTC");
 
   const onSelectPriceChange = (value: string) => {

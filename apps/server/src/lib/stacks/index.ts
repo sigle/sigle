@@ -37,6 +37,7 @@ export async function getStacksTransaction(
           },
         },
       });
+
       if (txResult.error) {
         throw new StacksApiError({
           cause: txResult.error.error,

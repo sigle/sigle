@@ -22,12 +22,14 @@ class JobBuilder<TInput = any> {
   input<T>(schema: z.ZodType<T>): JobBuilder<T> {
     // oxlint-disable-next-line typescript/no-explicit-any
     this._inputSchema = schema as any;
+
     // oxlint-disable-next-line typescript/no-explicit-any
     return this as any;
   }
 
   options(opts: SendOptions): this {
     this._options = { ...this._options, ...opts };
+
     return this;
   }
 
@@ -47,13 +49,16 @@ class JobBuilder<TInput = any> {
         throw error;
       }
     };
+
     this._handler = wrappedHandler;
+
     return this;
   }
 
   // Internal method to set PgBoss instance
   _setBoss(boss: PgBoss): this {
     this._boss = boss;
+
     return this;
   }
 
@@ -69,6 +74,7 @@ class JobBuilder<TInput = any> {
     }
 
     consola.debug("Job emitted", { name: this._name });
+
     // oxlint-disable-next-line typescript/no-explicit-any this is safe
     return this._boss.send(this._name, data as any, this._options);
   }
@@ -103,6 +109,7 @@ export class JobManager {
       job._setBoss(this.boss);
       this.jobs.push(job);
     }
+
     return this;
   }
 

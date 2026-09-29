@@ -10,13 +10,16 @@ import { generateImageBlurhashJob } from "../../generate-image-blurhash";
 function extractBaseTokenUri(contractString: string): string | null {
   const regex =
     /\(define-data-var base-token-uri \(string-ascii \d+\) "([^"]+)"\)/;
+
   const match = contractString.match(regex);
+
   return match ? match[1] : null;
 }
 
 function extractMaxSupply(contractString: string): bigint | null {
   const regex = /\(define-data-var max-supply uint u(\d+)\)/;
   const match = contractString.match(regex);
+
   return match ? BigInt(match[1]) : null;
 }
 
@@ -28,6 +31,7 @@ function extractFixedPricingDetails(contractString: string): {
 } | null {
   const regex =
     /\(unwrap-panic \(as-contract \(contract-call\? '(.+?) init-mint-details u(\d+) u(\d+) u(\d+) (none|some .*)\)\)\)/;
+
   const match = contractString.match(regex);
 
   if (!match) return null;
@@ -42,29 +46,36 @@ function extractFixedPricingDetails(contractString: string): {
 
 export async function getMetadataFromUri(baseTokenUri: string) {
   let url = baseTokenUri;
+
   if (baseTokenUri.startsWith("ar://")) {
     const arweaveTxId = baseTokenUri.replace("ar://", "");
     url = `${env.ARWEAVE_GATEWAY_URL}/${arweaveTxId}`;
   }
+
   const response = await fetch(url);
   const json = await response.json();
 
   // Verify data is correct
   const postMetadata = PostMetadataSchema.safeParse(json);
+
   if (!postMetadata.success) {
     throw new Error(`Invalid postV1: ${postMetadata.error}`);
   }
+
   const postData = postMetadata.data;
 
   const metaTitle = postData.content.attributes?.find(
     (attribute) => attribute.key === "meta-title",
   )?.value;
+
   const metaDescription = postData.content.attributes?.find(
     (attribute) => attribute.key === "meta-description",
   )?.value;
+
   const excerpt = postData.content.attributes?.find(
     (attribute) => attribute.key === "excerpt",
   )?.value;
+
   const canonicalUri = postData.content.attributes?.find(
     (attribute) => attribute.key === "canonical-uri",
   )?.value;
@@ -102,21 +113,26 @@ export const executeNewPostJob = async (
   data: z.TypeOf<typeof indexerNewPostSchema>["data"],
 ) => {
   const baseTokenUri = extractBaseTokenUri(data.contract);
+
   if (!baseTokenUri || !baseTokenUri.startsWith("ar://")) {
     throw new Error(`Invalid baseTokenUri: ${baseTokenUri}`);
   }
 
   const maxSupply = extractMaxSupply(data.contract);
+
   if (maxSupply === null) {
     throw new Error(`Invalid maxSupply: ${maxSupply}`);
   }
+
   const openEdition = maxSupply === BigInt(MAX_UINT);
 
   // Verify that the contract matches the template
   const fixedPricingDetails = extractFixedPricingDetails(data.contract);
+
   if (!fixedPricingDetails) {
     throw new Error(`Invalid fixedPricingDetails: ${fixedPricingDetails}`);
   }
+
   const { contract } = sigleClient.generatePostContract({
     metadata: baseTokenUri,
     collectInfo: {
@@ -124,6 +140,7 @@ export const executeNewPostJob = async (
       maxSupply,
     },
   });
+
   // Minify the contract to make comparison easier in case of formatting changes
   if (minifyClarity(contract) !== minifyClarity(data.contract)) {
     throw new Error(`Contract mismatch: ${data.txId}`);
@@ -133,6 +150,7 @@ export const executeNewPostJob = async (
 
   await prisma.$transaction(async (tx) => {
     const userId = data.sender;
+
     const post = await tx.post.findUnique({
       select: {
         id: true,
@@ -142,6 +160,7 @@ export const executeNewPostJob = async (
         id: metadata.id,
       },
     });
+
     if (post && post.txId !== data.txId) {
       throw new Error(
         `Post id ${metadata.id} already exists with txId ${post.txId}`,
@@ -156,6 +175,7 @@ export const executeNewPostJob = async (
         id: userId,
       },
     });
+
     if (!user) {
       await tx.user.create({
         data: {

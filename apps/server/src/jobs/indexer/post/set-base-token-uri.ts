@@ -30,9 +30,11 @@ export const executeIndexerSetBaseTokenUriJob = async (
       address: data.address,
     },
   });
+
   if (!collectible) {
     throw new Error(`Post not found for address ${data.address}`);
   }
+
   const post = collectible.post;
 
   await prisma.post.update({

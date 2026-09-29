@@ -44,6 +44,7 @@ export async function getMetadataFromUri(
   }
 
   const postMetadata = PostMetadataSchema.safeParse(fetchResult.value);
+
   if (!postMetadata.success) {
     return Result.err(
       new InvalidMetadataError({
@@ -51,31 +52,38 @@ export async function getMetadataFromUri(
       }),
     );
   }
+
   const postData = postMetadata.data;
 
   const signatureResult = verifyPostSignature(postData, {
     network: env.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
   });
+
   if (signatureResult.isErr()) {
     return signatureResult;
   }
+
   const { recoveredAddress, signature } = signatureResult.value;
 
   const metaTitle = postData.content.attributes?.find(
     (attribute) => attribute.key === "meta-title",
   )?.value;
+
   const metaDescription = postData.content.attributes?.find(
     (attribute) => attribute.key === "meta-description",
   )?.value;
+
   const excerpt = postData.content.attributes?.find(
     (attribute) => attribute.key === "excerpt",
   )?.value;
+
   const canonicalUri = postData.content.attributes?.find(
     (attribute) => attribute.key === "canonical-uri",
   )?.value;
 
   const versionSplit = postData.$schema.split("/");
   const version = versionSplit[versionSplit.length - 1].replace(".json", "");
+
   const metadata: PostMetadata = {
     version,
     id: postData.content.id,

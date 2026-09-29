@@ -26,6 +26,7 @@ const mockGetRouterParam = vi.fn((event: unknown, name: string) => {
   if (name === "draftId") {
     return (event as { draftId?: string }).draftId ?? undefined;
   }
+
   return undefined;
 });
 
@@ -33,6 +34,7 @@ const mockReadValidatedBodyZod = vi.fn();
 
 vi.mock<typeof import("nitro/h3")>(import("nitro/h3"), async () => {
   const actual = await vi.importActual("nitro/h3");
+
   return {
     ...actual,
     getRouterParam: mockGetRouterParam,
@@ -52,6 +54,7 @@ let mockStacksEnv = "testnet";
 
 vi.mock(import("@/env"), async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/env")>();
+
   return {
     ...actual,
     env: {
@@ -65,6 +68,7 @@ vi.mock(import("@/env"), async (importOriginal) => {
 
 vi.mock<typeof import("@sigle/sdk")>(import("@sigle/sdk"), async () => {
   const actual = await vi.importActual("@sigle/sdk");
+
   return {
     ...actual,
     verifyPostSignature: vi.fn(),
@@ -169,6 +173,7 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
     const post = await testDb.db.post.findUnique({
       where: { id: "arweave-tx-draft" },
     });
+
     expect(post).toMatchObject({
       id: "arweave-tx-draft",
       txId: "arweave-tx-draft",
@@ -179,11 +184,13 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
     const revisions = await testDb.db.postRevision.findMany({
       where: { postId: "arweave-tx-draft" },
     });
+
     expect(revisions.map((r) => r.txId)).toStrictEqual(["arweave-tx-draft"]);
   });
 
   it("edits existing post, adds Root-TX tag, increments revisionsCount, and creates new PostRevision", async () => {
     const user = await createTestUser({ id: userId });
+
     const originalPost = await createTestPost({
       id: "original-post-id",
       txId: "original-post-id",
@@ -253,6 +260,7 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
     const updatedPost = await testDb.db.post.findUnique({
       where: { id: originalPost.id },
     });
+
     expect(updatedPost).toMatchObject({
       id: originalPost.id,
       txId: "arweave-tx-edit-1",
@@ -266,6 +274,7 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
       where: { postId: originalPost.id },
       orderBy: { createdAt: "asc" },
     });
+
     expect(revisions.map((r) => r.txId)).toStrictEqual([
       "original-post-id",
       "arweave-tx-edit-1",

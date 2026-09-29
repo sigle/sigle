@@ -14,7 +14,9 @@ declare module "@tiptap/core" {
 
 function getEmbedType(url: string): "twitter" | "video" {
   if (TWITTER_REGEX.test(url)) return "twitter";
+
   if (YOUTUBE_REGEX.test(url)) return "video";
+
   return "twitter";
 }
 
@@ -56,6 +58,7 @@ const Embed = Node.create({
               embedType: type,
             },
           });
+
           return true;
         },
     };
@@ -90,9 +93,11 @@ const Embed = Node.create({
         tag: "div[data-embed]",
         getAttrs: (element) => {
           const url = (element as HTMLElement).getAttribute("data-embed");
+
           const embedType =
             (element as HTMLElement).getAttribute("data-embed-type") ||
             "twitter";
+
           return { url, embedType };
         },
       },
@@ -109,8 +114,10 @@ const Embed = Node.create({
 
     tokenize(src: string) {
       const markdownLinkMatch = /^\[([^\]]+)\]\(([^)]+)\)/.exec(src);
+
       if (markdownLinkMatch) {
         const url = markdownLinkMatch[1].trim();
+
         if (isValidUrl(url)) {
           return {
             type: "embed",
@@ -137,6 +144,7 @@ const Embed = Node.create({
 
   renderMarkdown(node) {
     if (!node.attrs?.url) return "";
+
     return `[${node.attrs.url}](${node.attrs.url})`;
   },
 

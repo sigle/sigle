@@ -40,6 +40,7 @@ export function verifyPostSignature(
     const message = JSON.stringify(metadataToSign);
     const messageHash = bytesToHex(hashMessage(message));
     const stacksSignature = createMessageSignature(signature);
+
     const publicKey = publicKeyFromSignatureRsv(
       messageHash,
       stacksSignature.data,
@@ -52,6 +53,7 @@ export function verifyPostSignature(
       message,
       publicKey,
     });
+
     if (!isSignatureValid) {
       return Result.err(
         new InvalidSignatureError({

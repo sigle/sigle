@@ -98,6 +98,7 @@ const Draft = ({
   refetchDrafts: () => Promise<unknown>;
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
+
   const { mutateAsync: deletePost } = sigleApiClient.useMutation(
     "post",
     "/api/protected/drafts/{draftId}/delete",
@@ -113,6 +114,7 @@ const Draft = ({
   const onDelete = async () => {
     // oxlint-disable-next-line no-alert
     const ok = confirm("Are you sure you want to delete this draft?");
+
     if (!ok) return;
 
     setIsDeleting(true);

@@ -6,6 +6,7 @@ import Link, { type LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 
 export type NextLinkProps = ComponentProps<typeof Link>;
+
 export type { LinkProps };
 
 /**

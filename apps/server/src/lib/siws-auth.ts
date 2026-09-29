@@ -29,6 +29,7 @@ export const betterAuthSiws = () =>
             value: nonce,
             expiresAt: new Date(Date.now() + 15 * 60 * 1000),
           });
+
           return { nonce };
         },
       ),

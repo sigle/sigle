@@ -60,6 +60,7 @@ export const EditorTipTap = () => {
   const isMobile = width ? width < 768 : false;
   const { setValue, getValues } = useFormContext<EditorPostFormData>();
   const setEditor = useEditorStore((state) => state.setEditor);
+
   const { mutateAsync: uploadMedia } = sigleApiClient.useMutation(
     "post",
     "/api/protected/drafts/{draftId}/upload-media",
@@ -118,6 +119,7 @@ export const EditorTipTap = () => {
             posthog.capture("editor_image_upload_success", {
               postId,
             });
+
             return data.url;
             // oxlint-disable-next-line typescript/no-explicit-any
           } catch (error: any) {
@@ -161,9 +163,11 @@ export const EditorTipTap = () => {
     // Expose the editor to the parent so we can use it to get the content
     onCreate: ({ editor }) => {
       const contentMarkdown = editor.getMarkdown();
+
       if (getValues("content") !== contentMarkdown) {
         setValue("content", contentMarkdown);
       }
+
       setEditor(editor);
     },
     onUpdate: ({ editor }) => {

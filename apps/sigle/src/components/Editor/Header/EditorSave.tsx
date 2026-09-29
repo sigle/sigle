@@ -14,15 +14,19 @@ export const EditorSave = () => {
   const postId = params.postId as string;
   const searchParams = useSearchParams();
   const forceSave = searchParams.get("forceSave") === "true";
+
   const [saveState, setSaveState] = useState<
     "idle" | "saving" | "error" | "saved"
   >("idle");
+
   const { watch, getValues } = useFormContext<EditorPostFormData>();
   const type = watch("type");
+
   const { mutate: updatePost } = sigleApiClient.useMutation(
     "post",
     "/api/protected/drafts/{draftId}/update",
   );
+
   const editor = useEditorStore((state) => state.editor);
 
   const onAutoSave = useDebouncedCallback(
@@ -75,11 +79,13 @@ export const EditorSave = () => {
   // We wait for the editor to be ready before listening to changes
   useEffect(() => {
     if (!editor) return;
+
     const subscription = watch(() => {
       if (type === "published") return;
       setSaveState("saving");
       onAutoSave();
     });
+
     return () => subscription.unsubscribe();
   }, [watch, type, editor, onAutoSave]);
 

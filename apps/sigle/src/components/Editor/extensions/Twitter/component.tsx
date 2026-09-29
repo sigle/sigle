@@ -19,6 +19,7 @@ import { VideoComponent } from "./video/component";
 export const isValidUrl = (val: string) => {
   return isValidTwitterUrl(val) || isValidYoutubeUrl(val);
 };
+
 export const globalPasteRegex = new RegExp(
   `(${YOUTUBE_REGEX_GLOBAL.source}|${TWITTER_REGEX_GLOBAL.source})`,
   "g",
@@ -42,9 +43,12 @@ export const EmbedComponent = (props: NodeViewProps) => {
   });
 
   const url: string | undefined = props.node.attrs.url;
+
   const embedType = useMemo(() => {
     if (!url) return undefined;
+
     if (isValidTwitterUrl(url)) return "twitter";
+
     if (isValidYoutubeUrl(url)) return "video";
   }, [url]);
 

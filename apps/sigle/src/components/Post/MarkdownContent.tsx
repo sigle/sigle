@@ -53,6 +53,7 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
           // oxlint-disable-next-line no-unused-vars
           img: ({ node: _node, src, ...props }) => {
             if (!src) return null;
+
             return (
               // oxlint-disable-next-line no-img-element
               <img
@@ -65,11 +66,13 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
           a: ({ node, href, ...props }) => {
             if (href && isValidTwitterUrl(href)) {
               const tweetId = getTweetIdFromUrl(href);
+
               if (tweetId) {
                 return <Tweet id={tweetId} />;
               }
             } else if (href && isValidYoutubeUrl(href)) {
               const url = getEmbedUrlFromYoutubeUrl({ url: href });
+
               if (url) {
                 return (
                   <iframe
