@@ -28,22 +28,7 @@ export const UserDropdown = () => {
   const { data: session } = useSession();
   const { logout } = useStacksLogin();
 
-  const { data: user } = sigleApiClient.useSuspenseQuery(
-    "get",
-    "/api/users/{username}",
-    {
-      params: {
-        path: {
-          username: session?.user.id || "",
-        },
-      },
-    },
-  );
-
-  const { data: userWhitelist } = sigleApiClient.useQuery(
-    "get",
-    "/api/protected/user/whitelisted",
-  );
+  const { data: me } = sigleApiClient.useQuery("get", "/api/protected/me");
 
   const onThemeChange = () => {
     const newTheme = resolvedTheme === "dark" ? "light" : "dark";
@@ -63,12 +48,12 @@ export const UserDropdown = () => {
             type="button"
             className="cursor-pointer transition hover:opacity-85"
           >
-            <ProfileAvatar user={user} size="2" />
+            <ProfileAvatar user={{ id: me?.id ?? session.user.id }} size="2" />
           </button>
         }
       />
       <DropdownMenuContent align="end" className="w-40">
-        {userWhitelist?.whitelisted ? (
+        {me?.whitelisted ? (
           <DropdownMenuItem
             render={
               <NextLink href="/p/new">
