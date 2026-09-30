@@ -10,7 +10,10 @@ export class RateLimitMiddleware extends HttpApiMiddleware.Service<RateLimitMidd
   { error: [TooManyRequests, InternalServerError] },
 ) {}
 
-export type RateLimitPolicyName = "default" | "profileMetadataUpload";
+export type RateLimitPolicyName =
+  | "default"
+  | "profileImageUpload"
+  | "profileMetadataUpload";
 
 export interface RateLimitLimit {
   readonly points: number;
@@ -25,6 +28,11 @@ export const RATE_LIMITS: Record<RateLimitPolicyName, RateLimitLimit> = {
   },
   // Matches the legacy server limit for profile metadata uploads
   profileMetadataUpload: {
+    points: 4,
+    windowMs: 60_000,
+  },
+  // Matches the legacy server limit for profile avatar and cover uploads
+  profileImageUpload: {
     points: 4,
     windowMs: 60_000,
   },
