@@ -1,13 +1,21 @@
-import type { Multipart } from "effect/unstable/http";
-import { Effect, FileSystem } from "effect";
+import { ByteSize, Effect } from "effect";
+import { HttpServerRequest } from "effect/unstable/http";
 import { HttpApiBuilder } from "effect/unstable/httpapi";
 import type { UploadProfileMetadataPayload } from "@/api/groups/profile";
 import { SigleApi } from "@/api";
 import { CurrentUser } from "@/api/middleware/auth-user";
-import { BadRequest, InternalServerError } from "@/api/schemas";
+import {
+  BadRequest,
+  InternalServerError,
+  PayloadTooLarge,
+  UnsupportedMediaType,
+} from "@/api/schemas";
 import { AppConfig } from "@/config";
+import { sha256Hex } from "@/lib/hash";
 import { isAllowedImageFormat, optimizeImage } from "@/lib/images";
 import {
+  PROFILE_IMAGE_MAX_BYTES,
+  PROFILE_IMAGE_MAX_MIB,
   profileImageKey,
   profileImagePostHogEvent,
   profileImageSettings,
@@ -53,31 +61,71 @@ export const uploadProfileMetadata = (
     return result;
   });
 
+const normalizeContentType = (contentType: string): string =>
+  contentType.split(";")[0]?.trim().toLowerCase() ?? "";
+
+const readImageBody = (request: HttpServerRequest.HttpServerRequest) =>
+  request.arrayBuffer.pipe(
+    Effect.provideService(
+      HttpServerRequest.MaxBodySize,
+      ByteSize.mebibytes(PROFILE_IMAGE_MAX_MIB),
+    ),
+    Effect.map((buffer) => new Uint8Array(buffer)),
+    Effect.tapError((error) =>
+      Effect.logWarning("Failed to read profile image body", { cause: error }),
+    ),
+    Effect.mapError(
+      () =>
+        new PayloadTooLarge({
+          message: `Image is too large, maximum size is ${PROFILE_IMAGE_MAX_MIB} MiB.`,
+        }),
+    ),
+  );
+
 export const uploadProfileImage = (
-  file: Multipart.PersistedFile,
   kind: ProfileImageKind,
+  request: HttpServerRequest.HttpServerRequest,
 ) =>
   Effect.gen(function* () {
     const user = yield* CurrentUser;
     const config = yield* AppConfig;
-    const fs = yield* FileSystem.FileSystem;
     const storage = yield* StorageService;
     const posthog = yield* PostHogService;
 
-    if (!isAllowedImageFormat(file.contentType)) {
-      return yield* new BadRequest({
-        message: `Unsupported image format: ${file.contentType}`,
+    const contentType = normalizeContentType(
+      request.headers["content-type"] ?? "",
+    );
+
+    if (!isAllowedImageFormat(contentType)) {
+      return yield* new UnsupportedMediaType({
+        message: `Unsupported image format: ${contentType}`,
       });
     }
 
-    const buffer = yield* fs.readFile(file.path).pipe(Effect.orDie);
+    const declaredSize = Number(request.headers["content-length"] ?? "");
+
+    if (
+      Number.isFinite(declaredSize) &&
+      declaredSize > PROFILE_IMAGE_MAX_BYTES
+    ) {
+      return yield* new PayloadTooLarge({
+        message: `Image is too large, maximum size is ${PROFILE_IMAGE_MAX_MIB} MiB.`,
+      });
+    }
+
+    const buffer = yield* readImageBody(request);
+
+    if (buffer.length === 0) {
+      return yield* new BadRequest({ message: "No image provided" });
+    }
+
     const { quality, width } = profileImageSettings(config.STACKS_ENV, kind);
 
     const optimized = yield* optimizeImage({ buffer, quality, width }).pipe(
       Effect.tapError((error) =>
         Effect.logWarning("Failed to optimize profile image", {
           cause: error.cause,
-          contentType: file.contentType,
+          contentType,
           kind,
         }),
       ),
@@ -86,10 +134,16 @@ export const uploadProfileImage = (
       ),
     );
 
+    const version = sha256Hex(optimized.buffer);
     const key = profileImageKey(user.id, kind);
 
     const uploaded = yield* storage
-      .uploadFile({ body: optimized, contentType: "image/webp", key })
+      .uploadFile({
+        body: optimized.buffer,
+        contentType: "image/webp",
+        key,
+        version,
+      })
       .pipe(
         Effect.mapError(
           (error) =>
@@ -99,19 +153,24 @@ export const uploadProfileImage = (
         ),
       );
 
-    const url = versionProfileImageUrl(uploaded.url);
+    const url = versionProfileImageUrl(uploaded.url, version);
 
     yield* posthog.capture({
       distinctId: user.id,
       event: profileImagePostHogEvent(kind),
       properties: {
         key,
-        sizeBytes: optimized.length,
+        sizeBytes: optimized.buffer.length,
         url,
       },
     });
 
-    return { url };
+    return {
+      height: optimized.height,
+      key,
+      url,
+      width: optimized.width,
+    };
   });
 
 export const ProfileHandlersLayer = HttpApiBuilder.group(
@@ -120,10 +179,7 @@ export const ProfileHandlersLayer = HttpApiBuilder.group(
   (handlers) =>
     handlers
       .handle("uploadMetadata", ({ payload }) => uploadProfileMetadata(payload))
-      .handle("uploadAvatar", ({ payload }) =>
-        uploadProfileImage(payload.file, "avatar"),
-      )
-      .handle("uploadCover", ({ payload }) =>
-        uploadProfileImage(payload.file, "cover"),
+      .handle("uploadImage", ({ params, request }) =>
+        uploadProfileImage(params.kind, request),
       ),
 );

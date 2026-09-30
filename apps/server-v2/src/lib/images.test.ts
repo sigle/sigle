@@ -20,32 +20,30 @@ const makePng = (width: number, height: number) =>
     .toBuffer();
 
 describe("images", () => {
-  it.effect(
-    "optimizes an image to webp and resizes it down to the target width",
-    () =>
-      Effect.gen(function* () {
-        const png = yield* Effect.promise(() => makePng(64, 32));
+  it.effect("optimizes an image to webp and resizes it down", () =>
+    Effect.gen(function* () {
+      const png = yield* Effect.promise(() => makePng(64, 32));
 
-        const optimized = yield* optimizeImage({
-          buffer: new Uint8Array(png),
-          quality: 75,
-          width: 32,
-        });
+      const optimized = yield* optimizeImage({
+        buffer: new Uint8Array(png),
+        quality: 75,
+        width: 32,
+      });
 
-        const metadata = yield* Effect.promise(() =>
-          sharp(Buffer.from(optimized)).metadata(),
-        );
+      const metadata = yield* Effect.promise(() =>
+        sharp(Buffer.from(optimized.buffer)).metadata(),
+      );
 
-        expect({
-          format: metadata.format,
-          width: metadata.width,
-          height: metadata.height,
-        }).toStrictEqual({
-          format: "webp",
-          width: 32,
-          height: 16,
-        });
-      }),
+      expect({
+        format: metadata.format,
+        width: optimized.width,
+        height: optimized.height,
+      }).toStrictEqual({
+        format: "webp",
+        width: 32,
+        height: 16,
+      });
+    }),
   );
 
   it.effect("never enlarges an image smaller than the target width", () =>
@@ -58,16 +56,10 @@ describe("images", () => {
         width: 1000,
       });
 
-      const metadata = yield* Effect.promise(() =>
-        sharp(Buffer.from(optimized)).metadata(),
-      );
-
       expect({
-        format: metadata.format,
-        width: metadata.width,
-        height: metadata.height,
+        width: optimized.width,
+        height: optimized.height,
       }).toStrictEqual({
-        format: "webp",
         width: 32,
         height: 16,
       });

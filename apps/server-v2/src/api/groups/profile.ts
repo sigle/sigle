@@ -1,10 +1,8 @@
 import { type ProfileMetadata, ProfileMetadataSchema } from "@sigle/sdk";
 import { Effect, Schema, SchemaIssue } from "effect";
-import { Multipart } from "effect/unstable/http";
 import {
   HttpApiEndpoint,
   HttpApiGroup,
-  HttpApiSchema,
   OpenApi,
 } from "effect/unstable/httpapi";
 import { UserAuthMiddleware } from "@/api/middleware/auth-user";
@@ -16,8 +14,10 @@ import {
   BadRequest,
   InternalServerError,
   PayloadTooLarge,
+  UnsupportedMediaType,
 } from "@/api/schemas";
-import { PROFILE_IMAGE_MAX_SIZE } from "@/lib/profile-images";
+import { allowedImageFormats } from "@/lib/images";
+import { profileImageKinds } from "@/lib/profile-images";
 
 /**
  * Profile metadata is a shared wire format defined in `@sigle/sdk` (and
@@ -51,18 +51,28 @@ export const UploadProfileMetadataResponse = Schema.Struct({
   gatewayUrl: Schema.String,
 }).annotate({ identifier: "UploadProfileMetadataResponse" });
 
-export const UploadProfileImagePayload = Schema.Struct({
-  file: Multipart.SingleFileSchema,
-}).pipe(
-  HttpApiSchema.asMultipart({
-    maxFileSize: PROFILE_IMAGE_MAX_SIZE,
-    maxTotalSize: PROFILE_IMAGE_MAX_SIZE,
-  }),
-);
+export const ProfileImageKindSchema = Schema.Literals(profileImageKinds);
 
 export const UploadProfileImageResponse = Schema.Struct({
   url: Schema.String,
+  key: Schema.String,
+  width: Schema.Int,
+  height: Schema.Int,
 }).annotate({ identifier: "UploadProfileImageResponse" });
+
+/**
+ * The endpoints read the raw request body themselves (see the handlers), so the
+ * binary request body is documented manually in the OpenAPI specification.
+ */
+const profileImageRequestBody = {
+  required: true,
+  content: Object.fromEntries(
+    allowedImageFormats.map((contentType) => [
+      contentType,
+      { schema: { type: "string", format: "binary" } },
+    ]),
+  ),
+};
 
 export const ProfileGroup = HttpApiGroup.make("profile")
   .add(
@@ -79,29 +89,22 @@ export const ProfileGroup = HttpApiGroup.make("profile")
       .annotate(RateLimitPolicy, "profileMetadataUpload"),
   )
   .add(
-    HttpApiEndpoint.post("uploadAvatar", "/upload-avatar", {
-      payload: UploadProfileImagePayload,
+    HttpApiEndpoint.put("uploadImage", "/images/:kind", {
+      params: { kind: ProfileImageKindSchema },
       success: UploadProfileImageResponse,
-      error: [BadRequest, PayloadTooLarge, InternalServerError],
+      error: [
+        BadRequest,
+        PayloadTooLarge,
+        UnsupportedMediaType,
+        InternalServerError,
+      ],
     })
-      .annotate(OpenApi.Summary, "Upload profile avatar")
+      .annotate(OpenApi.Summary, "Upload a profile image")
       .annotate(
         OpenApi.Description,
-        "Upload the profile avatar image. Re-uploading replaces the previous avatar.",
+        "Upload a profile avatar or cover image as a raw binary body. Re-uploading the same image is a no-op, uploading a different image replaces the previous file.",
       )
-      .annotate(RateLimitPolicy, "profileImageUpload"),
-  )
-  .add(
-    HttpApiEndpoint.post("uploadCover", "/upload-cover", {
-      payload: UploadProfileImagePayload,
-      success: UploadProfileImageResponse,
-      error: [BadRequest, PayloadTooLarge, InternalServerError],
-    })
-      .annotate(OpenApi.Summary, "Upload profile cover")
-      .annotate(
-        OpenApi.Description,
-        "Upload the profile cover image. Re-uploading replaces the previous cover.",
-      )
+      .annotate(OpenApi.Override, { requestBody: profileImageRequestBody })
       .annotate(RateLimitPolicy, "profileImageUpload"),
   )
   .prefix("/api/protected/user/profile")

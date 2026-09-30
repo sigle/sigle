@@ -8,7 +8,9 @@ export type ProfileImageKind = (typeof profileImageKinds)[number];
  * Maximum size accepted for a profile image upload, matching the legacy
  * server request body limit.
  */
-export const PROFILE_IMAGE_MAX_SIZE = "5 MiB" as const;
+export const PROFILE_IMAGE_MAX_MIB = 5;
+
+export const PROFILE_IMAGE_MAX_BYTES = PROFILE_IMAGE_MAX_MIB * 1024 * 1024;
 
 export interface ProfileImageSettings {
   readonly quality: number;
@@ -44,13 +46,11 @@ export const profileImageKey = (
 ): string => `u/${userId}/${kind}.webp`;
 
 /**
- * Appends a version to the public URL so browsers and the CDN fetch the
- * replacement image even though the object key is stable.
+ * Appends the content version to the public URL so browsers and the CDN fetch
+ * the replacement image even though the object key is stable.
  */
-export const versionProfileImageUrl = (
-  url: string,
-  version: number = Date.now(),
-): string => `${url}?v=${version}`;
+export const versionProfileImageUrl = (url: string, version: string): string =>
+  `${url}?v=${version}`;
 
 export const profileImagePostHogEvent = (kind: ProfileImageKind): string =>
   kind === "avatar" ? "profile media uploaded" : "profile cover media uploaded";

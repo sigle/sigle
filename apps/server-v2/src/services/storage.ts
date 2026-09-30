@@ -6,11 +6,13 @@ export interface StorageUploadOptions {
   readonly body: Uint8Array;
   readonly contentType: string;
   readonly key: string;
+  readonly version: string;
 }
 
-export interface StorageUploadResult {
+export interface StoredObject {
   readonly key: string;
   readonly url: string;
+  readonly version: string;
 }
 
 /**
@@ -26,6 +28,7 @@ export interface StorageUploader {
     readonly cacheControl: string;
     readonly contentType: string;
     readonly key: string;
+    readonly version: string;
   }) => Promise<void>;
 }
 
@@ -37,8 +40,22 @@ export class StorageUploadError extends Data.TaggedError("StorageUploadError")<{
 export interface StorageClient {
   readonly uploadFile: (
     options: StorageUploadOptions,
-  ) => Effect.Effect<StorageUploadResult, StorageUploadError>;
+  ) => Effect.Effect<StoredObject, StorageUploadError>;
 }
+
+const toStorageError = (cause: unknown): StorageUploadError =>
+  new StorageUploadError({
+    cause,
+    message: cause instanceof Error ? cause.message : String(cause),
+  });
+
+const logStorageError =
+  (operation: string, key: string) => (error: StorageUploadError) =>
+    Effect.logError("Object storage operation failed", {
+      cause: error.cause,
+      key,
+      operation,
+    });
 
 const makeS3Uploader = (config: AppConfigValues): StorageUploader => {
   const client = new S3Client({
@@ -52,7 +69,7 @@ const makeS3Uploader = (config: AppConfigValues): StorageUploader => {
   });
 
   return {
-    uploadFile: async ({ body, cacheControl, contentType, key }) => {
+    uploadFile: async ({ body, cacheControl, contentType, key, version }) => {
       await client.send(
         new PutObjectCommand({
           Bucket: config.R2_BUCKET,
@@ -60,6 +77,7 @@ const makeS3Uploader = (config: AppConfigValues): StorageUploader => {
           Body: body,
           CacheControl: cacheControl,
           ContentType: contentType,
+          Metadata: { version },
         }),
       );
     },
@@ -71,8 +89,14 @@ export const makeStorageService = (uploader: StorageUploader) =>
     const config = yield* AppConfig;
     const publicUrl = config.R2_PUBLIC_URL.replace(/\/+$/, "");
 
+    const toStoredObject = (key: string, version: string): StoredObject => ({
+      key,
+      url: `${publicUrl}/${key}`,
+      version,
+    });
+
     return {
-      uploadFile: ({ body, contentType, key }: StorageUploadOptions) =>
+      uploadFile: ({ body, contentType, key, version }: StorageUploadOptions) =>
         Effect.gen(function* () {
           yield* Effect.tryPromise({
             try: () =>
@@ -81,28 +105,31 @@ export const makeStorageService = (uploader: StorageUploader) =>
                 cacheControl: CACHE_CONTROL,
                 contentType,
                 key,
+                version,
               }),
-            catch: (cause) =>
-              new StorageUploadError({
-                cause,
-                message: cause instanceof Error ? cause.message : String(cause),
-              }),
-          }).pipe(
-            Effect.tapError((error) =>
-              Effect.logError("Failed to upload to object storage", {
-                cause: error.cause,
-                contentType,
-                key,
-              }),
-            ),
-          );
+            catch: toStorageError,
+          }).pipe(Effect.tapError(logStorageError("upload", key)));
 
-          return { key, url: `${publicUrl}/${key}` };
+          return toStoredObject(key, version);
         }),
     } satisfies StorageClient;
   });
 
 export const STORAGE_TEST_PUBLIC_URL = "https://cdn.test";
+
+export interface StorageTestRecorder {
+  readonly uploads: Array<StorageUploadOptions>;
+}
+
+export const makeStorageTestRecorder = (): StorageTestRecorder => ({
+  uploads: [],
+});
+
+export interface StorageTestOverrides {
+  readonly uploadFile?: (
+    options: StorageUploadOptions,
+  ) => Effect.Effect<StoredObject, StorageUploadError>;
+}
 
 export class StorageService extends Context.Service<
   StorageService,
@@ -118,20 +145,25 @@ export class StorageService extends Context.Service<
       }),
     );
 
+  /**
+   * Recording storage fake used by endpoint tests.
+   */
   static readonly layerTest = (
-    uploads: Array<StorageUploadOptions> = [],
-    uploadFile: (
-      options: StorageUploadOptions,
-    ) => Effect.Effect<StorageUploadResult, StorageUploadError> = (options) =>
-      Effect.succeed({
-        key: options.key,
-        url: `${STORAGE_TEST_PUBLIC_URL}/${options.key}`,
-      }),
+    recorder: StorageTestRecorder = makeStorageTestRecorder(),
+    overrides: StorageTestOverrides = {},
   ): Layer.Layer<StorageService> =>
-    Layer.succeed(StorageService, {
-      uploadFile: (options) =>
-        Effect.sync(() => {
-          uploads.push(options);
-        }).pipe(Effect.andThen(uploadFile(options))),
-    });
+    Layer.sync(StorageService, () => ({
+      uploadFile: (options) => {
+        recorder.uploads.push(options);
+
+        return (
+          overrides.uploadFile?.(options) ??
+          Effect.succeed({
+            key: options.key,
+            url: `${STORAGE_TEST_PUBLIC_URL}/${options.key}`,
+            version: options.version,
+          })
+        );
+      },
+    }));
 }

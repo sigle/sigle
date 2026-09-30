@@ -24,6 +24,12 @@ export class ImageOptimizationError extends Data.TaggedError(
   readonly message: string;
 }> {}
 
+export interface OptimizedImage {
+  readonly buffer: Uint8Array;
+  readonly height: number;
+  readonly width: number;
+}
+
 export interface OptimizeImageOptions {
   readonly buffer: Uint8Array;
   readonly quality: number;
@@ -40,16 +46,23 @@ export const optimizeImage = ({
   buffer,
   quality,
   width,
-}: OptimizeImageOptions): Effect.Effect<Uint8Array, ImageOptimizationError> =>
+}: OptimizeImageOptions): Effect.Effect<
+  OptimizedImage,
+  ImageOptimizationError
+> =>
   Effect.tryPromise({
     try: async () => {
-      const optimized = await sharp(buffer, { sequentialRead: true })
+      const { data, info } = await sharp(buffer, { sequentialRead: true })
         .rotate()
         .resize(width, undefined, { withoutEnlargement: true })
         .webp({ quality, effort: 6, smartSubsample: true })
-        .toBuffer();
+        .toBuffer({ resolveWithObject: true });
 
-      return new Uint8Array(optimized);
+      return {
+        buffer: new Uint8Array(data),
+        height: info.height,
+        width: info.width,
+      };
     },
     catch: (cause) =>
       new ImageOptimizationError({
