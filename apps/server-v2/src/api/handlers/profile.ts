@@ -1,5 +1,5 @@
 import { ByteSize, Effect, Option, Predicate } from "effect";
-import { HttpServerRequest } from "effect/unstable/http";
+import { HttpServerError, HttpServerRequest } from "effect/unstable/http";
 import { HttpApiBuilder } from "effect/unstable/httpapi";
 import type { UploadProfileMetadataPayload } from "@/api/groups/profile";
 import { SigleApi } from "@/api";
@@ -69,6 +69,17 @@ export const uploadProfileMetadata = (
 const normalizeContentType = (contentType: string): string =>
   contentType.split(";")[0]?.trim().toLowerCase() ?? "";
 
+/**
+ * `@effect/platform-node` fails the body read with this message once the
+ * `MaxBodySize` limit is exceeded, wrapped in an `HttpServerError`.
+ */
+const MAX_BODY_SIZE_CAUSE_MESSAGE = "maxBytes exceeded";
+
+const isBodyTooLargeError = (error: HttpServerError.HttpServerError): boolean =>
+  Predicate.isTagged(error.reason, "RequestParseError") &&
+  error.reason.cause instanceof Error &&
+  error.reason.cause.message === MAX_BODY_SIZE_CAUSE_MESSAGE;
+
 const readImageBody = (
   request: HttpServerRequest.HttpServerRequest,
   maxMib: number,
@@ -82,11 +93,12 @@ const readImageBody = (
     Effect.tapError((error) =>
       Effect.logWarning("Failed to read profile image body", { cause: error }),
     ),
-    Effect.mapError(
-      () =>
-        new PayloadTooLarge({
-          message: `Image is too large, maximum size is ${maxMib} MiB.`,
-        }),
+    Effect.mapError((error) =>
+      isBodyTooLargeError(error)
+        ? new PayloadTooLarge({
+            message: `Image is too large, maximum size is ${maxMib} MiB.`,
+          })
+        : new BadRequest({ message: "Failed to read request body." }),
     ),
   );
 

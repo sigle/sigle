@@ -30,6 +30,12 @@ export class ImageOptimizationError extends Data.TaggedError(
  */
 export const MAX_INPUT_PIXELS = 50_000_000;
 
+/**
+ * Time budget for a single sharp pipeline, applied natively by libvips so
+ * long-running work is stopped instead of only being abandoned by the caller.
+ */
+export const IMAGE_PROCESSING_TIMEOUT_SECONDS = 10;
+
 const mimeTypeBySharpFormat: ReadonlyMap<string, AllowedImageFormat> = new Map([
   ["jpeg", JPEG],
   ["png", PNG],
@@ -94,6 +100,7 @@ export const optimizeImage = ({
         limitInputPixels,
         sequentialRead: true,
       })
+        .timeout({ seconds: IMAGE_PROCESSING_TIMEOUT_SECONDS })
         .rotate()
         .resize(width, undefined, { withoutEnlargement: true })
         .webp({ quality, effort: 6, smartSubsample: true })

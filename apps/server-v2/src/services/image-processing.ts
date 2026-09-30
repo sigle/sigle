@@ -1,5 +1,6 @@
 import { Context, Data, Duration, Effect, Layer, Semaphore } from "effect";
 import {
+  IMAGE_PROCESSING_TIMEOUT_SECONDS,
   ImageOptimizationError,
   optimizeImage,
   type OptimizeImageOptions,
@@ -8,7 +9,7 @@ import {
 
 const MAX_CONCURRENT_OPTIMIZATIONS = 2;
 
-const OPTIMIZATION_TIMEOUT = Duration.seconds(10);
+const OPTIMIZATION_TIMEOUT = Duration.seconds(IMAGE_PROCESSING_TIMEOUT_SECONDS);
 
 export class ImageProcessingTimeoutError extends Data.TaggedError(
   "ImageProcessingTimeoutError",
@@ -40,8 +41,9 @@ export class ImageProcessingService extends Context.Service<
 
       return {
         optimize: (options) =>
-          semaphore.withPermits(1)(
-            optimizeImage(options).pipe(
+          semaphore
+            .withPermits(1)(optimizeImage(options).pipe(Effect.uninterruptible))
+            .pipe(
               Effect.timeoutOrElse({
                 duration: OPTIMIZATION_TIMEOUT,
                 orElse: () =>
@@ -52,7 +54,6 @@ export class ImageProcessingService extends Context.Service<
                   ),
               }),
             ),
-          ),
       } satisfies ImageProcessor;
     }),
   );
