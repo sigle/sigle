@@ -30,6 +30,8 @@ export const publishDraftJob = defineJob({
     Effect.gen(function* () {
       // mark domain state as failed
     }),
+  // Fields attached to failure reports (Sentry); redacted by default.
+  reportPayload: (payload) => ({ draftId: payload.draftId }),
 });
 ```
 
@@ -37,7 +39,9 @@ Producers enqueue with a stable id (duplicate offers are ignored while the row
 exists):
 
 ```ts
-yield * publishDraftJob.offer(payload, { id: `publish-draft:${draftId}` });
+const program = Effect.gen(function* () {
+  yield* publishDraftJob.offer(payload, { id: `publish-draft:${draftId}` });
+});
 ```
 
 ## Registering
@@ -59,8 +63,10 @@ cleanup.
 - Schema decode failures are marked failed by the queue and never reach
   handlers; they appear in the admin failed list.
 - Failures are reported to Sentry (`ErrorReporter`) with `queue`, `jobId`,
-  `attempts`, and a truncated payload. Metrics: `sigle.jobs.completed`,
-  `.retried`, `.failed_final`, `.failed_terminal`, `.duration`.
+  `attempts`, and the `reportPayload` projection (redacted by default, so
+  payload fields are only reported when explicitly projected). Metrics:
+  `sigle.jobs.completed`, `.retried`, `.failed_final`, `.failed_terminal`,
+  `.duration`.
 
 ## Monitoring
 

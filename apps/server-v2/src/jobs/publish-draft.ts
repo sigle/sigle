@@ -194,6 +194,7 @@ export const publishDraftJob = defineJob({
   concurrency: 2,
   process: (job) => processPublishDraftJob(job),
   onFinalFailure: (job) => markDraftPublishFailed(job),
+  reportPayload: (job) => ({ draftId: job.draftId }),
 });
 
 export const PublishDraftWorkerLive = publishDraftJob

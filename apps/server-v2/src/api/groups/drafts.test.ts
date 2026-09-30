@@ -496,7 +496,21 @@ describe("drafts", () => {
 
         expect(invalidMetaRes.status).toBe(400);
 
-        // 3. Signed by wallet not belonging to user -> 400 Bad Request
+        // 3. Metadata content id not matching the draft -> 400 Bad Request
+        const mismatchedIdRes = yield* publishDraftRequest(
+          client,
+          "draft-val",
+          {
+            metadata: createSignedTestPostMetadata({
+              draftId: "other-draft",
+              privateKey: ownerWallet.privateKey,
+            }),
+          },
+        );
+
+        expect(mismatchedIdRes.status).toBe(400);
+
+        // 4. Signed by wallet not belonging to user -> 400 Bad Request
         const wrongWalletRes = yield* publishDraftRequest(client, "draft-val", {
           metadata: createSignedTestPostMetadata({
             draftId: "draft-val",
@@ -506,7 +520,7 @@ describe("drafts", () => {
 
         expect(wrongWalletRes.status).toBe(400);
 
-        // 4. Already published signature -> 400 Bad Request
+        // 5. Already published signature -> 400 Bad Request
         const validSigned = createSignedTestPostMetadata({
           draftId: "draft-val",
           privateKey: ownerWallet.privateKey,

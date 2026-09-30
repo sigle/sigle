@@ -235,6 +235,12 @@ export const publishDraft = (
       });
     }
 
+    if (parsedMetadata.data.content.id !== draftId) {
+      return yield* new BadRequest({
+        message: "Post metadata content id does not match the draft",
+      });
+    }
+
     const signatureResult = verifyPostSignature(parsedMetadata.data, {
       network: config.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
     });
@@ -274,21 +280,31 @@ export const publishDraft = (
 
     const jobId = publishDraftJobId(draftId);
 
-    // If a previous publish job for this draft permanently failed, clear its
-    // queue entry so the new offer is accepted.
+    const isPublishInFlight =
+      foundDraft.txStatus === "PENDING" || foundDraft.txStatus === "PROCESSING";
+
+    // If a previous publish job permanently failed, clear its dead-lettered
+    // queue entry and stale upload checkpoint before accepting it again.
     if (foundDraft.txStatus === "FAILED") {
       yield* admin.clearJob(PUBLISH_DRAFT_QUEUE_NAME, jobId);
     }
 
-    yield* db
-      .update(draft)
-      .set({
-        txStatus: "PENDING",
-        updatedAt: new Date(),
-      })
-      .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
-      .pipe(Effect.orDie);
+    // Leave in-flight publishes untouched; only reset the draft for a fresh
+    // publish so the worker uploads the current metadata.
+    if (!isPublishInFlight) {
+      yield* db
+        .update(draft)
+        .set({
+          txStatus: "PENDING",
+          txId: null,
+          updatedAt: new Date(),
+        })
+        .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
+        .pipe(Effect.orDie);
+    }
 
+    // Re-offering a queued id is a no-op, and a missing queue row (crash
+    // between the state update and the offer) is re-created.
     yield* publishDraftJob
       .offer(
         {

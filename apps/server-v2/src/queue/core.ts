@@ -75,6 +75,8 @@ export const terminal = <E>(error: E): TerminalJobError =>
 
 const MAX_PAYLOAD_ATTRIBUTE_LENGTH = 1024;
 
+const REDACTED_PAYLOAD_JSON = "[redacted]";
+
 /**
  * Serializes a job payload for error reporting, truncating it to keep Sentry
  * events and logs reasonably sized.
@@ -159,6 +161,12 @@ export interface JobOptions<S extends Schema.Constraint, E, R> {
         meta: JobMeta,
       ) => Effect.Effect<void, never, R>)
     | undefined;
+  /**
+   * Projection of the payload attached to failure reports. Payload fields are
+   * only reported when explicitly included here; the default is a redacted
+   * placeholder.
+   */
+  readonly reportPayload?: ((payload: S["Type"]) => Schema.Json) | undefined;
   readonly maxAttempts?: number | undefined;
   readonly retrySchedule?: Schedule.Schedule<unknown, number> | undefined;
   readonly concurrency?: number | undefined;
@@ -220,6 +228,7 @@ export const defineJob = <S extends Schema.Constraint, E, R>(
   const retrySchedule = options.retrySchedule ?? defaultRetrySchedule;
   const concurrency = options.concurrency ?? DEFAULT_CONCURRENCY;
   const onFinalFailure = options.onFinalFailure;
+  const reportPayload = options.reportPayload;
 
   const tag = Context.Service<JobQueue<S>, JobQueue<S>>(
     `sigle/jobs/${options.name}`,
@@ -272,6 +281,18 @@ export const defineJob = <S extends Schema.Constraint, E, R>(
           Metric.withAttributes({ queue: options.name }),
         );
 
+        const describePayload = (payload: S["Type"]): string => {
+          if (reportPayload === undefined) {
+            return REDACTED_PAYLOAD_JSON;
+          }
+
+          try {
+            return truncatePayload(reportPayload(payload));
+          } catch {
+            return REDACTED_PAYLOAD_JSON;
+          }
+        };
+
         const reportFailure = (
           cause: Cause.Cause<unknown>,
           payloadJson: string,
@@ -319,7 +340,7 @@ export const defineJob = <S extends Schema.Constraint, E, R>(
               return yield* Effect.failCause(cause);
             }
 
-            const payloadJson = truncatePayload(payload);
+            const payloadJson = describePayload(payload);
             const terminalError = findTerminalError(cause);
 
             if (terminalError !== undefined) {

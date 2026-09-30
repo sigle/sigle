@@ -171,6 +171,7 @@ describe(defineJob, () => {
           name: "core-test-retry",
           payload: TestPayloadSchema,
           maxAttempts: 2,
+          reportPayload: (payload) => payload,
           process: (payload, meta) =>
             Effect.gen(function* () {
               attemptsSeen.push(meta.attempts);
@@ -263,11 +264,19 @@ describe(defineJob, () => {
     () =>
       Effect.gen(function* () {
         const attemptsSeen: Array<number> = [];
-        const reports: Array<string> = [];
+
+        const reports: Array<{ message: string; payload: string | undefined }> =
+          [];
+
         const done = yield* Deferred.make<void>();
 
-        const reporter = ErrorReporter.make(({ error }) => {
-          reports.push(error.message);
+        const reporter = ErrorReporter.make(({ attributes, error }) => {
+          reports.push({
+            message: error.message,
+            payload: Option.getOrUndefined(
+              decodeJobFailureAttributes(attributes),
+            )?.payload,
+          });
           Deferred.doneUnsafe(done, Exit.void);
         });
 
@@ -306,7 +315,7 @@ describe(defineJob, () => {
             stats,
           }).toStrictEqual({
             attemptsSeen: [1],
-            reports: ["invalid payload"],
+            reports: [{ message: "invalid payload", payload: "[redacted]" }],
             stats: [
               {
                 queueName: "core-test-terminal",
