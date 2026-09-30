@@ -22,8 +22,10 @@ import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { ArweaveService } from "@/services/arweave";
 import { AuthService } from "@/services/auth";
+import { ImageProcessingService } from "@/services/image-processing";
 import { PostHogService } from "@/services/posthog";
 import { RateLimiterLive } from "@/services/rate-limiter";
+import { StorageService } from "@/services/storage";
 import { TelemetryLayer } from "@/services/telemetry";
 import { UserWhitelistService } from "@/services/users";
 
@@ -31,6 +33,8 @@ export const CoreServicesLayer = Layer.mergeAll(
   TelemetryLayer,
   PostHogService.layer,
   ArweaveService.layer,
+  ImageProcessingService.layer,
+  StorageService.layer,
 ).pipe(Layer.provideMerge(AppConfig.layer), Layer.provide(NodeServices.layer));
 
 export const ApiHandlersLayer = Layer.mergeAll(

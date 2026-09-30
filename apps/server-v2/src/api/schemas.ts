@@ -55,6 +55,32 @@ export class NotFound extends Schema.Error<NotFound>("sigle/api/NotFound")(
   },
 ) {}
 
+export class UnsupportedMediaType extends Schema.Error<UnsupportedMediaType>(
+  "sigle/api/UnsupportedMediaType",
+)(
+  {
+    _tag: Schema.tag("UnsupportedMediaType"),
+    message: Schema.String,
+  },
+  {
+    description: "Unsupported Media Type",
+    httpApiStatus: 415,
+  },
+) {}
+
+export class PayloadTooLarge extends Schema.Error<PayloadTooLarge>(
+  "sigle/api/PayloadTooLarge",
+)(
+  {
+    _tag: Schema.tag("PayloadTooLarge"),
+    message: Schema.String,
+  },
+  {
+    description: "Payload Too Large",
+    httpApiStatus: 413,
+  },
+) {}
+
 export class TooManyRequests extends Schema.Error<TooManyRequests>(
   "sigle/api/TooManyRequests",
 )(
