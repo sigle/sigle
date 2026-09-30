@@ -106,7 +106,7 @@ const postgresLayer = (config: AppConfigValues) =>
     Effect.map(makePostgresDatabases(config), ({ db, authDb }) =>
       Context.make(Database, db).pipe(Context.add(AuthDatabase, authDb)),
     ),
-  ).pipe(Layer.provide(PgClient.layer({ url: config.DATABASE_URL })));
+  ).pipe(Layer.provideMerge(PgClient.layer({ url: config.DATABASE_URL })));
 
 const pgliteLayer = (config: AppConfigValues) =>
   Layer.effectContext(
@@ -114,7 +114,7 @@ const pgliteLayer = (config: AppConfigValues) =>
       Context.make(Database, db).pipe(Context.add(AuthDatabase, authDb)),
     ),
   ).pipe(
-    Layer.provide(
+    Layer.provideMerge(
       PgliteClient.layer({ dataDir: Redacted.value(config.DATABASE_URL) }),
     ),
   );

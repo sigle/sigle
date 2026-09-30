@@ -1,4 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
+import { PostMetadataSchema, verifyPostSignature } from "@sigle/sdk";
 import { and, count, desc, eq } from "drizzle-orm";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/unstable/httpapi";
@@ -7,13 +8,22 @@ import {
   CreateDraftPayload,
   DRAFT_LIST_DEFAULT_LIMIT,
   DraftListQuery,
+  PublishDraftPayload,
   UpdateDraftPayload,
 } from "@/api/groups/drafts";
 import { CurrentUser } from "@/api/middleware/auth-user";
-import { NotFound } from "@/api/schemas";
+import { BadRequest, NotFound } from "@/api/schemas";
+import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { draft } from "@/db/schema";
+import { draft, post } from "@/db/schema";
+import {
+  PUBLISH_DRAFT_QUEUE_NAME,
+  publishDraftJob,
+  publishDraftJobId,
+} from "@/jobs/publish-draft";
+import { JobAdminService } from "@/queue/admin";
 import { PostHogService } from "@/services/posthog";
+import { UserWhitelistService } from "@/services/users";
 
 const toDraft = (row: typeof draft.$inferSelect) => ({
   id: row.id,
@@ -195,6 +205,157 @@ export const deleteDraft = (draftId: string) =>
     });
   });
 
+export const publishDraft = (
+  draftId: string,
+  payload: typeof PublishDraftPayload.Type,
+) =>
+  Effect.gen(function* () {
+    const user = yield* CurrentUser;
+    const config = yield* AppConfig;
+    const db = yield* Database;
+    const whitelist = yield* UserWhitelistService;
+    const admin = yield* JobAdminService;
+
+    const [foundDraft] = yield* db
+      .select()
+      .from(draft)
+      .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
+      .limit(1)
+      .pipe(Effect.orDie);
+
+    if (!foundDraft) {
+      return yield* new NotFound({ message: "Draft not found" });
+    }
+
+    const parsedMetadata = PostMetadataSchema.safeParse(payload.metadata);
+
+    if (!parsedMetadata.success) {
+      return yield* new BadRequest({
+        message: "Invalid post metadata",
+      });
+    }
+
+    const signatureResult = verifyPostSignature(parsedMetadata.data, {
+      network: config.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
+    });
+
+    if (signatureResult.isErr()) {
+      return yield* new BadRequest({
+        message: signatureResult.error.error,
+      });
+    }
+
+    const { recoveredAddress, signature } = signatureResult.value;
+
+    const ownsWallet = yield* whitelist.hasWalletAddress(
+      user.id,
+      recoveredAddress,
+    );
+
+    if (!ownsWallet) {
+      return yield* new BadRequest({
+        message:
+          "Invalid signature: Signature verification failed or address mismatch",
+      });
+    }
+
+    const [existingPostWithSignature] = yield* db
+      .select({ id: post.id })
+      .from(post)
+      .where(eq(post.signature, signature))
+      .limit(1)
+      .pipe(Effect.orDie);
+
+    if (existingPostWithSignature) {
+      return yield* new BadRequest({
+        message: "Metadata signature has already been published",
+      });
+    }
+
+    const jobId = publishDraftJobId(draftId);
+
+    // If a previous publish job for this draft permanently failed, clear its
+    // queue entry so the new offer is accepted.
+    if (foundDraft.txStatus === "FAILED") {
+      yield* admin.clearJob(PUBLISH_DRAFT_QUEUE_NAME, jobId);
+    }
+
+    yield* db
+      .update(draft)
+      .set({
+        txStatus: "PENDING",
+        updatedAt: new Date(),
+      })
+      .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
+      .pipe(Effect.orDie);
+
+    yield* publishDraftJob
+      .offer(
+        {
+          draftId,
+          userId: user.id,
+          authorAddress: recoveredAddress,
+          signature,
+          metadataJson: JSON.stringify(parsedMetadata.data),
+        },
+        { id: jobId },
+      )
+      .pipe(Effect.orDie);
+
+    return {
+      draftId,
+      status: "PENDING" as const,
+    };
+  });
+
+export const getDraftPublishStatus = (draftId: string) =>
+  Effect.gen(function* () {
+    const user = yield* CurrentUser;
+    const db = yield* Database;
+
+    const [publishedPost] = yield* db
+      .select({ id: post.id, txId: post.txId })
+      .from(post)
+      .where(and(eq(post.draftId, draftId), eq(post.userId, user.id)))
+      .limit(1)
+      .pipe(Effect.orDie);
+
+    if (publishedPost) {
+      return {
+        status: "COMPLETED" as const,
+        postId: publishedPost.id,
+        arweaveId: publishedPost.txId,
+      };
+    }
+
+    const [foundDraft] = yield* db
+      .select({ txStatus: draft.txStatus, txId: draft.txId })
+      .from(draft)
+      .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
+      .limit(1)
+      .pipe(Effect.orDie);
+
+    if (!foundDraft) {
+      return yield* new NotFound({ message: "Draft not found" });
+    }
+
+    if (
+      foundDraft.txStatus === "PENDING" ||
+      foundDraft.txStatus === "PROCESSING" ||
+      foundDraft.txStatus === "FAILED"
+    ) {
+      return {
+        status: foundDraft.txStatus,
+        postId: null,
+        arweaveId: foundDraft.txId,
+      } as const;
+    }
+
+    return yield* new BadRequest({
+      message: "Draft publishing has not been started",
+    });
+  });
+
 export const DraftsHandlersLayer = HttpApiBuilder.group(
   SigleApi,
   "drafts",
@@ -206,5 +367,11 @@ export const DraftsHandlersLayer = HttpApiBuilder.group(
       .handle("update", ({ params, payload }) =>
         updateDraft(params.draftId, payload),
       )
-      .handle("delete", ({ params }) => deleteDraft(params.draftId)),
+      .handle("delete", ({ params }) => deleteDraft(params.draftId))
+      .handle("publish", ({ params, payload }) =>
+        publishDraft(params.draftId, payload),
+      )
+      .handle("getPublishStatus", ({ params }) =>
+        getDraftPublishStatus(params.draftId),
+      ),
 );

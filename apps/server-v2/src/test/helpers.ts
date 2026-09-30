@@ -1,3 +1,4 @@
+import { PostMetadataSchemaId } from "@sigle/sdk";
 import { hashMessage } from "@stacks/encryption";
 import {
   getAddressFromPrivateKey,
@@ -10,7 +11,7 @@ import { Cookies, HttpClient } from "effect/unstable/http";
 import { createSiwsMessage } from "sign-in-with-stacks";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { draft, session, user } from "@/db/schema";
+import { draft, post, session, user, walletAddress } from "@/db/schema";
 import { SESSION_COOKIE_NAME } from "@/services/auth";
 
 export const createTestUser = (
@@ -33,11 +34,38 @@ export const createTestUser = (
     return created;
   });
 
+export const createTestWalletAddress = (options: {
+  readonly id?: string;
+  readonly userId: string;
+  readonly address: string;
+  readonly chainId?: number;
+  readonly isPrimary?: boolean;
+}) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+
+    const [created] = yield* db
+      .insert(walletAddress)
+      .values({
+        id: options.id ?? crypto.randomUUID(),
+        userId: options.userId,
+        address: options.address,
+        chainId: options.chainId ?? STACKS_TESTNET_CHAIN_ID,
+        isPrimary: options.isPrimary ?? true,
+        createdAt: new Date(),
+      })
+      .returning();
+
+    return created;
+  });
+
 export const createTestDraft = (options: {
   readonly id?: string;
   readonly userId: string;
   readonly title?: string;
   readonly content?: string;
+  readonly txId?: string | null;
+  readonly txStatus?: string | null;
   readonly createdAt?: Date;
   readonly updatedAt?: Date;
 }) =>
@@ -50,8 +78,48 @@ export const createTestDraft = (options: {
         id: options.id ?? crypto.randomUUID(),
         title: options.title ?? "Test Draft",
         content: options.content ?? "Test content",
+        txId: options.txId ?? null,
+        txStatus: options.txStatus ?? null,
         createdAt: options.createdAt,
         updatedAt: options.updatedAt,
+        userId: options.userId,
+      })
+      .returning();
+
+    return created;
+  });
+
+export const createTestPost = (options: {
+  readonly id?: string;
+  readonly draftId?: string | null;
+  readonly userId: string;
+  readonly txId?: string;
+  readonly version?: string;
+  readonly blockHeight?: number;
+  readonly metadataUri?: string;
+  readonly title?: string;
+  readonly content?: string;
+  readonly excerpt?: string;
+  readonly signature?: string | null;
+}) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+    const id = options.id ?? crypto.randomUUID();
+    const txId = options.txId ?? id;
+
+    const [created] = yield* db
+      .insert(post)
+      .values({
+        id,
+        draftId: options.draftId ?? null,
+        version: options.version ?? "1.0.0",
+        txId,
+        blockHeight: options.blockHeight ?? 0,
+        metadataUri: options.metadataUri ?? `ar://${txId}`,
+        title: options.title ?? "Test Post",
+        content: options.content ?? "Test post content",
+        excerpt: options.excerpt ?? "Test excerpt",
+        signature: options.signature ?? null,
         userId: options.userId,
       })
       .returning();
@@ -105,6 +173,34 @@ export const signTestSiwsMessage = (
     messageHash: Buffer.from(hashMessage(message)).toString("hex"),
     privateKey,
   });
+
+export const createSignedTestPostMetadata = (options: {
+  readonly draftId: string;
+  readonly privateKey: string;
+  readonly title?: string;
+  readonly content?: string;
+  readonly tags?: Array<string>;
+}) => {
+  const metadataWithoutSignature = {
+    $schema: PostMetadataSchemaId.LATEST,
+    content: {
+      id: options.draftId,
+      title: options.title ?? "Published Title",
+      content: options.content ?? "Hello **Arweave** world!",
+      tags: options.tags ?? ["web3", "effect"],
+    },
+  };
+
+  const signature = signTestSiwsMessage(
+    JSON.stringify(metadataWithoutSignature),
+    options.privateKey,
+  );
+
+  return {
+    ...metadataWithoutSignature,
+    signature,
+  };
+};
 
 const TEST_SESSION_DURATION_MILLIS = 7 * 24 * 60 * 60 * 1000;
 

@@ -1,9 +1,10 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
 import { Data, Effect, Result } from "effect";
+import { SqlClient } from "effect/unstable/sql";
 import { Database } from "@/db";
-import { account, session, user, verification } from "@/db/schema";
-import { createTestUser } from "@/test/helpers";
+import { account, post, session, user, verification } from "@/db/schema";
+import { createTestPost, createTestUser } from "@/test/helpers";
 import { TestDatabaseLayer } from "@/test/layer";
 
 class RollbackTestError extends Data.TaggedError("RollbackTestError") {}
@@ -183,6 +184,50 @@ describe("database", () => {
           committedId: committed[0].id,
           rolledBackUsers: [],
         });
+      }),
+    );
+
+    it.effect("post: creates and queries posts and exposes SqlClient", () =>
+      Effect.gen(function* () {
+        const db = yield* Database;
+        const sql = yield* SqlClient.SqlClient;
+
+        const createdUser = yield* createTestUser();
+
+        const createdPost = yield* createTestPost({
+          id: "arweave-tx-1",
+          draftId: "draft-1",
+          userId: createdUser.id,
+          title: "Published Post",
+          signature: "sig-1",
+        });
+
+        const [foundPost] = yield* db
+          .select()
+          .from(post)
+          .where(eq(post.draftId, "draft-1"));
+
+        expect({
+          id: foundPost.id,
+          draftId: foundPost.draftId,
+          txId: foundPost.txId,
+          title: foundPost.title,
+          signature: foundPost.signature,
+          userId: foundPost.userId,
+        }).toStrictEqual({
+          id: createdPost.id,
+          draftId: "draft-1",
+          txId: "arweave-tx-1",
+          title: "Published Post",
+          signature: "sig-1",
+          userId: createdUser.id,
+        });
+
+        const rows = yield* sql<{ id: string }>`
+          SELECT id FROM post WHERE id = ${createdPost.id}
+        `;
+
+        expect(rows).toStrictEqual([{ id: "arweave-tx-1" }]);
       }),
     );
   });

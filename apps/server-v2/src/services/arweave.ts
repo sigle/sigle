@@ -1,5 +1,5 @@
 import { TurboFactory } from "@ardrive/turbo-sdk";
-import { Context, Data, Effect, Layer, Redacted } from "effect";
+import { Context, Data, Effect, ErrorReporter, Layer, Redacted } from "effect";
 import { CID } from "multiformats/cid";
 import { code } from "multiformats/codecs/raw";
 import { sha256 } from "multiformats/hashes/sha2";
@@ -34,9 +34,17 @@ export interface ArweaveUploader {
 }
 
 export class ArweaveUploadError extends Data.TaggedError("ArweaveUploadError")<{
-  readonly cause: unknown;
+  readonly cause?: unknown;
   readonly message: string;
-}> {}
+  readonly contentType?: ArweaveContentType | undefined;
+  readonly tags?: ReadonlyArray<ArweaveTag> | undefined;
+}> {
+  readonly [ErrorReporter.severity] = "Error" as const;
+  readonly [ErrorReporter.attributes] = {
+    contentType: this.contentType,
+    tags: this.tags,
+  };
+}
 
 export interface ArweaveClient {
   readonly uploadFile: (
