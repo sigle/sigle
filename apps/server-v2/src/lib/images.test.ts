@@ -1,9 +1,11 @@
 import { describe, expect, it } from "@effect/vitest";
-import { Effect } from "effect";
+import { Effect, Option } from "effect";
 import sharp from "sharp";
 import {
+  detectImageFormat,
   ImageOptimizationError,
   isAllowedImageFormat,
+  mimeTypeForSharpFormat,
   optimizeImage,
 } from "@/lib/images";
 
@@ -18,6 +20,11 @@ const makePng = (width: number, height: number) =>
   })
     .png()
     .toBuffer();
+
+const ONE_PIXEL_GIF = Buffer.from(
+  "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+  "base64",
+);
 
 describe("images", () => {
   it.effect("optimizes an image to webp and resizes it down", () =>
@@ -76,6 +83,53 @@ describe("images", () => {
 
       expect(error).toBeInstanceOf(ImageOptimizationError);
       expect(error._tag).toBe("ImageOptimizationError");
+    }),
+  );
+
+  it.effect("rejects images above the pixel limit", () =>
+    Effect.gen(function* () {
+      const png = yield* Effect.promise(() => makePng(64, 32));
+
+      const error = yield* optimizeImage({
+        buffer: new Uint8Array(png),
+        limitInputPixels: 100,
+        quality: 75,
+        width: 32,
+      }).pipe(Effect.flip);
+
+      expect(error).toBeInstanceOf(ImageOptimizationError);
+    }),
+  );
+
+  it.effect("detects the actual image format from the bytes", () =>
+    Effect.gen(function* () {
+      const png = yield* Effect.promise(() => makePng(16, 16));
+
+      const pngFormat = Option.getOrNull(
+        yield* detectImageFormat(new Uint8Array(png)),
+      );
+
+      const gifFormat = Option.getOrNull(
+        yield* detectImageFormat(new Uint8Array(ONE_PIXEL_GIF)),
+      );
+
+      const invalidFormat = yield* detectImageFormat(
+        new Uint8Array([1, 2, 3]),
+      ).pipe(Effect.orElseSucceed(() => Option.none()));
+
+      expect({
+        png: pngFormat,
+        pngMime: mimeTypeForSharpFormat(pngFormat ?? ""),
+        gif: gifFormat,
+        gifMime: mimeTypeForSharpFormat(gifFormat ?? ""),
+        invalid: Option.isNone(invalidFormat),
+      }).toStrictEqual({
+        png: "png",
+        pngMime: "image/png",
+        gif: "gif",
+        gifMime: undefined,
+        invalid: true,
+      });
     }),
   );
 

@@ -5,12 +5,19 @@ export const profileImageKinds = ["avatar", "cover"] as const;
 export type ProfileImageKind = (typeof profileImageKinds)[number];
 
 /**
- * Maximum size accepted for a profile image upload, matching the legacy
- * server request body limit.
+ * Maximum size accepted for a profile image upload. An avatar is displayed
+ * small and never needs as many bytes as a cover.
  */
-export const PROFILE_IMAGE_MAX_MIB = 5;
+const maxMibByKind: Record<ProfileImageKind, number> = {
+  avatar: 2,
+  cover: 5,
+};
 
-export const PROFILE_IMAGE_MAX_BYTES = PROFILE_IMAGE_MAX_MIB * 1024 * 1024;
+export const profileImageMaxMib = (kind: ProfileImageKind): number =>
+  maxMibByKind[kind];
+
+export const profileImageMaxBytes = (kind: ProfileImageKind): number =>
+  maxMibByKind[kind] * 1024 * 1024;
 
 export interface ProfileImageSettings {
   readonly quality: number;

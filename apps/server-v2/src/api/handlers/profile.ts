@@ -1,4 +1,4 @@
-import { ByteSize, Effect } from "effect";
+import { ByteSize, Effect, Option, Predicate } from "effect";
 import { HttpServerRequest } from "effect/unstable/http";
 import { HttpApiBuilder } from "effect/unstable/httpapi";
 import type { UploadProfileMetadataPayload } from "@/api/groups/profile";
@@ -12,17 +12,22 @@ import {
 } from "@/api/schemas";
 import { AppConfig } from "@/config";
 import { sha256Hex } from "@/lib/hash";
-import { isAllowedImageFormat, optimizeImage } from "@/lib/images";
 import {
-  PROFILE_IMAGE_MAX_BYTES,
-  PROFILE_IMAGE_MAX_MIB,
+  detectImageFormat,
+  isAllowedImageFormat,
+  mimeTypeForSharpFormat,
+} from "@/lib/images";
+import {
   profileImageKey,
+  profileImageMaxBytes,
+  profileImageMaxMib,
   profileImagePostHogEvent,
   profileImageSettings,
   type ProfileImageKind,
   versionProfileImageUrl,
 } from "@/lib/profile-images";
 import { ArweaveService } from "@/services/arweave";
+import { ImageProcessingService } from "@/services/image-processing";
 import { PostHogService } from "@/services/posthog";
 import { StorageService } from "@/services/storage";
 
@@ -64,11 +69,14 @@ export const uploadProfileMetadata = (
 const normalizeContentType = (contentType: string): string =>
   contentType.split(";")[0]?.trim().toLowerCase() ?? "";
 
-const readImageBody = (request: HttpServerRequest.HttpServerRequest) =>
+const readImageBody = (
+  request: HttpServerRequest.HttpServerRequest,
+  maxMib: number,
+) =>
   request.arrayBuffer.pipe(
     Effect.provideService(
       HttpServerRequest.MaxBodySize,
-      ByteSize.mebibytes(PROFILE_IMAGE_MAX_MIB),
+      ByteSize.mebibytes(maxMib),
     ),
     Effect.map((buffer) => new Uint8Array(buffer)),
     Effect.tapError((error) =>
@@ -77,7 +85,7 @@ const readImageBody = (request: HttpServerRequest.HttpServerRequest) =>
     Effect.mapError(
       () =>
         new PayloadTooLarge({
-          message: `Image is too large, maximum size is ${PROFILE_IMAGE_MAX_MIB} MiB.`,
+          message: `Image is too large, maximum size is ${maxMib} MiB.`,
         }),
     ),
   );
@@ -90,6 +98,7 @@ export const uploadProfileImage = (
     const user = yield* CurrentUser;
     const config = yield* AppConfig;
     const storage = yield* StorageService;
+    const images = yield* ImageProcessingService;
     const posthog = yield* PostHogService;
 
     const contentType = normalizeContentType(
@@ -102,35 +111,52 @@ export const uploadProfileImage = (
       });
     }
 
+    const maxMib = profileImageMaxMib(kind);
     const declaredSize = Number(request.headers["content-length"] ?? "");
 
     if (
       Number.isFinite(declaredSize) &&
-      declaredSize > PROFILE_IMAGE_MAX_BYTES
+      declaredSize > profileImageMaxBytes(kind)
     ) {
       return yield* new PayloadTooLarge({
-        message: `Image is too large, maximum size is ${PROFILE_IMAGE_MAX_MIB} MiB.`,
+        message: `Image is too large, maximum size is ${maxMib} MiB.`,
       });
     }
 
-    const buffer = yield* readImageBody(request);
+    const buffer = yield* readImageBody(request, maxMib);
 
     if (buffer.length === 0) {
       return yield* new BadRequest({ message: "No image provided" });
     }
 
+    const detected = yield* detectImageFormat(buffer).pipe(
+      Effect.orElseSucceed(() => Option.none()),
+    );
+
+    if (Option.isNone(detected)) {
+      return yield* new UnsupportedMediaType({ message: "Invalid image file" });
+    }
+
+    if (mimeTypeForSharpFormat(detected.value) === undefined) {
+      return yield* new UnsupportedMediaType({
+        message: `Unsupported image format: ${detected.value}`,
+      });
+    }
+
     const { quality, width } = profileImageSettings(config.STACKS_ENV, kind);
 
-    const optimized = yield* optimizeImage({ buffer, quality, width }).pipe(
+    const optimized = yield* images.optimize({ buffer, quality, width }).pipe(
       Effect.tapError((error) =>
         Effect.logWarning("Failed to optimize profile image", {
-          cause: error.cause,
+          cause: error,
           contentType,
           kind,
         }),
       ),
-      Effect.mapError(
-        () => new BadRequest({ message: "Failed to optimize image." }),
+      Effect.mapError((error) =>
+        Predicate.isTagged(error, "ImageProcessingTimeoutError")
+          ? new InternalServerError({ message: "Image processing timed out." })
+          : new BadRequest({ message: "Failed to optimize image." }),
       ),
     );
 

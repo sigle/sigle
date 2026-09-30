@@ -4,6 +4,7 @@ import { HttpRouter } from "effect/unstable/http";
 import { AppConfig, type AppConfigValues } from "@/config";
 import { ApiRoutesLayer } from "@/main";
 import { ArweaveService } from "@/services/arweave";
+import { ImageProcessingService } from "@/services/image-processing";
 import { PostHogService, type PostHogEvent } from "@/services/posthog";
 import { RateLimiterTest } from "@/services/rate-limiter";
 import { StorageService } from "@/services/storage";
@@ -28,6 +29,7 @@ export const makeTestServerLayer = (
     Layer.provideMerge(TestDatabaseLayer),
     Layer.provideMerge(AppConfig.layerTest(overrides)),
     Layer.provide(PostHogService.layerTest(posthogEvents)),
+    Layer.provide(ImageProcessingService.layer),
     Layer.provide(layers.arweave ?? ArweaveService.layerTest()),
     Layer.provide(layers.storage ?? StorageService.layerTest()),
   );

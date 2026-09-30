@@ -1,4 +1,4 @@
-import { Data, Effect } from "effect";
+import { Data, Effect, Option } from "effect";
 import sharp from "sharp";
 
 export const WEBP = "image/webp";
@@ -24,6 +24,42 @@ export class ImageOptimizationError extends Data.TaggedError(
   readonly message: string;
 }> {}
 
+/**
+ * Upper bound on the number of pixels sharp is allowed to decode, guarding
+ * against decompression bombs.
+ */
+export const MAX_INPUT_PIXELS = 50_000_000;
+
+const mimeTypeBySharpFormat: ReadonlyMap<string, AllowedImageFormat> = new Map([
+  ["jpeg", JPEG],
+  ["png", PNG],
+  ["webp", WEBP],
+]);
+
+export const mimeTypeForSharpFormat = (
+  format: string,
+): AllowedImageFormat | undefined => mimeTypeBySharpFormat.get(format);
+
+/**
+ * Reads the image header to detect the actual format, ignoring what the client
+ * declared in the request `Content-Type`.
+ *
+ * Returns `None` when the bytes are not a readable image, and the sharp format
+ * name (e.g. `png`, `gif`) otherwise.
+ */
+export const detectImageFormat = (
+  buffer: Uint8Array,
+): Effect.Effect<Option.Option<string>, ImageOptimizationError> =>
+  Effect.tryPromise({
+    try: async () =>
+      Option.fromNullishOr((await sharp(buffer).metadata()).format),
+    catch: (cause) =>
+      new ImageOptimizationError({
+        cause,
+        message: cause instanceof Error ? cause.message : String(cause),
+      }),
+  });
+
 export interface OptimizedImage {
   readonly buffer: Uint8Array;
   readonly height: number;
@@ -32,6 +68,7 @@ export interface OptimizedImage {
 
 export interface OptimizeImageOptions {
   readonly buffer: Uint8Array;
+  readonly limitInputPixels?: number | undefined;
   readonly quality: number;
   readonly width: number;
 }
@@ -44,6 +81,7 @@ export interface OptimizeImageOptions {
  */
 export const optimizeImage = ({
   buffer,
+  limitInputPixels = MAX_INPUT_PIXELS,
   quality,
   width,
 }: OptimizeImageOptions): Effect.Effect<
@@ -52,7 +90,10 @@ export const optimizeImage = ({
 > =>
   Effect.tryPromise({
     try: async () => {
-      const { data, info } = await sharp(buffer, { sequentialRead: true })
+      const { data, info } = await sharp(buffer, {
+        limitInputPixels,
+        sequentialRead: true,
+      })
         .rotate()
         .resize(width, undefined, { withoutEnlargement: true })
         .webp({ quality, effort: 6, smartSubsample: true })

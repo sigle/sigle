@@ -59,6 +59,11 @@ const makePngBuffer = (width = 16, height = 16) =>
     .png()
     .toBuffer();
 
+const ONE_PIXEL_GIF = Buffer.from(
+  "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+  "base64",
+);
+
 interface UploadImageInput {
   readonly bytes: Uint8Array<ArrayBuffer>;
   readonly contentType: string;
@@ -462,21 +467,35 @@ describe("profile", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("PUT /images/avatar rejects files larger than 5 MiB", () =>
+  it.effect("PUT /images applies per-kind size limits", () =>
     Effect.gen(function* () {
       const { client } = yield* createAuthenticatedClient();
 
-      const response = yield* uploadImageRequest(client, "avatar", {
+      const avatar = yield* uploadImageRequest(client, "avatar", {
+        bytes: new Uint8Array(3 * 1024 * 1024),
+        contentType: "image/png",
+      });
+
+      const cover = yield* uploadImageRequest(client, "cover", {
         bytes: new Uint8Array(6 * 1024 * 1024),
         contentType: "image/png",
       });
 
-      const body =
-        yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
+      const avatarBody =
+        yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(avatar);
 
-      expect({ status: response.status, message: body.message }).toStrictEqual({
-        status: 413,
-        message: "Image is too large, maximum size is 5 MiB.",
+      const coverBody =
+        yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(cover);
+
+      expect({
+        statuses: [avatar.status, cover.status],
+        messages: [avatarBody.message, coverBody.message],
+      }).toStrictEqual({
+        statuses: [413, 413],
+        messages: [
+          "Image is too large, maximum size is 2 MiB.",
+          "Image is too large, maximum size is 5 MiB.",
+        ],
       });
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
@@ -505,8 +524,27 @@ describe("profile", () => {
         statuses: [empty.status, invalid.status],
         messages: [emptyBody.message, invalidBody.message],
       }).toStrictEqual({
-        statuses: [400, 400],
-        messages: ["No image provided", "Failed to optimize image."],
+        statuses: [400, 415],
+        messages: ["No image provided", "Invalid image file"],
+      });
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect("PUT /images/avatar rejects formats the bytes do not match", () =>
+    Effect.gen(function* () {
+      const { client } = yield* createAuthenticatedClient();
+
+      const response = yield* uploadImageRequest(client, "avatar", {
+        bytes: new Uint8Array(ONE_PIXEL_GIF),
+        contentType: "image/png",
+      });
+
+      const body =
+        yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
+
+      expect({ status: response.status, message: body.message }).toStrictEqual({
+        status: 415,
+        message: "Unsupported image format: gif",
       });
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
