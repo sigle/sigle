@@ -27,7 +27,6 @@ Sigle is a monorepo made of multiple applications and packages:
 
 - `apps` - Contains the apps.
   - `sigle` - Contains the user facing application.
-  - `custom-domain` - Contains the custom domain app.
   - `server` - Contains the api.
 - `packages` - Contains the shared packages.
 
@@ -67,12 +66,11 @@ pnpm db:up
 
 ### Docker services
 
-| Name                 | Link                  | Profile |
-| -------------------- | --------------------- | ------- |
-| @sigle/server        | http://localhost:3001 | Default |
-| @sigle/sigle         | http://localhost:3000 | `full`  |
-| @sigle/custom-domain | http://localhost:3002 | `full`  |
-| Prisma Studio        | http://localhost:5555 | `tools` |
+| Name          | Link                  | Profile |
+| ------------- | --------------------- | ------- |
+| @sigle/server | http://localhost:3001 | Default |
+| @sigle/sigle  | http://localhost:3000 | `full`  |
+| Prisma Studio | http://localhost:5555 | `tools` |
 
 ### Seed the database (optional)
 
@@ -109,11 +107,4 @@ To update the e2e tests snapshots, run the following command from the root direc
 ```sh
 docker build -t local-playwright-docker --file apps/sigle/Dockerfile.dev .
 docker run -v "./apps/sigle/e2e:/app/apps/sigle/e2e" -it local-playwright-docker:latest
-```
-
-To update the custom domain e2e tests snapshots:
-
-```sh
-docker build -t local-playwright-docker --file apps/custom-domain/Dockerfile.dev .
-docker run -v "./apps/custom-domain/e2e:/app/apps/custom-domain/e2e" -it local-playwright-docker:latest
 ```

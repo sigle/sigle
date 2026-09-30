@@ -100,43 +100,6 @@ services:
     networks:
       - sigle-network
 
-  custom-domain:
-    container_name: sigle-custom-domain
-    profiles:
-      - full
-    build:
-      context: ./
-      dockerfile: ./apps/custom-domain/Dockerfile.dev
-    restart: always
-    ports:
-      - "3002:3002"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    environment:
-      - NODE_ENV=development
-      - PORT=3002
-      - NEXT_PUBLIC_API_URL=http://localhost:3001
-    develop:
-      watch:
-        - path: ./apps/custom-domain/package.json
-          action: rebuild
-        - path: ./apps/custom-domain/
-          target: /app/apps/custom-domain
-          action: sync
-        - path: ./packages/
-          target: /app/packages
-          action: sync
-        - path: ./apps/contracts/
-          target: /app/apps/contracts
-          action: sync
-        - path: ./apps/contracts-next/
-          target: /app/apps/contracts-next
-          action: sync
-    depends_on:
-      - server
-    networks:
-      - sigle-network
-
   studio:
     container_name: sigle-studio
     profiles:
