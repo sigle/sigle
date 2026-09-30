@@ -82,6 +82,46 @@ export interface paths {
     patch: operations["drafts.update"];
     trace?: never;
   };
+  "/api/protected/user/profile/upload-metadata": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Upload profile metadata
+     * @description Upload the profile metadata to Arweave and return the transaction id.
+     */
+    post: operations["profile.uploadMetadata"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/protected/user/profile/images/{kind}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /**
+     * Upload a profile image
+     * @description Upload a profile avatar or cover image as a raw binary body. Re-uploading the same image is a no-op, uploading a different image replaces the previous file.
+     */
+    put: operations["profile.uploadImage"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -183,6 +223,34 @@ export interface components {
       tags?: string[] | null;
       /** @description Omit to keep the current value unchanged, set to null to clear it. */
       canonicalUri?: string | null;
+    };
+    ProfileMetadataEncoded: unknown;
+    UploadProfileMetadataResponse: {
+      id: string;
+      uri: string;
+      cid: string;
+      gatewayUrl: string;
+    };
+    UploadProfileImageResponse: {
+      url: string;
+      key: string;
+      width: number;
+      height: number;
+    };
+    sigle_api_BadRequestEncoded: {
+      /** @enum {string} */
+      _tag: "BadRequest";
+      message: string;
+    };
+    sigle_api_PayloadTooLargeEncoded: {
+      /** @enum {string} */
+      _tag: "PayloadTooLarge";
+      message: string;
+    };
+    sigle_api_UnsupportedMediaTypeEncoded: {
+      /** @enum {string} */
+      _tag: "UnsupportedMediaType";
+      message: string;
     };
   };
   responses: never;
@@ -584,6 +652,141 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "profile.uploadMetadata": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          metadata: components["schemas"]["ProfileMetadataEncoded"];
+        };
+      };
+    };
+    responses: {
+      /** @description UploadProfileMetadataResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UploadProfileMetadataResponse"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "profile.uploadImage": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        kind: "avatar" | "cover";
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "image/webp": string;
+        "image/png": string;
+        "image/jpeg": string;
+      };
+    };
+    responses: {
+      /** @description UploadProfileImageResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UploadProfileImageResponse"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Payload Too Large */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_PayloadTooLargeEncoded"];
+        };
+      };
+      /** @description Unsupported Media Type */
+      415: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnsupportedMediaTypeEncoded"];
         };
       };
       /** @description Too Many Requests */

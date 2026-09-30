@@ -23,8 +23,8 @@ export const UploadProfilePicture = ({
 
   const { mutate: uploadImage, isPending: loadingUploadImage } =
     sigleApiClient.useMutation(
-      "post",
-      "/api/protected/user/profile/upload-avatar",
+      "put",
+      "/api/protected/user/profile/images/{kind}",
     );
 
   const onDrop = useCallback(
@@ -36,12 +36,21 @@ export const UploadProfilePicture = ({
       if (loadingUploadImage) return;
       posthog.capture("profile_image_upload_start", {});
 
-      const formData = new FormData();
-      formData.append("file", file);
+      // SAFETY: the endpoint reads a raw binary body, but openapi-typescript
+      // models `format: binary` request bodies as strings. The file is passed
+      // through `bodySerializer` unchanged.
       uploadImage(
         {
-          body: { file: file.name },
-          bodySerializer: () => formData,
+          params: {
+            path: {
+              kind: "avatar",
+            },
+          },
+          headers: {
+            "Content-Type": file.type,
+          },
+          body: file as never,
+          bodySerializer: () => file,
         },
         {
           onSuccess: (data) => {

@@ -1,8 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createId } from "@paralleldrive/cuid2";
 import {
-  type paths,
   createProfileMetadata,
+  type ProfileMetadataDetails,
   ProfileMetadataSchemaId,
 } from "@sigle/sdk";
 import { IconAt, IconBrandX } from "@tabler/icons-react";
@@ -26,7 +26,6 @@ import {
 } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
 import { useContractCall } from "@/hooks/useContractCall";
-import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient, sigleClient } from "@/lib/sigle";
 import { waitForTransaction } from "@/lib/stacks";
 import { UploadProfileCoverPicture } from "./UploadProfileCoverPicture";
@@ -42,7 +41,7 @@ const updateProfileMetadataSchema = z.object({
 });
 
 interface UpdateProfileMetadataProps {
-  profile: paths["/api/users/{username}"]["get"]["responses"]["200"]["content"]["application/json"]["profile"];
+  profile?: ProfileMetadataDetails;
   setEditingProfileMetadata: (editing: boolean) => void;
 }
 
@@ -50,8 +49,6 @@ export const UpdateProfileMetadata = ({
   profile,
   setEditingProfileMetadata,
 }: UpdateProfileMetadataProps) => {
-  const { data: session } = useSession();
-
   const {
     start: startToast,
     completeStep,
@@ -60,7 +57,6 @@ export const UpdateProfileMetadata = ({
     steps: [
       { id: "upload", title: "Uploading data to Arweave" },
       { id: "transaction", title: "Waiting for blockchain confirmation" },
-      { id: "index", title: "Indexing profile" },
     ],
     successMessage: "Profile updated!",
   });
@@ -68,28 +64,6 @@ export const UpdateProfileMetadata = ({
   const uploadProfileMetadata = sigleApiClient.useMutation(
     "post",
     "/api/protected/user/profile/upload-metadata",
-  );
-
-  const triggerIndexing = sigleApiClient.useMutation(
-    "post",
-    "/api/protected/user/profile/trigger-indexing",
-  );
-
-  const userId = session?.user.id;
-
-  const refetchProfile = sigleApiClient.useQuery(
-    "get",
-    "/api/users/{username}",
-    {
-      params: {
-        path: {
-          username: userId || "",
-        },
-      },
-    },
-    {
-      enabled: false,
-    },
   );
 
   const { contractCall } = useContractCall();
@@ -105,8 +79,8 @@ export const UpdateProfileMetadata = ({
     values: {
       displayName: profile?.displayName || undefined,
       description: profile?.description || undefined,
-      picture: profile?.pictureUri?.id || undefined,
-      coverPicture: profile?.coverPictureUri?.id || undefined,
+      picture: profile?.picture || undefined,
+      coverPicture: profile?.coverPicture || undefined,
       website: profile?.website || undefined,
       twitter: profile?.twitter || undefined,
     },
@@ -130,8 +104,7 @@ export const UpdateProfileMetadata = ({
 
     const data = await uploadProfileMetadata
       .mutateAsync({
-        body: {},
-        bodySerializer: () => JSON.stringify({ metadata }),
+        body: { metadata },
       })
       .then((result) => Result.ok(result))
       .catch((error) => Result.err(error));
@@ -175,48 +148,6 @@ export const UpdateProfileMetadata = ({
     }
 
     completeStep("transaction");
-
-    try {
-      await triggerIndexing.mutateAsync({});
-    } catch (error) {
-      setStepError(
-        "index",
-        error instanceof Error ? error.message : "Failed to trigger indexing",
-      );
-
-      return;
-    }
-
-    const pollingInterval = 2_000;
-    const timeout = 180_000;
-    const startTime = Date.now();
-
-    let isIndexed = false;
-
-    while (Date.now() - startTime < timeout) {
-      const result = await refetchProfile.refetch();
-
-      // Successfully indexed
-      if (result.data?.profile?.txId === txId) {
-        isIndexed = true;
-        break;
-      }
-
-      await new Promise((resolve) => {
-        setTimeout(resolve, pollingInterval);
-      });
-    }
-
-    if (!isIndexed) {
-      setStepError(
-        "index",
-        "Profile update timed out. Please refresh the page.",
-      );
-
-      return;
-    }
-
-    completeStep("index");
     setEditingProfileMetadata(false);
   });
 
