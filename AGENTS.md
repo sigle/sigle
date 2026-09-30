@@ -10,7 +10,6 @@ Sigle is a decentralized Web3 blogging platform built as a pnpm monorepo with Ne
 sigle/
 ├── apps/
 │   ├── sigle/          - Next.js frontend (port 3000)
-│   ├── custom-domain/  - Custom domain routing (port 3002)
 │   ├── server/         - Nitro API backend (port 3001)
 │   ├── docs/           - Nextra documentation
 │   └── contracts/      - Clarity smart contracts
@@ -56,7 +55,7 @@ cd packages/sdk && pnpm test -- test-file.spec.ts
 # Start backend & database with hot reload
 pnpm docker:dev
 
-# Start full stack (server + sigle + custom-domain)
+# Start full stack (server + sigle)
 pnpm docker:dev:full
 
 # Reset database (one-off server container)
