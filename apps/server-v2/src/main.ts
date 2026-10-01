@@ -22,8 +22,7 @@ import {
 import { RateLimitMiddlewareLayer } from "@/api/middleware/rate-limit";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { JobAdminService } from "@/queue/admin";
-import { QueueServicesLive } from "@/queue/store";
+import { JobsLive } from "@/jobs";
 import { ArweaveService } from "@/services/arweave";
 import { AuthService } from "@/services/auth";
 import { ImageProcessingService } from "@/services/image-processing";
@@ -92,8 +91,8 @@ export const HttpServerLayer = Layer.unwrap(
 );
 
 export const MainLayer = HttpServerLayer.pipe(
-  Layer.provide(QueueServicesLive),
-  Layer.provide(JobAdminService.layer),
+  Layer.provide(JobsLive),
+  Layer.provide(UserWhitelistService.layer),
   Layer.provide(RateLimiterLive),
   Layer.provide(Database.layer),
 );

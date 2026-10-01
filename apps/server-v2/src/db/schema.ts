@@ -3,6 +3,7 @@ import {
   boolean,
   doublePrecision,
   index,
+  integer,
   pgEnum,
   pgTable,
   text,
@@ -142,4 +143,36 @@ export const draft = pgTable(
       .references(() => user.id),
   },
   (table) => [index("draft_user_id_idx").on(table.userId)],
+);
+
+// --
+// Posts
+// --
+
+export const post = pgTable(
+  "post",
+  {
+    id: text("id").primaryKey(),
+    draftId: text("draft_id").unique("post_draft_id_key"),
+    version: text("version").notNull(),
+    txId: text("tx_id").notNull().unique("post_tx_id_key"),
+    arweaveL1TxId: text("arweave_l1_tx_id"),
+    blockHeight: integer("block_height").notNull(),
+    metadataUri: text("metadata_uri").notNull(),
+    title: text("title").notNull(),
+    content: text("content").notNull(),
+    excerpt: text("excerpt").notNull(),
+    metaTitle: text("meta_title"),
+    metaDescription: text("meta_description"),
+    coverImage: text("cover_image"),
+    tags: text("tags").array(),
+    canonicalUri: text("canonical_uri"),
+    signature: text("signature").unique("post_signature_key"),
+    createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id),
+  },
+  (table) => [index("post_user_id_idx").on(table.userId)],
 );
