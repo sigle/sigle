@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { Duration, Effect, Layer } from "effect";
-import { RateLimiter } from "effect/unstable/persistence";
+import { RateLimiter } from "effect/persistence";
 import { Database } from "@/db";
 import { rateLimiterFlexible } from "@/db/schema";
 

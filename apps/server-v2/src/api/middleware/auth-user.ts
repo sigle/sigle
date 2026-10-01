@@ -1,6 +1,6 @@
 import { Context, Effect, Layer } from "effect";
-import { HttpServerRequest } from "effect/unstable/http";
-import { HttpApiMiddleware } from "effect/unstable/httpapi";
+import { HttpServerRequest } from "effect/http";
+import { HttpApiMiddleware } from "effect/http-api";
 import { Forbidden, Unauthorized } from "@/api/schemas";
 import { AuthService } from "@/services/auth";
 import { UserWhitelistService } from "@/services/users";

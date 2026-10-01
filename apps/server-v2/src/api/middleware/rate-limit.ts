@@ -1,7 +1,7 @@
 import { Context, Duration, Effect, Layer, Option, Predicate } from "effect";
-import { HttpServerRequest, HttpServerResponse } from "effect/unstable/http";
-import { HttpApiMiddleware } from "effect/unstable/httpapi";
-import { RateLimiter } from "effect/unstable/persistence";
+import { HttpServerRequest, HttpServerResponse } from "effect/http";
+import { HttpApiMiddleware } from "effect/http-api";
+import { RateLimiter } from "effect/persistence";
 import { CurrentUser } from "@/api/middleware/auth-user";
 import { InternalServerError, TooManyRequests } from "@/api/schemas";
 

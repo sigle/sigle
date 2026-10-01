@@ -1,5 +1,5 @@
 import { Effect } from "effect";
-import { HttpApiBuilder } from "effect/unstable/httpapi";
+import { HttpApiBuilder } from "effect/http-api";
 import { SigleApi } from "@/api";
 
 export const getHealth = Effect.succeed({ success: true });

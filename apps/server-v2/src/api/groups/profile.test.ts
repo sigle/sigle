@@ -6,7 +6,7 @@ import {
   HttpClient,
   HttpClientRequest,
   HttpClientResponse,
-} from "effect/unstable/http";
+} from "effect/http";
 import sharp from "sharp";
 import type { PostHogEvent } from "@/services/posthog";
 import { sha256Hex } from "@/lib/hash";

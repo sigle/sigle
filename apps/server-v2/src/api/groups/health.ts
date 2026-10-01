@@ -1,5 +1,5 @@
 import { Schema } from "effect";
-import { HttpApiEndpoint, HttpApiGroup } from "effect/unstable/httpapi";
+import { HttpApiEndpoint, HttpApiGroup } from "effect/http-api";
 import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 
 export const HealthResponse = Schema.Struct({

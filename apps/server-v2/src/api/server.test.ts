@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Effect, Option, Schema } from "effect";
-import { Headers, HttpClient, HttpClientResponse } from "effect/unstable/http";
+import { Headers, HttpClient, HttpClientResponse } from "effect/http";
 import type { AppConfigValues } from "@/config";
 import { RATE_LIMITS } from "@/api/middleware/rate-limit";
 import { makeTestServerLayer } from "@/test/server";
