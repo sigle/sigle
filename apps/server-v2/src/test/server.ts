@@ -3,7 +3,7 @@ import { type Effect, Layer, Schedule } from "effect";
 import { HttpRouter } from "effect/http";
 import { AppConfig, type AppConfigValues } from "@/config";
 import { makeQueuesTestLayer } from "@/jobs";
-import { ApiRoutesLayer } from "@/main";
+import { ApiRoutesLayer, AuthLayer } from "@/main";
 import {
   ArweaveService,
   type ArweaveUploadError,
@@ -14,7 +14,6 @@ import { ImageProcessingService } from "@/services/image-processing";
 import { PostHogService, type PostHogEvent } from "@/services/posthog";
 import { RateLimiterTest } from "@/services/rate-limiter";
 import { StorageService } from "@/services/storage";
-import { UserWhitelistService } from "@/services/users";
 import { TestDatabaseLayer } from "@/test/layer";
 
 export interface TestServerOptions {
@@ -43,7 +42,7 @@ export const makeTestServerLayer = (
         maxAttempts: 2,
       }),
     ),
-    Layer.provide(UserWhitelistService.layer),
+    Layer.provide(AuthLayer),
     Layer.provide(RateLimiterTest),
     Layer.provideMerge(TestDatabaseLayer),
     Layer.provideMerge(AppConfig.layerTest(overrides)),

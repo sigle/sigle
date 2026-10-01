@@ -74,11 +74,7 @@ export const ApiRoutesLayer = Layer.mergeAll(
   HttpApiScalar.layer(SigleApi, { path: "/_scalar" }),
   AuthRoutesLayer,
   CorsLayer,
-).pipe(
-  Layer.provide(ApiHandlersLayer),
-  Layer.provide(ApiMiddlewareLayer),
-  Layer.provide(AuthLayer),
-);
+).pipe(Layer.provide(ApiHandlersLayer), Layer.provide(ApiMiddlewareLayer));
 
 export const HttpServerLayer = Layer.unwrap(
   Effect.gen(function* () {
@@ -92,7 +88,7 @@ export const HttpServerLayer = Layer.unwrap(
 
 export const MainLayer = HttpServerLayer.pipe(
   Layer.provide(JobsLive),
-  Layer.provide(UserWhitelistService.layer),
+  Layer.provide(AuthLayer),
   Layer.provide(RateLimiterLive),
   Layer.provide(Database.layer),
 );

@@ -84,6 +84,31 @@ const getPublishStatusRequest = (
   draftId: string,
 ) => client.get(`/api/protected/drafts/${draftId}/publish`);
 
+const waitForPublishStatus = (
+  client: HttpClient.HttpClient,
+  draftId: string,
+  isDone: (status: typeof PublishDraftStatusResponse.Type) => boolean,
+) =>
+  Effect.gen(function* () {
+    for (let attempt = 0; attempt < 200; attempt++) {
+      const response = yield* getPublishStatusRequest(client, draftId);
+
+      const status = yield* HttpClientResponse.schemaBodyJson(
+        PublishDraftStatusResponse,
+      )(response);
+
+      if (isDone(status)) {
+        return status;
+      }
+
+      yield* Effect.sleep("20 millis");
+    }
+
+    return yield* Effect.die(
+      new Error(`timed out waiting for publish status on ${draftId}`),
+    );
+  });
+
 describe("drafts", () => {
   it.effect("POST /api/protected/drafts creates a draft", () => {
     const events: Array<PostHogEvent> = [];
@@ -579,20 +604,11 @@ describe("drafts", () => {
             publishRes,
           );
 
-        // Poll status until COMPLETED
-        let currentStatus: typeof PublishDraftStatusResponse.Type = {
-          status: "PENDING",
-          postId: null,
-          arweaveId: null,
-        };
-
-        for (let i = 0; i < 30 && currentStatus.status !== "COMPLETED"; i++) {
-          yield* Effect.sleep("25 millis");
-          const pollRes = yield* getPublishStatusRequest(client, "draft-pub-1");
-          currentStatus = yield* HttpClientResponse.schemaBodyJson(
-            PublishDraftStatusResponse,
-          )(pollRes);
-        }
+        const currentStatus = yield* waitForPublishStatus(
+          client,
+          "draft-pub-1",
+          (status) => status.status === "COMPLETED",
+        );
 
         const [deletedDraft] = yield* db
           .select()
@@ -692,16 +708,12 @@ describe("drafts", () => {
           expect(firstRes.status).toBe(202);
 
           yield* Deferred.await(failedSignal);
-          yield* Effect.sleep("40 millis");
 
-          const failedStatusRes = yield* getPublishStatusRequest(
+          const failedStatus = yield* waitForPublishStatus(
             client,
             "draft-flaky",
+            (status) => status.status === "FAILED",
           );
-
-          const failedStatus = yield* HttpClientResponse.schemaBodyJson(
-            PublishDraftStatusResponse,
-          )(failedStatusRes);
 
           expect(failedStatus).toStrictEqual({
             status: "FAILED",
@@ -718,20 +730,11 @@ describe("drafts", () => {
 
           expect(retryRes.status).toBe(202);
 
-          let finalStatus = failedStatus;
-
-          for (let i = 0; i < 30 && finalStatus.status !== "COMPLETED"; i++) {
-            yield* Effect.sleep("25 millis");
-
-            const pollRes = yield* getPublishStatusRequest(
-              client,
-              "draft-flaky",
-            );
-
-            finalStatus = yield* HttpClientResponse.schemaBodyJson(
-              PublishDraftStatusResponse,
-            )(pollRes);
-          }
+          const finalStatus = yield* waitForPublishStatus(
+            client,
+            "draft-flaky",
+            (status) => status.status === "COMPLETED",
+          );
 
           expect(finalStatus).toStrictEqual({
             status: "COMPLETED",
