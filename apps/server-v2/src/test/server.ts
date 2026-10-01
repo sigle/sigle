@@ -1,6 +1,6 @@
 import { NodeHttpServer } from "@effect/platform-node";
 import { Layer } from "effect";
-import { HttpRouter } from "effect/unstable/http";
+import { HttpRouter } from "effect/http";
 import { AppConfig, type AppConfigValues } from "@/config";
 import { ApiRoutesLayer } from "@/main";
 import { ArweaveService } from "@/services/arweave";

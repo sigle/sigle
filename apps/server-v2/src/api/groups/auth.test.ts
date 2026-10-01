@@ -1,11 +1,7 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
 import { Effect, Schema } from "effect";
-import {
-  HttpClient,
-  HttpClientRequest,
-  HttpClientResponse,
-} from "effect/unstable/http";
+import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/http";
 import { Database } from "@/db";
 import { session, user, verification, walletAddress } from "@/db/schema";
 import {
