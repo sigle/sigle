@@ -611,7 +611,7 @@ describe("drafts", () => {
           currentStatus,
           deletedDraft,
           createdPostId: createdPost.id,
-          createdPostArweaveId: createdPost.arweaveId,
+          createdPostArweaveId: createdPost.arweaveTxId,
         }).toStrictEqual({
           unstartedStatus: 400,
           publishStatus: 202,

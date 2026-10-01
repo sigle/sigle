@@ -54,7 +54,7 @@ export const processPublishDraftJob = (
     const [foundDraft] = yield* db
       .select({
         id: draft.id,
-        txId: draft.txId,
+        arweaveTxId: draft.arweaveTxId,
       })
       .from(draft)
       .where(and(eq(draft.id, job.draftId), eq(draft.userId, job.userId)))
@@ -78,8 +78,8 @@ export const processPublishDraftJob = (
 
     // Step 1: Upload metadata JSON to Arweave (or reuse checkpointed txId from
     // an earlier attempt if a downstream step failed and triggered a retry).
-    const arweaveId =
-      foundDraft.txId ??
+    const arweaveTxId =
+      foundDraft.arweaveTxId ??
       (yield* Effect.gen(function* () {
         const uploaded = yield* arweave.uploadFile({
           file: Buffer.from(job.metadataJson),
@@ -95,7 +95,7 @@ export const processPublishDraftJob = (
         yield* db
           .update(draft)
           .set({
-            txId: uploaded.id,
+            arweaveTxId: uploaded.id,
             txStatus: "PROCESSING",
             updatedAt: new Date(),
           })
@@ -133,11 +133,11 @@ export const processPublishDraftJob = (
           }
 
           yield* tx.insert(post).values({
-            id: arweaveId,
+            id: arweaveTxId,
             draftId: job.draftId,
             version,
-            arweaveId,
-            metadataUri: `ar://${arweaveId}`,
+            arweaveTxId,
+            metadataUri: `ar://${arweaveTxId}`,
             title: postData.content.title,
             content: postData.content.content,
             excerpt,
@@ -164,8 +164,8 @@ export const processPublishDraftJob = (
       event: "draft published",
       properties: {
         draftId: job.draftId,
-        postId: arweaveId,
-        arweaveId,
+        postId: arweaveTxId,
+        arweaveId: arweaveTxId,
       },
     });
   });

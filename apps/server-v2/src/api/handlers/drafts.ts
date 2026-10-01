@@ -296,7 +296,7 @@ export const publishDraft = (
         .update(draft)
         .set({
           txStatus: "PENDING",
-          txId: null,
+          arweaveTxId: null,
           updatedAt: new Date(),
         })
         .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
@@ -330,7 +330,7 @@ export const getDraftPublishStatus = (draftId: string) =>
     const db = yield* Database;
 
     const [publishedPost] = yield* db
-      .select({ id: post.id, arweaveId: post.arweaveId })
+      .select({ id: post.id, arweaveTxId: post.arweaveTxId })
       .from(post)
       .where(and(eq(post.draftId, draftId), eq(post.userId, user.id)))
       .limit(1)
@@ -340,12 +340,12 @@ export const getDraftPublishStatus = (draftId: string) =>
       return {
         status: "COMPLETED" as const,
         postId: publishedPost.id,
-        arweaveId: publishedPost.arweaveId,
+        arweaveId: publishedPost.arweaveTxId,
       };
     }
 
     const [foundDraft] = yield* db
-      .select({ txStatus: draft.txStatus, txId: draft.txId })
+      .select({ txStatus: draft.txStatus, arweaveTxId: draft.arweaveTxId })
       .from(draft)
       .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
       .limit(1)
@@ -363,7 +363,7 @@ export const getDraftPublishStatus = (draftId: string) =>
       return {
         status: foundDraft.txStatus,
         postId: null,
-        arweaveId: foundDraft.txId,
+        arweaveId: foundDraft.arweaveTxId,
       } as const;
     }
 

@@ -64,7 +64,7 @@ export const createTestDraft = (options: {
   readonly userId: string;
   readonly title?: string;
   readonly content?: string;
-  readonly txId?: string | null;
+  readonly arweaveTxId?: string | null;
   readonly txStatus?: string | null;
   readonly createdAt?: Date;
   readonly updatedAt?: Date;
@@ -78,7 +78,7 @@ export const createTestDraft = (options: {
         id: options.id ?? crypto.randomUUID(),
         title: options.title ?? "Test Draft",
         content: options.content ?? "Test content",
-        txId: options.txId ?? null,
+        arweaveTxId: options.arweaveTxId ?? null,
         txStatus: options.txStatus ?? null,
         createdAt: options.createdAt,
         updatedAt: options.updatedAt,
@@ -93,7 +93,7 @@ export const createTestPost = (options: {
   readonly id?: string;
   readonly draftId?: string | null;
   readonly userId: string;
-  readonly arweaveId?: string;
+  readonly arweaveTxId?: string;
   readonly version?: string;
   readonly arweaveBlockHeight?: number | null;
   readonly metadataUri?: string;
@@ -105,7 +105,7 @@ export const createTestPost = (options: {
   Effect.gen(function* () {
     const db = yield* Database;
     const id = options.id ?? crypto.randomUUID();
-    const arweaveId = options.arweaveId ?? id;
+    const arweaveTxId = options.arweaveTxId ?? id;
 
     const [created] = yield* db
       .insert(post)
@@ -113,9 +113,9 @@ export const createTestPost = (options: {
         id,
         draftId: options.draftId ?? null,
         version: options.version ?? "1.0.0",
-        arweaveId,
+        arweaveTxId,
         arweaveBlockHeight: options.arweaveBlockHeight ?? null,
-        metadataUri: options.metadataUri ?? `ar://${arweaveId}`,
+        metadataUri: options.metadataUri ?? `ar://${arweaveTxId}`,
         title: options.title ?? "Test Post",
         content: options.content ?? "Test post content",
         excerpt: options.excerpt ?? "Test excerpt",

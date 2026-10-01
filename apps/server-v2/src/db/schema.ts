@@ -134,7 +134,7 @@ export const draft = pgTable(
     metaDescription: text("meta_description"),
     coverImage: text("cover_image"),
     canonicalUri: text("canonical_uri"),
-    txId: text("tx_id"),
+    arweaveTxId: text("arweave_tx_id"),
     txStatus: text("tx_status"),
     tags: text("tags").array(),
     createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
@@ -156,8 +156,9 @@ export const post = pgTable(
     id: text("id").primaryKey(),
     draftId: text("draft_id").unique("post_draft_id_key"),
     version: text("version").notNull(),
-    arweaveId: text("arweave_id").notNull().unique("post_arweave_id_key"),
-    arweaveL1TxId: text("arweave_l1_tx_id"),
+    arweaveTxId: text("arweave_tx_id")
+      .notNull()
+      .unique("post_arweave_tx_id_key"),
     // Null until the bundle is included in an Arweave block; populated by a
     // later queue.
     arweaveBlockHeight: integer("arweave_block_height"),

@@ -106,7 +106,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           expect({
             id: createdPost.id,
             draftId: createdPost.draftId,
-            arweaveId: createdPost.arweaveId,
+            arweaveTxId: createdPost.arweaveTxId,
             arweaveBlockHeight: createdPost.arweaveBlockHeight,
             version: createdPost.version,
             metadataUri: createdPost.metadataUri,
@@ -123,7 +123,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           }).toStrictEqual({
             id: "arweave-tx-001",
             draftId: "draft-1",
-            arweaveId: "arweave-tx-001",
+            arweaveTxId: "arweave-tx-001",
             arweaveBlockHeight: null,
             version: "1.0.0",
             metadataUri: "ar://arweave-tx-001",
@@ -164,7 +164,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
   );
 
   it.effect(
-    "skips Arweave upload when draft.txId is already checkpointed from a previous attempt",
+    "skips Arweave upload when draft.arweaveTxId is already checkpointed from a previous attempt",
     () =>
       Effect.gen(function* () {
         const uploads: Array<ArweaveUploadOptions> = [];
@@ -182,7 +182,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           yield* createTestDraft({
             id: "draft-checkpointed",
             userId: user.id,
-            txId: "existing-arweave-tx",
+            arweaveTxId: "existing-arweave-tx",
             txStatus: "PROCESSING",
           });
 
@@ -202,7 +202,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             .where(eq(post.id, "existing-arweave-tx"));
 
           expect(createdPost.draftId).toBe("draft-checkpointed");
-          expect(createdPost.arweaveId).toBe("existing-arweave-tx");
+          expect(createdPost.arweaveTxId).toBe("existing-arweave-tx");
         }).pipe(Effect.provide(layer));
       }),
   );
