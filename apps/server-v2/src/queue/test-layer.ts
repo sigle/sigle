@@ -26,10 +26,7 @@ export const makeJobTestLayer = <S extends Schema.Constraint, R>(
     options?.enableWorkers === false
       ? queueLayer
       : job
-          .workerLayer({
-            concurrency: options?.concurrency ?? 1,
-            maxAttempts: options?.maxAttempts,
-          })
+          .workerLayer({ concurrency: options?.concurrency ?? 1 })
           .pipe(Layer.provideMerge(queueLayer));
 
   return Layer.mergeAll(workerAndQueueLayer, JobAdminService.layer).pipe(

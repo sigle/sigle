@@ -87,7 +87,7 @@ export const makeJobAdmin = Effect.gen(function* () {
           COUNT(*) FILTER (WHERE state = 'pending' AND acquired_by IS NOT NULL)::INT AS active,
           COUNT(*) FILTER (WHERE state = 'completed')::INT AS completed,
           COUNT(*) FILTER (WHERE state = 'failed')::INT AS failed,
-          MIN(created_at) FILTER (WHERE state = 'pending') AS oldest_pending
+          MIN(created_at) FILTER (WHERE state = 'pending' AND acquired_by IS NULL) AS oldest_pending
         FROM effect_queue
         GROUP BY queue_name
         ORDER BY queue_name

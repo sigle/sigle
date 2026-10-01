@@ -8,7 +8,7 @@ import {
   Option,
   Schema,
 } from "effect";
-import { JobAdminService } from "@/queue/admin";
+import { JobAdminService, type QueueStats } from "@/queue/admin";
 import { defineJob, terminal } from "@/queue/core";
 import { makeJobTestLayer } from "@/queue/test-layer";
 
@@ -35,11 +35,35 @@ const decodeJobFailureAttributes = Schema.decodeUnknownOption(
   JobFailureAttributesSchema,
 );
 
+const waitForQueueStats = (
+  queueName: string,
+  predicate: (stats: QueueStats) => boolean,
+) =>
+  Effect.gen(function* () {
+    const admin = yield* JobAdminService;
+
+    for (let attempt = 0; attempt < 200; attempt++) {
+      const stats = yield* admin.getQueueStats;
+      const queue = stats.find((item) => item.queueName === queueName);
+
+      if (queue !== undefined && predicate(queue)) {
+        return queue;
+      }
+
+      yield* Effect.sleep("20 millis");
+    }
+
+    return yield* Effect.die(
+      new Error(`timed out waiting for ${queueName} queue stats`),
+    );
+  });
+
 describe(defineJob, () => {
   it.live("processes jobs, deduplicates offers by id, and reports stats", () =>
     Effect.gen(function* () {
       const processed: Array<string> = [];
       const done = yield* Deferred.make<void>();
+      const rerunDone = yield* Deferred.make<void>();
 
       const job = defineJob({
         name: "core-test-process",
@@ -52,6 +76,10 @@ describe(defineJob, () => {
 
             if (processed.length >= 2) {
               yield* Deferred.succeed(done, undefined);
+            }
+
+            if (processed.length >= 3) {
+              yield* Deferred.succeed(rerunDone, undefined);
             }
           }),
       });
@@ -70,26 +98,25 @@ describe(defineJob, () => {
         yield* job.offer(testPayload("second"), { id: "job-2" });
 
         yield* Deferred.await(done);
-        // Give the workers a moment to commit state = 'completed'
-        yield* Effect.sleep("40 millis");
 
-        const stats = yield* admin.getQueueStats;
+        const stats = yield* waitForQueueStats(
+          "core-test-process",
+          (queue) => queue.completed === 2,
+        );
 
         expect({
           processed: processed.toSorted(),
           stats,
         }).toStrictEqual({
           processed: ["first", "second"],
-          stats: [
-            {
-              queueName: "core-test-process",
-              pending: 0,
-              active: 0,
-              completed: 2,
-              failed: 0,
-              oldestPendingAgeMillis: null,
-            },
-          ],
+          stats: {
+            queueName: "core-test-process",
+            pending: 0,
+            active: 0,
+            completed: 2,
+            failed: 0,
+            oldestPendingAgeMillis: null,
+          },
         });
 
         // Clearing a completed row allows offering the same id again.
@@ -97,7 +124,7 @@ describe(defineJob, () => {
         expect(cleared).toBe(true);
 
         yield* job.offer(testPayload("second-again"), { id: "job-2" });
-        yield* Effect.sleep("60 millis");
+        yield* Deferred.await(rerunDone);
 
         expect(processed).toHaveLength(3);
       }).pipe(Effect.provide(layer));
@@ -164,7 +191,10 @@ describe(defineJob, () => {
 
           yield* job.offer(testPayload("flaky"), { id: "flaky-1" });
           yield* Deferred.await(failedDone);
-          yield* Effect.sleep("40 millis");
+          yield* waitForQueueStats(
+            "core-test-retry",
+            (queue) => queue.failed === 1,
+          );
 
           const failedPage = yield* admin.listFailed({
             queueName: "core-test-retry",
@@ -211,12 +241,15 @@ describe(defineJob, () => {
           expect(retried).toBe(true);
 
           yield* Deferred.await(recoveredDone);
-          yield* Effect.sleep("40 millis");
 
-          const stats = yield* admin.getQueueStats;
+          const stats = yield* waitForQueueStats(
+            "core-test-retry",
+            (queue) => queue.completed === 1 && queue.failed === 0,
+          );
+
           expect({
-            completed: stats[0]?.completed,
-            failed: stats[0]?.failed,
+            completed: stats.completed,
+            failed: stats.failed,
           }).toStrictEqual({ completed: 1, failed: 0 });
         }).pipe(Effect.provide(layer));
       }),
@@ -264,13 +297,13 @@ describe(defineJob, () => {
         });
 
         yield* Effect.gen(function* () {
-          const admin = yield* JobAdminService;
-
           yield* job.offer(testPayload("payload"), { id: "terminal-1" });
           yield* Deferred.await(done);
-          yield* Effect.sleep("40 millis");
 
-          const stats = yield* admin.getQueueStats;
+          const stats = yield* waitForQueueStats(
+            "core-test-terminal",
+            (queue) => queue.completed === 1,
+          );
 
           expect({
             attemptsSeen,
@@ -279,16 +312,14 @@ describe(defineJob, () => {
           }).toStrictEqual({
             attemptsSeen: [1],
             reports: [{ message: "invalid payload", payload: "[redacted]" }],
-            stats: [
-              {
-                queueName: "core-test-terminal",
-                pending: 0,
-                active: 0,
-                completed: 1,
-                failed: 0,
-                oldestPendingAgeMillis: null,
-              },
-            ],
+            stats: {
+              queueName: "core-test-terminal",
+              pending: 0,
+              active: 0,
+              completed: 1,
+              failed: 0,
+              oldestPendingAgeMillis: null,
+            },
           });
         }).pipe(Effect.provide(layer));
       }),

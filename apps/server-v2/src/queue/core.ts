@@ -141,10 +141,30 @@ const findTerminalError = (
     : undefined;
 };
 
-export interface WorkerOverrides {
-  readonly concurrency?: number | undefined;
+const isStoreError = (cause: Cause.Cause<unknown>): boolean => {
+  const failure = Cause.findErrorOption(cause);
+
+  return (
+    Option.isSome(failure) &&
+    failure.value instanceof PersistedQueue.PersistedQueueError
+  );
+};
+
+export interface QueueOverrides {
   readonly maxAttempts?: number | undefined;
   readonly retrySchedule?: Schedule.Schedule<unknown, number> | undefined;
+}
+
+export interface WorkerOverrides {
+  readonly concurrency?: number | undefined;
+}
+
+/**
+ * Queue configuration shared between a job's queue layer and its workers, so
+ * failure transitions and final-failure reporting always use one value.
+ */
+export interface JobRuntime {
+  readonly maxAttempts: number;
 }
 
 export interface JobOptions<S extends Schema.Constraint, E, R> {
@@ -190,13 +210,17 @@ export interface Job<S extends Schema.Constraint, R> {
   readonly retrySchedule: Schedule.Schedule<unknown, number>;
   readonly concurrency: number;
   readonly layer: Layer.Layer<
-    JobQueue<S>,
+    JobQueue<S> | JobRuntime,
     never,
     PersistedQueue.PersistedQueueFactory
   >;
   readonly makeLayer: (
-    overrides?: WorkerOverrides,
-  ) => Layer.Layer<JobQueue<S>, never, PersistedQueue.PersistedQueueFactory>;
+    overrides?: QueueOverrides,
+  ) => Layer.Layer<
+    JobQueue<S> | JobRuntime,
+    never,
+    PersistedQueue.PersistedQueueFactory
+  >;
   readonly offer: (
     payload: S["Type"],
     options?: OfferOptions,
@@ -210,7 +234,7 @@ export interface Job<S extends Schema.Constraint, R> {
   ) => Layer.Layer<
     never,
     never,
-    JobQueue<S> | S["DecodingServices"] | S["EncodingServices"] | R
+    JobQueue<S> | JobRuntime | S["DecodingServices"] | S["EncodingServices"] | R
   >;
 }
 
@@ -234,16 +258,26 @@ export const defineJob = <S extends Schema.Constraint, E, R>(
     `sigle/jobs/${options.name}`,
   );
 
-  const makeLayer = (overrides?: WorkerOverrides) =>
-    Layer.effect(
-      tag,
-      PersistedQueue.make({
-        name: options.name,
-        schema: options.payload,
-        maxAttempts: overrides?.maxAttempts ?? maxAttempts,
-        retrySchedule: overrides?.retrySchedule ?? retrySchedule,
-      }),
+  const runtimeTag = Context.Service<JobRuntime, JobRuntime>(
+    `sigle/jobs/${options.name}/runtime`,
+  );
+
+  const makeLayer = (overrides?: QueueOverrides) => {
+    const effectiveMaxAttempts = overrides?.maxAttempts ?? maxAttempts;
+
+    return Layer.merge(
+      Layer.effect(
+        tag,
+        PersistedQueue.make({
+          name: options.name,
+          schema: options.payload,
+          maxAttempts: effectiveMaxAttempts,
+          retrySchedule: overrides?.retrySchedule ?? retrySchedule,
+        }),
+      ),
+      Layer.succeed(runtimeTag, { maxAttempts: effectiveMaxAttempts }),
     );
+  };
 
   const offer = (payload: S["Type"], offerOptions?: OfferOptions) =>
     tag.use((queue) => queue.offer(payload, { id: offerOptions?.id }));
@@ -253,13 +287,14 @@ export const defineJob = <S extends Schema.Constraint, E, R>(
   ): Layer.Layer<
     never,
     never,
-    JobQueue<S> | S["DecodingServices"] | S["EncodingServices"] | R
+    JobQueue<S> | JobRuntime | S["DecodingServices"] | S["EncodingServices"] | R
   > =>
     Layer.effectDiscard(
       Effect.gen(function* () {
         const queue = yield* tag;
+        const runtime = yield* runtimeTag;
         const workerConcurrency = overrides?.concurrency ?? concurrency;
-        const workerMaxAttempts = overrides?.maxAttempts ?? maxAttempts;
+        const workerMaxAttempts = runtime.maxAttempts;
 
         const completedMetric = jobsCompletedCounter.pipe(
           Metric.withAttributes({ queue: options.name }),
@@ -407,10 +442,12 @@ export const defineJob = <S extends Schema.Constraint, E, R>(
           )
           .pipe(
             // `PersistedQueue.take` runs its SQL retry/fail finalizer before
-            // re-surfacing the handler failure. Catch non-interrupt failures
-            // here so the worker fiber keeps taking subsequent jobs.
+            // re-surfacing the handler failure. Swallow those so the worker
+            // fiber keeps taking subsequent jobs, but let store errors
+            // propagate to the worker loop's logging and retry.
             Effect.catchCauseIf(
-              (cause) => !Cause.hasInterruptsOnly(cause),
+              (cause) =>
+                !Cause.hasInterruptsOnly(cause) && !isStoreError(cause),
               () => Effect.void,
             ),
           );
