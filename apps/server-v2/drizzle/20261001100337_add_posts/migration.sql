@@ -20,6 +20,11 @@ CREATE TABLE "post" (
 );
 --> statement-breakpoint
 ALTER TABLE "draft" RENAME COLUMN "tx_id" TO "arweave_tx_id";--> statement-breakpoint
+UPDATE "draft"
+SET "arweave_tx_id" = NULL,
+    "tx_status" = NULL
+WHERE "arweave_tx_id" IS NOT NULL
+  AND "tx_status" IN ('PENDING', 'PROCESSING');--> statement-breakpoint
 CREATE INDEX "post_user_id_idx" ON "post" ("user_id");--> statement-breakpoint
 CREATE INDEX "post_arweave_pending_idx" ON "post" ("created_at") WHERE arweave_block_height is null;--> statement-breakpoint
 ALTER TABLE "post" ADD CONSTRAINT "post_user_id_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id");

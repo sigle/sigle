@@ -58,6 +58,53 @@ const sampleMetadataJson = JSON.stringify({
   },
 });
 
+const waitForDraftStatus = (draftId: string, status: string) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+
+    for (let attempt = 0; attempt < 200; attempt++) {
+      const [row] = yield* db
+        .select({ txStatus: draft.txStatus })
+        .from(draft)
+        .where(eq(draft.id, draftId))
+        .limit(1)
+        .pipe(Effect.orDie);
+
+      if (row?.txStatus === status) {
+        return;
+      }
+
+      yield* Effect.sleep("20 millis");
+    }
+
+    return yield* Effect.die(
+      new Error(`timed out waiting for draft ${draftId} to be ${status}`),
+    );
+  });
+
+const waitForCompletedJobs = (expected: number) =>
+  Effect.gen(function* () {
+    const admin = yield* JobAdminService;
+
+    for (let attempt = 0; attempt < 200; attempt++) {
+      const stats = yield* admin.getQueueStats;
+
+      const queue = stats.find(
+        (item) => item.queueName === publishDraftJob.name,
+      );
+
+      if ((queue?.completed ?? 0) >= expected) {
+        return stats;
+      }
+
+      yield* Effect.sleep("20 millis");
+    }
+
+    return yield* Effect.die(
+      new Error(`timed out waiting for ${expected} completed jobs`),
+    );
+  });
+
 describe("publishDraftQueue & processPublishDraftJob", () => {
   it.effect(
     "uploads metadata to Arweave, atomically replaces draft with post, and captures PostHog event",
@@ -264,7 +311,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           );
 
           yield* Deferred.await(done);
-          yield* Effect.sleep("40 millis");
+          yield* waitForDraftStatus("draft-fail", "FAILED");
 
           expect(attempts).toBe(2);
           expect(reportedMessages).toStrictEqual(["Arweave gateway down"]);
@@ -305,7 +352,6 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
 
       yield* Effect.gen(function* () {
         const db = yield* Database;
-        const admin = yield* JobAdminService;
         const user = yield* createTestUser();
 
         yield* createTestDraft({
@@ -326,14 +372,14 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
         );
 
         yield* Deferred.await(done);
-        yield* Effect.sleep("40 millis");
+        yield* waitForDraftStatus("draft-invalid", "FAILED");
 
         const [preservedDraft] = yield* db
           .select()
           .from(draft)
           .where(eq(draft.id, "draft-invalid"));
 
-        const stats = yield* admin.getQueueStats;
+        const stats = yield* waitForCompletedJobs(1);
 
         expect({
           reported: reportedMessages.length,
