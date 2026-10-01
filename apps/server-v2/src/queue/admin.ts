@@ -38,9 +38,15 @@ export interface ListFailedOptions {
   readonly offset: number;
 }
 
+export type JobState = "pending" | "processing" | "completed" | "failed";
+
 export interface JobAdmin {
   readonly getSummary: Effect.Effect<JobsSummary>;
   readonly getQueueStats: Effect.Effect<ReadonlyArray<QueueStats>>;
+  readonly getJobState: (
+    queueName: string,
+    id: string,
+  ) => Effect.Effect<JobState | null>;
   readonly listFailed: (
     options: ListFailedOptions,
   ) => Effect.Effect<FailedJobPage>;
@@ -120,6 +126,34 @@ export const makeJobAdmin = Effect.gen(function* () {
         oldestAges.length === 0 ? null : Math.min(...oldestAges),
     };
   });
+
+  const getJobState = (
+    queueName: string,
+    id: string,
+  ): Effect.Effect<JobState | null> =>
+    Effect.gen(function* () {
+      const [row] = yield* sql<{
+        readonly state: string;
+        readonly acquired_by: string | null;
+      }>`
+        SELECT state, acquired_by
+        FROM effect_queue
+        WHERE queue_name = ${queueName} AND id = ${id}
+        LIMIT 1
+      `;
+
+      if (row === undefined) {
+        return null;
+      }
+
+      if (row.state === "pending") {
+        return row.acquired_by === null ? "pending" : "processing";
+      }
+
+      return row.state === "completed" || row.state === "failed"
+        ? row.state
+        : null;
+    }).pipe(Effect.orDie);
 
   const listFailed = (
     options: ListFailedOptions,
@@ -210,6 +244,7 @@ export const makeJobAdmin = Effect.gen(function* () {
   return {
     getSummary,
     getQueueStats,
+    getJobState,
     listFailed,
     retryFailedJob,
     deleteFailedJob,

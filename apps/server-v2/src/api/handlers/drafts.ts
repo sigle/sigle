@@ -280,31 +280,37 @@ export const publishDraft = (
 
     const jobId = publishDraftJobId(draftId);
 
-    const isPublishInFlight =
-      foundDraft.txStatus === "PENDING" || foundDraft.txStatus === "PROCESSING";
+    const queueState = yield* admin.getJobState(
+      PUBLISH_DRAFT_QUEUE_NAME,
+      jobId,
+    );
 
-    // If a previous publish job permanently failed, clear its dead-lettered
-    // queue entry and stale upload checkpoint before accepting it again.
-    if (foundDraft.txStatus === "FAILED") {
+    // A live job already owns this draft: accept idempotently and leave its
+    // state and upload checkpoint untouched.
+    if (queueState === "pending" || queueState === "processing") {
+      return {
+        draftId,
+        status: "PENDING" as const,
+      };
+    }
+
+    // Reconcile drafts whose job dead-lettered, completed without finalizing,
+    // or vanished: drop the stale queue entry and checkpoint so the new offer
+    // starts from scratch instead of being deduplicated.
+    if (queueState !== null) {
       yield* admin.clearJob(PUBLISH_DRAFT_QUEUE_NAME, jobId);
     }
 
-    // Leave in-flight publishes untouched; only reset the draft for a fresh
-    // publish so the worker uploads the current metadata.
-    if (!isPublishInFlight) {
-      yield* db
-        .update(draft)
-        .set({
-          txStatus: "PENDING",
-          arweaveTxId: null,
-          updatedAt: new Date(),
-        })
-        .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
-        .pipe(Effect.orDie);
-    }
+    yield* db
+      .update(draft)
+      .set({
+        txStatus: "PENDING",
+        arweaveTxId: null,
+        updatedAt: new Date(),
+      })
+      .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
+      .pipe(Effect.orDie);
 
-    // Re-offering a queued id is a no-op, and a missing queue row (crash
-    // between the state update and the offer) is re-created.
     yield* publishDraftJob
       .offer(
         {

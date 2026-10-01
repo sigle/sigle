@@ -182,7 +182,18 @@ export const markDraftPublishFailed = (
         updatedAt: new Date(),
       })
       .where(and(eq(draft.id, job.draftId), eq(draft.userId, job.userId)))
-      .pipe(Effect.ignore);
+      .pipe(
+        Effect.retry({
+          schedule: Schedule.exponential("100 millis"),
+          times: 3,
+        }),
+        Effect.catchCause((cause) =>
+          Effect.logError(
+            `Failed to mark draft ${job.draftId} as FAILED`,
+            cause,
+          ),
+        ),
+      );
   });
 
 export const publishDraftJob = defineJob({

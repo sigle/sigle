@@ -745,6 +745,57 @@ describe("drafts", () => {
       }),
   );
 
+  it.live(
+    "POST /api/protected/drafts/:draftId/publish recovers a draft with a stale in-flight status",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const db = yield* Database;
+        const ownerWallet = createTestSiwsCredentials("testnet");
+
+        yield* createTestWalletAddress({
+          userId,
+          address: ownerWallet.address,
+        });
+        // A checkpoint without a live queue job (e.g. the FAILED write failed)
+        // which used to block re-publishing forever.
+        yield* createTestDraft({
+          id: "draft-stuck",
+          userId,
+          txStatus: "PENDING",
+          arweaveTxId: "stale-arweave-tx",
+        });
+
+        const publishRes = yield* publishDraftRequest(client, "draft-stuck", {
+          metadata: createSignedTestPostMetadata({
+            draftId: "draft-stuck",
+            privateKey: ownerWallet.privateKey,
+          }),
+        });
+
+        expect(publishRes.status).toBe(202);
+
+        const status = yield* waitForPublishStatus(
+          client,
+          "draft-stuck",
+          (current) => current.status === "COMPLETED",
+        );
+
+        const [createdPost] = yield* db
+          .select()
+          .from(post)
+          .where(eq(post.draftId, "draft-stuck"));
+
+        expect({
+          status: status.status,
+          arweaveId: createdPost.arweaveTxId,
+        }).toStrictEqual({
+          status: "COMPLETED",
+          arweaveId: ARWEAVE_TEST_UPLOAD_ID,
+        });
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
   it.effect("draft routes return 401 without a session", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
