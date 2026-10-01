@@ -3,6 +3,8 @@ import { Layer } from "effect";
 import { HttpRouter } from "effect/http";
 import { AppConfig, type AppConfigValues } from "@/config";
 import { ApiRoutesLayer } from "@/main";
+import { JobAdminService } from "@/queue/admin";
+import { QueueServicesLive } from "@/queue/store";
 import { ArweaveService } from "@/services/arweave";
 import { ImageProcessingService } from "@/services/image-processing";
 import { PostHogService, type PostHogEvent } from "@/services/posthog";
@@ -25,6 +27,8 @@ export const makeTestServerLayer = (
     disableLogger: true,
   }).pipe(
     Layer.provideMerge(NodeHttpServer.layerTest),
+    Layer.provide(QueueServicesLive),
+    Layer.provide(JobAdminService.layer),
     Layer.provide(RateLimiterTest),
     Layer.provideMerge(TestDatabaseLayer),
     Layer.provideMerge(AppConfig.layerTest(overrides)),
