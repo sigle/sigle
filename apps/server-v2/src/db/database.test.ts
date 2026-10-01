@@ -210,14 +210,16 @@ describe("database", () => {
         expect({
           id: foundPost.id,
           draftId: foundPost.draftId,
-          txId: foundPost.txId,
+          arweaveId: foundPost.arweaveId,
+          arweaveBlockHeight: foundPost.arweaveBlockHeight,
           title: foundPost.title,
           signature: foundPost.signature,
           userId: foundPost.userId,
         }).toStrictEqual({
           id: createdPost.id,
           draftId: "draft-1",
-          txId: "arweave-tx-1",
+          arweaveId: "arweave-tx-1",
+          arweaveBlockHeight: null,
           title: "Published Post",
           signature: "sig-1",
           userId: createdUser.id,

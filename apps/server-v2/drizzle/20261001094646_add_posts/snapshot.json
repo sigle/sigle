@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "983e44c9-6c00-4b90-a199-ecc44cf0d8a2",
+  "id": "9898603c-386e-4b75-b890-4345f6d5b08e",
   "prevIds": [
     "277718b6-1132-4259-ad78-c972e08e5275"
   ],
@@ -448,7 +448,7 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "tx_id",
+      "name": "arweave_id",
       "entityType": "columns",
       "schema": "public",
       "table": "post"
@@ -469,12 +469,12 @@
     {
       "type": "integer",
       "typeSchema": null,
-      "notNull": true,
+      "notNull": false,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "block_height",
+      "name": "arweave_block_height",
       "entityType": "columns",
       "schema": "public",
       "table": "post"
@@ -1131,6 +1131,27 @@
       "nameExplicit": true,
       "columns": [
         {
+          "value": "created_at",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": "arweave_block_height is null",
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "post_arweave_pending_idx",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "post"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
           "value": "user_id",
           "isExpression": false,
           "asc": true,
@@ -1397,10 +1418,10 @@
     {
       "nameExplicit": true,
       "columns": [
-        "tx_id"
+        "arweave_id"
       ],
       "nullsNotDistinct": false,
-      "name": "post_tx_id_key",
+      "name": "post_arweave_id_key",
       "schema": "public",
       "table": "post",
       "entityType": "uniques"

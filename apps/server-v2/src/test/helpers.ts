@@ -93,9 +93,9 @@ export const createTestPost = (options: {
   readonly id?: string;
   readonly draftId?: string | null;
   readonly userId: string;
-  readonly txId?: string;
+  readonly arweaveId?: string;
   readonly version?: string;
-  readonly blockHeight?: number;
+  readonly arweaveBlockHeight?: number | null;
   readonly metadataUri?: string;
   readonly title?: string;
   readonly content?: string;
@@ -105,7 +105,7 @@ export const createTestPost = (options: {
   Effect.gen(function* () {
     const db = yield* Database;
     const id = options.id ?? crypto.randomUUID();
-    const txId = options.txId ?? id;
+    const arweaveId = options.arweaveId ?? id;
 
     const [created] = yield* db
       .insert(post)
@@ -113,9 +113,9 @@ export const createTestPost = (options: {
         id,
         draftId: options.draftId ?? null,
         version: options.version ?? "1.0.0",
-        txId,
-        blockHeight: options.blockHeight ?? 0,
-        metadataUri: options.metadataUri ?? `ar://${txId}`,
+        arweaveId,
+        arweaveBlockHeight: options.arweaveBlockHeight ?? null,
+        metadataUri: options.metadataUri ?? `ar://${arweaveId}`,
         title: options.title ?? "Test Post",
         content: options.content ?? "Test post content",
         excerpt: options.excerpt ?? "Test excerpt",

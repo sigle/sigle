@@ -611,7 +611,7 @@ describe("drafts", () => {
           currentStatus,
           deletedDraft,
           createdPostId: createdPost.id,
-          createdPostTxId: createdPost.txId,
+          createdPostArweaveId: createdPost.arweaveId,
         }).toStrictEqual({
           unstartedStatus: 400,
           publishStatus: 202,
@@ -626,7 +626,7 @@ describe("drafts", () => {
           },
           deletedDraft: undefined,
           createdPostId: ARWEAVE_TEST_UPLOAD_ID,
-          createdPostTxId: ARWEAVE_TEST_UPLOAD_ID,
+          createdPostArweaveId: ARWEAVE_TEST_UPLOAD_ID,
         });
 
         expect(events).toContainEqual({

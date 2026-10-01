@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   bigint,
   boolean,
@@ -155,9 +156,11 @@ export const post = pgTable(
     id: text("id").primaryKey(),
     draftId: text("draft_id").unique("post_draft_id_key"),
     version: text("version").notNull(),
-    txId: text("tx_id").notNull().unique("post_tx_id_key"),
+    arweaveId: text("arweave_id").notNull().unique("post_arweave_id_key"),
     arweaveL1TxId: text("arweave_l1_tx_id"),
-    blockHeight: integer("block_height").notNull(),
+    // Null until the bundle is included in an Arweave block; populated by a
+    // later queue.
+    arweaveBlockHeight: integer("arweave_block_height"),
     metadataUri: text("metadata_uri").notNull(),
     title: text("title").notNull(),
     content: text("content").notNull(),
@@ -174,5 +177,10 @@ export const post = pgTable(
       .notNull()
       .references(() => user.id),
   },
-  (table) => [index("post_user_id_idx").on(table.userId)],
+  (table) => [
+    index("post_user_id_idx").on(table.userId),
+    index("post_arweave_pending_idx")
+      .on(table.createdAt)
+      .where(sql`arweave_block_height is null`),
+  ],
 );

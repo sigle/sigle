@@ -106,7 +106,8 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           expect({
             id: createdPost.id,
             draftId: createdPost.draftId,
-            txId: createdPost.txId,
+            arweaveId: createdPost.arweaveId,
+            arweaveBlockHeight: createdPost.arweaveBlockHeight,
             version: createdPost.version,
             metadataUri: createdPost.metadataUri,
             title: createdPost.title,
@@ -122,7 +123,8 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           }).toStrictEqual({
             id: "arweave-tx-001",
             draftId: "draft-1",
-            txId: "arweave-tx-001",
+            arweaveId: "arweave-tx-001",
+            arweaveBlockHeight: null,
             version: "1.0.0",
             metadataUri: "ar://arweave-tx-001",
             title: "Post Title",
@@ -200,7 +202,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             .where(eq(post.id, "existing-arweave-tx"));
 
           expect(createdPost.draftId).toBe("draft-checkpointed");
-          expect(createdPost.txId).toBe("existing-arweave-tx");
+          expect(createdPost.arweaveId).toBe("existing-arweave-tx");
         }).pipe(Effect.provide(layer));
       }),
   );

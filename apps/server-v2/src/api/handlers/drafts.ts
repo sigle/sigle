@@ -330,7 +330,7 @@ export const getDraftPublishStatus = (draftId: string) =>
     const db = yield* Database;
 
     const [publishedPost] = yield* db
-      .select({ id: post.id, txId: post.txId })
+      .select({ id: post.id, arweaveId: post.arweaveId })
       .from(post)
       .where(and(eq(post.draftId, draftId), eq(post.userId, user.id)))
       .limit(1)
@@ -340,7 +340,7 @@ export const getDraftPublishStatus = (draftId: string) =>
       return {
         status: "COMPLETED" as const,
         postId: publishedPost.id,
-        arweaveId: publishedPost.txId,
+        arweaveId: publishedPost.arweaveId,
       };
     }
 
