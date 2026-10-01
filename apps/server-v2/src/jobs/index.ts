@@ -1,6 +1,6 @@
 import { type Duration, Layer, type Schedule } from "effect";
-import { PersistedQueue } from "effect/unstable/persistence";
-import { type SqlClient } from "effect/unstable/sql";
+import { PersistedQueue } from "effect/persistence";
+import { type SqlClient } from "effect/sql";
 import { type Database } from "@/db";
 import {
   publishDraftJob,

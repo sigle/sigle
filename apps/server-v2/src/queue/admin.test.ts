@@ -1,7 +1,7 @@
 import { describe, expect, it } from "@effect/vitest";
 import { PostMetadataSchemaId } from "@sigle/sdk";
 import { Deferred, Effect, ErrorReporter, Exit, Layer, Schedule } from "effect";
-import { SqlClient } from "effect/unstable/sql";
+import { SqlClient } from "effect/sql";
 import { makeQueuesTestLayer } from "@/jobs";
 import {
   PUBLISH_DRAFT_QUEUE_NAME,

@@ -10,7 +10,7 @@ import {
   Schedule,
   Schema,
 } from "effect";
-import { PersistedQueue } from "effect/unstable/persistence";
+import { PersistedQueue } from "effect/persistence";
 
 export const DEFAULT_MAX_ATTEMPTS = 3;
 

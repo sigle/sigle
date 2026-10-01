@@ -1,7 +1,7 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
 import { Data, Effect, Result } from "effect";
-import { SqlClient } from "effect/unstable/sql";
+import { SqlClient } from "effect/sql";
 import { Database } from "@/db";
 import { account, post, session, user, verification } from "@/db/schema";
 import { createTestPost, createTestUser } from "@/test/helpers";

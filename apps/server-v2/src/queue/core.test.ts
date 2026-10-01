@@ -10,7 +10,7 @@ import {
   Schedule,
   Schema,
 } from "effect";
-import { PersistedQueue } from "effect/unstable/persistence";
+import { PersistedQueue } from "effect/persistence";
 import { JobAdminService } from "@/queue/admin";
 import { defineJob, terminal, type Job } from "@/queue/core";
 import { TestDatabaseLayer } from "@/test/layer";

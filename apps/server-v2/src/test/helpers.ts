@@ -7,7 +7,7 @@ import {
 } from "@stacks/transactions";
 import { makeSignature } from "better-auth/crypto";
 import { Effect, Redacted, Ref } from "effect";
-import { Cookies, HttpClient } from "effect/unstable/http";
+import { Cookies, HttpClient } from "effect/http";
 import { createSiwsMessage } from "sign-in-with-stacks";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";

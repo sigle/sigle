@@ -1,6 +1,6 @@
 import { NodeHttpServer } from "@effect/platform-node";
 import { type Effect, Layer, Schedule } from "effect";
-import { HttpRouter } from "effect/unstable/http";
+import { HttpRouter } from "effect/http";
 import { AppConfig, type AppConfigValues } from "@/config";
 import { makeQueuesTestLayer } from "@/jobs";
 import { ApiRoutesLayer } from "@/main";

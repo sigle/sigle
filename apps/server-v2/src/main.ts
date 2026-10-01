@@ -4,8 +4,8 @@ import {
   NodeServices,
 } from "@effect/platform-node";
 import { Effect, Layer } from "effect";
-import { HttpRouter } from "effect/unstable/http";
-import { HttpApiBuilder, HttpApiScalar } from "effect/unstable/httpapi";
+import { HttpRouter } from "effect/http";
+import { HttpApiBuilder, HttpApiScalar } from "effect/http-api";
 import { createServer } from "node:http";
 import { SigleApi } from "@/api";
 import { AuthRoutesLayer } from "@/api/groups/auth";

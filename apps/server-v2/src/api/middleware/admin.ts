@@ -1,5 +1,5 @@
 import { Effect, Layer } from "effect";
-import { HttpApiMiddleware } from "effect/unstable/httpapi";
+import { HttpApiMiddleware } from "effect/http-api";
 import { CurrentUser } from "@/api/middleware/auth-user";
 import { Forbidden } from "@/api/schemas";
 import { UserWhitelistService } from "@/services/users";

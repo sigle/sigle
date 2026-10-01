@@ -6,7 +6,7 @@ import {
   HttpClient,
   HttpClientRequest,
   HttpClientResponse,
-} from "effect/unstable/http";
+} from "effect/http";
 import type { PostHogEvent } from "@/services/posthog";
 import {
   Draft,

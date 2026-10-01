@@ -1,5 +1,5 @@
 import { DateTime, Effect } from "effect";
-import { HttpApiBuilder } from "effect/unstable/httpapi";
+import { HttpApiBuilder } from "effect/http-api";
 import { SigleApi } from "@/api";
 import {
   ADMIN_LIST_DEFAULT_LIMIT,
