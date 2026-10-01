@@ -10,7 +10,7 @@ import { Cookies, HttpClient } from "effect/http";
 import { createSiwsMessage } from "sign-in-with-stacks";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { draft, session, user } from "@/db/schema";
+import { draft, session, user, walletAddress } from "@/db/schema";
 import { SESSION_COOKIE_NAME } from "@/services/auth";
 
 export const createTestUser = (
@@ -27,6 +27,31 @@ export const createTestUser = (
         name: "Test User",
         email: `${id}@test.sigle.io`,
         ...overrides,
+      })
+      .returning();
+
+    return created;
+  });
+
+export const createTestWalletAddress = (options: {
+  readonly id?: string;
+  readonly userId: string;
+  readonly address: string;
+  readonly chainId?: number;
+  readonly isPrimary?: boolean;
+}) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+
+    const [created] = yield* db
+      .insert(walletAddress)
+      .values({
+        id: options.id ?? crypto.randomUUID(),
+        userId: options.userId,
+        address: options.address,
+        chainId: options.chainId ?? STACKS_TESTNET_CHAIN_ID,
+        isPrimary: options.isPrimary ?? true,
+        createdAt: new Date(),
       })
       .returning();
 

@@ -15,6 +15,19 @@ const OptionalNonEmptyRedacted = (
 ): Config.Config<Option.Option<Redacted.Redacted>> =>
   OptionalNonEmptyString(name).pipe(Config.map(Option.map(Redacted.make)));
 
+const CommaSeparatedList = (
+  name: string,
+): Config.Config<ReadonlyArray<string>> =>
+  Config.String(name).pipe(
+    Config.withDefault(""),
+    Config.map((value) =>
+      value
+        .split(",")
+        .map((item) => item.trim())
+        .filter((item) => item.length > 0),
+    ),
+  );
+
 export const appConfig = Config.all({
   NODE_ENV: Config.Literals(
     ["production", "development", "test"],
@@ -56,6 +69,8 @@ export const appConfig = Config.all({
   SENTRY_DSN: OptionalNonEmptyString("SENTRY_DSN"),
   POSTHOG_API_KEY: OptionalNonEmptyRedacted("POSTHOG_API_KEY"),
   POSTHOG_API_HOST: OptionalNonEmptyString("POSTHOG_API_HOST"),
+  // Wallet addresses allowed to access the admin jobs API
+  ADMIN_ADDRESSES: CommaSeparatedList("ADMIN_ADDRESSES"),
 });
 
 export type AppConfigValues = Config.Success<typeof appConfig>;
@@ -81,6 +96,7 @@ export const defaultTestConfig: AppConfigValues = {
   SENTRY_DSN: Option.none(),
   POSTHOG_API_KEY: Option.none(),
   POSTHOG_API_HOST: Option.none(),
+  ADMIN_ADDRESSES: [],
 };
 
 export class AppConfig extends Context.Service<AppConfig, AppConfigValues>()(

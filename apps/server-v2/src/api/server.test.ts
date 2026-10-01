@@ -7,6 +7,13 @@ import { makeTestServerLayer } from "@/test/server";
 
 const HealthResponse = Schema.Struct({
   success: Schema.Boolean,
+  queues: Schema.Struct({
+    pending: Schema.Int,
+    active: Schema.Int,
+    completed: Schema.Int,
+    failed: Schema.Int,
+    oldestPendingAgeMillis: Schema.NullOr(Schema.Int),
+  }),
 });
 
 const OpenApiOperation = Schema.Struct({
@@ -48,7 +55,16 @@ describe("http server", () => {
         yield* HttpClientResponse.schemaBodyJson(HealthResponse)(response);
 
       expect(response.status).toBe(200);
-      expect(body).toStrictEqual({ success: true });
+      expect(body).toStrictEqual({
+        success: true,
+        queues: {
+          pending: 0,
+          active: 0,
+          completed: 0,
+          failed: 0,
+          oldestPendingAgeMillis: null,
+        },
+      });
     }).pipe(Effect.provide(serverLayer())),
   );
 
