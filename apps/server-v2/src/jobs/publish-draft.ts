@@ -11,9 +11,6 @@ export const PUBLISH_DRAFT_QUEUE_NAME = "publish-draft";
 
 export const PUBLISH_DRAFT_MAX_ATTEMPTS = 3;
 
-export const publishDraftJobId = (draftId: string): string =>
-  `${PUBLISH_DRAFT_QUEUE_NAME}:${draftId}`;
-
 export const PublishDraftJobSchema = Schema.Struct({
   draftId: Schema.String,
   userId: Schema.String,
@@ -55,13 +52,15 @@ export const processPublishDraftJob = (
       .select({
         id: draft.id,
         arweaveTxId: draft.arweaveTxId,
+        publishSignature: draft.publishSignature,
       })
       .from(draft)
       .where(and(eq(draft.id, job.draftId), eq(draft.userId, job.userId)))
       .limit(1)
       .pipe(Effect.orDie);
 
-    if (!foundDraft) {
+    // Missing draft or a newer publish took ownership: nothing to do.
+    if (!foundDraft || foundDraft.publishSignature !== job.signature) {
       return;
     }
 
@@ -78,32 +77,46 @@ export const processPublishDraftJob = (
 
     // Step 1: Upload metadata JSON to Arweave (or reuse checkpointed txId from
     // an earlier attempt if a downstream step failed and triggered a retry).
-    const arweaveTxId =
-      foundDraft.arweaveTxId ??
-      (yield* Effect.gen(function* () {
-        const uploaded = yield* arweave.uploadFile({
-          file: Buffer.from(job.metadataJson),
-          contentType: "application/json",
-          tags: [
-            {
-              name: "Author",
-              value: job.authorAddress,
-            },
-          ],
-        });
+    // The checkpoint is only trusted while it belongs to this job's signed
+    // payload, and the fenced write releases ownership if a newer publish
+    // landed while the upload was in flight.
+    let arweaveTxId = foundDraft.arweaveTxId;
 
-        yield* db
-          .update(draft)
-          .set({
-            arweaveTxId: uploaded.id,
-            txStatus: "PROCESSING",
-            updatedAt: new Date(),
-          })
-          .where(and(eq(draft.id, job.draftId), eq(draft.userId, job.userId)))
-          .pipe(Effect.orDie);
+    if (arweaveTxId === null) {
+      const uploaded = yield* arweave.uploadFile({
+        file: Buffer.from(job.metadataJson),
+        contentType: "application/json",
+        tags: [
+          {
+            name: "Author",
+            value: job.authorAddress,
+          },
+        ],
+      });
 
-        return uploaded.id;
-      }));
+      const [checkpointed] = yield* db
+        .update(draft)
+        .set({
+          arweaveTxId: uploaded.id,
+          txStatus: "PROCESSING",
+          updatedAt: new Date(),
+        })
+        .where(
+          and(
+            eq(draft.id, job.draftId),
+            eq(draft.userId, job.userId),
+            eq(draft.publishSignature, job.signature),
+          ),
+        )
+        .returning({ id: draft.id })
+        .pipe(Effect.orDie);
+
+      if (!checkpointed) {
+        return;
+      }
+
+      arweaveTxId = uploaded.id;
+    }
 
     const attributes = postData.content.attributes ?? [];
 
@@ -125,7 +138,13 @@ export const processPublishDraftJob = (
         Effect.gen(function* () {
           const [deletedDraft] = yield* tx
             .delete(draft)
-            .where(and(eq(draft.id, job.draftId), eq(draft.userId, job.userId)))
+            .where(
+              and(
+                eq(draft.id, job.draftId),
+                eq(draft.userId, job.userId),
+                eq(draft.publishSignature, job.signature),
+              ),
+            )
             .returning({ id: draft.id });
 
           if (!deletedDraft) {
@@ -181,7 +200,13 @@ export const markDraftPublishFailed = (
         txStatus: "FAILED",
         updatedAt: new Date(),
       })
-      .where(and(eq(draft.id, job.draftId), eq(draft.userId, job.userId)))
+      .where(
+        and(
+          eq(draft.id, job.draftId),
+          eq(draft.userId, job.userId),
+          eq(draft.publishSignature, job.signature),
+        ),
+      )
       .pipe(
         Effect.retry({
           schedule: Schedule.exponential("100 millis"),

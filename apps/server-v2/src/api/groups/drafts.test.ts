@@ -21,6 +21,8 @@ import { draft, post } from "@/db/schema";
 import {
   ARWEAVE_TEST_UPLOAD,
   ARWEAVE_TEST_UPLOAD_ID,
+  ArweaveService,
+  type ArweaveUploadOptions,
   ArweaveUploadError,
 } from "@/services/arweave";
 import {
@@ -794,6 +796,138 @@ describe("drafts", () => {
           arweaveId: ARWEAVE_TEST_UPLOAD_ID,
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.live(
+    "POST /api/protected/drafts/:draftId/publish reuses the Arweave checkpoint when the signed metadata is unchanged",
+    () =>
+      Effect.gen(function* () {
+        const uploads: Array<ArweaveUploadOptions> = [];
+
+        const layer = makeTestServerLayer({}, [], {
+          arweave: ArweaveService.layerTest(uploads),
+        });
+
+        yield* Effect.gen(function* () {
+          const { client, userId } = yield* createAuthenticatedClient();
+          const db = yield* Database;
+          const ownerWallet = createTestSiwsCredentials("testnet");
+
+          yield* createTestWalletAddress({
+            userId,
+            address: ownerWallet.address,
+          });
+
+          const signedMetadata = createSignedTestPostMetadata({
+            draftId: "draft-checkpoint",
+            privateKey: ownerWallet.privateKey,
+          });
+
+          // A previous attempt uploaded the metadata, then failed before
+          // finalizing; its checkpoint is bound to this exact signature.
+          yield* createTestDraft({
+            id: "draft-checkpoint",
+            userId,
+            txStatus: "FAILED",
+            arweaveTxId: "checkpoint-arweave-tx",
+            publishSignature: signedMetadata.signature,
+          });
+
+          const publishRes = yield* publishDraftRequest(
+            client,
+            "draft-checkpoint",
+            { metadata: signedMetadata },
+          );
+
+          expect(publishRes.status).toBe(202);
+
+          const status = yield* waitForPublishStatus(
+            client,
+            "draft-checkpoint",
+            (current) => current.status === "COMPLETED",
+          );
+
+          const [createdPost] = yield* db
+            .select()
+            .from(post)
+            .where(eq(post.draftId, "draft-checkpoint"));
+
+          expect({
+            uploads: uploads.length,
+            status: status.status,
+            arweaveId: createdPost.arweaveTxId,
+          }).toStrictEqual({
+            uploads: 0,
+            status: "COMPLETED",
+            arweaveId: "checkpoint-arweave-tx",
+          });
+        }).pipe(Effect.provide(layer));
+      }),
+  );
+
+  it.live(
+    "POST /api/protected/drafts/:draftId/publish clears the Arweave checkpoint when the signed metadata changes",
+    () =>
+      Effect.gen(function* () {
+        const uploads: Array<ArweaveUploadOptions> = [];
+
+        const layer = makeTestServerLayer({}, [], {
+          arweave: ArweaveService.layerTest(uploads),
+        });
+
+        yield* Effect.gen(function* () {
+          const { client, userId } = yield* createAuthenticatedClient();
+          const db = yield* Database;
+          const ownerWallet = createTestSiwsCredentials("testnet");
+
+          yield* createTestWalletAddress({
+            userId,
+            address: ownerWallet.address,
+          });
+
+          yield* createTestDraft({
+            id: "draft-recheckpoint",
+            userId,
+            txStatus: "FAILED",
+            arweaveTxId: "old-arweave-tx",
+            publishSignature: "old-signature",
+          });
+
+          const publishRes = yield* publishDraftRequest(
+            client,
+            "draft-recheckpoint",
+            {
+              metadata: createSignedTestPostMetadata({
+                draftId: "draft-recheckpoint",
+                privateKey: ownerWallet.privateKey,
+              }),
+            },
+          );
+
+          expect(publishRes.status).toBe(202);
+
+          const status = yield* waitForPublishStatus(
+            client,
+            "draft-recheckpoint",
+            (current) => current.status === "COMPLETED",
+          );
+
+          const [createdPost] = yield* db
+            .select()
+            .from(post)
+            .where(eq(post.draftId, "draft-recheckpoint"));
+
+          expect({
+            uploads: uploads.length,
+            status: status.status,
+            arweaveId: createdPost.arweaveTxId,
+          }).toStrictEqual({
+            uploads: 1,
+            status: "COMPLETED",
+            arweaveId: ARWEAVE_TEST_UPLOAD_ID,
+          });
+        }).pipe(Effect.provide(layer));
+      }),
   );
 
   it.effect("draft routes return 401 without a session", () =>

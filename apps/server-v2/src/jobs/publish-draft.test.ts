@@ -5,11 +5,7 @@ import { Deferred, Effect, ErrorReporter, Exit, Layer, Schedule } from "effect";
 import { Database } from "@/db";
 import { draft, post } from "@/db/schema";
 import { makeQueuesTestLayer } from "@/jobs";
-import {
-  processPublishDraftJob,
-  publishDraftJob,
-  publishDraftJobId,
-} from "@/jobs/publish-draft";
+import { processPublishDraftJob, publishDraftJob } from "@/jobs/publish-draft";
 import { JobAdminService } from "@/queue/admin";
 import {
   ArweaveService,
@@ -128,6 +124,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             id: "draft-1",
             userId: user.id,
             title: "Draft Title",
+            publishSignature: "sig-001",
           });
 
           yield* processPublishDraftJob({
@@ -231,6 +228,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             userId: user.id,
             arweaveTxId: "existing-arweave-tx",
             txStatus: "PROCESSING",
+            publishSignature: "sig-checkpointed",
           });
 
           yield* processPublishDraftJob({
@@ -252,6 +250,62 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           expect(createdPost.arweaveTxId).toBe("existing-arweave-tx");
         }).pipe(Effect.provide(layer));
       }),
+  );
+
+  it.effect("does nothing when a newer publish owns the draft", () =>
+    Effect.gen(function* () {
+      const uploads: Array<ArweaveUploadOptions> = [];
+      const posthogEvents: Array<PostHogEvent> = [];
+
+      const layer = Layer.mergeAll(
+        TestDatabaseLayer,
+        ArweaveService.layerTest(uploads),
+        PostHogService.layerTest(posthogEvents),
+      );
+
+      yield* Effect.gen(function* () {
+        const db = yield* Database;
+        const user = yield* createTestUser();
+        yield* createTestDraft({
+          id: "draft-superseded",
+          userId: user.id,
+          txStatus: "PENDING",
+          publishSignature: "newer-signature",
+        });
+
+        yield* processPublishDraftJob({
+          draftId: "draft-superseded",
+          userId: user.id,
+          authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+          signature: "older-signature",
+          metadataJson: sampleMetadataJson,
+        });
+
+        const [preservedDraft] = yield* db
+          .select()
+          .from(draft)
+          .where(eq(draft.id, "draft-superseded"));
+
+        const posts = yield* db
+          .select()
+          .from(post)
+          .where(eq(post.draftId, "draft-superseded"));
+
+        expect({
+          uploads: uploads.length,
+          posthogEvents: posthogEvents.length,
+          txStatus: preservedDraft.txStatus,
+          publishSignature: preservedDraft.publishSignature,
+          posts: posts.length,
+        }).toStrictEqual({
+          uploads: 0,
+          posthogEvents: 0,
+          txStatus: "PENDING",
+          publishSignature: "newer-signature",
+          posts: 0,
+        });
+      }).pipe(Effect.provide(layer));
+    }),
   );
 
   it.live(
@@ -297,18 +351,16 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             id: "draft-fail",
             userId: user.id,
             txStatus: "PENDING",
+            publishSignature: "sig-fail",
           });
 
-          yield* publishDraftJob.offer(
-            {
-              draftId: "draft-fail",
-              userId: user.id,
-              authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
-              signature: "sig-fail",
-              metadataJson: sampleMetadataJson,
-            },
-            { id: publishDraftJobId("draft-fail") },
-          );
+          yield* publishDraftJob.offer({
+            draftId: "draft-fail",
+            userId: user.id,
+            authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+            signature: "sig-fail",
+            metadataJson: sampleMetadataJson,
+          });
 
           yield* Deferred.await(done);
           yield* waitForDraftStatus("draft-fail", "FAILED");
@@ -358,18 +410,16 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           id: "draft-invalid",
           userId: user.id,
           txStatus: "PENDING",
+          publishSignature: "sig-invalid",
         });
 
-        yield* publishDraftJob.offer(
-          {
-            draftId: "draft-invalid",
-            userId: user.id,
-            authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
-            signature: "sig-invalid",
-            metadataJson: "{ not json",
-          },
-          { id: publishDraftJobId("draft-invalid") },
-        );
+        yield* publishDraftJob.offer({
+          draftId: "draft-invalid",
+          userId: user.id,
+          authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+          signature: "sig-invalid",
+          metadataJson: "{ not json",
+        });
 
         yield* Deferred.await(done);
         yield* waitForDraftStatus("draft-invalid", "FAILED");

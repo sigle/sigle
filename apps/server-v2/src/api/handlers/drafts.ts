@@ -1,6 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { PostMetadataSchema, verifyPostSignature } from "@sigle/sdk";
-import { and, count, desc, eq } from "drizzle-orm";
+import { and, count, desc, eq, sql } from "drizzle-orm";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
 import { SigleApi } from "@/api";
@@ -16,12 +16,7 @@ import { BadRequest, NotFound } from "@/api/schemas";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { draft, post } from "@/db/schema";
-import {
-  PUBLISH_DRAFT_QUEUE_NAME,
-  publishDraftJob,
-  publishDraftJobId,
-} from "@/jobs/publish-draft";
-import { JobAdminService } from "@/queue/admin";
+import { publishDraftJob } from "@/jobs/publish-draft";
 import { PostHogService } from "@/services/posthog";
 import { UserWhitelistService } from "@/services/users";
 
@@ -214,7 +209,6 @@ export const publishDraft = (
     const config = yield* AppConfig;
     const db = yield* Database;
     const whitelist = yield* UserWhitelistService;
-    const admin = yield* JobAdminService;
 
     const [foundDraft] = yield* db
       .select()
@@ -278,50 +272,39 @@ export const publishDraft = (
       });
     }
 
-    const jobId = publishDraftJobId(draftId);
-
-    const queueState = yield* admin.getJobState(
-      PUBLISH_DRAFT_QUEUE_NAME,
-      jobId,
-    );
-
-    // A live job already owns this draft: accept idempotently and leave its
-    // state and upload checkpoint untouched.
-    if (queueState === "pending" || queueState === "processing") {
-      return {
-        draftId,
-        status: "PENDING" as const,
-      };
-    }
-
-    // Reconcile drafts whose job dead-lettered, completed without finalizing,
-    // or vanished: drop the stale queue entry and checkpoint so the new offer
-    // starts from scratch instead of being deduplicated.
-    if (queueState !== null) {
-      yield* admin.clearJob(PUBLISH_DRAFT_QUEUE_NAME, jobId);
-    }
-
-    yield* db
+    // Take ownership of the draft row: `publishSignature` identifies the signed
+    // payload being published, and the Arweave checkpoint only survives while
+    // it belongs to that payload. Workers whose job signature no longer matches
+    // the draft no-op, so the newest request wins without any queue
+    // reconciliation. The CASE reads the current row, so a checkpoint written
+    // by an in-flight worker for the same signature is never clobbered.
+    const [acceptedDraft] = yield* db
       .update(draft)
       .set({
         txStatus: "PENDING",
-        arweaveTxId: null,
+        publishSignature: signature,
+        arweaveTxId: sql`CASE
+          WHEN ${draft.publishSignature} = ${signature} THEN ${draft.arweaveTxId}
+          ELSE NULL
+        END`,
         updatedAt: new Date(),
       })
       .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
+      .returning({ id: draft.id })
       .pipe(Effect.orDie);
 
+    if (!acceptedDraft) {
+      return yield* new NotFound({ message: "Draft not found" });
+    }
+
     yield* publishDraftJob
-      .offer(
-        {
-          draftId,
-          userId: user.id,
-          authorAddress: recoveredAddress,
-          signature,
-          metadataJson: JSON.stringify(parsedMetadata.data),
-        },
-        { id: jobId },
-      )
+      .offer({
+        draftId,
+        userId: user.id,
+        authorAddress: recoveredAddress,
+        signature,
+        metadataJson: JSON.stringify(parsedMetadata.data),
+      })
       .pipe(Effect.orDie);
 
     return {

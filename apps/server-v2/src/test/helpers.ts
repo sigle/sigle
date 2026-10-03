@@ -66,6 +66,7 @@ export const createTestDraft = (options: {
   readonly content?: string;
   readonly arweaveTxId?: string | null;
   readonly txStatus?: string | null;
+  readonly publishSignature?: string | null;
   readonly createdAt?: Date;
   readonly updatedAt?: Date;
 }) =>
@@ -80,6 +81,7 @@ export const createTestDraft = (options: {
         content: options.content ?? "Test content",
         arweaveTxId: options.arweaveTxId ?? null,
         txStatus: options.txStatus ?? null,
+        publishSignature: options.publishSignature ?? null,
         createdAt: options.createdAt,
         updatedAt: options.updatedAt,
         userId: options.userId,

@@ -136,6 +136,9 @@ export const draft = pgTable(
     canonicalUri: text("canonical_uri"),
     arweaveTxId: text("arweave_tx_id"),
     txStatus: text("tx_status"),
+    // Signature of the signed post metadata the draft is publishing (or last
+    // attempted). `arweaveTxId` is a valid checkpoint only while it matches.
+    publishSignature: text("publish_signature"),
     tags: text("tags").array(),
     createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
