@@ -118,6 +118,11 @@ describe("job admin service", () => {
           attempts: page.results[0]?.attempts,
         }).toStrictEqual({ total: 2, resultCount: 1, attempts: 2 });
 
+        const failedState = yield* admin.getJobState(
+          "admin-test",
+          "admin-first",
+        );
+
         shouldFail = false;
 
         const retried = yield* admin.retryFailedJob(
@@ -126,6 +131,16 @@ describe("job admin service", () => {
         );
 
         yield* waitForCompletedJobs(1);
+
+        const completedState = yield* admin.getJobState(
+          "admin-test",
+          "admin-first",
+        );
+
+        const missingState = yield* admin.getJobState(
+          "admin-test",
+          "missing-state",
+        );
 
         const deleted = yield* admin.deleteFailedJob(
           "admin-test",
@@ -146,12 +161,18 @@ describe("job admin service", () => {
         });
 
         expect({
+          failedState,
+          completedState,
+          missingState,
           retried,
           deleted,
           deleteCompleted,
           cleared,
           remainingFailed: remaining.total,
         }).toStrictEqual({
+          failedState: "failed",
+          completedState: "completed",
+          missingState: null,
           retried: true,
           deleted: true,
           deleteCompleted: false,

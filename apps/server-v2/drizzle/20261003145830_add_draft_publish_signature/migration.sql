@@ -1,0 +1,1 @@
+ALTER TABLE "draft" ADD COLUMN "publish_signature" text;

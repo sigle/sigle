@@ -1,0 +1,1 @@
+ALTER TABLE "draft" ADD COLUMN "upload_claimed_at" timestamp(3);

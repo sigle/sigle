@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
-import { Effect, Option, Schema } from "effect";
+import { Deferred, Effect, Option, Schema } from "effect";
 import {
   Headers,
   HttpClient,
@@ -11,11 +11,28 @@ import type { PostHogEvent } from "@/services/posthog";
 import {
   Draft,
   DraftListResponse,
+  PublishDraftAccepted,
+  PublishDraftPayload,
+  PublishDraftStatusResponse,
   UpdateDraftPayload,
 } from "@/api/groups/drafts";
 import { Database } from "@/db";
-import { draft } from "@/db/schema";
-import { createAuthenticatedClient, createTestDraft } from "@/test/helpers";
+import { draft, post } from "@/db/schema";
+import {
+  ARWEAVE_TEST_UPLOAD,
+  ARWEAVE_TEST_UPLOAD_ID,
+  ArweaveService,
+  type ArweaveUploadOptions,
+  ArweaveUploadError,
+} from "@/services/arweave";
+import {
+  createAuthenticatedClient,
+  createSignedTestPostMetadata,
+  createTestDraft,
+  createTestPost,
+  createTestSiwsCredentials,
+  createTestWalletAddress,
+} from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 
 const ErrorResponse = Schema.Struct({ message: Schema.String });
@@ -52,6 +69,47 @@ const updateDraftRequest = (
 
 const deleteDraftRequest = (client: HttpClient.HttpClient, draftId: string) =>
   client.execute(HttpClientRequest.delete(`/api/protected/drafts/${draftId}`));
+
+const publishDraftRequest = (
+  client: HttpClient.HttpClient,
+  draftId: string,
+  body: typeof PublishDraftPayload.Type,
+) =>
+  client.execute(
+    HttpClientRequest.post(`/api/protected/drafts/${draftId}/publish`).pipe(
+      HttpClientRequest.bodyJsonUnsafe(body),
+    ),
+  );
+
+const getPublishStatusRequest = (
+  client: HttpClient.HttpClient,
+  draftId: string,
+) => client.get(`/api/protected/drafts/${draftId}/publish`);
+
+const waitForPublishStatus = (
+  client: HttpClient.HttpClient,
+  draftId: string,
+  isDone: (status: typeof PublishDraftStatusResponse.Type) => boolean,
+) =>
+  Effect.gen(function* () {
+    for (let attempt = 0; attempt < 200; attempt++) {
+      const response = yield* getPublishStatusRequest(client, draftId);
+
+      const status = yield* HttpClientResponse.schemaBodyJson(
+        PublishDraftStatusResponse,
+      )(response);
+
+      if (isDone(status)) {
+        return status;
+      }
+
+      yield* Effect.sleep("20 millis");
+    }
+
+    return yield* Effect.die(
+      new Error(`timed out waiting for publish status on ${draftId}`),
+    );
+  });
 
 describe("drafts", () => {
   it.effect("POST /api/protected/drafts creates a draft", () => {
@@ -430,6 +488,448 @@ describe("drafts", () => {
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
+  it.effect(
+    "POST /api/protected/drafts/:draftId/publish validates draft existence, metadata, signature, wallet ownership, and replay",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const ownerWallet = createTestSiwsCredentials("testnet");
+        const otherWallet = createTestSiwsCredentials("testnet");
+
+        yield* createTestWalletAddress({
+          userId,
+          address: ownerWallet.address,
+        });
+        yield* createTestDraft({ id: "draft-val", userId });
+
+        // 1. Non-existent draft -> 404 Not Found
+        const missingDraftRes = yield* publishDraftRequest(
+          client,
+          "missing-draft",
+          {
+            metadata: createSignedTestPostMetadata({
+              draftId: "missing-draft",
+              privateKey: ownerWallet.privateKey,
+            }),
+          },
+        );
+
+        expect(missingDraftRes.status).toBe(404);
+
+        // 2. Invalid metadata schema -> 400 Bad Request
+        const invalidMetaRes = yield* publishDraftRequest(client, "draft-val", {
+          metadata: { invalid: true },
+        });
+
+        expect(invalidMetaRes.status).toBe(400);
+
+        // 3. Metadata content id not matching the draft -> 400 Bad Request
+        const mismatchedIdRes = yield* publishDraftRequest(
+          client,
+          "draft-val",
+          {
+            metadata: createSignedTestPostMetadata({
+              draftId: "other-draft",
+              privateKey: ownerWallet.privateKey,
+            }),
+          },
+        );
+
+        expect(mismatchedIdRes.status).toBe(400);
+
+        // 4. Signed by wallet not belonging to user -> 400 Bad Request
+        const wrongWalletRes = yield* publishDraftRequest(client, "draft-val", {
+          metadata: createSignedTestPostMetadata({
+            draftId: "draft-val",
+            privateKey: otherWallet.privateKey,
+          }),
+        });
+
+        expect(wrongWalletRes.status).toBe(400);
+
+        // 5. Already published signature -> 400 Bad Request
+        const validSigned = createSignedTestPostMetadata({
+          draftId: "draft-val",
+          privateKey: ownerWallet.privateKey,
+        });
+
+        yield* createTestPost({
+          id: "existing-post-id",
+          userId,
+          signature: validSigned.signature,
+        });
+
+        const duplicateSigRes = yield* publishDraftRequest(
+          client,
+          "draft-val",
+          {
+            metadata: validSigned,
+          },
+        );
+
+        expect(duplicateSigRes.status).toBe(400);
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.live(
+    "POST & GET /api/protected/drafts/:draftId/publish enqueues and completes publishing",
+    () => {
+      const events: Array<PostHogEvent> = [];
+
+      return Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const db = yield* Database;
+        const ownerWallet = createTestSiwsCredentials("testnet");
+
+        yield* createTestWalletAddress({
+          userId,
+          address: ownerWallet.address,
+        });
+        yield* createTestDraft({ id: "draft-pub-1", userId });
+
+        // Status before publishing has been started -> 400 Bad Request
+        const unstartedRes = yield* getPublishStatusRequest(
+          client,
+          "draft-pub-1",
+        );
+
+        // Enqueue publish job
+        const publishRes = yield* publishDraftRequest(client, "draft-pub-1", {
+          metadata: createSignedTestPostMetadata({
+            draftId: "draft-pub-1",
+            privateKey: ownerWallet.privateKey,
+          }),
+        });
+
+        const publishBody =
+          yield* HttpClientResponse.schemaBodyJson(PublishDraftAccepted)(
+            publishRes,
+          );
+
+        const currentStatus = yield* waitForPublishStatus(
+          client,
+          "draft-pub-1",
+          (status) => status.status === "COMPLETED",
+        );
+
+        const [deletedDraft] = yield* db
+          .select()
+          .from(draft)
+          .where(eq(draft.id, "draft-pub-1"));
+
+        const [createdPost] = yield* db
+          .select()
+          .from(post)
+          .where(eq(post.draftId, "draft-pub-1"));
+
+        expect({
+          unstartedStatus: unstartedRes.status,
+          publishStatus: publishRes.status,
+          publishBody,
+          currentStatus,
+          deletedDraft,
+          createdPostId: createdPost.id,
+          createdPostArweaveId: createdPost.arweaveTxId,
+        }).toStrictEqual({
+          unstartedStatus: 400,
+          publishStatus: 202,
+          publishBody: {
+            draftId: "draft-pub-1",
+            status: "PENDING",
+          },
+          currentStatus: {
+            status: "COMPLETED",
+            postId: ARWEAVE_TEST_UPLOAD_ID,
+            arweaveId: ARWEAVE_TEST_UPLOAD_ID,
+          },
+          deletedDraft: undefined,
+          createdPostId: ARWEAVE_TEST_UPLOAD_ID,
+          createdPostArweaveId: ARWEAVE_TEST_UPLOAD_ID,
+        });
+
+        expect(events).toContainEqual({
+          distinctId: userId,
+          event: "draft published",
+          properties: {
+            draftId: "draft-pub-1",
+            postId: ARWEAVE_TEST_UPLOAD_ID,
+            arweaveId: ARWEAVE_TEST_UPLOAD_ID,
+          },
+        });
+      }).pipe(Effect.provide(makeTestServerLayer({}, events)));
+    },
+  );
+
+  it.live(
+    "GET /api/protected/drafts/:draftId/publish reports FAILED when upload fails and allows retry via POST",
+    () =>
+      Effect.gen(function* () {
+        let shouldFail = true;
+        const failedSignal = yield* Deferred.make<void>();
+        let attempts = 0;
+
+        const layer = makeTestServerLayer({}, [], {
+          arweaveUploadImpl: () =>
+            Effect.gen(function* () {
+              attempts++;
+
+              if (shouldFail) {
+                if (attempts >= 2) {
+                  yield* Deferred.succeed(failedSignal, undefined);
+                }
+
+                return yield* new ArweaveUploadError({
+                  cause: new Error("Arweave unavailable"),
+                  message: "Arweave unavailable",
+                });
+              }
+
+              return { ...ARWEAVE_TEST_UPLOAD, id: "recovered-arweave-tx" };
+            }),
+        });
+
+        yield* Effect.gen(function* () {
+          const { client, userId } = yield* createAuthenticatedClient();
+          const ownerWallet = createTestSiwsCredentials("testnet");
+
+          yield* createTestWalletAddress({
+            userId,
+            address: ownerWallet.address,
+          });
+          yield* createTestDraft({ id: "draft-flaky", userId });
+
+          const signedMetadata = createSignedTestPostMetadata({
+            draftId: "draft-flaky",
+            privateKey: ownerWallet.privateKey,
+          });
+
+          const firstRes = yield* publishDraftRequest(client, "draft-flaky", {
+            metadata: signedMetadata,
+          });
+
+          expect(firstRes.status).toBe(202);
+
+          yield* Deferred.await(failedSignal);
+
+          const failedStatus = yield* waitForPublishStatus(
+            client,
+            "draft-flaky",
+            (status) => status.status === "FAILED",
+          );
+
+          expect(failedStatus).toStrictEqual({
+            status: "FAILED",
+            postId: null,
+            arweaveId: null,
+          });
+
+          // Now recover Arweave and re-trigger publish via POST
+          shouldFail = false;
+
+          const retryRes = yield* publishDraftRequest(client, "draft-flaky", {
+            metadata: signedMetadata,
+          });
+
+          expect(retryRes.status).toBe(202);
+
+          const finalStatus = yield* waitForPublishStatus(
+            client,
+            "draft-flaky",
+            (status) => status.status === "COMPLETED",
+          );
+
+          expect(finalStatus).toStrictEqual({
+            status: "COMPLETED",
+            postId: "recovered-arweave-tx",
+            arweaveId: "recovered-arweave-tx",
+          });
+        }).pipe(Effect.provide(layer));
+      }),
+  );
+
+  it.live(
+    "POST /api/protected/drafts/:draftId/publish recovers a draft with a stale in-flight status",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const db = yield* Database;
+        const ownerWallet = createTestSiwsCredentials("testnet");
+
+        yield* createTestWalletAddress({
+          userId,
+          address: ownerWallet.address,
+        });
+        // A checkpoint without a live queue job (e.g. the FAILED write failed)
+        // which used to block re-publishing forever.
+        yield* createTestDraft({
+          id: "draft-stuck",
+          userId,
+          txStatus: "PENDING",
+          arweaveTxId: "stale-arweave-tx",
+        });
+
+        const publishRes = yield* publishDraftRequest(client, "draft-stuck", {
+          metadata: createSignedTestPostMetadata({
+            draftId: "draft-stuck",
+            privateKey: ownerWallet.privateKey,
+          }),
+        });
+
+        expect(publishRes.status).toBe(202);
+
+        const status = yield* waitForPublishStatus(
+          client,
+          "draft-stuck",
+          (current) => current.status === "COMPLETED",
+        );
+
+        const [createdPost] = yield* db
+          .select()
+          .from(post)
+          .where(eq(post.draftId, "draft-stuck"));
+
+        expect({
+          status: status.status,
+          arweaveId: createdPost.arweaveTxId,
+        }).toStrictEqual({
+          status: "COMPLETED",
+          arweaveId: ARWEAVE_TEST_UPLOAD_ID,
+        });
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.live(
+    "POST /api/protected/drafts/:draftId/publish reuses the Arweave checkpoint when the signed metadata is unchanged",
+    () =>
+      Effect.gen(function* () {
+        const uploads: Array<ArweaveUploadOptions> = [];
+
+        const layer = makeTestServerLayer({}, [], {
+          arweave: ArweaveService.layerTest(uploads),
+        });
+
+        yield* Effect.gen(function* () {
+          const { client, userId } = yield* createAuthenticatedClient();
+          const db = yield* Database;
+          const ownerWallet = createTestSiwsCredentials("testnet");
+
+          yield* createTestWalletAddress({
+            userId,
+            address: ownerWallet.address,
+          });
+
+          const signedMetadata = createSignedTestPostMetadata({
+            draftId: "draft-checkpoint",
+            privateKey: ownerWallet.privateKey,
+          });
+
+          // A previous attempt uploaded the metadata, then failed before
+          // finalizing; its checkpoint is bound to this exact signature.
+          yield* createTestDraft({
+            id: "draft-checkpoint",
+            userId,
+            txStatus: "FAILED",
+            arweaveTxId: "checkpoint-arweave-tx",
+            publishSignature: signedMetadata.signature,
+          });
+
+          const publishRes = yield* publishDraftRequest(
+            client,
+            "draft-checkpoint",
+            { metadata: signedMetadata },
+          );
+
+          expect(publishRes.status).toBe(202);
+
+          const status = yield* waitForPublishStatus(
+            client,
+            "draft-checkpoint",
+            (current) => current.status === "COMPLETED",
+          );
+
+          const [createdPost] = yield* db
+            .select()
+            .from(post)
+            .where(eq(post.draftId, "draft-checkpoint"));
+
+          expect({
+            uploads: uploads.length,
+            status: status.status,
+            arweaveId: createdPost.arweaveTxId,
+          }).toStrictEqual({
+            uploads: 0,
+            status: "COMPLETED",
+            arweaveId: "checkpoint-arweave-tx",
+          });
+        }).pipe(Effect.provide(layer));
+      }),
+  );
+
+  it.live(
+    "POST /api/protected/drafts/:draftId/publish clears the Arweave checkpoint when the signed metadata changes",
+    () =>
+      Effect.gen(function* () {
+        const uploads: Array<ArweaveUploadOptions> = [];
+
+        const layer = makeTestServerLayer({}, [], {
+          arweave: ArweaveService.layerTest(uploads),
+        });
+
+        yield* Effect.gen(function* () {
+          const { client, userId } = yield* createAuthenticatedClient();
+          const db = yield* Database;
+          const ownerWallet = createTestSiwsCredentials("testnet");
+
+          yield* createTestWalletAddress({
+            userId,
+            address: ownerWallet.address,
+          });
+
+          yield* createTestDraft({
+            id: "draft-recheckpoint",
+            userId,
+            txStatus: "FAILED",
+            arweaveTxId: "old-arweave-tx",
+            publishSignature: "old-signature",
+          });
+
+          const publishRes = yield* publishDraftRequest(
+            client,
+            "draft-recheckpoint",
+            {
+              metadata: createSignedTestPostMetadata({
+                draftId: "draft-recheckpoint",
+                privateKey: ownerWallet.privateKey,
+              }),
+            },
+          );
+
+          expect(publishRes.status).toBe(202);
+
+          const status = yield* waitForPublishStatus(
+            client,
+            "draft-recheckpoint",
+            (current) => current.status === "COMPLETED",
+          );
+
+          const [createdPost] = yield* db
+            .select()
+            .from(post)
+            .where(eq(post.draftId, "draft-recheckpoint"));
+
+          expect({
+            uploads: uploads.length,
+            status: status.status,
+            arweaveId: createdPost.arweaveTxId,
+          }).toStrictEqual({
+            uploads: 1,
+            status: "COMPLETED",
+            arweaveId: ARWEAVE_TEST_UPLOAD_ID,
+          });
+        }).pipe(Effect.provide(layer));
+      }),
+  );
+
   it.effect("draft routes return 401 without a session", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
@@ -440,10 +940,14 @@ describe("drafts", () => {
         client.get("/api/protected/drafts/draft-1"),
         updateDraftRequest(client, "draft-1", { title: "Title" }),
         deleteDraftRequest(client, "draft-1"),
+        publishDraftRequest(client, "draft-1", {
+          metadata: {},
+        }),
+        getPublishStatusRequest(client, "draft-1"),
       ]);
 
       expect(responses.map((response) => response.status)).toStrictEqual([
-        401, 401, 401, 401, 401,
+        401, 401, 401, 401, 401, 401, 401,
       ]);
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
