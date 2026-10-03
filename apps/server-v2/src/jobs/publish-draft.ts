@@ -1,5 +1,5 @@
 import { PostMetadataSchema } from "@sigle/sdk";
-import { and, eq } from "drizzle-orm";
+import { and, eq, isNull, lt, or } from "drizzle-orm";
 import { Data, Effect, Layer, Schedule, Schema } from "effect";
 import { Database } from "@/db";
 import { draft, post } from "@/db/schema";
@@ -28,6 +28,24 @@ class InvalidPublishMetadataError extends Data.TaggedError(
   readonly cause: unknown;
 }> {}
 
+/**
+ * Retryable error returned when another worker holds a fresh upload claim for
+ * the same draft and publish signature. The queue backs off and retries; by
+ * then the holder has either checkpointed the upload (reuse) or its claim has
+ * expired (reclaim).
+ */
+export class PublishDraftUploadClaimedError extends Data.TaggedError(
+  "PublishDraftUploadClaimedError",
+)<{
+  readonly draftId: string;
+}> {}
+
+/**
+ * Lease duration for the Arweave upload claim. A claim older than this is
+ * considered abandoned (crashed worker) and can be taken over.
+ */
+const PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS = 5 * 60 * 1000;
+
 const publishDraftRetrySchedule: Schedule.Schedule<unknown, number> =
   Schedule.jittered(
     Schedule.min([
@@ -40,7 +58,7 @@ export const processPublishDraftJob = (
   job: PublishDraftJob,
 ): Effect.Effect<
   void,
-  ArweaveUploadError | TerminalJobError,
+  ArweaveUploadError | PublishDraftUploadClaimedError | TerminalJobError,
   Database | ArweaveService | PostHogService
 > =>
   Effect.gen(function* () {
@@ -77,28 +95,84 @@ export const processPublishDraftJob = (
 
     // Step 1: Upload metadata JSON to Arweave (or reuse checkpointed txId from
     // an earlier attempt if a downstream step failed and triggered a retry).
-    // The checkpoint is only trusted while it belongs to this job's signed
-    // payload, and the fenced write releases ownership if a newer publish
-    // landed while the upload was in flight.
+    // Concurrent workers for the same signed payload must not both call
+    // `uploadFile`, so the uploader is elected with a leased claim on the draft
+    // row. The claim token also fences the checkpoint/release writes: a worker
+    // whose claim was taken over (stale lease) cannot clobber the new holder.
     let arweaveTxId = foundDraft.arweaveTxId;
 
     if (arweaveTxId === null) {
-      const uploaded = yield* arweave.uploadFile({
-        file: Buffer.from(job.metadataJson),
-        contentType: "application/json",
-        tags: [
-          {
-            name: "Author",
-            value: job.authorAddress,
-          },
-        ],
-      });
+      const claimedAt = new Date();
+
+      const staleClaimCutoff = new Date(
+        claimedAt.getTime() - PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS,
+      );
+
+      const [claimed] = yield* db
+        .update(draft)
+        .set({
+          uploadClaimedAt: claimedAt,
+          txStatus: "PROCESSING",
+          updatedAt: claimedAt,
+        })
+        .where(
+          and(
+            eq(draft.id, job.draftId),
+            eq(draft.userId, job.userId),
+            eq(draft.publishSignature, job.signature),
+            isNull(draft.arweaveTxId),
+            or(
+              isNull(draft.uploadClaimedAt),
+              lt(draft.uploadClaimedAt, staleClaimCutoff),
+            ),
+          ),
+        )
+        .returning({ id: draft.id })
+        .pipe(Effect.orDie);
+
+      if (!claimed) {
+        return yield* new PublishDraftUploadClaimedError({
+          draftId: job.draftId,
+        });
+      }
+
+      const uploaded = yield* arweave
+        .uploadFile({
+          file: Buffer.from(job.metadataJson),
+          contentType: "application/json",
+          tags: [
+            {
+              name: "Author",
+              value: job.authorAddress,
+            },
+          ],
+        })
+        // Release the claim before failing so the queue retry can reclaim it
+        // immediately instead of waiting for the lease to expire. A crashed
+        // worker leaves the claim behind; it is reclaimed after the lease.
+        .pipe(
+          Effect.tapError(() =>
+            db
+              .update(draft)
+              .set({ uploadClaimedAt: null, updatedAt: new Date() })
+              .where(
+                and(
+                  eq(draft.id, job.draftId),
+                  eq(draft.userId, job.userId),
+                  eq(draft.publishSignature, job.signature),
+                  eq(draft.uploadClaimedAt, claimedAt),
+                ),
+              )
+              .pipe(Effect.orDie),
+          ),
+        );
 
       const [checkpointed] = yield* db
         .update(draft)
         .set({
           arweaveTxId: uploaded.id,
           txStatus: "PROCESSING",
+          uploadClaimedAt: null,
           updatedAt: new Date(),
         })
         .where(
@@ -106,6 +180,7 @@ export const processPublishDraftJob = (
             eq(draft.id, job.draftId),
             eq(draft.userId, job.userId),
             eq(draft.publishSignature, job.signature),
+            eq(draft.uploadClaimedAt, claimedAt),
           ),
         )
         .returning({ id: draft.id })
@@ -198,6 +273,7 @@ export const markDraftPublishFailed = (
       .update(draft)
       .set({
         txStatus: "FAILED",
+        uploadClaimedAt: null,
         updatedAt: new Date(),
       })
       .where(

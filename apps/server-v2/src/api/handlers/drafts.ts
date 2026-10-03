@@ -273,11 +273,11 @@ export const publishDraft = (
     }
 
     // Take ownership of the draft row: `publishSignature` identifies the signed
-    // payload being published, and the Arweave checkpoint only survives while
-    // it belongs to that payload. Workers whose job signature no longer matches
-    // the draft no-op, so the newest request wins without any queue
-    // reconciliation. The CASE reads the current row, so a checkpoint written
-    // by an in-flight worker for the same signature is never clobbered.
+    // payload being published, and the Arweave checkpoint/upload claim only
+    // survive while they belong to that payload. Workers whose job signature no
+    // longer matches the draft no-op, so the newest request wins without any
+    // queue reconciliation. The CASE reads the current row, so a checkpoint or
+    // in-flight upload claim from the same signature is never clobbered.
     const [acceptedDraft] = yield* db
       .update(draft)
       .set({
@@ -285,6 +285,10 @@ export const publishDraft = (
         publishSignature: signature,
         arweaveTxId: sql`CASE
           WHEN ${draft.publishSignature} = ${signature} THEN ${draft.arweaveTxId}
+          ELSE NULL
+        END`,
+        uploadClaimedAt: sql`CASE
+          WHEN ${draft.publishSignature} = ${signature} THEN ${draft.uploadClaimedAt}
           ELSE NULL
         END`,
         updatedAt: new Date(),

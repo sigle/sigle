@@ -1,7 +1,15 @@
 import { describe, expect, it } from "@effect/vitest";
 import { MetadataAttributeType, PostMetadataSchemaId } from "@sigle/sdk";
 import { eq } from "drizzle-orm";
-import { Deferred, Effect, ErrorReporter, Exit, Layer, Schedule } from "effect";
+import {
+  Deferred,
+  Effect,
+  ErrorReporter,
+  Exit,
+  Fiber,
+  Layer,
+  Schedule,
+} from "effect";
 import { Database } from "@/db";
 import { draft, post } from "@/db/schema";
 import { makeQueuesTestLayer } from "@/jobs";
@@ -250,6 +258,121 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           expect(createdPost.arweaveTxId).toBe("existing-arweave-tx");
         }).pipe(Effect.provide(layer));
       }),
+  );
+
+  it.effect(
+    "elects one uploader when concurrent same-signature workers race",
+    () =>
+      Effect.gen(function* () {
+        const uploads: Array<ArweaveUploadOptions> = [];
+        const uploadStarted = yield* Deferred.make<void>();
+        const releaseUpload = yield* Deferred.make<void>();
+
+        const layer = Layer.mergeAll(
+          TestDatabaseLayer,
+          ArweaveService.layerTest(uploads, () =>
+            Effect.gen(function* () {
+              yield* Deferred.succeed(uploadStarted, undefined);
+              yield* Deferred.await(releaseUpload);
+
+              return { ...ARWEAVE_TEST_UPLOAD, id: "concurrent-arweave-tx" };
+            }),
+          ),
+          PostHogService.layerTest(),
+        );
+
+        yield* Effect.gen(function* () {
+          const db = yield* Database;
+          const user = yield* createTestUser();
+          yield* createTestDraft({
+            id: "draft-concurrent",
+            userId: user.id,
+            publishSignature: "sig-concurrent",
+          });
+
+          const job = {
+            draftId: "draft-concurrent",
+            userId: user.id,
+            authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+            signature: "sig-concurrent",
+            metadataJson: sampleMetadataJson,
+          };
+
+          const first = yield* Effect.forkChild(processPublishDraftJob(job));
+          yield* Deferred.await(uploadStarted);
+
+          // The second worker cannot claim the in-flight upload.
+          const second = yield* Effect.exit(processPublishDraftJob(job));
+
+          expect(Exit.isFailure(second)).toBe(true);
+          expect(uploads).toHaveLength(1);
+
+          yield* Deferred.succeed(releaseUpload, undefined);
+          yield* Fiber.join(first);
+
+          const posts = yield* db
+            .select()
+            .from(post)
+            .where(eq(post.draftId, "draft-concurrent"));
+
+          expect({
+            uploads: uploads.length,
+            postIds: posts.map((item) => item.id),
+          }).toStrictEqual({
+            uploads: 1,
+            postIds: ["concurrent-arweave-tx"],
+          });
+        }).pipe(Effect.provide(layer));
+      }),
+  );
+
+  it.effect("reclaims an upload claim whose lease expired", () =>
+    Effect.gen(function* () {
+      const uploads: Array<ArweaveUploadOptions> = [];
+
+      const layer = Layer.mergeAll(
+        TestDatabaseLayer,
+        ArweaveService.layerTest(uploads, () =>
+          Effect.succeed({
+            ...ARWEAVE_TEST_UPLOAD,
+            id: "reclaimed-arweave-tx",
+          }),
+        ),
+        PostHogService.layerTest(),
+      );
+
+      yield* Effect.gen(function* () {
+        const db = yield* Database;
+        const user = yield* createTestUser();
+        yield* createTestDraft({
+          id: "draft-reclaim",
+          userId: user.id,
+          publishSignature: "sig-reclaim",
+          uploadClaimedAt: new Date(Date.now() - 10 * 60 * 1000),
+        });
+
+        yield* processPublishDraftJob({
+          draftId: "draft-reclaim",
+          userId: user.id,
+          authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+          signature: "sig-reclaim",
+          metadataJson: sampleMetadataJson,
+        });
+
+        const [createdPost] = yield* db
+          .select()
+          .from(post)
+          .where(eq(post.draftId, "draft-reclaim"));
+
+        expect({
+          uploads: uploads.length,
+          postId: createdPost.id,
+        }).toStrictEqual({
+          uploads: 1,
+          postId: "reclaimed-arweave-tx",
+        });
+      }).pipe(Effect.provide(layer));
+    }),
   );
 
   it.effect("does nothing when a newer publish owns the draft", () =>

@@ -139,6 +139,9 @@ export const draft = pgTable(
     // Signature of the signed post metadata the draft is publishing (or last
     // attempted). `arweaveTxId` is a valid checkpoint only while it matches.
     publishSignature: text("publish_signature"),
+    // Lease held by the worker uploading to Arweave, so concurrent workers for
+    // the same signature do not upload the same metadata twice.
+    uploadClaimedAt: timestamp("upload_claimed_at", { precision: 3 }),
     tags: text("tags").array(),
     createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
