@@ -14,6 +14,7 @@ import { DraftsHandlersLayer } from "@/api/handlers/drafts";
 import { HealthHandlersLayer } from "@/api/handlers/health";
 import { ProfileHandlersLayer } from "@/api/handlers/profile";
 import { ProtectedHandlersLayer } from "@/api/handlers/protected";
+import { UsersHandlersLayer } from "@/api/handlers/users";
 import { AdminMiddlewareLayer } from "@/api/middleware/admin";
 import {
   UserAuthMiddlewareLayer,
@@ -45,6 +46,7 @@ export const ApiHandlersLayer = Layer.mergeAll(
   ProtectedHandlersLayer,
   DraftsHandlersLayer,
   ProfileHandlersLayer,
+  UsersHandlersLayer,
   AdminHandlersLayer,
 );
 

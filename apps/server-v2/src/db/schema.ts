@@ -153,6 +153,33 @@ export const draft = pgTable(
 );
 
 // --
+// Profiles
+// --
+
+export const profile = pgTable("profile", {
+  // One profile per user, keyed by the owning user.
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => user.id, { onDelete: "cascade" }),
+  // Stacks address that signed the latest profile metadata.
+  address: text("address").notNull(),
+  arweaveTxId: text("arweave_tx_id")
+    .notNull()
+    .unique("profile_arweave_tx_id_key"),
+  // Null until the metadata transaction is included in an Arweave block.
+  arweaveBlockHeight: integer("arweave_block_height"),
+  signature: text("signature").notNull().unique("profile_signature_key"),
+  displayName: text("display_name"),
+  description: text("description"),
+  website: text("website"),
+  twitter: text("twitter"),
+  picture: text("picture"),
+  coverPicture: text("cover_picture"),
+  createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
+});
+
+// --
 // Posts
 // --
 

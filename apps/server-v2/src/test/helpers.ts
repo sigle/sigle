@@ -11,7 +11,14 @@ import { Cookies, HttpClient } from "effect/http";
 import { createSiwsMessage } from "sign-in-with-stacks";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { draft, post, session, user, walletAddress } from "@/db/schema";
+import {
+  draft,
+  post,
+  profile,
+  session,
+  user,
+  walletAddress,
+} from "@/db/schema";
 import { SESSION_COOKIE_NAME } from "@/services/auth";
 
 export const createTestUser = (
@@ -87,6 +94,45 @@ export const createTestDraft = (options: {
         createdAt: options.createdAt,
         updatedAt: options.updatedAt,
         userId: options.userId,
+      })
+      .returning();
+
+    return created;
+  });
+
+export const createTestProfile = (options: {
+  readonly userId: string;
+  readonly address?: string;
+  readonly arweaveTxId?: string;
+  readonly arweaveBlockHeight?: number | null;
+  readonly signature?: string;
+  readonly displayName?: string;
+  readonly description?: string;
+  readonly website?: string;
+  readonly twitter?: string;
+  readonly picture?: string;
+  readonly coverPicture?: string;
+}) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+    const now = new Date();
+
+    const [created] = yield* db
+      .insert(profile)
+      .values({
+        userId: options.userId,
+        address: options.address ?? "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+        arweaveTxId: options.arweaveTxId ?? crypto.randomUUID(),
+        arweaveBlockHeight: options.arweaveBlockHeight ?? null,
+        signature: options.signature ?? crypto.randomUUID(),
+        displayName: options.displayName ?? "Test Profile",
+        description: options.description ?? "Test description",
+        website: options.website ?? null,
+        twitter: options.twitter ?? null,
+        picture: options.picture ?? null,
+        coverPicture: options.coverPicture ?? null,
+        createdAt: now,
+        updatedAt: now,
       })
       .returning();
 
