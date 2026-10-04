@@ -2,8 +2,6 @@ CREATE TABLE "profile" (
 	"user_id" text PRIMARY KEY,
 	"wallet_address_id" text NOT NULL,
 	"arweave_tx_id" text NOT NULL CONSTRAINT "profile_arweave_tx_id_key" UNIQUE,
-	"arweave_cid" text NOT NULL,
-	"content_hash" text NOT NULL,
 	"signature" text NOT NULL CONSTRAINT "profile_signature_key" UNIQUE,
 	"display_name" text,
 	"description" text,

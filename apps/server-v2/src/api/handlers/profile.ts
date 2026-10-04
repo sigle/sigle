@@ -73,29 +73,17 @@ export const uploadProfileMetadata = (
       });
     }
 
-    const { content } = payload.metadata;
-    // The metadata id is regenerated on every save, so it is excluded from the
-    // hash used to detect no-op saves.
-    const { id: _contentId, ...hashableContent } = content;
-    const contentHash = sha256Hex(Buffer.from(JSON.stringify(hashableContent)));
-
-    const [existingProfile] = yield* db
-      .select()
+    const [existingProfileWithSignature] = yield* db
+      .select({ userId: profile.userId })
       .from(profile)
-      .where(eq(profile.userId, user.id))
+      .where(eq(profile.signature, signature))
       .limit(1)
       .pipe(Effect.orDie);
 
-    const gatewayUrl = config.ARWEAVE_GATEWAY_URL.replace(/\/+$/, "");
-
-    // Skip the Arweave upload when the signed content is unchanged.
-    if (existingProfile && existingProfile.contentHash === contentHash) {
-      return {
-        id: existingProfile.arweaveTxId,
-        uri: `ar://${existingProfile.arweaveTxId}`,
-        cid: existingProfile.arweaveCid,
-        gatewayUrl: `${gatewayUrl}/${existingProfile.arweaveTxId}`,
-      };
+    if (existingProfileWithSignature) {
+      return yield* new BadRequest({
+        message: "Metadata signature has already been published",
+      });
     }
 
     const file = Buffer.from(JSON.stringify(payload.metadata));
@@ -119,14 +107,13 @@ export const uploadProfileMetadata = (
       );
 
     const now = new Date();
+    const { content } = payload.metadata;
 
     // Store the signed metadata on upload so the profile is immediately
     // readable.
     const profileFields = {
       walletAddressId: wallet.value.id,
       arweaveTxId: result.id,
-      arweaveCid: result.cid,
-      contentHash,
       signature,
       displayName: content.displayName ?? null,
       description: content.description ?? null,

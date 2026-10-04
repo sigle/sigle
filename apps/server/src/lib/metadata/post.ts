@@ -1,7 +1,7 @@
 import {
   InvalidSignatureError,
   PostMetadataSchema,
-  verifyPostSignature,
+  verifyMetadataSignature,
   type MediaImageMetadata,
 } from "@sigle/sdk";
 import { Result, type UnhandledException } from "better-result";
@@ -55,7 +55,7 @@ export async function getMetadataFromUri(
 
   const postData = postMetadata.data;
 
-  const signatureResult = verifyPostSignature(postData, {
+  const signatureResult = verifyMetadataSignature(postData, {
     network: env.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
   });
 

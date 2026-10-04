@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "5b2cb8df-fbf9-484b-a755-ffd60f92dd2d",
+  "id": "2cc843db-499a-409d-9b91-9f8b9b087576",
   "prevIds": [
     "7d4ce773-9680-42c2-9d96-be1d289edb18"
   ],
@@ -702,32 +702,6 @@
       "generated": null,
       "identity": null,
       "name": "arweave_tx_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "profile"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "arweave_cid",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "profile"
-    },
-    {
-      "type": "text",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
-      "name": "content_hash",
       "entityType": "columns",
       "schema": "public",
       "table": "profile"

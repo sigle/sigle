@@ -74,15 +74,3 @@ export function verifyMetadataSignature(
     );
   }
 }
-
-/**
- * @deprecated Use {@link verifyMetadataSignature} instead. Kept until the
- * legacy server is removed.
- */
-export const verifyPostSignature = verifyMetadataSignature;
-
-/** @deprecated Use {@link VerifyMetadataSignatureOptions} instead. */
-export type VerifyPostSignatureOptions = VerifyMetadataSignatureOptions;
-
-/** @deprecated Use {@link VerifyMetadataSignatureResult} instead. */
-export type VerifyPostSignatureResult = VerifyMetadataSignatureResult;

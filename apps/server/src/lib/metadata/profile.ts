@@ -1,6 +1,6 @@
 import {
   ProfileMetadataSchema,
-  verifyPostSignature,
+  verifyMetadataSignature,
   type InvalidSignatureError,
   type ProfileMetadata,
 } from "@sigle/sdk";
@@ -44,7 +44,7 @@ export async function getProfileMetadataFromUri(
     );
   }
 
-  const signatureResult = verifyPostSignature(profileMetadata.data, {
+  const signatureResult = verifyMetadataSignature(profileMetadata.data, {
     network: env.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
   });
 

@@ -170,10 +170,6 @@ export const profile = pgTable(
     arweaveTxId: text("arweave_tx_id")
       .notNull()
       .unique("profile_arweave_tx_id_key"),
-    arweaveCid: text("arweave_cid").notNull(),
-    // Hash of the signed metadata content (excluding its generated id), used
-    // to skip no-op uploads.
-    contentHash: text("content_hash").notNull(),
     signature: text("signature").notNull().unique("profile_signature_key"),
     displayName: text("display_name"),
     description: text("description"),
