@@ -11,9 +11,9 @@ import { PostMetadataSchemaId } from "./config.js";
 import { InvalidSignatureError } from "./errors.js";
 import { type PostMetadata } from "./post.js";
 import {
-  type VerifyPostSignatureResult,
-  verifyPostSignature,
-} from "./verify-post-signature.js";
+  type VerifyMetadataSignatureResult,
+  verifyMetadataSignature,
+} from "./verify-metadata-signature.js";
 
 // Consistent test private key (valid 32-byte hex + compressed byte)
 const TEST_PRIVATE_KEY =
@@ -58,17 +58,17 @@ function createSignedPostMetadata(
   };
 }
 
-describe(verifyPostSignature, () => {
+describe(verifyMetadataSignature, () => {
   it("should verify valid signature and return recovered address on mainnet by default", () => {
     const signedMetadata = createSignedPostMetadata();
 
-    const result = verifyPostSignature(signedMetadata);
+    const result = verifyMetadataSignature(signedMetadata);
 
     expect(result.isOk()).toBe(true);
 
     const value = result.unwrap();
 
-    expect(value).toStrictEqual<VerifyPostSignatureResult>({
+    expect(value).toStrictEqual<VerifyMetadataSignatureResult>({
       recoveredAddress: EXPECTED_MAINNET_ADDRESS,
       publicKey: TEST_PUBLIC_KEY,
       signature: signedMetadata.signature!,
@@ -78,7 +78,9 @@ describe(verifyPostSignature, () => {
   it("should recover testnet address when testnet network option is passed", () => {
     const signedMetadata = createSignedPostMetadata();
 
-    const result = verifyPostSignature(signedMetadata, { network: "testnet" });
+    const result = verifyMetadataSignature(signedMetadata, {
+      network: "testnet",
+    });
 
     expect(result.isOk()).toBe(true);
 
@@ -90,7 +92,9 @@ describe(verifyPostSignature, () => {
   it("should recover testnet address when devnet network option is passed", () => {
     const signedMetadata = createSignedPostMetadata();
 
-    const result = verifyPostSignature(signedMetadata, { network: "devnet" });
+    const result = verifyMetadataSignature(signedMetadata, {
+      network: "devnet",
+    });
 
     expect(result.isOk()).toBe(true);
 
@@ -102,7 +106,9 @@ describe(verifyPostSignature, () => {
   it("should recover testnet address when mocknet network option is passed", () => {
     const signedMetadata = createSignedPostMetadata();
 
-    const result = verifyPostSignature(signedMetadata, { network: "mocknet" });
+    const result = verifyMetadataSignature(signedMetadata, {
+      network: "mocknet",
+    });
 
     expect(result.isOk()).toBe(true);
 
@@ -121,7 +127,7 @@ describe(verifyPostSignature, () => {
       },
     };
 
-    const result = verifyPostSignature(unsignedMetadata);
+    const result = verifyMetadataSignature(unsignedMetadata);
 
     expect(result.isOk()).toBe(false);
 
@@ -143,7 +149,7 @@ describe(verifyPostSignature, () => {
       },
     };
 
-    const result = verifyPostSignature(tamperedMetadata);
+    const result = verifyMetadataSignature(tamperedMetadata);
 
     expect(result.isOk()).toBe(true);
 
@@ -163,7 +169,7 @@ describe(verifyPostSignature, () => {
       signature: "not-a-valid-hex-signature",
     };
 
-    const result = verifyPostSignature(malformedMetadata);
+    const result = verifyMetadataSignature(malformedMetadata);
 
     expect(result.isOk()).toBe(false);
 
@@ -180,7 +186,7 @@ describe(verifyPostSignature, () => {
       content: { id: "test" },
     };
 
-    const result = verifyPostSignature(unsignedMetadata);
+    const result = verifyMetadataSignature(unsignedMetadata);
 
     const err = unwrapErr(result);
 

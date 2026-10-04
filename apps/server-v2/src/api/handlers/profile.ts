@@ -1,8 +1,9 @@
 import {
   ArweaveTags,
   ArweaveTransactionTypes,
-  verifyPostSignature,
+  verifyMetadataSignature,
 } from "@sigle/sdk";
+import { eq } from "drizzle-orm";
 import { ByteSize, Effect, Option, Predicate } from "effect";
 import { HttpServerError, HttpServerRequest } from "effect/http";
 import { HttpApiBuilder } from "effect/http-api";
@@ -16,6 +17,8 @@ import {
   UnsupportedMediaType,
 } from "@/api/schemas";
 import { AppConfig } from "@/config";
+import { Database } from "@/db";
+import { profile } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
 import {
   detectImageFormat,
@@ -43,12 +46,13 @@ export const uploadProfileMetadata = (
   Effect.gen(function* () {
     const user = yield* CurrentUser;
     const config = yield* AppConfig;
+    const db = yield* Database;
     const arweave = yield* ArweaveService;
     const posthog = yield* PostHogService;
     const whitelist = yield* UserWhitelistService;
 
     // Verify that the signature is valid and belongs to a wallet owned by the logged-in user
-    const signatureResult = verifyPostSignature(payload.metadata, {
+    const signatureResult = verifyMetadataSignature(payload.metadata, {
       network: config.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
     });
 
@@ -58,17 +62,27 @@ export const uploadProfileMetadata = (
       });
     }
 
-    const { recoveredAddress } = signatureResult.value;
+    const { recoveredAddress, signature } = signatureResult.value;
 
-    const ownsWallet = yield* whitelist.hasWalletAddress(
-      user.id,
-      recoveredAddress,
-    );
+    const wallet = yield* whitelist.getWalletAddress(user.id, recoveredAddress);
 
-    if (!ownsWallet) {
+    if (Option.isNone(wallet)) {
       return yield* new BadRequest({
         message:
           "Invalid signature: Signature verification failed or address mismatch",
+      });
+    }
+
+    const [existingProfileWithSignature] = yield* db
+      .select({ userId: profile.userId })
+      .from(profile)
+      .where(eq(profile.signature, signature))
+      .limit(1)
+      .pipe(Effect.orDie);
+
+    if (existingProfileWithSignature) {
+      return yield* new BadRequest({
+        message: "Metadata signature has already been published",
       });
     }
 
@@ -91,6 +105,37 @@ export const uploadProfileMetadata = (
             }),
         ),
       );
+
+    const now = new Date();
+    const { content } = payload.metadata;
+
+    // Store the signed metadata on upload so the profile is immediately
+    // readable.
+    const profileFields = {
+      walletAddressId: wallet.value.id,
+      arweaveTxId: result.id,
+      signature,
+      displayName: content.displayName ?? null,
+      description: content.description ?? null,
+      website: content.website ?? null,
+      twitter: content.twitter ?? null,
+      picture: content.picture ?? null,
+      coverPicture: content.coverPicture ?? null,
+      updatedAt: now,
+    };
+
+    yield* db
+      .insert(profile)
+      .values({
+        ...profileFields,
+        userId: user.id,
+        createdAt: now,
+      })
+      .onConflictDoUpdate({
+        target: profile.userId,
+        set: profileFields,
+      })
+      .pipe(Effect.orDie);
 
     yield* posthog.capture({
       distinctId: user.id,

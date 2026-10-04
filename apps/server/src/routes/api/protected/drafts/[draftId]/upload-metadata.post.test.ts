@@ -1,4 +1,4 @@
-import { verifyPostSignature } from "@sigle/sdk";
+import { verifyMetadataSignature } from "@sigle/sdk";
 import { Result } from "better-result";
 import { H3Event, type getRouterParam } from "nitro/h3";
 import { PostHog } from "posthog-node";
@@ -69,7 +69,7 @@ vi.mock<typeof import("@sigle/sdk")>(import("@sigle/sdk"), async () => {
 
   return {
     ...actual,
-    verifyPostSignature: vi.fn(),
+    verifyMetadataSignature: vi.fn(),
   };
 });
 
@@ -134,7 +134,7 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
       metadata: mockMetadata,
     });
 
-    vi.mocked(verifyPostSignature).mockReturnValue(
+    vi.mocked(verifyMetadataSignature).mockReturnValue(
       Result.ok({
         recoveredAddress: userId,
         publicKey: "pubkey-draft-1",
@@ -214,7 +214,7 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
       metadata: editedMetadata,
     });
 
-    vi.mocked(verifyPostSignature).mockReturnValue(
+    vi.mocked(verifyMetadataSignature).mockReturnValue(
       Result.ok({
         recoveredAddress: userId,
         publicKey: "pubkey-edit-1",
@@ -278,7 +278,7 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
     ]);
   });
 
-  it("passes mainnet network option to verifyPostSignature when STACKS_ENV is mainnet", async () => {
+  it("passes mainnet network option to verifyMetadataSignature when STACKS_ENV is mainnet", async () => {
     mockStacksEnv = "mainnet";
 
     const user = await createTestUser({ id: userId });
@@ -304,7 +304,7 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
       metadata: mockMetadata,
     });
 
-    vi.mocked(verifyPostSignature).mockReturnValue(
+    vi.mocked(verifyMetadataSignature).mockReturnValue(
       Result.ok({
         recoveredAddress: userId,
         publicKey: "pubkey-mainnet",
@@ -327,12 +327,12 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
 
     await handler(mockEvent);
 
-    expect(verifyPostSignature).toHaveBeenCalledWith(mockMetadata, {
+    expect(verifyMetadataSignature).toHaveBeenCalledWith(mockMetadata, {
       network: "mainnet",
     });
   });
 
-  it("passes testnet network option to verifyPostSignature when STACKS_ENV is a non-mainnet value", async () => {
+  it("passes testnet network option to verifyMetadataSignature when STACKS_ENV is a non-mainnet value", async () => {
     mockStacksEnv = "testnet";
 
     const user = await createTestUser({ id: userId });
@@ -358,7 +358,7 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
       metadata: mockMetadata,
     });
 
-    vi.mocked(verifyPostSignature).mockReturnValue(
+    vi.mocked(verifyMetadataSignature).mockReturnValue(
       Result.ok({
         recoveredAddress: userId,
         publicKey: "pubkey-testnet",
@@ -381,7 +381,7 @@ describe("api/protected/drafts/[draftId]/upload-metadata.post", () => {
 
     await handler(mockEvent);
 
-    expect(verifyPostSignature).toHaveBeenCalledWith(mockMetadata, {
+    expect(verifyMetadataSignature).toHaveBeenCalledWith(mockMetadata, {
       network: "testnet",
     });
   });

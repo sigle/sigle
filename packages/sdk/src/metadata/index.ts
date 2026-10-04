@@ -10,4 +10,4 @@ export * from "./post.js";
 
 export * from "./profile.js";
 
-export * from "./verify-post-signature.js";
+export * from "./verify-metadata-signature.js";

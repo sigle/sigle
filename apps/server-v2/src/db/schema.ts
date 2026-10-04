@@ -153,6 +153,37 @@ export const draft = pgTable(
 );
 
 // --
+// Profiles
+// --
+
+export const profile = pgTable(
+  "profile",
+  {
+    // One profile per user, keyed by the owning user.
+    userId: text("user_id")
+      .primaryKey()
+      .references(() => user.id, { onDelete: "cascade" }),
+    // Wallet that signed the latest profile metadata.
+    walletAddressId: text("wallet_address_id")
+      .notNull()
+      .references(() => walletAddress.id, { onDelete: "cascade" }),
+    arweaveTxId: text("arweave_tx_id")
+      .notNull()
+      .unique("profile_arweave_tx_id_key"),
+    signature: text("signature").notNull().unique("profile_signature_key"),
+    displayName: text("display_name"),
+    description: text("description"),
+    website: text("website"),
+    twitter: text("twitter"),
+    picture: text("picture"),
+    coverPicture: text("cover_picture"),
+    createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
+  },
+  (table) => [index("profile_wallet_address_id_idx").on(table.walletAddressId)],
+);
+
+// --
 // Posts
 // --
 

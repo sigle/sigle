@@ -2,7 +2,7 @@ import {
   ArweaveTags,
   ArweaveTransactionTypes,
   ProfileMetadataSchema,
-  verifyPostSignature,
+  verifyMetadataSignature,
 } from "@sigle/sdk";
 import { defineRouteMeta } from "nitro";
 import { HTTPError, defineEventHandler } from "nitro/h3";
@@ -81,7 +81,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Verify that the signature is valid and resolves to the logged-in user's Stacks address
-  const signatureResult = verifyPostSignature(parsedMetadata.data, {
+  const signatureResult = verifyMetadataSignature(parsedMetadata.data, {
     network: env.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
   });
 

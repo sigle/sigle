@@ -1,5 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
-import { PostMetadataSchema, verifyPostSignature } from "@sigle/sdk";
+import { PostMetadataSchema, verifyMetadataSignature } from "@sigle/sdk";
 import { and, count, desc, eq, sql } from "drizzle-orm";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
@@ -235,7 +235,7 @@ export const publishDraft = (
       });
     }
 
-    const signatureResult = verifyPostSignature(parsedMetadata.data, {
+    const signatureResult = verifyMetadataSignature(parsedMetadata.data, {
       network: config.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
     });
 
