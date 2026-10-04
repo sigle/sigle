@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { Context, Effect, Layer } from "effect";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
@@ -9,6 +9,10 @@ const WHITELISTED_ADDRESSES: ReadonlyArray<string> = [];
 export interface UserWhitelist {
   readonly isUserWhitelisted: (userId: string) => Effect.Effect<boolean>;
   readonly isUserAdmin: (userId: string) => Effect.Effect<boolean>;
+  readonly hasWalletAddress: (
+    userId: string,
+    address: string,
+  ) => Effect.Effect<boolean>;
 }
 
 export const makeUserWhitelistService = Effect.gen(function* () {
@@ -47,6 +51,22 @@ export const makeUserWhitelistService = Effect.gen(function* () {
         return wallets.some((wallet) =>
           config.ADMIN_ADDRESSES.includes(wallet.address),
         );
+      }),
+    hasWalletAddress: (userId: string, address: string) =>
+      Effect.gen(function* () {
+        const [found] = yield* db
+          .select({ id: walletAddress.id })
+          .from(walletAddress)
+          .where(
+            and(
+              eq(walletAddress.userId, userId),
+              eq(walletAddress.address, address),
+            ),
+          )
+          .limit(1)
+          .pipe(Effect.orDie);
+
+        return found !== undefined;
       }),
   } satisfies UserWhitelist;
 });

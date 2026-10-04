@@ -22,8 +22,7 @@ import {
 import { RateLimitMiddlewareLayer } from "@/api/middleware/rate-limit";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { JobAdminService } from "@/queue/admin";
-import { QueueServicesLive } from "@/queue/store";
+import { JobsLive } from "@/jobs";
 import { ArweaveService } from "@/services/arweave";
 import { AuthService } from "@/services/auth";
 import { ImageProcessingService } from "@/services/image-processing";
@@ -75,11 +74,7 @@ export const ApiRoutesLayer = Layer.mergeAll(
   HttpApiScalar.layer(SigleApi, { path: "/_scalar" }),
   AuthRoutesLayer,
   CorsLayer,
-).pipe(
-  Layer.provide(ApiHandlersLayer),
-  Layer.provide(ApiMiddlewareLayer),
-  Layer.provide(AuthLayer),
-);
+).pipe(Layer.provide(ApiHandlersLayer), Layer.provide(ApiMiddlewareLayer));
 
 export const HttpServerLayer = Layer.unwrap(
   Effect.gen(function* () {
@@ -92,8 +87,8 @@ export const HttpServerLayer = Layer.unwrap(
 );
 
 export const MainLayer = HttpServerLayer.pipe(
-  Layer.provide(QueueServicesLive),
-  Layer.provide(JobAdminService.layer),
+  Layer.provide(JobsLive),
+  Layer.provide(AuthLayer),
   Layer.provide(RateLimiterLive),
   Layer.provide(Database.layer),
 );
