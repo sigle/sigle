@@ -27,6 +27,7 @@ import { JobsLive } from "@/jobs";
 import { ArweaveService } from "@/services/arweave";
 import { AuthService } from "@/services/auth";
 import { ImageProcessingService } from "@/services/image-processing";
+import { OpenTimestampsService } from "@/services/opentimestamps";
 import { PostHogService } from "@/services/posthog";
 import { RateLimiterLive } from "@/services/rate-limiter";
 import { StorageService } from "@/services/storage";
@@ -37,6 +38,7 @@ export const CoreServicesLayer = Layer.mergeAll(
   TelemetryLayer,
   PostHogService.layer,
   ArweaveService.layer,
+  OpenTimestampsService.layer,
   ImageProcessingService.layer,
   StorageService.layer,
 ).pipe(Layer.provideMerge(AppConfig.layer), Layer.provide(NodeServices.layer));

@@ -17,7 +17,7 @@ import {
   UpdateDraftPayload,
 } from "@/api/groups/drafts";
 import { Database } from "@/db";
-import { draft, post } from "@/db/schema";
+import { draft, post, postOts } from "@/db/schema";
 import {
   ARWEAVE_TEST_UPLOAD,
   ARWEAVE_TEST_UPLOAD_ID,
@@ -108,6 +108,30 @@ const waitForPublishStatus = (
 
     return yield* Effect.die(
       new Error(`timed out waiting for publish status on ${draftId}`),
+    );
+  });
+
+const waitForPostOtsStatus = (postId: string, status: string) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+
+    for (let attempt = 0; attempt < 200; attempt++) {
+      const [row] = yield* db
+        .select({ status: postOts.status, otsTxId: postOts.otsTxId })
+        .from(postOts)
+        .where(eq(postOts.postId, postId))
+        .limit(1)
+        .pipe(Effect.orDie);
+
+      if (row?.status === status) {
+        return row;
+      }
+
+      yield* Effect.sleep("20 millis");
+    }
+
+    return yield* Effect.die(
+      new Error(`timed out waiting for post_ots ${postId} to be ${status}`),
     );
   });
 
@@ -622,6 +646,12 @@ describe("drafts", () => {
           .from(post)
           .where(eq(post.draftId, "draft-pub-1"));
 
+        // Publishing schedules OpenTimestamps stamping and upgrading.
+        const postOtsRow = yield* waitForPostOtsStatus(
+          ARWEAVE_TEST_UPLOAD_ID,
+          "UPGRADED",
+        );
+
         expect({
           unstartedStatus: unstartedRes.status,
           publishStatus: publishRes.status,
@@ -630,6 +660,8 @@ describe("drafts", () => {
           deletedDraft,
           createdPostId: createdPost.id,
           createdPostArweaveId: createdPost.arweaveTxId,
+          otsStatus: postOtsRow.status,
+          otsTxId: postOtsRow.otsTxId,
         }).toStrictEqual({
           unstartedStatus: 400,
           publishStatus: 202,
@@ -645,6 +677,8 @@ describe("drafts", () => {
           deletedDraft: undefined,
           createdPostId: ARWEAVE_TEST_UPLOAD_ID,
           createdPostArweaveId: ARWEAVE_TEST_UPLOAD_ID,
+          otsStatus: "UPGRADED",
+          otsTxId: "arweave-test-upload-id",
         });
 
         expect(events).toContainEqual({
@@ -852,8 +886,12 @@ describe("drafts", () => {
             .from(post)
             .where(eq(post.draftId, "draft-checkpoint"));
 
+          const metadataUploads = uploads.filter(
+            (upload) => upload.contentType === "application/json",
+          );
+
           expect({
-            uploads: uploads.length,
+            uploads: metadataUploads.length,
             status: status.status,
             arweaveId: createdPost.arweaveTxId,
           }).toStrictEqual({
@@ -917,8 +955,12 @@ describe("drafts", () => {
             .from(post)
             .where(eq(post.draftId, "draft-recheckpoint"));
 
+          const metadataUploads = uploads.filter(
+            (upload) => upload.contentType === "application/json",
+          );
+
           expect({
-            uploads: uploads.length,
+            uploads: metadataUploads.length,
             status: status.status,
             arweaveId: createdPost.arweaveTxId,
           }).toStrictEqual({

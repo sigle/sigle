@@ -14,6 +14,7 @@ import { Database } from "@/db";
 import {
   draft,
   post,
+  postOts,
   profile,
   session,
   user,
@@ -169,6 +170,32 @@ export const createTestPost = (options: {
         excerpt: options.excerpt ?? "Test excerpt",
         signature: options.signature ?? null,
         userId: options.userId,
+      })
+      .returning();
+
+    return created;
+  });
+
+export const createTestPostOts = (options: {
+  readonly postId: string;
+  readonly status?: "PENDING" | "UPGRADED" | "FAILED";
+  readonly contentHash?: string;
+  readonly pendingProof?: Buffer | null;
+  readonly otsTxId?: string | null;
+  readonly updatedAt?: Date;
+}) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+
+    const [created] = yield* db
+      .insert(postOts)
+      .values({
+        postId: options.postId,
+        status: options.status ?? "PENDING",
+        contentHash: options.contentHash ?? "a".repeat(64),
+        pendingProof: options.pendingProof ?? null,
+        otsTxId: options.otsTxId ?? null,
+        updatedAt: options.updatedAt,
       })
       .returning();
 
