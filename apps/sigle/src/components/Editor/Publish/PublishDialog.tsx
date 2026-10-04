@@ -1,6 +1,5 @@
 "use client";
 
-import type { PostMetadata } from "@sigle/sdk";
 import { request } from "@stacks/connect";
 import { IconArrowLeft, IconRefresh } from "@tabler/icons-react";
 import { Result } from "better-result";
@@ -19,20 +18,62 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
-import { sigleApiClient } from "@/lib/sigle";
+import { sigleApiClient, sigleApiFetchClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 import { generateSigleMetadataFromForm } from "../utils";
 import { PublishReview } from "./PublishReview";
+
+const PUBLISH_POLLING_INTERVAL_MILLIS = 2_000;
+
+const PUBLISH_TIMEOUT_MILLIS = 180_000;
+
+const waitForPublishCompletion = async (draftId: string) => {
+  const startTime = Date.now();
+
+  while (Date.now() - startTime < PUBLISH_TIMEOUT_MILLIS) {
+    const response = await sigleApiFetchClient.GET(
+      "/api/protected/drafts/{draftId}/publish",
+      {
+        params: {
+          path: {
+            draftId,
+          },
+        },
+      },
+    );
+
+    if (response.error) {
+      return Result.err({ message: response.error.message });
+    }
+
+    const { data } = response;
+
+    if (data.status === "FAILED") {
+      return Result.err({ message: "Failed to publish post" });
+    }
+
+    if (data.status === "COMPLETED" && data.postId) {
+      return Result.ok({
+        postId: data.postId,
+        arweaveId: data.arweaveId,
+      });
+    }
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, PUBLISH_POLLING_INTERVAL_MILLIS);
+    });
+  }
+
+  return Result.err({ message: "Publishing timed out, please try again" });
+};
 
 interface PublishDialogProps {
   postId: string;
 }
 
 export const PublishDialog = ({ postId }: PublishDialogProps) => {
-  const { data: session } = useSession();
   const posthog = usePostHog();
   const router = useRouter();
   const { handleSubmit, watch } = useFormContext<EditorPostFormData>();
@@ -42,9 +83,9 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   const setPublishOpen = useEditorStore((state) => state.setPublishOpen);
   const [publishingLoading, setPublishingLoading] = useState(false);
 
-  const { mutateAsync: uploadMetadata } = sigleApiClient.useMutation(
+  const { mutateAsync: publishDraft } = sigleApiClient.useMutation(
     "post",
-    "/api/protected/drafts/{draftId}/upload-metadata",
+    "/api/protected/drafts/{draftId}/publish",
   );
 
   const { steps, start, completeStep, setStepError, reset } = useMultiStep({
@@ -63,7 +104,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   const onSubmit = () => {
     handleSubmit(
       async (data) => {
-        if (!session) return;
         setPublishingLoading(true);
         start();
 
@@ -76,8 +116,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
         try {
           metadata = await generateSigleMetadataFromForm({
-            userAddress: session.user.id,
-            type: data.type,
             editor,
             postId,
             post: data,
@@ -144,39 +182,49 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         metadata.signature = signature;
         completeStep("signature");
 
-        // SAFETY: the endpoint accepts the serialized PostMetadata payload, but its generated schema types metadata as an empty object; the intersection keeps the payload's real type assignable to the generated request type.
-        const uploadedMetadataResult = await uploadMetadata({
+        const publishResult = await publishDraft({
           params: {
             path: {
               draftId: postId,
             },
           },
           body: {
-            type,
-            metadata: metadata as PostMetadata & Record<string, never>,
+            metadata,
           },
         })
           .then((result) => Result.ok(result))
           .catch((error) => Result.err(error));
 
-        if (uploadedMetadataResult.isErr()) {
-          posthog.capture("post_publish_upload_metadata_error", {
+        if (publishResult.isErr()) {
+          posthog.capture("post_publish_start_error", {
             postId,
-            error: uploadedMetadataResult.error,
+            error: publishResult.error,
           });
           setStepError(
             "arweave",
-            uploadedMetadataResult.error.message
-              ? uploadedMetadataResult.error.message
-              : "Failed to upload metadata to Arweave",
+            publishResult.error.message
+              ? publishResult.error.message
+              : "Failed to start publishing",
           );
+
+          return;
+        }
+
+        const publishStatus = await waitForPublishCompletion(postId);
+
+        if (publishStatus.isErr()) {
+          posthog.capture("post_publish_error", {
+            postId,
+            error: publishStatus.error,
+          });
+          setStepError("arweave", publishStatus.error.message);
 
           return;
         }
 
         completeStep("arweave");
 
-        const { id: targetPostId, arweaveId } = uploadedMetadataResult.value;
+        const { postId: targetPostId, arweaveId } = publishStatus.value;
         posthog.capture("post_publish_success", {
           postId: targetPostId,
           arweaveId,
