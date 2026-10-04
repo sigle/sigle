@@ -5,6 +5,7 @@ import {
   createProfileMetadata,
   ProfileMetadataSchemaId,
 } from "@sigle/sdk";
+import { request } from "@stacks/connect";
 import { IconAt, IconBrandX } from "@tabler/icons-react";
 import { Result } from "better-result";
 import { useForm } from "react-hook-form";
@@ -25,10 +26,8 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
-import { useContractCall } from "@/hooks/useContractCall";
 import { useSession } from "@/lib/auth-hooks";
-import { sigleApiClient, sigleClient } from "@/lib/sigle";
-import { waitForTransaction } from "@/lib/stacks";
+import { sigleApiClient } from "@/lib/sigle";
 import { UploadProfileCoverPicture } from "./UploadProfileCoverPicture";
 import { UploadProfilePicture } from "./UploadProfilePicture";
 
@@ -58,8 +57,8 @@ export const UpdateProfileMetadata = ({
     setStepError,
   } = useMultiStepToast({
     steps: [
+      { id: "signature", title: "Signing with Stacks wallet" },
       { id: "upload", title: "Uploading data to Arweave" },
-      { id: "transaction", title: "Waiting for blockchain confirmation" },
       { id: "index", title: "Indexing profile" },
     ],
     successMessage: "Profile updated!",
@@ -91,8 +90,6 @@ export const UpdateProfileMetadata = ({
       enabled: false,
     },
   );
-
-  const { contractCall } = useContractCall();
 
   const {
     register,
@@ -128,6 +125,31 @@ export const UpdateProfileMetadata = ({
       },
     });
 
+    let signature = "";
+
+    try {
+      const { signature: _, ...metadataToSign } = metadata;
+      const message = JSON.stringify(metadataToSign);
+
+      const response = await request("stx_signMessage", {
+        message,
+      });
+
+      signature = response.signature;
+    } catch (error) {
+      console.error(error);
+      setStepError(
+        "signature",
+        "Wallet signature request was cancelled or failed.",
+      );
+
+      return;
+    }
+
+    // Add the signature to the metadata
+    metadata.signature = signature;
+    completeStep("signature");
+
     const data = await uploadProfileMetadata
       .mutateAsync({
         body: {},
@@ -147,35 +169,6 @@ export const UpdateProfileMetadata = ({
 
     completeStep("upload");
 
-    const { parameters } = sigleClient.setProfile({
-      metadata: `ar://${data.value.id}`,
-    });
-
-    const contractCallResult = await contractCall(parameters);
-
-    if (contractCallResult.isErr()) {
-      setStepError("transaction", contractCallResult.error.message);
-
-      return;
-    }
-
-    const txId = contractCallResult.value;
-    const transactionResult = await waitForTransaction({ txId });
-
-    if (transactionResult.isErr()) {
-      setStepError("transaction", transactionResult.error.message);
-
-      return;
-    }
-
-    if (transactionResult.value.tx_status !== "success") {
-      setStepError("transaction", "Transaction failed");
-
-      return;
-    }
-
-    completeStep("transaction");
-
     try {
       await triggerIndexing.mutateAsync({});
     } catch (error) {
@@ -187,6 +180,7 @@ export const UpdateProfileMetadata = ({
       return;
     }
 
+    const arweaveId = data.value.id;
     const pollingInterval = 2_000;
     const timeout = 180_000;
     const startTime = Date.now();
@@ -197,7 +191,7 @@ export const UpdateProfileMetadata = ({
       const result = await refetchProfile.refetch();
 
       // Successfully indexed
-      if (result.data?.profile?.txId === txId) {
+      if (result.data?.profile?.txId === arweaveId) {
         isIndexed = true;
         break;
       }

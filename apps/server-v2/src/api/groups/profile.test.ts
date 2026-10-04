@@ -25,7 +25,12 @@ import {
   type StorageTestRecorder,
   STORAGE_TEST_PUBLIC_URL,
 } from "@/services/storage";
-import { createAuthenticatedClient } from "@/test/helpers";
+import {
+  createAuthenticatedClient,
+  createSignedTestProfileMetadata,
+  createTestSiwsCredentials,
+  createTestWalletAddress,
+} from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 
 const UploadProfileMetadataResponse = Schema.Struct({
@@ -101,6 +106,7 @@ const validMetadata = {
 interface ProfileMetadataInput {
   readonly $schema?: string;
   readonly content?: { readonly id?: string };
+  readonly signature?: string;
 }
 
 const uploadProfileMetadataRequest = (
@@ -113,18 +119,37 @@ const uploadProfileMetadataRequest = (
     ),
   );
 
+/**
+ * Creates an authenticated user with a linked Stacks wallet and signs the
+ * profile metadata with that wallet's private key.
+ */
+const createSignedProfileClient = () =>
+  Effect.gen(function* () {
+    const credentials = createTestSiwsCredentials();
+    const { client, userId } = yield* createAuthenticatedClient();
+
+    yield* createTestWalletAddress({
+      userId,
+      address: credentials.address,
+    });
+
+    const metadata = createSignedTestProfileMetadata({
+      privateKey: credentials.privateKey,
+    });
+
+    return { address: credentials.address, client, metadata, userId };
+  });
+
 describe("profile", () => {
   it.effect("POST upload-metadata uploads metadata to Arweave", () => {
     const uploads: Array<ArweaveUploadOptions> = [];
     const events: Array<PostHogEvent> = [];
 
     return Effect.gen(function* () {
-      const { client, userId } = yield* createAuthenticatedClient();
+      const { address, client, metadata, userId } =
+        yield* createSignedProfileClient();
 
-      const response = yield* uploadProfileMetadataRequest(
-        client,
-        validMetadata,
-      );
+      const response = yield* uploadProfileMetadataRequest(client, metadata);
 
       const body = yield* HttpClientResponse.schemaBodyJson(
         UploadProfileMetadataResponse,
@@ -136,6 +161,7 @@ describe("profile", () => {
         status: response.status,
         body,
         contentType: uploaded?.contentType,
+        tags: uploaded?.tags,
         metadata: JSON.parse(
           Buffer.from(uploaded?.file ?? new Uint8Array()).toString(),
         ),
@@ -144,7 +170,11 @@ describe("profile", () => {
         status: 200,
         body: ARWEAVE_TEST_UPLOAD,
         contentType: "application/json",
-        metadata: validMetadata,
+        tags: [
+          { name: "Author", value: address },
+          { name: "Type", value: "profile" },
+        ],
+        metadata,
         events: [
           {
             distinctId: userId,
@@ -164,11 +194,11 @@ describe("profile", () => {
 
   it.effect("POST upload-metadata is limited to 4 requests per minute", () =>
     Effect.gen(function* () {
-      const { client } = yield* createAuthenticatedClient();
+      const { client, metadata } = yield* createSignedProfileClient();
 
       const responses = yield* Effect.forEach(
         Array.from({ length: 5 }, (_, index) => index),
-        () => uploadProfileMetadataRequest(client, validMetadata),
+        () => uploadProfileMetadataRequest(client, metadata),
         { concurrency: 1 },
       );
 
@@ -193,18 +223,18 @@ describe("profile", () => {
 
   it.effect("POST upload-metadata rate limits each user independently", () =>
     Effect.gen(function* () {
-      const first = yield* createAuthenticatedClient();
-      const second = yield* createAuthenticatedClient();
+      const first = yield* createSignedProfileClient();
+      const second = yield* createSignedProfileClient();
 
       const firstResponses = yield* Effect.forEach(
         Array.from({ length: 4 }, (_, index) => index),
-        () => uploadProfileMetadataRequest(first.client, validMetadata),
+        () => uploadProfileMetadataRequest(first.client, first.metadata),
         { concurrency: 1 },
       );
 
       const secondResponse = yield* uploadProfileMetadataRequest(
         second.client,
-        validMetadata,
+        second.metadata,
       );
 
       expect({
@@ -239,6 +269,36 @@ describe("profile", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
+  it.effect("POST upload-metadata rejects metadata without a signature", () =>
+    Effect.gen(function* () {
+      const { client } = yield* createAuthenticatedClient();
+
+      const response = yield* uploadProfileMetadataRequest(
+        client,
+        validMetadata,
+      );
+
+      expect(response.status).toBe(400);
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
+    "POST upload-metadata rejects a signature from another wallet",
+    () =>
+      Effect.gen(function* () {
+        const { client } = yield* createAuthenticatedClient();
+        const credentials = createTestSiwsCredentials();
+
+        const metadata = createSignedTestProfileMetadata({
+          privateKey: credentials.privateKey,
+        });
+
+        const response = yield* uploadProfileMetadataRequest(client, metadata);
+
+        expect(response.status).toBe(400);
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
   it.effect("POST upload-metadata returns 500 when Arweave fails", () => {
     const arweaveLayer = ArweaveService.layerTest([], () =>
       Effect.fail(
@@ -250,12 +310,9 @@ describe("profile", () => {
     );
 
     return Effect.gen(function* () {
-      const { client } = yield* createAuthenticatedClient();
+      const { client, metadata } = yield* createSignedProfileClient();
 
-      const response = yield* uploadProfileMetadataRequest(
-        client,
-        validMetadata,
-      );
+      const response = yield* uploadProfileMetadataRequest(client, metadata);
 
       const body =
         yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);

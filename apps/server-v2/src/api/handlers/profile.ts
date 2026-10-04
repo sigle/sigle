@@ -1,3 +1,8 @@
+import {
+  ArweaveTags,
+  ArweaveTransactionTypes,
+  verifyPostSignature,
+} from "@sigle/sdk";
 import { ByteSize, Effect, Option, Predicate } from "effect";
 import { HttpServerError, HttpServerRequest } from "effect/http";
 import { HttpApiBuilder } from "effect/http-api";
@@ -30,14 +35,42 @@ import { ArweaveService } from "@/services/arweave";
 import { ImageProcessingService } from "@/services/image-processing";
 import { PostHogService } from "@/services/posthog";
 import { StorageService } from "@/services/storage";
+import { UserWhitelistService } from "@/services/users";
 
 export const uploadProfileMetadata = (
   payload: typeof UploadProfileMetadataPayload.Type,
 ) =>
   Effect.gen(function* () {
     const user = yield* CurrentUser;
+    const config = yield* AppConfig;
     const arweave = yield* ArweaveService;
     const posthog = yield* PostHogService;
+    const whitelist = yield* UserWhitelistService;
+
+    // Verify that the signature is valid and belongs to a wallet owned by the logged-in user
+    const signatureResult = verifyPostSignature(payload.metadata, {
+      network: config.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
+    });
+
+    if (signatureResult.isErr()) {
+      return yield* new BadRequest({
+        message: signatureResult.error.error,
+      });
+    }
+
+    const { recoveredAddress } = signatureResult.value;
+
+    const ownsWallet = yield* whitelist.hasWalletAddress(
+      user.id,
+      recoveredAddress,
+    );
+
+    if (!ownsWallet) {
+      return yield* new BadRequest({
+        message:
+          "Invalid signature: Signature verification failed or address mismatch",
+      });
+    }
 
     const file = Buffer.from(JSON.stringify(payload.metadata));
 
@@ -45,6 +78,10 @@ export const uploadProfileMetadata = (
       .uploadFile({
         file,
         contentType: "application/json",
+        tags: [
+          { name: ArweaveTags.author, value: recoveredAddress },
+          { name: ArweaveTags.type, value: ArweaveTransactionTypes.profile },
+        ],
       })
       .pipe(
         Effect.mapError(

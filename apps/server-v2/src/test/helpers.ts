@@ -1,4 +1,4 @@
-import { PostMetadataSchemaId } from "@sigle/sdk";
+import { PostMetadataSchemaId, ProfileMetadataSchemaId } from "@sigle/sdk";
 import { hashMessage } from "@stacks/encryption";
 import {
   getAddressFromPrivateKey,
@@ -177,6 +177,30 @@ export const signTestSiwsMessage = (
     messageHash: Buffer.from(hashMessage(message)).toString("hex"),
     privateKey,
   });
+
+export const createSignedTestProfileMetadata = (options: {
+  readonly privateKey: string;
+  readonly id?: string;
+  readonly displayName?: string;
+}) => {
+  const metadataWithoutSignature = {
+    $schema: ProfileMetadataSchemaId.LATEST,
+    content: {
+      id: options.id ?? "profile-1",
+      displayName: options.displayName ?? "Test profile",
+    },
+  };
+
+  const signature = signTestSiwsMessage(
+    JSON.stringify(metadataWithoutSignature),
+    options.privateKey,
+  );
+
+  return {
+    ...metadataWithoutSignature,
+    signature,
+  };
+};
 
 export const createSignedTestPostMetadata = (options: {
   readonly draftId: string;

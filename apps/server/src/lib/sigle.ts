@@ -1,12 +1,13 @@
-import { createClient, sigleConfig } from "@sigle/sdk";
+import { createClient } from "@sigle/sdk";
+import { STACKS_MAINNET, STACKS_TESTNET } from "@stacks/network";
 import { env } from "@/env";
-import { stacksNetwork } from "./stacks";
 
-const networkSigleConfig = sigleConfig[env.STACKS_ENV];
+const stacksNetworks = {
+  mainnet: STACKS_MAINNET,
+  testnet: STACKS_TESTNET,
+};
 
 export const sigleClient = createClient({
   networkName: env.STACKS_ENV,
-  network: stacksNetwork,
+  network: stacksNetworks[env.STACKS_ENV],
 });
-
-export { networkSigleConfig as sigleConfig };

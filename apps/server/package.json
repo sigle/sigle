@@ -21,7 +21,6 @@
     "@prisma/client": "7.9.1",
     "@sentry/node": "10.50.0",
     "@sigle/sdk": "workspace:*",
-    "@stacks/blockchain-api-client": "9.3.0",
     "@stacks/common": "7.6.0",
     "@stacks/encryption": "7.6.0",
     "@stacks/network": "7.6.0",

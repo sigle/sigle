@@ -37,7 +37,6 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 
 # Copy full sources
 COPY --from=builder /app/out/full/ .
-COPY --from=builder /app/apps/contracts ./apps/contracts
 COPY --from=builder /app/apps/contracts-next ./apps/contracts-next
 COPY ./apps/$APP_NAME/.env.development* ./apps/$APP_NAME/
 COPY turbo.json turbo.json
