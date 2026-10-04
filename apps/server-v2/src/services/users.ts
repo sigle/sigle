@@ -1,5 +1,5 @@
 import { and, eq } from "drizzle-orm";
-import { Context, Effect, Layer } from "effect";
+import { Context, Effect, Layer, Option } from "effect";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { walletAddress } from "@/db/schema";
@@ -13,11 +13,32 @@ export interface UserWhitelist {
     userId: string,
     address: string,
   ) => Effect.Effect<boolean>;
+  readonly getWalletAddress: (
+    userId: string,
+    address: string,
+  ) => Effect.Effect<Option.Option<typeof walletAddress.$inferSelect>>;
 }
 
 export const makeUserWhitelistService = Effect.gen(function* () {
   const config = yield* AppConfig;
   const db = yield* Database;
+
+  const getWalletAddress = (userId: string, address: string) =>
+    Effect.gen(function* () {
+      const [found] = yield* db
+        .select()
+        .from(walletAddress)
+        .where(
+          and(
+            eq(walletAddress.userId, userId),
+            eq(walletAddress.address, address),
+          ),
+        )
+        .limit(1)
+        .pipe(Effect.orDie);
+
+      return Option.fromNullishOr(found);
+    });
 
   return {
     isUserWhitelisted: (userId: string) =>
@@ -53,21 +74,8 @@ export const makeUserWhitelistService = Effect.gen(function* () {
         );
       }),
     hasWalletAddress: (userId: string, address: string) =>
-      Effect.gen(function* () {
-        const [found] = yield* db
-          .select({ id: walletAddress.id })
-          .from(walletAddress)
-          .where(
-            and(
-              eq(walletAddress.userId, userId),
-              eq(walletAddress.address, address),
-            ),
-          )
-          .limit(1)
-          .pipe(Effect.orDie);
-
-        return found !== undefined;
-      }),
+      Effect.map(getWalletAddress(userId, address), Option.isSome),
+    getWalletAddress,
   } satisfies UserWhitelist;
 });
 

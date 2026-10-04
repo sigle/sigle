@@ -1,7 +1,12 @@
 import { Schema } from "effect";
-import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/http-api";
+import {
+  HttpApiEndpoint,
+  HttpApiGroup,
+  HttpApiSchema,
+  OpenApi,
+} from "effect/http-api";
 import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
-import { NotFound } from "@/api/schemas";
+import { BadRequest, NotFound } from "@/api/schemas";
 
 const DateTime = Schema.DateTimeUtcFromString.pipe(
   Schema.annotateEncoded({ format: "date-time" }),
@@ -21,8 +26,15 @@ export const UserProfile = Schema.Struct({
 export const UserProfileResponse = Schema.Struct({
   address: Schema.String,
   profile: Schema.NullOr(UserProfile),
-  postsCount: Schema.Int,
 }).annotate({ identifier: "UserProfileResponse" });
+
+export const UserProfileResponseWithHeaders = HttpApiSchema.WithHeaders(
+  UserProfileResponse,
+  {
+    "cache-control": Schema.String,
+    etag: Schema.String,
+  },
+);
 
 export const UsersGroup = HttpApiGroup.make("users")
   .add(
@@ -30,13 +42,13 @@ export const UsersGroup = HttpApiGroup.make("users")
       params: {
         username: Schema.String,
       },
-      success: UserProfileResponse,
-      error: NotFound,
+      success: UserProfileResponseWithHeaders,
+      error: [BadRequest, NotFound],
     })
       .annotate(OpenApi.Summary, "Get a user profile")
       .annotate(
         OpenApi.Description,
-        "Get a public user by Stacks address with their profile and published post count.",
+        "Get a public user by Stacks address with their profile. Responses are cacheable via `Cache-Control` and `ETag`.",
       ),
   )
   .prefix("/api/users")

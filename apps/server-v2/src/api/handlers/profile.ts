@@ -1,7 +1,7 @@
 import {
   ArweaveTags,
   ArweaveTransactionTypes,
-  verifyPostSignature,
+  verifyMetadataSignature,
 } from "@sigle/sdk";
 import { eq } from "drizzle-orm";
 import { ByteSize, Effect, Option, Predicate } from "effect";
@@ -52,7 +52,7 @@ export const uploadProfileMetadata = (
     const whitelist = yield* UserWhitelistService;
 
     // Verify that the signature is valid and belongs to a wallet owned by the logged-in user
-    const signatureResult = verifyPostSignature(payload.metadata, {
+    const signatureResult = verifyMetadataSignature(payload.metadata, {
       network: config.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
     });
 
@@ -64,29 +64,38 @@ export const uploadProfileMetadata = (
 
     const { recoveredAddress, signature } = signatureResult.value;
 
-    const ownsWallet = yield* whitelist.hasWalletAddress(
-      user.id,
-      recoveredAddress,
-    );
+    const wallet = yield* whitelist.getWalletAddress(user.id, recoveredAddress);
 
-    if (!ownsWallet) {
+    if (Option.isNone(wallet)) {
       return yield* new BadRequest({
         message:
           "Invalid signature: Signature verification failed or address mismatch",
       });
     }
 
-    const [existingProfileWithSignature] = yield* db
-      .select({ userId: profile.userId })
+    const { content } = payload.metadata;
+    // The metadata id is regenerated on every save, so it is excluded from the
+    // hash used to detect no-op saves.
+    const { id: _contentId, ...hashableContent } = content;
+    const contentHash = sha256Hex(Buffer.from(JSON.stringify(hashableContent)));
+
+    const [existingProfile] = yield* db
+      .select()
       .from(profile)
-      .where(eq(profile.signature, signature))
+      .where(eq(profile.userId, user.id))
       .limit(1)
       .pipe(Effect.orDie);
 
-    if (existingProfileWithSignature) {
-      return yield* new BadRequest({
-        message: "Metadata signature has already been published",
-      });
+    const gatewayUrl = config.ARWEAVE_GATEWAY_URL.replace(/\/+$/, "");
+
+    // Skip the Arweave upload when the signed content is unchanged.
+    if (existingProfile && existingProfile.contentHash === contentHash) {
+      return {
+        id: existingProfile.arweaveTxId,
+        uri: `ar://${existingProfile.arweaveTxId}`,
+        cid: existingProfile.arweaveCid,
+        gatewayUrl: `${gatewayUrl}/${existingProfile.arweaveTxId}`,
+      };
     }
 
     const file = Buffer.from(JSON.stringify(payload.metadata));
@@ -110,15 +119,14 @@ export const uploadProfileMetadata = (
       );
 
     const now = new Date();
-    const { content } = payload.metadata;
 
     // Store the signed metadata on upload so the profile is immediately
-    // readable. The Arweave block height stays null until the transaction is
-    // mined and reconciled by the indexer.
+    // readable.
     const profileFields = {
-      address: recoveredAddress,
+      walletAddressId: wallet.value.id,
       arweaveTxId: result.id,
-      arweaveBlockHeight: null,
+      arweaveCid: result.cid,
+      contentHash,
       signature,
       displayName: content.displayName ?? null,
       description: content.description ?? null,

@@ -96,16 +96,16 @@ const response = await request("stx_callContract", {
 });
 ```
 
-## Verify post signature
+## Verify metadata signature
 
-To verify the cryptographic signature of post metadata, use the `verifyPostSignature` function. It returns a typed `Result` from `better-result` containing the recovered Stacks address, public key, and signature on success, or an `InvalidSignatureError` on failure.
+To verify the cryptographic signature of metadata (posts or profiles), use the `verifyMetadataSignature` function. It returns a typed `Result` from `better-result` containing the recovered Stacks address, public key, and signature on success, or an `InvalidSignatureError` on failure.
 
-> **Important**: `verifyPostSignature` verifies that the metadata was signed and recovers the signer's Stacks address. You must always check that `recoveredAddress` matches the expected author's address to ensure the post was signed by the intended author.
+> **Important**: `verifyMetadataSignature` verifies that the metadata was signed and recovers the signer's Stacks address. You must always check that `recoveredAddress` matches the expected author's address to ensure the post was signed by the intended author.
 
 ```tsx
-import { verifyPostSignature } from "@sigle/sdk";
+import { verifyMetadataSignature } from "@sigle/sdk";
 
-const result = verifyPostSignature(postMetadata, {
+const result = verifyMetadataSignature(postMetadata, {
   // Optional: defaults to "mainnet". Can also be "testnet", "devnet", or "mocknet".
   network: "mainnet",
 });

@@ -102,9 +102,10 @@ export const createTestDraft = (options: {
 
 export const createTestProfile = (options: {
   readonly userId: string;
-  readonly address?: string;
+  readonly walletAddressId: string;
   readonly arweaveTxId?: string;
-  readonly arweaveBlockHeight?: number | null;
+  readonly arweaveCid?: string;
+  readonly contentHash?: string;
   readonly signature?: string;
   readonly displayName?: string;
   readonly description?: string;
@@ -121,9 +122,10 @@ export const createTestProfile = (options: {
       .insert(profile)
       .values({
         userId: options.userId,
-        address: options.address ?? "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+        walletAddressId: options.walletAddressId,
         arweaveTxId: options.arweaveTxId ?? crypto.randomUUID(),
-        arweaveBlockHeight: options.arweaveBlockHeight ?? null,
+        arweaveCid: options.arweaveCid ?? crypto.randomUUID(),
+        contentHash: options.contentHash ?? crypto.randomUUID(),
         signature: options.signature ?? crypto.randomUUID(),
         displayName: options.displayName ?? "Test Profile",
         description: options.description ?? "Test description",

@@ -1,5 +1,8 @@
 import { describe, expect, it } from "@effect/vitest";
-import { ProfileMetadataSchemaId } from "@sigle/sdk";
+import {
+  ProfileMetadataSchemaId,
+  type ProfileMetadataDetails,
+} from "@sigle/sdk";
 import { eq } from "drizzle-orm";
 import { Effect, Option, Schema } from "effect";
 import {
@@ -13,6 +16,10 @@ import type { PostHogEvent } from "@/services/posthog";
 import { Database } from "@/db";
 import { profile as profileTable } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
+
+const contentHashOf = (content: Omit<ProfileMetadataDetails, "id">) =>
+  sha256Hex(Buffer.from(JSON.stringify(content)));
+
 import {
   ARWEAVE_TEST_UPLOAD,
   ARWEAVE_TEST_UPLOAD_ID,
@@ -153,7 +160,7 @@ const createSignedProfileClient = () =>
     const credentials = createTestSiwsCredentials();
     const { client, userId } = yield* createAuthenticatedClient();
 
-    yield* createTestWalletAddress({
+    const wallet = yield* createTestWalletAddress({
       userId,
       address: credentials.address,
     });
@@ -176,6 +183,7 @@ const createSignedProfileClient = () =>
       metadata,
       signMetadata,
       userId,
+      walletAddressId: wallet.id,
     };
   });
 
@@ -185,7 +193,7 @@ describe("profile", () => {
     const events: Array<PostHogEvent> = [];
 
     return Effect.gen(function* () {
-      const { address, client, metadata, userId } =
+      const { address, client, metadata, userId, walletAddressId } =
         yield* createSignedProfileClient();
 
       const db = yield* Database;
@@ -226,9 +234,10 @@ describe("profile", () => {
         metadata,
         profile: {
           userId,
-          address,
+          walletAddressId,
           arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
-          arweaveBlockHeight: null,
+          arweaveCid: ARWEAVE_TEST_UPLOAD.cid,
+          contentHash: contentHashOf({ displayName: "Test profile" }),
           signature: metadata.signature,
           displayName: "Test profile",
           description: null,
@@ -294,9 +303,10 @@ describe("profile", () => {
         rows: [
           {
             userId,
-            address: expect.any(String),
+            walletAddressId: expect.any(String),
             arweaveTxId: `${ARWEAVE_TEST_UPLOAD_ID}-2`,
-            arweaveBlockHeight: null,
+            arweaveCid: ARWEAVE_TEST_UPLOAD.cid,
+            contentHash: contentHashOf({ displayName: "Updated profile" }),
             signature: updatedMetadata.signature,
             displayName: "Updated profile",
             description: null,
@@ -318,28 +328,99 @@ describe("profile", () => {
     );
   });
 
-  it.effect("POST upload-metadata rejects an already published signature", () =>
-    Effect.gen(function* () {
-      const { client, metadata } = yield* createSignedProfileClient();
+  it.effect(
+    "POST upload-metadata reuses the profile when the content is unchanged",
+    () => {
+      const uploads: Array<ArweaveUploadOptions> = [];
 
-      const firstResponse = yield* uploadProfileMetadataRequest(
-        client,
-        metadata,
+      return Effect.gen(function* () {
+        const { client, metadata, signMetadata, userId } =
+          yield* createSignedProfileClient();
+
+        const db = yield* Database;
+
+        const firstResponse = yield* uploadProfileMetadataRequest(
+          client,
+          metadata,
+        );
+
+        const firstBody = yield* HttpClientResponse.schemaBodyJson(
+          UploadProfileMetadataResponse,
+        )(firstResponse);
+
+        // Same content, but a new generated id and signature.
+        const secondResponse = yield* uploadProfileMetadataRequest(
+          client,
+          signMetadata({ id: "profile-2" }),
+        );
+
+        const secondBody = yield* HttpClientResponse.schemaBodyJson(
+          UploadProfileMetadataResponse,
+        )(secondResponse);
+
+        const [savedProfile] = yield* db
+          .select()
+          .from(profileTable)
+          .where(eq(profileTable.userId, userId))
+          .limit(1)
+          .pipe(Effect.orDie);
+
+        expect({
+          statuses: [firstResponse.status, secondResponse.status],
+          uploads: uploads.length,
+          sameArweaveId: firstBody.id === secondBody.id,
+          reusedCid: secondBody.cid === ARWEAVE_TEST_UPLOAD.cid,
+          savedArweaveTxId: savedProfile?.arweaveTxId,
+        }).toStrictEqual({
+          statuses: [200, 200],
+          uploads: 1,
+          sameArweaveId: true,
+          reusedCid: true,
+          savedArweaveTxId: `${ARWEAVE_TEST_UPLOAD_ID}-1`,
+        });
+      }).pipe(
+        Effect.provide(
+          makeTestServerLayer({}, [], {
+            arweave: makeUniqueArweaveUploadLayer(uploads),
+          }),
+        ),
       );
+    },
+  );
 
-      const secondResponse = yield* uploadProfileMetadataRequest(
-        client,
-        metadata,
+  it.effect(
+    "POST upload-metadata is idempotent for an identical payload",
+    () => {
+      const uploads: Array<ArweaveUploadOptions> = [];
+
+      return Effect.gen(function* () {
+        const { client, metadata } = yield* createSignedProfileClient();
+
+        const firstResponse = yield* uploadProfileMetadataRequest(
+          client,
+          metadata,
+        );
+
+        const secondResponse = yield* uploadProfileMetadataRequest(
+          client,
+          metadata,
+        );
+
+        expect({
+          statuses: [firstResponse.status, secondResponse.status],
+          uploads: uploads.length,
+        }).toStrictEqual({
+          statuses: [200, 200],
+          uploads: 1,
+        });
+      }).pipe(
+        Effect.provide(
+          makeTestServerLayer({}, [], {
+            arweave: makeUniqueArweaveUploadLayer(uploads),
+          }),
+        ),
       );
-
-      expect({
-        first: firstResponse.status,
-        second: secondResponse.status,
-      }).toStrictEqual({
-        first: 200,
-        second: 400,
-      });
-    }).pipe(Effect.provide(makeTestServerLayer())),
+    },
   );
 
   it.effect("POST upload-metadata is limited to 4 requests per minute", () =>
@@ -351,7 +432,10 @@ describe("profile", () => {
         (index) =>
           uploadProfileMetadataRequest(
             client,
-            signMetadata({ id: `profile-${index}` }),
+            signMetadata({
+              id: `profile-${index}`,
+              displayName: `Profile ${index}`,
+            }),
           ),
         { concurrency: 1 },
       );
@@ -391,7 +475,10 @@ describe("profile", () => {
         (index) =>
           uploadProfileMetadataRequest(
             first.client,
-            first.signMetadata({ id: `first-${index}` }),
+            first.signMetadata({
+              id: `first-${index}`,
+              displayName: `First ${index}`,
+            }),
           ),
         { concurrency: 1 },
       );

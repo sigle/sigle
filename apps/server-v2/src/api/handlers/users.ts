@@ -1,13 +1,20 @@
-import { count, eq } from "drizzle-orm";
+import { validateStacksAddress } from "@stacks/transactions";
+import { eq } from "drizzle-orm";
 import { DateTime, Effect } from "effect";
-import { HttpApiBuilder } from "effect/http-api";
+import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
 import { SigleApi } from "@/api";
-import { NotFound } from "@/api/schemas";
+import { BadRequest, NotFound } from "@/api/schemas";
 import { Database } from "@/db";
-import { post, profile, user, walletAddress } from "@/db/schema";
+import { profile, user, walletAddress } from "@/db/schema";
+
+const CACHE_CONTROL = "public, max-age=60";
 
 export const getUserProfile = (username: string) =>
   Effect.gen(function* () {
+    if (!validateStacksAddress(username)) {
+      return yield* new BadRequest({ message: "Invalid Stacks address" });
+    }
+
     const db = yield* Database;
 
     const [foundUser] = yield* db
@@ -26,31 +33,31 @@ export const getUserProfile = (username: string) =>
       return yield* new NotFound({ message: "User not found" });
     }
 
-    const [totals] = yield* db
-      .select({ count: count() })
-      .from(post)
-      .where(eq(post.userId, foundUser.userId))
-      .pipe(Effect.orDie);
-
     const foundProfile = foundUser.profile;
+    const etag = foundProfile ? `"${foundProfile.arweaveTxId}"` : `"none"`;
 
-    return {
-      address: username,
-      profile:
-        foundProfile === null
-          ? null
-          : {
-              displayName: foundProfile.displayName,
-              description: foundProfile.description,
-              website: foundProfile.website,
-              twitter: foundProfile.twitter,
-              picture: foundProfile.picture,
-              coverPicture: foundProfile.coverPicture,
-              arweaveTxId: foundProfile.arweaveTxId,
-              updatedAt: DateTime.fromDateUnsafe(foundProfile.updatedAt),
-            },
-      postsCount: totals.count,
-    };
+    return HttpApiSchema.withHeaders({
+      body: {
+        address: username,
+        profile:
+          foundProfile === null
+            ? null
+            : {
+                displayName: foundProfile.displayName,
+                description: foundProfile.description,
+                website: foundProfile.website,
+                twitter: foundProfile.twitter,
+                picture: foundProfile.picture,
+                coverPicture: foundProfile.coverPicture,
+                arweaveTxId: foundProfile.arweaveTxId,
+                updatedAt: DateTime.fromDateUnsafe(foundProfile.updatedAt),
+              },
+      },
+      headers: {
+        "cache-control": CACHE_CONTROL,
+        etag,
+      },
+    });
   });
 
 export const UsersHandlersLayer = HttpApiBuilder.group(

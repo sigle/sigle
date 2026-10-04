@@ -30,6 +30,10 @@ export const relations = defineRelations(schema, (r) => ({
       from: r.walletAddress.userId,
       to: r.user.id,
     }),
+    profile: r.one.profile({
+      from: r.walletAddress.id,
+      to: r.profile.walletAddressId,
+    }),
   },
   draft: {
     user: r.one.user({
@@ -47,6 +51,10 @@ export const relations = defineRelations(schema, (r) => ({
     user: r.one.user({
       from: r.profile.userId,
       to: r.user.id,
+    }),
+    walletAddress: r.one.walletAddress({
+      from: r.profile.walletAddressId,
+      to: r.walletAddress.id,
     }),
   },
 }));

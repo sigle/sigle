@@ -9,23 +9,23 @@ import {
 import { Result } from "better-result";
 import { InvalidSignatureError } from "./errors.js";
 
-export interface VerifyPostSignatureOptions {
+export interface VerifyMetadataSignatureOptions {
   network?: StacksNetworkName;
 }
 
-export interface VerifyPostSignatureResult {
+export interface VerifyMetadataSignatureResult {
   recoveredAddress: string;
   publicKey: string;
   signature: string;
 }
 
-export function verifyPostSignature(
+export function verifyMetadataSignature(
   metadata: {
     signature?: string;
     content: unknown;
   },
-  options?: VerifyPostSignatureOptions,
-): Result<VerifyPostSignatureResult, InvalidSignatureError> {
+  options?: VerifyMetadataSignatureOptions,
+): Result<VerifyMetadataSignatureResult, InvalidSignatureError> {
   const { signature, ...metadataToSign } = metadata;
 
   if (!signature) {
@@ -74,3 +74,15 @@ export function verifyPostSignature(
     );
   }
 }
+
+/**
+ * @deprecated Use {@link verifyMetadataSignature} instead. Kept until the
+ * legacy server is removed.
+ */
+export const verifyPostSignature = verifyMetadataSignature;
+
+/** @deprecated Use {@link VerifyMetadataSignatureOptions} instead. */
+export type VerifyPostSignatureOptions = VerifyMetadataSignatureOptions;
+
+/** @deprecated Use {@link VerifyMetadataSignatureResult} instead. */
+export type VerifyPostSignatureResult = VerifyMetadataSignatureResult;

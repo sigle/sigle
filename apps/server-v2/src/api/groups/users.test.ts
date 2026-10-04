@@ -1,9 +1,13 @@
 import { describe, expect, it } from "@effect/vitest";
-import { DateTime, Effect, Schema } from "effect";
-import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/http";
+import { DateTime, Effect, Option, Schema } from "effect";
+import {
+  Headers,
+  HttpClient,
+  HttpClientRequest,
+  HttpClientResponse,
+} from "effect/http";
 import { UserProfileResponse } from "@/api/groups/users";
 import {
-  createTestPost,
   createTestProfile,
   createTestUser,
   createTestWalletAddress,
@@ -18,11 +22,27 @@ const getUserRequest = (client: HttpClient.HttpClient, username: string) =>
   client.execute(HttpClientRequest.get(`/api/users/${username}`));
 
 describe("users", () => {
+  it.effect("GET /api/users/:username rejects an invalid Stacks address", () =>
+    Effect.gen(function* () {
+      const client = yield* HttpClient.HttpClient;
+
+      const response = yield* getUserRequest(client, "not-an-address");
+
+      const body =
+        yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
+
+      expect({ status: response.status, message: body.message }).toStrictEqual({
+        status: 400,
+        message: "Invalid Stacks address",
+      });
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
   it.effect("GET /api/users/:username returns 404 for an unknown address", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
 
-      const response = yield* getUserRequest(client, "STUNKNOWN");
+      const response = yield* getUserRequest(client, TEST_ADDRESS);
 
       const body =
         yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
@@ -54,24 +74,25 @@ describe("users", () => {
         body: {
           address: TEST_ADDRESS,
           profile: null,
-          postsCount: 0,
         },
       });
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("GET /api/users/:username returns the profile and post count", () =>
+  it.effect("GET /api/users/:username returns the profile", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
       const user = yield* createTestUser();
 
-      yield* createTestWalletAddress({
+      const wallet = yield* createTestWalletAddress({
         userId: user.id,
         address: TEST_ADDRESS,
       });
+
       yield* createTestProfile({
         userId: user.id,
-        address: TEST_ADDRESS,
+        walletAddressId: wallet.id,
+        arweaveTxId: "arweave-profile-tx",
         displayName: "Alice",
         description: "Hello",
         website: "https://example.com",
@@ -79,8 +100,6 @@ describe("users", () => {
         picture: "https://cdn.example.com/avatar.webp",
         coverPicture: "https://cdn.example.com/cover.webp",
       });
-      yield* createTestPost({ userId: user.id, title: "First post" });
-      yield* createTestPost({ userId: user.id, title: "Second post" });
 
       const response = yield* getUserRequest(client, TEST_ADDRESS);
 
@@ -89,7 +108,6 @@ describe("users", () => {
 
       expect(body).toMatchObject({
         address: TEST_ADDRESS,
-        postsCount: 2,
         profile: {
           displayName: "Alice",
           description: "Hello",
@@ -97,10 +115,48 @@ describe("users", () => {
           twitter: "alice",
           picture: "https://cdn.example.com/avatar.webp",
           coverPicture: "https://cdn.example.com/cover.webp",
+          arweaveTxId: "arweave-profile-tx",
         },
       });
       expect(response.status).toBe(200);
       expect(DateTime.isDateTime(body.profile?.updatedAt)).toBe(true);
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect("GET /api/users/:username returns caching headers", () =>
+    Effect.gen(function* () {
+      const client = yield* HttpClient.HttpClient;
+      const user = yield* createTestUser();
+
+      const wallet = yield* createTestWalletAddress({
+        userId: user.id,
+        address: TEST_ADDRESS,
+      });
+
+      yield* createTestProfile({
+        userId: user.id,
+        walletAddressId: wallet.id,
+        arweaveTxId: "arweave-profile-tx",
+        displayName: "Alice",
+      });
+
+      const response = yield* getUserRequest(client, TEST_ADDRESS);
+
+      const cacheControl = Option.getOrUndefined(
+        Headers.get(response.headers, "cache-control"),
+      );
+
+      const etag = Option.getOrUndefined(Headers.get(response.headers, "etag"));
+
+      expect({
+        status: response.status,
+        cacheControl,
+        etag,
+      }).toStrictEqual({
+        status: 200,
+        cacheControl: "public, max-age=60",
+        etag: '"arweave-profile-tx"',
+      });
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 });

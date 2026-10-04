@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "685e7213-33c2-4183-abd7-e58657e1a447",
+  "id": "5b2cb8df-fbf9-484b-a755-ffd60f92dd2d",
   "prevIds": [
     "7d4ce773-9680-42c2-9d96-be1d289edb18"
   ],
@@ -688,7 +688,7 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "address",
+      "name": "wallet_address_id",
       "entityType": "columns",
       "schema": "public",
       "table": "profile"
@@ -707,14 +707,27 @@
       "table": "profile"
     },
     {
-      "type": "integer",
+      "type": "text",
       "typeSchema": null,
-      "notNull": false,
+      "notNull": true,
       "dimensions": 0,
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "arweave_block_height",
+      "name": "arweave_cid",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "profile"
+    },
+    {
+      "type": "text",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "content_hash",
       "entityType": "columns",
       "schema": "public",
       "table": "profile"
@@ -1340,6 +1353,27 @@
       "nameExplicit": true,
       "columns": [
         {
+          "value": "wallet_address_id",
+          "isExpression": false,
+          "asc": true,
+          "nullsFirst": false,
+          "opclass": null
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "with": "",
+      "method": "btree",
+      "concurrently": false,
+      "name": "profile_wallet_address_id_idx",
+      "entityType": "indexes",
+      "schema": "public",
+      "table": "profile"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        {
           "value": "user_id",
           "isExpression": false,
           "asc": true,
@@ -1491,6 +1525,23 @@
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "profile_user_id_user_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "profile"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "wallet_address_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "wallet_address",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "name": "profile_wallet_address_id_wallet_address_id_fkey",
       "entityType": "fks",
       "schema": "public",
       "table": "profile"
