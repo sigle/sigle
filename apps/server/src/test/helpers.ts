@@ -12,6 +12,8 @@ interface CreateTestUserOptions {
     website?: string;
     twitter?: string;
     txId?: string;
+    blockHeight?: number;
+    signature?: string;
   };
 }
 
@@ -37,6 +39,8 @@ export async function createTestUser(
             txId:
               options.profile.txId ??
               `0x${Math.random().toString(16).slice(2)}`,
+            blockHeight: options.profile.blockHeight ?? 0,
+            signature: options.profile.signature,
             createdAt: now,
             updatedAt: now,
           },

@@ -1,15 +1,30 @@
-import { ProfileMetadataSchema, type ProfileMetadata } from "@sigle/sdk";
+import {
+  ProfileMetadataSchema,
+  verifyPostSignature,
+  type InvalidSignatureError,
+  type ProfileMetadata,
+} from "@sigle/sdk";
 import { Result, type UnhandledException } from "better-result";
+import { env } from "../../env";
 import { resolveImageUrl } from "../images";
 import { InvalidMetadataError, type MetadataFetchFailedError } from "./errors";
 import { fetchMetadata } from "./fetch";
+
+export interface VerifiedProfileMetadata {
+  metadata: ProfileMetadata;
+  recoveredAddress: string;
+  signature: string;
+}
 
 export async function getProfileMetadataFromUri(
   baseTokenUri: string,
 ): Promise<
   Result<
-    ProfileMetadata,
-    MetadataFetchFailedError | InvalidMetadataError | UnhandledException
+    VerifiedProfileMetadata,
+    | MetadataFetchFailedError
+    | InvalidMetadataError
+    | InvalidSignatureError
+    | UnhandledException
   >
 > {
   const url = resolveImageUrl(baseTokenUri);
@@ -29,7 +44,19 @@ export async function getProfileMetadataFromUri(
     );
   }
 
-  const postData = profileMetadata.data;
+  const signatureResult = verifyPostSignature(profileMetadata.data, {
+    network: env.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
+  });
 
-  return Result.ok(postData);
+  if (signatureResult.isErr()) {
+    return signatureResult;
+  }
+
+  const { recoveredAddress, signature } = signatureResult.value;
+
+  return Result.ok({
+    metadata: profileMetadata.data,
+    recoveredAddress,
+    signature,
+  });
 }

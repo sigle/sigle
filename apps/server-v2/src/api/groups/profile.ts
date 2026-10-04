@@ -75,7 +75,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
     HttpApiEndpoint.post("uploadMetadata", "/upload-metadata", {
       payload: UploadProfileMetadataPayload,
       success: UploadProfileMetadataResponse,
-      error: InternalServerError,
+      error: [BadRequest, InternalServerError],
     })
       .annotate(OpenApi.Summary, "Upload profile metadata")
       .annotate(

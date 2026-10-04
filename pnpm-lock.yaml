@@ -209,30 +209,6 @@ importers:
         specifier: 'catalog:'
         version: 1.0.0(@opentelemetry/api@1.9.1)(@types/node@25.6.2)(@vitest/ui@5.0.1)(bufferutil@4.1.0)(esbuild@0.27.7)(happy-dom@20.9.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@25.6.2)(typescript@7.0.2))(terser@5.47.1)(tsx@4.21.0)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.8.2)
 
-  apps/contracts:
-    devDependencies:
-      '@stacks/clarinet-sdk':
-        specifier: 3.24.0
-        version: 3.24.0(encoding@0.1.13)
-      '@stacks/network':
-        specifier: 7.6.0
-        version: 7.6.0(encoding@0.1.13)
-      '@stacks/transactions':
-        specifier: 7.6.0
-        version: 7.6.0(encoding@0.1.13)
-      chokidar-cli:
-        specifier: 3.0.0
-        version: 3.0.0
-      typescript:
-        specifier: 7.0.2
-        version: 7.0.2
-      vitest:
-        specifier: 'catalog:'
-        version: 5.0.1(@opentelemetry/api@1.9.1)(@types/node@25.6.2)(@vitest/browser-preview@5.0.1)(@vitest/ui@5.0.1)(@voidzero-dev/vite-plus-core@1.0.0(@types/node@25.6.2)(esbuild@0.27.7)(jiti@2.7.0)(terser@5.47.1)(tsx@4.21.0)(typescript@7.0.2)(yaml@2.8.2))(happy-dom@20.9.0(bufferutil@4.1.0)(utf-8-validate@6.0.6))(msw@2.13.6(@types/node@25.6.2)(typescript@7.0.2))
-      vitest-environment-clarinet:
-        specifier: 3.0.2
-        version: 3.0.2(@stacks/clarinet-sdk@3.24.0(encoding@0.1.13))(vitest@5.0.1)
-
   apps/contracts-next:
     devDependencies:
       '@sigle/sdk':
@@ -313,9 +289,6 @@ importers:
       '@sigle/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
-      '@stacks/blockchain-api-client':
-        specifier: 9.3.0
-        version: 9.3.0(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
       '@stacks/common':
         specifier: 7.6.0
         version: 7.6.0
@@ -857,42 +830,6 @@ importers:
       zod:
         specifier: 4.3.6
         version: 4.3.6
-
-  packages/testnet-seed:
-    devDependencies:
-      '@paralleldrive/cuid2':
-        specifier: 3.3.0
-        version: 3.3.0
-      '@sigle/sdk':
-        specifier: workspace:*
-        version: link:../sdk
-      '@stacks/blockchain-api-client':
-        specifier: 9.3.0
-        version: 9.3.0(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
-      '@stacks/network':
-        specifier: 7.6.0
-        version: 7.6.0(encoding@0.1.13)
-      '@stacks/transactions':
-        specifier: 7.6.0
-        version: 7.6.0(encoding@0.1.13)
-      '@stacks/wallet-sdk':
-        specifier: 7.6.0
-        version: 7.6.0(encoding@0.1.13)
-      '@tsconfig/recommended':
-        specifier: 1.0.13
-        version: 1.0.13
-      '@types/node':
-        specifier: 26.6.2
-        version: 26.6.2
-      smol-toml:
-        specifier: 1.6.0
-        version: 1.6.0
-      tsx:
-        specifier: 4.21.0
-        version: 4.21.0
-      typescript:
-        specifier: 7.0.2
-        version: 7.0.2
 
 packages:
 
@@ -4762,9 +4699,6 @@ packages:
   '@scure/base@1.2.6':
     resolution: {integrity: sha512-g/nm5FgUa//MCj1gV09zTJTaM6KBAHqLN907YVQqf7zC49+DcO4B1so4ZX07Ef10Twr6nuqYEH9GEggFXA4Fmg==}
 
-  '@scure/bip32@1.1.3':
-    resolution: {integrity: sha512-dSH3+LCWONlSNQuF34xZrG6Xas7tp2jSSqHb/pMfXWM0vKE4JZOtK3uJfoWouUVW5IGlls75HkXmYLldZ8ySgQ==}
-
   '@scure/bip32@1.4.0':
     resolution: {integrity: sha512-sVUpc0Vq3tXCkDGYVWGIZTRfnvu8LoTDaev7vbwh0omSvVORONr960MQWdKqJDCReIEmTj3PAr73O3aoxz7OPg==}
 
@@ -5653,9 +5587,6 @@ packages:
   '@solana/web3.js@1.98.4':
     resolution: {integrity: sha512-vv9lfnvjUsRiq//+j5pBdXig0IQdtzA0BRZ3bXEP4KaIyF1CcaydWqgyzQgfZMNIsWNWmG+AUHwPy4AHOD6gpw==}
 
-  '@stacks/auth@7.6.0':
-    resolution: {integrity: sha512-uxhoX0ITDdxxRAWx7KE0WdQKLansoBSBLuVjGbrs/CKsrkNpwPerdw+9RFlP3U0mK53HLyKZlCX37DWqthG1SA==}
-
   '@stacks/blockchain-api-client@9.3.0':
     resolution: {integrity: sha512-AYjgUXVweyPLP+iwhZlHQQUctUDnd9GLY+T6tOMwH+KB4Nor0+gjgHB5Ai18A8iMVNw0OW23uUfohhMY6E2dqw==}
 
@@ -5690,17 +5621,11 @@ packages:
   '@stacks/profile@7.6.0':
     resolution: {integrity: sha512-gFXKl3eLi1vWiCcZ3F5QFBq/X+vYn3TKSbe1iHRW4VdhIB+WFedpJ4h2WrqTzRepRNQzd2z6kl2pKuyD1x+fuA==}
 
-  '@stacks/storage@7.6.0':
-    resolution: {integrity: sha512-gNJEwqDzP0Wwfuocy98GjMEn2bnKJYGYbTxJ3uK04v7gks+M58I0cTMzC38CkJWLaVO1xRtNZ3VfVi5zybabkQ==}
-
   '@stacks/transactions@6.17.0':
     resolution: {integrity: sha512-FUah2BRgV66ApLcEXGNGhwyFTRXqX5Zco3LpiM3essw8PF0NQlHwwdPgtDko5RfrJl3LhGXXe/30nwsfNnB3+g==}
 
   '@stacks/transactions@7.6.0':
     resolution: {integrity: sha512-s7F7eJtQVnZoB79j8pY9SLKhlvvdYZZD1NSDRWrFjzSJTDmxptL8c50S563WFja6KOhFOgg1jd+p0XWTxFAVyA==}
-
-  '@stacks/wallet-sdk@7.6.0':
-    resolution: {integrity: sha512-NsvGOBB/AlpZEIGsjH7ltc2XrmiHw6jzvtR+fkxQAmOxsu6EaZzdnaq4S9jRcxUOzMmQWCYB0Q26FZyY298XJQ==}
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -18467,12 +18392,6 @@ snapshots:
 
   '@scure/base@1.2.6': {}
 
-  '@scure/bip32@1.1.3':
-    dependencies:
-      '@noble/hashes': 1.1.5
-      '@noble/secp256k1': 1.7.2
-      '@scure/base': 1.1.9
-
   '@scure/bip32@1.4.0':
     dependencies:
       '@noble/curves': 1.4.2
@@ -19812,35 +19731,12 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@stacks/auth@7.6.0(encoding@0.1.13)':
-    dependencies:
-      '@noble/secp256k1': 1.7.1
-      '@stacks/common': 7.6.0
-      '@stacks/encryption': 7.6.0
-      '@stacks/network': 7.6.0(encoding@0.1.13)
-      '@stacks/profile': 7.6.0(encoding@0.1.13)
-      cross-fetch: 3.2.0(encoding@0.1.13)
-      jsontokens: 4.0.1
-    transitivePeerDependencies:
-      - encoding
-
   '@stacks/blockchain-api-client@9.3.0(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@5.0.10)':
     dependencies:
       eventemitter3: 4.0.7
       jsonrpc-lite: 2.2.0
       openapi-fetch: 0.10.6
       socket.io-client: 4.8.3(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@5.0.10)
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-
-  '@stacks/blockchain-api-client@9.3.0(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)':
-    dependencies:
-      eventemitter3: 4.0.7
-      jsonrpc-lite: 2.2.0
-      openapi-fetch: 0.10.6
-      socket.io-client: 4.8.3(bufferutil@4.1.0)(supports-color@10.2.2)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -19947,17 +19843,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/storage@7.6.0(encoding@0.1.13)':
-    dependencies:
-      '@stacks/auth': 7.6.0(encoding@0.1.13)
-      '@stacks/common': 7.6.0
-      '@stacks/encryption': 7.6.0
-      '@stacks/network': 7.6.0(encoding@0.1.13)
-      base64-js: 1.5.1
-      jsontokens: 4.0.1
-    transitivePeerDependencies:
-      - encoding
-
   '@stacks/transactions@6.17.0(encoding@0.1.13)':
     dependencies:
       '@noble/hashes': 1.1.5
@@ -19977,23 +19862,6 @@ snapshots:
       '@stacks/network': 7.6.0(encoding@0.1.13)
       c32check: 2.0.0
       lodash.clonedeep: 4.5.0
-    transitivePeerDependencies:
-      - encoding
-
-  '@stacks/wallet-sdk@7.6.0(encoding@0.1.13)':
-    dependencies:
-      '@scure/bip32': 1.1.3
-      '@scure/bip39': 1.1.0
-      '@stacks/auth': 7.6.0(encoding@0.1.13)
-      '@stacks/common': 7.6.0
-      '@stacks/encryption': 7.6.0
-      '@stacks/network': 7.6.0(encoding@0.1.13)
-      '@stacks/profile': 7.6.0(encoding@0.1.13)
-      '@stacks/storage': 7.6.0(encoding@0.1.13)
-      '@stacks/transactions': 7.6.0(encoding@0.1.13)
-      c32check: 2.0.0
-      jsontokens: 4.0.1
-      zone-file: 2.0.0-beta.3
     transitivePeerDependencies:
       - encoding
 

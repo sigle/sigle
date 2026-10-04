@@ -105,6 +105,8 @@ model RateLimiterFlexible {
 model Profile {
   id                String  @id @map("id")
   txId              String  @unique @map("tx_id")
+  blockHeight       Int     @default(0) @map("block_height")
+  signature         String? @unique @map("signature")
   displayName       String? @map("display_name")
   description       String? @map("description")
   website           String? @map("website")

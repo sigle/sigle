@@ -51,9 +51,6 @@ services:
         - path: ./packages/
           target: /app/packages
           action: sync
-        - path: ./apps/contracts/
-          target: /app/apps/contracts
-          action: sync
         - path: ./apps/contracts-next/
           target: /app/apps/contracts-next
           action: sync
@@ -88,9 +85,6 @@ services:
           action: sync
         - path: ./packages/
           target: /app/packages
-          action: sync
-        - path: ./apps/contracts/
-          target: /app/apps/contracts
           action: sync
         - path: ./apps/contracts-next/
           target: /app/apps/contracts-next

@@ -9,8 +9,8 @@ export const indexerSetProfileSchema = z.object({
   action: z.literal("indexer-set-profile"),
   data: z.object({
     txId: z.string(),
-    address: z.string(),
     uri: z.string(),
+    blockHeight: z.number(),
   }),
 });
 
@@ -23,27 +23,77 @@ export const executeIndexerSetProfileJob = async (
     const message = matchError(metadataResult.error, {
       MetadataFetchFailedError: (e) => `Failed to fetch metadata: ${e.error}`,
       InvalidMetadataError: (e) => `Metadata validation failed: ${e.error}`,
+      InvalidSignatureError: (e) => `Invalid signature: ${e.error}`,
       UnhandledException: (e) => `Unhandled exception: ${e.message}`,
     });
 
     consola.error("Can't process profile metadata", {
       txId: data.txId,
       uri: data.uri,
-      author: data.address,
       error: message,
     });
 
     return;
   }
 
-  const metadata = metadataResult.value;
+  const { metadata, recoveredAddress, signature } = metadataResult.value;
 
-  const {
-    id: _,
-    picture: __,
-    coverPicture: ____,
-    ...metadataWithoutId
-  } = metadata.content;
+  // A signed profile can only ever update the profile of its signer, and a
+  // signature that already belongs to another transaction is a replay.
+  const existingProfileWithSignature = await prisma.profile.findUnique({
+    select: {
+      id: true,
+      txId: true,
+    },
+    where: {
+      signature,
+    },
+  });
+
+  if (
+    existingProfileWithSignature &&
+    existingProfileWithSignature.txId !== data.txId
+  ) {
+    consola.warn("Skipping replayed profile metadata", {
+      txId: data.txId,
+      existingTxId: existingProfileWithSignature.txId,
+      signature,
+    });
+
+    return;
+  }
+
+  const existingProfile = await prisma.profile.findUnique({
+    select: {
+      blockHeight: true,
+    },
+    where: {
+      id: recoveredAddress,
+    },
+  });
+
+  // Never let an older mined transaction overwrite a newer profile.
+  if (
+    existingProfile &&
+    data.blockHeight > 0 &&
+    existingProfile.blockHeight > data.blockHeight
+  ) {
+    consola.warn("Skipping stale profile metadata", {
+      txId: data.txId,
+      address: recoveredAddress,
+      blockHeight: data.blockHeight,
+      existingBlockHeight: existingProfile.blockHeight,
+    });
+
+    return;
+  }
+
+  const profileFields = {
+    displayName: metadata.content.displayName,
+    description: metadata.content.description,
+    website: metadata.content.website,
+    twitter: metadata.content.twitter,
+  };
 
   // Ensure user exists
   const user = await prisma.user.findUnique({
@@ -51,30 +101,34 @@ export const executeIndexerSetProfileJob = async (
       id: true,
     },
     where: {
-      id: data.address,
+      id: recoveredAddress,
     },
   });
 
   if (!user) {
     await prisma.user.create({
       data: {
-        id: data.address,
+        id: recoveredAddress,
       },
     });
   }
 
   await prisma.profile.upsert({
     where: {
-      id: data.address,
+      id: recoveredAddress,
     },
     update: {
-      ...metadataWithoutId,
+      ...profileFields,
       txId: data.txId,
+      blockHeight: data.blockHeight,
+      signature,
     },
     create: {
-      ...metadataWithoutId,
-      id: data.address,
+      ...profileFields,
+      id: recoveredAddress,
       txId: data.txId,
+      blockHeight: data.blockHeight,
+      signature,
     },
   });
 
@@ -82,7 +136,7 @@ export const executeIndexerSetProfileJob = async (
     // We do a separate update query here as for some reason prisma doesn't let us update the relationship in the upsert
     await prisma.profile.update({
       where: {
-        id: data.address,
+        id: recoveredAddress,
       },
       data: {
         pictureUri: metadata.content.picture
@@ -130,7 +184,7 @@ export const executeIndexerSetProfileJob = async (
   }
 
   consola.info("profile.setProfile", {
-    id: data.address,
+    id: recoveredAddress,
     uri: data.uri,
     txId: data.txId,
   });

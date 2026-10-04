@@ -89,7 +89,8 @@ export interface ProfileMetadata {
    */
   content: ProfileMetadataDetails;
   /**
-   * A cryptographic signature of the `content` data.
+   * A cryptographic signature of the metadata (excluding this field), created
+   * with the Stacks wallet of the profile owner.
    */
   signature?: string;
 }

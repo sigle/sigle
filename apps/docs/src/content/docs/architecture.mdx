@@ -5,7 +5,7 @@ description: Technical architecture of the Sigle protocol and monorepo.
 
 Sigle is a monorepo that contains multiple packages. The main packages are:
 
-- [`@sigle/contracts`](https://github.com/sigle/sigle/tree/main/apps/contracts): The protocol contracts and tests.
+- [`@sigle/contracts-next`](https://github.com/sigle/sigle/tree/main/apps/contracts-next): The post collectibles contracts and tests.
 - [`@sigle/sdk`](https://github.com/sigle/sigle/tree/main/packages/sdk): The SDK package that contains all the schemas and logic to interact with the protocol.
 - [`@sigle/server`](https://github.com/sigle/sigle/tree/main/apps/server): The backend server that serves the API and host the indexer logic.
 - [`@sigle/sigle`](https://github.com/sigle/sigle/tree/main/apps/sigle): The web application one interacts with.
@@ -22,7 +22,7 @@ flowchart LR
 
     subgraph Core[" Core Layer "]
         direction TB
-        Contracts["Smart Contracts<br/>(@sigle/contracts)"]
+        Contracts["Smart Contracts<br/>(@sigle/contracts-next)"]
 
         subgraph Backend[" Backend Services "]
             direction TB
