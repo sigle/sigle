@@ -1,4 +1,3 @@
-import { parseBTC } from "@sigle/sdk";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -29,8 +28,8 @@ export const EditorSave = () => {
   const type = watch("type");
 
   const { mutate: updatePost } = sigleApiClient.useMutation(
-    "post",
-    "/api/protected/drafts/{draftId}/update",
+    "patch",
+    "/api/protected/drafts/{draftId}",
   );
 
   const editor = useEditorStore((state) => state.editor);
@@ -47,16 +46,13 @@ export const EditorSave = () => {
             },
           },
           body: {
-            ...values,
-            collect: {
-              ...values.collect,
-              collectPrice: {
-                ...values.collect.collectPrice,
-                price: Number(
-                  parseBTC(String(values.collect.collectPrice.price)),
-                ),
-              },
-            },
+            title: values.title,
+            content: values.content,
+            metaTitle: values.metaTitle || null,
+            metaDescription: values.metaDescription || null,
+            coverImage: values.coverImage || null,
+            tags: values.tags ?? [],
+            canonicalUri: values.canonicalUri || null,
           },
         },
         {
