@@ -1,10 +1,6 @@
 import { type ProfileMetadata, ProfileMetadataSchema } from "@sigle/sdk";
 import { Effect, Schema, SchemaIssue } from "effect";
-import {
-  HttpApiEndpoint,
-  HttpApiGroup,
-  OpenApi,
-} from "effect/unstable/httpapi";
+import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/http-api";
 import { UserAuthMiddleware } from "@/api/middleware/auth-user";
 import {
   RateLimitMiddleware,

@@ -4,809 +4,1364 @@
  */
 
 export interface paths {
-  "/health": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/health": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["health.get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations["health.get"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/me": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/protected/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["protected.me"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations["protected.me"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/protected/drafts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List drafts
+         * @description List the current user drafts, most recently updated first.
+         */
+        get: operations["drafts.list"];
+        put?: never;
+        /**
+         * Create a draft
+         * @description Create a new draft, optionally seeded with the provided fields.
+         */
+        post: operations["drafts.create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /**
-     * List drafts
-     * @description List the current user drafts, most recently updated first.
-     */
-    get: operations["drafts.list"];
-    put?: never;
-    /**
-     * Create a draft
-     * @description Create a new draft, optionally seeded with the provided fields.
-     */
-    post: operations["drafts.create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts/{draftId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/protected/drafts/{draftId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a draft */
+        get: operations["drafts.get"];
+        put?: never;
+        post?: never;
+        /** Delete a draft */
+        delete: operations["drafts.delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update a draft
+         * @description Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields.
+         */
+        patch: operations["drafts.update"];
+        trace?: never;
     };
-    /** Get a draft */
-    get: operations["drafts.get"];
-    put?: never;
-    post?: never;
-    /** Delete a draft */
-    delete: operations["drafts.delete"];
-    options?: never;
-    head?: never;
-    /**
-     * Update a draft
-     * @description Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields.
-     */
-    patch: operations["drafts.update"];
-    trace?: never;
-  };
-  "/api/protected/user/profile/upload-metadata": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/protected/drafts/{draftId}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get draft publish status
+         * @description Poll the asynchronous publishing status of a draft.
+         */
+        get: operations["drafts.getPublishStatus"];
+        put?: never;
+        /**
+         * Publish a draft
+         * @description Validate signed post metadata and enqueue an asynchronous publish job.
+         */
+        post: operations["drafts.publish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    /**
-     * Upload profile metadata
-     * @description Upload the profile metadata to Arweave and return the transaction id.
-     */
-    post: operations["profile.uploadMetadata"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/user/profile/images/{kind}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/protected/user/profile/upload-metadata": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload profile metadata
+         * @description Upload the profile metadata to Arweave and return the transaction id.
+         */
+        post: operations["profile.uploadMetadata"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    /**
-     * Upload a profile image
-     * @description Upload a profile avatar or cover image as a raw binary body. Re-uploading the same image is a no-op, uploading a different image replaces the previous file.
-     */
-    put: operations["profile.uploadImage"];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
+    "/api/protected/user/profile/images/{kind}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Upload a profile image
+         * @description Upload a profile avatar or cover image as a raw binary body. Re-uploading the same image is a no-op, uploading a different image replaces the previous file.
+         */
+        put: operations["profile.uploadImage"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/protected/admin/queues": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List queue statistics
+         * @description Return pending, active, completed, and failed job counts per queue.
+         */
+        get: operations["admin.listQueues"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/protected/admin/queues/{queueName}/failed": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List failed jobs
+         * @description List dead-lettered jobs of a queue, most recently failed first.
+         */
+        get: operations["admin.listFailedJobs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/protected/admin/queues/{queueName}/failed/{id}/retry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Retry a failed job
+         * @description Reset a dead-lettered job so workers pick it up again.
+         */
+        post: operations["admin.retryFailedJob"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/protected/admin/queues/{queueName}/failed/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete a failed job
+         * @description Permanently remove a dead-lettered job from the queue.
+         */
+        delete: operations["admin.deleteFailedJob"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    sigle_api_TooManyRequestsEncoded: {
-      /** @enum {string} */
-      _tag: "TooManyRequests";
-      message: string;
-      retryAfterMillis: number;
+    schemas: {
+        sigle_api_UnauthorizedEncoded: {
+            /** @enum {string} */
+            _tag: "Unauthorized";
+            message: string;
+        };
+        sigle_api_ForbiddenEncoded: {
+            /** @enum {string} */
+            _tag: "Forbidden";
+            message: string;
+        };
+        sigle_api_InternalServerErrorEncoded: {
+            /** @enum {string} */
+            _tag: "InternalServerError";
+            message: string;
+        };
+        sigle_api_TooManyRequestsEncoded: {
+            /** @enum {string} */
+            _tag: "TooManyRequests";
+            message: string;
+            retryAfterMillis: number;
+        };
+        sigle_api_NotFoundEncoded: {
+            /** @enum {string} */
+            _tag: "NotFound";
+            message: string;
+        };
+        RetryFailedJobResponse: {
+            success: boolean;
+        };
+        FailedJobListResponse: {
+            results: components["schemas"]["FailedJobListItem"][];
+            limit: number;
+            offset: number;
+            total: number;
+        };
+        FailedJobListItem: {
+            id: string;
+            queueName: string;
+            payload: unknown;
+            attempts: number;
+            lastFailure: string | null;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        AdminQueueListResponse: {
+            results: components["schemas"]["QueueStatsItem"][];
+        };
+        QueueStatsItem: {
+            queueName: string;
+            pending: number;
+            active: number;
+            completed: number;
+            failed: number;
+            oldestPendingAgeMillis: number | null;
+        };
+        sigle_api_UnsupportedMediaTypeEncoded: {
+            /** @enum {string} */
+            _tag: "UnsupportedMediaType";
+            message: string;
+        };
+        sigle_api_PayloadTooLargeEncoded: {
+            /** @enum {string} */
+            _tag: "PayloadTooLarge";
+            message: string;
+        };
+        sigle_api_BadRequestEncoded: {
+            /** @enum {string} */
+            _tag: "BadRequest";
+            message: string;
+        };
+        UploadProfileImageResponse: {
+            url: string;
+            key: string;
+            width: number;
+            height: number;
+        };
+        UploadProfileMetadataResponse: {
+            id: string;
+            uri: string;
+            cid: string;
+            gatewayUrl: string;
+        };
+        ProfileMetadataEncoded: unknown;
+        PublishDraftStatusResponse: {
+            status: components["schemas"]["PublishDraftStatus"];
+            postId: string | null;
+            arweaveId: string | null;
+        };
+        /** @enum {string} */
+        PublishDraftStatus: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
+        PublishDraftAccepted: {
+            draftId: string;
+            /** @enum {string} */
+            status: "PENDING";
+        };
+        PublishDraftPayload: {
+            metadata: unknown;
+        };
+        Draft_1: {
+            id: string;
+            title: string;
+            content: string;
+            metaTitle: string | null;
+            metaDescription: string | null;
+            coverImage: string | null;
+            tags: string[];
+            canonicalUri: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        UpdateDraftPayload: {
+            /** @description Omit to keep the current value unchanged. */
+            title?: string;
+            /** @description Omit to keep the current value unchanged. */
+            content?: string;
+            /** @description Omit to keep the current value unchanged, set to null to clear it. */
+            metaTitle?: string | null;
+            /** @description Omit to keep the current value unchanged, set to null to clear it. */
+            metaDescription?: string | null;
+            /** @description Omit to keep the current value unchanged, set to null to clear it. */
+            coverImage?: string | null;
+            /** @description Omit to keep the current value unchanged, set to null to clear it. */
+            tags?: string[] | null;
+            /** @description Omit to keep the current value unchanged, set to null to clear it. */
+            canonicalUri?: string | null;
+        };
+        DraftListResponse: {
+            results: components["schemas"]["DraftListItem"][];
+            limit: number;
+            offset: number;
+            total: number;
+        };
+        DraftListItem: {
+            id: string;
+            title: string;
+            metaTitle: string | null;
+            metaDescription: string | null;
+            coverImage: string | null;
+            tags: string[];
+            canonicalUri: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        Draft: {
+            id: string;
+            title: string;
+            content: string;
+            metaTitle: string | null;
+            metaDescription: string | null;
+            coverImage: string | null;
+            tags: string[];
+            canonicalUri: string | null;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        CreateDraftPayload: {
+            title?: string;
+            content?: string;
+            metaTitle?: string | null;
+            metaDescription?: string | null;
+            coverImage?: string | null;
+            tags?: string[];
+            canonicalUri?: string | null;
+        };
     };
-    sigle_api_InternalServerErrorEncoded: {
-      /** @enum {string} */
-      _tag: "InternalServerError";
-      message: string;
-    };
-    sigle_api_UnauthorizedEncoded: {
-      /** @enum {string} */
-      _tag: "Unauthorized";
-      message: string;
-    };
-    CreateDraftPayload: {
-      title?: string;
-      content?: string;
-      metaTitle?: string | null;
-      metaDescription?: string | null;
-      coverImage?: string | null;
-      tags?: string[];
-      canonicalUri?: string | null;
-    };
-    Draft: {
-      id: string;
-      title: string;
-      content: string;
-      metaTitle: string | null;
-      metaDescription: string | null;
-      coverImage: string | null;
-      tags: string[];
-      canonicalUri: string | null;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    sigle_api_ForbiddenEncoded: {
-      /** @enum {string} */
-      _tag: "Forbidden";
-      message: string;
-    };
-    DraftListItem: {
-      id: string;
-      title: string;
-      metaTitle: string | null;
-      metaDescription: string | null;
-      coverImage: string | null;
-      tags: string[];
-      canonicalUri: string | null;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    DraftListResponse: {
-      results: components["schemas"]["DraftListItem"][];
-      limit: number;
-      offset: number;
-      total: number;
-    };
-    Draft_1: {
-      id: string;
-      title: string;
-      content: string;
-      metaTitle: string | null;
-      metaDescription: string | null;
-      coverImage: string | null;
-      tags: string[];
-      canonicalUri: string | null;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    sigle_api_NotFoundEncoded: {
-      /** @enum {string} */
-      _tag: "NotFound";
-      message: string;
-    };
-    UpdateDraftPayload: {
-      /** @description Omit to keep the current value unchanged. */
-      title?: string;
-      /** @description Omit to keep the current value unchanged. */
-      content?: string;
-      /** @description Omit to keep the current value unchanged, set to null to clear it. */
-      metaTitle?: string | null;
-      /** @description Omit to keep the current value unchanged, set to null to clear it. */
-      metaDescription?: string | null;
-      /** @description Omit to keep the current value unchanged, set to null to clear it. */
-      coverImage?: string | null;
-      /** @description Omit to keep the current value unchanged, set to null to clear it. */
-      tags?: string[] | null;
-      /** @description Omit to keep the current value unchanged, set to null to clear it. */
-      canonicalUri?: string | null;
-    };
-    ProfileMetadataEncoded: unknown;
-    UploadProfileMetadataResponse: {
-      id: string;
-      uri: string;
-      cid: string;
-      gatewayUrl: string;
-    };
-    UploadProfileImageResponse: {
-      url: string;
-      key: string;
-      width: number;
-      height: number;
-    };
-    sigle_api_BadRequestEncoded: {
-      /** @enum {string} */
-      _tag: "BadRequest";
-      message: string;
-    };
-    sigle_api_PayloadTooLargeEncoded: {
-      /** @enum {string} */
-      _tag: "PayloadTooLarge";
-      message: string;
-    };
-    sigle_api_UnsupportedMediaTypeEncoded: {
-      /** @enum {string} */
-      _tag: "UnsupportedMediaType";
-      message: string;
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  "health.get": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "health.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        success: boolean;
+                    };
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Success */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    "protected.me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          "application/json": {
-            success: boolean;
-          };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        whitelisted: boolean;
+                    };
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
         };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
-        };
-      };
     };
-  };
-  "protected.me": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "drafts.list": {
+        parameters: {
+            query?: {
+                limit?: string;
+                offset?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description DraftListResponse */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DraftListResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Success */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    "drafts.create": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
         };
-        content: {
-          "application/json": {
-            id: string;
-            whitelisted: boolean;
-          };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateDraftPayload"];
+            };
         };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            /** @description Draft */
+            201: {
+                headers: {
+                    location: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
         };
-        content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
-        };
-      };
     };
-  };
-  "drafts.list": {
-    parameters: {
-      query?: {
-        limit?: string;
-        offset?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "drafts.get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                draftId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Draft */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft_1"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description DraftListResponse */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    "drafts.delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                draftId: string;
+            };
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["DraftListResponse"];
+        requestBody?: never;
+        responses: {
+            /** @description <No Content> */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
         };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
-        };
-      };
     };
-  };
-  "drafts.create": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "drafts.update": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                draftId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateDraftPayload"];
+            };
+        };
+        responses: {
+            /** @description Draft */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Draft_1"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
+        };
     };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["CreateDraftPayload"];
-      };
+    "drafts.getPublishStatus": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                draftId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description PublishDraftStatusResponse */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublishDraftStatusResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
+        };
     };
-    responses: {
-      /** @description Draft */
-      201: {
-        headers: {
-          location: string;
-          [name: string]: unknown;
+    "drafts.publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                draftId: string;
+            };
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["Draft"];
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PublishDraftPayload"];
+            };
         };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            /** @description PublishDraftAccepted */
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublishDraftAccepted"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
         };
-        content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
-        };
-      };
     };
-  };
-  "drafts.get": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        draftId: string;
-      };
-      cookie?: never;
+    "profile.uploadMetadata": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": {
+                    metadata: components["schemas"]["ProfileMetadataEncoded"];
+                };
+            };
+        };
+        responses: {
+            /** @description UploadProfileMetadataResponse */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UploadProfileMetadataResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description Draft */
-      200: {
-        headers: {
-          [name: string]: unknown;
+    "profile.uploadImage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                kind: "avatar" | "cover";
+            };
+            cookie?: never;
         };
-        content: {
-          "application/json": components["schemas"]["Draft_1"];
+        requestBody: {
+            content: {
+                "image/webp": string;
+                "image/png": string;
+                "image/jpeg": string;
+            };
         };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
+        responses: {
+            /** @description UploadProfileImageResponse */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UploadProfileImageResponse"];
+                };
+            };
+            /** @description Bad Request */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+                };
+            };
+            /** @description Payload Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_PayloadTooLargeEncoded"];
+                };
+            };
+            /** @description Unsupported Media Type */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnsupportedMediaTypeEncoded"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
         };
-        content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
-        };
-      };
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
-        };
-      };
     };
-  };
-  "drafts.delete": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        draftId: string;
-      };
-      cookie?: never;
+    "admin.listQueues": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description AdminQueueListResponse */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AdminQueueListResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
+        };
     };
-    requestBody?: never;
-    responses: {
-      /** @description <No Content> */
-      204: {
-        headers: {
-          [name: string]: unknown;
+    "admin.listFailedJobs": {
+        parameters: {
+            query?: {
+                limit?: string;
+                offset?: string;
+            };
+            header?: never;
+            path: {
+                queueName: string;
+            };
+            cookie?: never;
         };
-        content?: never;
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
+        requestBody?: never;
+        responses: {
+            /** @description FailedJobListResponse */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FailedJobListResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
         };
-        content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
-        };
-      };
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
-        };
-      };
     };
-  };
-  "drafts.update": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        draftId: string;
-      };
-      cookie?: never;
+    "admin.retryFailedJob": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                queueName: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description RetryFailedJobResponse */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RetryFailedJobResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
+        };
     };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpdateDraftPayload"];
-      };
+    "admin.deleteFailedJob": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                queueName: string;
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description <No Content> */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+                };
+            };
+            /** @description Too Many Requests */
+            429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+                };
+            };
+        };
     };
-    responses: {
-      /** @description Draft */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["Draft_1"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
-        };
-      };
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
-        };
-      };
-    };
-  };
-  "profile.uploadMetadata": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": {
-          metadata: components["schemas"]["ProfileMetadataEncoded"];
-        };
-      };
-    };
-    responses: {
-      /** @description UploadProfileMetadataResponse */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UploadProfileMetadataResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
-        };
-      };
-    };
-  };
-  "profile.uploadImage": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        kind: "avatar" | "cover";
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "image/webp": string;
-        "image/png": string;
-        "image/jpeg": string;
-      };
-    };
-    responses: {
-      /** @description UploadProfileImageResponse */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UploadProfileImageResponse"];
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
-        };
-      };
-      /** @description Payload Too Large */
-      413: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_PayloadTooLargeEncoded"];
-        };
-      };
-      /** @description Unsupported Media Type */
-      415: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_UnsupportedMediaTypeEncoded"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
-        };
-      };
-    };
-  };
 }

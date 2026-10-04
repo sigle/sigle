@@ -1,6 +1,6 @@
 import { ByteSize, Effect, Option, Predicate } from "effect";
-import { HttpServerError, HttpServerRequest } from "effect/unstable/http";
-import { HttpApiBuilder } from "effect/unstable/httpapi";
+import { HttpServerError, HttpServerRequest } from "effect/http";
+import { HttpApiBuilder } from "effect/http-api";
 import type { UploadProfileMetadataPayload } from "@/api/groups/profile";
 import { SigleApi } from "@/api";
 import { CurrentUser } from "@/api/middleware/auth-user";

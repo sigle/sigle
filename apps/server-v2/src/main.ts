@@ -4,15 +4,17 @@ import {
   NodeServices,
 } from "@effect/platform-node";
 import { Effect, Layer } from "effect";
-import { HttpRouter } from "effect/unstable/http";
-import { HttpApiBuilder, HttpApiScalar } from "effect/unstable/httpapi";
+import { HttpRouter } from "effect/http";
+import { HttpApiBuilder, HttpApiScalar } from "effect/http-api";
 import { createServer } from "node:http";
 import { SigleApi } from "@/api";
 import { AuthRoutesLayer } from "@/api/groups/auth";
+import { AdminHandlersLayer } from "@/api/handlers/admin";
 import { DraftsHandlersLayer } from "@/api/handlers/drafts";
 import { HealthHandlersLayer } from "@/api/handlers/health";
 import { ProfileHandlersLayer } from "@/api/handlers/profile";
 import { ProtectedHandlersLayer } from "@/api/handlers/protected";
+import { AdminMiddlewareLayer } from "@/api/middleware/admin";
 import {
   UserAuthMiddlewareLayer,
   WhitelistedUserMiddlewareLayer,
@@ -20,6 +22,7 @@ import {
 import { RateLimitMiddlewareLayer } from "@/api/middleware/rate-limit";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
+import { JobsLive } from "@/jobs";
 import { ArweaveService } from "@/services/arweave";
 import { AuthService } from "@/services/auth";
 import { ImageProcessingService } from "@/services/image-processing";
@@ -42,12 +45,14 @@ export const ApiHandlersLayer = Layer.mergeAll(
   ProtectedHandlersLayer,
   DraftsHandlersLayer,
   ProfileHandlersLayer,
+  AdminHandlersLayer,
 );
 
 export const ApiMiddlewareLayer = Layer.mergeAll(
   RateLimitMiddlewareLayer,
   UserAuthMiddlewareLayer,
   WhitelistedUserMiddlewareLayer,
+  AdminMiddlewareLayer,
 );
 
 export const AuthLayer = Layer.mergeAll(
@@ -69,11 +74,7 @@ export const ApiRoutesLayer = Layer.mergeAll(
   HttpApiScalar.layer(SigleApi, { path: "/_scalar" }),
   AuthRoutesLayer,
   CorsLayer,
-).pipe(
-  Layer.provide(ApiHandlersLayer),
-  Layer.provide(ApiMiddlewareLayer),
-  Layer.provide(AuthLayer),
-);
+).pipe(Layer.provide(ApiHandlersLayer), Layer.provide(ApiMiddlewareLayer));
 
 export const HttpServerLayer = Layer.unwrap(
   Effect.gen(function* () {
@@ -86,6 +87,8 @@ export const HttpServerLayer = Layer.unwrap(
 );
 
 export const MainLayer = HttpServerLayer.pipe(
+  Layer.provide(JobsLive),
+  Layer.provide(AuthLayer),
   Layer.provide(RateLimiterLive),
   Layer.provide(Database.layer),
 );

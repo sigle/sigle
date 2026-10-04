@@ -1,9 +1,5 @@
 import { Effect, Layer } from "effect";
-import {
-  HttpRouter,
-  HttpServerRequest,
-  HttpServerResponse,
-} from "effect/unstable/http";
+import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/http";
 import { AuthService } from "@/services/auth";
 
 const webResponseToHttpResponse = (

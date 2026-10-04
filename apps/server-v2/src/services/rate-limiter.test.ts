@@ -1,7 +1,7 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Duration, Effect, Layer } from "effect";
+import { RateLimiter } from "effect/persistence";
 import { TestClock } from "effect/testing";
-import { RateLimiter } from "effect/unstable/persistence";
 import { RateLimiterStoreDrizzle } from "@/services/rate-limiter";
 import { TestDatabaseLayer } from "@/test/layer";
 

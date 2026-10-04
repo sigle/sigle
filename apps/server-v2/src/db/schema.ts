@@ -1,8 +1,10 @@
+import { sql } from "drizzle-orm";
 import {
   bigint,
   boolean,
   doublePrecision,
   index,
+  integer,
   pgEnum,
   pgTable,
   text,
@@ -132,8 +134,14 @@ export const draft = pgTable(
     metaDescription: text("meta_description"),
     coverImage: text("cover_image"),
     canonicalUri: text("canonical_uri"),
-    txId: text("tx_id"),
+    arweaveTxId: text("arweave_tx_id"),
     txStatus: text("tx_status"),
+    // Signature of the signed post metadata the draft is publishing (or last
+    // attempted). `arweaveTxId` is a valid checkpoint only while it matches.
+    publishSignature: text("publish_signature"),
+    // Lease held by the worker uploading to Arweave, so concurrent workers for
+    // the same signature do not upload the same metadata twice.
+    uploadClaimedAt: timestamp("upload_claimed_at", { precision: 3 }),
     tags: text("tags").array(),
     createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
@@ -142,4 +150,44 @@ export const draft = pgTable(
       .references(() => user.id),
   },
   (table) => [index("draft_user_id_idx").on(table.userId)],
+);
+
+// --
+// Posts
+// --
+
+export const post = pgTable(
+  "post",
+  {
+    id: text("id").primaryKey(),
+    draftId: text("draft_id").unique("post_draft_id_key"),
+    version: text("version").notNull(),
+    arweaveTxId: text("arweave_tx_id")
+      .notNull()
+      .unique("post_arweave_tx_id_key"),
+    // Null until the bundle is included in an Arweave block; populated by a
+    // later queue.
+    arweaveBlockHeight: integer("arweave_block_height"),
+    metadataUri: text("metadata_uri").notNull(),
+    title: text("title").notNull(),
+    content: text("content").notNull(),
+    excerpt: text("excerpt").notNull(),
+    metaTitle: text("meta_title"),
+    metaDescription: text("meta_description"),
+    coverImage: text("cover_image"),
+    tags: text("tags").array(),
+    canonicalUri: text("canonical_uri"),
+    signature: text("signature").unique("post_signature_key"),
+    createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id),
+  },
+  (table) => [
+    index("post_user_id_idx").on(table.userId),
+    index("post_arweave_pending_idx")
+      .on(table.createdAt)
+      .where(sql`arweave_block_height is null`),
+  ],
 );

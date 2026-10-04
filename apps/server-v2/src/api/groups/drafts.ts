@@ -4,13 +4,13 @@ import {
   HttpApiGroup,
   HttpApiSchema,
   OpenApi,
-} from "effect/unstable/httpapi";
+} from "effect/http-api";
 import {
   UserAuthMiddleware,
   WhitelistedUserMiddleware,
 } from "@/api/middleware/auth-user";
 import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
-import { NotFound } from "@/api/schemas";
+import { BadRequest, NotFound } from "@/api/schemas";
 
 export const DRAFT_LIST_DEFAULT_LIMIT = 20;
 
@@ -111,6 +111,28 @@ export const UpdateDraftPayload = Schema.Struct({
   canonicalUri: Clearable(Schema.String),
 }).annotate({ identifier: "UpdateDraftPayload" });
 
+export const PublishDraftPayload = Schema.Struct({
+  metadata: Schema.Unknown,
+}).annotate({ identifier: "PublishDraftPayload" });
+
+export const PublishDraftAccepted = Schema.Struct({
+  draftId: Schema.String,
+  status: Schema.Literal("PENDING"),
+}).annotate({ identifier: "PublishDraftAccepted" });
+
+export const PublishDraftStatus = Schema.Literals([
+  "PENDING",
+  "PROCESSING",
+  "COMPLETED",
+  "FAILED",
+]).annotate({ identifier: "PublishDraftStatus" });
+
+export const PublishDraftStatusResponse = Schema.Struct({
+  status: PublishDraftStatus,
+  postId: Schema.NullOr(Schema.String),
+  arweaveId: Schema.NullOr(Schema.String),
+}).annotate({ identifier: "PublishDraftStatusResponse" });
+
 export const DraftsGroup = HttpApiGroup.make("drafts")
   .add(
     HttpApiEndpoint.post("create", "/", {
@@ -160,6 +182,32 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       success: HttpApiSchema.NoContent,
       error: NotFound,
     }).annotate(OpenApi.Summary, "Delete a draft"),
+    HttpApiEndpoint.post("publish", "/:draftId/publish", {
+      params: {
+        draftId: Schema.String,
+      },
+      payload: PublishDraftPayload,
+      success: HttpApiSchema.status(202)(PublishDraftAccepted),
+      error: [BadRequest, NotFound],
+    })
+      .middleware(RateLimitMiddleware)
+      .annotate(OpenApi.Summary, "Publish a draft")
+      .annotate(
+        OpenApi.Description,
+        "Validate signed post metadata and enqueue an asynchronous publish job.",
+      ),
+    HttpApiEndpoint.get("getPublishStatus", "/:draftId/publish", {
+      params: {
+        draftId: Schema.String,
+      },
+      success: PublishDraftStatusResponse,
+      error: [BadRequest, NotFound],
+    })
+      .annotate(OpenApi.Summary, "Get draft publish status")
+      .annotate(
+        OpenApi.Description,
+        "Poll the asynchronous publishing status of a draft.",
+      ),
   )
   .prefix("/api/protected/drafts")
   .middleware(RateLimitMiddleware)

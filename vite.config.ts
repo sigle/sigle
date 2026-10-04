@@ -30,14 +30,6 @@ export default defineConfig({
     },
     overrides: [
       {
-        files: ["apps/custom-domain/**"],
-        options: {
-          sortTailwindcss: {
-            stylesheet: "apps/custom-domain/src/app/globals.css",
-          },
-        },
-      },
-      {
         files: ["apps/sigle/**"],
         options: {
           sortTailwindcss: {

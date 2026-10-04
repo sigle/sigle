@@ -45,3 +45,5 @@ minimumReleaseAgeExclude:
   - "@oxfmt/*"
   - vitest
   - "@vitest/*"
+  - effect
+  - "@effect/*"

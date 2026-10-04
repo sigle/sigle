@@ -63,6 +63,8 @@ const databaseContext = Layer.effectContext(
 
 export const TestDatabaseLayer = Layer.unwrap(
   Effect.map(loadTemplate, (loadDataDir) =>
-    databaseContext.pipe(Layer.provide(PgliteClient.layer({ loadDataDir }))),
+    databaseContext.pipe(
+      Layer.provideMerge(PgliteClient.layer({ loadDataDir })),
+    ),
   ),
 );
