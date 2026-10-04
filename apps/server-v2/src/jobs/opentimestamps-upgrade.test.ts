@@ -215,6 +215,92 @@ describe("opentimestamps upgrade job", () => {
       ),
   );
 
+  it.effect(
+    "marks the proof UPGRADED with no block info when verification is pending",
+    () => {
+      const uploads: Array<ArweaveUploadOptions> = [];
+
+      return Effect.gen(function* () {
+        const db = yield* Database;
+
+        yield* seedPostWithPendingProof({ postId: "post-unconfirmed" });
+
+        yield* processOpenTimestampsUpgradeJob({ postId: "post-unconfirmed" });
+
+        const [row] = yield* db
+          .select()
+          .from(postOts)
+          .where(eq(postOts.postId, "post-unconfirmed"));
+
+        expect({
+          status: row?.status,
+          pendingProof: row?.pendingProof,
+          bitcoinBlockHeight: row?.bitcoinBlockHeight,
+          bitcoinTimestamp: row?.bitcoinTimestamp,
+          uploads: uploads.length,
+        }).toStrictEqual({
+          status: "UPGRADED",
+          pendingProof: null,
+          bitcoinBlockHeight: null,
+          bitcoinTimestamp: null,
+          uploads: 1,
+        });
+      }).pipe(
+        Effect.provide(
+          makeUpgradeTestLayer({
+            uploads,
+            verify: () =>
+              Effect.succeed({
+                status: "pending" as const,
+                reason: "No Bitcoin attestation found",
+              }),
+          }),
+        ),
+      );
+    },
+  );
+
+  it.live(
+    "marks the proof FAILED and skips the upload when verification is invalid",
+    () => {
+      const uploads: Array<ArweaveUploadOptions> = [];
+
+      return Effect.gen(function* () {
+        const admin = yield* JobAdminService;
+
+        yield* seedPostWithPendingProof({
+          postId: "post-invalid-verification",
+        });
+        yield* opentimestampsUpgradeJob.offer(
+          { postId: "post-invalid-verification" },
+          { id: "ots-upgrade:post-invalid-verification" },
+        );
+
+        yield* waitForPostOtsStatus("post-invalid-verification", "FAILED");
+
+        const upgradeStats = findUpgradeQueue(yield* admin.getQueueStats);
+
+        expect({
+          completed: upgradeStats?.completed,
+          failed: upgradeStats?.failed,
+          uploads: uploads.length,
+        }).toStrictEqual({ completed: 1, failed: 0, uploads: 0 });
+      }).pipe(
+        Effect.provide(
+          makeUpgradeTestLayer({
+            enableWorkers: true,
+            uploads,
+            verify: () =>
+              Effect.succeed({
+                status: "invalid" as const,
+                reason: "File hash does not match proof",
+              }),
+          }),
+        ),
+      );
+    },
+  );
+
   it.live(
     "marks the proof as FAILED after exhausting retries when not anchored",
     () => {

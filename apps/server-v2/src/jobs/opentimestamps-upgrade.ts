@@ -33,6 +33,13 @@ export class OtsPendingProofMissingError extends Data.TaggedError(
   readonly postId: string;
 }> {}
 
+export class OtsVerificationInvalidError extends Data.TaggedError(
+  "OtsVerificationInvalidError",
+)<{
+  readonly postId: string;
+  readonly reason: string;
+}> {}
+
 export const processOpenTimestampsUpgradeJob = (
   job: OpenTimestampsUpgradeJob,
 ): Effect.Effect<
@@ -84,6 +91,17 @@ export const processOpenTimestampsUpgradeJob = (
       );
 
     const verification = yield* ots.verify(proof, postOtsRow.contentHash);
+
+    // An invalid verification means the digest does not match the proof or
+    // the Bitcoin block. Never record that proof as anchored.
+    if (verification.status === "invalid") {
+      return yield* terminal(
+        new OtsVerificationInvalidError({
+          postId: job.postId,
+          reason: verification.reason,
+        }),
+      );
+    }
 
     const uploaded = yield* arweave.uploadFile({
       file: proof,
