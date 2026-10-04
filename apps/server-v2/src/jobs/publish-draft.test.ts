@@ -13,7 +13,11 @@ import {
 import { Database } from "@/db";
 import { draft, post } from "@/db/schema";
 import { makeQueuesTestLayer } from "@/jobs";
-import { processPublishDraftJob, publishDraftJob } from "@/jobs/publish-draft";
+import {
+  markDraftPublishFailed,
+  processPublishDraftJob,
+  publishDraftJob,
+} from "@/jobs/publish-draft";
 import { JobAdminService } from "@/queue/admin";
 import {
   ArweaveService,
@@ -373,6 +377,45 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
         });
       }).pipe(Effect.provide(layer));
     }),
+  );
+
+  it.effect(
+    "does not release an active upload claim when marking failure",
+    () =>
+      Effect.gen(function* () {
+        const db = yield* Database;
+        const user = yield* createTestUser();
+        const claimedAt = new Date();
+
+        yield* createTestDraft({
+          id: "draft-claim-failed",
+          userId: user.id,
+          txStatus: "PROCESSING",
+          publishSignature: "sig-claim-failed",
+          uploadClaimedAt: claimedAt,
+        });
+
+        yield* markDraftPublishFailed({
+          draftId: "draft-claim-failed",
+          userId: user.id,
+          authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+          signature: "sig-claim-failed",
+          metadataJson: sampleMetadataJson,
+        });
+
+        const [failedDraft] = yield* db
+          .select()
+          .from(draft)
+          .where(eq(draft.id, "draft-claim-failed"));
+
+        expect({
+          txStatus: failedDraft.txStatus,
+          uploadClaimedAt: failedDraft.uploadClaimedAt,
+        }).toStrictEqual({
+          txStatus: "FAILED",
+          uploadClaimedAt: claimedAt,
+        });
+      }).pipe(Effect.provide(TestDatabaseLayer)),
   );
 
   it.effect("does nothing when a newer publish owns the draft", () =>

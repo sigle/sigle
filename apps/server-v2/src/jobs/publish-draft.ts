@@ -42,9 +42,11 @@ export class PublishDraftUploadClaimedError extends Data.TaggedError(
 
 /**
  * Lease duration for the Arweave upload claim. A claim older than this is
- * considered abandoned (crashed worker) and can be taken over.
+ * considered abandoned (crashed worker) and can be taken over. Kept in line
+ * with the queue's lock expiration so a worker that crashed mid-upload can be
+ * replaced as soon as its queue row is re-taken.
  */
-const PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS = 5 * 60 * 1000;
+const PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS = 2 * 60 * 1000;
 
 const publishDraftRetrySchedule: Schedule.Schedule<unknown, number> =
   Schedule.jittered(
@@ -269,11 +271,13 @@ export const markDraftPublishFailed = (
 ): Effect.Effect<void, never, Database> =>
   Effect.gen(function* () {
     const db = yield* Database;
+    // The active upload claim is intentionally left untouched: only its owner
+    // (on success or error) or lease expiry may release it, otherwise a
+    // competing job could clear a live uploader's claim and double-upload.
     yield* db
       .update(draft)
       .set({
         txStatus: "FAILED",
-        uploadClaimedAt: null,
         updatedAt: new Date(),
       })
       .where(
