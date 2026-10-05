@@ -1,8 +1,10 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Effect, Layer, Schedule } from "effect";
+import { AppConfig } from "@/config";
 import { makeQueuesTestLayer } from "@/jobs";
 import { JobAdminService, type QueueStats } from "@/queue/admin";
 import { ArweaveService } from "@/services/arweave";
+import { ImageProcessingService } from "@/services/image-processing";
 import { OpenTimestampsService } from "@/services/opentimestamps";
 import { PostHogService } from "@/services/posthog";
 import {
@@ -23,6 +25,8 @@ const makeReconcileTestLayer = () =>
     Layer.provideMerge(OpenTimestampsService.layerTest()),
     Layer.provideMerge(ArweaveService.layerTest()),
     Layer.provideMerge(PostHogService.layerTest()),
+    Layer.provideMerge(AppConfig.layerTest()),
+    Layer.provideMerge(ImageProcessingService.layer),
     Layer.provideMerge(TestDatabaseLayer),
   );
 

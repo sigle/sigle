@@ -12,13 +12,20 @@ const DateTime = Schema.DateTimeUtcFromString.pipe(
   Schema.annotateEncoded({ format: "date-time" }),
 );
 
+export const MediaImage = Schema.Struct({
+  url: Schema.String,
+  width: Schema.NullOr(Schema.Int),
+  height: Schema.NullOr(Schema.Int),
+  thumbhash: Schema.NullOr(Schema.String),
+}).annotate({ identifier: "MediaImage" });
+
 export const UserProfile = Schema.Struct({
   displayName: Schema.NullOr(Schema.String),
   description: Schema.NullOr(Schema.String),
   website: Schema.NullOr(Schema.String),
   twitter: Schema.NullOr(Schema.String),
-  picture: Schema.NullOr(Schema.String),
-  coverPicture: Schema.NullOr(Schema.String),
+  picture: Schema.NullOr(MediaImage),
+  coverPicture: Schema.NullOr(MediaImage),
   arweaveTxId: Schema.String,
   updatedAt: DateTime,
 }).annotate({ identifier: "UserProfile" });

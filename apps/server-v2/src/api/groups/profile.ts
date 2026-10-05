@@ -54,6 +54,8 @@ export const UploadProfileImageResponse = Schema.Struct({
   key: Schema.String,
   width: Schema.Int,
   height: Schema.Int,
+  // Base64 ThumbHash placeholder for the optimized image.
+  thumbhash: Schema.String,
 }).annotate({ identifier: "UploadProfileImageResponse" });
 
 /**

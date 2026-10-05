@@ -185,6 +185,43 @@ export const profile = pgTable(
 );
 
 // --
+// Media images
+// --
+
+export const mediaImageStatusEnum = pgEnum("MediaImageStatus", [
+  "PENDING",
+  "READY",
+  "FAILED",
+]);
+
+/**
+ * Placeholder metadata for an image referenced by a post cover or a profile
+ * picture. `id` is the canonical URL stored on `post.cover_image` and
+ * `profile.picture`/`cover_picture`; rows are created eagerly as PENDING by the
+ * producers and filled in by the thumbhash job (or inline on upload).
+ */
+export const mediaImage = pgTable(
+  "media_image",
+  {
+    id: text("id").primaryKey(),
+    status: mediaImageStatusEnum("status").default("PENDING").notNull(),
+    mimeType: text("mime_type"),
+    width: integer("width"),
+    height: integer("height"),
+    size: integer("size"),
+    // Base64 of the 25-byte ThumbHash placeholder.
+    thumbhash: text("thumbhash"),
+    createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("media_image_pending_idx")
+      .on(table.createdAt)
+      .where(sql`status = 'PENDING'`),
+  ],
+);
+
+// --
 // Posts
 // --
 

@@ -2,11 +2,15 @@ import { PostMetadataSchema } from "@sigle/sdk";
 import { and, eq, isNull, lt, or } from "drizzle-orm";
 import { Data, Effect, Layer, Schedule, Schema } from "effect";
 import { Database } from "@/db";
-import { draft, post, postOts } from "@/db/schema";
+import { draft, mediaImage, post, postOts } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
 import { defineJob, terminal, type TerminalJobError } from "@/queue/core";
 import { ArweaveService, type ArweaveUploadError } from "@/services/arweave";
 import { PostHogService } from "@/services/posthog";
+import {
+  generateImageThumbhashJob,
+  thumbhashJobId,
+} from "./generate-image-thumbhash";
 import { opentimestampsStampJob, otsStampJobId } from "./opentimestamps-stamp";
 
 export const PUBLISH_DRAFT_QUEUE_NAME = "publish-draft";
@@ -59,14 +63,14 @@ const publishDraftRetrySchedule: Schedule.Schedule<unknown, number> =
   );
 
 /**
- * Returns the published post id when this call created the post, or
- * `undefined` when there was nothing to do (draft superseded, already
- * finalized by another attempt, ...).
+ * Returns the published post and its cover image URL when this call created
+ * the post, or `undefined` when there was nothing to do (draft superseded,
+ * already finalized by another attempt, ...).
  */
 export const processPublishDraftJob = (
   job: PublishDraftJob,
 ): Effect.Effect<
-  string | undefined,
+  { readonly postId: string; readonly coverImage: string | null } | undefined,
   ArweaveUploadError | PublishDraftUploadClaimedError | TerminalJobError,
   Database | ArweaveService | PostHogService
 > =>
@@ -262,6 +266,19 @@ export const processPublishDraftJob = (
             contentHash: sha256Hex(Buffer.from(job.metadataJson)),
           });
 
+          // Cover image metadata is created alongside the post so readers can
+          // see a placeholder as soon as the post exists. The thumbhash job
+          // fills it in; an existing READY row for a reused cover is kept.
+          if (coverImage !== null) {
+            yield* tx
+              .insert(mediaImage)
+              .values({
+                id: coverImage,
+                mimeType: postData.content.coverImage?.type ?? null,
+              })
+              .onConflictDoNothing();
+          }
+
           return true;
         }),
       )
@@ -281,7 +298,7 @@ export const processPublishDraftJob = (
       },
     });
 
-    return arweaveTxId;
+    return { coverImage, postId: arweaveTxId };
   });
 
 export const markDraftPublishFailed = (
@@ -327,15 +344,27 @@ export const publishDraftJob = defineJob({
   concurrency: 2,
   process: (job) =>
     Effect.gen(function* () {
-      const postId = yield* processPublishDraftJob(job);
+      const published = yield* processPublishDraftJob(job);
 
-      if (postId === undefined) {
+      if (published === undefined) {
         return;
       }
 
       yield* opentimestampsStampJob
-        .offer({ postId }, { id: otsStampJobId(postId) })
+        .offer(
+          { postId: published.postId },
+          { id: otsStampJobId(published.postId) },
+        )
         .pipe(Effect.orDie);
+
+      if (published.coverImage !== null) {
+        yield* generateImageThumbhashJob
+          .offer(
+            { imageId: published.coverImage },
+            { id: thumbhashJobId(published.coverImage) },
+          )
+          .pipe(Effect.orDie);
+      }
     }),
   onFinalFailure: (job) => markDraftPublishFailed(job),
   reportPayload: (job) => ({ draftId: job.draftId }),
@@ -346,4 +375,5 @@ export const PublishDraftWorkerLive = publishDraftJob
   .pipe(
     Layer.provideMerge(publishDraftJob.layer),
     Layer.provideMerge(opentimestampsStampJob.layer),
+    Layer.provideMerge(generateImageThumbhashJob.layer),
   );

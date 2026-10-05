@@ -50,6 +50,10 @@ export const appConfig = Config.all({
   ARWEAVE_GATEWAY_URL: Config.NonEmptyString("ARWEAVE_GATEWAY_URL").pipe(
     Config.withDefault("https://turbo-gateway.com"),
   ),
+  // The gateway URL to use when serving files stored on IPFS
+  IPFS_GATEWAY_URL: Config.NonEmptyString("IPFS_GATEWAY_URL").pipe(
+    Config.withDefault("https://ipfs.filebase.io/ipfs"),
+  ),
   // The S3-compatible endpoint of the Cloudflare R2 bucket
   R2_ENDPOINT: Config.NonEmptyString("R2_ENDPOINT"),
   // The R2 access key id
@@ -86,6 +90,7 @@ export const defaultTestConfig: AppConfigValues = {
   API_URL: "http://localhost:3001",
   ARWEAVE_PRIVATE_KEY: Redacted.make("sigle-test-arweave-private-key"),
   ARWEAVE_GATEWAY_URL: "https://turbo-gateway.com",
+  IPFS_GATEWAY_URL: "https://ipfs.filebase.io/ipfs",
   R2_ENDPOINT: "https://r2.test",
   R2_ACCESS_KEY_ID: "r2-test-access-key-id",
   R2_SECRET_ACCESS_KEY: Redacted.make("r2-test-secret-access-key"),

@@ -1,7 +1,14 @@
 import { type Duration, Layer, type Schedule } from "effect";
 import { PersistedQueue } from "effect/persistence";
 import { type SqlClient } from "effect/sql";
+import { type AppConfig } from "@/config";
 import { type Database } from "@/db";
+import {
+  type GenerateImageThumbhashJob,
+  generateImageThumbhashJob,
+  GenerateImageThumbhashWorkerLive,
+} from "@/jobs/generate-image-thumbhash";
+import { MediaImageReconcileLive } from "@/jobs/media-image-reconcile";
 import { OpenTimestampsReconcileLive } from "@/jobs/opentimestamps-reconcile";
 import {
   type OpenTimestampsStampJob,
@@ -22,6 +29,7 @@ import { JobAdminService } from "@/queue/admin";
 import { type JobRuntime } from "@/queue/core";
 import { QueueStoreLive } from "@/queue/store";
 import { type ArweaveService } from "@/services/arweave";
+import { type ImageProcessingService } from "@/services/image-processing";
 import { type OpenTimestampsService } from "@/services/opentimestamps";
 import { type PostHogService } from "@/services/posthog";
 
@@ -30,6 +38,7 @@ export const jobs = [
   publishDraftJob,
   opentimestampsStampJob,
   opentimestampsUpgradeJob,
+  generateImageThumbhashJob,
 ] as const;
 
 export const QueueCleanupLive = PersistedQueue.layerCleanup({
@@ -41,7 +50,9 @@ export const JobsLive = Layer.mergeAll(
   PublishDraftWorkerLive,
   OpenTimestampsStampWorkerLive,
   OpenTimestampsUpgradeWorkerLive,
+  GenerateImageThumbhashWorkerLive,
   OpenTimestampsReconcileLive,
+  MediaImageReconcileLive,
   JobAdminService.layer,
   QueueCleanupLive,
 ).pipe(
@@ -58,12 +69,15 @@ export const makeQueuesTestLayer = (options?: {
   | PersistedQueue.PersistedQueue<PublishDraftJob>
   | PersistedQueue.PersistedQueue<OpenTimestampsStampJob>
   | PersistedQueue.PersistedQueue<OpenTimestampsUpgradeJob>
+  | PersistedQueue.PersistedQueue<GenerateImageThumbhashJob>
   | JobRuntime
   | JobAdminService,
   never,
   | SqlClient.SqlClient
   | Database
+  | AppConfig
   | ArweaveService
+  | ImageProcessingService
   | OpenTimestampsService
   | PostHogService
 > => {
@@ -80,12 +94,14 @@ export const makeQueuesTestLayer = (options?: {
     publishDraftJob.makeLayer(queueOverrides),
     opentimestampsStampJob.makeLayer(queueOverrides),
     opentimestampsUpgradeJob.makeLayer(queueOverrides),
+    generateImageThumbhashJob.makeLayer(queueOverrides),
   );
 
   const workerLayers = Layer.mergeAll(
     publishDraftJob.workerLayer({ concurrency: 1 }),
     opentimestampsStampJob.workerLayer({ concurrency: 1 }),
     opentimestampsUpgradeJob.workerLayer({ concurrency: 1 }),
+    generateImageThumbhashJob.workerLayer({ concurrency: 1 }),
   ).pipe(Layer.provide(queueLayers));
 
   const appLayer =
