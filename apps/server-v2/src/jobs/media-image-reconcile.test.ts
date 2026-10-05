@@ -89,6 +89,46 @@ describe("media image reconciliation", () => {
     }).pipe(Effect.provide(makeReconcileTestLayer())),
   );
 
+  it.effect(
+    "keeps scanning past rows with existing jobs when filling the batch",
+    () =>
+      Effect.gen(function* () {
+        const admin = yield* JobAdminService;
+        const stale = staleDate();
+
+        // 50 stale rows with in-flight jobs fill the first scan page.
+        const inFlightIds = Array.from(
+          { length: 50 },
+          (_, index) => `https://cdn.test/a-${index}`,
+        );
+
+        yield* Effect.forEach(
+          inFlightIds,
+          (id) =>
+            Effect.gen(function* () {
+              yield* createTestMediaImage({ id, updatedAt: stale });
+
+              yield* generateImageThumbhashJob.offer(
+                { imageId: id },
+                { id: thumbhashJobId(id) },
+              );
+            }),
+          { concurrency: 1 },
+        );
+
+        yield* createTestMediaImage({
+          id: "https://cdn.test/z-lost.png",
+          updatedAt: stale,
+        });
+
+        yield* reconcileMediaImages;
+
+        const queue = findThumbhashQueue(yield* admin.getQueueStats);
+
+        expect(queue?.pending).toBe(51);
+      }).pipe(Effect.provide(makeReconcileTestLayer())),
+  );
+
   it.effect("ignores rows that are not pending", () =>
     Effect.gen(function* () {
       const admin = yield* JobAdminService;

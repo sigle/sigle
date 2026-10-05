@@ -24,32 +24,51 @@ export const reconcileMediaImages = Effect.gen(function* () {
 
   const cutoff = new Date(Date.now() - MEDIA_IMAGE_RECONCILE_STALE_MILLIS);
 
-  const staleRows = yield* db
-    .select({ id: mediaImage.id })
-    .from(mediaImage)
-    .where(
-      and(eq(mediaImage.status, "PENDING"), lt(mediaImage.updatedAt, cutoff)),
-    )
-    .limit(RECONCILE_BATCH_SIZE)
-    .pipe(Effect.orDie);
+  const lostImageIds: Array<string> = [];
+  let offset = 0;
 
-  for (const row of staleRows) {
-    const jobId = thumbhashJobId(row.id);
+  // Scan until the recovery batch is filled or the stale rows are exhausted,
+  // so rows that already have a queue job do not consume batch slots.
+  while (lostImageIds.length < RECONCILE_BATCH_SIZE) {
+    const staleRows = yield* db
+      .select({ id: mediaImage.id })
+      .from(mediaImage)
+      .where(
+        and(eq(mediaImage.status, "PENDING"), lt(mediaImage.updatedAt, cutoff)),
+      )
+      .orderBy(mediaImage.updatedAt, mediaImage.id)
+      .limit(RECONCILE_BATCH_SIZE)
+      .offset(offset)
+      .pipe(Effect.orDie);
 
-    const jobState = yield* admin.getJobState(
-      generateImageThumbhashJob.name,
-      jobId,
-    );
-
-    if (jobState === null) {
-      yield* generateImageThumbhashJob
-        .offer({ imageId: row.id }, { id: jobId })
-        .pipe(Effect.orDie);
-
-      yield* Effect.logInfo("Re-offered lost image thumbhash job", {
-        imageId: row.id,
-      });
+    if (staleRows.length === 0) {
+      break;
     }
+
+    offset += staleRows.length;
+
+    for (const row of staleRows) {
+      const jobState = yield* admin.getJobState(
+        generateImageThumbhashJob.name,
+        thumbhashJobId(row.id),
+      );
+
+      if (jobState === null) {
+        lostImageIds.push(row.id);
+
+        if (lostImageIds.length === RECONCILE_BATCH_SIZE) {
+          break;
+        }
+      }
+    }
+  }
+
+  for (const imageId of lostImageIds) {
+    yield* generateImageThumbhashJob
+      .offer({ imageId }, { id: thumbhashJobId(imageId) })
+      .pipe(Effect.orDie);
+
+    yield* Effect.logInfo("Re-offered lost image thumbhash job", { imageId });
   }
 });
 

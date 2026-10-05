@@ -258,7 +258,11 @@ describe("generate image thumbhash job", () => {
         "https://[::1]/private.png",
         "https://[fd00::1]/private.png",
         "https://[::ffff:127.0.0.1]/private.png",
+        "https://127.0.0.1./private.png",
         "https://localhost/private.png",
+        "https://localhost./private.png",
+        "https://foo.localhost/private.png",
+        "https://foo.localhost./private.png",
         "https://metadata/private.png",
       ];
 

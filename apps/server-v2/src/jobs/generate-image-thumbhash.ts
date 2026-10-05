@@ -121,7 +121,10 @@ const validateImageUrl = (
     }
 
     const hostname = parsed.hostname.toLowerCase();
-    const literal = parseIpLiteral(hostname);
+    // A trailing dot is equivalent to the bare name (`localhost.`), so strip
+    // it before matching.
+    const normalizedHostname = hostname.replace(/\.+$/, "");
+    const literal = parseIpLiteral(normalizedHostname);
 
     if (literal !== null) {
       if (blockedAddresses.check(literal.address, literal.family)) {
@@ -133,7 +136,11 @@ const validateImageUrl = (
       return parsed;
     }
 
-    if (!hostname.includes(".") || privateHostnames.has(hostname)) {
+    if (
+      !normalizedHostname.includes(".") ||
+      privateHostnames.has(normalizedHostname) ||
+      normalizedHostname.endsWith(".localhost")
+    ) {
       return yield* rejectUrl(`Image host is not allowed: ${hostname}`);
     }
 
