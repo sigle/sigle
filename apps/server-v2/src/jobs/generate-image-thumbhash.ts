@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import { Data, Effect, Layer, Option, Schedule, Schema } from "effect";
+import { BlockList, isIPv4, isIPv6 } from "node:net";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { mediaImage } from "@/db/schema";
@@ -27,6 +28,228 @@ export const GENERATE_IMAGE_THUMBHASH_MAX_ATTEMPTS = 3;
 export const GENERATE_IMAGE_THUMBHASH_MAX_BYTES = 10 * 1024 * 1024;
 
 const FETCH_TIMEOUT_MILLIS = 30_000;
+
+const MAX_IMAGE_REDIRECTS = 3;
+
+const redirectStatuses = new Set([301, 302, 303, 307, 308]);
+
+const privateHostnames = new Set(["localhost", "localhost.localdomain"]);
+
+const blockedAddresses = new BlockList();
+
+for (const [network, prefix] of [
+  ["0.0.0.0", 8],
+  ["10.0.0.0", 8],
+  ["100.64.0.0", 10],
+  ["127.0.0.0", 8],
+  ["169.254.0.0", 16],
+  ["172.16.0.0", 12],
+  ["192.0.0.0", 24],
+  ["192.0.2.0", 24],
+  ["192.168.0.0", 16],
+  ["198.18.0.0", 15],
+  ["198.51.100.0", 24],
+  ["203.0.113.0", 24],
+  ["224.0.0.0", 4],
+  ["240.0.0.0", 4],
+] as const) {
+  blockedAddresses.addSubnet(network, prefix, "ipv4");
+}
+
+for (const [network, prefix] of [
+  ["::", 96],
+  ["64:ff9b::", 96],
+  ["100::", 64],
+  ["2001:db8::", 32],
+  ["fc00::", 7],
+  ["fe80::", 10],
+  ["ff00::", 8],
+] as const) {
+  blockedAddresses.addSubnet(network, prefix, "ipv6");
+}
+
+interface IpLiteral {
+  readonly address: string;
+  readonly family: "ipv4" | "ipv6";
+}
+
+const parseIpLiteral = (hostname: string): IpLiteral | null => {
+  const address =
+    hostname.startsWith("[") && hostname.endsWith("]")
+      ? hostname.slice(1, -1)
+      : hostname;
+
+  if (isIPv4(address)) {
+    return { address, family: "ipv4" };
+  }
+
+  if (isIPv6(address)) {
+    const mapped = /^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/i.exec(address);
+
+    if (mapped?.[1] !== undefined && isIPv4(mapped[1])) {
+      return { address: mapped[1], family: "ipv4" };
+    }
+
+    return { address, family: "ipv6" };
+  }
+
+  return null;
+};
+
+const rejectUrl = (message: string) =>
+  Effect.fail(terminal(new InvalidImageError({ message })));
+
+/**
+ * Restricts remote fetches to https URLs whose host is not a loopback,
+ * link-local, private or reserved address. Hostnames are not DNS-resolved
+ * here; pinning resolved addresses would require a custom dispatcher.
+ */
+const validateImageUrl = (
+  rawUrl: string,
+): Effect.Effect<URL, TerminalJobError> =>
+  Effect.gen(function* () {
+    const parsed = yield* Effect.try({
+      try: () => new URL(rawUrl),
+      catch: () =>
+        terminal(
+          new InvalidImageError({ message: `Invalid image URL: ${rawUrl}` }),
+        ),
+    });
+
+    if (parsed.protocol !== "https:") {
+      return yield* rejectUrl(`Image URL must use https: ${rawUrl}`);
+    }
+
+    const hostname = parsed.hostname.toLowerCase();
+    const literal = parseIpLiteral(hostname);
+
+    if (literal !== null) {
+      if (blockedAddresses.check(literal.address, literal.family)) {
+        return yield* rejectUrl(
+          `Image host address is not allowed: ${hostname}`,
+        );
+      }
+
+      return parsed;
+    }
+
+    if (!hostname.includes(".") || privateHostnames.has(hostname)) {
+      return yield* rejectUrl(`Image host is not allowed: ${hostname}`);
+    }
+
+    return parsed;
+  });
+
+/**
+ * Follows a bounded number of redirects manually so every hop is revalidated
+ * by `validateImageUrl` instead of trusting the redirect of a gateway.
+ */
+const fetchImageResponse = (
+  initialUrl: string,
+): Effect.Effect<Response, ImageFetchError | TerminalJobError> =>
+  Effect.gen(function* () {
+    let url = initialUrl;
+    let response: Response | null = null;
+
+    for (let redirects = 0; redirects <= MAX_IMAGE_REDIRECTS; redirects++) {
+      const target = yield* validateImageUrl(url);
+
+      const current = yield* Effect.tryPromise({
+        try: () =>
+          fetch(target, {
+            redirect: "manual",
+            signal: AbortSignal.timeout(FETCH_TIMEOUT_MILLIS),
+          }),
+        catch: (cause) =>
+          new ImageFetchError({
+            cause,
+            message: `Failed to fetch image: ${describeCause(cause)}`,
+          }),
+      });
+
+      const location = redirectStatuses.has(current.status)
+        ? current.headers.get("location")
+        : null;
+
+      if (location === null) {
+        response = current;
+        break;
+      }
+
+      if (redirects === MAX_IMAGE_REDIRECTS) {
+        return yield* rejectUrl(`Too many redirects: ${initialUrl}`);
+      }
+
+      url = yield* Effect.try({
+        try: () => new URL(location, target).toString(),
+        catch: () =>
+          terminal(
+            new InvalidImageError({
+              message: `Invalid image redirect location: ${location}`,
+            }),
+          ),
+      });
+    }
+
+    if (response === null) {
+      return yield* rejectUrl(`Image not reachable: ${initialUrl}`);
+    }
+
+    return response;
+  });
+
+/**
+ * Streams the response body, cancelling the reader as soon as the cumulative
+ * size exceeds `maxBytes` so an oversized or unbounded body is never fully
+ * buffered.
+ */
+const readBodyWithLimit = (response: Response, maxBytes: number) =>
+  Effect.tryPromise({
+    try: async () => {
+      const body = response.body;
+
+      if (body === null) {
+        return { bytes: new Uint8Array(), tooLarge: false as const };
+      }
+
+      const reader = body.getReader();
+      const chunks: Array<Uint8Array> = [];
+      let total = 0;
+
+      for (;;) {
+        const { done, value } = await reader.read();
+
+        if (done) {
+          break;
+        }
+
+        total += value.byteLength;
+
+        if (total > maxBytes) {
+          await reader.cancel();
+
+          return { bytes: new Uint8Array(), tooLarge: true as const };
+        }
+
+        chunks.push(value);
+      }
+
+      const bytes = new Uint8Array(total);
+      let offset = 0;
+
+      for (const chunk of chunks) {
+        bytes.set(chunk, offset);
+        offset += chunk.byteLength;
+      }
+
+      return { bytes, tooLarge: false as const };
+    },
+    catch: (cause) =>
+      new ImageFetchError({
+        cause,
+        message: `Failed to read image body: ${describeCause(cause)}`,
+      }),
+  });
 
 export const GenerateImageThumbhashJobSchema = Schema.Struct({
   imageId: Schema.String,
@@ -97,18 +320,7 @@ export const processGenerateImageThumbhashJob = (
       ipfs: config.IPFS_GATEWAY_URL,
     });
 
-    const response = yield* Effect.tryPromise({
-      try: () =>
-        fetch(url, {
-          redirect: "follow",
-          signal: AbortSignal.timeout(FETCH_TIMEOUT_MILLIS),
-        }),
-      catch: (cause) =>
-        new ImageFetchError({
-          cause,
-          message: `Failed to fetch image: ${describeCause(cause)}`,
-        }),
-    });
+    const response = yield* fetchImageResponse(url);
 
     // A missing image will never appear, so stop retrying it.
     if (response.status === 404 || response.status === 410) {
@@ -139,24 +351,18 @@ export const processGenerateImageThumbhashJob = (
       );
     }
 
-    const body = yield* Effect.tryPromise({
-      try: () => response.arrayBuffer(),
-      catch: (cause) =>
-        new ImageFetchError({
-          cause,
-          message: `Failed to read image body: ${describeCause(cause)}`,
-        }),
-    });
+    const body = yield* readBodyWithLimit(
+      response,
+      GENERATE_IMAGE_THUMBHASH_MAX_BYTES,
+    );
 
-    if (body.byteLength > GENERATE_IMAGE_THUMBHASH_MAX_BYTES) {
-      return yield* terminal(
-        new InvalidImageError({
-          message: `Image is too large: ${body.byteLength} bytes`,
-        }),
+    if (body.tooLarge) {
+      return yield* rejectUrl(
+        `Image is too large: more than ${GENERATE_IMAGE_THUMBHASH_MAX_BYTES} bytes`,
       );
     }
 
-    const buffer = new Uint8Array(body);
+    const buffer = body.bytes;
 
     const detected = yield* detectImageFormat(buffer).pipe(
       Effect.orElseSucceed(() => Option.none()),
@@ -179,7 +385,7 @@ export const processGenerateImageThumbhashJob = (
       .set({
         height: thumbhash.height,
         mimeType: mimeType ?? row.mimeType,
-        size: body.byteLength,
+        size: buffer.byteLength,
         status: "READY",
         thumbhash: thumbhash.thumbhash,
         updatedAt: new Date(),

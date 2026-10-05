@@ -63,6 +63,7 @@ const findMediaImage = (id: string) =>
 
 describe("generate image thumbhash job", () => {
   afterEach(() => {
+    vi.restoreAllMocks();
     vi.unstubAllGlobals();
   });
 
@@ -105,7 +106,7 @@ describe("generate image thumbhash job", () => {
         // ThumbHash stores an approximate aspect ratio.
         expect(decoded.w / decoded.h).toBeGreaterThan(1.5);
         expect(fetchMock).toHaveBeenCalledTimes(1);
-        expect(fetchMock.mock.calls[0]?.[0]).toBe(
+        expect(String(fetchMock.mock.calls[0]?.[0])).toBe(
           "https://ipfs.filebase.io/ipfs/bafy-test",
         );
       }).pipe(Effect.provide(testLayer)),
@@ -198,6 +199,147 @@ describe("generate image thumbhash job", () => {
 
       // Terminal failures are marked FAILED by the queue's onFinalFailure.
       expect(row.status).toBe("PENDING");
+    }).pipe(Effect.provide(testLayer)),
+  );
+
+  it.effect("cancels the reader once the body exceeds the limit", () => {
+    const stream = new ReadableStream<Uint8Array<ArrayBuffer>>({
+      start(controller) {
+        controller.enqueue(new Uint8Array(6 * 1024 * 1024));
+        controller.enqueue(new Uint8Array(6 * 1024 * 1024));
+        controller.close();
+      },
+    });
+
+    return Effect.gen(function* () {
+      const cancelSpy = vi.spyOn(
+        ReadableStreamDefaultReader.prototype,
+        "cancel",
+      );
+
+      const fetchMock = vi.fn(
+        async (_input: RequestInfo | URL, _init?: RequestInit) =>
+          new Response(stream, {
+            status: 200,
+            headers: { "content-type": "image/png" },
+          }),
+      );
+
+      vi.stubGlobal("fetch", fetchMock);
+
+      yield* createTestMediaImage({ id: "https://cdn.test/stream.png" });
+
+      const exit = yield* Effect.exit(
+        processGenerateImageThumbhashJob({
+          imageId: "https://cdn.test/stream.png",
+        }),
+      );
+
+      expect({
+        failed: Exit.isFailure(exit),
+        canceled: cancelSpy.mock.calls.length > 0,
+      }).toStrictEqual({ failed: true, canceled: true });
+    }).pipe(Effect.provide(testLayer));
+  });
+
+  it.effect("rejects non-https and private image hosts without fetching", () =>
+    Effect.gen(function* () {
+      const fetchMock = vi.fn(() => {
+        throw new Error("fetch should not be called");
+      });
+
+      vi.stubGlobal("fetch", fetchMock);
+
+      const rejected = [
+        "http://169.254.169.254/latest/meta-data",
+        "https://169.254.169.254/latest/meta-data",
+        "https://127.0.0.1/private.png",
+        "https://10.0.0.8/private.png",
+        "https://[::1]/private.png",
+        "https://[fd00::1]/private.png",
+        "https://[::ffff:127.0.0.1]/private.png",
+        "https://localhost/private.png",
+        "https://metadata/private.png",
+      ];
+
+      for (const imageId of rejected) {
+        yield* createTestMediaImage({ id: imageId });
+
+        const exit = yield* Effect.exit(
+          processGenerateImageThumbhashJob({ imageId }),
+        );
+
+        expect(Exit.isFailure(exit)).toBe(true);
+      }
+
+      expect(fetchMock).not.toHaveBeenCalled();
+    }).pipe(Effect.provide(testLayer)),
+  );
+
+  it.effect("revalidates redirect targets and refuses private ones", () =>
+    Effect.gen(function* () {
+      const fetchMock = vi.fn(
+        async (_input: RequestInfo | URL, _init?: RequestInit) =>
+          new Response(null, {
+            status: 302,
+            headers: { location: "https://127.0.0.1/private.png" },
+          }),
+      );
+
+      vi.stubGlobal("fetch", fetchMock);
+
+      yield* createTestMediaImage({ id: "https://cdn.test/redirect.png" });
+
+      const exit = yield* Effect.exit(
+        processGenerateImageThumbhashJob({
+          imageId: "https://cdn.test/redirect.png",
+        }),
+      );
+
+      expect({
+        failed: Exit.isFailure(exit),
+        fetches: fetchMock.mock.calls.length,
+      }).toStrictEqual({ failed: true, fetches: 1 });
+    }).pipe(Effect.provide(testLayer)),
+  );
+
+  it.effect("follows a bounded number of public redirects", () =>
+    Effect.gen(function* () {
+      const png = yield* Effect.promise(() => makePngBuffer());
+
+      const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input);
+
+        if (url === "https://cdn.test/first.png") {
+          return new Response(null, {
+            status: 301,
+            headers: { location: "/second.png" },
+          });
+        }
+
+        return new Response(new Uint8Array(png), {
+          status: 200,
+          headers: { "content-type": "image/png" },
+        });
+      });
+
+      vi.stubGlobal("fetch", fetchMock);
+
+      yield* createTestMediaImage({ id: "https://cdn.test/first.png" });
+
+      yield* processGenerateImageThumbhashJob({
+        imageId: "https://cdn.test/first.png",
+      });
+
+      const row = yield* findMediaImage("https://cdn.test/first.png");
+
+      expect({
+        status: row.status,
+        urls: fetchMock.mock.calls.map((call) => String(call[0])),
+      }).toStrictEqual({
+        status: "READY",
+        urls: ["https://cdn.test/first.png", "https://cdn.test/second.png"],
+      });
     }).pipe(Effect.provide(testLayer)),
   );
 });
