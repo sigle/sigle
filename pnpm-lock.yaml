@@ -437,6 +437,9 @@ importers:
       sign-in-with-stacks:
         specifier: 0.4.0
         version: 0.4.0(b82a83bb0a5ba75d71f645eb420b7e00)
+      thumbhash:
+        specifier: 0.1.1
+        version: 0.1.1
       zod:
         specifier: 4.3.6
         version: 4.3.6
@@ -12137,6 +12140,9 @@ packages:
 
   through2@2.0.5:
     resolution: {integrity: sha512-/mrRod8xqpA+IHSLyGCQ2s8SPHiCDEeQJSep1jqLYeEUClOFG2Qsh+4FU6G9VeqpZnGW/Su8LQGc4YKni5rYSQ==}
+
+  thumbhash@0.1.1:
+    resolution: {integrity: sha512-kH5pKeIIBPQXAOni2AiY/Cu/NKdkFREdpH+TLdM0g6WA7RriCv0kPLgP731ady67MhTAqrVG/4mnEeibVuCJcg==}
 
   tiny-inflate@1.0.3:
     resolution: {integrity: sha512-pkY1fj1cKHb2seWDy0B16HeWyczlJA9/WW3u3c4z/NiWDsO3DOU5D7nhTLE9CF0yXv/QZFY7sEJmj24dK+Rrqw==}
@@ -28541,6 +28547,8 @@ snapshots:
       readable-stream: 2.3.8
       xtend: 4.0.2
     optional: true
+
+  thumbhash@0.1.1: {}
 
   tiny-inflate@1.0.3: {}
 

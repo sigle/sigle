@@ -8,6 +8,7 @@ import {
 } from "effect/http";
 import { UserProfileResponse } from "@/api/groups/users";
 import {
+  createTestMediaImage,
   createTestProfile,
   createTestUser,
   createTestWalletAddress,
@@ -113,14 +114,101 @@ describe("users", () => {
           description: "Hello",
           website: "https://example.com",
           twitter: "alice",
-          picture: "https://cdn.example.com/avatar.webp",
-          coverPicture: "https://cdn.example.com/cover.webp",
+          picture: {
+            url: "https://cdn.example.com/avatar.webp",
+            width: null,
+            height: null,
+            thumbhash: null,
+          },
+          coverPicture: {
+            url: "https://cdn.example.com/cover.webp",
+            width: null,
+            height: null,
+            thumbhash: null,
+          },
           arweaveTxId: "arweave-profile-tx",
         },
       });
       expect(response.status).toBe(200);
       expect(DateTime.isDateTime(body.profile?.updatedAt)).toBe(true);
     }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
+    "GET /api/users/:username returns image placeholders and versions the ETag",
+    () =>
+      Effect.gen(function* () {
+        const client = yield* HttpClient.HttpClient;
+        const user = yield* createTestUser();
+
+        const wallet = yield* createTestWalletAddress({
+          userId: user.id,
+          address: TEST_ADDRESS,
+        });
+
+        const picture = "https://cdn.example.com/avatar.webp?v=1";
+        const coverPicture = "https://cdn.example.com/cover.webp?v=2";
+
+        yield* createTestProfile({
+          userId: user.id,
+          walletAddressId: wallet.id,
+          arweaveTxId: "arweave-profile-tx",
+          picture,
+          coverPicture,
+        });
+
+        const pictureUpdatedAt = new Date("2026-01-01T00:00:00.000Z");
+        const coverUpdatedAt = new Date("2026-01-02T00:00:00.000Z");
+
+        yield* createTestMediaImage({
+          id: picture,
+          status: "READY",
+          width: 100,
+          height: 100,
+          thumbhash: "avatar-thumbhash",
+          updatedAt: pictureUpdatedAt,
+        });
+
+        yield* createTestMediaImage({
+          id: coverPicture,
+          status: "READY",
+          width: 2000,
+          height: 1000,
+          thumbhash: "cover-thumbhash",
+          updatedAt: coverUpdatedAt,
+        });
+
+        const response = yield* getUserRequest(client, TEST_ADDRESS);
+
+        const body =
+          yield* HttpClientResponse.schemaBodyJson(UserProfileResponse)(
+            response,
+          );
+
+        const etag = Option.getOrUndefined(
+          Headers.get(response.headers, "etag"),
+        );
+
+        expect({
+          picture: body.profile?.picture,
+          coverPicture: body.profile?.coverPicture,
+          etag,
+        }).toStrictEqual({
+          picture: {
+            url: picture,
+            width: 100,
+            height: 100,
+            thumbhash: "avatar-thumbhash",
+          },
+          coverPicture: {
+            url: coverPicture,
+            width: 2000,
+            height: 1000,
+            thumbhash: "cover-thumbhash",
+          },
+          etag: `"arweave-profile-tx-${pictureUpdatedAt.getTime()}.${coverUpdatedAt.getTime()}"`,
+        });
+      }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
   it.effect("GET /api/users/:username returns caching headers", () =>

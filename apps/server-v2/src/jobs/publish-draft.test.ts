@@ -10,8 +10,9 @@ import {
   Layer,
   Schedule,
 } from "effect";
+import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { draft, post, postOts } from "@/db/schema";
+import { draft, mediaImage, post, postOts } from "@/db/schema";
 import { makeQueuesTestLayer } from "@/jobs";
 import {
   markDraftPublishFailed,
@@ -26,6 +27,7 @@ import {
   ARWEAVE_TEST_UPLOAD,
   type ArweaveUploadOptions,
 } from "@/services/arweave";
+import { ImageProcessingService } from "@/services/image-processing";
 import { OpenTimestampsService } from "@/services/opentimestamps";
 import { PostHogService, type PostHogEvent } from "@/services/posthog";
 import { createTestDraft, createTestUser } from "@/test/helpers";
@@ -141,12 +143,18 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             publishSignature: "sig-001",
           });
 
-          yield* processPublishDraftJob({
+          const published = yield* processPublishDraftJob({
             draftId: "draft-1",
             userId: user.id,
             authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
             signature: "sig-001",
             metadataJson: sampleMetadataJson,
+          });
+
+          expect(published).toStrictEqual({
+            postId: "arweave-tx-001",
+            coverImage:
+              "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
           });
 
           const remainingDrafts = yield* db
@@ -165,6 +173,16 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             .select()
             .from(postOts)
             .where(eq(postOts.postId, "arweave-tx-001"));
+
+          const [createdMediaImage] = yield* db
+            .select()
+            .from(mediaImage)
+            .where(
+              eq(
+                mediaImage.id,
+                "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+              ),
+            );
 
           expect({
             id: createdPost.id,
@@ -185,6 +203,8 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             userId: createdPost.userId,
             otsStatus: createdPostOts.status,
             otsContentHash: createdPostOts.contentHash,
+            mediaStatus: createdMediaImage.status,
+            mediaMimeType: createdMediaImage.mimeType,
           }).toStrictEqual({
             id: "arweave-tx-001",
             draftId: "draft-1",
@@ -205,15 +225,22 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             userId: user.id,
             otsStatus: "PENDING",
             otsContentHash: sha256Hex(Buffer.from(sampleMetadataJson)),
+            mediaStatus: "PENDING",
+            mediaMimeType: "image/png",
           });
 
-          expect(uploads).toHaveLength(1);
-          expect(uploads[0]?.tags).toStrictEqual([
-            {
-              name: "Author",
-              value: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
-            },
-          ]);
+          expect({
+            length: uploads.length,
+            tags: uploads[0]?.tags,
+          }).toStrictEqual({
+            length: 1,
+            tags: [
+              {
+                name: "Author",
+                value: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+              },
+            ],
+          });
 
           expect(posthogEvents).toStrictEqual([
             {
@@ -512,6 +539,8 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           }),
           PostHogService.layerTest(),
           OpenTimestampsService.layerTest(),
+          AppConfig.layerTest(),
+          ImageProcessingService.layer,
           ErrorReporter.layer([reporter]),
         );
 
@@ -572,6 +601,8 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
         ArweaveService.layerTest(uploads),
         PostHogService.layerTest(),
         OpenTimestampsService.layerTest(),
+        AppConfig.layerTest(),
+        ImageProcessingService.layer,
         ErrorReporter.layer([reporter]),
       );
 

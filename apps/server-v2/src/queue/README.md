@@ -81,4 +81,4 @@ by calling the `process` function directly.
 
 Cron/scheduled jobs, delayed starts, priorities, batching, the HTTP admin
 surface, metric scraping, separate worker processes, and porting the v1
-(pg-boss) `indexer` and `generate-image-blurhash` jobs.
+(pg-boss) `indexer` jobs.

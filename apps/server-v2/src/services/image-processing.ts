@@ -1,10 +1,12 @@
 import { Context, Data, Duration, Effect, Layer, Semaphore } from "effect";
 import {
+  generateThumbhash,
   IMAGE_PROCESSING_TIMEOUT_SECONDS,
   ImageOptimizationError,
   optimizeImage,
   type OptimizeImageOptions,
   type OptimizedImage,
+  type ThumbhashResult,
 } from "@/lib/images";
 
 const MAX_CONCURRENT_OPTIMIZATIONS = 2;
@@ -24,6 +26,12 @@ export interface ImageProcessor {
     OptimizedImage,
     ImageOptimizationError | ImageProcessingTimeoutError
   >;
+  readonly generateThumbhash: (
+    buffer: Uint8Array,
+  ) => Effect.Effect<
+    ThumbhashResult,
+    ImageOptimizationError | ImageProcessingTimeoutError
+  >;
 }
 
 /**
@@ -39,21 +47,25 @@ export class ImageProcessingService extends Context.Service<
     Effect.gen(function* () {
       const semaphore = yield* Semaphore.make(MAX_CONCURRENT_OPTIMIZATIONS);
 
+      const runWithPermit = <A, E>(effect: Effect.Effect<A, E>) =>
+        semaphore
+          .withPermits(1)(effect.pipe(Effect.uninterruptible))
+          .pipe(
+            Effect.timeoutOrElse({
+              duration: OPTIMIZATION_TIMEOUT,
+              orElse: () =>
+                Effect.fail(
+                  new ImageProcessingTimeoutError({
+                    timeoutMillis: Duration.toMillis(OPTIMIZATION_TIMEOUT),
+                  }),
+                ),
+            }),
+          );
+
       return {
-        optimize: (options) =>
-          semaphore
-            .withPermits(1)(optimizeImage(options).pipe(Effect.uninterruptible))
-            .pipe(
-              Effect.timeoutOrElse({
-                duration: OPTIMIZATION_TIMEOUT,
-                orElse: () =>
-                  Effect.fail(
-                    new ImageProcessingTimeoutError({
-                      timeoutMillis: Duration.toMillis(OPTIMIZATION_TIMEOUT),
-                    }),
-                  ),
-              }),
-            ),
+        optimize: (options) => runWithPermit(optimizeImage(options)),
+        generateThumbhash: (buffer) =>
+          runWithPermit(generateThumbhash({ buffer })),
       } satisfies ImageProcessor;
     }),
   );

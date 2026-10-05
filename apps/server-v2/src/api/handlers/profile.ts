@@ -18,7 +18,11 @@ import {
 } from "@/api/schemas";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { profile } from "@/db/schema";
+import { mediaImage, profile } from "@/db/schema";
+import {
+  generateImageThumbhashJob,
+  thumbhashJobId,
+} from "@/jobs/generate-image-thumbhash";
 import { sha256Hex } from "@/lib/hash";
 import {
   detectImageFormat,
@@ -109,6 +113,16 @@ export const uploadProfileMetadata = (
     const now = new Date();
     const { content } = payload.metadata;
 
+    const [existingProfile] = yield* db
+      .select({
+        coverPicture: profile.coverPicture,
+        picture: profile.picture,
+      })
+      .from(profile)
+      .where(eq(profile.userId, user.id))
+      .limit(1)
+      .pipe(Effect.orDie);
+
     // Store the signed metadata on upload so the profile is immediately
     // readable.
     const profileFields = {
@@ -136,6 +150,49 @@ export const uploadProfileMetadata = (
         set: profileFields,
       })
       .pipe(Effect.orDie);
+
+    // Externally hosted pictures bypass the upload endpoint, so make sure
+    // their thumbnail placeholder is scheduled. Images uploaded through this
+    // server already have a READY row.
+    const changedImages = new Set<string>();
+
+    if (
+      profileFields.picture !== null &&
+      profileFields.picture !== existingProfile?.picture
+    ) {
+      changedImages.add(profileFields.picture);
+    }
+
+    if (
+      profileFields.coverPicture !== null &&
+      profileFields.coverPicture !== existingProfile?.coverPicture
+    ) {
+      changedImages.add(profileFields.coverPicture);
+    }
+
+    for (const imageId of changedImages) {
+      const [existingImage] = yield* db
+        .select({ status: mediaImage.status, thumbhash: mediaImage.thumbhash })
+        .from(mediaImage)
+        .where(eq(mediaImage.id, imageId))
+        .limit(1)
+        .pipe(Effect.orDie);
+
+      const hasPlaceholder =
+        existingImage?.status === "READY" && existingImage.thumbhash !== null;
+
+      if (!hasPlaceholder) {
+        yield* db
+          .insert(mediaImage)
+          .values({ id: imageId })
+          .onConflictDoNothing()
+          .pipe(Effect.orDie);
+
+        yield* generateImageThumbhashJob
+          .offer({ imageId }, { id: thumbhashJobId(imageId) })
+          .pipe(Effect.orDie);
+      }
+    }
 
     yield* posthog.capture({
       distinctId: user.id,
@@ -191,6 +248,7 @@ export const uploadProfileImage = (
   Effect.gen(function* () {
     const user = yield* CurrentUser;
     const config = yield* AppConfig;
+    const db = yield* Database;
     const storage = yield* StorageService;
     const images = yield* ImageProcessingService;
     const posthog = yield* PostHogService;
@@ -275,6 +333,39 @@ export const uploadProfileImage = (
 
     const url = versionProfileImageUrl(uploaded.url, version);
 
+    // The image bytes are in hand, so the placeholder is computed inline
+    // instead of going through the thumbhash queue.
+    const generated = yield* images.generateThumbhash(optimized.buffer).pipe(
+      Effect.tapError((error) =>
+        Effect.logWarning("Failed to generate profile image thumbhash", {
+          cause: error,
+          kind,
+        }),
+      ),
+      Effect.mapError(
+        () =>
+          new InternalServerError({
+            message: "Failed to generate image placeholder.",
+          }),
+      ),
+    );
+
+    const mediaFields = {
+      height: optimized.height,
+      mimeType: "image/webp",
+      size: optimized.buffer.length,
+      status: "READY" as const,
+      thumbhash: generated.thumbhash,
+      updatedAt: new Date(),
+      width: optimized.width,
+    };
+
+    yield* db
+      .insert(mediaImage)
+      .values({ id: url, ...mediaFields })
+      .onConflictDoUpdate({ target: mediaImage.id, set: mediaFields })
+      .pipe(Effect.orDie);
+
     yield* posthog.capture({
       distinctId: user.id,
       event: profileImagePostHogEvent(kind),
@@ -288,6 +379,7 @@ export const uploadProfileImage = (
     return {
       height: optimized.height,
       key,
+      thumbhash: generated.thumbhash,
       url,
       width: optimized.width,
     };

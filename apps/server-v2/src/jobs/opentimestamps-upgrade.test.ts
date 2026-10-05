@@ -1,11 +1,13 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
 import { Effect, Exit, Layer, Option, Schedule } from "effect";
+import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { postOts } from "@/db/schema";
 import { makeQueuesTestLayer } from "@/jobs";
 import { JobAdminService, type QueueStats } from "@/queue/admin";
 import { ArweaveService, type ArweaveUploadOptions } from "@/services/arweave";
+import { ImageProcessingService } from "@/services/image-processing";
 import {
   OTS_TEST_UPGRADED_PROOF,
   OTS_TEST_VERIFICATION,
@@ -49,6 +51,8 @@ const makeUpgradeTestLayer = (options: {
     Layer.provideMerge(OpenTimestampsService.layerTest(operations)),
     Layer.provideMerge(ArweaveService.layerTest(options.uploads ?? [])),
     Layer.provideMerge(PostHogService.layerTest()),
+    Layer.provideMerge(AppConfig.layerTest()),
+    Layer.provideMerge(ImageProcessingService.layer),
     Layer.provideMerge(TestDatabaseLayer),
   );
 };

@@ -9,9 +9,10 @@ import {
   HttpClientResponse,
 } from "effect/http";
 import sharp from "sharp";
+import { afterEach, vi } from "vitest";
 import type { PostHogEvent } from "@/services/posthog";
 import { Database } from "@/db";
-import { profile as profileTable } from "@/db/schema";
+import { mediaImage, profile as profileTable } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
 import {
   ARWEAVE_TEST_UPLOAD,
@@ -48,12 +49,38 @@ const UploadProfileImageResponse = Schema.Struct({
   key: Schema.String,
   width: Schema.Int,
   height: Schema.Int,
+  thumbhash: Schema.String,
 });
 
 const ErrorResponse = Schema.Struct({ message: Schema.String });
 
 const profileImagePath = (kind: string) =>
   `/api/protected/user/profile/images/${kind}`;
+
+/**
+ * Polls the media row until the background thumbhash job reaches `status`.
+ */
+const waitForMediaImageStatus = (id: string, status: string) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+
+    for (let attempt = 0; attempt < 200; attempt++) {
+      const [row] = yield* db
+        .select()
+        .from(mediaImage)
+        .where(eq(mediaImage.id, id))
+        .limit(1)
+        .pipe(Effect.orDie);
+
+      if (row?.status === status) {
+        return row;
+      }
+
+      yield* Effect.sleep("20 millis");
+    }
+
+    return undefined;
+  });
 
 const makePngBuffer = (width = 16, height = 16) =>
   sharp({
@@ -161,11 +188,15 @@ const createSignedProfileClient = () =>
     const signMetadata = (options: {
       readonly id: string;
       readonly displayName?: string;
+      readonly picture?: string;
+      readonly coverPicture?: string;
     }) =>
       createSignedTestProfileMetadata({
         privateKey: credentials.privateKey,
         id: options.id,
         displayName: options.displayName,
+        picture: options.picture,
+        coverPicture: options.coverPicture,
       });
 
     const metadata = signMetadata({ id: "profile-1" });
@@ -181,6 +212,10 @@ const createSignedProfileClient = () =>
   });
 
 describe("profile", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it.effect("POST upload-metadata uploads metadata to Arweave", () => {
     const uploads: Array<ArweaveUploadOptions> = [];
     const events: Array<PostHogEvent> = [];
@@ -316,6 +351,66 @@ describe("profile", () => {
       ),
     );
   });
+
+  it.live(
+    "POST upload-metadata schedules thumbhash generation for external pictures",
+    () => {
+      const imageFetches: Array<string> = [];
+
+      return Effect.gen(function* () {
+        const { client, signMetadata, userId } =
+          yield* createSignedProfileClient();
+
+        const png = yield* Effect.promise(() => makePngBuffer());
+
+        vi.stubGlobal(
+          "fetch",
+          vi.fn(async (input: RequestInfo | URL) => {
+            imageFetches.push(String(input));
+
+            return new Response(new Uint8Array(png), {
+              status: 200,
+              headers: { "content-type": "image/png" },
+            });
+          }),
+        );
+
+        const imageUrl = "https://cdn.example.com/external.png";
+
+        const metadata = signMetadata({
+          id: "profile-external",
+          picture: imageUrl,
+        });
+
+        const response = yield* uploadProfileMetadataRequest(client, metadata);
+
+        const mediaRow = yield* waitForMediaImageStatus(imageUrl, "READY");
+
+        const db = yield* Database;
+
+        const [savedProfile] = yield* db
+          .select()
+          .from(profileTable)
+          .where(eq(profileTable.userId, userId))
+          .limit(1)
+          .pipe(Effect.orDie);
+
+        expect({
+          status: response.status,
+          mediaStatus: mediaRow?.status,
+          thumbhash: mediaRow?.thumbhash,
+          picture: savedProfile?.picture,
+          fetches: imageFetches,
+        }).toStrictEqual({
+          status: 200,
+          mediaStatus: "READY",
+          thumbhash: expect.any(String),
+          picture: imageUrl,
+          fetches: [imageUrl],
+        });
+      }).pipe(Effect.provide(makeTestServerLayer()));
+    },
+  );
 
   it.effect("POST upload-metadata rejects an already published signature", () =>
     Effect.gen(function* () {
@@ -542,6 +637,15 @@ describe("profile", () => {
       const version = uploaded === undefined ? "" : sha256Hex(uploaded.body);
       const url = `${STORAGE_TEST_PUBLIC_URL}/${key}?v=${version}`;
 
+      const db = yield* Database;
+
+      const [savedMedia] = yield* db
+        .select()
+        .from(mediaImage)
+        .where(eq(mediaImage.id, url))
+        .limit(1)
+        .pipe(Effect.orDie);
+
       expect({
         status: response.status,
         body,
@@ -549,12 +653,19 @@ describe("profile", () => {
         width: metadata.width,
         height: metadata.height,
         isWebp: uploadedBytes.subarray(8, 12).toString() === "WEBP",
+        mediaStatus: savedMedia?.status,
+        mediaMimeType: savedMedia?.mimeType,
+        mediaWidth: savedMedia?.width,
+        mediaHeight: savedMedia?.height,
+        mediaSize: savedMedia?.size,
+        thumbhashMatches: body.thumbhash === savedMedia?.thumbhash,
         events,
       }).toStrictEqual({
         status: 200,
         body: {
           height: 300,
           key,
+          thumbhash: expect.any(String),
           url,
           width: 600,
         },
@@ -567,6 +678,12 @@ describe("profile", () => {
         width: 600,
         height: 300,
         isWebp: true,
+        mediaStatus: "READY",
+        mediaMimeType: "image/webp",
+        mediaWidth: 600,
+        mediaHeight: 300,
+        mediaSize: uploadedBytes.length,
+        thumbhashMatches: true,
         events: [
           {
             distinctId: userId,

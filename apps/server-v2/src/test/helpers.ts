@@ -13,6 +13,7 @@ import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import {
   draft,
+  mediaImage,
   post,
   postOts,
   profile,
@@ -138,6 +139,36 @@ export const createTestProfile = (options: {
     return created;
   });
 
+export const createTestMediaImage = (options: {
+  readonly id: string;
+  readonly status?: "PENDING" | "READY" | "FAILED";
+  readonly mimeType?: string | null;
+  readonly width?: number | null;
+  readonly height?: number | null;
+  readonly size?: number | null;
+  readonly thumbhash?: string | null;
+  readonly updatedAt?: Date;
+}) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+
+    const [created] = yield* db
+      .insert(mediaImage)
+      .values({
+        id: options.id,
+        status: options.status ?? "PENDING",
+        mimeType: options.mimeType ?? null,
+        width: options.width ?? null,
+        height: options.height ?? null,
+        size: options.size ?? null,
+        thumbhash: options.thumbhash ?? null,
+        updatedAt: options.updatedAt,
+      })
+      .returning();
+
+    return created;
+  });
+
 export const createTestPost = (options: {
   readonly id?: string;
   readonly draftId?: string | null;
@@ -249,17 +280,36 @@ export const signTestSiwsMessage = (
     privateKey,
   });
 
+interface TestProfileMetadataContent {
+  id: string;
+  displayName: string;
+  picture?: string;
+  coverPicture?: string;
+}
+
 export const createSignedTestProfileMetadata = (options: {
   readonly privateKey: string;
   readonly id?: string;
   readonly displayName?: string;
+  readonly picture?: string;
+  readonly coverPicture?: string;
 }) => {
+  const content: TestProfileMetadataContent = {
+    id: options.id ?? "profile-1",
+    displayName: options.displayName ?? "Test profile",
+  };
+
+  if (options.picture !== undefined) {
+    content.picture = options.picture;
+  }
+
+  if (options.coverPicture !== undefined) {
+    content.coverPicture = options.coverPicture;
+  }
+
   const metadataWithoutSignature = {
     $schema: ProfileMetadataSchemaId.LATEST,
-    content: {
-      id: options.id ?? "profile-1",
-      displayName: options.displayName ?? "Test profile",
-    },
+    content,
   };
 
   const signature = signTestSiwsMessage(
