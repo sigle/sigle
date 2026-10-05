@@ -5,7 +5,9 @@ import { code } from "multiformats/codecs/raw";
 import { sha256 } from "multiformats/hashes/sha2";
 import { AppConfig, type AppConfigValues } from "@/config";
 
-export type ArweaveContentType = "application/json";
+export type ArweaveContentType =
+  | "application/json"
+  | "application/vnd.opentimestamps.ots";
 
 export interface ArweaveTag {
   readonly name: string;

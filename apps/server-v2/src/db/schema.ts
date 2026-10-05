@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   bigint,
   boolean,
+  bytea,
   doublePrecision,
   index,
   integer,
@@ -221,4 +222,39 @@ export const post = pgTable(
       .on(table.createdAt)
       .where(sql`arweave_block_height is null`),
   ],
+);
+
+// --
+// OpenTimestamps
+// --
+
+export const postOtsStatusEnum = pgEnum("PostOtsStatus", [
+  "PENDING",
+  "UPGRADED",
+  "FAILED",
+]);
+
+// One OpenTimestamps proof per published post. The post metadata JSON uploaded
+// to Arweave is the file being anchored, identified by `contentHash`.
+export const postOts = pgTable(
+  "post_ots",
+  {
+    postId: text("post_id")
+      .primaryKey()
+      .references(() => post.id, { onDelete: "cascade" }),
+    status: postOtsStatusEnum("status").default("PENDING").notNull(),
+    // Hex SHA-256 of the exact metadata bytes stored on Arweave.
+    contentHash: text("content_hash").notNull(),
+    // Pending `.ots` proof returned by the calendars, kept until it can be
+    // upgraded to a Bitcoin-anchored proof.
+    pendingProof: bytea("pending_proof"),
+    // Arweave transaction id of the upgraded `.ots` proof.
+    otsTxId: text("ots_tx_id"),
+    bitcoinBlockHeight: integer("bitcoin_block_height"),
+    bitcoinBlockHash: text("bitcoin_block_hash"),
+    bitcoinTimestamp: timestamp("bitcoin_timestamp", { precision: 3 }),
+    createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
+  },
+  (table) => [index("post_ots_status_idx").on(table.status)],
 );

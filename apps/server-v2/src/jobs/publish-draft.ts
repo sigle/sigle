@@ -2,10 +2,12 @@ import { PostMetadataSchema } from "@sigle/sdk";
 import { and, eq, isNull, lt, or } from "drizzle-orm";
 import { Data, Effect, Layer, Schedule, Schema } from "effect";
 import { Database } from "@/db";
-import { draft, post } from "@/db/schema";
+import { draft, post, postOts } from "@/db/schema";
+import { sha256Hex } from "@/lib/hash";
 import { defineJob, terminal, type TerminalJobError } from "@/queue/core";
 import { ArweaveService, type ArweaveUploadError } from "@/services/arweave";
 import { PostHogService } from "@/services/posthog";
+import { opentimestampsStampJob, otsStampJobId } from "./opentimestamps-stamp";
 
 export const PUBLISH_DRAFT_QUEUE_NAME = "publish-draft";
 
@@ -56,10 +58,15 @@ const publishDraftRetrySchedule: Schedule.Schedule<unknown, number> =
     ]),
   );
 
+/**
+ * Returns the published post id when this call created the post, or
+ * `undefined` when there was nothing to do (draft superseded, already
+ * finalized by another attempt, ...).
+ */
 export const processPublishDraftJob = (
   job: PublishDraftJob,
 ): Effect.Effect<
-  void,
+  string | undefined,
   ArweaveUploadError | PublishDraftUploadClaimedError | TerminalJobError,
   Database | ArweaveService | PostHogService
 > =>
@@ -246,6 +253,15 @@ export const processPublishDraftJob = (
             userId: job.userId,
           });
 
+          // The exact JSON bytes uploaded above are what OpenTimestamps
+          // anchors, so the hash is captured in the same transaction as the
+          // post itself.
+          yield* tx.insert(postOts).values({
+            postId: arweaveTxId,
+            status: "PENDING",
+            contentHash: sha256Hex(Buffer.from(job.metadataJson)),
+          });
+
           return true;
         }),
       )
@@ -264,6 +280,8 @@ export const processPublishDraftJob = (
         arweaveId: arweaveTxId,
       },
     });
+
+    return arweaveTxId;
   });
 
 export const markDraftPublishFailed = (
@@ -307,11 +325,25 @@ export const publishDraftJob = defineJob({
   maxAttempts: PUBLISH_DRAFT_MAX_ATTEMPTS,
   retrySchedule: publishDraftRetrySchedule,
   concurrency: 2,
-  process: (job) => processPublishDraftJob(job),
+  process: (job) =>
+    Effect.gen(function* () {
+      const postId = yield* processPublishDraftJob(job);
+
+      if (postId === undefined) {
+        return;
+      }
+
+      yield* opentimestampsStampJob
+        .offer({ postId }, { id: otsStampJobId(postId) })
+        .pipe(Effect.orDie);
+    }),
   onFinalFailure: (job) => markDraftPublishFailed(job),
   reportPayload: (job) => ({ draftId: job.draftId }),
 });
 
 export const PublishDraftWorkerLive = publishDraftJob
   .workerLayer()
-  .pipe(Layer.provideMerge(publishDraftJob.layer));
+  .pipe(
+    Layer.provideMerge(publishDraftJob.layer),
+    Layer.provideMerge(opentimestampsStampJob.layer),
+  );

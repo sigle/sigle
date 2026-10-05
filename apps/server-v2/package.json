@@ -15,6 +15,7 @@
     "@effect/platform-node": "4.0.0",
     "@effect/platform-node-shared": "4.0.0",
     "@effect/sql-pg": "4.0.0",
+    "@otskit/client": "0.7.2",
     "@paralleldrive/cuid2": "3.3.0",
     "@sentry/effect": "10.50.0",
     "@sigle/sdk": "workspace:*",

@@ -11,13 +11,14 @@ import {
   Schedule,
 } from "effect";
 import { Database } from "@/db";
-import { draft, post } from "@/db/schema";
+import { draft, post, postOts } from "@/db/schema";
 import { makeQueuesTestLayer } from "@/jobs";
 import {
   markDraftPublishFailed,
   processPublishDraftJob,
   publishDraftJob,
 } from "@/jobs/publish-draft";
+import { sha256Hex } from "@/lib/hash";
 import { JobAdminService } from "@/queue/admin";
 import {
   ArweaveService,
@@ -25,6 +26,7 @@ import {
   ARWEAVE_TEST_UPLOAD,
   type ArweaveUploadOptions,
 } from "@/services/arweave";
+import { OpenTimestampsService } from "@/services/opentimestamps";
 import { PostHogService, type PostHogEvent } from "@/services/posthog";
 import { createTestDraft, createTestUser } from "@/test/helpers";
 import { TestDatabaseLayer } from "@/test/layer";
@@ -159,6 +161,11 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             .from(post)
             .where(eq(post.id, "arweave-tx-001"));
 
+          const [createdPostOts] = yield* db
+            .select()
+            .from(postOts)
+            .where(eq(postOts.postId, "arweave-tx-001"));
+
           expect({
             id: createdPost.id,
             draftId: createdPost.draftId,
@@ -176,6 +183,8 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             canonicalUri: createdPost.canonicalUri,
             signature: createdPost.signature,
             userId: createdPost.userId,
+            otsStatus: createdPostOts.status,
+            otsContentHash: createdPostOts.contentHash,
           }).toStrictEqual({
             id: "arweave-tx-001",
             draftId: "draft-1",
@@ -194,6 +203,8 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             canonicalUri: "https://sigle.io/p/1",
             signature: "sig-001",
             userId: user.id,
+            otsStatus: "PENDING",
+            otsContentHash: sha256Hex(Buffer.from(sampleMetadataJson)),
           });
 
           expect(uploads).toHaveLength(1);
@@ -500,6 +511,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             );
           }),
           PostHogService.layerTest(),
+          OpenTimestampsService.layerTest(),
           ErrorReporter.layer([reporter]),
         );
 
@@ -559,6 +571,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
         TestDatabaseLayer,
         ArweaveService.layerTest(uploads),
         PostHogService.layerTest(),
+        OpenTimestampsService.layerTest(),
         ErrorReporter.layer([reporter]),
       );
 

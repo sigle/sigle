@@ -11,6 +11,7 @@ import {
   type ArweaveUploadResult,
 } from "@/services/arweave";
 import { ImageProcessingService } from "@/services/image-processing";
+import { OpenTimestampsService } from "@/services/opentimestamps";
 import { PostHogService, type PostHogEvent } from "@/services/posthog";
 import { RateLimiterTest } from "@/services/rate-limiter";
 import { StorageService } from "@/services/storage";
@@ -19,6 +20,7 @@ import { TestDatabaseLayer } from "@/test/layer";
 export interface TestServerOptions {
   readonly arweave?: Layer.Layer<ArweaveService>;
   readonly storage?: Layer.Layer<StorageService>;
+  readonly opentimestamps?: Layer.Layer<OpenTimestampsService>;
   readonly arweaveUploadImpl?: (
     options: ArweaveUploadOptions,
   ) => Effect.Effect<ArweaveUploadResult, ArweaveUploadError>;
@@ -47,6 +49,7 @@ export const makeTestServerLayer = (
     Layer.provideMerge(TestDatabaseLayer),
     Layer.provideMerge(AppConfig.layerTest(overrides)),
     Layer.provide(PostHogService.layerTest(posthogEvents)),
+    Layer.provide(options.opentimestamps ?? OpenTimestampsService.layerTest()),
     Layer.provide(ImageProcessingService.layer),
     Layer.provide(
       options.arweave ??
