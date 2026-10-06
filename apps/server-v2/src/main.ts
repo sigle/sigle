@@ -1,4 +1,5 @@
 import {
+  NodeHttpClient,
   NodeHttpServer,
   NodeRuntime,
   NodeServices,
@@ -25,13 +26,17 @@ import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { JobsLive } from "@/jobs";
 import { ArweaveService } from "@/services/arweave";
+import { ArweaveGraphQLService } from "@/services/arweave-graphql";
 import { AuthService } from "@/services/auth";
 import { ImageProcessingService } from "@/services/image-processing";
+import { MediaImagesService } from "@/services/media-images";
+import { MetadataService } from "@/services/metadata";
 import { OpenTimestampsService } from "@/services/opentimestamps";
 import { PostHogService } from "@/services/posthog";
 import { RateLimiterLive } from "@/services/rate-limiter";
 import { StorageService } from "@/services/storage";
 import { TelemetryLayer } from "@/services/telemetry";
+import { UserProvisioningService } from "@/services/user-provisioning";
 import { UserWhitelistService } from "@/services/users";
 
 export const CoreServicesLayer = Layer.mergeAll(
@@ -41,7 +46,11 @@ export const CoreServicesLayer = Layer.mergeAll(
   OpenTimestampsService.layer,
   ImageProcessingService.layer,
   StorageService.layer,
-).pipe(Layer.provideMerge(AppConfig.layer), Layer.provide(NodeServices.layer));
+).pipe(
+  Layer.provideMerge(AppConfig.layer),
+  Layer.provideMerge(NodeHttpClient.layerUndici),
+  Layer.provide(NodeServices.layer),
+);
 
 export const ApiHandlersLayer = Layer.mergeAll(
   HealthHandlersLayer,
@@ -62,6 +71,17 @@ export const ApiMiddlewareLayer = Layer.mergeAll(
 export const AuthLayer = Layer.mergeAll(
   AuthService.layer,
   UserWhitelistService.layer,
+);
+
+/**
+ * Services consumed by the Arweave discovery jobs (posts, profiles and media
+ * placeholders). Wired here so the upcoming indexer jobs can use them.
+ */
+export const IndexerServicesLayer = Layer.mergeAll(
+  ArweaveGraphQLService.layer,
+  MetadataService.layer,
+  UserProvisioningService.layer,
+  MediaImagesService.layer,
 );
 
 export const CorsLayer = Layer.unwrap(
@@ -94,6 +114,7 @@ export const MainLayer = HttpServerLayer.pipe(
   Layer.provide(JobsLive),
   Layer.provide(AuthLayer),
   Layer.provide(RateLimiterLive),
+  Layer.provide(IndexerServicesLayer),
   Layer.provide(Database.layer),
 );
 
