@@ -59,16 +59,4 @@ export const SELECT_PUBLIC_POST_FIELDS = {
   revisionsCount: true,
   createdAt: true,
   updatedAt: true,
-  // Relations
-  minterFixedPrice: true,
-  collectible: {
-    select: {
-      id: true,
-      address: true,
-      maxSupply: true,
-      openEdition: true,
-      collected: true,
-      enabled: true,
-    },
-  },
 };

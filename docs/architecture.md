@@ -30,8 +30,7 @@ To verify the user's identity, we use better-auth. We ask the user to sign a mes
 The content lifecycle from editor to reader:
 
 1. **Draft creation** — Content is written in the editor and saved as drafts in PostgreSQL.
-2. **Metadata upload** — Post metadata (JSON) is uploaded to Arweave, tagged with the IPFS CID.
-3. **On-chain publication** — The user signs a Stacks transaction.
-4. **Indexing** — The server registers predicates with Hiro Platform. On-chain events trigger webhooks back to the server. The server listen for events emitted by the contracts.
-5. **Job processing** — Indexer jobs fetch metadata and populate PostgreSQL.
-6. **Content rendering** — The web client fetches post metadata from the API and renders the formatted content.
+2. **Metadata upload** — Post metadata (JSON) is signed with the user's Stacks wallet and uploaded to Arweave, tagged with the IPFS CID.
+3. **Notarization** — Published posts are notarized with OpenTimestamps.
+4. **Indexing** — Indexer jobs fetch metadata and resolve the Arweave L1 transaction to populate PostgreSQL.
+5. **Content rendering** — The web client fetches post metadata from the API and renders the formatted content.

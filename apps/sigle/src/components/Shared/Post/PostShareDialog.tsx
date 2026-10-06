@@ -1,8 +1,6 @@
 import type { paths } from "@sigle/sdk";
-import { IconReceiptTax } from "@tabler/icons-react";
 import Image from "next/image";
 import { useState } from "react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,9 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Field } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { appConfig } from "@/config";
 import { env } from "@/env";
-import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
 
 interface PostShareDialogProps {
@@ -29,16 +25,10 @@ export const PostShareDialog = ({
   post,
 }: PostShareDialogProps) => {
   const [isCopied, setIsCopied] = useState(false);
-  const { data: session } = useSession();
 
-  const postLink = `${env.NEXT_PUBLIC_APP_URL}${Routes.post(
-    { postId: post.id },
-    {
-      search: {
-        referral: post.collectible && session ? session.user.id : undefined,
-      },
-    },
-  )}`;
+  const postLink = `${env.NEXT_PUBLIC_APP_URL}${Routes.post({
+    postId: post.id,
+  })}`;
 
   const onCopy = () => {
     navigator.clipboard.writeText(postLink).then(() => {
@@ -56,34 +46,14 @@ export const PostShareDialog = ({
       <DialogContent>
         <DialogTitle>Share</DialogTitle>
         <div className="sr-only">
-          <DialogDescription>
-            Earn referrer rewards for each primary sale made through your link.
-          </DialogDescription>
+          <DialogDescription>Share this post.</DialogDescription>
         </div>
 
         <div className="space-y-8">
-          {post.collectible ? (
-            <Alert className="bg-muted">
-              <IconReceiptTax size={16} />
-              <AlertDescription>
-                Earn referrer rewards for each primary sale made through your
-                link.{" "}
-                <a
-                  className="underline"
-                  href={`${appConfig.docsUrl}/monetization#fee-structure`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Learn more.
-                </a>
-              </AlertDescription>
-            </Alert>
-          ) : null}
-
           <div className="flex justify-center gap-5">
             <a
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                `Collect ${metaTitleAttribute} on @sigleapp&url=${postLink}`,
+                `Read ${metaTitleAttribute} on @sigleapp&url=${postLink}`,
               )}`}
               target="_blank"
               rel="noreferrer noopener"
@@ -98,7 +68,7 @@ export const PostShareDialog = ({
             </a>
             <a
               href={`https://bsky.app/intent/compose?text=${encodeURIComponent(
-                `Collect ${metaTitleAttribute} on @sigleapp`,
+                `Read ${metaTitleAttribute} on @sigleapp`,
               )}&url=${postLink}`}
               target="_blank"
               rel="noreferrer noopener"
@@ -113,7 +83,7 @@ export const PostShareDialog = ({
             </a>
             <a
               href={`https://t.me/share/url?text=${encodeURIComponent(
-                `Collect ${metaTitleAttribute} on @sigleapp`,
+                `Read ${metaTitleAttribute} on @sigleapp`,
               )}&url=${postLink}`}
               target="_blank"
               rel="noreferrer noopener"

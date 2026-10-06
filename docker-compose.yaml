@@ -51,9 +51,6 @@ services:
         - path: ./packages/
           target: /app/packages
           action: sync
-        - path: ./apps/contracts-next/
-          target: /app/apps/contracts-next
-          action: sync
     depends_on:
       postgres:
         condition: service_healthy
@@ -85,9 +82,6 @@ services:
           action: sync
         - path: ./packages/
           target: /app/packages
-          action: sync
-        - path: ./apps/contracts-next/
-          target: /app/apps/contracts-next
           action: sync
     depends_on:
       - server

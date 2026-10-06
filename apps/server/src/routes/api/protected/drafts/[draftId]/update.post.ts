@@ -32,38 +32,6 @@ defineRouteMeta({
               coverImage: {
                 type: "string",
               },
-              collect: {
-                type: "object",
-                required: ["collectPrice", "collectLimit"],
-                properties: {
-                  collectPrice: {
-                    type: "object",
-                    required: ["type", "price"],
-                    properties: {
-                      type: {
-                        type: "string",
-                        enum: ["free", "paid"],
-                      },
-                      price: {
-                        type: "number",
-                      },
-                    },
-                  },
-                  collectLimit: {
-                    type: "object",
-                    required: ["type", "limit"],
-                    properties: {
-                      type: {
-                        type: "string",
-                        enum: ["open", "fixed"],
-                      },
-                      limit: {
-                        type: "number",
-                      },
-                    },
-                  },
-                },
-              },
               tags: {
                 type: "array",
                 items: {
@@ -115,16 +83,6 @@ const updateDraftSchema = z.object({
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
   coverImage: z.string().optional(),
-  collect: z.object({
-    collectPrice: z.object({
-      type: z.enum(["free", "paid"] as const),
-      price: z.coerce.number().int().min(0),
-    }),
-    collectLimit: z.object({
-      type: z.enum(["open", "fixed"] as const),
-      limit: z.coerce.number().int().min(1),
-    }),
-  }),
   tags: z.array(z.string()).optional(),
   canonicalUri: z.string().optional(),
 });
@@ -151,10 +109,6 @@ export default defineEventHandler(async (event) => {
       metaTitle: body.metaTitle,
       metaDescription: body.metaDescription,
       coverImage: body.coverImage,
-      collectPriceType: body.collect.collectPrice.type,
-      collectPrice: body.collect.collectPrice.price,
-      collectLimitType: body.collect.collectLimit.type,
-      collectLimit: body.collect.collectLimit.limit,
       tags: body.tags,
       canonicalUri: body.canonicalUri,
     },

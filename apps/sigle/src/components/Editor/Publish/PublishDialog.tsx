@@ -76,8 +76,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
         try {
           metadata = await generateSigleMetadataFromForm({
-            userAddress: session.user.id,
-            type: data.type,
             editor,
             postId,
             post: data,

@@ -35,7 +35,6 @@ export default defineConfig({
       },
       sidebar: [
         { slug: "index", label: "Overview" },
-        { slug: "monetization" },
         { slug: "platform" },
         {
           label: "Build on Sigle",

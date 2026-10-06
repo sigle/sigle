@@ -360,12 +360,6 @@ export interface paths {
               coverImage?: string;
               tags?: string[];
               canonicalUri?: string;
-              /** @enum {string} */
-              collectPriceType?: "free" | "paid";
-              collectPrice?: string;
-              /** @enum {string} */
-              collectLimitType?: "open" | "fixed";
-              collectLimit?: number;
               txId?: string;
               txStatus?: string;
               createdAt: string;
@@ -460,18 +454,6 @@ export interface paths {
             metaTitle?: string;
             metaDescription?: string;
             coverImage?: string;
-            collect?: {
-              collectPrice: {
-                /** @enum {string} */
-                type: "free" | "paid";
-                price: number;
-              };
-              collectLimit: {
-                /** @enum {string} */
-                type: "open" | "fixed";
-                limit: number;
-              };
-            };
             tags?: string[];
             canonicalUri?: string;
           };
@@ -618,59 +600,6 @@ export interface paths {
           };
           content: {
             "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts/{draftId}/upload-nft-image": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Upload nft image to IPFS. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          draftId: string;
-        };
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "multipart/form-data": {
-            /**
-             * Format: binary
-             * @description Profile media
-             */
-            file: string;
-            /** @enum {string} */
-            type: "draft" | "published";
-          };
-        };
-      };
-      responses: {
-        /** @description Media uploaded */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              cid: string;
-              url: string;
-            };
           };
         };
       };
@@ -1212,28 +1141,10 @@ export interface components {
       txId: string;
       arweaveL1TxId?: string;
       blockHeight: number;
-      revisionsCount?: number;
-      collectorsCount?: number;
       metadataUri: string;
+      revisionsCount?: number;
       createdAt: string;
       updatedAt: string;
-      minterFixedPrice?: {
-        id: string;
-        /** @description The price in BigInt format */
-        price: string;
-        /** @description The start block in BigInt format */
-        startBlock: string;
-        /** @description The end block in BigInt format */
-        endBlock: string;
-      };
-      collectible?: {
-        id: string;
-        address: string;
-        maxSupply: number;
-        openEdition: boolean;
-        collected: number;
-        enabled: boolean;
-      };
       user: {
         id: string;
         createdAt: string;

@@ -1,5 +1,5 @@
+import type { paths } from "@sigle/sdk";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { type paths, formatBTC } from "@sigle/sdk";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -12,16 +12,6 @@ const editorPostSchema = z.object({
   coverImage: z.string().optional(),
   tags: z.array(z.string()).optional(),
   canonicalUri: z.string().optional(),
-  collect: z.object({
-    collectPrice: z.object({
-      type: z.enum(["free", "paid"] as const),
-      price: z.coerce.number().min(0),
-    }),
-    collectLimit: z.object({
-      type: z.enum(["open", "fixed"] as const),
-      limit: z.coerce.number().int().min(1),
-    }),
-  }),
 });
 
 export type EditorPostFormData = z.infer<typeof editorPostSchema>;
@@ -47,16 +37,6 @@ export const EditorFormProvider = ({
       coverImage: post.coverImage || undefined,
       tags: post.tags || [],
       canonicalUri: post.canonicalUri || undefined,
-      collect: {
-        collectPrice: {
-          type: post.collectPriceType || "free",
-          price: post.collectPrice ? formatBTC(BigInt(post.collectPrice)) : 0,
-        },
-        collectLimit: {
-          type: post.collectLimitType || "open",
-          limit: post.collectLimit || 100,
-        },
-      },
     },
   });
 

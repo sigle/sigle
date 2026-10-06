@@ -2,8 +2,8 @@ import type { Editor } from "@tiptap/core";
 import { create } from "zustand";
 
 interface EditorState {
-  menuOpen: boolean | "meta" | "collect";
-  setMenuOpen: (menuOpen: boolean | "meta" | "collect") => void;
+  menuOpen: boolean | "meta";
+  setMenuOpen: (menuOpen: boolean | "meta") => void;
 
   publishOpen: boolean;
   setPublishOpen: (menuOpen: boolean) => void;
