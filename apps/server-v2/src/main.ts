@@ -25,13 +25,17 @@ import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { JobsLive } from "@/jobs";
 import { ArweaveService } from "@/services/arweave";
+import { ArweaveGraphQLService } from "@/services/arweave-graphql";
 import { AuthService } from "@/services/auth";
 import { ImageProcessingService } from "@/services/image-processing";
+import { MediaImagesService } from "@/services/media-images";
+import { MetadataService } from "@/services/metadata";
 import { OpenTimestampsService } from "@/services/opentimestamps";
 import { PostHogService } from "@/services/posthog";
 import { RateLimiterLive } from "@/services/rate-limiter";
 import { StorageService } from "@/services/storage";
 import { TelemetryLayer } from "@/services/telemetry";
+import { UserProvisioningService } from "@/services/user-provisioning";
 import { UserWhitelistService } from "@/services/users";
 
 export const CoreServicesLayer = Layer.mergeAll(
@@ -64,6 +68,17 @@ export const AuthLayer = Layer.mergeAll(
   UserWhitelistService.layer,
 );
 
+/**
+ * Services consumed by the Arweave discovery jobs (posts, profiles and media
+ * placeholders). Wired here so the upcoming indexer jobs can use them.
+ */
+export const IndexerServicesLayer = Layer.mergeAll(
+  ArweaveGraphQLService.layer,
+  MetadataService.layer,
+  UserProvisioningService.layer,
+  MediaImagesService.layer,
+);
+
 export const CorsLayer = Layer.unwrap(
   Effect.map(AppConfig, (config) =>
     HttpRouter.cors({
@@ -94,6 +109,7 @@ export const MainLayer = HttpServerLayer.pipe(
   Layer.provide(JobsLive),
   Layer.provide(AuthLayer),
   Layer.provide(RateLimiterLive),
+  Layer.provide(IndexerServicesLayer),
   Layer.provide(Database.layer),
 );
 
