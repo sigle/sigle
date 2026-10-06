@@ -23,7 +23,6 @@ export const Routes = {
       postId: z.string(),
     }),
     z.object({
-      referral: z.string().optional().nullable(),
       published: z.boolean().optional(),
     }),
   ),

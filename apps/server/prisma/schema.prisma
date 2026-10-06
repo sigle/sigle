@@ -28,14 +28,12 @@ model User {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  drafts     Draft[]
-  posts      Post[]
-  profile    Profile?
-  ownedNfts  PostNft[] @relation("owner")
-  mintedNfts PostNft[] @relation("minter")
-  sessions   Session[]
-  accounts   Account[]
-  uploads    UserUpload[]
+  drafts   Draft[]
+  posts    Post[]
+  profile  Profile?
+  sessions Session[]
+  accounts Account[]
+  uploads  UserUpload[]
 
   @@unique([email])
   @@map("user")
@@ -134,10 +132,6 @@ model Draft {
   canonicalUri     String?  @map("canonical_uri")
   txId             String?  @map("tx_id")
   txStatus         String?  @map("tx_status")
-  collectPriceType String?  @map("collect_price_type")
-  collectPrice     BigInt?  @map("collect_price")
-  collectLimitType String?  @map("collect_limit_type")
-  collectLimit     Int?     @map("collect_limit")
   tags             String[] @map("tags")
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -175,11 +169,8 @@ model Post {
   revisionsCount Int            @default(1) @map("revisions_count")
   revisions      PostRevision[]
 
-  userId           String            @map("user_id")
-  user             User              @relation(fields: [userId], references: [id])
-  nfts             PostNft[]
-  minterFixedPrice MinterFixedPrice?
-  collectible      Collectible?
+  userId String @map("user_id")
+  user   User   @relation(fields: [userId], references: [id])
 
   @@map("post")
 }
@@ -197,30 +188,6 @@ model PostRevision {
   @@unique([postId, txId])
   @@index([postId])
   @@map("post_revision")
-}
-
-model MinterFixedPrice {
-  id         String @id @map("id")
-  price      BigInt @map("price")
-  startBlock BigInt @map("start_block")
-  endBlock   BigInt @map("end_block")
-
-  post Post @relation(fields: [id], references: [id])
-
-  @@map("minter_fixed_price")
-}
-
-model Collectible {
-  id          String  @id @map("id")
-  address     String  @unique @map("address")
-  maxSupply   Int     @map("max_supply")
-  openEdition Boolean @map("open_edition")
-  collected   Int     @map("collected")
-  enabled     Boolean @map("enabled")
-
-  post Post @relation(fields: [id], references: [id])
-
-  @@map("collectible")
 }
 
 model MediaImage {
@@ -254,19 +221,4 @@ model UserUpload {
   @@index([userId])
   @@index([userId, createdAt])
   @@map("user_upload")
-}
-
-model PostNft {
-  id String @id @map("id")
-
-  createdAt DateTime @map("created_at")
-
-  postId   String @map("post_id")
-  post     Post   @relation(fields: [postId], references: [id])
-  ownerId  String @map("owner_id")
-  owner    User   @relation(name: "owner", fields: [ownerId], references: [id])
-  minterId String @map("minter_id")
-  minter   User   @relation(name: "minter", fields: [minterId], references: [id])
-
-  @@map("post_nft")
 }

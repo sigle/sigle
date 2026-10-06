@@ -144,16 +144,6 @@ export default function MigrationPage() {
               coverImage: data.coverImage,
               metaDescription: data.metaDescription,
               canonicalUri: data.canonicalUrl,
-              collect: {
-                collectPrice: {
-                  type: "free",
-                  price: 0,
-                },
-                collectLimit: {
-                  type: "open",
-                  limit: 100,
-                },
-              },
             },
           },
         );

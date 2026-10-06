@@ -17,13 +17,11 @@
     "test": "vp test"
   },
   "dependencies": {
-    "@sigle/contracts-source-next": "workspace:*",
     "better-result": "3.0.1",
     "zod-validation-error": "5.0.0"
   },
   "devDependencies": {
     "@stacks/common": "7.6.0",
-    "@stacks/connect": "8.2.7",
     "@stacks/encryption": "7.6.0",
     "@stacks/network": "7.6.0",
     "@stacks/transactions": "7.6.0",
@@ -38,7 +36,6 @@
   },
   "peerDependencies": {
     "@stacks/common": "^7.0.0",
-    "@stacks/connect": "^8.0.0",
     "@stacks/encryption": "^7.0.0",
     "@stacks/network": "^7.0.0",
     "@stacks/transactions": "^7.0.0",

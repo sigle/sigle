@@ -34,14 +34,3 @@ jobs:
 
       - name: Test
         run: pnpm test
-
-  test-contracts:
-    name: "Test contracts"
-    runs-on: ubuntu-24.04
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: "Check contract syntax (contracts-next)"
-        uses: docker://ghcr.io/stx-labs/clarinet:3.24.0
-        with:
-          args: check --manifest-path ./apps/contracts-next/Clarinet.toml

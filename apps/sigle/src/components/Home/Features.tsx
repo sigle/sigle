@@ -18,11 +18,12 @@ export const HomeFeatures = () => {
         <div className="flex flex-col items-center gap-4 rounded-2xl bg-secondary/50 p-5 text-center">
           <IconCurrencyBitcoin className="mt-3 size-8 text-muted-foreground" />
           <h3 className="text-2xl font-semibold tracking-tight">
-            Earn Bitcoin
+            Bitcoin Secured
           </h3>
           <p className="text-sm text-balance text-muted-foreground">
-            Turn readers into collectors with direct{" "}
-            <span className="font-medium">sBTC</span> payments to your wallet.
+            Your posts are notarized on Bitcoin with{" "}
+            <span className="font-medium">OpenTimestamps</span> to prove
+            authorship.
           </p>
         </div>
 

@@ -2,16 +2,13 @@
 
 import type { paths } from "@sigle/sdk";
 import { format } from "date-fns";
-import { useState } from "react";
 import { BlurImage } from "@/components/ui/blur-image";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
 import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../../NextLink";
-import { PostCollectDialog } from "../PostCollectDialog";
 
 interface PostCardProps {
   post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"]["results"][number];
@@ -19,13 +16,6 @@ interface PostCardProps {
 }
 
 export const PostCard = ({ post, className }: PostCardProps) => {
-  const [collectDialogOpen, setCollectDialogOpen] = useState(false);
-
-  const canCollect =
-    post.collectible &&
-    (post.collectible.maxSupply === 0 ||
-      post.collectible.collected < post.collectible.maxSupply);
-
   return (
     <Card className={cn("relative pt-0", className)}>
       <div className="absolute inset-0 aspect-video bg-muted" />
@@ -73,29 +63,6 @@ export const PostCard = ({ post, className }: PostCardProps) => {
           </NextLink>{" "}
           • {format(new Date(post.createdAt), "MMM dd, yyyy")}
         </p>
-        {post.collectible ? (
-          <>
-            <div className="mt-4 flex items-center justify-between">
-              <p className="text-muted-foreground">
-                {post.collectible.openEdition
-                  ? `${post.collectible.collected} collected`
-                  : `${post.collectible.collected}/${post.collectible.maxSupply} collected`}
-              </p>
-              <Button
-                variant="secondary"
-                disabled={!canCollect}
-                onClick={() => setCollectDialogOpen(true)}
-              >
-                Collect
-              </Button>
-            </div>
-            <PostCollectDialog
-              post={post}
-              open={collectDialogOpen}
-              onOpenChange={setCollectDialogOpen}
-            />
-          </>
-        ) : null}
       </CardContent>
     </Card>
   );

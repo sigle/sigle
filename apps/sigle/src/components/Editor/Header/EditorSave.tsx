@@ -1,4 +1,3 @@
-import { parseBTC } from "@sigle/sdk";
 import { IconInfoCircle } from "@tabler/icons-react";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -48,15 +47,6 @@ export const EditorSave = () => {
           },
           body: {
             ...values,
-            collect: {
-              ...values.collect,
-              collectPrice: {
-                ...values.collect.collectPrice,
-                price: Number(
-                  parseBTC(String(values.collect.collectPrice.price)),
-                ),
-              },
-            },
           },
         },
         {
