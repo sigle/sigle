@@ -6,8 +6,10 @@ import {
   ProfileMetadataSchema,
   verifyMetadataSignature,
 } from "@sigle/sdk";
-import { Context, Data, Effect, Layer, Schema } from "effect";
+import { Context, Data, Effect, Layer, type Schema } from "effect";
+import { HttpClient } from "effect/http";
 import { AppConfig } from "@/config";
+import { makeJsonHttpClient } from "@/lib/http";
 import { type ImageGateways, resolveImageUrl } from "@/lib/images";
 
 export class MetadataFetchError extends Data.TaggedError("MetadataFetchError")<{
@@ -33,58 +35,8 @@ export type MetadataError =
   | InvalidMetadataError
   | MetadataSignatureError;
 
-export interface MetadataHttpClient {
-  readonly fetchJson: (
-    url: string,
-  ) => Effect.Effect<Schema.Json, MetadataFetchError>;
-}
-
 const describeCause = (cause: unknown): string =>
   cause instanceof Error ? cause.message : String(cause);
-
-/**
- * Fetches a JSON document over `fetch`. The payload is decoded at this
- * boundary so callers never handle raw JSON.
- */
-export const makeFetchMetadataHttpClient = (): MetadataHttpClient => ({
-  fetchJson: (url) =>
-    Effect.gen(function* () {
-      const response = yield* Effect.tryPromise({
-        try: () => fetch(url),
-        catch: (cause) =>
-          new MetadataFetchError({
-            message: `Failed to fetch metadata from ${url}: ${describeCause(cause)}`,
-            cause,
-          }),
-      });
-
-      if (!response.ok) {
-        return yield* new MetadataFetchError({
-          message: `Failed to fetch metadata from ${url}: status ${response.status}`,
-          cause: undefined,
-        });
-      }
-
-      const json = yield* Effect.tryPromise({
-        try: () => response.json(),
-        catch: (cause) =>
-          new MetadataFetchError({
-            message: `Failed to read metadata from ${url}: ${describeCause(cause)}`,
-            cause,
-          }),
-      });
-
-      return yield* Schema.decodeUnknownEffect(Schema.Json)(json).pipe(
-        Effect.mapError(
-          (cause) =>
-            new MetadataFetchError({
-              message: `Metadata at ${url} is not valid JSON`,
-              cause,
-            }),
-        ),
-      );
-    }),
-});
 
 export interface VerifiedPostMetadata {
   readonly metadata: PostMetadata;
@@ -140,11 +92,25 @@ const findAttributeValue = (
   attributes?.find((attribute) => attribute.key === key)?.value;
 
 export const makeMetadataService = (
-  http: MetadataHttpClient,
+  http: HttpClient.HttpClient,
   options: MetadataServiceOptions,
 ): MetadataOperations => {
-  const fetchJson = (uri: string) =>
-    http.fetchJson(resolveImageUrl(uri, options.gateways));
+  const client = HttpClient.filterStatusOk(http);
+
+  const fetchJson = (uri: string) => {
+    const url = resolveImageUrl(uri, options.gateways);
+
+    return client.get(url).pipe(
+      Effect.flatMap((response) => response.json),
+      Effect.mapError(
+        (cause) =>
+          new MetadataFetchError({
+            message: `Failed to fetch metadata from ${url}: ${describeCause(cause)}`,
+            cause,
+          }),
+      ),
+    );
+  };
 
   return {
     getPostMetadataFromUri: (uri) =>
@@ -229,21 +195,25 @@ export class MetadataService extends Context.Service<
   MetadataService,
   MetadataOperations
 >()("sigle/MetadataService") {
-  static readonly layer: Layer.Layer<MetadataService, never, AppConfig> =
-    Layer.effect(
-      MetadataService,
-      Effect.gen(function* () {
-        const config = yield* AppConfig;
+  static readonly layer: Layer.Layer<
+    MetadataService,
+    never,
+    AppConfig | HttpClient.HttpClient
+  > = Layer.effect(
+    MetadataService,
+    Effect.gen(function* () {
+      const config = yield* AppConfig;
+      const http = yield* HttpClient.HttpClient;
 
-        return makeMetadataService(makeFetchMetadataHttpClient(), {
-          gateways: {
-            arweave: config.ARWEAVE_GATEWAY_URL,
-            ipfs: config.IPFS_GATEWAY_URL,
-          },
-          network: config.STACKS_ENV,
-        });
-      }),
-    );
+      return makeMetadataService(http, {
+        gateways: {
+          arweave: config.ARWEAVE_GATEWAY_URL,
+          ipfs: config.IPFS_GATEWAY_URL,
+        },
+        network: config.STACKS_ENV,
+      });
+    }),
+  );
 
   static readonly layerTest = (
     respond: (url: string) => Schema.Json,
@@ -252,7 +222,9 @@ export class MetadataService extends Context.Service<
     Layer.succeed(
       MetadataService,
       makeMetadataService(
-        { fetchJson: (url) => Effect.sync(() => respond(url)) },
+        makeJsonHttpClient((_request, url) => ({
+          body: respond(url.toString()),
+        })),
         {
           gateways: TEST_GATEWAYS,
           network: "testnet",

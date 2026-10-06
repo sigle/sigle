@@ -1,6 +1,13 @@
 import { ArweaveTags, ArweaveTransactionTypes } from "@sigle/sdk";
 import { Context, Data, Effect, Layer, Option, Schema } from "effect";
+import {
+  HttpClient,
+  HttpBody,
+  HttpClientRequest,
+  HttpClientResponse,
+} from "effect/http";
 import { AppConfig } from "@/config";
+import { makeJsonHttpClient } from "@/lib/http";
 
 /** Number of transactions fetched per Arweave GraphQL page, mirroring v1. */
 export const ARWEAVE_GRAPHQL_PAGE_SIZE = 100;
@@ -67,15 +74,6 @@ export type ArweaveGraphQLQuery =
       readonly ids: ReadonlyArray<string>;
     };
 
-export interface ArweaveGraphQLClient {
-  readonly execute: (
-    query: ArweaveGraphQLQuery,
-  ) => Effect.Effect<
-    ReadonlyArray<ArweaveTransactionEdge>,
-    ArweaveGraphQLError
-  >;
-}
-
 const TRANSACTIONS_BY_TAGS_QUERY = `query TransactionsByTags($tags: [TagFilter!]!, $minBlockHeight: Int, $after: String, $first: Int!) {
   transactions(tags: $tags, block: { min: $minBlockHeight }, first: $first, sort: HEIGHT_ASC, after: $after) {
     edges {
@@ -138,76 +136,8 @@ const encodeQuery = (query: ArweaveGraphQLQuery): QueryBody => {
   };
 };
 
-const decodeResponse = Schema.decodeUnknownEffect(TransactionsResponseSchema);
-
 const describeCause = (cause: unknown): string =>
   cause instanceof Error ? cause.message : String(cause);
-
-/**
- * Arweave GraphQL client over `fetch`. The response is decoded at this boundary
- * so callers only ever see validated edges.
- */
-export const makeFetchArweaveGraphQLClient = (
-  gatewayUrl: string,
-): ArweaveGraphQLClient => {
-  const endpoint = `${gatewayUrl.replace(/\/+$/, "")}/graphql`;
-
-  return {
-    execute: (query) =>
-      Effect.gen(function* () {
-        const response = yield* Effect.tryPromise({
-          try: () =>
-            fetch(endpoint, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(encodeQuery(query)),
-            }),
-          catch: (cause) =>
-            new ArweaveGraphQLError({
-              message: `Failed to query Arweave GraphQL: ${describeCause(cause)}`,
-              cause,
-            }),
-        });
-
-        if (!response.ok) {
-          return yield* new ArweaveGraphQLError({
-            message: `Arweave GraphQL request failed with status ${response.status}`,
-            cause: undefined,
-          });
-        }
-
-        const body = yield* Effect.tryPromise({
-          try: () => response.json(),
-          catch: (cause) =>
-            new ArweaveGraphQLError({
-              message: `Failed to read Arweave GraphQL response: ${describeCause(cause)}`,
-              cause,
-            }),
-        });
-
-        const decoded = yield* decodeResponse(body).pipe(
-          Effect.mapError(
-            (cause) =>
-              new ArweaveGraphQLError({
-                message: "Invalid Arweave GraphQL response",
-                cause,
-              }),
-          ),
-        );
-
-        if (decoded.errors !== undefined && decoded.errors.length > 0) {
-          return yield* new ArweaveGraphQLError({
-            message: `Arweave GraphQL error: ${decoded.errors
-              .map((error) => error.message)
-              .join(", ")}`,
-            cause: undefined,
-          });
-        }
-
-        return decoded.data?.transactions?.edges ?? [];
-      }),
-  };
-};
 
 export interface ArweaveGraphQLOperations {
   /**
@@ -242,24 +172,77 @@ export interface ArweaveGraphQLOperations {
 }
 
 export const makeArweaveGraphQLService = (
-  client: ArweaveGraphQLClient,
+  http: HttpClient.HttpClient,
   appId: string,
+  gatewayUrl: string,
 ): ArweaveGraphQLOperations => {
+  const endpoint = `${gatewayUrl.replace(/\/+$/, "")}/graphql`;
+  const client = HttpClient.filterStatusOk(http);
+
   const appNameTag: ArweaveTagFilter = {
     name: ArweaveTags.appName,
     values: [appId],
   };
 
+  const execute = (
+    query: ArweaveGraphQLQuery,
+  ): Effect.Effect<
+    ReadonlyArray<ArweaveTransactionEdge>,
+    ArweaveGraphQLError
+  > =>
+    client
+      .execute(
+        HttpClientRequest.post(endpoint, {
+          body: HttpBody.jsonUnsafe(encodeQuery(query)),
+        }),
+      )
+      .pipe(
+        Effect.mapError(
+          (cause) =>
+            new ArweaveGraphQLError({
+              message: `Arweave GraphQL request failed: ${describeCause(cause)}`,
+              cause,
+            }),
+        ),
+        Effect.flatMap((response) =>
+          HttpClientResponse.schemaBodyJson(TransactionsResponseSchema)(
+            response,
+          ).pipe(
+            Effect.mapError(
+              (cause) =>
+                new ArweaveGraphQLError({
+                  message: "Invalid Arweave GraphQL response",
+                  cause,
+                }),
+            ),
+          ),
+        ),
+        Effect.flatMap((decoded) => {
+          if (decoded.errors !== undefined && decoded.errors.length > 0) {
+            return Effect.fail(
+              new ArweaveGraphQLError({
+                message: `Arweave GraphQL error: ${decoded.errors
+                  .map((error) => error.message)
+                  .join(", ")}`,
+                cause: undefined,
+              }),
+            );
+          }
+
+          return Effect.succeed(decoded.data?.transactions?.edges ?? []);
+        }),
+      );
+
   return {
     fetchPostTransactions: ({ minBlockHeight, afterCursor }) =>
-      client.execute({
+      execute({
         kind: "transactionsByTags",
         tags: [appNameTag],
         minBlockHeight,
         after: afterCursor,
       }),
     fetchProfileTransactions: ({ minBlockHeight, afterCursor }) =>
-      client.execute({
+      execute({
         kind: "transactionsByTags",
         tags: [
           appNameTag,
@@ -272,43 +255,52 @@ export const makeArweaveGraphQLService = (
         after: afterCursor,
       }),
     fetchTransactionBlock: (txId) =>
-      client
-        .execute({ kind: "transactionsByIds", ids: [txId] })
-        .pipe(
-          Effect.map((edges) =>
-            Option.fromNullishOr(edges[0]?.node.block ?? null),
-          ),
+      execute({ kind: "transactionsByIds", ids: [txId] }).pipe(
+        Effect.map((edges) =>
+          Option.fromNullishOr(edges[0]?.node.block ?? null),
         ),
+      ),
   };
 };
+
+export interface ArweaveGraphQLTestResponse {
+  readonly status?: number | undefined;
+  readonly body: Schema.Json;
+}
 
 export class ArweaveGraphQLService extends Context.Service<
   ArweaveGraphQLService,
   ArweaveGraphQLOperations
 >()("sigle/ArweaveGraphQLService") {
-  static readonly layer: Layer.Layer<ArweaveGraphQLService, never, AppConfig> =
-    Layer.effect(
-      ArweaveGraphQLService,
-      Effect.gen(function* () {
-        const config = yield* AppConfig;
+  static readonly layer: Layer.Layer<
+    ArweaveGraphQLService,
+    never,
+    AppConfig | HttpClient.HttpClient
+  > = Layer.effect(
+    ArweaveGraphQLService,
+    Effect.gen(function* () {
+      const config = yield* AppConfig;
+      const http = yield* HttpClient.HttpClient;
 
-        return makeArweaveGraphQLService(
-          makeFetchArweaveGraphQLClient(config.ARWEAVE_GATEWAY_URL),
-          config.APP_ID,
-        );
-      }),
-    );
+      return makeArweaveGraphQLService(
+        http,
+        config.APP_ID,
+        config.ARWEAVE_GATEWAY_URL,
+      );
+    }),
+  );
 
   static readonly layerTest = (
     respond: (
-      query: ArweaveGraphQLQuery,
-    ) => ReadonlyArray<ArweaveTransactionEdge>,
+      request: HttpClientRequest.HttpClientRequest,
+    ) => ArweaveGraphQLTestResponse,
   ): Layer.Layer<ArweaveGraphQLService> =>
     Layer.succeed(
       ArweaveGraphQLService,
       makeArweaveGraphQLService(
-        { execute: (query) => Effect.sync(() => respond(query)) },
+        makeJsonHttpClient((request) => respond(request)),
         "sigle-test",
+        "https://gateway.test",
       ),
     );
 }

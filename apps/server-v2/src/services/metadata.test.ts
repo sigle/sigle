@@ -1,5 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Effect, Schema } from "effect";
+import { makeJsonHttpClient } from "@/lib/http";
 import {
   InvalidMetadataError,
   MetadataFetchError,
@@ -171,17 +172,9 @@ describe("metadata service", () => {
     }).pipe(Effect.provide(layer));
   });
 
-  it.effect("propagates fetch failures", () => {
+  it.effect("wraps HTTP failures in MetadataFetchError", () => {
     const service = makeMetadataService(
-      {
-        fetchJson: () =>
-          Effect.fail(
-            new MetadataFetchError({
-              message: "network down",
-              cause: undefined,
-            }),
-          ),
-      },
+      makeJsonHttpClient(() => ({ status: 500, body: { error: "down" } })),
       {
         gateways: {
           arweave: "https://turbo-gateway.test",
@@ -197,7 +190,7 @@ describe("metadata service", () => {
         .pipe(Effect.flip);
 
       expect(error).toBeInstanceOf(MetadataFetchError);
-      expect(error.message).toBe("network down");
+      expect(error.message).toContain("Failed to fetch metadata");
     });
   });
 });

@@ -1,11 +1,10 @@
+import type { HttpClientRequest } from "effect/http";
 import { describe, expect, it } from "@effect/vitest";
-import { Effect, Layer, Option } from "effect";
-import { afterEach, vi } from "vitest";
-import { AppConfig } from "@/config";
+import { Effect, Option, Schema } from "effect";
 import {
   ArweaveGraphQLError,
   ArweaveGraphQLService,
-  type ArweaveGraphQLQuery,
+  type ArweaveGraphQLTestResponse,
   type ArweaveTransactionEdge,
 } from "@/services/arweave-graphql";
 
@@ -21,42 +20,52 @@ const makeEdge = (
   },
 });
 
-const stubFetchResponse = <T>(body: T, status = 200) => {
-  const fetchMock = vi.fn(
-    async (_input: RequestInfo | URL, _init?: RequestInit) =>
-      new Response(JSON.stringify(body), {
-        status,
-        headers: { "content-type": "application/json" },
-      }),
+const RequestBodySchema = Schema.Struct({
+  query: Schema.String,
+  variables: Schema.Struct({
+    tags: Schema.optionalKey(
+      Schema.Array(
+        Schema.Struct({
+          name: Schema.String,
+          values: Schema.Array(Schema.String),
+        }),
+      ),
+    ),
+    ids: Schema.optionalKey(Schema.Array(Schema.String)),
+    minBlockHeight: Schema.optionalKey(Schema.Finite),
+    after: Schema.optionalKey(Schema.String),
+    first: Schema.optionalKey(Schema.Finite),
+  }),
+});
+
+const RequestBodyJsonSchema = Schema.fromJsonString(RequestBodySchema);
+
+const EncodedBodySchema = Schema.Struct({
+  body: Schema.optionalKey(Schema.String),
+});
+
+const requestBody = (request: HttpClientRequest.HttpClientRequest) => {
+  const encoded = Schema.decodeUnknownSync(EncodedBodySchema)(
+    request.body.toJSON(),
   );
 
-  vi.stubGlobal("fetch", fetchMock);
-
-  return fetchMock;
+  return Schema.decodeSync(RequestBodyJsonSchema)(encoded.body ?? "null");
 };
 
-const productionLayer = ArweaveGraphQLService.layer.pipe(
-  Layer.provide(
-    AppConfig.layerTest({
-      APP_ID: "sigle-test",
-      ARWEAVE_GATEWAY_URL: "https://gateway.test/",
-    }),
-  ),
-);
+const respondWithEdges = (
+  edges: ReadonlyArray<ArweaveTransactionEdge>,
+): ArweaveGraphQLTestResponse => ({
+  body: { data: { transactions: { edges } } },
+});
 
 describe("arweave graphql service", () => {
-  afterEach(() => {
-    vi.restoreAllMocks();
-    vi.unstubAllGlobals();
-  });
-
   it.effect("fetches post transactions by app name tag", () => {
-    const queries: Array<ArweaveGraphQLQuery> = [];
+    const requests: Array<ReturnType<typeof requestBody>> = [];
 
-    const layer = ArweaveGraphQLService.layerTest((query) => {
-      queries.push(query);
+    const layer = ArweaveGraphQLService.layerTest((request) => {
+      requests.push(requestBody(request));
 
-      return [makeEdge()];
+      return respondWithEdges([makeEdge()]);
     });
 
     return Effect.gen(function* () {
@@ -67,24 +76,22 @@ describe("arweave graphql service", () => {
       });
 
       expect(edges).toStrictEqual([makeEdge()]);
-      expect(queries).toStrictEqual([
-        {
-          kind: "transactionsByTags",
-          tags: [{ name: "App-Name", values: ["sigle-test"] }],
-          minBlockHeight: 5,
-          after: undefined,
-        },
-      ]);
+      expect(requests[0]?.variables).toStrictEqual({
+        tags: [{ name: "App-Name", values: ["sigle-test"] }],
+        minBlockHeight: 5,
+        first: 100,
+      });
+      expect(requests[0]?.query).toContain("TransactionsByTags");
     }).pipe(Effect.provide(layer));
   });
 
   it.effect("fetches profile transactions with the profile type tag", () => {
-    const queries: Array<ArweaveGraphQLQuery> = [];
+    const requests: Array<ReturnType<typeof requestBody>> = [];
 
-    const layer = ArweaveGraphQLService.layerTest((query) => {
-      queries.push(query);
+    const layer = ArweaveGraphQLService.layerTest((request) => {
+      requests.push(requestBody(request));
 
-      return [];
+      return respondWithEdges([]);
     });
 
     return Effect.gen(function* () {
@@ -95,52 +102,25 @@ describe("arweave graphql service", () => {
         afterCursor: "cursor-9",
       });
 
-      expect(queries).toStrictEqual([
-        {
-          kind: "transactionsByTags",
-          tags: [
-            { name: "App-Name", values: ["sigle-test"] },
-            { name: "Type", values: ["profile"] },
-          ],
-          minBlockHeight: 0,
-          after: "cursor-9",
-        },
-      ]);
+      expect(requests[0]?.variables).toStrictEqual({
+        tags: [
+          { name: "App-Name", values: ["sigle-test"] },
+          { name: "Type", values: ["profile"] },
+        ],
+        minBlockHeight: 0,
+        after: "cursor-9",
+        first: 100,
+      });
     }).pipe(Effect.provide(layer));
   });
 
-  it.effect("posts the encoded query to the gateway and parses edges", () => {
-    const fetchMock = stubFetchResponse({
-      data: { transactions: { edges: [makeEdge()] } },
-    });
-
-    return Effect.gen(function* () {
-      const graphql = yield* ArweaveGraphQLService;
-
-      const edges = yield* graphql.fetchPostTransactions({
-        minBlockHeight: 5,
-      });
-
-      expect(edges).toStrictEqual([makeEdge()]);
-
-      const [url, init] = fetchMock.mock.calls[0] ?? [];
-
-      expect(url).toBe("https://gateway.test/graphql");
-      expect(init?.method).toBe("POST");
-      expect(JSON.parse(String(init?.body))).toStrictEqual({
-        query: expect.stringContaining("TransactionsByTags"),
-        variables: {
-          tags: [{ name: "App-Name", values: ["sigle-test"] }],
-          minBlockHeight: 5,
-          first: 100,
-        },
-      });
-    }).pipe(Effect.provide(productionLayer));
-  });
-
   it.effect("returns the mined block of a transaction", () => {
-    const fetchMock = stubFetchResponse({
-      data: { transactions: { edges: [makeEdge()] } },
+    const requests: Array<ReturnType<typeof requestBody>> = [];
+
+    const layer = ArweaveGraphQLService.layerTest((request) => {
+      requests.push(requestBody(request));
+
+      return respondWithEdges([makeEdge()]);
     });
 
     return Effect.gen(function* () {
@@ -152,20 +132,18 @@ describe("arweave graphql service", () => {
         height: 12,
         timestamp: 1_700_000_000,
       });
-
-      const [, init] = fetchMock.mock.calls[0] ?? [];
-
-      expect(JSON.parse(String(init?.body))).toStrictEqual({
-        query: expect.stringContaining("TransactionsByIds"),
-        variables: { ids: ["tx-1"], first: 100 },
+      expect(requests[0]?.variables).toStrictEqual({
+        ids: ["tx-1"],
+        first: 100,
       });
-    }).pipe(Effect.provide(productionLayer));
+      expect(requests[0]?.query).toContain("TransactionsByIds");
+    }).pipe(Effect.provide(layer));
   });
 
   it.effect("returns none when the transaction has no mined block", () => {
-    stubFetchResponse({
-      data: { transactions: { edges: [makeEdge({ block: null })] } },
-    });
+    const layer = ArweaveGraphQLService.layerTest(() =>
+      respondWithEdges([makeEdge({ block: null })]),
+    );
 
     return Effect.gen(function* () {
       const graphql = yield* ArweaveGraphQLService;
@@ -173,11 +151,13 @@ describe("arweave graphql service", () => {
       const block = yield* graphql.fetchTransactionBlock("tx-1");
 
       expect(Option.isNone(block)).toBe(true);
-    }).pipe(Effect.provide(productionLayer));
+    }).pipe(Effect.provide(layer));
   });
 
   it.effect("fails with ArweaveGraphQLError on graphql errors", () => {
-    stubFetchResponse({ errors: [{ message: "boom" }] });
+    const layer = ArweaveGraphQLService.layerTest(() => ({
+      body: { errors: [{ message: "boom" }] },
+    }));
 
     return Effect.gen(function* () {
       const graphql = yield* ArweaveGraphQLService;
@@ -188,11 +168,14 @@ describe("arweave graphql service", () => {
 
       expect(error).toBeInstanceOf(ArweaveGraphQLError);
       expect(error.message).toBe("Arweave GraphQL error: boom");
-    }).pipe(Effect.provide(productionLayer));
+    }).pipe(Effect.provide(layer));
   });
 
   it.effect("fails with ArweaveGraphQLError on non-ok responses", () => {
-    stubFetchResponse({}, 500);
+    const layer = ArweaveGraphQLService.layerTest(() => ({
+      status: 500,
+      body: {},
+    }));
 
     return Effect.gen(function* () {
       const graphql = yield* ArweaveGraphQLService;
@@ -202,14 +185,14 @@ describe("arweave graphql service", () => {
         .pipe(Effect.flip);
 
       expect(error).toBeInstanceOf(ArweaveGraphQLError);
-      expect(error.message).toBe(
-        "Arweave GraphQL request failed with status 500",
-      );
-    }).pipe(Effect.provide(productionLayer));
+      expect(error.message).toContain("Arweave GraphQL request failed");
+    }).pipe(Effect.provide(layer));
   });
 
   it.effect("fails with ArweaveGraphQLError on invalid response shapes", () => {
-    stubFetchResponse({ data: { transactions: { edges: [{ cursor: 1 }] } } });
+    const layer = ArweaveGraphQLService.layerTest(() => ({
+      body: { data: { transactions: { edges: [{ cursor: 1 }] } } },
+    }));
 
     return Effect.gen(function* () {
       const graphql = yield* ArweaveGraphQLService;
@@ -220,6 +203,6 @@ describe("arweave graphql service", () => {
 
       expect(error).toBeInstanceOf(ArweaveGraphQLError);
       expect(error.message).toBe("Invalid Arweave GraphQL response");
-    }).pipe(Effect.provide(productionLayer));
+    }).pipe(Effect.provide(layer));
   });
 });

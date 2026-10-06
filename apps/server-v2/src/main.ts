@@ -1,4 +1,5 @@
 import {
+  NodeHttpClient,
   NodeHttpServer,
   NodeRuntime,
   NodeServices,
@@ -45,7 +46,11 @@ export const CoreServicesLayer = Layer.mergeAll(
   OpenTimestampsService.layer,
   ImageProcessingService.layer,
   StorageService.layer,
-).pipe(Layer.provideMerge(AppConfig.layer), Layer.provide(NodeServices.layer));
+).pipe(
+  Layer.provideMerge(AppConfig.layer),
+  Layer.provideMerge(NodeHttpClient.layerUndici),
+  Layer.provide(NodeServices.layer),
+);
 
 export const ApiHandlersLayer = Layer.mergeAll(
   HealthHandlersLayer,
