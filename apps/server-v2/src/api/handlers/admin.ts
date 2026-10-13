@@ -6,6 +6,8 @@ import {
   type FailedJobListQuery,
 } from "@/api/groups/admin";
 import { NotFound } from "@/api/schemas";
+import { indexPostsJob } from "@/jobs/index-posts";
+import { indexProfilesJob } from "@/jobs/index-profiles";
 import { JobAdminService } from "@/queue/admin";
 
 export const listQueues = Effect.gen(function* () {
@@ -60,6 +62,22 @@ export const deleteFailedJob = (queueName: string, id: string) =>
     }
   });
 
+export const triggerPostsScan = Effect.gen(function* () {
+  yield* indexPostsJob
+    .offer({}, { id: `index-posts:manual:${crypto.randomUUID()}` })
+    .pipe(Effect.orDie);
+
+  return { queued: true };
+});
+
+export const triggerProfilesScan = Effect.gen(function* () {
+  yield* indexProfilesJob
+    .offer({}, { id: `index-profiles:manual:${crypto.randomUUID()}` })
+    .pipe(Effect.orDie);
+
+  return { queued: true };
+});
+
 export const AdminHandlersLayer = HttpApiBuilder.group(
   SigleApi,
   "admin",
@@ -74,5 +92,7 @@ export const AdminHandlersLayer = HttpApiBuilder.group(
       )
       .handle("deleteFailedJob", ({ params }) =>
         deleteFailedJob(params.queueName, params.id),
-      ),
+      )
+      .handle("triggerPostsScan", () => triggerPostsScan)
+      .handle("triggerProfilesScan", () => triggerProfilesScan),
 );

@@ -12,6 +12,10 @@ import {
   thumbhashJobId,
 } from "./generate-image-thumbhash";
 import { opentimestampsStampJob, otsStampJobId } from "./opentimestamps-stamp";
+import {
+  blockHeightJobId,
+  updateArweaveBlockHeightJob,
+} from "./update-arweave-block-height";
 
 export const PUBLISH_DRAFT_QUEUE_NAME = "publish-draft";
 
@@ -357,6 +361,13 @@ export const publishDraftJob = defineJob({
         )
         .pipe(Effect.orDie);
 
+      yield* updateArweaveBlockHeightJob
+        .offer(
+          { postId: published.postId },
+          { id: blockHeightJobId(published.postId) },
+        )
+        .pipe(Effect.orDie);
+
       if (published.coverImage !== null) {
         yield* generateImageThumbhashJob
           .offer(
@@ -376,4 +387,5 @@ export const PublishDraftWorkerLive = publishDraftJob
     Layer.provideMerge(publishDraftJob.layer),
     Layer.provideMerge(opentimestampsStampJob.layer),
     Layer.provideMerge(generateImageThumbhashJob.layer),
+    Layer.provideMerge(updateArweaveBlockHeightJob.layer),
   );

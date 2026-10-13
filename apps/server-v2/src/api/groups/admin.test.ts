@@ -1,6 +1,7 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Effect, Schema } from "effect";
 import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/http";
+import { JobAdminService } from "@/queue/admin";
 import {
   createAuthenticatedClient,
   createTestWalletAddress,
@@ -106,6 +107,46 @@ describe("admin jobs API", () => {
       );
 
       expect(remove.status).toBe(404);
+    }).pipe(
+      Effect.provide(makeTestServerLayer({ ADMIN_ADDRESSES: [ADMIN_ADDRESS] })),
+    ),
+  );
+
+  it.effect("queues discovery scans for an admin", () =>
+    Effect.gen(function* () {
+      const { client, userId } = yield* createAuthenticatedClient();
+      yield* createTestWalletAddress({ userId, address: ADMIN_ADDRESS });
+
+      const posts = yield* client.execute(
+        HttpClientRequest.post("/api/protected/admin/index/posts"),
+      );
+
+      const profiles = yield* client.execute(
+        HttpClientRequest.post("/api/protected/admin/index/profiles"),
+      );
+
+      const admin = yield* JobAdminService;
+
+      const queued = (yield* admin.getQueueStats)
+        .filter(
+          (stats) =>
+            stats.queueName === "index-posts" ||
+            stats.queueName === "index-profiles",
+        )
+        .map((stats) => [stats.queueName, stats.pending]);
+
+      expect({
+        posts: posts.status,
+        profiles: profiles.status,
+        queued,
+      }).toStrictEqual({
+        posts: 202,
+        profiles: 202,
+        queued: [
+          ["index-posts", 1],
+          ["index-profiles", 1],
+        ],
+      });
     }).pipe(
       Effect.provide(makeTestServerLayer({ ADMIN_ADDRESSES: [ADMIN_ADDRESS] })),
     ),

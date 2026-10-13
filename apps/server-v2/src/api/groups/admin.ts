@@ -68,6 +68,10 @@ export const RetryFailedJobResponse = Schema.Struct({
   success: Schema.Boolean,
 }).annotate({ identifier: "RetryFailedJobResponse" });
 
+export const IndexScanAccepted = Schema.Struct({
+  queued: Schema.Boolean,
+}).annotate({ identifier: "IndexScanAccepted" });
+
 export const AdminGroup = HttpApiGroup.make("admin")
   .add(
     HttpApiEndpoint.get("listQueues", "/queues", {
@@ -119,6 +123,22 @@ export const AdminGroup = HttpApiGroup.make("admin")
       .annotate(
         OpenApi.Description,
         "Permanently remove a dead-lettered job from the queue.",
+      ),
+    HttpApiEndpoint.post("triggerPostsScan", "/index/posts", {
+      success: HttpApiSchema.status(202)(IndexScanAccepted),
+    })
+      .annotate(OpenApi.Summary, "Trigger a posts discovery scan")
+      .annotate(
+        OpenApi.Description,
+        "Queue an immediate Arweave posts discovery scan.",
+      ),
+    HttpApiEndpoint.post("triggerProfilesScan", "/index/profiles", {
+      success: HttpApiSchema.status(202)(IndexScanAccepted),
+    })
+      .annotate(OpenApi.Summary, "Trigger a profiles discovery scan")
+      .annotate(
+        OpenApi.Description,
+        "Queue an immediate Arweave profiles discovery scan.",
       ),
   )
   .prefix("/api/protected/admin")

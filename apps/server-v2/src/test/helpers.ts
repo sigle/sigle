@@ -107,6 +107,7 @@ export const createTestProfile = (options: {
   readonly walletAddressId: string;
   readonly arweaveTxId?: string;
   readonly signature?: string;
+  readonly arweaveBlockHeight?: number | null;
   readonly displayName?: string;
   readonly description?: string;
   readonly website?: string;
@@ -125,6 +126,7 @@ export const createTestProfile = (options: {
         walletAddressId: options.walletAddressId,
         arweaveTxId: options.arweaveTxId ?? crypto.randomUUID(),
         signature: options.signature ?? crypto.randomUUID(),
+        arweaveBlockHeight: options.arweaveBlockHeight ?? null,
         displayName: options.displayName ?? "Test Profile",
         description: options.description ?? "Test description",
         website: options.website ?? null,
@@ -181,6 +183,7 @@ export const createTestPost = (options: {
   readonly content?: string;
   readonly excerpt?: string;
   readonly signature?: string | null;
+  readonly createdAt?: Date;
 }) =>
   Effect.gen(function* () {
     const db = yield* Database;
@@ -200,6 +203,7 @@ export const createTestPost = (options: {
         content: options.content ?? "Test post content",
         excerpt: options.excerpt ?? "Test excerpt",
         signature: options.signature ?? null,
+        createdAt: options.createdAt,
         userId: options.userId,
       })
       .returning();
