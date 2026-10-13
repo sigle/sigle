@@ -247,6 +247,7 @@ export const post = pgTable(
     tags: text("tags").array(),
     canonicalUri: text("canonical_uri"),
     signature: text("signature").unique("post_signature_key"),
+    revisionsCount: integer("revisions_count").default(1).notNull(),
     createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
     updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
     userId: text("user_id")
@@ -258,6 +259,31 @@ export const post = pgTable(
     index("post_arweave_pending_idx")
       .on(table.createdAt)
       .where(sql`arweave_block_height is null`),
+  ],
+);
+
+// --
+// Post revisions
+// --
+
+/**
+ * Every Arweave transaction that carried a post's metadata. The post row
+ * always points at the latest revision; discovery fills this history in.
+ */
+export const postRevision = pgTable(
+  "post_revision",
+  {
+    id: text("id").primaryKey(),
+    postId: text("post_id")
+      .notNull()
+      .references(() => post.id, { onDelete: "cascade" }),
+    txId: text("tx_id").notNull(),
+    arweaveBlockHeight: integer("arweave_block_height"),
+    createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("post_revision_post_id_tx_id_key").on(table.postId, table.txId),
+    index("post_revision_post_id_idx").on(table.postId),
   ],
 );
 
