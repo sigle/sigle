@@ -47,6 +47,12 @@ import {
   type PublishDraftJob,
   PublishDraftWorkerLive,
 } from "@/jobs/publish-draft";
+import {
+  type UpdateArweaveBlockHeightJob,
+  updateArweaveBlockHeightJob,
+  UpdateArweaveBlockHeightWorkerLive,
+} from "@/jobs/update-arweave-block-height";
+import { UpdateArweaveBlockHeightReconcileLive } from "@/jobs/update-arweave-block-height-reconcile";
 import { JobAdminService } from "@/queue/admin";
 import { type JobRuntime } from "@/queue/core";
 import { QueueStoreLive } from "@/queue/store";
@@ -65,6 +71,7 @@ export const jobs = [
   indexPostsJob,
   indexProfileJob,
   indexProfilesJob,
+  updateArweaveBlockHeightJob,
 ] as const;
 
 export const QueueCleanupLive = PersistedQueue.layerCleanup({
@@ -77,6 +84,7 @@ export const JobsLive = Layer.mergeAll(
   OpenTimestampsStampWorkerLive,
   OpenTimestampsUpgradeWorkerLive,
   GenerateImageThumbhashWorkerLive,
+  UpdateArweaveBlockHeightWorkerLive,
   IndexPostWorkerLive,
   IndexPostsWorkerLive,
   IndexProfileWorkerLive,
@@ -85,6 +93,7 @@ export const JobsLive = Layer.mergeAll(
   MediaImageReconcileLive,
   IndexPostsScanLive,
   IndexProfilesScanLive,
+  UpdateArweaveBlockHeightReconcileLive,
   JobAdminService.layer,
   QueueCleanupLive,
 ).pipe(
@@ -106,6 +115,7 @@ export const makeQueuesTestLayer = (options?: {
   | PersistedQueue.PersistedQueue<IndexPostsJob>
   | PersistedQueue.PersistedQueue<IndexProfileJob>
   | PersistedQueue.PersistedQueue<IndexProfilesJob>
+  | PersistedQueue.PersistedQueue<UpdateArweaveBlockHeightJob>
   | JobRuntime
   | JobAdminService,
   never,
@@ -135,6 +145,7 @@ export const makeQueuesTestLayer = (options?: {
     indexPostsJob.makeLayer(queueOverrides),
     indexProfileJob.makeLayer(queueOverrides),
     indexProfilesJob.makeLayer(queueOverrides),
+    updateArweaveBlockHeightJob.makeLayer(queueOverrides),
   );
 
   const workerLayers = Layer.mergeAll(

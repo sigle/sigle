@@ -183,6 +183,7 @@ export const createTestPost = (options: {
   readonly content?: string;
   readonly excerpt?: string;
   readonly signature?: string | null;
+  readonly createdAt?: Date;
 }) =>
   Effect.gen(function* () {
     const db = yield* Database;
@@ -202,6 +203,7 @@ export const createTestPost = (options: {
         content: options.content ?? "Test post content",
         excerpt: options.excerpt ?? "Test excerpt",
         signature: options.signature ?? null,
+        createdAt: options.createdAt,
         userId: options.userId,
       })
       .returning();
