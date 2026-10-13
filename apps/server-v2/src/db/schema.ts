@@ -172,6 +172,8 @@ export const profile = pgTable(
       .notNull()
       .unique("profile_arweave_tx_id_key"),
     signature: text("signature").notNull().unique("profile_signature_key"),
+    /** Null until the profile metadata transaction is mined. */
+    arweaveBlockHeight: integer("arweave_block_height"),
     displayName: text("display_name"),
     description: text("description"),
     website: text("website"),

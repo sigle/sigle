@@ -107,6 +107,7 @@ export const createTestProfile = (options: {
   readonly walletAddressId: string;
   readonly arweaveTxId?: string;
   readonly signature?: string;
+  readonly arweaveBlockHeight?: number | null;
   readonly displayName?: string;
   readonly description?: string;
   readonly website?: string;
@@ -125,6 +126,7 @@ export const createTestProfile = (options: {
         walletAddressId: options.walletAddressId,
         arweaveTxId: options.arweaveTxId ?? crypto.randomUUID(),
         signature: options.signature ?? crypto.randomUUID(),
+        arweaveBlockHeight: options.arweaveBlockHeight ?? null,
         displayName: options.displayName ?? "Test Profile",
         description: options.description ?? "Test description",
         website: options.website ?? null,

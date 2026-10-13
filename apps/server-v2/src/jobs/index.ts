@@ -19,6 +19,17 @@ import {
   IndexPostsScanLive,
   IndexPostsWorkerLive,
 } from "@/jobs/index-posts";
+import {
+  type IndexProfileJob,
+  indexProfileJob,
+  IndexProfileWorkerLive,
+} from "@/jobs/index-profile";
+import {
+  type IndexProfilesJob,
+  indexProfilesJob,
+  IndexProfilesScanLive,
+  IndexProfilesWorkerLive,
+} from "@/jobs/index-profiles";
 import { MediaImageReconcileLive } from "@/jobs/media-image-reconcile";
 import { OpenTimestampsReconcileLive } from "@/jobs/opentimestamps-reconcile";
 import {
@@ -52,6 +63,8 @@ export const jobs = [
   generateImageThumbhashJob,
   indexPostJob,
   indexPostsJob,
+  indexProfileJob,
+  indexProfilesJob,
 ] as const;
 
 export const QueueCleanupLive = PersistedQueue.layerCleanup({
@@ -66,9 +79,12 @@ export const JobsLive = Layer.mergeAll(
   GenerateImageThumbhashWorkerLive,
   IndexPostWorkerLive,
   IndexPostsWorkerLive,
+  IndexProfileWorkerLive,
+  IndexProfilesWorkerLive,
   OpenTimestampsReconcileLive,
   MediaImageReconcileLive,
   IndexPostsScanLive,
+  IndexProfilesScanLive,
   JobAdminService.layer,
   QueueCleanupLive,
 ).pipe(
@@ -88,6 +104,8 @@ export const makeQueuesTestLayer = (options?: {
   | PersistedQueue.PersistedQueue<GenerateImageThumbhashJob>
   | PersistedQueue.PersistedQueue<IndexPostJob>
   | PersistedQueue.PersistedQueue<IndexPostsJob>
+  | PersistedQueue.PersistedQueue<IndexProfileJob>
+  | PersistedQueue.PersistedQueue<IndexProfilesJob>
   | JobRuntime
   | JobAdminService,
   never,
@@ -115,6 +133,8 @@ export const makeQueuesTestLayer = (options?: {
     generateImageThumbhashJob.makeLayer(queueOverrides),
     indexPostJob.makeLayer(queueOverrides),
     indexPostsJob.makeLayer(queueOverrides),
+    indexProfileJob.makeLayer(queueOverrides),
+    indexProfilesJob.makeLayer(queueOverrides),
   );
 
   const workerLayers = Layer.mergeAll(

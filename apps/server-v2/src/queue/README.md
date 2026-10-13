@@ -80,6 +80,6 @@ by calling the `process` function directly.
 ## Deferred
 
 Cron/scheduled jobs, delayed starts, priorities, batching, the HTTP admin
-surface, metric scraping, separate worker processes, and porting the remaining
-v1 (pg-boss) `indexer` jobs (profiles discovery and the hourly Arweave L1 tx id
-sync).
+surface, metric scraping, separate worker processes, and porting the v1
+(pg-boss) hourly Arweave L1 tx id sync (superseded by post block-height
+enrichment).
