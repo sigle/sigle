@@ -80,58 +80,55 @@ describe("users", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("GET /api/users/:username returns the profile", () =>
-    Effect.gen(function* () {
-      const client = yield* HttpClient.HttpClient;
-      const user = yield* createTestUser();
+  it.effect(
+    "GET /api/users/:username returns a profile whose signer has no account",
+    () =>
+      Effect.gen(function* () {
+        const client = yield* HttpClient.HttpClient;
 
-      const wallet = yield* createTestWalletAddress({
-        userId: user.id,
-        address: TEST_ADDRESS,
-      });
-
-      yield* createTestProfile({
-        userId: user.id,
-        walletAddressId: wallet.id,
-        arweaveTxId: "arweave-profile-tx",
-        displayName: "Alice",
-        description: "Hello",
-        website: "https://example.com",
-        twitter: "alice",
-        picture: "https://cdn.example.com/avatar.webp",
-        coverPicture: "https://cdn.example.com/cover.webp",
-      });
-
-      const response = yield* getUserRequest(client, TEST_ADDRESS);
-
-      const body =
-        yield* HttpClientResponse.schemaBodyJson(UserProfileResponse)(response);
-
-      expect(body).toMatchObject({
-        address: TEST_ADDRESS,
-        profile: {
+        yield* createTestProfile({
+          address: TEST_ADDRESS,
+          arweaveTxId: "arweave-profile-tx",
           displayName: "Alice",
           description: "Hello",
           website: "https://example.com",
           twitter: "alice",
-          picture: {
-            url: "https://cdn.example.com/avatar.webp",
-            width: null,
-            height: null,
-            thumbhash: null,
+          picture: "https://cdn.example.com/avatar.webp",
+          coverPicture: "https://cdn.example.com/cover.webp",
+        });
+
+        const response = yield* getUserRequest(client, TEST_ADDRESS);
+
+        const body =
+          yield* HttpClientResponse.schemaBodyJson(UserProfileResponse)(
+            response,
+          );
+
+        expect(body).toMatchObject({
+          address: TEST_ADDRESS,
+          profile: {
+            displayName: "Alice",
+            description: "Hello",
+            website: "https://example.com",
+            twitter: "alice",
+            picture: {
+              url: "https://cdn.example.com/avatar.webp",
+              width: null,
+              height: null,
+              thumbhash: null,
+            },
+            coverPicture: {
+              url: "https://cdn.example.com/cover.webp",
+              width: null,
+              height: null,
+              thumbhash: null,
+            },
+            arweaveTxId: "arweave-profile-tx",
           },
-          coverPicture: {
-            url: "https://cdn.example.com/cover.webp",
-            width: null,
-            height: null,
-            thumbhash: null,
-          },
-          arweaveTxId: "arweave-profile-tx",
-        },
-      });
-      expect(response.status).toBe(200);
-      expect(DateTime.isDateTime(body.profile?.updatedAt)).toBe(true);
-    }).pipe(Effect.provide(makeTestServerLayer())),
+        });
+        expect(response.status).toBe(200);
+        expect(DateTime.isDateTime(body.profile?.updatedAt)).toBe(true);
+      }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
   it.effect(
@@ -139,19 +136,12 @@ describe("users", () => {
     () =>
       Effect.gen(function* () {
         const client = yield* HttpClient.HttpClient;
-        const user = yield* createTestUser();
-
-        const wallet = yield* createTestWalletAddress({
-          userId: user.id,
-          address: TEST_ADDRESS,
-        });
 
         const picture = "https://cdn.example.com/avatar.webp?v=1";
         const coverPicture = "https://cdn.example.com/cover.webp?v=2";
 
         yield* createTestProfile({
-          userId: user.id,
-          walletAddressId: wallet.id,
+          address: TEST_ADDRESS,
           arweaveTxId: "arweave-profile-tx",
           picture,
           coverPicture,
@@ -214,16 +204,9 @@ describe("users", () => {
   it.effect("GET /api/users/:username returns caching headers", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
-      const user = yield* createTestUser();
-
-      const wallet = yield* createTestWalletAddress({
-        userId: user.id,
-        address: TEST_ADDRESS,
-      });
 
       yield* createTestProfile({
-        userId: user.id,
-        walletAddressId: wallet.id,
+        address: TEST_ADDRESS,
         arweaveTxId: "arweave-profile-tx",
         displayName: "Alice",
       });

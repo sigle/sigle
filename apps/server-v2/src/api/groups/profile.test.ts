@@ -180,7 +180,7 @@ const createSignedProfileClient = () =>
     const credentials = createTestSiwsCredentials();
     const { client, userId } = yield* createAuthenticatedClient();
 
-    const wallet = yield* createTestWalletAddress({
+    yield* createTestWalletAddress({
       userId,
       address: credentials.address,
     });
@@ -207,7 +207,6 @@ const createSignedProfileClient = () =>
       metadata,
       signMetadata,
       userId,
-      walletAddressId: wallet.id,
     };
   });
 
@@ -221,7 +220,7 @@ describe("profile", () => {
     const events: Array<PostHogEvent> = [];
 
     return Effect.gen(function* () {
-      const { address, client, metadata, userId, walletAddressId } =
+      const { address, client, metadata, userId } =
         yield* createSignedProfileClient();
 
       const db = yield* Database;
@@ -237,7 +236,7 @@ describe("profile", () => {
       const [savedProfile] = yield* db
         .select()
         .from(profileTable)
-        .where(eq(profileTable.userId, userId))
+        .where(eq(profileTable.address, address))
         .limit(1)
         .pipe(Effect.orDie);
 
@@ -261,8 +260,7 @@ describe("profile", () => {
         ],
         metadata,
         profile: {
-          userId,
-          walletAddressId,
+          address,
           arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
           signature: metadata.signature,
           displayName: "Test profile",
@@ -295,7 +293,7 @@ describe("profile", () => {
     const uploads: Array<ArweaveUploadOptions> = [];
 
     return Effect.gen(function* () {
-      const { client, metadata, signMetadata, userId } =
+      const { address, client, metadata, signMetadata } =
         yield* createSignedProfileClient();
 
       const db = yield* Database;
@@ -318,7 +316,7 @@ describe("profile", () => {
       const rows = yield* db
         .select()
         .from(profileTable)
-        .where(eq(profileTable.userId, userId))
+        .where(eq(profileTable.address, address))
         .pipe(Effect.orDie);
 
       expect({
@@ -328,8 +326,7 @@ describe("profile", () => {
         statuses: [200, 200],
         rows: [
           {
-            userId,
-            walletAddressId: expect.any(String),
+            address,
             arweaveTxId: `${ARWEAVE_TEST_UPLOAD_ID}-2`,
             signature: updatedMetadata.signature,
             displayName: "Updated profile",
@@ -358,7 +355,7 @@ describe("profile", () => {
       const imageFetches: Array<string> = [];
 
       return Effect.gen(function* () {
-        const { client, signMetadata, userId } =
+        const { address, client, signMetadata } =
           yield* createSignedProfileClient();
 
         const png = yield* Effect.promise(() => makePngBuffer());
@@ -391,7 +388,7 @@ describe("profile", () => {
         const [savedProfile] = yield* db
           .select()
           .from(profileTable)
-          .where(eq(profileTable.userId, userId))
+          .where(eq(profileTable.address, address))
           .limit(1)
           .pipe(Effect.orDie);
 

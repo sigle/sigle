@@ -8,10 +8,6 @@ export const relations = defineRelations(schema, (r) => ({
     walletAddresses: r.many.walletAddress(),
     drafts: r.many.draft(),
     posts: r.many.post(),
-    profile: r.one.profile({
-      from: r.user.id,
-      to: r.profile.userId,
-    }),
   },
   session: {
     user: r.one.user({
@@ -29,10 +25,6 @@ export const relations = defineRelations(schema, (r) => ({
     user: r.one.user({
       from: r.walletAddress.userId,
       to: r.user.id,
-    }),
-    profile: r.one.profile({
-      from: r.walletAddress.id,
-      to: r.profile.walletAddressId,
     }),
   },
   draft: {
@@ -55,16 +47,6 @@ export const relations = defineRelations(schema, (r) => ({
     post: r.one.post({
       from: r.postOts.postId,
       to: r.post.id,
-    }),
-  },
-  profile: {
-    user: r.one.user({
-      from: r.profile.userId,
-      to: r.user.id,
-    }),
-    walletAddress: r.one.walletAddress({
-      from: r.profile.walletAddressId,
-      to: r.walletAddress.id,
     }),
   },
 }));

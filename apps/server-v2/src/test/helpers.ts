@@ -103,8 +103,7 @@ export const createTestDraft = (options: {
   });
 
 export const createTestProfile = (options: {
-  readonly userId: string;
-  readonly walletAddressId: string;
+  readonly address: string;
   readonly arweaveTxId?: string;
   readonly signature?: string;
   readonly displayName?: string;
@@ -121,8 +120,7 @@ export const createTestProfile = (options: {
     const [created] = yield* db
       .insert(profile)
       .values({
-        userId: options.userId,
-        walletAddressId: options.walletAddressId,
+        address: options.address,
         arweaveTxId: options.arweaveTxId ?? crypto.randomUUID(),
         signature: options.signature ?? crypto.randomUUID(),
         displayName: options.displayName ?? "Test Profile",

@@ -13,10 +13,6 @@ export interface UserWhitelist {
     userId: string,
     address: string,
   ) => Effect.Effect<boolean>;
-  readonly getWalletAddress: (
-    userId: string,
-    address: string,
-  ) => Effect.Effect<Option.Option<typeof walletAddress.$inferSelect>>;
 }
 
 export const makeUserWhitelistService = Effect.gen(function* () {
@@ -75,7 +71,6 @@ export const makeUserWhitelistService = Effect.gen(function* () {
       }),
     hasWalletAddress: (userId: string, address: string) =>
       Effect.map(getWalletAddress(userId, address), Option.isSome),
-    getWalletAddress,
   } satisfies UserWhitelist;
 });
 
