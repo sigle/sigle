@@ -1,5 +1,11 @@
 import { TurboFactory } from "@ardrive/turbo-sdk";
 import { Context, Data, Effect, Layer, Redacted, Schema } from "effect";
+import {
+  FetchHttpClient,
+  HttpClient,
+  HttpClientRequest,
+  HttpClientResponse,
+} from "effect/http";
 import { CID } from "multiformats/cid";
 import { code } from "multiformats/codecs/raw";
 import { sha256 } from "multiformats/hashes/sha2";
@@ -88,7 +94,7 @@ export interface ArweaveClient {
 
 const TRANSACTIONS_PAGE_SIZE = 100;
 
-const GATEWAY_TIMEOUT_MILLIS = 30_000;
+const GATEWAY_TIMEOUT = "30 seconds";
 
 const TRANSACTIONS_QUERY = `
   query Transactions(
@@ -153,10 +159,6 @@ const TransactionsResponse = Schema.Struct({
 /** Wire shape of the gateway GraphQL `transactions` response. */
 export type ArweaveTransactionsResponse = typeof TransactionsResponse.Encoded;
 
-const decodeTransactionsResponse = Schema.decodeUnknownEffect(
-  Schema.fromJsonString(TransactionsResponse),
-);
-
 const createCIDv1FromBuffer = async (buffer: Uint8Array): Promise<string> => {
   const hash = await sha256.digest(buffer);
 
@@ -190,43 +192,15 @@ const makeTurboUploader = (config: AppConfigValues): ArweaveUploader => {
   };
 };
 
-/** Fetches a gateway URL and returns the body of a successful response. */
-const requestGateway = (url: string, init: RequestInit = {}) =>
-  Effect.gen(function* () {
-    const response = yield* Effect.tryPromise({
-      try: async () => {
-        const result = await fetch(url, {
-          ...init,
-          signal: AbortSignal.timeout(GATEWAY_TIMEOUT_MILLIS),
-        });
-
-        return {
-          status: result.status,
-          ok: result.ok,
-          body: await result.text(),
-        };
-      },
-      catch: (cause) =>
-        new ArweaveGatewayError({
-          cause,
-          message: `Arweave gateway request failed: ${cause instanceof Error ? cause.message : String(cause)}`,
-        }),
-    });
-
-    if (!response.ok) {
-      return yield* new ArweaveGatewayError({
-        cause: response.body,
-        message: `Arweave gateway returned HTTP ${response.status} for ${url}`,
-      });
-    }
-
-    return response.body;
-  });
-
 export const makeArweaveService = (uploader: ArweaveUploader) =>
   Effect.gen(function* () {
     const config = yield* AppConfig;
     const gatewayUrl = config.ARWEAVE_GATEWAY_URL.replace(/\/+$/, "");
+
+    const gateway = (yield* HttpClient.HttpClient).pipe(
+      HttpClient.mapRequest(HttpClientRequest.prependUrl(gatewayUrl)),
+      HttpClient.filterStatusOk,
+    );
 
     const ownerAddress = yield* Effect.promise(() =>
       uploader.getOwnerAddress(),
@@ -272,10 +246,8 @@ export const makeArweaveService = (uploader: ArweaveUploader) =>
         }),
       queryTransactions: (query: ArweaveTransactionsQuery) =>
         Effect.gen(function* () {
-          const body = yield* requestGateway(`${gatewayUrl}/graphql`, {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({
+          const response = yield* HttpClientRequest.post("/graphql").pipe(
+            HttpClientRequest.bodyJsonUnsafe({
               query: TRANSACTIONS_QUERY,
               variables: {
                 owners: query.owners,
@@ -288,14 +260,16 @@ export const makeArweaveService = (uploader: ArweaveUploader) =>
                 after: query.after ?? null,
               },
             }),
-          });
-
-          const response = yield* decodeTransactionsResponse(body).pipe(
+            gateway.execute,
+            Effect.flatMap(
+              HttpClientResponse.schemaBodyJson(TransactionsResponse),
+            ),
+            Effect.timeout(GATEWAY_TIMEOUT),
             Effect.mapError(
               (cause) =>
                 new ArweaveGatewayError({
                   cause,
-                  message: "Invalid Arweave GraphQL response",
+                  message: `Arweave GraphQL request failed: ${cause.message}`,
                 }),
             ),
           );
@@ -326,7 +300,18 @@ export const makeArweaveService = (uploader: ArweaveUploader) =>
                 : null,
           };
         }),
-      getData: (id: string) => requestGateway(`${gatewayUrl}/${id}`),
+      getData: (id: string) =>
+        gateway.get(`/${id}`).pipe(
+          Effect.flatMap((response) => response.text),
+          Effect.timeout(GATEWAY_TIMEOUT),
+          Effect.mapError(
+            (cause) =>
+              new ArweaveGatewayError({
+                cause,
+                message: `Failed to read Arweave transaction ${id}: ${cause.message}`,
+              }),
+          ),
+        ),
     } satisfies ArweaveClient;
   });
 
@@ -410,7 +395,7 @@ export class ArweaveService extends Context.Service<
 
         return yield* makeArweaveService(makeTurboUploader(config));
       }),
-    );
+    ).pipe(Layer.provide(FetchHttpClient.layer));
 
   static readonly layerTest = (
     uploads: Array<ArweaveUploadOptions> = [],

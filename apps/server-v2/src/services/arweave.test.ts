@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
-import { Effect, Layer } from "effect";
-import { afterEach, vi } from "vite-plus/test";
+import { Effect, Layer, Predicate } from "effect";
+import { HttpClient, HttpClientResponse } from "effect/http";
 import { AppConfig } from "@/config";
 import {
   ArweaveService,
@@ -16,20 +16,30 @@ const unusedUploader: ArweaveUploader = {
   getOwnerAddress: async () => "owner-address",
 };
 
-const stubGatewayResponse = (
-  body: ArweaveTransactionsResponse,
-  requests: Array<{ url: string; body: unknown }>,
-) =>
-  vi.stubGlobal(
-    "fetch",
-    vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
-      requests.push({
-        url: String(input),
-        body: JSON.parse(String(init?.body)),
-      });
+interface GatewayRequest {
+  readonly url: string;
+  readonly body: unknown;
+}
 
-      return Response.json(body);
-    }),
+/** HTTP client answering every gateway request with `body`. */
+const makeGatewayLayer = (
+  body: ArweaveTransactionsResponse,
+  requests: Array<GatewayRequest> = [],
+) =>
+  Layer.succeed(
+    HttpClient.HttpClient,
+    HttpClient.make((request, url) =>
+      Effect.sync(() => {
+        requests.push({
+          url: url.toString(),
+          body: Predicate.isTagged(request.body, "Uint8Array")
+            ? JSON.parse(new TextDecoder().decode(request.body.body))
+            : null,
+        });
+
+        return HttpClientResponse.fromWeb(request, Response.json(body));
+      }),
+    ),
   );
 
 const TEST_FILE = Buffer.from(JSON.stringify({ hello: "world" }));
@@ -39,8 +49,10 @@ const TEST_FILE_CID =
 
 const makeTestArweaveLayer = (
   uploader: ArweaveUploader,
+  gateway: Layer.Layer<HttpClient.HttpClient> = makeGatewayLayer({}),
 ): Layer.Layer<ArweaveService> =>
   Layer.effect(ArweaveService, makeArweaveService(uploader)).pipe(
+    Layer.provide(gateway),
     Layer.provide(
       AppConfig.layerTest({
         APP_ID: "Sigle-Test",
@@ -50,10 +62,6 @@ const makeTestArweaveLayer = (
   );
 
 describe("arweave service", () => {
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
-
   it.effect(
     "uploads the file with content type, app name and IPFS CID tags",
     () => {
@@ -132,38 +140,38 @@ describe("arweave service", () => {
   it.effect(
     "queries the gateway GraphQL index and returns the next page cursor",
     () => {
-      const requests: Array<{ url: string; body: unknown }> = [];
+      const requests: Array<GatewayRequest> = [];
 
-      return Effect.gen(function* () {
-        stubGatewayResponse(
-          {
-            data: {
-              transactions: {
-                pageInfo: { hasNextPage: true },
-                edges: [
-                  {
-                    cursor: "cursor-1",
-                    node: {
-                      id: "tx-1",
-                      owner: { address: "owner-address" },
-                      block: { height: 5 },
-                    },
+      const gateway = makeGatewayLayer(
+        {
+          data: {
+            transactions: {
+              pageInfo: { hasNextPage: true },
+              edges: [
+                {
+                  cursor: "cursor-1",
+                  node: {
+                    id: "tx-1",
+                    owner: { address: "owner-address" },
+                    block: { height: 5 },
                   },
-                  {
-                    cursor: "cursor-2",
-                    node: {
-                      id: "tx-2",
-                      owner: { address: "owner-address" },
-                      block: null,
-                    },
+                },
+                {
+                  cursor: "cursor-2",
+                  node: {
+                    id: "tx-2",
+                    owner: { address: "owner-address" },
+                    block: null,
                   },
-                ],
-              },
+                },
+              ],
             },
           },
-          requests,
-        );
+        },
+        requests,
+      );
 
+      return Effect.gen(function* () {
         const arweave = yield* ArweaveService;
 
         const page = yield* arweave.queryTransactions({
@@ -196,17 +204,12 @@ describe("arweave service", () => {
             },
           ],
         });
-      }).pipe(Effect.provide(makeTestArweaveLayer(unusedUploader)));
+      }).pipe(Effect.provide(makeTestArweaveLayer(unusedUploader, gateway)));
     },
   );
 
   it.effect("fails when the GraphQL query returns errors", () =>
     Effect.gen(function* () {
-      stubGatewayResponse(
-        { data: null, errors: [{ message: "Unknown type TagFilter" }] },
-        [],
-      );
-
       const arweave = yield* ArweaveService;
 
       const error = yield* arweave
@@ -217,6 +220,16 @@ describe("arweave service", () => {
         tag: "ArweaveGatewayError",
         message: "Arweave GraphQL query failed: Unknown type TagFilter",
       });
-    }).pipe(Effect.provide(makeTestArweaveLayer(unusedUploader))),
+    }).pipe(
+      Effect.provide(
+        makeTestArweaveLayer(
+          unusedUploader,
+          makeGatewayLayer({
+            data: null,
+            errors: [{ message: "Unknown type TagFilter" }],
+          }),
+        ),
+      ),
+    ),
   );
 });
