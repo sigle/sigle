@@ -1,4 +1,9 @@
-import { PostMetadataSchemaId, ProfileMetadataSchemaId } from "@sigle/sdk";
+import {
+  ArweaveTags,
+  ArweaveTransactionTypes,
+  PostMetadataSchemaId,
+  ProfileMetadataSchemaId,
+} from "@sigle/sdk";
 import { hashMessage } from "@stacks/encryption";
 import {
   getAddressFromPrivateKey,
@@ -21,6 +26,11 @@ import {
   user,
   walletAddress,
 } from "@/db/schema";
+import {
+  ARWEAVE_TEST_OWNER_ADDRESS,
+  type ArweaveTag,
+  type ArweaveTestTransaction,
+} from "@/services/arweave";
 import { SESSION_COOKIE_NAME } from "@/services/auth";
 
 export const createTestUser = (
@@ -105,6 +115,7 @@ export const createTestDraft = (options: {
 export const createTestProfile = (options: {
   readonly address: string;
   readonly arweaveTxId?: string;
+  readonly arweaveBlockHeight?: number | null;
   readonly signature?: string;
   readonly displayName?: string;
   readonly description?: string;
@@ -122,6 +133,7 @@ export const createTestProfile = (options: {
       .values({
         address: options.address,
         arweaveTxId: options.arweaveTxId ?? crypto.randomUUID(),
+        arweaveBlockHeight: options.arweaveBlockHeight ?? null,
         signature: options.signature ?? crypto.randomUUID(),
         displayName: options.displayName ?? "Test Profile",
         description: options.description ?? "Test description",
@@ -320,6 +332,27 @@ export const createSignedTestProfileMetadata = (options: {
     signature,
   };
 };
+
+/**
+ * A mined profile transaction uploaded by this server, as served by the
+ * in-memory gateway of `ArweaveService.layerTest`.
+ */
+export const createTestProfileTransaction = (options: {
+  readonly id: string;
+  readonly metadata: unknown;
+  readonly blockHeight?: number | null;
+  readonly ownerAddress?: string;
+  readonly tags?: ReadonlyArray<ArweaveTag>;
+}): ArweaveTestTransaction => ({
+  id: options.id,
+  ownerAddress: options.ownerAddress ?? ARWEAVE_TEST_OWNER_ADDRESS,
+  blockHeight: options.blockHeight === undefined ? 100 : options.blockHeight,
+  tags: options.tags ?? [
+    { name: ArweaveTags.appName, value: "sigle-test" },
+    { name: ArweaveTags.type, value: ArweaveTransactionTypes.profile },
+  ],
+  data: JSON.stringify(options.metadata),
+});
 
 export const createSignedTestPostMetadata = (options: {
   readonly draftId: string;

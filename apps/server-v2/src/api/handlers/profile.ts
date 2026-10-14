@@ -19,10 +19,7 @@ import {
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { mediaImage, profile } from "@/db/schema";
-import {
-  generateImageThumbhashJob,
-  thumbhashJobId,
-} from "@/jobs/generate-image-thumbhash";
+import { scheduleChangedProfileImages } from "@/jobs/index-profile";
 import { sha256Hex } from "@/lib/hash";
 import {
   detectImageFormat,
@@ -127,9 +124,11 @@ export const uploadProfileMetadata = (
       .pipe(Effect.orDie);
 
     // Store the signed metadata on upload so the profile is immediately
-    // readable.
+    // readable. The profile indexer sets the block once the transaction is
+    // mined.
     const profileFields = {
       arweaveTxId: result.id,
+      arweaveBlockHeight: null,
       signature,
       displayName: content.displayName ?? null,
       description: content.description ?? null,
@@ -153,48 +152,7 @@ export const uploadProfileMetadata = (
       })
       .pipe(Effect.orDie);
 
-    // Externally hosted pictures bypass the upload endpoint, so make sure
-    // their thumbnail placeholder is scheduled. Images uploaded through this
-    // server already have a READY row.
-    const changedImages = new Set<string>();
-
-    if (
-      profileFields.picture !== null &&
-      profileFields.picture !== existingProfile?.picture
-    ) {
-      changedImages.add(profileFields.picture);
-    }
-
-    if (
-      profileFields.coverPicture !== null &&
-      profileFields.coverPicture !== existingProfile?.coverPicture
-    ) {
-      changedImages.add(profileFields.coverPicture);
-    }
-
-    for (const imageId of changedImages) {
-      const [existingImage] = yield* db
-        .select({ status: mediaImage.status, thumbhash: mediaImage.thumbhash })
-        .from(mediaImage)
-        .where(eq(mediaImage.id, imageId))
-        .limit(1)
-        .pipe(Effect.orDie);
-
-      const hasPlaceholder =
-        existingImage?.status === "READY" && existingImage.thumbhash !== null;
-
-      if (!hasPlaceholder) {
-        yield* db
-          .insert(mediaImage)
-          .values({ id: imageId })
-          .onConflictDoNothing()
-          .pipe(Effect.orDie);
-
-        yield* generateImageThumbhashJob
-          .offer({ imageId }, { id: thumbhashJobId(imageId) })
-          .pipe(Effect.orDie);
-      }
-    }
+    yield* scheduleChangedProfileImages(existingProfile, profileFields);
 
     yield* posthog.capture({
       distinctId: user.id,

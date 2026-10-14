@@ -262,6 +262,7 @@ describe("profile", () => {
         profile: {
           address,
           arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
+          arweaveBlockHeight: null,
           signature: metadata.signature,
           displayName: "Test profile",
           description: null,
@@ -289,65 +290,76 @@ describe("profile", () => {
     );
   });
 
-  it.effect("POST upload-metadata updates the existing profile", () => {
-    const uploads: Array<ArweaveUploadOptions> = [];
+  it.effect(
+    "POST upload-metadata updates the profile and clears its block",
+    () => {
+      const uploads: Array<ArweaveUploadOptions> = [];
 
-    return Effect.gen(function* () {
-      const { address, client, metadata, signMetadata } =
-        yield* createSignedProfileClient();
+      return Effect.gen(function* () {
+        const { address, client, metadata, signMetadata } =
+          yield* createSignedProfileClient();
 
-      const db = yield* Database;
+        const db = yield* Database;
 
-      const firstResponse = yield* uploadProfileMetadataRequest(
-        client,
-        metadata,
+        const firstResponse = yield* uploadProfileMetadataRequest(
+          client,
+          metadata,
+        );
+
+        // The first profile got mined; the new upload is not mined yet.
+        yield* db
+          .update(profileTable)
+          .set({ arweaveBlockHeight: 100 })
+          .where(eq(profileTable.address, address))
+          .pipe(Effect.orDie);
+
+        const updatedMetadata = signMetadata({
+          id: "profile-2",
+          displayName: "Updated profile",
+        });
+
+        const secondResponse = yield* uploadProfileMetadataRequest(
+          client,
+          updatedMetadata,
+        );
+
+        const rows = yield* db
+          .select()
+          .from(profileTable)
+          .where(eq(profileTable.address, address))
+          .pipe(Effect.orDie);
+
+        expect({
+          statuses: [firstResponse.status, secondResponse.status],
+          rows,
+        }).toStrictEqual({
+          statuses: [200, 200],
+          rows: [
+            {
+              address,
+              arweaveTxId: `${ARWEAVE_TEST_UPLOAD_ID}-2`,
+              arweaveBlockHeight: null,
+              signature: updatedMetadata.signature,
+              displayName: "Updated profile",
+              description: null,
+              website: null,
+              twitter: null,
+              picture: null,
+              coverPicture: null,
+              createdAt: expect.any(Date),
+              updatedAt: expect.any(Date),
+            },
+          ],
+        });
+      }).pipe(
+        Effect.provide(
+          makeTestServerLayer({}, [], {
+            arweave: makeUniqueArweaveUploadLayer(uploads),
+          }),
+        ),
       );
-
-      const updatedMetadata = signMetadata({
-        id: "profile-2",
-        displayName: "Updated profile",
-      });
-
-      const secondResponse = yield* uploadProfileMetadataRequest(
-        client,
-        updatedMetadata,
-      );
-
-      const rows = yield* db
-        .select()
-        .from(profileTable)
-        .where(eq(profileTable.address, address))
-        .pipe(Effect.orDie);
-
-      expect({
-        statuses: [firstResponse.status, secondResponse.status],
-        rows,
-      }).toStrictEqual({
-        statuses: [200, 200],
-        rows: [
-          {
-            address,
-            arweaveTxId: `${ARWEAVE_TEST_UPLOAD_ID}-2`,
-            signature: updatedMetadata.signature,
-            displayName: "Updated profile",
-            description: null,
-            website: null,
-            twitter: null,
-            picture: null,
-            coverPicture: null,
-            createdAt: expect.any(Date),
-            updatedAt: expect.any(Date),
-          },
-        ],
-      });
-    }).pipe(
-      Effect.provide(
-        makeTestServerLayer({}, [], {
-          arweave: makeUniqueArweaveUploadLayer(uploads),
-        }),
-      ),
-    );
-  });
+    },
+  );
 
   it.live(
     "POST upload-metadata schedules thumbhash generation for external pictures",

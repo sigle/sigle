@@ -165,6 +165,9 @@ export const profile = pgTable("profile", {
   arweaveTxId: text("arweave_tx_id")
     .notNull()
     .unique("profile_arweave_tx_id_key"),
+  // Null until the profile transaction is included in an Arweave block; set
+  // by the profile indexer.
+  arweaveBlockHeight: integer("arweave_block_height"),
   signature: text("signature").notNull().unique("profile_signature_key"),
   displayName: text("display_name"),
   description: text("description"),
