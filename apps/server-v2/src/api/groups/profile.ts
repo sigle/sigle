@@ -1,5 +1,4 @@
-import { type ProfileMetadata, ProfileMetadataSchema } from "@sigle/sdk";
-import { Effect, Schema, SchemaIssue } from "effect";
+import { Schema } from "effect";
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/http-api";
 import { UserAuthMiddleware } from "@/api/middleware/auth-user";
 import {
@@ -13,31 +12,11 @@ import {
   UnsupportedMediaType,
 } from "@/api/schemas";
 import { allowedImageFormats } from "@/lib/images";
+import { ProfileMetadata } from "@/lib/metadata";
 import { profileImageKinds } from "@/lib/profile-images";
 
-/**
- * Profile metadata is a shared wire format defined in `@sigle/sdk` (and
- * published as a JSON schema), so the zod schema is reused as the single
- * source of truth instead of being mirrored in Effect.
- */
-export const ProfileMetadataValue =
-  Schema.declareConstructor<ProfileMetadata>()(
-    [],
-    () => (input, self, options) => {
-      const parsed = ProfileMetadataSchema.safeParse(input);
-
-      return parsed.success
-        ? Effect.succeed(parsed.data)
-        : Effect.fail(new SchemaIssue.InvalidType(self, input, options));
-    },
-    {
-      identifier: "ProfileMetadata",
-      description: "The profile metadata to upload to Arweave.",
-    },
-  );
-
 export const UploadProfileMetadataPayload = Schema.Struct({
-  metadata: ProfileMetadataValue,
+  metadata: ProfileMetadata,
 });
 
 export const UploadProfileMetadataResponse = Schema.Struct({

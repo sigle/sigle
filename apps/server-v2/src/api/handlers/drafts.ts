@@ -1,5 +1,5 @@
 import { createId } from "@paralleldrive/cuid2";
-import { PostMetadataSchema, verifyMetadataSignature } from "@sigle/sdk";
+import { verifyMetadataSignature } from "@sigle/sdk";
 import { and, count, desc, eq, sql } from "drizzle-orm";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
@@ -221,21 +221,15 @@ export const publishDraft = (
       return yield* new NotFound({ message: "Draft not found" });
     }
 
-    const parsedMetadata = PostMetadataSchema.safeParse(payload.metadata);
+    const { metadata } = payload;
 
-    if (!parsedMetadata.success) {
-      return yield* new BadRequest({
-        message: "Invalid post metadata",
-      });
-    }
-
-    if (parsedMetadata.data.content.id !== draftId) {
+    if (metadata.content.id !== draftId) {
       return yield* new BadRequest({
         message: "Post metadata content id does not match the draft",
       });
     }
 
-    const signatureResult = verifyMetadataSignature(parsedMetadata.data, {
+    const signatureResult = verifyMetadataSignature(metadata, {
       network: config.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
     });
 
@@ -307,7 +301,7 @@ export const publishDraft = (
         userId: user.id,
         authorAddress: recoveredAddress,
         signature,
-        metadataJson: JSON.stringify(parsedMetadata.data),
+        metadataJson: JSON.stringify(metadata),
       })
       .pipe(Effect.orDie);
 

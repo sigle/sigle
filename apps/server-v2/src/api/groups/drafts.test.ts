@@ -12,7 +12,6 @@ import {
   Draft,
   DraftListResponse,
   PublishDraftAccepted,
-  PublishDraftPayload,
   PublishDraftStatusResponse,
   UpdateDraftPayload,
 } from "@/api/groups/drafts";
@@ -73,7 +72,8 @@ const deleteDraftRequest = (client: HttpClient.HttpClient, draftId: string) =>
 const publishDraftRequest = (
   client: HttpClient.HttpClient,
   draftId: string,
-  body: typeof PublishDraftPayload.Type,
+  // Untyped so tests can send payloads the schema rejects.
+  body: { readonly metadata: unknown },
 ) =>
   client.execute(
     HttpClientRequest.post(`/api/protected/drafts/${draftId}/publish`).pipe(

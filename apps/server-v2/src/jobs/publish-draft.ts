@@ -1,9 +1,9 @@
-import { PostMetadataSchema } from "@sigle/sdk";
 import { and, eq, isNull, lt, or } from "drizzle-orm";
 import { Data, Effect, Layer, Schedule, Schema } from "effect";
 import { Database } from "@/db";
 import { draft, mediaImage, post, postOts } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
+import { PostMetadata } from "@/lib/metadata";
 import { defineJob, terminal, type TerminalJobError } from "@/queue/core";
 import { ArweaveService, type ArweaveUploadError } from "@/services/arweave";
 import { PostHogService } from "@/services/posthog";
@@ -26,6 +26,10 @@ export const PublishDraftJobSchema = Schema.Struct({
 });
 
 export type PublishDraftJob = typeof PublishDraftJobSchema.Type;
+
+const decodePostMetadataJson = Schema.decodeUnknownEffect(
+  Schema.fromJsonString(PostMetadata),
+);
 
 class InvalidPublishMetadataError extends Data.TaggedError(
   "InvalidPublishMetadataError",
@@ -95,16 +99,13 @@ export const processPublishDraftJob = (
       return;
     }
 
-    const postData = yield* Effect.try({
-      try: () => PostMetadataSchema.parse(JSON.parse(job.metadataJson)),
-      catch: (cause) =>
+    const postData = yield* decodePostMetadataJson(job.metadataJson).pipe(
+      Effect.mapError((cause) =>
         terminal(
-          new InvalidPublishMetadataError({
-            message: cause instanceof Error ? cause.message : String(cause),
-            cause,
-          }),
+          new InvalidPublishMetadataError({ message: cause.message, cause }),
         ),
-    });
+      ),
+    );
 
     // Step 1: Upload metadata JSON to Arweave (or reuse checkpointed txId from
     // an earlier attempt if a downstream step failed and triggered a retry).
