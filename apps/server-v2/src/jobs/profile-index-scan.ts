@@ -17,7 +17,7 @@ import { indexProfileJob, indexProfileJobId } from "./index-profile";
  */
 export const PROFILE_INDEX_RESCAN_BLOCKS = 50;
 
-const PROFILE_INDEX_INTERVAL = "5 minutes";
+const PROFILE_INDEX_INTERVAL = "1 hour";
 
 /**
  * Offers an `index-profile` job for every mined profile transaction that is
