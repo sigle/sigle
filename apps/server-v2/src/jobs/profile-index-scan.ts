@@ -5,6 +5,7 @@ import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { profile } from "@/db/schema";
 import {
+  ArweaveGatewayError,
   ArweaveService,
   type ArweaveTransactionsPage,
 } from "@/services/arweave";
@@ -97,6 +98,14 @@ export const scanProfileTransactions = Effect.gen(function* () {
         .pipe(Effect.orDie);
 
       offered++;
+    }
+
+    // A gateway returning the cursor it was given would page forever.
+    if (page.nextCursor !== null && page.nextCursor === after) {
+      return yield* new ArweaveGatewayError({
+        cause: page.nextCursor,
+        message: `Arweave GraphQL cursor did not advance: ${page.nextCursor}`,
+      });
     }
 
     after = page.nextCursor;

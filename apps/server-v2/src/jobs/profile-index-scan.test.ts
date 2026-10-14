@@ -20,14 +20,21 @@ import { TestDatabaseLayer } from "@/test/layer";
 import { indexProfileJob, indexProfileJobId } from "./index-profile";
 import { scanProfileTransactions } from "./profile-index-scan";
 
-const makeScanTestLayer = (gateway: ArweaveTestGateway) =>
+const makeScanTestLayer = (
+  gateway: ArweaveTestGateway,
+  arweave: Layer.Layer<ArweaveService> = ArweaveService.layerTest(
+    [],
+    undefined,
+    gateway,
+  ),
+) =>
   makeQueuesTestLayer({
     enableWorkers: false,
     maxAttempts: 2,
     retrySchedule: Schedule.spaced("0 millis"),
   }).pipe(
     Layer.provideMerge(OpenTimestampsService.layerTest()),
-    Layer.provideMerge(ArweaveService.layerTest([], undefined, gateway)),
+    Layer.provideMerge(arweave),
     Layer.provideMerge(PostHogService.layerTest()),
     Layer.provideMerge(AppConfig.layerTest()),
     Layer.provideMerge(ImageProcessingService.layer),
@@ -171,5 +178,40 @@ describe("profile index scan", () => {
         }),
       ),
     );
+  });
+
+  it.effect("fails when the gateway does not advance the cursor", () => {
+    let queries = 0;
+
+    const stuckGateway = Layer.effect(
+      ArweaveService,
+      Effect.gen(function* () {
+        const arweave = yield* ArweaveService;
+
+        return {
+          ...arweave,
+          queryTransactions: () =>
+            Effect.sync(() => {
+              queries++;
+
+              return { transactions: [], nextCursor: "stuck" };
+            }),
+        };
+      }),
+    ).pipe(Layer.provide(ArweaveService.layerTest()));
+
+    return Effect.gen(function* () {
+      const error = yield* scanProfileTransactions.pipe(Effect.flip);
+
+      expect({
+        tag: error._tag,
+        message: error.message,
+        queries,
+      }).toStrictEqual({
+        tag: "ArweaveGatewayError",
+        message: "Arweave GraphQL cursor did not advance: stuck",
+        queries: 2,
+      });
+    }).pipe(Effect.provide(makeScanTestLayer({}, stuckGateway)));
   });
 });
