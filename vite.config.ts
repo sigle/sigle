@@ -183,6 +183,7 @@ export default defineConfig({
           // The root `categories` setting switches on every effecttsgo rule,
           // including the ones the recommended preset intentionally leaves off.
           "effecttsgo/any-unknown-in-error-context": "off",
+          "effecttsgo/api-stability-leak": "off",
           "effecttsgo/async-function": "off",
           "effecttsgo/crypto-random-uuid": "off",
           "effecttsgo/crypto-random-uuid-in-effect": "off",
@@ -208,6 +209,9 @@ export default defineConfig({
           "effecttsgo/new-promise": "off",
           "effecttsgo/new-schema-class": "off",
           "effecttsgo/node-builtin-import": "off",
+          "effecttsgo/prefer-effect-array": "off",
+          "effecttsgo/prefer-effect-record": "off",
+          "effecttsgo/prefer-schema-tagged-error": "off",
           "effecttsgo/prefer-schema-over-json": "off",
           "effecttsgo/prefer-schema-type-property": "off",
           "effecttsgo/process-env": "off",

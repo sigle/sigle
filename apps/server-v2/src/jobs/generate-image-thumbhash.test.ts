@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { Effect, Exit, Layer } from "effect";
 import sharp from "sharp";
 import { thumbHashToRGBA } from "thumbhash";
-import { afterEach, vi } from "vitest";
+import { afterEach, vi } from "vite-plus/test";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { mediaImage } from "@/db/schema";

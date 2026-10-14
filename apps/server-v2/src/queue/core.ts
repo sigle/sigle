@@ -254,6 +254,12 @@ export const defineJob = <S extends Schema.Constraint, E, R>(
   const onFinalFailure = options.onFinalFailure;
   const reportPayload = options.reportPayload;
 
+  /**
+   * `PersistedQueue` methods require the payload schema's encoding/decoding
+   * services; they are passed through to callers on purpose.
+   *
+   * @effect-expect-leaking S["EncodingServices"] | S["DecodingServices"]
+   */
   const tag = Context.Service<JobQueue<S>, JobQueue<S>>(
     `sigle/jobs/${options.name}`,
   );

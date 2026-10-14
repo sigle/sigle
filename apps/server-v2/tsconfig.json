@@ -11,7 +11,14 @@
     "plugins": [
       {
         "name": "@effect/language-service",
-        "diagnostics": false
+        "diagnostics": false,
+        "allowedUnstableApis": [
+          "effect/http",
+          "effect/http-api",
+          "effect/persistence",
+          "effect/sql",
+          "@effect/sql-pglite"
+        ]
       }
     ],
     "paths": {

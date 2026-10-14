@@ -9,7 +9,7 @@ import {
   HttpClientResponse,
 } from "effect/http";
 import sharp from "sharp";
-import { afterEach, vi } from "vitest";
+import { afterEach, vi } from "vite-plus/test";
 import type { PostHogEvent } from "@/services/posthog";
 import { Database } from "@/db";
 import { mediaImage, profile as profileTable } from "@/db/schema";
