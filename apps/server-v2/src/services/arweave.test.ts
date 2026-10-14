@@ -1,13 +1,36 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Effect, Layer } from "effect";
+import { afterEach, vi } from "vite-plus/test";
 import { AppConfig } from "@/config";
 import {
   ArweaveService,
   ArweaveUploadError,
   type ArweaveTag,
+  type ArweaveTransactionsResponse,
   type ArweaveUploader,
   makeArweaveService,
 } from "@/services/arweave";
+
+const unusedUploader: ArweaveUploader = {
+  uploadFile: async () => ({ id: "unused" }),
+  getOwnerAddress: async () => "owner-address",
+};
+
+const stubGatewayResponse = (
+  body: ArweaveTransactionsResponse,
+  requests: Array<{ url: string; body: unknown }>,
+) =>
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+      requests.push({
+        url: String(input),
+        body: JSON.parse(String(init?.body)),
+      });
+
+      return Response.json(body);
+    }),
+  );
 
 const TEST_FILE = Buffer.from(JSON.stringify({ hello: "world" }));
 
@@ -27,6 +50,10 @@ const makeTestArweaveLayer = (
   );
 
 describe("arweave service", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it.effect(
     "uploads the file with content type, app name and IPFS CID tags",
     () => {
@@ -41,6 +68,7 @@ describe("arweave service", () => {
 
           return { id: "arweave-tx-1" };
         },
+        getOwnerAddress: async () => "owner-address",
       };
 
       return Effect.gen(function* () {
@@ -84,6 +112,7 @@ describe("arweave service", () => {
       uploadFile: async () => {
         throw new Error("turbo unreachable");
       },
+      getOwnerAddress: async () => "owner-address",
     };
 
     return Effect.gen(function* () {
@@ -99,4 +128,95 @@ describe("arweave service", () => {
       expect(error.cause).toBeInstanceOf(Error);
     }).pipe(Effect.provide(makeTestArweaveLayer(uploader)));
   });
+
+  it.effect(
+    "queries the gateway GraphQL index and returns the next page cursor",
+    () => {
+      const requests: Array<{ url: string; body: unknown }> = [];
+
+      return Effect.gen(function* () {
+        stubGatewayResponse(
+          {
+            data: {
+              transactions: {
+                pageInfo: { hasNextPage: true },
+                edges: [
+                  {
+                    cursor: "cursor-1",
+                    node: {
+                      id: "tx-1",
+                      owner: { address: "owner-address" },
+                      block: { height: 5 },
+                    },
+                  },
+                  {
+                    cursor: "cursor-2",
+                    node: {
+                      id: "tx-2",
+                      owner: { address: "owner-address" },
+                      block: null,
+                    },
+                  },
+                ],
+              },
+            },
+          },
+          requests,
+        );
+
+        const arweave = yield* ArweaveService;
+
+        const page = yield* arweave.queryTransactions({
+          owners: ["owner-address"],
+          tags: [{ name: "Type", value: "profile" }],
+          minBlockHeight: 5,
+        });
+
+        expect({ page, requests }).toStrictEqual({
+          page: {
+            transactions: [
+              { id: "tx-1", ownerAddress: "owner-address", blockHeight: 5 },
+              { id: "tx-2", ownerAddress: "owner-address", blockHeight: null },
+            ],
+            nextCursor: "cursor-2",
+          },
+          requests: [
+            {
+              url: "https://turbo-gateway.test/graphql",
+              body: {
+                query: expect.any(String),
+                variables: {
+                  owners: ["owner-address"],
+                  tags: [{ name: "Type", values: ["profile"] }],
+                  minBlockHeight: 5,
+                  first: 100,
+                  after: null,
+                },
+              },
+            },
+          ],
+        });
+      }).pipe(Effect.provide(makeTestArweaveLayer(unusedUploader)));
+    },
+  );
+
+  it.effect("fails when the GraphQL query returns errors", () =>
+    Effect.gen(function* () {
+      stubGatewayResponse(
+        { data: null, errors: [{ message: "Unknown type TagFilter" }] },
+        [],
+      );
+
+      const arweave = yield* ArweaveService;
+
+      const error = yield* arweave
+        .queryTransactions({ owners: [], tags: [], minBlockHeight: 0 })
+        .pipe(Effect.flip);
+
+      expect({ tag: error._tag, message: error.message }).toStrictEqual({
+        tag: "ArweaveGatewayError",
+        message: "Arweave GraphQL query failed: Unknown type TagFilter",
+      });
+    }).pipe(Effect.provide(makeTestArweaveLayer(unusedUploader))),
+  );
 });
