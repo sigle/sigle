@@ -68,9 +68,12 @@ export const uploadProfileMetadata = (
 
     const { recoveredAddress, signature } = signatureResult.value;
 
-    const wallet = yield* whitelist.getWalletAddress(user.id, recoveredAddress);
+    const ownsWallet = yield* whitelist.hasWalletAddress(
+      user.id,
+      recoveredAddress,
+    );
 
-    if (Option.isNone(wallet)) {
+    if (!ownsWallet) {
       return yield* new BadRequest({
         message:
           "Invalid signature: Signature verification failed or address mismatch",
@@ -78,7 +81,7 @@ export const uploadProfileMetadata = (
     }
 
     const [existingProfileWithSignature] = yield* db
-      .select({ userId: profile.userId })
+      .select({ address: profile.address })
       .from(profile)
       .where(eq(profile.signature, signature))
       .limit(1)
@@ -119,14 +122,13 @@ export const uploadProfileMetadata = (
         picture: profile.picture,
       })
       .from(profile)
-      .where(eq(profile.userId, user.id))
+      .where(eq(profile.address, recoveredAddress))
       .limit(1)
       .pipe(Effect.orDie);
 
     // Store the signed metadata on upload so the profile is immediately
     // readable.
     const profileFields = {
-      walletAddressId: wallet.value.id,
       arweaveTxId: result.id,
       signature,
       displayName: content.displayName ?? null,
@@ -142,11 +144,11 @@ export const uploadProfileMetadata = (
       .insert(profile)
       .values({
         ...profileFields,
-        userId: user.id,
+        address: recoveredAddress,
         createdAt: now,
       })
       .onConflictDoUpdate({
-        target: profile.userId,
+        target: profile.address,
         set: profileFields,
       })
       .pipe(Effect.orDie);
