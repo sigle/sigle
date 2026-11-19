@@ -6,12 +6,36 @@ import {
   POST_LIST_DEFAULT_LIMIT,
   type PostListQuery,
 } from "@/api/groups/posts";
-import { findProfile } from "@/api/handlers/users";
+import { findProfiles } from "@/api/handlers/users";
 import { NotFound } from "@/api/schemas";
 import { Database } from "@/db";
 import { mediaImage, post, postOts, walletAddress } from "@/db/schema";
 import { parseStacksAddress } from "@/lib/stacks-address";
-import { findWalletAddresses } from "@/services/users";
+import { findPrimaryWalletAddresses } from "@/services/users";
+
+/**
+ * Author of each user's posts, in the order of `userIds`: their primary wallet
+ * address with its profile.
+ */
+const findAuthors = (userIds: ReadonlyArray<string>) =>
+  Effect.gen(function* () {
+    const addresses = yield* findPrimaryWalletAddresses(userIds);
+    const profiles = yield* findProfiles([...new Set(addresses)]);
+
+    return addresses.map((address) => ({
+      address,
+      profile: profiles.get(address)?.profile ?? null,
+    }));
+  });
+
+const toMediaImage = (
+  url: string | null,
+  image: {
+    readonly width: number | null;
+    readonly height: number | null;
+    readonly thumbhash: string | null;
+  },
+) => (url === null ? null : { url, ...image });
 
 export const listPosts = (query: typeof PostListQuery.Type) =>
   Effect.gen(function* () {
@@ -51,25 +75,44 @@ export const listPosts = (query: typeof PostListQuery.Type) =>
         metaTitle: post.metaTitle,
         metaDescription: post.metaDescription,
         coverImage: post.coverImage,
+        coverWidth: mediaImage.width,
+        coverHeight: mediaImage.height,
+        coverThumbhash: mediaImage.thumbhash,
         tags: post.tags,
         canonicalUri: post.canonicalUri,
         arweaveTxId: post.arweaveTxId,
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
+        userId: post.userId,
       })
       .from(post)
+      .leftJoin(mediaImage, eq(mediaImage.id, post.coverImage))
       .where(where)
       .orderBy(desc(post.createdAt), desc(post.id))
       .limit(limit)
       .offset(offset)
       .pipe(Effect.orDie);
 
+    const authors = yield* findAuthors(posts.map((item) => item.userId));
+
     return {
-      results: posts.map((item) => ({
-        ...item,
+      results: posts.map((item, index) => ({
+        id: item.id,
+        title: item.title,
+        excerpt: item.excerpt,
+        metaTitle: item.metaTitle,
+        metaDescription: item.metaDescription,
+        coverImage: toMediaImage(item.coverImage, {
+          width: item.coverWidth,
+          height: item.coverHeight,
+          thumbhash: item.coverThumbhash,
+        }),
         tags: item.tags ?? [],
+        canonicalUri: item.canonicalUri,
+        arweaveTxId: item.arweaveTxId,
         createdAt: DateTime.fromDateUnsafe(item.createdAt),
         updatedAt: DateTime.fromDateUnsafe(item.updatedAt),
+        author: authors[index],
       })),
       limit,
       offset,
@@ -104,9 +147,7 @@ export const getPost = (postId: string) =>
     }
 
     const foundPost = found.post;
-    const [authorAddress] = yield* findWalletAddresses(foundPost.userId);
-
-    const authorProfile = yield* findProfile(authorAddress);
+    const [author] = yield* findAuthors([foundPost.userId]);
 
     return {
       id: foundPost.id,
@@ -115,15 +156,11 @@ export const getPost = (postId: string) =>
       excerpt: foundPost.excerpt,
       metaTitle: foundPost.metaTitle,
       metaDescription: foundPost.metaDescription,
-      coverImage:
-        foundPost.coverImage === null
-          ? null
-          : {
-              url: foundPost.coverImage,
-              width: found.coverWidth,
-              height: found.coverHeight,
-              thumbhash: found.coverThumbhash,
-            },
+      coverImage: toMediaImage(foundPost.coverImage, {
+        width: found.coverWidth,
+        height: found.coverHeight,
+        thumbhash: found.coverThumbhash,
+      }),
       tags: foundPost.tags ?? [],
       canonicalUri: foundPost.canonicalUri,
       metadataUri: foundPost.metadataUri,
@@ -131,10 +168,7 @@ export const getPost = (postId: string) =>
       arweaveBlockHeight: foundPost.arweaveBlockHeight,
       createdAt: DateTime.fromDateUnsafe(foundPost.createdAt),
       updatedAt: DateTime.fromDateUnsafe(foundPost.updatedAt),
-      author: {
-        address: authorAddress,
-        profile: authorProfile?.profile ?? null,
-      },
+      author,
       opentimestamps:
         found.otsStatus === null
           ? null
