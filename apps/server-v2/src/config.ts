@@ -91,6 +91,9 @@ export const appConfig = Config.all({
   // Wallet addresses on the pro plan on testnet, where the Explorer Guild NFT
   // is not deployed. Ignored on mainnet
   PRO_ADDRESSES: CommaSeparatedList("PRO_ADDRESSES"),
+  // Wallet addresses allowed to write drafts and profiles on mainnet. Every
+  // user is whitelisted on testnet
+  WHITELISTED_ADDRESSES: CommaSeparatedList("WHITELISTED_ADDRESSES"),
 });
 
 export type AppConfigValues = Config.Success<typeof appConfig>;
@@ -120,6 +123,7 @@ export const defaultTestConfig: AppConfigValues = {
   POSTHOG_API_HOST: Option.none(),
   ADMIN_ADDRESSES: [],
   PRO_ADDRESSES: [],
+  WHITELISTED_ADDRESSES: [],
 };
 
 export class AppConfig extends Context.Service<AppConfig, AppConfigValues>()(
