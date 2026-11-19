@@ -2,6 +2,7 @@ import { describe, expect, it } from "@effect/vitest";
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
 import { Effect, Layer } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
+import { TestClock } from "effect/testing";
 import { AppConfig, type AppConfigValues } from "@/config";
 import {
   makePlanService,
@@ -26,7 +27,7 @@ const MAINNET_CONFIG: Partial<AppConfigValues> = {
 const makeStacksApiLayer = (
   holdings: Readonly<Record<string, number>>,
   requests: Array<URL> = [],
-  status = 200,
+  status: () => number = () => 200,
 ) =>
   Layer.succeed(
     HttpClient.HttpClient,
@@ -43,7 +44,7 @@ const makeStacksApiLayer = (
           request,
           Response.json(
             { limit: 1, total: holdings[principal] ?? 0, results: [] },
-            { status },
+            { status: status() },
           ),
         );
       }),
@@ -116,34 +117,43 @@ describe("plan service", () => {
       Effect.provide(
         makePlanTestLayer(
           MAINNET_CONFIG,
-          makeStacksApiLayer({ [HOLDER]: 1 }, [], 429),
+          makeStacksApiLayer({ [HOLDER]: 1 }, [], () => 429),
         ),
       ),
     ),
   );
 
-  it.effect("returns pro when any of the user's wallets holds the NFT", () =>
-    Effect.gen(function* () {
-      const plans = yield* PlanService;
+  it.effect(
+    "on mainnet, returns pro when a wallet holds the NFT and ignores PRO_ADDRESSES",
+    () =>
+      Effect.gen(function* () {
+        const plans = yield* PlanService;
 
-      const holderUserId = yield* createUserWithWallets([NON_HOLDER, HOLDER]);
-      const nonHolderUserId = yield* createUserWithWallets([OTHER_NON_HOLDER]);
-      const walletlessUserId = yield* createUserWithWallets([]);
+        const holderUserId = yield* createUserWithWallets([NON_HOLDER, HOLDER]);
 
-      expect({
-        holder: yield* plans.getUserPlan(holderUserId),
-        nonHolder: yield* plans.getUserPlan(nonHolderUserId),
-        walletless: yield* plans.getUserPlan(walletlessUserId),
-      }).toStrictEqual({
-        holder: "pro",
-        nonHolder: "free",
-        walletless: "free",
-      });
-    }).pipe(
-      Effect.provide(
-        makePlanTestLayer(MAINNET_CONFIG, makeStacksApiLayer({ [HOLDER]: 1 })),
+        const nonHolderUserId = yield* createUserWithWallets([
+          OTHER_NON_HOLDER,
+        ]);
+
+        const walletlessUserId = yield* createUserWithWallets([]);
+
+        expect({
+          holder: yield* plans.getUserPlan(holderUserId),
+          nonHolder: yield* plans.getUserPlan(nonHolderUserId),
+          walletless: yield* plans.getUserPlan(walletlessUserId),
+        }).toStrictEqual({
+          holder: "pro",
+          nonHolder: "free",
+          walletless: "free",
+        });
+      }).pipe(
+        Effect.provide(
+          makePlanTestLayer(
+            { ...MAINNET_CONFIG, PRO_ADDRESSES: [OTHER_NON_HOLDER] },
+            makeStacksApiLayer({ [HOLDER]: 1 }),
+          ),
+        ),
       ),
-    ),
   );
 
   it.effect(
@@ -178,4 +188,43 @@ describe("plan service", () => {
       );
     },
   );
+  it.effect("caches user plans for 12 hours and retries failed lookups", () => {
+    const requests: Array<URL> = [];
+    let status = 503;
+
+    return Effect.gen(function* () {
+      const plans = yield* PlanService;
+      const userId = yield* createUserWithWallets([HOLDER]);
+
+      yield* Effect.flip(plans.getUserPlan(userId));
+      status = 200;
+
+      const plansWithinTtl = [
+        yield* plans.getUserPlan(userId),
+        yield* plans.getUserPlan(userId),
+      ];
+
+      const requestsWithinTtl = requests.length;
+
+      yield* TestClock.adjust("12 hours");
+      yield* plans.getUserPlan(userId);
+
+      expect({
+        plansWithinTtl,
+        requestsWithinTtl,
+        requestsAfterTtl: requests.length,
+      }).toStrictEqual({
+        plansWithinTtl: ["pro", "pro"],
+        requestsWithinTtl: 2,
+        requestsAfterTtl: 3,
+      });
+    }).pipe(
+      Effect.provide(
+        makePlanTestLayer(
+          MAINNET_CONFIG,
+          makeStacksApiLayer({ [HOLDER]: 1 }, requests, () => status),
+        ),
+      ),
+    );
+  });
 });

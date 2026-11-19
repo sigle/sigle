@@ -1,6 +1,6 @@
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
 import { eq } from "drizzle-orm";
-import { Context, Data, Effect, Layer, Schema } from "effect";
+import { Cache, Context, Data, Effect, Exit, Layer, Schema } from "effect";
 import {
   FetchHttpClient,
   HttpClient,
@@ -15,6 +15,11 @@ export type UserPlan = "free" | "pro";
 
 const STACKS_API_TIMEOUT = "10 seconds";
 
+// A plan change, such as buying or selling the NFT, can take this long to show.
+const USER_PLAN_CACHE_TTL = "12 hours";
+
+const USER_PLAN_CACHE_CAPACITY = 10_000;
+
 const NftBalancesResponse = Schema.Struct({ total: Schema.Int });
 
 export class NftHoldingsError extends Data.TaggedError("NftHoldingsError")<{
@@ -27,7 +32,10 @@ export interface PlanClient {
   readonly hasTegNft: (
     address: string,
   ) => Effect.Effect<boolean, NftHoldingsError>;
-  /** `pro` when one of the user's wallets is in `PRO_ADDRESSES` or holds an Explorer Guild NFT. */
+  /**
+   * `pro` when one of the user's wallets holds an Explorer Guild NFT, or on
+   * testnet is in `PRO_ADDRESSES`. Results are cached in memory per user.
+   */
   readonly getUserPlan: (
     userId: string,
   ) => Effect.Effect<UserPlan, NftHoldingsError>;
@@ -73,9 +81,8 @@ export const makePlanService = Effect.gen(function* () {
       return total > 0;
     });
 
-  return {
-    hasTegNft,
-    getUserPlan: (userId: string) =>
+  const userPlans = yield* Cache.makeWith(
+    (userId: string) =>
       Effect.gen(function* () {
         const wallets = yield* db
           .select({ address: walletAddress.address })
@@ -85,15 +92,26 @@ export const makePlanService = Effect.gen(function* () {
 
         for (const { address } of wallets) {
           if (
-            config.PRO_ADDRESSES.includes(address) ||
+            (config.STACKS_ENV === "testnet" &&
+              config.PRO_ADDRESSES.includes(address)) ||
             (yield* hasTegNft(address))
           ) {
-            return "pro";
+            return "pro" as const;
           }
         }
 
-        return "free";
+        return "free" as const;
       }),
+    {
+      capacity: USER_PLAN_CACHE_CAPACITY,
+      // Failed lookups are not cached so the next call retries the Stacks API.
+      timeToLive: (exit) => (Exit.isSuccess(exit) ? USER_PLAN_CACHE_TTL : 0),
+    },
+  );
+
+  return {
+    hasTegNft,
+    getUserPlan: (userId: string) => Cache.get(userPlans, userId),
   } satisfies PlanClient;
 });
 

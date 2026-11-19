@@ -88,8 +88,8 @@ export const appConfig = Config.all({
   POSTHOG_API_HOST: OptionalNonEmptyString("POSTHOG_API_HOST"),
   // Wallet addresses allowed to access the admin jobs API
   ADMIN_ADDRESSES: CommaSeparatedList("ADMIN_ADDRESSES"),
-  // Wallet addresses always on the pro plan, used to emulate pro users on
-  // testnet where the Explorer Guild NFT is not deployed
+  // Wallet addresses on the pro plan on testnet, where the Explorer Guild NFT
+  // is not deployed. Ignored on mainnet
   PRO_ADDRESSES: CommaSeparatedList("PRO_ADDRESSES"),
 });
 
