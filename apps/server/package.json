@@ -37,7 +37,7 @@
     "prisma": "7.9.1",
     "rate-limiter-flexible": "9.1.1",
     "rou3": "0.8.1",
-    "sharp": "0.35.3",
+    "sharp": "0.35.5",
     "sign-in-with-stacks": "0.1.6",
     "zod": "4.3.6",
     "zod-validation-error": "5.0.0"
