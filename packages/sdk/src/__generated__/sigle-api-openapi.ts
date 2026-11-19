@@ -77,7 +77,7 @@ export interface paths {
     head?: never;
     /**
      * Update a draft
-     * @description Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields.
+     * @description Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields. Returns a 409 while the draft is being published.
      */
     patch: operations["drafts.update"];
     trace?: never;
@@ -655,6 +655,11 @@ export interface components {
       /** @description A cryptographic signature of the `content` data. */
       signature?: string;
     };
+    sigle_api_ConflictEncoded: {
+      /** @enum {string} */
+      _tag: "Conflict";
+      message: string;
+    };
     Draft: {
       id: string;
       title: string;
@@ -1114,6 +1119,15 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ConflictEncoded"];
         };
       };
       /** @description Too Many Requests */

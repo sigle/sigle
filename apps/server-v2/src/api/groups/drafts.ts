@@ -12,6 +12,7 @@ import {
 import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 import {
   BadRequest,
+  Conflict,
   documentPaginationQuery,
   Forbidden,
   imageRequestBody,
@@ -180,12 +181,12 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       },
       payload: UpdateDraftPayload,
       success: Draft,
-      error: NotFound,
+      error: [NotFound, Conflict],
     })
       .annotate(OpenApi.Summary, "Update a draft")
       .annotate(
         OpenApi.Description,
-        "Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields.",
+        "Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields. Returns a 409 while the draft is being published.",
       ),
     HttpApiEndpoint.delete("delete", "/:draftId", {
       params: {

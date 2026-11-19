@@ -24,6 +24,8 @@ export const EditorSave = () => {
     "idle" | "saving" | "error" | "saved"
   >("idle");
 
+  const [saveError, setSaveError] = useState<string | null>(null);
+
   const { watch, getValues } = useFormContext<EditorPostFormData>();
   const type = watch("type");
 
@@ -59,7 +61,10 @@ export const EditorSave = () => {
           onSuccess: () => {
             setSaveState("saved");
           },
-          onError: () => {
+          onError: (error) => {
+            // A 409 explains why the draft cannot be saved right now, such as
+            // a publish in progress.
+            setSaveError(error.message);
             setSaveState("error");
           },
         },
@@ -95,7 +100,9 @@ export const EditorSave = () => {
     return (
       <Alert variant="destructive" className="mt-4">
         <IconInfoCircle size={14} />
-        <AlertDescription>Error Saving, please try again</AlertDescription>
+        <AlertDescription>
+          {saveError ?? "Error Saving, please try again"}
+        </AlertDescription>
       </Alert>
     );
   }

@@ -65,6 +65,20 @@ export class NotFound extends Schema.Error<
   },
 ) {}
 
+export class Conflict extends Schema.Error<
+  Conflict,
+  { readonly brand: unique symbol }
+>("sigle/api/Conflict")(
+  {
+    _tag: Schema.tag("Conflict"),
+    message: Schema.String,
+  },
+  {
+    description: "Conflict",
+    httpApiStatus: 409,
+  },
+) {}
+
 export class UnsupportedMediaType extends Schema.Error<
   UnsupportedMediaType,
   { readonly brand: unique symbol }
