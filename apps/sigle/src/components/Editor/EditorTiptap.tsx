@@ -55,9 +55,9 @@ export const EditorTipTap = () => {
   const { setValue, getValues } = useFormContext<EditorPostFormData>();
   const setEditor = useEditorStore((state) => state.setEditor);
 
-  const { mutateAsync: uploadMedia } = sigleApiClient.useMutation(
-    "post",
-    "/api/protected/drafts/{draftId}/upload-media",
+  const { mutateAsync: uploadImage } = sigleApiClient.useMutation(
+    "put",
+    "/api/protected/drafts/{draftId}/images",
   );
 
   const editor = useEditor({
@@ -96,18 +96,21 @@ export const EditorTipTap = () => {
             postId,
           });
 
-          const formData = new FormData();
-          formData.append("file", file);
-
           try {
-            // SAFETY: openapi-fetch passes FormData instances through untouched for multipart/form-data, so the generated `{ file: string }` request type only describes the server-side form field.
-            const data = await uploadMedia({
+            // SAFETY: the endpoint reads a raw binary body, but openapi-typescript
+            // models `format: binary` request bodies as strings. The file is
+            // passed through `bodySerializer` unchanged.
+            const data = await uploadImage({
               params: {
                 path: {
                   draftId: postId,
                 },
               },
-              body: formData as FormData & { file: string },
+              headers: {
+                "Content-Type": file.type,
+              },
+              body: file as never,
+              bodySerializer: () => file,
             });
 
             posthog.capture("editor_image_upload_success", {

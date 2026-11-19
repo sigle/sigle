@@ -1,5 +1,6 @@
 import type { OpenApi } from "effect/http-api";
 import { Schema } from "effect";
+import { allowedImageFormats } from "@/lib/images";
 
 /**
  * Shared HTTP API error schemas.
@@ -172,3 +173,18 @@ export const documentPaginationQuery =
       }),
     };
   };
+
+/**
+ * Image upload endpoints read the raw request body themselves (see the
+ * handlers), so the binary request body is documented manually in the OpenAPI
+ * specification.
+ */
+export const imageRequestBody = {
+  required: true,
+  content: Object.fromEntries(
+    allowedImageFormats.map((contentType) => [
+      contentType,
+      { schema: { type: "string", format: "binary" } },
+    ]),
+  ),
+};

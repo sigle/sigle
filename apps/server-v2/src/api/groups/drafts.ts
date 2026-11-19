@@ -13,8 +13,14 @@ import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 import {
   BadRequest,
   documentPaginationQuery,
+  Forbidden,
+  imageRequestBody,
+  InternalServerError,
   NotFound,
+  PayloadTooLarge,
   paginationQueryFields,
+  TooManyRequests,
+  UnsupportedMediaType,
 } from "@/api/schemas";
 import { PostMetadata } from "@/lib/metadata";
 
@@ -126,6 +132,15 @@ export const PublishDraftStatusResponse = Schema.Struct({
   arweaveId: Schema.NullOr(Schema.String),
 }).annotate({ identifier: "PublishDraftStatusResponse" });
 
+export const UploadDraftImageResponse = Schema.Struct({
+  url: Schema.String,
+  key: Schema.String,
+  width: Schema.Int,
+  height: Schema.Int,
+  // Base64 ThumbHash placeholder for the optimized image.
+  thumbhash: Schema.String,
+}).annotate({ identifier: "UploadDraftImageResponse" });
+
 export const DraftsGroup = HttpApiGroup.make("drafts")
   .add(
     HttpApiEndpoint.post("create", "/", {
@@ -205,6 +220,28 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
         OpenApi.Description,
         "Poll the asynchronous publishing status of a draft.",
       ),
+    // TODO(#1328): only the contract for now, the handler always fails.
+    HttpApiEndpoint.put("uploadImage", "/:draftId/images", {
+      params: {
+        draftId: Schema.String,
+      },
+      success: UploadDraftImageResponse,
+      error: [
+        BadRequest,
+        Forbidden,
+        NotFound,
+        PayloadTooLarge,
+        TooManyRequests,
+        UnsupportedMediaType,
+        InternalServerError,
+      ],
+    })
+      .annotate(OpenApi.Summary, "Upload a draft image")
+      .annotate(
+        OpenApi.Description,
+        "Upload an image to embed in a draft as a raw binary body. Not implemented yet: always responds with a 500.",
+      )
+      .annotate(OpenApi.Override, { requestBody: imageRequestBody }),
   )
   .prefix("/api/protected/drafts")
   .middleware(RateLimitMiddleware)

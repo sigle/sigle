@@ -12,7 +12,7 @@ import {
   UpdateDraftPayload,
 } from "@/api/groups/drafts";
 import { CurrentUser } from "@/api/middleware/auth-user";
-import { BadRequest, NotFound } from "@/api/schemas";
+import { BadRequest, InternalServerError, NotFound } from "@/api/schemas";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { draft, post } from "@/db/schema";
@@ -369,5 +369,13 @@ export const DraftsHandlersLayer = HttpApiBuilder.group(
       )
       .handle("getPublishStatus", ({ params }) =>
         getDraftPublishStatus(params.draftId),
+      )
+      // TODO(#1328): upload the image.
+      .handle("uploadImage", () =>
+        Effect.fail(
+          new InternalServerError({
+            message: "Draft image uploads are not available yet.",
+          }),
+        ),
       ),
 );

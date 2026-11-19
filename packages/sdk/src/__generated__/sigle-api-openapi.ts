@@ -106,6 +106,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/protected/drafts/{draftId}/images": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /**
+     * Upload a draft image
+     * @description Upload an image to embed in a draft as a raw binary body. Not implemented yet: always responds with a 500.
+     */
+    put: operations["drafts.uploadImage"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/protected/user/profile/upload-metadata": {
     parameters: {
       query?: never;
@@ -523,6 +543,13 @@ export interface components {
       };
       /** @description A cryptographic signature of the `content` data. */
       signature?: string;
+    };
+    UploadDraftImageResponse: {
+      url: string;
+      key: string;
+      width: number;
+      height: number;
+      thumbhash: string;
     };
     PublishDraftStatusResponse: {
       status: components["schemas"]["PublishDraftStatus"];
@@ -1243,6 +1270,106 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "drafts.uploadImage": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        draftId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "image/webp": string;
+        "image/png": string;
+        "image/jpeg": string;
+      };
+    };
+    responses: {
+      /** @description UploadDraftImageResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UploadDraftImageResponse"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Payload Too Large */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_PayloadTooLargeEncoded"];
+        };
+      };
+      /** @description Unsupported Media Type */
+      415: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnsupportedMediaTypeEncoded"];
         };
       };
       /** @description Too Many Requests */

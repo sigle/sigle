@@ -27,11 +27,8 @@ export const EditorCoverImage = () => {
   const { setValue, watch } = useFormContext<EditorPostFormData>();
   const watchCoverImage = watch("coverImage");
 
-  const { mutateAsync: uploadMedia, isPending: loadingUploadImage } =
-    sigleApiClient.useMutation(
-      "post",
-      "/api/protected/drafts/{draftId}/upload-media",
-    );
+  const { mutateAsync: uploadImage, isPending: loadingUploadImage } =
+    sigleApiClient.useMutation("put", "/api/protected/drafts/{draftId}/images");
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {
@@ -47,17 +44,21 @@ export const EditorCoverImage = () => {
       posthog.capture("cover_image_upload_start", {
         postId,
       });
-      const formData = new FormData();
-      formData.append("file", file);
-      // SAFETY: openapi-fetch passes FormData instances through untouched for multipart/form-data, so the generated `{ file: string }` request type only describes the server-side form field.
-      uploadMedia(
+      // SAFETY: the endpoint reads a raw binary body, but openapi-typescript
+      // models `format: binary` request bodies as strings. The file is passed
+      // through `bodySerializer` unchanged.
+      uploadImage(
         {
           params: {
             path: {
               draftId: postId,
             },
           },
-          body: formData as FormData & { file: string },
+          headers: {
+            "Content-Type": file.type,
+          },
+          body: file as never,
+          bodySerializer: () => file,
         },
         {
           onSuccess: (data) => {
@@ -78,7 +79,7 @@ export const EditorCoverImage = () => {
         },
       );
     },
-    [postId, loadingUploadImage, posthog, setValue, setPreview, uploadMedia],
+    [postId, loadingUploadImage, posthog, setValue, setPreview, uploadImage],
   );
 
   // This is required for the migration process from Gaia.
