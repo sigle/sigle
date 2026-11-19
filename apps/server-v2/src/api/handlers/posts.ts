@@ -1,8 +1,3 @@
-import {
-  addressToString,
-  createAddress,
-  validateStacksAddress,
-} from "@stacks/transactions";
 import { count, desc, eq, inArray } from "drizzle-orm";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder } from "effect/http-api";
@@ -12,42 +7,34 @@ import {
   type PostListQuery,
 } from "@/api/groups/posts";
 import { findProfile } from "@/api/handlers/users";
-import { BadRequest, NotFound } from "@/api/schemas";
+import { NotFound } from "@/api/schemas";
 import { Database } from "@/db";
 import { mediaImage, post, postOts, walletAddress } from "@/db/schema";
-import { findPrimaryWalletAddress } from "@/services/users";
+import { parseStacksAddress } from "@/lib/stacks-address";
+import { findWalletAddresses } from "@/services/users";
 
 export const listPosts = (query: typeof PostListQuery.Type) =>
   Effect.gen(function* () {
-    if (
-      query.username !== undefined &&
-      !validateStacksAddress(query.username)
-    ) {
-      return yield* new BadRequest({ message: "Invalid Stacks address" });
-    }
+    const username =
+      query.username === undefined
+        ? undefined
+        : yield* parseStacksAddress(query.username);
 
     const db = yield* Database;
     const limit = query.limit ?? POST_LIST_DEFAULT_LIMIT;
     const offset = query.offset ?? 0;
 
     // Posts belong to a user, who can have several wallets, so an address
-    // matches every post of the user owning it. Wallet addresses are stored in
-    // their canonical c32 form, which validation does not enforce: decoding
-    // folds confusable characters such as `O` and `0`.
+    // matches every post of the user owning it.
     const where =
-      query.username === undefined
+      username === undefined
         ? undefined
         : inArray(
             post.userId,
             db
               .select({ userId: walletAddress.userId })
               .from(walletAddress)
-              .where(
-                eq(
-                  walletAddress.address,
-                  addressToString(createAddress(query.username)),
-                ),
-              ),
+              .where(eq(walletAddress.address, username)),
           );
 
     const [totals] = yield* db
@@ -117,10 +104,9 @@ export const getPost = (postId: string) =>
     }
 
     const foundPost = found.post;
-    const authorAddress = yield* findPrimaryWalletAddress(foundPost.userId);
+    const [authorAddress] = yield* findWalletAddresses(foundPost.userId);
 
-    const authorProfile =
-      authorAddress === null ? undefined : yield* findProfile(authorAddress);
+    const authorProfile = yield* findProfile(authorAddress);
 
     return {
       id: foundPost.id,
@@ -145,10 +131,10 @@ export const getPost = (postId: string) =>
       arweaveBlockHeight: foundPost.arweaveBlockHeight,
       createdAt: DateTime.fromDateUnsafe(foundPost.createdAt),
       updatedAt: DateTime.fromDateUnsafe(foundPost.updatedAt),
-      author:
-        authorAddress === null
-          ? null
-          : { address: authorAddress, profile: authorProfile?.profile ?? null },
+      author: {
+        address: authorAddress,
+        profile: authorProfile?.profile ?? null,
+      },
       opentimestamps:
         found.otsStatus === null
           ? null

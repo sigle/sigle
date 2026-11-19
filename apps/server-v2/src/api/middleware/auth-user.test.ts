@@ -1,15 +1,15 @@
 import { describe, expect, it } from "@effect/vitest";
+import { eq } from "drizzle-orm";
 import { Effect, Schema } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
-import {
-  createAuthenticatedClient,
-  createTestWalletAddress,
-} from "@/test/helpers";
+import { Database } from "@/db";
+import { walletAddress } from "@/db/schema";
+import { createAuthenticatedClient } from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 
 const CurrentUserResponse = Schema.Struct({
   id: Schema.String,
-  address: Schema.NullOr(Schema.String),
+  address: Schema.String,
   whitelisted: Schema.Boolean,
 });
 
@@ -32,7 +32,7 @@ describe("userAuthMiddleware", () => {
 
   it.effect("provides the current user for whitelisted users", () =>
     Effect.gen(function* () {
-      const { client, userId } = yield* createAuthenticatedClient();
+      const { client, userId, address } = yield* createAuthenticatedClient();
 
       const response = yield* client.get("/api/protected/me");
 
@@ -42,41 +42,27 @@ describe("userAuthMiddleware", () => {
       expect(response.status).toBe(200);
       expect(body).toStrictEqual({
         id: userId,
-        address: null,
+        address,
         whitelisted: true,
       });
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("returns the primary wallet address of the current user", () =>
+  it.effect("rejects users without a linked wallet", () =>
     Effect.gen(function* () {
+      const db = yield* Database;
       const { client, userId } = yield* createAuthenticatedClient();
-
-      // The secondary wallet is linked first so the oldest wallet is not the
-      // primary one.
-      yield* createTestWalletAddress({
-        userId,
-        address: "ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG",
-        isPrimary: false,
-      });
-      yield* createTestWalletAddress({
-        userId,
-        address: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
-        chainId: 1,
-      });
+      yield* db.delete(walletAddress).where(eq(walletAddress.userId, userId));
 
       const response = yield* client.get("/api/protected/me");
 
-      const body =
-        yield* HttpClientResponse.schemaBodyJson(CurrentUserResponse)(response);
-
-      expect(body.address).toBe("ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM");
+      expect(response.status).toBe(500);
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
   it.effect("reports non-whitelisted users", () =>
     Effect.gen(function* () {
-      const { client, userId } = yield* createAuthenticatedClient();
+      const { client, userId, address } = yield* createAuthenticatedClient();
 
       const response = yield* client.get("/api/protected/me");
 
@@ -86,7 +72,7 @@ describe("userAuthMiddleware", () => {
       expect(response.status).toBe(200);
       expect(body).toStrictEqual({
         id: userId,
-        address: null,
+        address,
         whitelisted: false,
       });
     }).pipe(Effect.provide(makeTestServerLayer({ STACKS_ENV: "mainnet" }))),

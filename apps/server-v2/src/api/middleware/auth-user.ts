@@ -2,11 +2,19 @@ import { Context, Effect, Layer } from "effect";
 import { HttpServerRequest } from "effect/http";
 import { HttpApiMiddleware } from "effect/http-api";
 import { Forbidden, Unauthorized } from "@/api/schemas";
+import { AppConfig } from "@/config";
+import { Database } from "@/db";
 import { AuthService } from "@/services/auth";
-import { UserWhitelistService } from "@/services/users";
+import { findWalletAddresses } from "@/services/users";
+
+const WHITELISTED_ADDRESSES: ReadonlyArray<string> = [];
 
 export interface AuthenticatedUser {
   readonly id: string;
+  /** Primary Stacks address of the user. */
+  readonly address: string;
+  /** Addresses of all the user's wallets, the primary one first. */
+  readonly walletAddresses: ReadonlyArray<string>;
   readonly whitelisted: boolean;
 }
 
@@ -19,7 +27,7 @@ export class UserAuthMiddleware extends HttpApiMiddleware.Service<
   UserAuthMiddleware,
   {
     provides: CurrentUser;
-    requires: AuthService | UserWhitelistService;
+    requires: AuthService | AppConfig | Database;
   }
 >()("sigle/UserAuthMiddleware", {
   error: [Unauthorized],
@@ -28,12 +36,13 @@ export class UserAuthMiddleware extends HttpApiMiddleware.Service<
 export const UserAuthMiddlewareLayer: Layer.Layer<
   UserAuthMiddleware,
   never,
-  AuthService | UserWhitelistService
+  AuthService | AppConfig | Database
 > = Layer.effect(
   UserAuthMiddleware,
   Effect.gen(function* () {
     const auth = yield* AuthService;
-    const users = yield* UserWhitelistService;
+    const config = yield* AppConfig;
+    const db = yield* Database;
 
     return (httpEffect) =>
       Effect.gen(function* () {
@@ -46,11 +55,19 @@ export const UserAuthMiddlewareLayer: Layer.Layer<
           return yield* new Unauthorized({ message: "Unauthorized" });
         }
 
-        const whitelisted = yield* users.isUserWhitelisted(session.user.id);
+        const walletAddresses = yield* findWalletAddresses(
+          session.user.id,
+        ).pipe(Effect.provideService(Database, db));
 
         return yield* Effect.provideService(httpEffect, CurrentUser, {
           id: session.user.id,
-          whitelisted,
+          address: walletAddresses[0],
+          walletAddresses,
+          whitelisted:
+            config.STACKS_ENV === "testnet" ||
+            walletAddresses.some((address) =>
+              WHITELISTED_ADDRESSES.includes(address),
+            ),
         });
       });
   }),

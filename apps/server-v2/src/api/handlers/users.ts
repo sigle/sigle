@@ -1,12 +1,12 @@
-import { validateStacksAddress } from "@stacks/transactions";
 import { eq } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
 import { SigleApi } from "@/api";
-import { BadRequest, NotFound } from "@/api/schemas";
+import { NotFound } from "@/api/schemas";
 import { Database } from "@/db";
 import { mediaImage, profile, walletAddress } from "@/db/schema";
+import { parseStacksAddress } from "@/lib/stacks-address";
 
 const CACHE_CONTROL = "public, max-age=60";
 
@@ -92,12 +92,9 @@ export const findProfile = (address: string) =>
 
 export const getUserProfile = (username: string) =>
   Effect.gen(function* () {
-    if (!validateStacksAddress(username)) {
-      return yield* new BadRequest({ message: "Invalid Stacks address" });
-    }
-
+    const address = yield* parseStacksAddress(username);
     const db = yield* Database;
-    const found = yield* findProfile(username);
+    const found = yield* findProfile(address);
 
     // Profiles are keyed by the signing address, so an address is known when
     // it either published a profile or signed in without publishing one.
@@ -105,7 +102,7 @@ export const getUserProfile = (username: string) =>
       const [wallet] = yield* db
         .select({ id: walletAddress.id })
         .from(walletAddress)
-        .where(eq(walletAddress.address, username))
+        .where(eq(walletAddress.address, address))
         .limit(1)
         .pipe(Effect.orDie);
 
@@ -114,13 +111,13 @@ export const getUserProfile = (username: string) =>
       }
 
       return HttpApiSchema.withHeaders({
-        body: { address: username, profile: null },
+        body: { address, profile: null },
         headers: { "cache-control": CACHE_CONTROL, etag: `"none"` },
       });
     }
 
     return HttpApiSchema.withHeaders({
-      body: { address: username, profile: found.profile },
+      body: { address, profile: found.profile },
       headers: {
         "cache-control": CACHE_CONTROL,
         etag: found.etag,

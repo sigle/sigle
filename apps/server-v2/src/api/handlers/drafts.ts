@@ -18,7 +18,6 @@ import { Database } from "@/db";
 import { draft, post } from "@/db/schema";
 import { publishDraftJob } from "@/jobs/publish-draft";
 import { PostHogService } from "@/services/posthog";
-import { UserWhitelistService } from "@/services/users";
 
 const toDraft = (row: typeof draft.$inferSelect) => ({
   id: row.id,
@@ -208,7 +207,6 @@ export const publishDraft = (
     const user = yield* CurrentUser;
     const config = yield* AppConfig;
     const db = yield* Database;
-    const whitelist = yield* UserWhitelistService;
 
     const [foundDraft] = yield* db
       .select()
@@ -241,12 +239,7 @@ export const publishDraft = (
 
     const { recoveredAddress, signature } = signatureResult.value;
 
-    const ownsWallet = yield* whitelist.hasWalletAddress(
-      user.id,
-      recoveredAddress,
-    );
-
-    if (!ownsWallet) {
+    if (!user.walletAddresses.includes(recoveredAddress)) {
       return yield* new BadRequest({
         message:
           "Invalid signature: Signature verification failed or address mismatch",
