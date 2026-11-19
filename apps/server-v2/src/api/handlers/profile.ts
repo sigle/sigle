@@ -162,6 +162,7 @@ export const uploadProfileImage = (
     const posthog = yield* PostHogService;
 
     const uploaded = yield* uploadImageFromRequest(request, {
+      userId: user.id,
       ...profileImageSettings(config.STACKS_ENV, kind),
       maxMib: profileImageMaxMib(kind),
       key: () => profileImageKey(user.id, kind),

@@ -79,6 +79,10 @@ export const appConfig = Config.all({
   R2_BUCKET: Config.NonEmptyString("R2_BUCKET"),
   // The public base URL used to serve uploaded files
   R2_PUBLIC_URL: Config.NonEmptyString("R2_PUBLIC_URL"),
+  // Total bytes a user can upload to object storage
+  UPLOAD_QUOTA_TOTAL_BYTES: Config.Int("UPLOAD_QUOTA_TOTAL_BYTES"),
+  // Bytes a user can upload to object storage per UTC day
+  UPLOAD_QUOTA_DAILY_BYTES: Config.Int("UPLOAD_QUOTA_DAILY_BYTES"),
   DATABASE_KIND: Config.Literals(["postgres", "pglite"], "DATABASE_KIND"),
   DATABASE_URL: Config.NonEmptyString("DATABASE_URL").pipe(
     Config.map(Redacted.make),
@@ -113,6 +117,8 @@ export const defaultTestConfig: AppConfigValues = {
   R2_SECRET_ACCESS_KEY: Redacted.make("r2-test-secret-access-key"),
   R2_BUCKET: "sigle-test",
   R2_PUBLIC_URL: "https://cdn.test",
+  UPLOAD_QUOTA_TOTAL_BYTES: 1024 * 1024 * 1024,
+  UPLOAD_QUOTA_DAILY_BYTES: 200 * 1024 * 1024,
   DATABASE_KIND: "pglite",
   DATABASE_URL: Redacted.make("memory://"),
   SENTRY_DSN: Option.none(),

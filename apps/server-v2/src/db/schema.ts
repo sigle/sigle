@@ -180,6 +180,35 @@ export const profile = pgTable("profile", {
 });
 
 // --
+// Uploads
+// --
+
+/**
+ * One row per file a user uploaded to object storage, used to enforce the
+ * daily and total upload quotas. Sizes are the stored bytes, after
+ * optimization.
+ */
+export const userUpload = pgTable(
+  "user_upload",
+  {
+    id: text("id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    key: text("key").notNull(),
+    sizeBytes: integer("size_bytes").notNull(),
+    contentType: text("content_type").notNull(),
+    createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("user_upload_user_id_created_at_idx").on(
+      table.userId,
+      table.createdAt,
+    ),
+  ],
+);
+
+// --
 // Media images
 // --
 
