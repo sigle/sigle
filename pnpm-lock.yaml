@@ -579,9 +579,6 @@ importers:
       better-result:
         specifier: 3.0.1
         version: 3.0.1
-      blurhash:
-        specifier: 2.0.5
-        version: 2.0.5
       class-variance-authority:
         specifier: 0.7.1
         version: 0.7.1

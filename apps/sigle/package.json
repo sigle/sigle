@@ -54,7 +54,6 @@
     "@tiptap/suggestion": "3.28.0",
     "better-auth": "1.7.6",
     "better-result": "3.0.1",
-    "blurhash": "2.0.5",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "date-fns": "4.1.0",
