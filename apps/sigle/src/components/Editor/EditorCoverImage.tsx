@@ -8,6 +8,7 @@ import {
   type MouseEventHandler,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import { useDropzone } from "react-dropzone";
@@ -82,11 +83,21 @@ export const EditorCoverImage = () => {
     [postId, loadingUploadImage, posthog, setValue, setPreview, uploadImage],
   );
 
+  // The Gaia cover of a draft is uploaded once. `onDrop` changes with the
+  // upload state, so without this a failed upload would start the next one.
+  const gaiaUploadAttempt = useRef<string | null>(null);
+
   // This is required for the migration process from Gaia.
   // It can be removed once it's done.
   useEffect(() => {
     const autoUploadImage = async () => {
-      if (watchCoverImage?.startsWith("https://gaia.blockstack.org/hub/")) {
+      const attempt = `${postId}:${watchCoverImage}`;
+
+      if (
+        watchCoverImage?.startsWith("https://gaia.blockstack.org/hub/") &&
+        gaiaUploadAttempt.current !== attempt
+      ) {
+        gaiaUploadAttempt.current = attempt;
         const response = await fetch(watchCoverImage);
         const blob = await response.blob();
         const file = new File([blob], "cover-image", { type: blob.type });
@@ -95,7 +106,7 @@ export const EditorCoverImage = () => {
     };
 
     autoUploadImage();
-  }, [watchCoverImage, onDrop]);
+  }, [postId, watchCoverImage, onDrop]);
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
