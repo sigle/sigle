@@ -21,7 +21,14 @@ import { resolveImageUrl } from "@/lib/images";
 import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "./EditorFormProvider";
 
-export const EditorCoverImage = () => {
+interface EditorCoverImageProps {
+  /** Whether the user can upload images, which is only on the Pro plan. */
+  canUploadImages?: boolean;
+}
+
+export const EditorCoverImage = ({
+  canUploadImages = false,
+}: EditorCoverImageProps) => {
   const postId = useParams<{ postId: string }>().postId;
   const posthog = usePostHog();
   const [preview, setPreview] = useState<string | null>(null);
@@ -94,6 +101,7 @@ export const EditorCoverImage = () => {
       const attempt = `${postId}:${watchCoverImage}`;
 
       if (
+        canUploadImages &&
         watchCoverImage?.startsWith("https://gaia.blockstack.org/hub/") &&
         gaiaUploadAttempt.current !== attempt
       ) {
@@ -106,10 +114,11 @@ export const EditorCoverImage = () => {
     };
 
     autoUploadImage();
-  }, [postId, watchCoverImage, onDrop]);
+  }, [canUploadImages, postId, watchCoverImage, onDrop]);
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     onDrop,
+    disabled: !canUploadImages,
     accept: {
       "image/jpeg": [],
       "image/png": [],
@@ -129,6 +138,12 @@ export const EditorCoverImage = () => {
   const resolvedWatchCoverImage = watchCoverImage
     ? resolveImageUrl(watchCoverImage, { gateway: true })
     : null;
+
+  // Free users keep an existing cover, which they can remove, but cannot add
+  // one.
+  if (!canUploadImages && !preview && !resolvedWatchCoverImage) {
+    return null;
+  }
 
   return (
     <div

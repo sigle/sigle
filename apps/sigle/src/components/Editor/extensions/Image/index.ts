@@ -28,9 +28,10 @@ declare module "@tiptap/core" {
 export const TipTapImage = TipTapImageBase.extend<
   ImageOptions & {
     /**
-     * Upload a file and return the URL.
+     * Upload a file and return the URL. Unset when the user can't upload
+     * images, such as on the free plan.
      */
-    uploadFile: (file: File) => Promise<string>;
+    uploadFile?: (file: File) => Promise<string>;
   }
 >({
   draggable: true,
@@ -75,6 +76,10 @@ export const TipTapImage = TipTapImageBase.extend<
       setImageFromFile:
         ({ file }) =>
         ({ chain, editor }) => {
+          const { uploadFile } = this.options;
+
+          if (!uploadFile) return false;
+
           const uploadId = nanoid();
           // We show a preview of  the image image as uploading can take a while.
           const preview = URL.createObjectURL(file);
@@ -86,8 +91,7 @@ export const TipTapImage = TipTapImageBase.extend<
             })
             .run();
 
-          this.options
-            .uploadFile(file)
+          uploadFile(file)
             .then((imageUrl) => {
               // The file can take some time to propagate to IPFS. So we keep the local preview of the file
               const transaction = editor.state.tr;
@@ -137,10 +141,15 @@ export const TipTapImage = TipTapImageBase.extend<
   // It can be removed once it's done.
   onCreate() {
     const { editor } = this;
+    const { uploadFile } = this.options;
+
     const transaction = editor.state.tr;
 
     editor.state.doc.descendants((node, pos) => {
+      // Without an uploader the Gaia images are kept as they are, instead of
+      // being removed from the document when their upload fails.
       if (
+        uploadFile &&
         node.type.name === "image" &&
         node.attrs.src?.startsWith("https://gaia.blockstack.org/hub/")
       ) {
@@ -159,7 +168,7 @@ export const TipTapImage = TipTapImageBase.extend<
           .then((blob) => {
             const file = new File([blob], "image", { type: blob.type });
 
-            return this.options.uploadFile(file);
+            return uploadFile(file);
           })
           .then((imageUrl) => {
             const updateTransaction = editor.state.tr;

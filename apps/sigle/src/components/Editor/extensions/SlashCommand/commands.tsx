@@ -75,6 +75,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     title: "Image",
     description: "Upload from your computer",
     section: "basic",
+    proOnly: true,
     command: ({ editor, range }) => {
       const input = document.createElement("input");
       input.type = "file";
