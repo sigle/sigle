@@ -38,5 +38,15 @@ export const relations = defineRelations(schema, (r) => ({
       from: r.post.userId,
       to: r.user.id,
     }),
+    ots: r.one.postOts({
+      from: r.post.id,
+      to: r.postOts.postId,
+    }),
+  },
+  postOts: {
+    post: r.one.post({
+      from: r.postOts.postId,
+      to: r.post.id,
+    }),
   },
 }));

@@ -84,33 +84,6 @@ export const LatestPost = () => {
                   }
                 />
               </div>
-
-              {post.collectible ? (
-                <div className="mt-5 -mb-4">
-                  {/* TODO once we have that info from backend */}
-                  {/* <Flex
-                gap="5"
-                align="center"
-                justify="between"
-                className="border-b border-solid border-border py-5 last:border-b-0"
-              >
-                <Text size="2">Earned</Text>
-                <Text size="2" weight="medium">
-                  {
-                    // TODO that amount from backend
-                    0
-                  }{" "}
-                  <Text size="1" color="gray">
-                    sBTC
-                  </Text>
-                </Text>
-              </Flex> */}
-                  <div className="flex items-center justify-between gap-5 border-b border-solid border-border py-5 last:border-b-0">
-                    <p>Collected</p>
-                    <p className="font-medium">{post.collectible.collected}</p>
-                  </div>
-                </div>
-              ) : null}
             </>
           ) : null}
         </CardContent>

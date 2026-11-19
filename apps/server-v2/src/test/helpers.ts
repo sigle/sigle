@@ -1,4 +1,9 @@
-import { PostMetadataSchemaId } from "@sigle/sdk";
+import {
+  ArweaveTags,
+  ArweaveTransactionTypes,
+  PostMetadataSchemaId,
+  ProfileMetadataSchemaId,
+} from "@sigle/sdk";
 import { hashMessage } from "@stacks/encryption";
 import {
   getAddressFromPrivateKey,
@@ -6,12 +11,26 @@ import {
   signMessageHashRsv,
 } from "@stacks/transactions";
 import { makeSignature } from "better-auth/crypto";
-import { Effect, Redacted, Ref } from "effect";
-import { Cookies, HttpClient } from "effect/http";
+import { Duration, Effect, Redacted, Schedule } from "effect";
+import { Cookies, HttpClient, HttpClientRequest } from "effect/http";
 import { createSiwsMessage } from "sign-in-with-stacks";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { draft, post, session, user, walletAddress } from "@/db/schema";
+import {
+  draft,
+  mediaImage,
+  post,
+  postOts,
+  profile,
+  session,
+  user,
+  walletAddress,
+} from "@/db/schema";
+import {
+  ARWEAVE_TEST_OWNER_ADDRESS,
+  type ArweaveTag,
+  type ArweaveTestTransaction,
+} from "@/services/arweave";
 import { SESSION_COOKIE_NAME } from "@/services/auth";
 
 export const createTestUser = (
@@ -93,6 +112,73 @@ export const createTestDraft = (options: {
     return created;
   });
 
+export const createTestProfile = (options: {
+  readonly address: string;
+  readonly arweaveTxId?: string;
+  readonly arweaveBlockHeight?: number | null;
+  readonly signature?: string;
+  readonly displayName?: string;
+  readonly description?: string;
+  readonly website?: string;
+  readonly twitter?: string;
+  readonly picture?: string;
+  readonly coverPicture?: string;
+}) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+    const now = new Date();
+
+    const [created] = yield* db
+      .insert(profile)
+      .values({
+        address: options.address,
+        arweaveTxId: options.arweaveTxId ?? crypto.randomUUID(),
+        arweaveBlockHeight: options.arweaveBlockHeight ?? null,
+        signature: options.signature ?? crypto.randomUUID(),
+        displayName: options.displayName ?? "Test Profile",
+        description: options.description ?? "Test description",
+        website: options.website ?? null,
+        twitter: options.twitter ?? null,
+        picture: options.picture ?? null,
+        coverPicture: options.coverPicture ?? null,
+        createdAt: now,
+        updatedAt: now,
+      })
+      .returning();
+
+    return created;
+  });
+
+export const createTestMediaImage = (options: {
+  readonly id: string;
+  readonly status?: "PENDING" | "READY" | "FAILED";
+  readonly mimeType?: string | null;
+  readonly width?: number | null;
+  readonly height?: number | null;
+  readonly size?: number | null;
+  readonly thumbhash?: string | null;
+  readonly updatedAt?: Date;
+}) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+
+    const [created] = yield* db
+      .insert(mediaImage)
+      .values({
+        id: options.id,
+        status: options.status ?? "PENDING",
+        mimeType: options.mimeType ?? null,
+        width: options.width ?? null,
+        height: options.height ?? null,
+        size: options.size ?? null,
+        thumbhash: options.thumbhash ?? null,
+        updatedAt: options.updatedAt,
+      })
+      .returning();
+
+    return created;
+  });
+
 export const createTestPost = (options: {
   readonly id?: string;
   readonly draftId?: string | null;
@@ -125,6 +211,32 @@ export const createTestPost = (options: {
         excerpt: options.excerpt ?? "Test excerpt",
         signature: options.signature ?? null,
         userId: options.userId,
+      })
+      .returning();
+
+    return created;
+  });
+
+export const createTestPostOts = (options: {
+  readonly postId: string;
+  readonly status?: "PENDING" | "UPGRADED" | "FAILED";
+  readonly contentHash?: string;
+  readonly pendingProof?: Buffer | null;
+  readonly otsTxId?: string | null;
+  readonly updatedAt?: Date;
+}) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+
+    const [created] = yield* db
+      .insert(postOts)
+      .values({
+        postId: options.postId,
+        status: options.status ?? "PENDING",
+        contentHash: options.contentHash ?? "a".repeat(64),
+        pendingProof: options.pendingProof ?? null,
+        otsTxId: options.otsTxId ?? null,
+        updatedAt: options.updatedAt,
       })
       .returning();
 
@@ -177,6 +289,70 @@ export const signTestSiwsMessage = (
     messageHash: Buffer.from(hashMessage(message)).toString("hex"),
     privateKey,
   });
+
+interface TestProfileMetadataContent {
+  id: string;
+  displayName: string;
+  picture?: string;
+  coverPicture?: string;
+}
+
+export const createSignedTestProfileMetadata = (options: {
+  readonly privateKey: string;
+  readonly id?: string;
+  readonly displayName?: string;
+  readonly picture?: string;
+  readonly coverPicture?: string;
+}) => {
+  const content: TestProfileMetadataContent = {
+    id: options.id ?? "profile-1",
+    displayName: options.displayName ?? "Test profile",
+  };
+
+  if (options.picture !== undefined) {
+    content.picture = options.picture;
+  }
+
+  if (options.coverPicture !== undefined) {
+    content.coverPicture = options.coverPicture;
+  }
+
+  const metadataWithoutSignature = {
+    $schema: ProfileMetadataSchemaId.LATEST,
+    content,
+  };
+
+  const signature = signTestSiwsMessage(
+    JSON.stringify(metadataWithoutSignature),
+    options.privateKey,
+  );
+
+  return {
+    ...metadataWithoutSignature,
+    signature,
+  };
+};
+
+/**
+ * A mined profile transaction uploaded by this server, as served by the
+ * in-memory gateway of `ArweaveService.layerTest`.
+ */
+export const createTestProfileTransaction = (options: {
+  readonly id: string;
+  readonly metadata: unknown;
+  readonly blockHeight?: number | null;
+  readonly ownerAddress?: string;
+  readonly tags?: ReadonlyArray<ArweaveTag>;
+}): ArweaveTestTransaction => ({
+  id: options.id,
+  ownerAddress: options.ownerAddress ?? ARWEAVE_TEST_OWNER_ADDRESS,
+  blockHeight: options.blockHeight === undefined ? 100 : options.blockHeight,
+  tags: options.tags ?? [
+    { name: ArweaveTags.appName, value: "sigle-test" },
+    { name: ArweaveTags.type, value: ArweaveTransactionTypes.profile },
+  ],
+  data: JSON.stringify(options.metadata),
+});
 
 export const createSignedTestPostMetadata = (options: {
   readonly draftId: string;
@@ -240,15 +416,40 @@ export const createAuthenticatedClient = (options: { userId?: string } = {}) =>
       makeSignature(token, Redacted.value(config.AUTH_SECRET)),
     );
 
-    const cookies = Cookies.setUnsafe(
-      SESSION_COOKIE_NAME,
-      `${token}.${signature}`,
-    )(Cookies.empty);
+    const cookieHeader = Cookies.toCookieHeader(
+      Cookies.setUnsafe(
+        SESSION_COOKIE_NAME,
+        `${token}.${signature}`,
+      )(Cookies.empty),
+    );
 
     return {
       client: (yield* HttpClient.HttpClient).pipe(
-        HttpClient.withCookiesRef(yield* Ref.make(cookies)),
+        HttpClient.mapRequest(
+          HttpClientRequest.setHeader("cookie", cookieHeader),
+        ),
       ),
       userId: user.id,
     };
+  });
+
+/**
+ * Total time a job keeps retrying before its final failure: the sum of its
+ * retry schedule's delays over every attempt, stepped the way
+ * `PersistedQueue` replays the schedule from the attempt count.
+ */
+export const totalRetryWindow = (job: {
+  readonly retrySchedule: Schedule.Schedule<unknown, number>;
+  readonly maxAttempts: number;
+}) =>
+  Effect.gen(function* () {
+    const step = yield* Schedule.toStep(job.retrySchedule);
+    let elapsedMillis = 0;
+
+    for (let attempt = 1; attempt < job.maxAttempts; attempt++) {
+      const [, delay] = yield* step(elapsedMillis, attempt);
+      elapsedMillis += Duration.toMillis(delay);
+    }
+
+    return Duration.millis(elapsedMillis);
   });

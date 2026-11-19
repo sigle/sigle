@@ -42,7 +42,6 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 # Build the project and its dependencies
 COPY --from=builder /app/out/full/ .
 # Copy contracts source to avoid cyclic dependency
-COPY --from=builder /app/apps/contracts ./apps/contracts
 COPY --from=builder /app/apps/contracts-next ./apps/contracts-next
 COPY ./apps/$APP_NAME/.env.development* ./apps/$APP_NAME/
 COPY turbo.json turbo.json

@@ -14,6 +14,7 @@ import { DraftsHandlersLayer } from "@/api/handlers/drafts";
 import { HealthHandlersLayer } from "@/api/handlers/health";
 import { ProfileHandlersLayer } from "@/api/handlers/profile";
 import { ProtectedHandlersLayer } from "@/api/handlers/protected";
+import { UsersHandlersLayer } from "@/api/handlers/users";
 import { AdminMiddlewareLayer } from "@/api/middleware/admin";
 import {
   UserAuthMiddlewareLayer,
@@ -26,6 +27,8 @@ import { JobsLive } from "@/jobs";
 import { ArweaveService } from "@/services/arweave";
 import { AuthService } from "@/services/auth";
 import { ImageProcessingService } from "@/services/image-processing";
+import { OpenTimestampsService } from "@/services/opentimestamps";
+import { PlanService } from "@/services/plan";
 import { PostHogService } from "@/services/posthog";
 import { RateLimiterLive } from "@/services/rate-limiter";
 import { StorageService } from "@/services/storage";
@@ -36,6 +39,7 @@ export const CoreServicesLayer = Layer.mergeAll(
   TelemetryLayer,
   PostHogService.layer,
   ArweaveService.layer,
+  OpenTimestampsService.layer,
   ImageProcessingService.layer,
   StorageService.layer,
 ).pipe(Layer.provideMerge(AppConfig.layer), Layer.provide(NodeServices.layer));
@@ -45,6 +49,7 @@ export const ApiHandlersLayer = Layer.mergeAll(
   ProtectedHandlersLayer,
   DraftsHandlersLayer,
   ProfileHandlersLayer,
+  UsersHandlersLayer,
   AdminHandlersLayer,
 );
 
@@ -58,6 +63,7 @@ export const ApiMiddlewareLayer = Layer.mergeAll(
 export const AuthLayer = Layer.mergeAll(
   AuthService.layer,
   UserWhitelistService.layer,
+  PlanService.layer,
 );
 
 export const CorsLayer = Layer.unwrap(

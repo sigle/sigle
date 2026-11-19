@@ -7,9 +7,10 @@ import { Schema } from "effect";
  * status code used by `HttpApiBuilder` when rendering the response and by the
  * OpenAPI generator.
  */
-export class BadRequest extends Schema.Error<BadRequest>(
-  "sigle/api/BadRequest",
-)(
+export class BadRequest extends Schema.Error<
+  BadRequest,
+  { readonly brand: unique symbol }
+>("sigle/api/BadRequest")(
   {
     _tag: Schema.tag("BadRequest"),
     message: Schema.String,
@@ -20,9 +21,10 @@ export class BadRequest extends Schema.Error<BadRequest>(
   },
 ) {}
 
-export class Unauthorized extends Schema.Error<Unauthorized>(
-  "sigle/api/Unauthorized",
-)(
+export class Unauthorized extends Schema.Error<
+  Unauthorized,
+  { readonly brand: unique symbol }
+>("sigle/api/Unauthorized")(
   {
     _tag: Schema.tag("Unauthorized"),
     message: Schema.String,
@@ -33,7 +35,10 @@ export class Unauthorized extends Schema.Error<Unauthorized>(
   },
 ) {}
 
-export class Forbidden extends Schema.Error<Forbidden>("sigle/api/Forbidden")(
+export class Forbidden extends Schema.Error<
+  Forbidden,
+  { readonly brand: unique symbol }
+>("sigle/api/Forbidden")(
   {
     _tag: Schema.tag("Forbidden"),
     message: Schema.String,
@@ -44,7 +49,10 @@ export class Forbidden extends Schema.Error<Forbidden>("sigle/api/Forbidden")(
   },
 ) {}
 
-export class NotFound extends Schema.Error<NotFound>("sigle/api/NotFound")(
+export class NotFound extends Schema.Error<
+  NotFound,
+  { readonly brand: unique symbol }
+>("sigle/api/NotFound")(
   {
     _tag: Schema.tag("NotFound"),
     message: Schema.String,
@@ -55,9 +63,10 @@ export class NotFound extends Schema.Error<NotFound>("sigle/api/NotFound")(
   },
 ) {}
 
-export class UnsupportedMediaType extends Schema.Error<UnsupportedMediaType>(
-  "sigle/api/UnsupportedMediaType",
-)(
+export class UnsupportedMediaType extends Schema.Error<
+  UnsupportedMediaType,
+  { readonly brand: unique symbol }
+>("sigle/api/UnsupportedMediaType")(
   {
     _tag: Schema.tag("UnsupportedMediaType"),
     message: Schema.String,
@@ -68,9 +77,10 @@ export class UnsupportedMediaType extends Schema.Error<UnsupportedMediaType>(
   },
 ) {}
 
-export class PayloadTooLarge extends Schema.Error<PayloadTooLarge>(
-  "sigle/api/PayloadTooLarge",
-)(
+export class PayloadTooLarge extends Schema.Error<
+  PayloadTooLarge,
+  { readonly brand: unique symbol }
+>("sigle/api/PayloadTooLarge")(
   {
     _tag: Schema.tag("PayloadTooLarge"),
     message: Schema.String,
@@ -81,9 +91,10 @@ export class PayloadTooLarge extends Schema.Error<PayloadTooLarge>(
   },
 ) {}
 
-export class TooManyRequests extends Schema.Error<TooManyRequests>(
-  "sigle/api/TooManyRequests",
-)(
+export class TooManyRequests extends Schema.Error<
+  TooManyRequests,
+  { readonly brand: unique symbol }
+>("sigle/api/TooManyRequests")(
   {
     _tag: Schema.tag("TooManyRequests"),
     message: Schema.String,
@@ -95,9 +106,10 @@ export class TooManyRequests extends Schema.Error<TooManyRequests>(
   },
 ) {}
 
-export class InternalServerError extends Schema.Error<InternalServerError>(
-  "sigle/api/InternalServerError",
-)(
+export class InternalServerError extends Schema.Error<
+  InternalServerError,
+  { readonly brand: unique symbol }
+>("sigle/api/InternalServerError")(
   {
     _tag: Schema.tag("InternalServerError"),
     message: Schema.String,

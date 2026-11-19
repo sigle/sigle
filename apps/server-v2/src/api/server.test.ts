@@ -20,6 +20,9 @@ const OpenApiOperation = Schema.Struct({
 
 const OpenApiResponse = Schema.Struct({
   openapi: Schema.String,
+  components: Schema.Struct({
+    schemas: Schema.Record(Schema.String, Schema.Unknown),
+  }),
   paths: Schema.Record(
     Schema.String,
     Schema.Struct({
@@ -72,6 +75,8 @@ describe("http server", () => {
         requestBody: Object.keys(
           profileImagePath?.put?.requestBody?.content ?? {},
         ),
+        postMetadata: body.components.schemas["PostMetadata"],
+        profileMetadata: body.components.schemas["ProfileMetadata"],
       }).toStrictEqual({
         status: 200,
         openapi: true,
@@ -98,6 +103,16 @@ describe("http server", () => {
           "image/png",
           "image/webp",
         ]),
+        // Signed metadata schemas are generated from the `@sigle/sdk` zod
+        // schemas instead of being documented as opaque values.
+        postMetadata: expect.objectContaining({
+          type: "object",
+          required: expect.arrayContaining(["$schema", "content"]),
+        }),
+        profileMetadata: expect.objectContaining({
+          type: "object",
+          required: expect.arrayContaining(["$schema", "content"]),
+        }),
       });
     }).pipe(Effect.provide(serverLayer())),
   );

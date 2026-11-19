@@ -190,9 +190,6 @@ defineRouteMeta({
               blockHeight: {
                 type: "number",
               },
-              collectorsCount: {
-                type: "number",
-              },
               metadataUri: {
                 type: "string",
               },
@@ -204,58 +201,6 @@ defineRouteMeta({
               },
               updatedAt: {
                 type: "string",
-              },
-              minterFixedPrice: {
-                type: "object",
-                required: ["id", "price", "startBlock", "endBlock"],
-                properties: {
-                  id: {
-                    type: "string",
-                  },
-                  price: {
-                    type: "string",
-                    description: "The price in BigInt format",
-                  },
-                  startBlock: {
-                    type: "string",
-                    description: "The start block in BigInt format",
-                  },
-                  endBlock: {
-                    type: "string",
-                    description: "The end block in BigInt format",
-                  },
-                },
-              },
-              collectible: {
-                type: "object",
-                required: [
-                  "id",
-                  "address",
-                  "maxSupply",
-                  "openEdition",
-                  "collected",
-                  "enabled",
-                ],
-                properties: {
-                  id: {
-                    type: "string",
-                  },
-                  address: {
-                    type: "string",
-                  },
-                  maxSupply: {
-                    type: "number",
-                  },
-                  openEdition: {
-                    type: "boolean",
-                  },
-                  collected: {
-                    type: "number",
-                  },
-                  enabled: {
-                    type: "boolean",
-                  },
-                },
               },
               user: {
                 type: "object",

@@ -70,7 +70,6 @@ describe("api/posts/[postId]/index.get", () => {
     expect(result).toMatchObject({
       id: post.id,
       title: "Test Post",
-      collectorsCount: 0,
     });
   });
 
@@ -91,39 +90,6 @@ describe("api/posts/[postId]/index.get", () => {
 
     const result = await handler(mockEvent);
 
-    expect(result).toStrictEqual({ collectorsCount: 0 });
-  });
-
-  it("returns collectors count", async () => {
-    const user = await createTestUser({ id: userId });
-
-    const post = await createTestPost({
-      id: "post-1",
-      userId: user.id,
-      title: "Test Post",
-    });
-
-    // Create NFT with a different minter
-    const minter1 = await createTestUser({ id: "minter1" });
-
-    await testDb.db.postNft.create({
-      data: {
-        id: "nft-1",
-        postId: post.id,
-        ownerId: minter1.id,
-        minterId: minter1.id,
-        createdAt: new Date(),
-      },
-    });
-
-    mockGetRouterParam.mockReturnValue("post-1");
-
-    const mockEvent = new H3Event(
-      new Request("http://localhost/api/posts/post-1"),
-    );
-
-    const result = await handler(mockEvent);
-
-    expect(result?.collectorsCount).toBe(1);
+    expect(result).toBeNull();
   });
 });

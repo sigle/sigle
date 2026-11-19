@@ -1,9 +1,9 @@
-import { cvToJSON, hexToCV } from "@stacks/transactions";
+import { ArweaveTags, ArweaveTransactionTypes } from "@sigle/sdk";
+import { Result, TaggedError } from "better-result";
 import { z } from "zod";
+import { env } from "@/env";
 import { consola } from "@/lib/consola";
 import { prisma } from "@/lib/prisma";
-import { sigleConfig } from "@/lib/sigle";
-import { getStacksTransaction, stacksApiClient } from "@/lib/stacks";
 import { indexerJob } from "..";
 
 export const indexerIndexProfilesSchema = z.object({
@@ -11,160 +11,210 @@ export const indexerIndexProfilesSchema = z.object({
   data: z.object({}),
 });
 
-const API_LIMIT = 50;
+export class FetchArweaveTransactionsFailedError extends TaggedError(
+  "FetchArweaveTransactionsFailedError",
+)<{
+  error: string;
+}> {}
 
-const eventLogSchema = z.object({
-  value: z.object({
-    a: z.object({
-      value: z.literal("set-profile"),
-    }),
-    address: z.object({
-      value: z.string(),
-    }),
-    uri: z.object({
-      value: z.string(),
-    }),
+export interface ArweaveProfileEdge {
+  cursor: string;
+  node: {
+    id: string;
+    block?: {
+      height: number;
+    } | null;
+  };
+}
+
+const arweaveProfileEdgeSchema = z.object({
+  cursor: z.string(),
+  node: z.object({
+    id: z.string(),
+    block: z.object({ height: z.number() }).nullish(),
   }),
 });
+
+const graphQLResponseSchema = z.object({
+  errors: z.array(z.object({ message: z.string() })).optional(),
+  data: z
+    .object({
+      transactions: z
+        .object({
+          edges: z.array(arweaveProfileEdgeSchema),
+        })
+        .optional(),
+    })
+    .optional(),
+});
+
+export async function fetchArweaveProfileTransactions({
+  minBlockHeight,
+  afterCursor,
+}: {
+  minBlockHeight: number;
+  afterCursor?: string;
+}): Promise<Result<ArweaveProfileEdge[], FetchArweaveTransactionsFailedError>> {
+  const afterParam = afterCursor ? `, after: "${afterCursor}"` : "";
+
+  const query = `
+    query {
+      transactions(
+        tags: [
+          { name: "${ArweaveTags.appName}", values: ["${env.APP_ID}"] }
+          { name: "${ArweaveTags.type}", values: ["${ArweaveTransactionTypes.profile}"] }
+        ]
+        block: { min: ${minBlockHeight} }
+        first: 100
+        sort: HEIGHT_ASC
+        ${afterParam}
+      ) {
+        edges {
+          cursor
+          node {
+            id
+            block {
+              height
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  return Result.tryPromise({
+    try: async () => {
+      const response = await fetch(`${env.ARWEAVE_GATEWAY_URL}/graphql`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ query }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = graphQLResponseSchema.parse(await response.json());
+
+      if (result.errors && result.errors.length > 0) {
+        throw new Error(
+          `GraphQL error: ${result.errors.map((e) => e.message).join(", ")}`,
+        );
+      }
+
+      if (!result.data?.transactions?.edges) {
+        throw new Error(
+          "Invalid GraphQL response: transactions.edges is missing",
+        );
+      }
+
+      return result.data.transactions.edges;
+    },
+    catch: (error) => {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error);
+
+      return new FetchArweaveTransactionsFailedError({ error: errorMessage });
+    },
+  });
+}
 
 export const executeIndexerIndexProfilesJob = async (
   _data: z.TypeOf<typeof indexerIndexProfilesSchema>["data"],
 ) => {
-  // Use updatedAt instead of createdAt because profiles are updated over time
-  // and createdAt doesn't change on update. This ensures we start from
-  // the most recently indexed profile update.
-  const latestProfile = await prisma.profile.findFirst({
+  const latestMinedProfile = await prisma.profile.findFirst({
     select: {
-      txId: true,
+      blockHeight: true,
+    },
+    where: {
+      blockHeight: {
+        gt: 0,
+      },
     },
     orderBy: {
-      updatedAt: "desc",
+      blockHeight: "desc",
     },
   });
 
-  const lastProcessedTxId = latestProfile?.txId;
+  const minBlockHeight = latestMinedProfile
+    ? latestMinedProfile.blockHeight
+    : 0;
 
-  let offset = 0;
+  consola.info("Starting profiles indexer run from block height", {
+    minBlockHeight,
+  });
+
+  let toProcess = 0;
+  let currentCursor = "";
   let hasMore = true;
-  let caughtUp = false;
 
-  const profiles: {
-    txId: string;
-    address: string;
-    uri: string;
-  }[] = [];
-
-  while (hasMore && !caughtUp) {
-    console.debug("Fetching events from Stacks API", {
-      offset,
-      limit: API_LIMIT,
+  while (hasMore) {
+    consola.info("Fetching profile transactions from Arweave GraphQL", {
+      minBlockHeight,
+      currentCursor,
     });
 
-    const resultEvents = await stacksApiClient.GET(
-      "/extended/v1/contract/{contract_id}/events",
-      {
-        params: {
-          path: {
-            contract_id: sigleConfig.profilesRegistryAddress,
-          },
-          query: {
-            limit: API_LIMIT,
-            offset,
-          },
-        },
-      },
-    );
+    const fetchResult = await fetchArweaveProfileTransactions({
+      minBlockHeight,
+      afterCursor: currentCursor,
+    });
 
-    if (resultEvents.error) {
-      consola.error("Error fetching events from Stacks API", {
-        error: resultEvents.error,
+    if (fetchResult.isErr()) {
+      consola.error("Error fetching transactions from Arweave GraphQL", {
+        error: fetchResult.error,
       });
-      break;
+      throw new Error(fetchResult.error.error);
     }
 
-    const events = resultEvents.data.results;
+    const edges = fetchResult.value;
 
-    if (!events || events.length === 0) {
+    if (edges.length === 0) {
       hasMore = false;
       break;
     }
 
-    if (events.length < API_LIMIT) {
+    if (edges.length < 100) {
       hasMore = false;
+    } else {
+      currentCursor = edges[edges.length - 1].cursor;
     }
 
-    for (const event of events) {
-      if (lastProcessedTxId && event.tx_id === lastProcessedTxId) {
-        consola.info("Caught up to last processed txId, stopping", {
-          txId: lastProcessedTxId,
-        });
-        caughtUp = true;
-        break;
+    for (const edge of edges) {
+      const txId = edge.node.id;
+
+      const profileExists = await prisma.profile.findUnique({
+        select: {
+          id: true,
+        },
+        where: {
+          txId,
+        },
+      });
+
+      if (profileExists) {
+        // oxlint-disable-next-line no-continue
+        continue;
       }
 
-      if (
-        event.event_type === "smart_contract_log" &&
-        event.contract_log &&
-        event.contract_log.topic === "print"
-      ) {
-        const eventValue = cvToJSON(hexToCV(event.contract_log.value.hex));
-        const eventLog = eventLogSchema.safeParse(eventValue);
+      const blockHeight = edge.node.block ? edge.node.block.height : 0;
 
-        if (!eventLog.success) {
-          consola.error("Failed to parse event log with schema", {
-            txId: event.tx_id,
-            error: eventLog.error,
-            value: eventValue,
-          });
-          // oxlint-disable-next-line no-continue
-          continue;
-        }
-
-        const transaction = await getStacksTransaction(event.tx_id);
-
-        if (transaction.isErr()) {
-          consola.error("Failed to fetch transaction for event log", {
-            txId: event.tx_id,
-            error: transaction.error,
-          });
-          // oxlint-disable-next-line no-continue
-          continue;
-        }
-
-        if (transaction.value.tx_status !== "success") {
-          consola.error("Transaction for event log is not successful", {
-            txId: event.tx_id,
-            status: transaction.value.tx_status,
-          });
-          // oxlint-disable-next-line no-continue
-          continue;
-        }
-
-        profiles.push({
-          txId: event.tx_id,
-          address: eventLog.data.value.address.value,
-          uri: eventLog.data.value.uri.value,
-        });
-      }
-    }
-
-    offset += API_LIMIT;
-  }
-
-  if (profiles.length > 0) {
-    profiles.reverse();
-
-    for (const profile of profiles) {
       await indexerJob.emit({
         action: "indexer-set-profile",
-        data: profile,
+        data: {
+          txId,
+          uri: `ar://${txId}`,
+          blockHeight,
+        },
       });
+
+      toProcess++;
     }
   }
 
   const returnData = {
-    toProcess: profiles.length,
-    lastProcessedTxId,
+    toProcess,
   };
 
   consola.info("Index profiles job complete", returnData);

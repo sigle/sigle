@@ -35,7 +35,6 @@ export default defineConfig({
       },
       sidebar: [
         { slug: "index", label: "Overview" },
-        { slug: "monetization" },
         { slug: "platform" },
         {
           label: "Build on Sigle",
@@ -54,7 +53,8 @@ export default defineConfig({
   ],
   vite: {
     build: {
-      chunkSizeWarningLimit: 700,
+      // Mermaid 12 bundles ELK as a lazily loaded ~1.5 MB chunk.
+      chunkSizeWarningLimit: 1600,
     },
   },
 });

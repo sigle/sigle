@@ -11,12 +11,9 @@ sigle/
 ├── apps/
 │   ├── sigle/          - Next.js frontend (port 3000)
 │   ├── server/         - Nitro API backend (port 3001)
-│   ├── docs/           - Nextra documentation
-│   └── contracts/      - Clarity smart contracts
+│   └── docs/           - Nextra documentation
 ├── packages/
-│   ├── sdk/            - Shared TypeScript SDK
-│   └── contracts-source-next/
-│   └── testnet-seed/
+│   └── sdk/            - Shared TypeScript SDK
 └── docker-compose.yaml - Local dev services (PostgreSQL)
 ```
 
@@ -45,7 +42,6 @@ pnpm repos:sync
 
 ```bash
 # Run single test file
-cd apps/contracts && pnpm test -- test-file.spec.ts
 cd packages/sdk && pnpm test -- test-file.spec.ts
 ```
 

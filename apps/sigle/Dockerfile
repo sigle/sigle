@@ -43,7 +43,6 @@ RUN pnpm install --frozen-lockfile --prod=false
 
 COPY --from=builder /app/out/full/ .
 # Copy contracts source to avoid cyclic dependency
-COPY --from=builder /app/apps/contracts ./apps/contracts
 COPY --from=builder /app/apps/contracts-next ./apps/contracts-next
 COPY turbo.json turbo.json
 

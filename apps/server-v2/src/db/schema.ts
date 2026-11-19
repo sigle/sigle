@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   bigint,
   boolean,
+  bytea,
   doublePrecision,
   index,
   integer,
@@ -153,6 +154,69 @@ export const draft = pgTable(
 );
 
 // --
+// Profiles
+// --
+
+export const profile = pgTable("profile", {
+  // Stacks address that signed the latest profile metadata. A profile belongs
+  // to the signing address rather than to an account, so a profile published
+  // on Arweave exists even if its signer never signed in.
+  address: text("address").primaryKey(),
+  arweaveTxId: text("arweave_tx_id")
+    .notNull()
+    .unique("profile_arweave_tx_id_key"),
+  // Null until the profile transaction is included in an Arweave block; set
+  // by the profile indexer.
+  arweaveBlockHeight: integer("arweave_block_height"),
+  signature: text("signature").notNull().unique("profile_signature_key"),
+  displayName: text("display_name"),
+  description: text("description"),
+  website: text("website"),
+  twitter: text("twitter"),
+  picture: text("picture"),
+  coverPicture: text("cover_picture"),
+  createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
+  updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
+});
+
+// --
+// Media images
+// --
+
+export const mediaImageStatusEnum = pgEnum("MediaImageStatus", [
+  "PENDING",
+  "READY",
+  "FAILED",
+]);
+
+/**
+ * Placeholder metadata for an image referenced by a post cover or a profile
+ * picture. `id` is the canonical URL stored on `post.cover_image` and
+ * `profile.picture`/`cover_picture`; rows are created eagerly as PENDING by the
+ * producers and filled in by the thumbhash job (or inline on upload).
+ */
+export const mediaImage = pgTable(
+  "media_image",
+  {
+    id: text("id").primaryKey(),
+    status: mediaImageStatusEnum("status").default("PENDING").notNull(),
+    mimeType: text("mime_type"),
+    width: integer("width"),
+    height: integer("height"),
+    size: integer("size"),
+    // Base64 of the 25-byte ThumbHash placeholder.
+    thumbhash: text("thumbhash"),
+    createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("media_image_pending_idx")
+      .on(table.createdAt)
+      .where(sql`status = 'PENDING'`),
+  ],
+);
+
+// --
 // Posts
 // --
 
@@ -190,4 +254,39 @@ export const post = pgTable(
       .on(table.createdAt)
       .where(sql`arweave_block_height is null`),
   ],
+);
+
+// --
+// OpenTimestamps
+// --
+
+export const postOtsStatusEnum = pgEnum("PostOtsStatus", [
+  "PENDING",
+  "UPGRADED",
+  "FAILED",
+]);
+
+// One OpenTimestamps proof per published post. The post metadata JSON uploaded
+// to Arweave is the file being anchored, identified by `contentHash`.
+export const postOts = pgTable(
+  "post_ots",
+  {
+    postId: text("post_id")
+      .primaryKey()
+      .references(() => post.id, { onDelete: "cascade" }),
+    status: postOtsStatusEnum("status").default("PENDING").notNull(),
+    // Hex SHA-256 of the exact metadata bytes stored on Arweave.
+    contentHash: text("content_hash").notNull(),
+    // Pending `.ots` proof returned by the calendars, kept until it can be
+    // upgraded to a Bitcoin-anchored proof.
+    pendingProof: bytea("pending_proof"),
+    // Arweave transaction id of the upgraded `.ots` proof.
+    otsTxId: text("ots_tx_id"),
+    bitcoinBlockHeight: integer("bitcoin_block_height"),
+    bitcoinBlockHash: text("bitcoin_block_hash"),
+    bitcoinTimestamp: timestamp("bitcoin_timestamp", { precision: 3 }),
+    createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
+    updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
+  },
+  (table) => [index("post_ots_status_idx").on(table.status)],
 );

@@ -1,6 +1,6 @@
 ---
 title: "@sigle/sdk"
-description: Install and use the @sigle/sdk to create a client, mint posts, publish posts and verify post signatures.
+description: Install and use the @sigle/sdk to create and verify post metadata.
 ---
 
 ## Installation
@@ -9,103 +9,16 @@ description: Install and use the @sigle/sdk to create a client, mint posts, publ
 npm install @sigle/sdk
 ```
 
-## Create client
+## Verify metadata signature
 
-To create a client, use the `createClient` method. Pass in the network you want to use.
+To verify the cryptographic signature of metadata (posts or profiles), use the `verifyMetadataSignature` function. It returns a typed `Result` from `better-result` containing the recovered Stacks address, public key, and signature on success, or an `InvalidSignatureError` on failure.
 
-```tsx
-import { STACKS_MAINNET } from "@stacks/network";
-import { createClient } from "@sigle/sdk";
-
-const sigleClient = createClient({
-  network: STACKS_MAINNET,
-});
-```
-
-## Mint
-
-To prepare a mint transaction, use the `mint` method. Then pass the parameters to `stx_callContract` to execute the transaction with the user's wallet.
+> **Important**: `verifyMetadataSignature` verifies that the metadata was signed and recovers the signer's Stacks address. You must always check that `recoveredAddress` matches the expected author's address to ensure the post was signed by the intended author.
 
 ```tsx
-import { STACKS_MAINNET } from "@stacks/network";
-import { request } from "@stacks/connect";
-import { createClient } from "@sigle/sdk";
+import { verifyMetadataSignature } from "@sigle/sdk";
 
-const sigleClient = createClient({
-  network: STACKS_MAINNET,
-});
-
-const { parameters } = await sigleClient.mint({
-  // Your user sender address
-  sender: "SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173",
-  // Address of the NFT post contract
-  contract: "SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173.xxx",
-  // Amount of tokens to mint
-  amount: 1,
-  // Optionally, set a referral address to receive the referral fee
-  referral: "SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173",
-  // Price of 1 NFT
-  price: post.minterFixedPrice.price,
-});
-
-const response = await request("stx_callContract", {
-  ...parameters,
-  // Your other options
-});
-```
-
-## Publish post
-
-To deploy a new post, use the `generatePostContract` method to get the smart contract code. Then pass the parameters to `stx_deployContract` to execute the transaction with the user's wallet.
-
-```tsx
-import { STACKS_MAINNET } from "@stacks/network";
-import { request } from "@stacks/connect";
-import { createClient, createPostMetadata } from "@sigle/sdk";
-import { createId } from "@paralleldrive/cuid2";
-
-const sigleClient = createClient({
-  network: STACKS_MAINNET,
-});
-
-// Generate a unique post ID
-const postId = createId();
-
-const metadata = createPostMetadata({
-  // Add all the metadata fields here
-  name: "Your post title",
-});
-
-// Upload the post metadata on the storage of your choice (IPFS, Arweave, etc.)
-const metadataUrl = await uploadMetadata({
-  metadata,
-});
-
-const { contract } = sigleClient.generatePostContract({
-  metadata: metadataUrl,
-  collectInfo: {
-    amount: 0,
-    maxSupply: 100,
-  },
-});
-
-const response = await request("stx_callContract", {
-  name: postId,
-  clarityCode: contract,
-  // Your other options
-});
-```
-
-## Verify post signature
-
-To verify the cryptographic signature of post metadata, use the `verifyPostSignature` function. It returns a typed `Result` from `better-result` containing the recovered Stacks address, public key, and signature on success, or an `InvalidSignatureError` on failure.
-
-> **Important**: `verifyPostSignature` verifies that the metadata was signed and recovers the signer's Stacks address. You must always check that `recoveredAddress` matches the expected author's address to ensure the post was signed by the intended author.
-
-```tsx
-import { verifyPostSignature } from "@sigle/sdk";
-
-const result = verifyPostSignature(postMetadata, {
+const result = verifyMetadataSignature(postMetadata, {
   // Optional: defaults to "mainnet". Can also be "testnet", "devnet", or "mocknet".
   network: "mainnet",
 });

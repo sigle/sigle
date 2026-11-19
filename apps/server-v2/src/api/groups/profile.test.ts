@@ -1,5 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
 import { ProfileMetadataSchemaId } from "@sigle/sdk";
+import { eq } from "drizzle-orm";
 import { Effect, Option, Schema } from "effect";
 import {
   Headers,
@@ -8,7 +9,10 @@ import {
   HttpClientResponse,
 } from "effect/http";
 import sharp from "sharp";
+import { afterEach, vi } from "vite-plus/test";
 import type { PostHogEvent } from "@/services/posthog";
+import { Database } from "@/db";
+import { mediaImage, profile as profileTable } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
 import {
   ARWEAVE_TEST_UPLOAD,
@@ -25,7 +29,12 @@ import {
   type StorageTestRecorder,
   STORAGE_TEST_PUBLIC_URL,
 } from "@/services/storage";
-import { createAuthenticatedClient } from "@/test/helpers";
+import {
+  createAuthenticatedClient,
+  createSignedTestProfileMetadata,
+  createTestSiwsCredentials,
+  createTestWalletAddress,
+} from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 
 const UploadProfileMetadataResponse = Schema.Struct({
@@ -40,12 +49,38 @@ const UploadProfileImageResponse = Schema.Struct({
   key: Schema.String,
   width: Schema.Int,
   height: Schema.Int,
+  thumbhash: Schema.String,
 });
 
 const ErrorResponse = Schema.Struct({ message: Schema.String });
 
 const profileImagePath = (kind: string) =>
   `/api/protected/user/profile/images/${kind}`;
+
+/**
+ * Polls the media row until the background thumbhash job reaches `status`.
+ */
+const waitForMediaImageStatus = (id: string, status: string) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+
+    for (let attempt = 0; attempt < 200; attempt++) {
+      const [row] = yield* db
+        .select()
+        .from(mediaImage)
+        .where(eq(mediaImage.id, id))
+        .limit(1)
+        .pipe(Effect.orDie);
+
+      if (row?.status === status) {
+        return row;
+      }
+
+      yield* Effect.sleep("20 millis");
+    }
+
+    return undefined;
+  });
 
 const makePngBuffer = (width = 16, height = 16) =>
   sharp({
@@ -101,6 +136,7 @@ const validMetadata = {
 interface ProfileMetadataInput {
   readonly $schema?: string;
   readonly content?: { readonly id?: string };
+  readonly signature?: string;
 }
 
 const uploadProfileMetadataRequest = (
@@ -113,18 +149,83 @@ const uploadProfileMetadataRequest = (
     ),
   );
 
+/**
+ * Arweave test layer returning a unique transaction id per upload, so several
+ * uploads can be persisted in the same test database.
+ */
+const makeUniqueArweaveUploadLayer = (
+  uploads: Array<ArweaveUploadOptions> = [],
+) => {
+  let uploadCount = 0;
+
+  return ArweaveService.layerTest(uploads, () => {
+    uploadCount += 1;
+    const id = `${ARWEAVE_TEST_UPLOAD_ID}-${uploadCount}`;
+
+    return Effect.succeed({
+      ...ARWEAVE_TEST_UPLOAD,
+      id,
+      uri: `ar://${id}`,
+      gatewayUrl: `https://turbo-gateway.com/${id}`,
+    });
+  });
+};
+
+/**
+ * Creates an authenticated user with a linked Stacks wallet and signs the
+ * profile metadata with that wallet's private key.
+ */
+const createSignedProfileClient = () =>
+  Effect.gen(function* () {
+    const credentials = createTestSiwsCredentials();
+    const { client, userId } = yield* createAuthenticatedClient();
+
+    yield* createTestWalletAddress({
+      userId,
+      address: credentials.address,
+    });
+
+    const signMetadata = (options: {
+      readonly id: string;
+      readonly displayName?: string;
+      readonly picture?: string;
+      readonly coverPicture?: string;
+    }) =>
+      createSignedTestProfileMetadata({
+        privateKey: credentials.privateKey,
+        id: options.id,
+        displayName: options.displayName,
+        picture: options.picture,
+        coverPicture: options.coverPicture,
+      });
+
+    const metadata = signMetadata({ id: "profile-1" });
+
+    return {
+      address: credentials.address,
+      client,
+      metadata,
+      signMetadata,
+      userId,
+    };
+  });
+
 describe("profile", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it.effect("POST upload-metadata uploads metadata to Arweave", () => {
     const uploads: Array<ArweaveUploadOptions> = [];
     const events: Array<PostHogEvent> = [];
 
     return Effect.gen(function* () {
-      const { client, userId } = yield* createAuthenticatedClient();
+      const { address, client, metadata, userId } =
+        yield* createSignedProfileClient();
 
-      const response = yield* uploadProfileMetadataRequest(
-        client,
-        validMetadata,
-      );
+      const db = yield* Database;
+
+      const response = yield* uploadProfileMetadataRequest(client, metadata);
 
       const body = yield* HttpClientResponse.schemaBodyJson(
         UploadProfileMetadataResponse,
@@ -132,19 +233,46 @@ describe("profile", () => {
 
       const uploaded = uploads[0];
 
+      const [savedProfile] = yield* db
+        .select()
+        .from(profileTable)
+        .where(eq(profileTable.address, address))
+        .limit(1)
+        .pipe(Effect.orDie);
+
       expect({
         status: response.status,
         body,
         contentType: uploaded?.contentType,
+        tags: uploaded?.tags,
         metadata: JSON.parse(
           Buffer.from(uploaded?.file ?? new Uint8Array()).toString(),
         ),
+        profile: savedProfile,
         events,
       }).toStrictEqual({
         status: 200,
         body: ARWEAVE_TEST_UPLOAD,
         contentType: "application/json",
-        metadata: validMetadata,
+        tags: [
+          { name: "Author", value: address },
+          { name: "Type", value: "profile" },
+        ],
+        metadata,
+        profile: {
+          address,
+          arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
+          arweaveBlockHeight: null,
+          signature: metadata.signature,
+          displayName: "Test profile",
+          description: null,
+          website: null,
+          twitter: null,
+          picture: null,
+          coverPicture: null,
+          createdAt: expect.any(Date),
+          updatedAt: expect.any(Date),
+        },
         events: [
           {
             distinctId: userId,
@@ -162,13 +290,175 @@ describe("profile", () => {
     );
   });
 
+  it.effect(
+    "POST upload-metadata updates the profile and clears its block",
+    () => {
+      const uploads: Array<ArweaveUploadOptions> = [];
+
+      return Effect.gen(function* () {
+        const { address, client, metadata, signMetadata } =
+          yield* createSignedProfileClient();
+
+        const db = yield* Database;
+
+        const firstResponse = yield* uploadProfileMetadataRequest(
+          client,
+          metadata,
+        );
+
+        // The first profile got mined; the new upload is not mined yet.
+        yield* db
+          .update(profileTable)
+          .set({ arweaveBlockHeight: 100 })
+          .where(eq(profileTable.address, address))
+          .pipe(Effect.orDie);
+
+        const updatedMetadata = signMetadata({
+          id: "profile-2",
+          displayName: "Updated profile",
+        });
+
+        const secondResponse = yield* uploadProfileMetadataRequest(
+          client,
+          updatedMetadata,
+        );
+
+        const rows = yield* db
+          .select()
+          .from(profileTable)
+          .where(eq(profileTable.address, address))
+          .pipe(Effect.orDie);
+
+        expect({
+          statuses: [firstResponse.status, secondResponse.status],
+          rows,
+        }).toStrictEqual({
+          statuses: [200, 200],
+          rows: [
+            {
+              address,
+              arweaveTxId: `${ARWEAVE_TEST_UPLOAD_ID}-2`,
+              arweaveBlockHeight: null,
+              signature: updatedMetadata.signature,
+              displayName: "Updated profile",
+              description: null,
+              website: null,
+              twitter: null,
+              picture: null,
+              coverPicture: null,
+              createdAt: expect.any(Date),
+              updatedAt: expect.any(Date),
+            },
+          ],
+        });
+      }).pipe(
+        Effect.provide(
+          makeTestServerLayer({}, [], {
+            arweave: makeUniqueArweaveUploadLayer(uploads),
+          }),
+        ),
+      );
+    },
+  );
+
+  it.live(
+    "POST upload-metadata schedules thumbhash generation for external pictures",
+    () => {
+      const imageFetches: Array<string> = [];
+
+      return Effect.gen(function* () {
+        const { address, client, signMetadata } =
+          yield* createSignedProfileClient();
+
+        const png = yield* Effect.promise(() => makePngBuffer());
+
+        vi.stubGlobal(
+          "fetch",
+          vi.fn(async (input: RequestInfo | URL) => {
+            imageFetches.push(String(input));
+
+            return new Response(new Uint8Array(png), {
+              status: 200,
+              headers: { "content-type": "image/png" },
+            });
+          }),
+        );
+
+        const imageUrl = "https://cdn.example.com/external.png";
+
+        const metadata = signMetadata({
+          id: "profile-external",
+          picture: imageUrl,
+        });
+
+        const response = yield* uploadProfileMetadataRequest(client, metadata);
+
+        const mediaRow = yield* waitForMediaImageStatus(imageUrl, "READY");
+
+        const db = yield* Database;
+
+        const [savedProfile] = yield* db
+          .select()
+          .from(profileTable)
+          .where(eq(profileTable.address, address))
+          .limit(1)
+          .pipe(Effect.orDie);
+
+        expect({
+          status: response.status,
+          mediaStatus: mediaRow?.status,
+          thumbhash: mediaRow?.thumbhash,
+          picture: savedProfile?.picture,
+          fetches: imageFetches,
+        }).toStrictEqual({
+          status: 200,
+          mediaStatus: "READY",
+          thumbhash: expect.any(String),
+          picture: imageUrl,
+          fetches: [imageUrl],
+        });
+      }).pipe(Effect.provide(makeTestServerLayer()));
+    },
+  );
+
+  it.effect("POST upload-metadata rejects an already published signature", () =>
+    Effect.gen(function* () {
+      const { client, metadata } = yield* createSignedProfileClient();
+
+      const firstResponse = yield* uploadProfileMetadataRequest(
+        client,
+        metadata,
+      );
+
+      const secondResponse = yield* uploadProfileMetadataRequest(
+        client,
+        metadata,
+      );
+
+      expect({
+        first: firstResponse.status,
+        second: secondResponse.status,
+      }).toStrictEqual({
+        first: 200,
+        second: 400,
+      });
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
   it.effect("POST upload-metadata is limited to 4 requests per minute", () =>
     Effect.gen(function* () {
-      const { client } = yield* createAuthenticatedClient();
+      const { client, signMetadata } = yield* createSignedProfileClient();
 
       const responses = yield* Effect.forEach(
         Array.from({ length: 5 }, (_, index) => index),
-        () => uploadProfileMetadataRequest(client, validMetadata),
+        (index) =>
+          uploadProfileMetadataRequest(
+            client,
+            signMetadata({
+              id: `profile-${index}`,
+              displayName: `Profile ${index}`,
+            }),
+          ),
         { concurrency: 1 },
       );
 
@@ -188,23 +478,36 @@ describe("profile", () => {
         statuses: [200, 200, 200, 200, 429],
         limit: "4",
       });
-    }).pipe(Effect.provide(makeTestServerLayer())),
+    }).pipe(
+      Effect.provide(
+        makeTestServerLayer({}, [], {
+          arweave: makeUniqueArweaveUploadLayer(),
+        }),
+      ),
+    ),
   );
 
   it.effect("POST upload-metadata rate limits each user independently", () =>
     Effect.gen(function* () {
-      const first = yield* createAuthenticatedClient();
-      const second = yield* createAuthenticatedClient();
+      const first = yield* createSignedProfileClient();
+      const second = yield* createSignedProfileClient();
 
       const firstResponses = yield* Effect.forEach(
         Array.from({ length: 4 }, (_, index) => index),
-        () => uploadProfileMetadataRequest(first.client, validMetadata),
+        (index) =>
+          uploadProfileMetadataRequest(
+            first.client,
+            first.signMetadata({
+              id: `first-${index}`,
+              displayName: `First ${index}`,
+            }),
+          ),
         { concurrency: 1 },
       );
 
       const secondResponse = yield* uploadProfileMetadataRequest(
         second.client,
-        validMetadata,
+        second.metadata,
       );
 
       expect({
@@ -214,7 +517,13 @@ describe("profile", () => {
         first: [200, 200, 200, 200],
         second: 200,
       });
-    }).pipe(Effect.provide(makeTestServerLayer())),
+    }).pipe(
+      Effect.provide(
+        makeTestServerLayer({}, [], {
+          arweave: makeUniqueArweaveUploadLayer(),
+        }),
+      ),
+    ),
   );
 
   it.effect("POST upload-metadata rejects invalid metadata", () =>
@@ -239,6 +548,36 @@ describe("profile", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
+  it.effect("POST upload-metadata rejects metadata without a signature", () =>
+    Effect.gen(function* () {
+      const { client } = yield* createAuthenticatedClient();
+
+      const response = yield* uploadProfileMetadataRequest(
+        client,
+        validMetadata,
+      );
+
+      expect(response.status).toBe(400);
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
+    "POST upload-metadata rejects a signature from another wallet",
+    () =>
+      Effect.gen(function* () {
+        const { client } = yield* createAuthenticatedClient();
+        const credentials = createTestSiwsCredentials();
+
+        const metadata = createSignedTestProfileMetadata({
+          privateKey: credentials.privateKey,
+        });
+
+        const response = yield* uploadProfileMetadataRequest(client, metadata);
+
+        expect(response.status).toBe(400);
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
   it.effect("POST upload-metadata returns 500 when Arweave fails", () => {
     const arweaveLayer = ArweaveService.layerTest([], () =>
       Effect.fail(
@@ -250,12 +589,9 @@ describe("profile", () => {
     );
 
     return Effect.gen(function* () {
-      const { client } = yield* createAuthenticatedClient();
+      const { client, metadata } = yield* createSignedProfileClient();
 
-      const response = yield* uploadProfileMetadataRequest(
-        client,
-        validMetadata,
-      );
+      const response = yield* uploadProfileMetadataRequest(client, metadata);
 
       const body =
         yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
@@ -310,6 +646,15 @@ describe("profile", () => {
       const version = uploaded === undefined ? "" : sha256Hex(uploaded.body);
       const url = `${STORAGE_TEST_PUBLIC_URL}/${key}?v=${version}`;
 
+      const db = yield* Database;
+
+      const [savedMedia] = yield* db
+        .select()
+        .from(mediaImage)
+        .where(eq(mediaImage.id, url))
+        .limit(1)
+        .pipe(Effect.orDie);
+
       expect({
         status: response.status,
         body,
@@ -317,12 +662,19 @@ describe("profile", () => {
         width: metadata.width,
         height: metadata.height,
         isWebp: uploadedBytes.subarray(8, 12).toString() === "WEBP",
+        mediaStatus: savedMedia?.status,
+        mediaMimeType: savedMedia?.mimeType,
+        mediaWidth: savedMedia?.width,
+        mediaHeight: savedMedia?.height,
+        mediaSize: savedMedia?.size,
+        thumbhashMatches: body.thumbhash === savedMedia?.thumbhash,
         events,
       }).toStrictEqual({
         status: 200,
         body: {
           height: 300,
           key,
+          thumbhash: expect.any(String),
           url,
           width: 600,
         },
@@ -335,6 +687,12 @@ describe("profile", () => {
         width: 600,
         height: 300,
         isWebp: true,
+        mediaStatus: "READY",
+        mediaMimeType: "image/webp",
+        mediaWidth: 600,
+        mediaHeight: 300,
+        mediaSize: uploadedBytes.length,
+        thumbhashMatches: true,
         events: [
           {
             distinctId: userId,

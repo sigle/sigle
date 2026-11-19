@@ -10,6 +10,7 @@ describe("config service", () => {
       expect({
         NODE_ENV: config.NODE_ENV,
         STACKS_ENV: config.STACKS_ENV,
+        STACKS_API_URL: config.STACKS_API_URL,
         SIGLE_ENV: config.SIGLE_ENV,
         PORT: config.PORT,
         APP_ID: config.APP_ID,
@@ -18,6 +19,7 @@ describe("config service", () => {
       }).toStrictEqual({
         NODE_ENV: "development",
         STACKS_ENV: "testnet",
+        STACKS_API_URL: "https://api.testnet.hiro.so",
         SIGLE_ENV: "local",
         PORT: 3001,
         APP_ID: "sigle-test",

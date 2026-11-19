@@ -1,11 +1,17 @@
-import { PostMetadataSchema } from "@sigle/sdk";
 import { and, eq, isNull, lt, or } from "drizzle-orm";
 import { Data, Effect, Layer, Schedule, Schema } from "effect";
 import { Database } from "@/db";
-import { draft, post } from "@/db/schema";
+import { draft, mediaImage, post, postOts } from "@/db/schema";
+import { sha256Hex } from "@/lib/hash";
+import { PostMetadata } from "@/lib/metadata";
 import { defineJob, terminal, type TerminalJobError } from "@/queue/core";
 import { ArweaveService, type ArweaveUploadError } from "@/services/arweave";
 import { PostHogService } from "@/services/posthog";
+import {
+  generateImageThumbhashJob,
+  thumbhashJobId,
+} from "./generate-image-thumbhash";
+import { opentimestampsStampJob, otsStampJobId } from "./opentimestamps-stamp";
 
 export const PUBLISH_DRAFT_QUEUE_NAME = "publish-draft";
 
@@ -20,6 +26,10 @@ export const PublishDraftJobSchema = Schema.Struct({
 });
 
 export type PublishDraftJob = typeof PublishDraftJobSchema.Type;
+
+const decodePostMetadataJson = Schema.decodeUnknownEffect(
+  Schema.fromJsonString(PostMetadata),
+);
 
 class InvalidPublishMetadataError extends Data.TaggedError(
   "InvalidPublishMetadataError",
@@ -56,10 +66,15 @@ const publishDraftRetrySchedule: Schedule.Schedule<unknown, number> =
     ]),
   );
 
+/**
+ * Returns the published post and its cover image URL when this call created
+ * the post, or `undefined` when there was nothing to do (draft superseded,
+ * already finalized by another attempt, ...).
+ */
 export const processPublishDraftJob = (
   job: PublishDraftJob,
 ): Effect.Effect<
-  void,
+  { readonly postId: string; readonly coverImage: string | null } | undefined,
   ArweaveUploadError | PublishDraftUploadClaimedError | TerminalJobError,
   Database | ArweaveService | PostHogService
 > =>
@@ -84,16 +99,13 @@ export const processPublishDraftJob = (
       return;
     }
 
-    const postData = yield* Effect.try({
-      try: () => PostMetadataSchema.parse(JSON.parse(job.metadataJson)),
-      catch: (cause) =>
+    const postData = yield* decodePostMetadataJson(job.metadataJson).pipe(
+      Effect.mapError((cause) =>
         terminal(
-          new InvalidPublishMetadataError({
-            message: cause instanceof Error ? cause.message : String(cause),
-            cause,
-          }),
+          new InvalidPublishMetadataError({ message: cause.message, cause }),
         ),
-    });
+      ),
+    );
 
     // Step 1: Upload metadata JSON to Arweave (or reuse checkpointed txId from
     // an earlier attempt if a downstream step failed and triggered a retry).
@@ -246,6 +258,28 @@ export const processPublishDraftJob = (
             userId: job.userId,
           });
 
+          // The exact JSON bytes uploaded above are what OpenTimestamps
+          // anchors, so the hash is captured in the same transaction as the
+          // post itself.
+          yield* tx.insert(postOts).values({
+            postId: arweaveTxId,
+            status: "PENDING",
+            contentHash: sha256Hex(Buffer.from(job.metadataJson)),
+          });
+
+          // Cover image metadata is created alongside the post so readers can
+          // see a placeholder as soon as the post exists. The thumbhash job
+          // fills it in; an existing READY row for a reused cover is kept.
+          if (coverImage !== null) {
+            yield* tx
+              .insert(mediaImage)
+              .values({
+                id: coverImage,
+                mimeType: postData.content.coverImage?.type ?? null,
+              })
+              .onConflictDoNothing();
+          }
+
           return true;
         }),
       )
@@ -264,6 +298,8 @@ export const processPublishDraftJob = (
         arweaveId: arweaveTxId,
       },
     });
+
+    return { coverImage, postId: arweaveTxId };
   });
 
 export const markDraftPublishFailed = (
@@ -307,11 +343,38 @@ export const publishDraftJob = defineJob({
   maxAttempts: PUBLISH_DRAFT_MAX_ATTEMPTS,
   retrySchedule: publishDraftRetrySchedule,
   concurrency: 2,
-  process: (job) => processPublishDraftJob(job),
+  process: (job) =>
+    Effect.gen(function* () {
+      const published = yield* processPublishDraftJob(job);
+
+      if (published === undefined) {
+        return;
+      }
+
+      yield* opentimestampsStampJob
+        .offer(
+          { postId: published.postId },
+          { id: otsStampJobId(published.postId) },
+        )
+        .pipe(Effect.orDie);
+
+      if (published.coverImage !== null) {
+        yield* generateImageThumbhashJob
+          .offer(
+            { imageId: published.coverImage },
+            { id: thumbhashJobId(published.coverImage) },
+          )
+          .pipe(Effect.orDie);
+      }
+    }),
   onFinalFailure: (job) => markDraftPublishFailed(job),
   reportPayload: (job) => ({ draftId: job.draftId }),
 });
 
 export const PublishDraftWorkerLive = publishDraftJob
   .workerLayer()
-  .pipe(Layer.provideMerge(publishDraftJob.layer));
+  .pipe(
+    Layer.provideMerge(publishDraftJob.layer),
+    Layer.provideMerge(opentimestampsStampJob.layer),
+    Layer.provideMerge(generateImageThumbhashJob.layer),
+  );

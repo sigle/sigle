@@ -9,11 +9,10 @@
   ],
   "versionGroups": [
     {
-      "label": "@sigle/contracts old version enforced by clarinet",
+      "label": "@sigle/sdk stacks peer deps use a wider range than the pinned workspace versions",
       "packages": ["@sigle/sdk"],
       "dependencies": [
         "@stacks/common",
-        "@stacks/connect",
         "@stacks/encryption",
         "@stacks/transactions",
         "@stacks/network",

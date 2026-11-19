@@ -11,6 +11,7 @@ import {
 } from "@/api/middleware/auth-user";
 import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 import { BadRequest, NotFound } from "@/api/schemas";
+import { PostMetadata } from "@/lib/metadata";
 
 export const DRAFT_LIST_DEFAULT_LIMIT = 20;
 
@@ -112,7 +113,7 @@ export const UpdateDraftPayload = Schema.Struct({
 }).annotate({ identifier: "UpdateDraftPayload" });
 
 export const PublishDraftPayload = Schema.Struct({
-  metadata: Schema.Unknown,
+  metadata: PostMetadata,
 }).annotate({ identifier: "PublishDraftPayload" });
 
 export const PublishDraftAccepted = Schema.Struct({

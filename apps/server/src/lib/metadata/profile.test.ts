@@ -1,8 +1,23 @@
-import { ProfileMetadataSchemaId } from "@sigle/sdk";
+import { InvalidSignatureError, ProfileMetadataSchemaId } from "@sigle/sdk";
+import { bytesToHex } from "@stacks/common";
+import { hashMessage } from "@stacks/encryption";
+import {
+  privateKeyToPublic,
+  publicKeyToAddress,
+  signMessageHashRsv,
+} from "@stacks/transactions";
 import { Result } from "better-result";
 import { describe, expect, it, vi, beforeEach } from "vite-plus/test";
 import { InvalidMetadataError, MetadataFetchFailedError } from "./errors";
 import { getProfileMetadataFromUri } from "./profile";
+
+// Consistent test private key (valid 32-byte hex + compressed byte)
+const TEST_PRIVATE_KEY =
+  "7287ba251d44a4d3fd9276c88ce3476c5aa9c784807a54ec29d5fa0605340d0f01";
+
+const TEST_PUBLIC_KEY = String(privateKeyToPublic(TEST_PRIVATE_KEY));
+
+const EXPECTED_TESTNET_ADDRESS = publicKeyToAddress(TEST_PUBLIC_KEY, "testnet");
 
 function unwrapErr<T, E>(result: Result<T, E>): E {
   if (result.isErr()) return result.error;
@@ -40,6 +55,25 @@ const validMetadata = {
   },
 };
 
+function signProfileMetadata(metadata: { $schema: string; content: unknown }) {
+  const message = JSON.stringify(metadata);
+  const messageHash = bytesToHex(hashMessage(message));
+
+  return signMessageHashRsv({
+    messageHash,
+    privateKey: TEST_PRIVATE_KEY,
+  });
+}
+
+function createSignedProfileMetadata<
+  T extends { $schema: string; content: unknown },
+>(metadata: T): T & { signature: string } {
+  return {
+    ...metadata,
+    signature: signProfileMetadata(metadata),
+  };
+}
+
 describe("profile metadata", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -47,10 +81,12 @@ describe("profile metadata", () => {
   });
 
   describe(getProfileMetadataFromUri, () => {
-    it("should return ok result with parsed metadata on successful fetch", async () => {
+    it("should return ok result with parsed metadata and recovered address on successful fetch", async () => {
+      const signedMetadata = createSignedProfileMetadata(validMetadata);
+
       mockFetch.mockResolvedValue({
         ok: true,
-        json: async () => validMetadata,
+        json: async () => signedMetadata,
       });
 
       const result = await getProfileMetadataFromUri(
@@ -58,7 +94,31 @@ describe("profile metadata", () => {
       );
 
       expect(result.isOk()).toBe(true);
-      expect(result).toStrictEqual(Result.ok(validMetadata));
+      expect(result).toStrictEqual(
+        Result.ok({
+          metadata: signedMetadata,
+          recoveredAddress: EXPECTED_TESTNET_ADDRESS,
+          signature: signedMetadata.signature,
+        }),
+      );
+    });
+
+    it("should return err with InvalidSignatureError when signature is missing", async () => {
+      mockFetch.mockResolvedValue({
+        ok: true,
+        json: async () => validMetadata,
+      });
+
+      const result = await getProfileMetadataFromUri(
+        "https://example.com/unsigned.json",
+      );
+
+      expect(result.isOk()).toBe(false);
+
+      const error = expectInstanceOf(unwrapErr(result), InvalidSignatureError);
+
+      expect(error._tag).toBe("InvalidSignatureError");
+      expect(error.error).toBe("Invalid signature: Signature is required");
     });
 
     it("should return err with MetadataFetchFailedError on fetch failure", async () => {
@@ -153,15 +213,19 @@ describe("profile metadata", () => {
       expect(error._tag).toBe("InvalidMetadataError");
     });
 
-    it("should return ok result with minimal valid metadata", async () => {
+    it("should return ok result with minimal signed metadata", async () => {
+      const minimalMetadata = {
+        $schema: ProfileMetadataSchemaId.LATEST,
+        content: {
+          id: "profile-minimal",
+        },
+      };
+
+      const signedMetadata = createSignedProfileMetadata(minimalMetadata);
+
       mockFetch.mockResolvedValue({
         ok: true,
-        json: async () => ({
-          $schema: ProfileMetadataSchemaId.LATEST,
-          content: {
-            id: "profile-minimal",
-          },
-        }),
+        json: async () => signedMetadata,
       });
 
       const result = await getProfileMetadataFromUri(
@@ -171,10 +235,9 @@ describe("profile metadata", () => {
       expect(result.isOk()).toBe(true);
       expect(result).toStrictEqual(
         Result.ok({
-          $schema: ProfileMetadataSchemaId.LATEST,
-          content: {
-            id: "profile-minimal",
-          },
+          metadata: signedMetadata,
+          recoveredAddress: EXPECTED_TESTNET_ADDRESS,
+          signature: signedMetadata.signature,
         }),
       );
     });

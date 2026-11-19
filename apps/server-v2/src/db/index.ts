@@ -1,3 +1,4 @@
+import type { SqlClient } from "effect/sql";
 import { PgClient } from "@effect/sql-pg";
 import { PgliteClient } from "@effect/sql-pglite";
 import { PGlite } from "@electric-sql/pglite";
@@ -122,11 +123,18 @@ const pgliteLayer = (config: AppConfigValues) =>
 export class Database extends Context.Service<Database, DatabaseClient>()(
   "sigle/Database",
 ) {
+  // Driver clients are not subtypes of `SqlClient`, so both branches are
+  // widened to the services the rest of the app consumes. The drizzle Effect
+  // drivers type their failures as `any`, so the error channel is `unknown`.
   static readonly layer = Layer.unwrap(
-    Effect.map(AppConfig, (config) =>
-      config.DATABASE_KIND === "postgres"
-        ? postgresLayer(config)
-        : pgliteLayer(config),
+    Effect.map(
+      AppConfig,
+      (
+        config,
+      ): Layer.Layer<Database | AuthDatabase | SqlClient.SqlClient, unknown> =>
+        config.DATABASE_KIND === "postgres"
+          ? postgresLayer(config)
+          : pgliteLayer(config),
     ),
   );
 }

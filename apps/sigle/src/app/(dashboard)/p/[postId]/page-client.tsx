@@ -3,7 +3,6 @@
 import { IconArrowLeft } from "@tabler/icons-react";
 import { notFound } from "next/navigation";
 import { use } from "react";
-import { PostCollectCard } from "@/components/Post/CollectCard";
 import { PostMarkdownContent } from "@/components/Post/MarkdownContent";
 import { PostProvenanceCard } from "@/components/Post/ProvenanceCard";
 import { PostUserActions } from "@/components/Post/UserActions";
@@ -89,13 +88,6 @@ export function PostClientPage(props: Props) {
         <Separator className="mt-10 mb-8" />
 
         <PostProvenanceCard post={post} />
-
-        {post.collectible ? (
-          <>
-            <Separator className="my-8" />
-            <PostCollectCard post={post} />
-          </>
-        ) : null}
 
         <PostUserInfoCard post={post} />
       </div>

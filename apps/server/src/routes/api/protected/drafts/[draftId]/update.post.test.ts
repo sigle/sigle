@@ -70,10 +70,6 @@ describe("api/protected/drafts/[draftId]/update.post", () => {
     mockReadValidatedBodyZod.mockResolvedValue({
       title: "New Title",
       content: "New Content",
-      collect: {
-        collectPrice: { type: "free", price: 0 },
-        collectLimit: { type: "open", limit: 100 },
-      },
     });
     mockGetRouterParam.mockReturnValue("draft-1");
 
@@ -99,10 +95,6 @@ describe("api/protected/drafts/[draftId]/update.post", () => {
     expect(updatedDraft).toMatchObject({
       title: "New Title",
       content: "New Content",
-      collectPriceType: "free",
-      collectPrice: BigInt(0),
-      collectLimitType: "open",
-      collectLimit: 100,
     });
   });
 });

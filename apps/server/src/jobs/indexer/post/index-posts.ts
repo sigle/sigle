@@ -1,3 +1,4 @@
+import { ArweaveTags, ArweaveTransactionTypes } from "@sigle/sdk";
 import { Result, TaggedError } from "better-result";
 import { z } from "zod";
 import { env } from "@/env";
@@ -196,6 +197,19 @@ export const executeIndexerIndexPostsJob = async (
 
     for (const edge of edges) {
       const txId = edge.node.id;
+
+      // Profile metadata shares the App-Name tag with posts but has a
+      // different schema, so it is skipped before metadata parsing.
+      const isProfileTransaction = edge.node.tags?.some(
+        (tag) =>
+          tag.name === ArweaveTags.type &&
+          tag.value === ArweaveTransactionTypes.profile,
+      );
+
+      if (isProfileTransaction) {
+        // oxlint-disable-next-line no-continue
+        continue;
+      }
 
       // Check if post already exists in database
       const postExists = await prisma.post.findUnique({
