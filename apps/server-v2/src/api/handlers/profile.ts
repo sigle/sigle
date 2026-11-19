@@ -1,34 +1,23 @@
+import type { HttpServerRequest } from "effect/http";
 import {
   ArweaveTags,
   ArweaveTransactionTypes,
   verifyMetadataSignature,
 } from "@sigle/sdk";
 import { eq } from "drizzle-orm";
-import { ByteSize, Effect, Option, Predicate } from "effect";
-import { HttpServerError, HttpServerRequest } from "effect/http";
+import { Effect } from "effect";
 import { HttpApiBuilder } from "effect/http-api";
 import type { UploadProfileMetadataPayload } from "@/api/groups/profile";
 import { SigleApi } from "@/api";
+import { uploadImageFromRequest } from "@/api/image-upload";
 import { CurrentUser } from "@/api/middleware/auth-user";
-import {
-  BadRequest,
-  InternalServerError,
-  PayloadTooLarge,
-  UnsupportedMediaType,
-} from "@/api/schemas";
+import { BadRequest, InternalServerError } from "@/api/schemas";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { mediaImage, profile } from "@/db/schema";
+import { profile } from "@/db/schema";
 import { scheduleChangedProfileImages } from "@/jobs/index-profile";
-import { sha256Hex } from "@/lib/hash";
-import {
-  detectImageFormat,
-  isAllowedImageFormat,
-  mimeTypeForSharpFormat,
-} from "@/lib/images";
 import {
   profileImageKey,
-  profileImageMaxBytes,
   profileImageMaxMib,
   profileImagePostHogEvent,
   profileImageSettings,
@@ -36,9 +25,7 @@ import {
   versionProfileImageUrl,
 } from "@/lib/profile-images";
 import { ArweaveService } from "@/services/arweave";
-import { ImageProcessingService } from "@/services/image-processing";
 import { PostHogService } from "@/services/posthog";
-import { StorageService } from "@/services/storage";
 import { UserWhitelistService } from "@/services/users";
 
 export const uploadProfileMetadata = (
@@ -165,42 +152,6 @@ export const uploadProfileMetadata = (
     return result;
   });
 
-const normalizeContentType = (contentType: string): string =>
-  contentType.split(";")[0]?.trim().toLowerCase() ?? "";
-
-/**
- * `@effect/platform-node` fails the body read with this message once the
- * `MaxBodySize` limit is exceeded, wrapped in an `HttpServerError`.
- */
-const MAX_BODY_SIZE_CAUSE_MESSAGE = "maxBytes exceeded";
-
-const isBodyTooLargeError = (error: HttpServerError.HttpServerError): boolean =>
-  Predicate.isTagged(error.reason, "RequestParseError") &&
-  error.reason.cause instanceof Error &&
-  error.reason.cause.message === MAX_BODY_SIZE_CAUSE_MESSAGE;
-
-const readImageBody = (
-  request: HttpServerRequest.HttpServerRequest,
-  maxMib: number,
-) =>
-  request.arrayBuffer.pipe(
-    Effect.provideService(
-      HttpServerRequest.MaxBodySize,
-      ByteSize.mebibytes(maxMib),
-    ),
-    Effect.map((buffer) => new Uint8Array(buffer)),
-    Effect.tapError((error) =>
-      Effect.logWarning("Failed to read profile image body", { cause: error }),
-    ),
-    Effect.mapError((error) =>
-      isBodyTooLargeError(error)
-        ? new PayloadTooLarge({
-            message: `Image is too large, maximum size is ${maxMib} MiB.`,
-          })
-        : new BadRequest({ message: "Failed to read request body." }),
-    ),
-  );
-
 export const uploadProfileImage = (
   kind: ProfileImageKind,
   request: HttpServerRequest.HttpServerRequest,
@@ -208,140 +159,31 @@ export const uploadProfileImage = (
   Effect.gen(function* () {
     const user = yield* CurrentUser;
     const config = yield* AppConfig;
-    const db = yield* Database;
-    const storage = yield* StorageService;
-    const images = yield* ImageProcessingService;
     const posthog = yield* PostHogService;
 
-    const contentType = normalizeContentType(
-      request.headers["content-type"] ?? "",
-    );
-
-    if (!isAllowedImageFormat(contentType)) {
-      return yield* new UnsupportedMediaType({
-        message: `Unsupported image format: ${contentType}`,
-      });
-    }
-
-    const maxMib = profileImageMaxMib(kind);
-    const declaredSize = Number(request.headers["content-length"] ?? "");
-
-    if (
-      Number.isFinite(declaredSize) &&
-      declaredSize > profileImageMaxBytes(kind)
-    ) {
-      return yield* new PayloadTooLarge({
-        message: `Image is too large, maximum size is ${maxMib} MiB.`,
-      });
-    }
-
-    const buffer = yield* readImageBody(request, maxMib);
-
-    if (buffer.length === 0) {
-      return yield* new BadRequest({ message: "No image provided" });
-    }
-
-    const detected = yield* detectImageFormat(buffer).pipe(
-      Effect.orElseSucceed(() => Option.none()),
-    );
-
-    if (Option.isNone(detected)) {
-      return yield* new UnsupportedMediaType({ message: "Invalid image file" });
-    }
-
-    if (mimeTypeForSharpFormat(detected.value) === undefined) {
-      return yield* new UnsupportedMediaType({
-        message: `Unsupported image format: ${detected.value}`,
-      });
-    }
-
-    const { quality, width } = profileImageSettings(config.STACKS_ENV, kind);
-
-    const optimized = yield* images.optimize({ buffer, quality, width }).pipe(
-      Effect.tapError((error) =>
-        Effect.logWarning("Failed to optimize profile image", {
-          cause: error,
-          contentType,
-          kind,
-        }),
-      ),
-      Effect.mapError((error) =>
-        Predicate.isTagged(error, "ImageProcessingTimeoutError")
-          ? new InternalServerError({ message: "Image processing timed out." })
-          : new BadRequest({ message: "Failed to optimize image." }),
-      ),
-    );
-
-    const version = sha256Hex(optimized.buffer);
-    const key = profileImageKey(user.id, kind);
-
-    const uploaded = yield* storage
-      .uploadFile({
-        body: optimized.buffer,
-        contentType: "image/webp",
-        key,
-        version,
-      })
-      .pipe(
-        Effect.mapError(
-          (error) =>
-            new InternalServerError({
-              message: `Failed to upload image, error: ${error.message}`,
-            }),
-        ),
-      );
-
-    const url = versionProfileImageUrl(uploaded.url, version);
-
-    // The image bytes are in hand, so the placeholder is computed inline
-    // instead of going through the thumbhash queue.
-    const generated = yield* images.generateThumbhash(optimized.buffer).pipe(
-      Effect.tapError((error) =>
-        Effect.logWarning("Failed to generate profile image thumbhash", {
-          cause: error,
-          kind,
-        }),
-      ),
-      Effect.mapError(
-        () =>
-          new InternalServerError({
-            message: "Failed to generate image placeholder.",
-          }),
-      ),
-    );
-
-    const mediaFields = {
-      height: optimized.height,
-      mimeType: "image/webp",
-      size: optimized.buffer.length,
-      status: "READY" as const,
-      thumbhash: generated.thumbhash,
-      updatedAt: new Date(),
-      width: optimized.width,
-    };
-
-    yield* db
-      .insert(mediaImage)
-      .values({ id: url, ...mediaFields })
-      .onConflictDoUpdate({ target: mediaImage.id, set: mediaFields })
-      .pipe(Effect.orDie);
+    const uploaded = yield* uploadImageFromRequest(request, {
+      ...profileImageSettings(config.STACKS_ENV, kind),
+      maxMib: profileImageMaxMib(kind),
+      key: () => profileImageKey(user.id, kind),
+      url: (stored) => versionProfileImageUrl(stored.url, stored.version),
+    });
 
     yield* posthog.capture({
       distinctId: user.id,
       event: profileImagePostHogEvent(kind),
       properties: {
-        key,
-        sizeBytes: optimized.buffer.length,
-        url,
+        key: uploaded.key,
+        sizeBytes: uploaded.sizeBytes,
+        url: uploaded.url,
       },
     });
 
     return {
-      height: optimized.height,
-      key,
-      thumbhash: generated.thumbhash,
-      url,
-      width: optimized.width,
+      height: uploaded.height,
+      key: uploaded.key,
+      thumbhash: uploaded.thumbhash,
+      url: uploaded.url,
+      width: uploaded.width,
     };
   });
 
