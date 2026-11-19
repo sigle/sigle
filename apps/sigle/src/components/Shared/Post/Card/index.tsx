@@ -11,7 +11,7 @@ import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../../NextLink";
 
 interface PostCardProps {
-  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"]["results"][number];
+  post: paths["/api/posts"]["get"]["responses"][200]["content"]["application/json"]["results"][number];
   className?: string;
 }
 
@@ -22,10 +22,10 @@ export const PostCard = ({ post, className }: PostCardProps) => {
       {post.coverImage ? (
         <NextLink href={Routes.post({ postId: post.id })}>
           <BlurImage
-            src={resolveImageUrl(post.coverImage.id)}
+            src={resolveImageUrl(post.coverImage.url)}
             alt="Cover card"
             className="relative aspect-video w-full object-cover"
-            blurhash={post.coverImage.blurhash}
+            thumbhash={post.coverImage.thumbhash}
             width={post.coverImage.width}
             height={post.coverImage.height}
           />
@@ -55,11 +55,10 @@ export const PostCard = ({ post, className }: PostCardProps) => {
           By{" "}
           <NextLink
             className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
-            href={Routes.userProfile({ username: post.user.id })}
+            href={Routes.userProfile({ username: post.author.address })}
           >
-            {post.user.profile?.displayName
-              ? post.user.profile?.displayName
-              : formatReadableAddress(post.user.id)}
+            {post.author.profile?.displayName ||
+              formatReadableAddress(post.author.address)}
           </NextLink>{" "}
           • {format(new Date(post.createdAt), "MMM dd, yyyy")}
         </p>

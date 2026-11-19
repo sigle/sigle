@@ -3,7 +3,6 @@
 import { IconPencil } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
-import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { NextLink } from "../Shared/NextLink";
@@ -17,21 +16,15 @@ import {
   EmptyTitle,
 } from "../ui/empty";
 
-export const LatestPost = () => {
-  const { data: session } = useSession();
-
-  const { data: posts } = sigleApiClient.useSuspenseQuery(
-    "get",
-    "/api/posts/list",
-    {
-      params: {
-        query: {
-          username: session?.user.id || "",
-          limit: 1,
-        },
+export const LatestPost = ({ address }: { address: string }) => {
+  const { data: posts } = sigleApiClient.useSuspenseQuery("get", "/api/posts", {
+    params: {
+      query: {
+        username: address,
+        limit: 1,
       },
     },
-  );
+  });
 
   const post = posts.results[0];
 

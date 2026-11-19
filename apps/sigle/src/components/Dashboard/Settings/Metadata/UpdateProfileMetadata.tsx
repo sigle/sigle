@@ -1,12 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createId } from "@paralleldrive/cuid2";
 import {
-  type paths,
   createProfileMetadata,
+  type paths,
   ProfileMetadataSchemaId,
 } from "@sigle/sdk";
 import { request } from "@stacks/connect";
 import { IconAt, IconBrandX } from "@tabler/icons-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Result } from "better-result";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -26,7 +27,6 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
-import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient } from "@/lib/sigle";
 import { UploadProfileCoverPicture } from "./UploadProfileCoverPicture";
 import { UploadProfilePicture } from "./UploadProfilePicture";
@@ -41,7 +41,7 @@ const updateProfileMetadataSchema = z.object({
 });
 
 interface UpdateProfileMetadataProps {
-  profile: paths["/api/users/{username}"]["get"]["responses"]["200"]["content"]["application/json"]["profile"];
+  profile: paths["/api/users/{username}"]["get"]["responses"][200]["content"]["application/json"]["profile"];
   setEditingProfileMetadata: (editing: boolean) => void;
 }
 
@@ -49,7 +49,7 @@ export const UpdateProfileMetadata = ({
   profile,
   setEditingProfileMetadata,
 }: UpdateProfileMetadataProps) => {
-  const { data: session } = useSession();
+  const queryClient = useQueryClient();
 
   const {
     start: startToast,
@@ -59,7 +59,6 @@ export const UpdateProfileMetadata = ({
     steps: [
       { id: "signature", title: "Signing with Stacks wallet" },
       { id: "upload", title: "Uploading data to Arweave" },
-      { id: "index", title: "Indexing profile" },
     ],
     successMessage: "Profile updated!",
   });
@@ -67,28 +66,6 @@ export const UpdateProfileMetadata = ({
   const uploadProfileMetadata = sigleApiClient.useMutation(
     "post",
     "/api/protected/user/profile/upload-metadata",
-  );
-
-  const triggerIndexing = sigleApiClient.useMutation(
-    "post",
-    "/api/protected/user/profile/trigger-indexing",
-  );
-
-  const userId = session?.user.id;
-
-  const refetchProfile = sigleApiClient.useQuery(
-    "get",
-    "/api/users/{username}",
-    {
-      params: {
-        path: {
-          username: userId || "",
-        },
-      },
-    },
-    {
-      enabled: false,
-    },
   );
 
   const {
@@ -102,8 +79,8 @@ export const UpdateProfileMetadata = ({
     values: {
       displayName: profile?.displayName || undefined,
       description: profile?.description || undefined,
-      picture: profile?.pictureUri?.id || undefined,
-      coverPicture: profile?.coverPictureUri?.id || undefined,
+      picture: profile?.picture?.url || undefined,
+      coverPicture: profile?.coverPicture?.url || undefined,
       website: profile?.website || undefined,
       twitter: profile?.twitter || undefined,
     },
@@ -152,8 +129,7 @@ export const UpdateProfileMetadata = ({
 
     const data = await uploadProfileMetadata
       .mutateAsync({
-        body: {},
-        bodySerializer: () => JSON.stringify({ metadata }),
+        body: { metadata },
       })
       .then((result) => Result.ok(result))
       .catch((error) => Result.err(error));
@@ -167,50 +143,11 @@ export const UpdateProfileMetadata = ({
       return;
     }
 
+    // server-v2 stores the profile on upload, no indexing to wait for.
     completeStep("upload");
-
-    try {
-      await triggerIndexing.mutateAsync({});
-    } catch (error) {
-      setStepError(
-        "index",
-        error instanceof Error ? error.message : "Failed to trigger indexing",
-      );
-
-      return;
-    }
-
-    const arweaveId = data.value.id;
-    const pollingInterval = 2_000;
-    const timeout = 180_000;
-    const startTime = Date.now();
-
-    let isIndexed = false;
-
-    while (Date.now() - startTime < timeout) {
-      const result = await refetchProfile.refetch();
-
-      // Successfully indexed
-      if (result.data?.profile?.txId === arweaveId) {
-        isIndexed = true;
-        break;
-      }
-
-      await new Promise((resolve) => {
-        setTimeout(resolve, pollingInterval);
-      });
-    }
-
-    if (!isIndexed) {
-      setStepError(
-        "index",
-        "Profile update timed out. Please refresh the page.",
-      );
-
-      return;
-    }
-
-    completeStep("index");
+    await queryClient.invalidateQueries({
+      queryKey: ["get", "/api/users/{username}"],
+    });
     setEditingProfileMetadata(false);
   });
 

@@ -1,25 +1,26 @@
+import type { paths } from "@sigle/sdk";
 import { BlurImage } from "@/components/ui/blur-image";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { getDefaultAvatarUrl } from "@/lib/users";
+
+type UserProfileResponse =
+  paths["/api/users/{username}"]["get"]["responses"][200]["content"]["application/json"];
 
 export const ProfileAvatar = ({
   user,
   size,
 }: {
   user: {
-    id: string;
+    address: string;
     profile?: {
-      pictureUri?: {
-        id: string;
-        width?: number;
-        height?: number;
-        blurhash?: string;
-      };
-    };
+      picture: NonNullable<UserProfileResponse["profile"]>["picture"];
+    } | null;
   };
   size: "2" | "3" | "8";
 }) => {
+  const picture = user.profile?.picture;
+
   return (
     <div
       className={cn("overflow-hidden rounded-sm bg-muted", {
@@ -28,18 +29,18 @@ export const ProfileAvatar = ({
         "size-32": size === "8",
       })}
     >
-      {user.profile?.pictureUri ? (
+      {picture ? (
         <BlurImage
-          src={resolveImageUrl(user.profile.pictureUri.id)}
-          alt={user.id}
+          src={resolveImageUrl(picture.url)}
+          alt={user.address}
           className="size-full object-cover"
-          blurhash={user.profile.pictureUri.blurhash}
-          width={user.profile.pictureUri.width}
-          height={user.profile.pictureUri.height}
+          thumbhash={picture.thumbhash}
+          width={picture.width}
+          height={picture.height}
         />
       ) : (
         // oxlint-disable-next-line no-img-element
-        <img src={getDefaultAvatarUrl(user.id)} alt={user.id} />
+        <img src={getDefaultAvatarUrl(user.address)} alt={user.address} />
       )}
     </div>
   );

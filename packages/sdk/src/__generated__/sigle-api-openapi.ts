@@ -4,33 +4,14 @@
  */
 
 export interface paths {
-  "/_nitro/tasks/{*param1}": {
+  "/health": {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          "*param1": string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-      };
-    };
+    get: operations["health.get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -39,31 +20,14 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/_openapi.json": {
+  "/api/protected/me": {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-      };
-    };
+    get: operations["protected.me"];
     put?: never;
     post?: never;
     delete?: never;
@@ -72,252 +36,24 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/_scalar": {
+  "/api/protected/drafts": {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-      };
-    };
+    /**
+     * List drafts
+     * @description List the current user drafts, most recently updated first.
+     */
+    get: operations["drafts.list"];
     put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/_swagger": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/auth/{all}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          all: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/posts/{postId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Get post. */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          postId: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Post entry. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Post"];
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/posts/by-tx-id": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Get post by txId. */
-    get: {
-      parameters: {
-        query: {
-          txId: string;
-        };
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Post entry. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["Post"];
-          };
-        };
-        /** @description Post not found */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/posts/list": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Get posts list. */
-    get: {
-      parameters: {
-        query?: {
-          /** @description Limit the number of posts returned. */
-          limit?: number;
-          /** @description The address of the user to get posts for. */
-          username?: string;
-          /** @description The number of posts to skip before starting to collect the result set. */
-          offset?: number;
-        };
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Posts list. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              limit: number;
-              offset: number;
-              total: number;
-              results: components["schemas"]["Post"][];
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
+    /**
+     * Create a draft
+     * @description Create a new draft, optionally seeded with the provided fields.
+     */
+    post: operations["drafts.create"];
     delete?: never;
     options?: never;
     head?: never;
@@ -331,67 +67,46 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** @description Get draft for the current profile. */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          draftId: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Draft entry. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              id: string;
-              /** @enum {string} */
-              type: "draft" | "published";
-              title: string;
-              content?: string;
-              metaTitle?: string;
-              metaDescription?: string;
-              coverImage?: string;
-              tags?: string[];
-              canonicalUri?: string;
-              txId?: string;
-              txStatus?: string;
-              createdAt: string;
-              updatedAt: string;
-            };
-          };
-        };
-        /** @description Draft not found. */
-        404: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              /** @example Draft not found. */
-              message?: string;
-              /** @example 404 */
-              statusCode?: number;
-            };
-          };
-        };
-      };
-    };
+    /** Get a draft */
+    get: operations["drafts.get"];
     put?: never;
     post?: never;
+    /** Delete a draft */
+    delete: operations["drafts.delete"];
+    options?: never;
+    head?: never;
+    /**
+     * Update a draft
+     * @description Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields. Returns a 409 while the draft is being published.
+     */
+    patch: operations["drafts.update"];
+    trace?: never;
+  };
+  "/api/protected/drafts/{draftId}/publish": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get draft publish status
+     * @description Poll the asynchronous publishing status of a draft.
+     */
+    get: operations["drafts.getPublishStatus"];
+    put?: never;
+    /**
+     * Publish a draft
+     * @description Validate signed post metadata and enqueue an asynchronous publish job.
+     */
+    post: operations["drafts.publish"];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/api/protected/drafts/{draftId}/delete": {
+  "/api/protected/drafts/{draftId}/images": {
     parameters: {
       query?: never;
       header?: never;
@@ -399,471 +114,12 @@ export interface paths {
       cookie?: never;
     };
     get?: never;
-    put?: never;
-    /** @description Delete the draft for the current profile. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          draftId: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description OK */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content?: never;
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts/{draftId}/update": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Update the draft for the current profile. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          draftId: string;
-        };
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "application/json": {
-            title: string;
-            content: string;
-            metaTitle?: string;
-            metaDescription?: string;
-            coverImage?: string;
-            tags?: string[];
-            canonicalUri?: string;
-          };
-        };
-      };
-      responses: {
-        /** @description Draft updated. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              id: string;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts/{draftId}/upload-media": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Upload draft media. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          draftId: string;
-        };
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "multipart/form-data": {
-            /**
-             * Format: binary
-             * @description Profile media
-             */
-            file: string;
-          };
-        };
-      };
-      responses: {
-        /** @description Media uploaded */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              cid: string;
-              url: string;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts/{draftId}/upload-metadata": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Upload draft metadata to Arweave. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          draftId: string;
-        };
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "application/json": {
-            /** @enum {string} */
-            type: "draft" | "published";
-            metadata: Record<string, never>;
-          };
-        };
-      };
-      responses: {
-        /** @description Metadata uploaded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              /** @description Post ID. */
-              id: string;
-              /** @description Post ID. */
-              postId: string;
-              /** @description Arweave transaction ID. */
-              arweaveId: string;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts/create": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Create a new draft for the current profile. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Draft created. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              id: string;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/drafts/list": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Get drafts for the current profile. */
-    get: {
-      parameters: {
-        query?: {
-          /** @description Limit the number of drafts returned. */
-          limit?: number;
-        };
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Drafts list. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              id: string;
-              title: string;
-              content?: string;
-              metaTitle?: string;
-              metaDescription?: string;
-              coverImage?: string;
-              txId?: string;
-              txStatus?: string;
-              createdAt: string;
-              updatedAt: string;
-            }[];
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    put?: never;
+    /**
+     * Upload a draft image
+     * @description Upload an image to embed in a draft as a raw binary body. Not implemented yet: always responds with a 500.
+     */
+    put: operations["drafts.uploadImage"];
     post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/user/profile/trigger-indexing": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Trigger profile indexing. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Indexing triggered. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              success?: boolean;
-            };
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/user/profile/upload-avatar": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Upload avatar for a profile. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "multipart/form-data": {
-            /**
-             * Format: binary
-             * @description Profile media
-             */
-            file: string;
-          };
-        };
-      };
-      responses: {
-        /** @description Avatar uploaded */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              cid: string;
-              url: string;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/user/profile/upload-cover": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /** @description Upload cover picture for a profile. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "multipart/form-data": {
-            /**
-             * Format: binary
-             * @description Profile media
-             */
-            file: string;
-          };
-        };
-      };
-      responses: {
-        /** @description Cover uploaded */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              cid: string;
-              url: string;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
     delete?: never;
     options?: never;
     head?: never;
@@ -879,92 +135,30 @@ export interface paths {
     };
     get?: never;
     put?: never;
-    /** @description Upload profile metadata to Arweave. */
-    post: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody: {
-        content: {
-          "application/json": {
-            /** @description Profile metadata */
-            metadata?: Record<string, never>;
-          };
-        };
-      };
-      responses: {
-        /** @description Metadata uploaded. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              /** @description Arweave ID. */
-              id: string;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
+    /**
+     * Upload profile metadata
+     * @description Upload the profile metadata to Arweave and return the transaction id.
+     */
+    post: operations["profile.uploadMetadata"];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/api/protected/user/whitelisted": {
+  "/api/protected/user/profile/images/{kind}": {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    /** @description Is user whitelisted. */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description Success */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": {
-              whitelisted: boolean;
-            };
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    put?: never;
+    get?: never;
+    /**
+     * Upload a profile image
+     * @description Upload a profile avatar or cover image as a raw binary body. Re-uploading the same image is a no-op, uploading a different image replaces the previous file.
+     */
+    put: operations["profile.uploadImage"];
     post?: never;
     delete?: never;
     options?: never;
@@ -979,38 +173,11 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** @description Get user profile. */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path: {
-          username: string;
-        };
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description User profile. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["UserProfile"];
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
+    /**
+     * Get a user profile
+     * @description Get a public user by Stacks address with their profile. Responses are cacheable via `Cache-Control` and `ETag`.
+     */
+    get: operations["users.get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -1019,52 +186,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/users/trending": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /** @description Get trending profiles. */
-    get: {
-      parameters: {
-        query?: never;
-        header?: never;
-        path?: never;
-        cookie?: never;
-      };
-      requestBody?: never;
-      responses: {
-        /** @description User profiles. */
-        200: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["UserProfile"][];
-          };
-        };
-        /** @description Bad request */
-        400: {
-          headers: {
-            [name: string]: unknown;
-          };
-          content: {
-            "application/json": components["schemas"]["BadRequest"];
-          };
-        };
-      };
-    };
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/health": {
+  "/api/posts": {
     parameters: {
       query?: never;
       header?: never;
@@ -1072,13 +194,113 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Health check
-     * @description Check the health of the server
+     * List posts
+     * @description List published posts, newest first. Pass `username` (a Stacks address) to only list the posts of that author.
      */
-    get: operations["healthCheck"];
+    get: operations["posts.list"];
     put?: never;
     post?: never;
     delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/posts/{postId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get a post
+     * @description Get a published post with its cover image placeholder, its author profile, and its OpenTimestamps proof status.
+     */
+    get: operations["posts.get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/protected/admin/queues": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * List queue statistics
+     * @description Return pending, active, completed, and failed job counts per queue.
+     */
+    get: operations["admin.listQueues"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/protected/admin/queues/{queueName}/failed": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * List failed jobs
+     * @description List dead-lettered jobs of a queue, most recently failed first.
+     */
+    get: operations["admin.listFailedJobs"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/protected/admin/queues/{queueName}/failed/{id}/retry": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Retry a failed job
+     * @description Reset a dead-lettered job so workers pick it up again.
+     */
+    post: operations["admin.retryFailedJob"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/protected/admin/queues/{queueName}/failed/{id}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    /**
+     * Delete a failed job
+     * @description Permanently remove a dead-lettered job from the queue.
+     */
+    delete: operations["admin.deleteFailedJob"];
     options?: never;
     head?: never;
     patch?: never;
@@ -1088,88 +310,413 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
-    BadRequest: {
+    sigle_api_UnauthorizedEncoded: {
+      /** @enum {string} */
+      _tag: "Unauthorized";
       message: string;
     };
-    UserProfile: {
-      /** @description The address of the user */
+    sigle_api_ForbiddenEncoded: {
+      /** @enum {string} */
+      _tag: "Forbidden";
+      message: string;
+    };
+    sigle_api_InternalServerErrorEncoded: {
+      /** @enum {string} */
+      _tag: "InternalServerError";
+      message: string;
+    };
+    sigle_api_TooManyRequestsEncoded: {
+      /** @enum {string} */
+      _tag: "TooManyRequests";
+      message: string;
+      retryAfterMillis: number;
+    };
+    sigle_api_NotFoundEncoded: {
+      /** @enum {string} */
+      _tag: "NotFound";
+      message: string;
+    };
+    RetryFailedJobResponse: {
+      success: boolean;
+    };
+    FailedJobListResponse: {
+      results: components["schemas"]["FailedJobListItem"][];
+      limit: number;
+      offset: number;
+      total: number;
+    };
+    FailedJobListItem: {
       id: string;
-      /**
-       * @description The flag of the user
-       * @enum {string}
-       */
-      flag: "NONE" | "VERIFIED";
-      postsCount?: number;
-      createdAt: string;
+      queueName: string;
+      payload: unknown;
+      attempts: number;
+      lastFailure: string | null;
+      /** Format: date-time */
       updatedAt: string;
-      profile?: {
-        id: string;
-        txId: string;
-        displayName?: string;
-        description?: string;
-        website?: string;
-        twitter?: string;
-        pictureUri?: {
-          id: string;
-          width?: number;
-          height?: number;
-          blurhash?: string;
-        };
-        coverPictureUri?: {
-          id: string;
-          width?: number;
-          height?: number;
-          blurhash?: string;
-        };
-      };
+    };
+    AdminQueueListResponse: {
+      results: components["schemas"]["QueueStatsItem"][];
+    };
+    QueueStatsItem: {
+      queueName: string;
+      pending: number;
+      active: number;
+      completed: number;
+      failed: number;
+      oldestPendingAgeMillis: number | null;
     };
     Post: {
       id: string;
       title: string;
-      content?: string;
-      metaTitle?: string;
-      metaDescription?: string;
-      coverImage?: {
-        id: string;
-        width?: number;
-        height?: number;
-        blurhash?: string;
-      };
-      excerpt?: string;
-      tags?: string[];
-      canonicalUri?: string;
-      txId: string;
-      arweaveL1TxId?: string;
-      blockHeight: number;
+      content: string;
+      excerpt: string;
+      metaTitle: string | null;
+      metaDescription: string | null;
+      coverImage: components["schemas"]["MediaImage"] | null;
+      tags: string[];
+      canonicalUri: string | null;
       metadataUri: string;
-      revisionsCount?: number;
+      arweaveTxId: string;
+      arweaveBlockHeight: number | null;
+      /** Format: date-time */
       createdAt: string;
+      /** Format: date-time */
       updatedAt: string;
-      user: {
+      author: components["schemas"]["UserProfileResponse"];
+      opentimestamps: components["schemas"]["PostOpenTimestamps"] | null;
+    };
+    PostOpenTimestamps: {
+      /** @enum {string} */
+      status: "PENDING" | "UPGRADED" | "FAILED";
+      otsTxId: string | null;
+      bitcoinBlockHeight: number | null;
+      bitcoinTimestamp: string | null;
+    };
+    UserProfileResponse: {
+      address: string;
+      profile: components["schemas"]["UserProfile"] | null;
+    };
+    UserProfile: {
+      displayName: string | null;
+      description: string | null;
+      website: string | null;
+      twitter: string | null;
+      picture: components["schemas"]["MediaImage"] | null;
+      coverPicture: components["schemas"]["MediaImage"] | null;
+      arweaveTxId: string;
+      /** Format: date-time */
+      updatedAt: string;
+    };
+    MediaImage: {
+      url: string;
+      width: number | null;
+      height: number | null;
+      thumbhash: string | null;
+    };
+    sigle_api_BadRequestEncoded: {
+      /** @enum {string} */
+      _tag: "BadRequest";
+      message: string;
+    };
+    PostListResponse: {
+      results: components["schemas"]["PostListItem"][];
+      limit: number;
+      offset: number;
+      total: number;
+    };
+    PostListItem: {
+      id: string;
+      title: string;
+      excerpt: string;
+      metaTitle: string | null;
+      metaDescription: string | null;
+      coverImage: components["schemas"]["MediaImage"] | null;
+      tags: string[];
+      canonicalUri: string | null;
+      arweaveTxId: string;
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+      author: components["schemas"]["UserProfileResponse"];
+    };
+    sigle_api_UnsupportedMediaTypeEncoded: {
+      /** @enum {string} */
+      _tag: "UnsupportedMediaType";
+      message: string;
+    };
+    sigle_api_PayloadTooLargeEncoded: {
+      /** @enum {string} */
+      _tag: "PayloadTooLarge";
+      message: string;
+    };
+    UploadProfileImageResponse: {
+      url: string;
+      key: string;
+      width: number;
+      height: number;
+      thumbhash: string;
+    };
+    UploadProfileMetadataResponse: {
+      id: string;
+      uri: string;
+      cid: string;
+      gatewayUrl: string;
+    };
+    /** @description The signed profile metadata to upload to Arweave. */
+    ProfileMetadata: {
+      /** @constant */
+      $schema: "https://json-schemas.sigle.io/profile/1.0.0.json";
+      content: {
+        /** @description Random id also used in the url. Have to be unique on sigle. */
         id: string;
-        createdAt: string;
-        updatedAt: string;
-        profile?: {
-          id: string;
-          txId: string;
-          displayName?: string;
-          description?: string;
-          website?: string;
-          twitter?: string;
-          pictureUri?: {
-            id: string;
-            width?: number;
-            height?: number;
-            blurhash?: string;
-          };
-          coverPictureUri?: {
-            id: string;
-            width?: number;
-            height?: number;
-            blurhash?: string;
-          };
-        };
+        /** @description The profile display name. */
+        displayName?: string;
+        /** @description The profile description as Markdown. */
+        description?: string;
+        /**
+         * Format: uri
+         * @description The website URL.
+         */
+        website?: string;
+        /** @description Twitter username. */
+        twitter?: string;
+        /**
+         * Format: uri
+         * @description The profile image URL.
+         */
+        picture?: string;
+        /**
+         * Format: uri
+         * @description The profile cover image URL.
+         */
+        coverPicture?: string;
+        /** @description List of attributes that can be used to store any additional information that is not supported by the standard */
+        attributes?: (
+          | {
+              /** @constant */
+              type: "Boolean";
+              /** @description The attribute's unique identifier. */
+              key: string;
+              /**
+               * @description A JS boolean value serialized as string. It's consumer responsibility to parse it.
+               * @enum {string}
+               */
+              value: "true" | "false";
+            }
+          | {
+              /** @constant */
+              type: "Date";
+              /** @description The attribute's unique identifier. */
+              key: string;
+              /**
+               * Format: date-time
+               * @description A valid ISO 8601 date string.  It's consumer responsibility to parse it.
+               */
+              value: string;
+            }
+          | {
+              /** @constant */
+              type: "Number";
+              /** @description The attribute's unique identifier. */
+              key: string;
+              /** @description A valid JS number serialized as string. It's consumer responsibility to parse it. */
+              value: string;
+            }
+          | {
+              /** @constant */
+              type: "String";
+              /** @description The attribute's unique identifier. */
+              key: string;
+              /** @description Any string value. */
+              value: string;
+            }
+          | {
+              /** @constant */
+              type: "JSON";
+              /** @description The attribute's unique identifier. */
+              key: string;
+              /** @description A JSON string. It's consumer responsibility to validate and parse it. */
+              value: string;
+            }
+        )[];
       };
+      /** @description A cryptographic signature of the `content` data. */
+      signature?: string;
+    };
+    UploadDraftImageResponse: {
+      url: string;
+      key: string;
+      width: number;
+      height: number;
+      thumbhash: string;
+    };
+    PublishDraftStatusResponse: {
+      status: components["schemas"]["PublishDraftStatus"];
+      postId: string | null;
+      arweaveId: string | null;
+    };
+    /** @enum {string} */
+    PublishDraftStatus: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
+    PublishDraftAccepted: {
+      draftId: string;
+      /** @enum {string} */
+      status: "PENDING";
+    };
+    PublishDraftPayload: {
+      metadata: components["schemas"]["PostMetadata"];
+    };
+    /** @description The signed post metadata to upload to Arweave. */
+    PostMetadata: {
+      name?: string;
+      description?: string;
+      /** Format: uri */
+      external_url?: string;
+      /** Format: uri */
+      image?: string;
+      /** @constant */
+      $schema: "https://json-schemas.sigle.io/posts/1.0.0.json";
+      content: {
+        /** @description Random id also used in the url. Have to be unique on sigle. */
+        id: string;
+        /** @description Post title. */
+        title: string;
+        /** @description Markdown content. */
+        content: string;
+        /** @description List of attributes that can be used to store any additional information that is not supported by the standard */
+        attributes?: (
+          | {
+              /** @constant */
+              type: "Boolean";
+              /** @description The attribute's unique identifier. */
+              key: string;
+              /**
+               * @description A JS boolean value serialized as string. It's consumer responsibility to parse it.
+               * @enum {string}
+               */
+              value: "true" | "false";
+            }
+          | {
+              /** @constant */
+              type: "Date";
+              /** @description The attribute's unique identifier. */
+              key: string;
+              /**
+               * Format: date-time
+               * @description A valid ISO 8601 date string.  It's consumer responsibility to parse it.
+               */
+              value: string;
+            }
+          | {
+              /** @constant */
+              type: "Number";
+              /** @description The attribute's unique identifier. */
+              key: string;
+              /** @description A valid JS number serialized as string. It's consumer responsibility to parse it. */
+              value: string;
+            }
+          | {
+              /** @constant */
+              type: "String";
+              /** @description The attribute's unique identifier. */
+              key: string;
+              /** @description Any string value. */
+              value: string;
+            }
+          | {
+              /** @constant */
+              type: "JSON";
+              /** @description The attribute's unique identifier. */
+              key: string;
+              /** @description A JSON string. It's consumer responsibility to validate and parse it. */
+              value: string;
+            }
+        )[];
+        /** @description The cover image. */
+        coverImage?: {
+          /** Format: uri */
+          url: string;
+          /**
+           * @description The MIME type of the image.
+           * @enum {string}
+           */
+          type: "image/gif" | "image/jpeg" | "image/png" | "image/webp";
+          /** @description The alt tag of the image for accessibility. */
+          alt?: string;
+        };
+        /** @description An arbitrary list of tags. */
+        tags?: string[];
+        /**
+         * @description Specify a content warning.
+         * @enum {string}
+         */
+        contentWarning?: "NSFW" | "SENSITIVE" | "SPOILER";
+      };
+      /** @description A cryptographic signature of the `content` data. */
+      signature?: string;
+    };
+    sigle_api_ConflictEncoded: {
+      /** @enum {string} */
+      _tag: "Conflict";
+      message: string;
+    };
+    Draft: {
+      id: string;
+      title: string;
+      content: string;
+      metaTitle: string | null;
+      metaDescription: string | null;
+      coverImage: string | null;
+      tags: string[];
+      canonicalUri: string | null;
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+    };
+    UpdateDraftPayload: {
+      /** @description Omit to keep the current value unchanged. */
+      title?: string;
+      /** @description Omit to keep the current value unchanged. */
+      content?: string;
+      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      metaTitle?: string | null;
+      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      metaDescription?: string | null;
+      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      coverImage?: string | null;
+      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      tags?: string[] | null;
+      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      canonicalUri?: string | null;
+    };
+    DraftListResponse: {
+      results: components["schemas"]["DraftListItem"][];
+      limit: number;
+      offset: number;
+      total: number;
+    };
+    DraftListItem: {
+      id: string;
+      title: string;
+      metaTitle: string | null;
+      metaDescription: string | null;
+      coverImage: string | null;
+      tags: string[];
+      canonicalUri: string | null;
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+    };
+    CreateDraftPayload: {
+      title?: string;
+      content?: string;
+      metaTitle?: string | null;
+      metaDescription?: string | null;
+      coverImage?: string | null;
+      tags?: string[];
+      canonicalUri?: string | null;
     };
   };
   responses: never;
@@ -1180,7 +727,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  healthCheck: {
+  "health.get": {
     parameters: {
       query?: never;
       header?: never;
@@ -1189,16 +736,1227 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description OK */
+      /** @description Success */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
           "application/json": {
-            /** @description Whether the server is healthy */
-            success?: boolean;
+            success: boolean;
           };
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "protected.me": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Success */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": {
+            id: string;
+            address: string;
+            whitelisted: boolean;
+          };
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "drafts.list": {
+    parameters: {
+      query?: {
+        limit?: number;
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description DraftListResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["DraftListResponse"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "drafts.create": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["CreateDraftPayload"];
+      };
+    };
+    responses: {
+      /** @description Draft */
+      201: {
+        headers: {
+          location: string;
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Draft"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "drafts.get": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        draftId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Draft */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Draft"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "drafts.delete": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        draftId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description <No Content> */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "drafts.update": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        draftId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateDraftPayload"];
+      };
+    };
+    responses: {
+      /** @description Draft */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Draft"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ConflictEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "drafts.getPublishStatus": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        draftId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description PublishDraftStatusResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PublishDraftStatusResponse"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "drafts.publish": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        draftId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PublishDraftPayload"];
+      };
+    };
+    responses: {
+      /** @description PublishDraftAccepted */
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PublishDraftAccepted"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "drafts.uploadImage": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        draftId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "image/webp": string;
+        "image/png": string;
+        "image/jpeg": string;
+      };
+    };
+    responses: {
+      /** @description UploadDraftImageResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UploadDraftImageResponse"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Payload Too Large */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_PayloadTooLargeEncoded"];
+        };
+      };
+      /** @description Unsupported Media Type */
+      415: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnsupportedMediaTypeEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "profile.uploadMetadata": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": {
+          metadata: components["schemas"]["ProfileMetadata"];
+        };
+      };
+    };
+    responses: {
+      /** @description UploadProfileMetadataResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UploadProfileMetadataResponse"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "profile.uploadImage": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        kind: "avatar" | "cover";
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "image/webp": string;
+        "image/png": string;
+        "image/jpeg": string;
+      };
+    };
+    responses: {
+      /** @description UploadProfileImageResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UploadProfileImageResponse"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Payload Too Large */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_PayloadTooLargeEncoded"];
+        };
+      };
+      /** @description Unsupported Media Type */
+      415: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnsupportedMediaTypeEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "users.get": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        username: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description UserProfileResponse */
+      200: {
+        headers: {
+          "cache-control": string;
+          etag: string;
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UserProfileResponse"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "posts.list": {
+    parameters: {
+      query?: {
+        username?: string;
+        limit?: number;
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description PostListResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PostListResponse"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "posts.get": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        postId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Post */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Post"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "admin.listQueues": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description AdminQueueListResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["AdminQueueListResponse"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "admin.listFailedJobs": {
+    parameters: {
+      query?: {
+        limit?: number;
+        offset?: number;
+      };
+      header?: never;
+      path: {
+        queueName: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description FailedJobListResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["FailedJobListResponse"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "admin.retryFailedJob": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        queueName: string;
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description RetryFailedJobResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["RetryFailedJobResponse"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "admin.deleteFailedJob": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        queueName: string;
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description <No Content> */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
         };
       };
     };

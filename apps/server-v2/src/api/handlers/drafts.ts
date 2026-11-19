@@ -1,6 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { verifyMetadataSignature } from "@sigle/sdk";
-import { and, count, desc, eq, sql } from "drizzle-orm";
+import { and, count, desc, eq, isNull, notInArray, or, sql } from "drizzle-orm";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
 import { SigleApi } from "@/api";
@@ -12,7 +12,12 @@ import {
   UpdateDraftPayload,
 } from "@/api/groups/drafts";
 import { CurrentUser } from "@/api/middleware/auth-user";
-import { BadRequest, NotFound } from "@/api/schemas";
+import {
+  BadRequest,
+  Conflict,
+  InternalServerError,
+  NotFound,
+} from "@/api/schemas";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { draft, post } from "@/db/schema";
@@ -160,18 +165,44 @@ export const updateDraft = (
     const user = yield* CurrentUser;
     const db = yield* Database;
 
+    // A publish signs a snapshot of the draft and deletes the draft once the
+    // post is stored, so a save accepted while it runs would be lost. The
+    // status is checked in the same statement as the write.
     const [updatedDraft] = yield* db
       .update(draft)
       .set(toUpdateSet(payload))
-      .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
+      .where(
+        and(
+          eq(draft.id, draftId),
+          eq(draft.userId, user.id),
+          or(
+            isNull(draft.txStatus),
+            notInArray(draft.txStatus, ["PENDING", "PROCESSING"]),
+          ),
+        ),
+      )
       .returning()
       .pipe(Effect.orDie);
 
-    if (!updatedDraft) {
+    if (updatedDraft) {
+      return toDraft(updatedDraft);
+    }
+
+    const [foundDraft] = yield* db
+      .select({ id: draft.id })
+      .from(draft)
+      .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
+      .limit(1)
+      .pipe(Effect.orDie);
+
+    if (!foundDraft) {
       return yield* new NotFound({ message: "Draft not found" });
     }
 
-    return toDraft(updatedDraft);
+    return yield* new Conflict({
+      message:
+        "This draft is being published, changes can be saved once publishing finishes.",
+    });
   });
 
 export const deleteDraft = (draftId: string) =>
@@ -369,5 +400,13 @@ export const DraftsHandlersLayer = HttpApiBuilder.group(
       )
       .handle("getPublishStatus", ({ params }) =>
         getDraftPublishStatus(params.draftId),
+      )
+      // TODO(#1328): upload the image.
+      .handle("uploadImage", () =>
+        Effect.fail(
+          new InternalServerError({
+            message: "Draft image uploads are not available yet.",
+          }),
+        ),
       ),
 );

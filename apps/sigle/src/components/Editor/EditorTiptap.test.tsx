@@ -63,13 +63,14 @@ const waitForEditor = async () => {
 };
 
 const defaultPost = {
-  type: "draft" as const,
+  id: "test-id",
   title: "",
   content: "",
-  coverImage: undefined,
-  published: false,
-  timestamp: 0,
-  id: "test-id",
+  metaTitle: null,
+  metaDescription: null,
+  coverImage: null,
+  tags: [],
+  canonicalUri: null,
   createdAt: "2024-01-01T00:00:00.000Z",
   updatedAt: "2024-01-01T00:00:00.000Z",
 };

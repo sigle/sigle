@@ -11,6 +11,10 @@ interface PostUserInfoCardProps {
 }
 
 export const PostUserInfoCard = ({ post }: PostUserInfoCardProps) => {
+  const { author } = post;
+
+  const profileHref = Routes.userProfile({ username: author.address });
+
   return (
     <Card className="mt-8">
       <CardContent className="space-y-2">
@@ -22,36 +26,35 @@ export const PostUserInfoCard = ({ post }: PostUserInfoCardProps) => {
         </p>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <NextLink href={Routes.userProfile({ username: post.user.id })}>
-              <ProfileAvatar user={post.user} size="2" />
+            <NextLink href={profileHref}>
+              <ProfileAvatar user={author} size="2" />
             </NextLink>
             <div className="grid gap-0.5">
-              {post.user.profile?.displayName ? (
+              {author.profile?.displayName ? (
                 <p className="font-medium">
-                  <NextLink
-                    href={Routes.userProfile({ username: post.user.id })}
-                  >
-                    {post.user.profile?.displayName}
+                  <NextLink href={profileHref}>
+                    {author.profile?.displayName}
                   </NextLink>
                 </p>
               ) : null}
-              <p className="text-xs text-muted-foreground" title={post.user.id}>
-                <NextLink href={Routes.userProfile({ username: post.user.id })}>
-                  {formatReadableAddress(post.user.id)}
+              <p
+                className="text-xs text-muted-foreground"
+                title={author.address}
+              >
+                <NextLink href={profileHref}>
+                  {formatReadableAddress(author.address)}
                 </NextLink>
               </p>
             </div>
           </div>
         </div>
 
-        {post.user.profile?.description ? (
+        {author.profile?.description ? (
           <div
             className="mt-3 text-xs text-muted-foreground"
-            title={post.user.id}
+            title={author.address}
           >
-            <ProfileMarkdownDescription
-              content={post.user.profile.description}
-            />
+            <ProfileMarkdownDescription content={author.profile.description} />
           </div>
         ) : null}
       </CardContent>

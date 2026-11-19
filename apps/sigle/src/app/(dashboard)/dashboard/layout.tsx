@@ -23,17 +23,14 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
 
-  const { data: userWhitelist } = sigleApiClient.useQuery(
-    "get",
-    "/api/protected/user/whitelisted",
-  );
+  const { data: me } = sigleApiClient.useQuery("get", "/api/protected/me");
 
   const navigationLinks = [
     {
       label: "Dashboard",
       href: "/dashboard",
     },
-    ...(userWhitelist?.whitelisted
+    ...(me?.whitelisted
       ? [
           {
             label: "Drafts",

@@ -24,12 +24,14 @@ export const EditorSave = () => {
     "idle" | "saving" | "error" | "saved"
   >("idle");
 
+  const [saveError, setSaveError] = useState<string | null>(null);
+
   const { watch, getValues } = useFormContext<EditorPostFormData>();
   const type = watch("type");
 
   const { mutate: updatePost } = sigleApiClient.useMutation(
-    "post",
-    "/api/protected/drafts/{draftId}/update",
+    "patch",
+    "/api/protected/drafts/{draftId}",
   );
 
   const editor = useEditorStore((state) => state.editor);
@@ -46,14 +48,23 @@ export const EditorSave = () => {
             },
           },
           body: {
-            ...values,
+            title: values.title,
+            content: values.content,
+            metaTitle: values.metaTitle || null,
+            metaDescription: values.metaDescription || null,
+            coverImage: values.coverImage || null,
+            tags: values.tags ?? [],
+            canonicalUri: values.canonicalUri || null,
           },
         },
         {
           onSuccess: () => {
             setSaveState("saved");
           },
-          onError: () => {
+          onError: (error) => {
+            // A 409 explains why the draft cannot be saved right now, such as
+            // a publish in progress.
+            setSaveError(error.message);
             setSaveState("error");
           },
         },
@@ -89,7 +100,9 @@ export const EditorSave = () => {
     return (
       <Alert variant="destructive" className="mt-4">
         <IconInfoCircle size={14} />
-        <AlertDescription>Error Saving, please try again</AlertDescription>
+        <AlertDescription>
+          {saveError ?? "Error Saving, please try again"}
+        </AlertDescription>
       </Alert>
     );
   }

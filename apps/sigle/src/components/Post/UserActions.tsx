@@ -14,6 +14,7 @@ interface PostUserActionsProps {
 
 export const PostUserActions = ({ post }: PostUserActionsProps) => {
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const { author } = post;
 
   // TODO add published time + read time under user name in the format "Mar 1, 2026 (clock icon) 6 min read"
 
@@ -21,18 +22,21 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
     <>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <NextLink href={Routes.userProfile({ username: post.user.id })}>
-            <ProfileAvatar user={post.user} size="2" />
+          <NextLink href={Routes.userProfile({ username: author.address })}>
+            <ProfileAvatar user={author} size="2" />
           </NextLink>
           <div className="grid gap-0.5">
-            <NextLink href={Routes.userProfile({ username: post.user.id })}>
+            <NextLink href={Routes.userProfile({ username: author.address })}>
               <p className="text-sm font-medium">
-                {post.user.profile?.displayName}
+                {author.profile?.displayName}
               </p>
             </NextLink>
-            <NextLink href={Routes.userProfile({ username: post.user.id })}>
-              <p className="text-xs text-muted-foreground" title={post.user.id}>
-                {formatReadableAddress(post.user.id)}
+            <NextLink href={Routes.userProfile({ username: author.address })}>
+              <p
+                className="text-xs text-muted-foreground"
+                title={author.address}
+              >
+                {formatReadableAddress(author.address)}
               </p>
             </NextLink>
           </div>

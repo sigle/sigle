@@ -34,7 +34,7 @@ export async function GET(
   }
 
   const { data: posts, error: postsError } = await sigleApiFetchClient.GET(
-    "/api/posts/list",
+    "/api/posts",
     {
       params: {
         query: {
@@ -54,8 +54,8 @@ export async function GET(
   const userLink = `${env.NEXT_PUBLIC_APP_URL}/u/${username}`;
 
   const feed = new Feed({
-    title: user.profile?.displayName || user.id,
-    description: user.profile?.description,
+    title: user.profile?.displayName || user.address,
+    description: user.profile?.description ?? undefined,
     id: userLink,
     link: userLink,
     language: "en",
@@ -72,9 +72,11 @@ export async function GET(
       title: post.title,
       id: postLink,
       link: postLink,
-      description: post.content,
+      // The list does not include the full content, the excerpt is the
+      // summary readers see in their feed reader.
+      description: post.excerpt,
       date: new Date(post.createdAt),
-      image: post.coverImage ? resolveImageUrl(post.coverImage.id) : undefined,
+      image: post.coverImage ? resolveImageUrl(post.coverImage.url) : undefined,
     });
   }
 

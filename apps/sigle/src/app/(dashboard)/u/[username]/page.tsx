@@ -28,7 +28,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     notFound();
   }
 
-  const title = user.id;
+  const title = user.profile?.displayName || user.address;
 
   const description = user.profile?.description
     ? user.profile.description
