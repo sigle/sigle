@@ -3,6 +3,7 @@
 import { IconInfoCircle } from "@tabler/icons-react";
 import { GetFamiliarCards } from "@/components/Dashboard/GetFamiliarCards";
 import { LatestDrafts } from "@/components/Dashboard/LatestDrafts";
+import { LatestPost } from "@/components/Dashboard/LatestPost";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { sigleApiClient } from "@/lib/sigle";
 
@@ -29,6 +30,7 @@ export default function Dashboard() {
 
       {!isLoadingMe && me?.whitelisted ? (
         <div className="grid gap-5 md:grid-cols-2">
+          {me.address ? <LatestPost address={me.address} /> : null}
           <LatestDrafts />
         </div>
       ) : null}

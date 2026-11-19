@@ -30,6 +30,18 @@ export const UserDropdown = () => {
 
   const { data: me } = sigleApiClient.useQuery("get", "/api/protected/me");
 
+  const { data: user } = sigleApiClient.useQuery(
+    "get",
+    "/api/users/{username}",
+    {
+      params: { path: { username: me?.address ?? "" } },
+      // The profile response is cacheable for 60s, revalidate so edits show up
+      // right away.
+      cache: "no-cache",
+    },
+    { enabled: !!me?.address },
+  );
+
   const onThemeChange = () => {
     const newTheme = resolvedTheme === "dark" ? "light" : "dark";
     setTheme(newTheme);
@@ -48,7 +60,10 @@ export const UserDropdown = () => {
             type="button"
             className="cursor-pointer transition hover:opacity-85"
           >
-            <ProfileAvatar user={{ id: me?.id ?? session.user.id }} size="2" />
+            <ProfileAvatar
+              user={user ?? { address: me?.address ?? session.user.id }}
+              size="2"
+            />
           </button>
         }
       />

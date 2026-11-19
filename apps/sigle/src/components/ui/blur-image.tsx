@@ -3,19 +3,29 @@
 import { decode } from "blurhash";
 import Image, { type ImageProps } from "next/image";
 import { useMemo } from "react";
+import { thumbHashToDataURL } from "thumbhash";
 
 type BlurImageProps = Omit<ImageProps, "placeholder" | "blurDataURL"> & {
   blurhash?: string | null;
+  // Base64 ThumbHash placeholder, as returned by server-v2.
+  thumbhash?: string | null;
 };
 
 export function BlurImage({
   blurhash,
+  thumbhash,
   alt,
   width,
   height,
   ...props
 }: BlurImageProps) {
   const blurDataURL = useMemo(() => {
+    if (thumbhash) {
+      return thumbHashToDataURL(
+        Uint8Array.from(atob(thumbhash), (char) => char.charCodeAt(0)),
+      );
+    }
+
     if (!blurhash) return undefined;
     const pixels = decode(blurhash, 32, 32);
     const canvas = document.createElement("canvas");
@@ -34,7 +44,7 @@ export function BlurImage({
     }
 
     return undefined;
-  }, [blurhash]);
+  }, [blurhash, thumbhash]);
 
   return (
     <Image

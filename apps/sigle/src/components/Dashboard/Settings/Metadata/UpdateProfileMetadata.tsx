@@ -2,11 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createId } from "@paralleldrive/cuid2";
 import {
   createProfileMetadata,
-  type ProfileMetadataDetails,
+  type paths,
   ProfileMetadataSchemaId,
 } from "@sigle/sdk";
 import { request } from "@stacks/connect";
 import { IconAt, IconBrandX } from "@tabler/icons-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { Result } from "better-result";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -40,7 +41,7 @@ const updateProfileMetadataSchema = z.object({
 });
 
 interface UpdateProfileMetadataProps {
-  profile?: ProfileMetadataDetails;
+  profile: paths["/api/users/{username}"]["get"]["responses"][200]["content"]["application/json"]["profile"];
   setEditingProfileMetadata: (editing: boolean) => void;
 }
 
@@ -48,6 +49,8 @@ export const UpdateProfileMetadata = ({
   profile,
   setEditingProfileMetadata,
 }: UpdateProfileMetadataProps) => {
+  const queryClient = useQueryClient();
+
   const {
     start: startToast,
     completeStep,
@@ -76,8 +79,8 @@ export const UpdateProfileMetadata = ({
     values: {
       displayName: profile?.displayName || undefined,
       description: profile?.description || undefined,
-      picture: profile?.picture || undefined,
-      coverPicture: profile?.coverPicture || undefined,
+      picture: profile?.picture?.url || undefined,
+      coverPicture: profile?.coverPicture?.url || undefined,
       website: profile?.website || undefined,
       twitter: profile?.twitter || undefined,
     },
@@ -142,6 +145,9 @@ export const UpdateProfileMetadata = ({
 
     // server-v2 stores the profile on upload, no indexing to wait for.
     completeStep("upload");
+    await queryClient.invalidateQueries({
+      queryKey: ["get", "/api/users/{username}"],
+    });
     setEditingProfileMetadata(false);
   });
 

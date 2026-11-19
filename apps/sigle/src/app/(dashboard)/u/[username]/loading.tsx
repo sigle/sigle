@@ -17,7 +17,7 @@ export const PageProfileSkeleton = () => {
             <Skeleton>
               <ProfileAvatar
                 user={{
-                  id: "L",
+                  address: "L",
                 }}
                 size="8"
               />

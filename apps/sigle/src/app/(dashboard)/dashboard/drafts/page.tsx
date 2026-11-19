@@ -36,7 +36,7 @@ export default function DashboardDrafts() {
   } = sigleApiClient.useQuery("get", "/api/protected/drafts", {
     params: {
       query: {
-        limit: "50",
+        limit: 50,
       },
     },
   });

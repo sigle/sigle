@@ -672,6 +672,9 @@ importers:
       tailwind-merge:
         specifier: 3.6.0
         version: 3.6.0
+      thumbhash:
+        specifier: 0.1.1
+        version: 0.1.1
       valid-url:
         specifier: 1.0.9
         version: 1.0.9

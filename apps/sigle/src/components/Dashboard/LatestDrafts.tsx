@@ -25,7 +25,7 @@ export const LatestDrafts = () => {
   } = sigleApiClient.useQuery("get", "/api/protected/drafts", {
     params: {
       query: {
-        limit: "5",
+        limit: 5,
       },
     },
   });
