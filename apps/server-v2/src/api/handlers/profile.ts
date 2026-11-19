@@ -82,10 +82,11 @@ export const uploadProfileMetadata = (
         ],
       })
       .pipe(
+        // ArweaveService logs the cause, the client only gets a generic message.
         Effect.mapError(
-          (error) =>
+          () =>
             new InternalServerError({
-              message: `Failed to upload to Arweave, error: ${error.message}`,
+              message: "Failed to upload to Arweave.",
             }),
         ),
       );
