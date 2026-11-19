@@ -11,13 +11,25 @@ import {
 
 export const OPENTIMESTAMPS_UPGRADE_QUEUE_NAME = "opentimestamps-upgrade";
 
-export const OPENTIMESTAMPS_UPGRADE_MAX_ATTEMPTS = 97;
+// Bitcoin confirmations usually arrive within an hour, but can take several
+// hours under congestion: poll every 30 minutes for the first 48 hours. The
+// calendars keep commitments far longer, and their outages look like "not
+// anchored yet", so keep polling daily for a month before giving up.
+const FREQUENT_UPGRADE_RETRIES = 96;
+
+const DAILY_UPGRADE_RETRIES = 30;
+
+export const OPENTIMESTAMPS_UPGRADE_MAX_ATTEMPTS =
+  1 + FREQUENT_UPGRADE_RETRIES + DAILY_UPGRADE_RETRIES;
 
 const upgradeRetrySchedule: Schedule.Schedule<unknown, number> =
   Schedule.jittered(
-    // Bitcoin confirmations usually arrive within an hour, but can take
-    // several hours under congestion. 97 attempts roughly cover 48 hours.
-    Schedule.spaced("30 minutes"),
+    Schedule.concat(
+      Schedule.spaced("30 minutes").pipe(
+        Schedule.upTo({ times: FREQUENT_UPGRADE_RETRIES }),
+      ),
+      Schedule.spaced("1 day"),
+    ),
   );
 
 export const OpenTimestampsUpgradeJobSchema = Schema.Struct({
@@ -40,11 +52,27 @@ export class OtsVerificationInvalidError extends Data.TaggedError(
   readonly reason: string;
 }> {}
 
+/**
+ * Retryable error returned when the upgraded proof could not be checked
+ * against Bitcoin: it has no Bitcoin attestation yet (`pending`), or the
+ * Esplora endpoint failed (`network_error`).
+ */
+export class OtsVerificationPendingError extends Data.TaggedError(
+  "OtsVerificationPendingError",
+)<{
+  readonly postId: string;
+  readonly status: "pending" | "network_error";
+  readonly reason: string;
+}> {}
+
 export const processOpenTimestampsUpgradeJob = (
   job: OpenTimestampsUpgradeJob,
 ): Effect.Effect<
   void,
-  OtsUpgradeFailure | TerminalJobError | ArweaveUploadError,
+  | OtsUpgradeFailure
+  | OtsVerificationPendingError
+  | TerminalJobError
+  | ArweaveUploadError,
   Database | OpenTimestampsService | ArweaveService
 > =>
   Effect.gen(function* () {
@@ -103,6 +131,16 @@ export const processOpenTimestampsUpgradeJob = (
       );
     }
 
+    // Only a proof verified against a Bitcoin block is recorded as anchored;
+    // otherwise keep the pending proof and retry later.
+    if (verification.status !== "verified") {
+      return yield* new OtsVerificationPendingError({
+        postId: job.postId,
+        status: verification.status,
+        reason: verification.reason,
+      });
+    }
+
     const uploaded = yield* arweave.uploadFile({
       file: proof,
       contentType: "application/vnd.opentimestamps.ots",
@@ -113,18 +151,15 @@ export const processOpenTimestampsUpgradeJob = (
       ],
     });
 
-    const verified = verification.status === "verified" ? verification : null;
-
     yield* db
       .update(postOts)
       .set({
         status: "UPGRADED",
         otsTxId: uploaded.id,
         pendingProof: null,
-        bitcoinBlockHeight: verified?.blockHeight ?? null,
-        bitcoinBlockHash: verified?.blockHash ?? null,
-        bitcoinTimestamp:
-          verified === null ? null : new Date(verified.blockTime * 1000),
+        bitcoinBlockHeight: verification.blockHeight,
+        bitcoinBlockHash: verification.blockHash ?? null,
+        bitcoinTimestamp: new Date(verification.blockTime * 1000),
         updatedAt: new Date(),
       })
       .where(eq(postOts.postId, job.postId))
@@ -133,7 +168,7 @@ export const processOpenTimestampsUpgradeJob = (
     yield* Effect.logInfo("OpenTimestamps proof upgraded", {
       postId: job.postId,
       otsTxId: uploaded.id,
-      bitcoinBlockHeight: verified?.blockHeight ?? null,
+      bitcoinBlockHeight: verification.blockHeight,
     });
   });
 

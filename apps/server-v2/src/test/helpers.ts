@@ -11,7 +11,7 @@ import {
   signMessageHashRsv,
 } from "@stacks/transactions";
 import { makeSignature } from "better-auth/crypto";
-import { Effect, Redacted } from "effect";
+import { Duration, Effect, Redacted, Schedule } from "effect";
 import { Cookies, HttpClient, HttpClientRequest } from "effect/http";
 import { createSiwsMessage } from "sign-in-with-stacks";
 import { AppConfig } from "@/config";
@@ -431,4 +431,25 @@ export const createAuthenticatedClient = (options: { userId?: string } = {}) =>
       ),
       userId: user.id,
     };
+  });
+
+/**
+ * Total time a job keeps retrying before its final failure: the sum of its
+ * retry schedule's delays over every attempt, stepped the way
+ * `PersistedQueue` replays the schedule from the attempt count.
+ */
+export const totalRetryWindow = (job: {
+  readonly retrySchedule: Schedule.Schedule<unknown, number>;
+  readonly maxAttempts: number;
+}) =>
+  Effect.gen(function* () {
+    const step = yield* Schedule.toStep(job.retrySchedule);
+    let elapsedMillis = 0;
+
+    for (let attempt = 1; attempt < job.maxAttempts; attempt++) {
+      const [, delay] = yield* step(elapsedMillis, attempt);
+      elapsedMillis += Duration.toMillis(delay);
+    }
+
+    return Duration.millis(elapsedMillis);
   });

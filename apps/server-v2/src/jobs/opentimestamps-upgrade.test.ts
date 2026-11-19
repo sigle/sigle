@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
-import { Effect, Exit, Layer, Option, Schedule } from "effect";
+import { Duration, Effect, Exit, Layer, Option, Schedule } from "effect";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { postOts } from "@/db/schema";
@@ -21,6 +21,7 @@ import {
   createTestPost,
   createTestPostOts,
   createTestUser,
+  totalRetryWindow,
 } from "@/test/helpers";
 import { TestDatabaseLayer } from "@/test/layer";
 import {
@@ -219,49 +220,65 @@ describe("opentimestamps upgrade job", () => {
       ),
   );
 
-  it.effect(
-    "marks the proof UPGRADED with no block info when verification is pending",
-    () => {
-      const uploads: Array<ArweaveUploadOptions> = [];
+  for (const verification of [
+    { status: "pending" as const, reason: "No Bitcoin attestation found" },
+    { status: "network_error" as const, reason: "Esplora is unavailable" },
+  ]) {
+    it.effect(
+      `keeps the proof pending and retries when verification is ${verification.status}`,
+      () => {
+        const uploads: Array<ArweaveUploadOptions> = [];
+        const postId = `post-unverified-${verification.status}`;
 
-      return Effect.gen(function* () {
-        const db = yield* Database;
+        return Effect.gen(function* () {
+          const db = yield* Database;
 
-        yield* seedPostWithPendingProof({ postId: "post-unconfirmed" });
+          yield* seedPostWithPendingProof({ postId });
 
-        yield* processOpenTimestampsUpgradeJob({ postId: "post-unconfirmed" });
+          const exit = yield* Effect.exit(
+            processOpenTimestampsUpgradeJob({ postId }),
+          );
 
-        const [row] = yield* db
-          .select()
-          .from(postOts)
-          .where(eq(postOts.postId, "post-unconfirmed"));
+          const error = Exit.isFailure(exit)
+            ? Option.getOrUndefined(Exit.findErrorOption(exit))
+            : undefined;
 
-        expect({
-          status: row?.status,
-          pendingProof: row?.pendingProof,
-          bitcoinBlockHeight: row?.bitcoinBlockHeight,
-          bitcoinTimestamp: row?.bitcoinTimestamp,
-          uploads: uploads.length,
-        }).toStrictEqual({
-          status: "UPGRADED",
-          pendingProof: null,
-          bitcoinBlockHeight: null,
-          bitcoinTimestamp: null,
-          uploads: 1,
-        });
-      }).pipe(
-        Effect.provide(
-          makeUpgradeTestLayer({
-            uploads,
-            verify: () =>
-              Effect.succeed({
-                status: "pending" as const,
-                reason: "No Bitcoin attestation found",
-              }),
-          }),
-        ),
-      );
-    },
+          const [row] = yield* db
+            .select()
+            .from(postOts)
+            .where(eq(postOts.postId, postId));
+
+          expect({
+            errorTag: error?._tag,
+            status: row?.status,
+            pendingProof: row?.pendingProof,
+            otsTxId: row?.otsTxId,
+            uploads: uploads.length,
+          }).toStrictEqual({
+            errorTag: "OtsVerificationPendingError",
+            status: "PENDING",
+            pendingProof: PENDING_PROOF,
+            otsTxId: null,
+            uploads: 0,
+          });
+        }).pipe(
+          Effect.provide(
+            makeUpgradeTestLayer({
+              uploads,
+              verify: () => Effect.succeed(verification),
+            }),
+          ),
+        );
+      },
+    );
+  }
+
+  it.effect("keeps polling an unanchored proof for weeks", () =>
+    Effect.gen(function* () {
+      const window = yield* totalRetryWindow(opentimestampsUpgradeJob);
+
+      expect(Duration.toDays(window)).toBeGreaterThanOrEqual(14);
+    }),
   );
 
   it.live(
