@@ -81,6 +81,41 @@ describe("users", () => {
   );
 
   it.effect(
+    "GET /api/users/:username reads a non-canonical address spelling",
+    () =>
+      Effect.gen(function* () {
+        const client = yield* HttpClient.HttpClient;
+
+        yield* createTestProfile({
+          address: TEST_ADDRESS,
+          arweaveTxId: "arweave-profile-tx",
+          displayName: "Alice",
+        });
+
+        // `O` decodes to the same address as `0`.
+        const response = yield* getUserRequest(
+          client,
+          TEST_ADDRESS.replaceAll("0", "O"),
+        );
+
+        const body =
+          yield* HttpClientResponse.schemaBodyJson(UserProfileResponse)(
+            response,
+          );
+
+        expect({
+          status: response.status,
+          address: body.address,
+          displayName: body.profile?.displayName,
+        }).toStrictEqual({
+          status: 200,
+          address: TEST_ADDRESS,
+          displayName: "Alice",
+        });
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
     "GET /api/users/:username returns a profile whose signer has no account",
     () =>
       Effect.gen(function* () {
