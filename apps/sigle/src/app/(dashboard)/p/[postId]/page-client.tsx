@@ -48,9 +48,6 @@ export function PostClientPage(props: Props) {
             src={resolveImageUrl(post.coverImage.url)}
             alt="Cover post"
             className="size-full rounded-lg object-cover"
-            // server-v2 already optimizes cover images and serves them from
-            // its CDN, which is not a Next.js image host.
-            unoptimized
             thumbhash={post.coverImage.thumbhash}
             width={post.coverImage.width ?? undefined}
             height={post.coverImage.height ?? undefined}

@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 import { withSentryConfig } from "@sentry/nextjs";
 
+// Public URL of the server-v2 image CDN (`R2_PUBLIC_URL` on the server), which
+// serves uploaded profile and post images.
+if (!process.env.CDN_URL) {
+  throw new Error("CDN_URL is required");
+}
+
+const cdnUrl = new URL(process.env.CDN_URL);
+
 const nextConfig: NextConfig = {
   output: "standalone",
   images: {
@@ -10,6 +18,12 @@ const nextConfig: NextConfig = {
         hostname: "ipfs.filebase.io",
         port: "",
         search: "",
+      },
+      // Profile image URLs carry a `?v=` version, so any query is allowed.
+      {
+        protocol: "https",
+        hostname: cdnUrl.hostname,
+        port: cdnUrl.port,
       },
     ],
   },

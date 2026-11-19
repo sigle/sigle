@@ -34,9 +34,6 @@ export const ProfileAvatar = ({
           src={resolveImageUrl(picture.url)}
           alt={user.address}
           className="size-full object-cover"
-          // server-v2 already optimizes profile images and serves them from its
-          // CDN, which is not a Next.js image host.
-          unoptimized
           thumbhash={picture.thumbhash}
           width={picture.width ?? undefined}
           height={picture.height ?? undefined}

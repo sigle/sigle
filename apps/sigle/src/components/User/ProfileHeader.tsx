@@ -63,9 +63,6 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
             alt="Banner"
             sizes="100vw"
             className="size-full object-cover"
-            // server-v2 already optimizes profile images and serves them from
-            // its CDN, which is not a Next.js image host.
-            unoptimized
             thumbhash={coverPicture.thumbhash}
             width={coverPicture.width ?? undefined}
             height={coverPicture.height ?? undefined}
