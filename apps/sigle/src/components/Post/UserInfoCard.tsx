@@ -13,10 +13,6 @@ interface PostUserInfoCardProps {
 export const PostUserInfoCard = ({ post }: PostUserInfoCardProps) => {
   const { author } = post;
 
-  if (!author) {
-    return null;
-  }
-
   const profileHref = Routes.userProfile({ username: author.address });
 
   return (

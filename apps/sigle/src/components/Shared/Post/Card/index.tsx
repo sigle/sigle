@@ -55,20 +55,15 @@ export const PostCard = ({ post, className }: PostCardProps) => {
           </p>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          {post.author ? (
-            <>
-              By{" "}
-              <NextLink
-                className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
-                href={Routes.userProfile({ username: post.author.address })}
-              >
-                {post.author.profile?.displayName ||
-                  formatReadableAddress(post.author.address)}
-              </NextLink>{" "}
-              •{" "}
-            </>
-          ) : null}
-          {format(new Date(post.createdAt), "MMM dd, yyyy")}
+          By{" "}
+          <NextLink
+            className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
+            href={Routes.userProfile({ username: post.author.address })}
+          >
+            {post.author.profile?.displayName ||
+              formatReadableAddress(post.author.address)}
+          </NextLink>{" "}
+          • {format(new Date(post.createdAt), "MMM dd, yyyy")}
         </p>
       </CardContent>
     </Card>

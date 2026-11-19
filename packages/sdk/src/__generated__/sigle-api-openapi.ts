@@ -362,7 +362,7 @@ export interface components {
       createdAt: string;
       /** Format: date-time */
       updatedAt: string;
-      author: components["schemas"]["UserProfileResponse"] | null;
+      author: components["schemas"]["UserProfileResponse"];
       opentimestamps: components["schemas"]["PostOpenTimestamps"] | null;
     };
     PostOpenTimestamps: {
@@ -418,7 +418,7 @@ export interface components {
       createdAt: string;
       /** Format: date-time */
       updatedAt: string;
-      author: components["schemas"]["UserProfileResponse"] | null;
+      author: components["schemas"]["UserProfileResponse"];
     };
     sigle_api_UnsupportedMediaTypeEncoded: {
       /** @enum {string} */
@@ -752,7 +752,7 @@ export interface operations {
         content: {
           "application/json": {
             id: string;
-            address: string | null;
+            address: string;
             whitelisted: boolean;
           };
         };

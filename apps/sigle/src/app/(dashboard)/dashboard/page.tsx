@@ -30,7 +30,7 @@ export default function Dashboard() {
 
       {!isLoadingMe && me?.whitelisted ? (
         <div className="grid gap-5 md:grid-cols-2">
-          {me.address ? <LatestPost address={me.address} /> : null}
+          <LatestPost address={me.address} />
           <LatestDrafts />
         </div>
       ) : null}

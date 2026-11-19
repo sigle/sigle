@@ -46,7 +46,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
     });
   };
 
-  const isCurrentUser = !!me?.address && me.address === user.address;
+  const isCurrentUser = me?.address === user.address;
   const coverPicture = user.profile?.coverPicture;
 
   return (

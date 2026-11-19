@@ -44,11 +44,11 @@ export default async function Image({
 
   const title = post.title;
 
-  const picture = post.author?.profile?.picture;
+  const picture = post.author.profile?.picture;
   const avatar = picture ? resolveImageUrl(picture.url) : undefined;
 
-  const username = post.author?.profile?.displayName;
-  const handle = post.author?.address;
+  const username = post.author.profile?.displayName;
+  const handle = post.author.address;
 
   return new ImageResponse(
     <div
@@ -86,16 +86,14 @@ export default async function Image({
           ) : null}
           <div tw="flex flex-col ml-3">
             {username ? <div tw="text-xl">{username}</div> : null}
-            {handle ? (
-              <div
-                tw="text-base"
-                style={{
-                  color: "#646464",
-                }}
-              >
-                {`@${handle}`}
-              </div>
-            ) : null}
+            <div
+              tw="text-base"
+              style={{
+                color: "#646464",
+              }}
+            >
+              {`@${handle}`}
+            </div>
           </div>
         </div>
         <div tw="flex flex-col items-center">

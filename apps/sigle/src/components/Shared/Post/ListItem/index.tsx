@@ -36,7 +36,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
 
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
-  const isCurrentUser = !!me?.address && me.address === post.author?.address;
+  const isCurrentUser = me?.address === post.author.address;
 
   return (
     <div className="space-y-3 border-b border-solid border-border py-5 last:border-b-0">
@@ -58,22 +58,17 @@ export const PostListItem = ({ post }: PostListItemProps) => {
             </NextLink>
             <div className="mt-2 flex items-center gap-2">
               <p className="text-xs text-muted-foreground">
-                {post.author ? (
-                  <>
-                    By{" "}
-                    <NextLink
-                      className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
-                      href={Routes.userProfile({
-                        username: post.author.address,
-                      })}
-                    >
-                      {post.author.profile?.displayName ||
-                        formatReadableAddress(post.author.address)}
-                    </NextLink>{" "}
-                    •{" "}
-                  </>
-                ) : null}
-                {format(new Date(post.createdAt), "MMM dd, yyyy")}
+                By{" "}
+                <NextLink
+                  className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
+                  href={Routes.userProfile({
+                    username: post.author.address,
+                  })}
+                >
+                  {post.author.profile?.displayName ||
+                    formatReadableAddress(post.author.address)}
+                </NextLink>{" "}
+                • {format(new Date(post.createdAt), "MMM dd, yyyy")}
               </p>
               <DropdownMenu>
                 <DropdownMenuTrigger

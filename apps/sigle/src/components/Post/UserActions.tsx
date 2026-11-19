@@ -21,30 +21,26 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
   return (
     <>
       <div className="flex items-center justify-between">
-        {author ? (
-          <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
+          <NextLink href={Routes.userProfile({ username: author.address })}>
+            <ProfileAvatar user={author} size="2" />
+          </NextLink>
+          <div className="grid gap-0.5">
             <NextLink href={Routes.userProfile({ username: author.address })}>
-              <ProfileAvatar user={author} size="2" />
+              <p className="text-sm font-medium">
+                {author.profile?.displayName}
+              </p>
             </NextLink>
-            <div className="grid gap-0.5">
-              <NextLink href={Routes.userProfile({ username: author.address })}>
-                <p className="text-sm font-medium">
-                  {author.profile?.displayName}
-                </p>
-              </NextLink>
-              <NextLink href={Routes.userProfile({ username: author.address })}>
-                <p
-                  className="text-xs text-muted-foreground"
-                  title={author.address}
-                >
-                  {formatReadableAddress(author.address)}
-                </p>
-              </NextLink>
-            </div>
+            <NextLink href={Routes.userProfile({ username: author.address })}>
+              <p
+                className="text-xs text-muted-foreground"
+                title={author.address}
+              >
+                {formatReadableAddress(author.address)}
+              </p>
+            </NextLink>
           </div>
-        ) : (
-          <div />
-        )}
+        </div>
         <div className="flex items-center gap-4">
           <Button variant="ghost" onClick={() => setShareDialogOpen(true)}>
             <IconShare size={16} /> Share
