@@ -150,12 +150,12 @@ export const getDraft = (draftId: string) =>
   });
 
 /**
- * Maps the PATCH payload to a Drizzle update set. Drizzle ignores `undefined`
- * values, which is how JSON Merge Patch "omitted" fields are left unchanged.
- * Listing the columns explicitly keeps non-column payload keys out of the
- * update.
+ * Maps the PATCH payload to the draft columns it changes. Drizzle ignores
+ * `undefined` values, which is how JSON Merge Patch "omitted" fields are left
+ * unchanged. Listing the columns explicitly keeps non-column payload keys out
+ * of the update.
  */
-const toUpdateSet = (payload: typeof UpdateDraftPayload.Type) => ({
+const toUpdateFields = (payload: typeof UpdateDraftPayload.Type) => ({
   title: payload.title,
   content: payload.content,
   metaTitle: payload.metaTitle,
@@ -163,7 +163,6 @@ const toUpdateSet = (payload: typeof UpdateDraftPayload.Type) => ({
   coverImage: payload.coverImage,
   tags: payload.tags,
   canonicalUri: payload.canonicalUri,
-  updatedAt: new Date(),
 });
 
 export const updateDraft = (
@@ -174,12 +173,20 @@ export const updateDraft = (
     const user = yield* CurrentUser;
     const db = yield* Database;
 
+    const fields = toUpdateFields(payload);
+
+    // An empty patch changes nothing, so it must not bump `updatedAt` and
+    // reorder the draft list.
+    if (Object.values(fields).every((value) => value === undefined)) {
+      return yield* getDraft(draftId);
+    }
+
     // A publish signs a snapshot of the draft and deletes the draft once the
     // post is stored, so a save accepted while it runs would be lost. The
     // status is checked in the same statement as the write.
     const [updatedDraft] = yield* db
       .update(draft)
-      .set(toUpdateSet(payload))
+      .set({ ...fields, updatedAt: new Date() })
       .where(
         and(
           eq(draft.id, draftId),

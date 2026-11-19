@@ -59,6 +59,68 @@ const Clearable = <S extends Schema.Top>(schema: S) =>
     }),
   );
 
+/**
+ * Draft field limits. The website editor and the signed post metadata already
+ * enforce the same limits for meta fields and tags, so a draft that saves can
+ * also be published.
+ */
+export const DRAFT_LIMITS = {
+  title: 300,
+  // The editor stores HTML; images are embedded by URL, not inline.
+  content: 1_000_000,
+  metaTitle: 100,
+  metaDescription: 250,
+  canonicalUri: 200,
+  coverImage: 2048,
+  tags: 5,
+  tag: 50,
+} as const;
+
+const isHttpUrl = Schema.makeFilter((value: string) => {
+  if (!URL.canParse(value)) {
+    return "Expected an http(s) URL";
+  }
+
+  const { protocol } = new URL(value);
+
+  return protocol === "http:" || protocol === "https:"
+    ? true
+    : "Expected an http(s) URL";
+});
+
+const DraftTitle = Schema.String.check(Schema.isMaxLength(DRAFT_LIMITS.title));
+
+const DraftContent = Schema.String.check(
+  Schema.isMaxLength(DRAFT_LIMITS.content),
+);
+
+const DraftMetaTitle = Schema.String.check(
+  Schema.isMaxLength(DRAFT_LIMITS.metaTitle),
+);
+
+const DraftMetaDescription = Schema.String.check(
+  Schema.isMaxLength(DRAFT_LIMITS.metaDescription),
+);
+
+const DraftCoverImage = Schema.String.check(
+  Schema.isMaxLength(DRAFT_LIMITS.coverImage),
+  isHttpUrl,
+);
+
+const DraftCanonicalUri = Schema.String.check(
+  Schema.isMaxLength(DRAFT_LIMITS.canonicalUri),
+  isHttpUrl,
+);
+
+const DraftTags = Schema.mutable(
+  Schema.Array(
+    Schema.String.check(
+      Schema.isMinLength(1),
+      Schema.isMaxLength(DRAFT_LIMITS.tag),
+    ),
+  ).check(Schema.isMaxLength(DRAFT_LIMITS.tags)),
+);
+
 export const Draft = Schema.Struct({
   id: Schema.String,
   title: Schema.String,
@@ -96,23 +158,24 @@ export const DraftListQuery = Schema.Struct(
 ).annotate({ identifier: "DraftListQuery" });
 
 export const CreateDraftPayload = Schema.Struct({
-  title: Schema.optionalKey(Schema.String),
-  content: Schema.optionalKey(Schema.String),
-  metaTitle: Schema.optionalKey(Schema.NullOr(Schema.String)),
-  metaDescription: Schema.optionalKey(Schema.NullOr(Schema.String)),
-  coverImage: Schema.optionalKey(Schema.NullOr(Schema.String)),
-  tags: Schema.optionalKey(Schema.Array(Schema.String)),
-  canonicalUri: Schema.optionalKey(Schema.NullOr(Schema.String)),
+  title: Schema.optionalKey(DraftTitle),
+  content: Schema.optionalKey(DraftContent),
+  metaTitle: Schema.optionalKey(Schema.NullOr(DraftMetaTitle)),
+  metaDescription: Schema.optionalKey(Schema.NullOr(DraftMetaDescription)),
+  coverImage: Schema.optionalKey(Schema.NullOr(DraftCoverImage)),
+  tags: Schema.optionalKey(DraftTags),
+  canonicalUri: Schema.optionalKey(Schema.NullOr(DraftCanonicalUri)),
 }).annotate({ identifier: "CreateDraftPayload" });
 
 export const UpdateDraftPayload = Schema.Struct({
-  title: Patch(Schema.String),
-  content: Patch(Schema.String),
-  metaTitle: Clearable(Schema.String),
-  metaDescription: Clearable(Schema.String),
-  coverImage: Clearable(Schema.String),
-  tags: Clearable(Schema.mutable(Schema.Array(Schema.String))),
-  canonicalUri: Clearable(Schema.String),
+  title: Patch(DraftTitle),
+  content: Patch(DraftContent),
+  metaTitle: Clearable(DraftMetaTitle),
+  metaDescription: Clearable(DraftMetaDescription),
+  coverImage: Clearable(DraftCoverImage),
+  // Tags are never null in a draft, so they are cleared with `[]`.
+  tags: Patch(DraftTags),
+  canonicalUri: Clearable(DraftCanonicalUri),
 }).annotate({ identifier: "UpdateDraftPayload" });
 
 export const PublishDraftPayload = Schema.Struct({

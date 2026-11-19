@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
-import { Deferred, Effect, Layer, Option, Schema, Stream } from "effect";
+import { Deferred, Effect, Exit, Layer, Option, Schema, Stream } from "effect";
 import {
   Headers,
   HttpClient,
@@ -10,7 +10,9 @@ import {
 import sharp from "sharp";
 import type { PostHogEvent } from "@/services/posthog";
 import {
+  CreateDraftPayload,
   Draft,
+  DRAFT_LIMITS,
   DraftListResponse,
   PublishDraftAccepted,
   PublishDraftStatusResponse,
@@ -201,7 +203,7 @@ describe("drafts", () => {
         content: "World",
         metaTitle: "Meta title",
         metaDescription: "Meta description",
-        coverImage: "cover.png",
+        coverImage: "https://cdn.test/cover.png",
         tags: ["stacks", "writing"],
         canonicalUri: "https://example.com/post",
       });
@@ -214,7 +216,7 @@ describe("drafts", () => {
         content: "World",
         metaTitle: "Meta title",
         metaDescription: "Meta description",
-        coverImage: "cover.png",
+        coverImage: "https://cdn.test/cover.png",
         tags: ["stacks", "writing"],
         canonicalUri: "https://example.com/post",
       });
@@ -435,7 +437,7 @@ describe("drafts", () => {
         content: "Content",
         metaTitle: "Meta title",
         metaDescription: "Meta description",
-        coverImage: "cover.png",
+        coverImage: "https://cdn.test/cover.png",
         canonicalUri: "https://example.com/post",
       });
 
@@ -461,6 +463,44 @@ describe("drafts", () => {
         canonicalUri: null,
       });
     }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
+    "PATCH /api/protected/drafts/:draftId with an empty body changes nothing",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const db = yield* Database;
+        const updatedAt = new Date("2026-01-01T00:00:00.000Z");
+
+        yield* createTestDraft({
+          id: "draft-1",
+          userId,
+          title: "Title",
+          updatedAt,
+        });
+
+        const response = yield* updateDraftRequest(client, "draft-1", {});
+        const missing = yield* updateDraftRequest(client, "missing", {});
+        const body = yield* HttpClientResponse.schemaBodyJson(Draft)(response);
+
+        const [stored] = yield* db
+          .select({ updatedAt: draft.updatedAt })
+          .from(draft)
+          .where(eq(draft.id, "draft-1"));
+
+        expect({
+          status: response.status,
+          title: body.title,
+          storedUpdatedAt: stored?.updatedAt.toISOString(),
+          missingStatus: missing.status,
+        }).toStrictEqual({
+          status: 200,
+          title: "Title",
+          storedUpdatedAt: updatedAt.toISOString(),
+          missingStatus: 404,
+        });
+      }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
   it.effect(
@@ -1116,6 +1156,79 @@ describe("update draft payload", () => {
     expect(() =>
       Schema.decodeUnknownSync(UpdateDraftPayload)({ title: null }),
     ).toThrow("Expected string");
+  });
+});
+
+describe("draft payload limits", () => {
+  const tags = (count: number, length = 3) =>
+    Array.from({ length: count }, (_, index) => `${index}`.padEnd(length, "x"));
+
+  // Each value at its limit is accepted, one past it is rejected.
+  const cases = [
+    {
+      field: "title",
+      valid: "x".repeat(DRAFT_LIMITS.title),
+      invalid: "x".repeat(DRAFT_LIMITS.title + 1),
+    },
+    {
+      field: "metaTitle",
+      valid: "x".repeat(DRAFT_LIMITS.metaTitle),
+      invalid: "x".repeat(DRAFT_LIMITS.metaTitle + 1),
+    },
+    {
+      field: "metaDescription",
+      valid: "x".repeat(DRAFT_LIMITS.metaDescription),
+      invalid: "x".repeat(DRAFT_LIMITS.metaDescription + 1),
+    },
+    {
+      field: "tags",
+      valid: tags(DRAFT_LIMITS.tags),
+      invalid: tags(DRAFT_LIMITS.tags + 1),
+    },
+    {
+      field: "tags",
+      valid: tags(1, DRAFT_LIMITS.tag),
+      invalid: tags(1, DRAFT_LIMITS.tag + 1),
+    },
+    { field: "tags", valid: [], invalid: [""] },
+    { field: "tags", valid: [], invalid: null },
+    {
+      field: "coverImage",
+      valid: "https://cdn.test/cover.webp",
+      invalid: "cover.png",
+    },
+    {
+      field: "coverImage",
+      valid: "http://example.com/a.png",
+      invalid: "data:image/png;base64,AAAA",
+    },
+    {
+      field: "canonicalUri",
+      valid: "https://example.com/post",
+      invalid: "ftp://example.com/post",
+    },
+    {
+      field: "canonicalUri",
+      valid: `https://example.com/${"x".repeat(DRAFT_LIMITS.canonicalUri - 20)}`,
+      invalid: `https://example.com/${"x".repeat(DRAFT_LIMITS.canonicalUri - 19)}`,
+    },
+  ];
+
+  it.each([
+    ["create", CreateDraftPayload],
+    ["update", UpdateDraftPayload],
+  ] as const)("%s payload enforces the field limits", (_name, schema) => {
+    const decode = Schema.decodeUnknownExit(schema);
+
+    expect(
+      cases.map(({ field, valid, invalid }) => ({
+        field,
+        valid: Exit.isSuccess(decode({ [field]: valid })),
+        invalid: Exit.isSuccess(decode({ [field]: invalid })),
+      })),
+    ).toStrictEqual(
+      cases.map(({ field }) => ({ field, valid: true, invalid: false })),
+    );
   });
 });
 
