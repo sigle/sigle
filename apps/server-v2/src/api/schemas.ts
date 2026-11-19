@@ -1,3 +1,4 @@
+import type { OpenApi } from "effect/http-api";
 import { Schema } from "effect";
 
 /**
@@ -119,3 +120,55 @@ export class InternalServerError extends Schema.Error<
     httpApiStatus: 500,
   },
 ) {}
+
+/**
+ * `limit` and `offset` query fields shared by the paginated list endpoints.
+ */
+export const paginationQueryFields = (maxLimit: number) => ({
+  limit: Schema.optionalKey(
+    Schema.Int.pipe(
+      Schema.check(
+        Schema.isGreaterThanOrEqualTo(1),
+        Schema.isLessThanOrEqualTo(maxLimit),
+      ),
+    ),
+  ),
+  offset: Schema.optionalKey(
+    Schema.Int.pipe(Schema.check(Schema.isGreaterThanOrEqualTo(0))),
+  ),
+});
+
+/**
+ * Query values are decoded from their string form, so the generated OpenAPI
+ * documents `limit` and `offset` as strings. Document them as integers instead
+ * so the generated SDK accepts numbers.
+ */
+export const documentPaginationQuery =
+  (maxLimit: number): Parameters<typeof OpenApi.Transform.of>[0] =>
+  (spec) => {
+    // SAFETY: an endpoint `OpenApi.Transform` is applied to the operation
+    // object generated for that endpoint.
+    const operation = spec as OpenApi.OpenAPISpecOperation;
+
+    return {
+      ...operation,
+      parameters: operation.parameters.map((parameter) => {
+        if (parameter.in !== "query") {
+          return parameter;
+        }
+
+        if (parameter.name === "limit") {
+          return {
+            ...parameter,
+            schema: { type: "integer", minimum: 1, maximum: maxLimit },
+          };
+        }
+
+        if (parameter.name === "offset") {
+          return { ...parameter, schema: { type: "integer", minimum: 0 } };
+        }
+
+        return parameter;
+      }),
+    };
+  };
