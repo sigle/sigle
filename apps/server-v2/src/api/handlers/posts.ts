@@ -1,4 +1,8 @@
-import { validateStacksAddress } from "@stacks/transactions";
+import {
+  addressToString,
+  createAddress,
+  validateStacksAddress,
+} from "@stacks/transactions";
 import { count, desc, eq, inArray } from "drizzle-orm";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder } from "effect/http-api";
@@ -25,7 +29,9 @@ export const listPosts = (query: typeof PostListQuery.Type) =>
     const offset = query.offset ?? 0;
 
     // Posts belong to a user, who can have several wallets, so an address
-    // matches every post of the user owning it.
+    // matches every post of the user owning it. Wallet addresses are stored in
+    // their canonical c32 form, which validation does not enforce: decoding
+    // folds confusable characters such as `O` and `0`.
     const where =
       query.username === undefined
         ? undefined
@@ -34,7 +40,12 @@ export const listPosts = (query: typeof PostListQuery.Type) =>
             db
               .select({ userId: walletAddress.userId })
               .from(walletAddress)
-              .where(eq(walletAddress.address, query.username)),
+              .where(
+                eq(
+                  walletAddress.address,
+                  addressToString(createAddress(query.username)),
+                ),
+              ),
           );
 
     const [totals] = yield* db

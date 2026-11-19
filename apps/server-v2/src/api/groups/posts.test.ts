@@ -78,8 +78,10 @@ describe("posts", () => {
       yield* createAuthorPosts(AUTHOR_ADDRESS, ["author old", "author new"]);
       yield* createAuthorPosts(OTHER_ADDRESS, ["other"]);
 
+      // A non-canonical spelling of the author address (`O` for `0`) still
+      // matches the stored wallet.
       const response = yield* client.get(
-        `/api/posts?username=${AUTHOR_ADDRESS}&limit=1`,
+        `/api/posts?username=${AUTHOR_ADDRESS.replaceAll("0", "O")}&limit=1`,
       );
 
       const body =
