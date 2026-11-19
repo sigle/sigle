@@ -191,6 +191,8 @@ export const createTestPost = (options: {
   readonly content?: string;
   readonly excerpt?: string;
   readonly signature?: string | null;
+  readonly coverImage?: string | null;
+  readonly tags?: Array<string> | null;
   readonly createdAt?: Date;
 }) =>
   Effect.gen(function* () {
@@ -211,6 +213,8 @@ export const createTestPost = (options: {
         content: options.content ?? "Test post content",
         excerpt: options.excerpt ?? "Test excerpt",
         signature: options.signature ?? null,
+        coverImage: options.coverImage ?? null,
+        tags: options.tags ?? null,
         createdAt: options.createdAt,
         userId: options.userId,
       })
@@ -225,6 +229,8 @@ export const createTestPostOts = (options: {
   readonly contentHash?: string;
   readonly pendingProof?: Buffer | null;
   readonly otsTxId?: string | null;
+  readonly bitcoinBlockHeight?: number | null;
+  readonly bitcoinTimestamp?: Date | null;
   readonly updatedAt?: Date;
 }) =>
   Effect.gen(function* () {
@@ -238,6 +244,8 @@ export const createTestPostOts = (options: {
         contentHash: options.contentHash ?? "a".repeat(64),
         pendingProof: options.pendingProof ?? null,
         otsTxId: options.otsTxId ?? null,
+        bitcoinBlockHeight: options.bitcoinBlockHeight ?? null,
+        bitcoinTimestamp: options.bitcoinTimestamp ?? null,
         updatedAt: options.updatedAt,
       })
       .returning();

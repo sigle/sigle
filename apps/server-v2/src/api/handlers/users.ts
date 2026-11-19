@@ -14,12 +14,13 @@ const pictureImage = alias(mediaImage, "picture_image");
 
 const coverPictureImage = alias(mediaImage, "cover_picture_image");
 
-export const getUserProfile = (username: string) =>
+/**
+ * Reads the profile published by an address, with the placeholders of its
+ * images, and the ETag of that representation. `undefined` when the address
+ * never published a profile.
+ */
+export const findProfile = (address: string) =>
   Effect.gen(function* () {
-    if (!validateStacksAddress(username)) {
-      return yield* new BadRequest({ message: "Invalid Stacks address" });
-    }
-
     const db = yield* Database;
 
     const [found] = yield* db
@@ -40,9 +41,63 @@ export const getUserProfile = (username: string) =>
         coverPictureImage,
         eq(coverPictureImage.id, profile.coverPicture),
       )
-      .where(eq(profile.address, username))
+      .where(eq(profile.address, address))
       .limit(1)
       .pipe(Effect.orDie);
+
+    if (!found) {
+      return undefined;
+    }
+
+    const foundProfile = found.profile;
+
+    // The thumbnail is filled in asynchronously after the profile metadata is
+    // stored, so its `updatedAt` is part of the ETag to invalidate caches when
+    // the placeholder becomes available.
+    const mediaUpdatedAt = [found.pictureUpdatedAt, found.coverUpdatedAt]
+      .flatMap((date) => (date === null ? [] : [date.getTime()]))
+      .sort((first, second) => first - second)
+      .join(".");
+
+    return {
+      etag: `"${foundProfile.arweaveTxId}${mediaUpdatedAt === "" ? "" : `-${mediaUpdatedAt}`}"`,
+      profile: {
+        displayName: foundProfile.displayName,
+        description: foundProfile.description,
+        website: foundProfile.website,
+        twitter: foundProfile.twitter,
+        picture:
+          foundProfile.picture === null
+            ? null
+            : {
+                url: foundProfile.picture,
+                width: found.pictureWidth,
+                height: found.pictureHeight,
+                thumbhash: found.pictureThumbhash,
+              },
+        coverPicture:
+          foundProfile.coverPicture === null
+            ? null
+            : {
+                url: foundProfile.coverPicture,
+                width: found.coverWidth,
+                height: found.coverHeight,
+                thumbhash: found.coverThumbhash,
+              },
+        arweaveTxId: foundProfile.arweaveTxId,
+        updatedAt: DateTime.fromDateUnsafe(foundProfile.updatedAt),
+      },
+    };
+  });
+
+export const getUserProfile = (username: string) =>
+  Effect.gen(function* () {
+    if (!validateStacksAddress(username)) {
+      return yield* new BadRequest({ message: "Invalid Stacks address" });
+    }
+
+    const db = yield* Database;
+    const found = yield* findProfile(username);
 
     // Profiles are keyed by the signing address, so an address is known when
     // it either published a profile or signed in without publishing one.
@@ -64,51 +119,11 @@ export const getUserProfile = (username: string) =>
       });
     }
 
-    const foundProfile = found.profile;
-
-    // The thumbnail is filled in asynchronously after the profile metadata is
-    // stored, so its `updatedAt` is part of the ETag to invalidate caches when
-    // the placeholder becomes available.
-    const mediaUpdatedAt = [found.pictureUpdatedAt, found.coverUpdatedAt]
-      .flatMap((date) => (date === null ? [] : [date.getTime()]))
-      .sort((first, second) => first - second)
-      .join(".");
-
-    const etag = `"${foundProfile.arweaveTxId}${mediaUpdatedAt === "" ? "" : `-${mediaUpdatedAt}`}"`;
-
     return HttpApiSchema.withHeaders({
-      body: {
-        address: username,
-        profile: {
-          displayName: foundProfile.displayName,
-          description: foundProfile.description,
-          website: foundProfile.website,
-          twitter: foundProfile.twitter,
-          picture:
-            foundProfile.picture === null
-              ? null
-              : {
-                  url: foundProfile.picture,
-                  width: found.pictureWidth,
-                  height: found.pictureHeight,
-                  thumbhash: found.pictureThumbhash,
-                },
-          coverPicture:
-            foundProfile.coverPicture === null
-              ? null
-              : {
-                  url: foundProfile.coverPicture,
-                  width: found.coverWidth,
-                  height: found.coverHeight,
-                  thumbhash: found.coverThumbhash,
-                },
-          arweaveTxId: foundProfile.arweaveTxId,
-          updatedAt: DateTime.fromDateUnsafe(foundProfile.updatedAt),
-        },
-      },
+      body: { address: username, profile: found.profile },
       headers: {
         "cache-control": CACHE_CONTROL,
-        etag,
+        etag: found.etag,
       },
     });
   });
