@@ -238,7 +238,7 @@ export interface paths {
     };
     /**
      * List queue statistics
-     * @description Return pending, active, completed, and failed job counts per queue.
+     * @description Return pending, active, completed, and failed job counts per queue, including registered queues without jobs.
      */
     get: operations["admin.listQueues"];
     put?: never;
@@ -313,11 +313,6 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
-    sigle_api_BadRequestEncoded: {
-      /** @enum {string} */
-      _tag: "BadRequest";
-      message: string;
-    };
     sigle_api_UnauthorizedEncoded: {
       /** @enum {string} */
       _tag: "Unauthorized";
@@ -344,6 +339,18 @@ export interface components {
       _tag: "NotFound";
       message: string;
     };
+    sigle_api_BadRequestEncoded: {
+      /** @enum {string} */
+      _tag: "BadRequest";
+      message: string;
+    };
+    /** @enum {string} */
+    QueueName:
+      | "publish-draft"
+      | "opentimestamps-stamp"
+      | "opentimestamps-upgrade"
+      | "generate-image-thumbhash"
+      | "index-profile";
     RetryFailedJobResponse: {
       success: boolean;
     };
@@ -1887,7 +1894,7 @@ export interface operations {
       };
       header?: never;
       path: {
-        queueName: string;
+        queueName: components["schemas"]["QueueName"];
       };
       cookie?: never;
     };
@@ -1954,7 +1961,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
-        queueName: string;
+        queueName: components["schemas"]["QueueName"];
         id: string;
       };
       cookie?: never;
@@ -2031,7 +2038,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
-        queueName: string;
+        queueName: components["schemas"]["QueueName"];
         id: string;
       };
       cookie?: never;

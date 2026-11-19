@@ -175,7 +175,7 @@ export const makeJobAdmin = Effect.gen(function* () {
         SELECT id, element, attempts, last_failure, updated_at
         FROM effect_queue
         WHERE state = 'failed' AND queue_name = ${options.queueName}
-        ORDER BY updated_at DESC
+        ORDER BY updated_at DESC, id DESC
         LIMIT ${options.limit} OFFSET ${options.offset}
       `;
 

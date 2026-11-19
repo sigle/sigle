@@ -167,8 +167,13 @@ export interface JobRuntime {
   readonly maxAttempts: number;
 }
 
-export interface JobOptions<S extends Schema.Constraint, E, R> {
-  readonly name: string;
+export interface JobOptions<
+  S extends Schema.Constraint,
+  E,
+  R,
+  N extends string = string,
+> {
+  readonly name: N;
   readonly payload: S;
   readonly process: (
     payload: S["Type"],
@@ -202,8 +207,12 @@ export type JobQueue<S extends Schema.Constraint> =
     S["EncodingServices"] | S["DecodingServices"]
   >;
 
-export interface Job<S extends Schema.Constraint, R> {
-  readonly name: string;
+export interface Job<
+  S extends Schema.Constraint,
+  R,
+  N extends string = string,
+> {
+  readonly name: N;
   readonly payload: S;
   readonly tag: Context.Service<JobQueue<S>, JobQueue<S>>;
   readonly maxAttempts: number;
@@ -245,9 +254,14 @@ export interface Job<S extends Schema.Constraint, R> {
  * verified against `payload`, and gets a worker layer, retries with backoff,
  * Sentry reporting, and metrics for free.
  */
-export const defineJob = <S extends Schema.Constraint, E, R>(
-  options: JobOptions<S, E, R>,
-): Job<S, R> => {
+export const defineJob = <
+  S extends Schema.Constraint,
+  E,
+  R,
+  const N extends string = string,
+>(
+  options: JobOptions<S, E, R, N>,
+): Job<S, R, N> => {
   const maxAttempts = options.maxAttempts ?? DEFAULT_MAX_ATTEMPTS;
   const retrySchedule = options.retrySchedule ?? defaultRetrySchedule;
   const concurrency = options.concurrency ?? DEFAULT_CONCURRENCY;

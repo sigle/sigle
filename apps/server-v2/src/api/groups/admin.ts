@@ -9,10 +9,12 @@ import { AdminMiddleware } from "@/api/middleware/admin";
 import { UserAuthMiddleware } from "@/api/middleware/auth-user";
 import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 import {
+  BadRequest,
   documentPaginationQuery,
   NotFound,
   paginationQueryFields,
 } from "@/api/schemas";
+import { queueNames } from "@/jobs";
 
 export const ADMIN_LIST_DEFAULT_LIMIT = 20;
 
@@ -21,6 +23,14 @@ export const ADMIN_LIST_MAX_LIMIT = 100;
 const DateTime = Schema.DateTimeUtcFromString.pipe(
   Schema.annotateEncoded({ format: "date-time" }),
 );
+
+/**
+ * Queue of a registered job. An unknown name is rejected with a 400 instead of
+ * reading an empty queue.
+ */
+export const QueueNameParam = Schema.Literals(queueNames).annotate({
+  identifier: "QueueName",
+});
 
 export const QueueStatsItem = Schema.Struct({
   queueName: Schema.String,
@@ -67,14 +77,15 @@ export const AdminGroup = HttpApiGroup.make("admin")
       .annotate(OpenApi.Summary, "List queue statistics")
       .annotate(
         OpenApi.Description,
-        "Return pending, active, completed, and failed job counts per queue.",
+        "Return pending, active, completed, and failed job counts per queue, including registered queues without jobs.",
       ),
     HttpApiEndpoint.get("listFailedJobs", "/queues/:queueName/failed", {
       params: {
-        queueName: Schema.String,
+        queueName: QueueNameParam,
       },
       query: FailedJobListQuery,
       success: FailedJobListResponse,
+      error: BadRequest,
     })
       .annotate(OpenApi.Summary, "List failed jobs")
       .annotate(
@@ -90,11 +101,11 @@ export const AdminGroup = HttpApiGroup.make("admin")
       "/queues/:queueName/failed/:id/retry",
       {
         params: {
-          queueName: Schema.String,
+          queueName: QueueNameParam,
           id: Schema.String,
         },
         success: RetryFailedJobResponse,
-        error: NotFound,
+        error: [BadRequest, NotFound],
       },
     )
       .annotate(OpenApi.Summary, "Retry a failed job")
@@ -104,11 +115,11 @@ export const AdminGroup = HttpApiGroup.make("admin")
       ),
     HttpApiEndpoint.delete("deleteFailedJob", "/queues/:queueName/failed/:id", {
       params: {
-        queueName: Schema.String,
+        queueName: QueueNameParam,
         id: Schema.String,
       },
       success: HttpApiSchema.NoContent,
-      error: NotFound,
+      error: [BadRequest, NotFound],
     })
       .annotate(OpenApi.Summary, "Delete a failed job")
       .annotate(

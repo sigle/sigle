@@ -6,13 +6,35 @@ import {
   type FailedJobListQuery,
 } from "@/api/groups/admin";
 import { NotFound } from "@/api/schemas";
-import { JobAdminService } from "@/queue/admin";
+import { queueNames } from "@/jobs";
+import { JobAdminService, type QueueStats } from "@/queue/admin";
+
+const emptyQueueStats = (queueName: string): QueueStats => ({
+  queueName,
+  pending: 0,
+  active: 0,
+  completed: 0,
+  failed: 0,
+  oldestPendingAgeMillis: null,
+});
 
 export const listQueues = Effect.gen(function* () {
   const admin = yield* JobAdminService;
+  const stats = yield* admin.getQueueStats;
+
+  // The stats only cover queues with rows, so registered queues without jobs
+  // are added with zero counts. Rows of a queue that is no longer registered
+  // are still listed.
+  const names = [
+    ...new Set([...queueNames, ...stats.map((queue) => queue.queueName)]),
+  ].toSorted();
 
   return {
-    results: yield* admin.getQueueStats,
+    results: names.map(
+      (name) =>
+        stats.find((queue) => queue.queueName === name) ??
+        emptyQueueStats(name),
+    ),
   };
 });
 

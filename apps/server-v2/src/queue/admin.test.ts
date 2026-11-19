@@ -182,4 +182,40 @@ describe("job admin service", () => {
       }).pipe(Effect.provide(layer));
     }),
   );
+
+  it.effect("pages failed jobs with equal timestamps in a stable order", () =>
+    Effect.gen(function* () {
+      const sql = (yield* SqlClient.SqlClient).withoutTransforms();
+      const admin = yield* JobAdminService;
+      const failedAt = "2026-01-01T00:00:00.000Z";
+
+      for (const id of ["job-1", "job-2", "job-3", "job-4", "job-5"]) {
+        yield* sql`
+          INSERT INTO effect_queue
+            (id, queue_name, element, state, attempts, created_at, updated_at, visible_at)
+          VALUES
+            (${id}, 'admin-order', '{}', 'failed', 3, ${failedAt}, ${failedAt}, ${failedAt})
+        `;
+      }
+
+      const pages = yield* Effect.forEach([0, 2, 4], (offset) =>
+        admin.listFailed({ queueName: "admin-order", limit: 2, offset }),
+      );
+
+      expect(
+        pages.map((page) => page.results.map((job) => job.id)),
+      ).toStrictEqual([["job-5", "job-4"], ["job-3", "job-2"], ["job-1"]]);
+    }).pipe(
+      Effect.provide(
+        makeJobTestLayer(
+          defineJob({
+            name: "admin-order",
+            payload: AdminTestPayloadSchema,
+            process: () => Effect.void,
+          }),
+          { enableWorkers: false },
+        ),
+      ),
+    ),
+  );
 });
