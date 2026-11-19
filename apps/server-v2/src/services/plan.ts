@@ -1,3 +1,4 @@
+import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
 import { eq } from "drizzle-orm";
 import { Context, Data, Effect, Layer, Schema } from "effect";
 import {
@@ -12,15 +13,9 @@ import { walletAddress } from "@/db/schema";
 
 export type UserPlan = "free" | "pro";
 
-/** The Explorer Guild collection, only deployed on mainnet. */
-export const TEG_NFT_ASSET_IDENTIFIER =
-  "SP2X0TZ59D5SZ8ACQ6YMCHHNR2ZN51Z32E2CJ173.the-explorer-guild::The-Explorer-Guild";
-
-const STACKS_API_URL = "https://api.hiro.so";
-
 const STACKS_API_TIMEOUT = "10 seconds";
 
-const NftHoldingsResponse = Schema.Struct({ total: Schema.Int });
+const NftBalancesResponse = Schema.Struct({ total: Schema.Int });
 
 export class NftHoldingsError extends Data.TaggedError("NftHoldingsError")<{
   readonly cause: unknown;
@@ -43,7 +38,9 @@ export const makePlanService = Effect.gen(function* () {
   const db = yield* Database;
 
   const stacksApi = (yield* HttpClient.HttpClient).pipe(
-    HttpClient.mapRequest(HttpClientRequest.prependUrl(STACKS_API_URL)),
+    HttpClient.mapRequest(
+      HttpClientRequest.prependUrl(config.STACKS_API_URL.replace(/\/+$/, "")),
+    ),
     HttpClient.filterStatusOk,
   );
 
@@ -55,21 +52,20 @@ export const makePlanService = Effect.gen(function* () {
       }
 
       const { total } = yield* HttpClientRequest.get(
-        "/extended/v1/tokens/nft/holdings",
+        `/extended/v3/principals/${encodeURIComponent(address)}/balances/nft`,
       ).pipe(
         HttpClientRequest.setUrlParams({
-          principal: address,
-          asset_identifiers: TEG_NFT_ASSET_IDENTIFIER,
+          asset_identifier: TEG_NFT_ASSET_IDENTIFIER,
           limit: "1",
         }),
         stacksApi.execute,
-        Effect.flatMap(HttpClientResponse.schemaBodyJson(NftHoldingsResponse)),
+        Effect.flatMap(HttpClientResponse.schemaBodyJson(NftBalancesResponse)),
         Effect.timeout(STACKS_API_TIMEOUT),
         Effect.mapError(
           (cause) =>
             new NftHoldingsError({
               cause,
-              message: `Stacks NFT holdings request failed: ${cause.message}`,
+              message: `Stacks NFT balances request failed: ${cause.message}`,
             }),
         ),
       );

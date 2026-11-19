@@ -1,4 +1,5 @@
 import { describe, expect, it } from "@effect/vitest";
+import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
 import { Effect, Layer } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
 import { AppConfig, type AppConfigValues } from "@/config";
@@ -6,7 +7,6 @@ import {
   makePlanService,
   NftHoldingsError,
   PlanService,
-  TEG_NFT_ASSET_IDENTIFIER,
 } from "@/services/plan";
 import { createTestUser, createTestWalletAddress } from "@/test/helpers";
 import { TestDatabaseLayer } from "@/test/layer";
@@ -17,7 +17,12 @@ const NON_HOLDER = "SP2J6ZY48GV1EZ5V2V5RB9MP66SW86PYKKNRV9EJ7";
 
 const OTHER_NON_HOLDER = "SP2C2YFP12AJZB4MABJBAJ55XECVS7E4PMMZ89YZR";
 
-/** Stacks API answering holdings requests with the totals in `holdings`. */
+const MAINNET_CONFIG: Partial<AppConfigValues> = {
+  STACKS_ENV: "mainnet",
+  STACKS_API_URL: "https://stacks-api.test/",
+};
+
+/** Stacks API answering NFT balance requests with the totals in `holdings`. */
 const makeStacksApiLayer = (
   holdings: Readonly<Record<string, number>>,
   requests: Array<URL> = [],
@@ -28,12 +33,16 @@ const makeStacksApiLayer = (
     HttpClient.make((request, url) =>
       Effect.sync(() => {
         requests.push(url);
-        const principal = url.searchParams.get("principal") ?? "";
+
+        const principal =
+          /^\/extended\/v3\/principals\/([^/]+)\/balances\/nft$/.exec(
+            url.pathname,
+          )?.[1] ?? "";
 
         return HttpClientResponse.fromWeb(
           request,
           Response.json(
-            { limit: 1, offset: 0, total: holdings[principal] ?? 0 },
+            { limit: 1, total: holdings[principal] ?? 0, results: [] },
             { status },
           ),
         );
@@ -63,36 +72,38 @@ const createUserWithWallets = (addresses: ReadonlyArray<string>) =>
   });
 
 describe("plan service", () => {
-  it.effect("checks Explorer Guild holdings on the Hiro mainnet API", () => {
-    const requests: Array<URL> = [];
+  it.effect(
+    "checks Explorer Guild holdings on the configured Stacks API",
+    () => {
+      const requests: Array<URL> = [];
 
-    return Effect.gen(function* () {
-      const plans = yield* PlanService;
+      return Effect.gen(function* () {
+        const plans = yield* PlanService;
 
-      expect({
-        holder: yield* plans.hasTegNft(HOLDER),
-        nonHolder: yield* plans.hasTegNft(NON_HOLDER),
-      }).toStrictEqual({ holder: true, nonHolder: false });
+        expect({
+          holder: yield* plans.hasTegNft(HOLDER),
+          nonHolder: yield* plans.hasTegNft(NON_HOLDER),
+        }).toStrictEqual({ holder: true, nonHolder: false });
 
-      expect(requests[0]?.origin + requests[0]?.pathname).toBe(
-        "https://api.hiro.so/extended/v1/tokens/nft/holdings",
-      );
-      expect(Object.fromEntries(requests[0]?.searchParams ?? [])).toStrictEqual(
-        {
-          principal: HOLDER,
-          asset_identifiers: TEG_NFT_ASSET_IDENTIFIER,
+        expect(requests[0]?.origin + requests[0]?.pathname).toBe(
+          `https://stacks-api.test/extended/v3/principals/${HOLDER}/balances/nft`,
+        );
+        expect(
+          Object.fromEntries(requests[0]?.searchParams ?? []),
+        ).toStrictEqual({
+          asset_identifier: TEG_NFT_ASSET_IDENTIFIER,
           limit: "1",
-        },
-      );
-    }).pipe(
-      Effect.provide(
-        makePlanTestLayer(
-          { STACKS_ENV: "mainnet" },
-          makeStacksApiLayer({ [HOLDER]: 2 }, requests),
+        });
+      }).pipe(
+        Effect.provide(
+          makePlanTestLayer(
+            MAINNET_CONFIG,
+            makeStacksApiLayer({ [HOLDER]: 2 }, requests),
+          ),
         ),
-      ),
-    );
-  });
+      );
+    },
+  );
 
   it.effect("fails with NftHoldingsError when the Stacks API errors", () =>
     Effect.gen(function* () {
@@ -104,7 +115,7 @@ describe("plan service", () => {
     }).pipe(
       Effect.provide(
         makePlanTestLayer(
-          { STACKS_ENV: "mainnet" },
+          MAINNET_CONFIG,
           makeStacksApiLayer({ [HOLDER]: 1 }, [], 429),
         ),
       ),
@@ -130,10 +141,7 @@ describe("plan service", () => {
       });
     }).pipe(
       Effect.provide(
-        makePlanTestLayer(
-          { STACKS_ENV: "mainnet" },
-          makeStacksApiLayer({ [HOLDER]: 1 }),
-        ),
+        makePlanTestLayer(MAINNET_CONFIG, makeStacksApiLayer({ [HOLDER]: 1 })),
       ),
     ),
   );
