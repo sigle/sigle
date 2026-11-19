@@ -30,19 +30,40 @@ const PUBLISH_POLLING_INTERVAL_MILLIS = 2_000;
 const PUBLISH_TIMEOUT_MILLIS = 180_000;
 
 const waitForPublishCompletion = async (draftId: string) => {
-  const startTime = Date.now();
+  const deadline = Date.now() + PUBLISH_TIMEOUT_MILLIS;
 
-  while (Date.now() - startTime < PUBLISH_TIMEOUT_MILLIS) {
-    const response = await sigleApiFetchClient.GET(
-      "/api/protected/drafts/{draftId}/publish",
-      {
+  const timedOut = Result.err({
+    message: "Publishing timed out, please try again",
+  });
+
+  while (Date.now() < deadline) {
+    // A status request that never answers must not outlive the deadline.
+    const signal = AbortSignal.timeout(deadline - Date.now());
+
+    const response = await sigleApiFetchClient
+      .GET("/api/protected/drafts/{draftId}/publish", {
         params: {
           path: {
             draftId,
           },
         },
-      },
-    );
+        signal,
+      })
+      // openapi-fetch throws on network errors and aborts instead of returning
+      // `response.error`.
+      .catch(() =>
+        signal.aborted ? ("timeout" as const) : ("failed" as const),
+      );
+
+    if (response === "timeout") {
+      return timedOut;
+    }
+
+    if (response === "failed") {
+      return Result.err({
+        message: "Failed to check the publishing status, please try again",
+      });
+    }
 
     if (response.error) {
       return Result.err({ message: response.error.message });
@@ -66,7 +87,7 @@ const waitForPublishCompletion = async (draftId: string) => {
     });
   }
 
-  return Result.err({ message: "Publishing timed out, please try again" });
+  return timedOut;
 };
 
 interface PublishDialogProps {
