@@ -15,7 +15,7 @@ import { findProfile } from "@/api/handlers/users";
 import { BadRequest, NotFound } from "@/api/schemas";
 import { Database } from "@/db";
 import { mediaImage, post, postOts, walletAddress } from "@/db/schema";
-import { findPrimaryWalletAddress } from "@/services/users";
+import { findWalletAddresses } from "@/services/users";
 
 export const listPosts = (query: typeof PostListQuery.Type) =>
   Effect.gen(function* () {
@@ -117,7 +117,7 @@ export const getPost = (postId: string) =>
     }
 
     const foundPost = found.post;
-    const authorAddress = yield* findPrimaryWalletAddress(foundPost.userId);
+    const [authorAddress] = yield* findWalletAddresses(foundPost.userId);
 
     const authorProfile = yield* findProfile(authorAddress);
 
