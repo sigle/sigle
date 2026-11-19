@@ -14,7 +14,18 @@ import {
 
 export const OPENTIMESTAMPS_STAMP_QUEUE_NAME = "opentimestamps-stamp";
 
-export const OPENTIMESTAMPS_STAMP_MAX_ATTEMPTS = 3;
+// The calendars answer within seconds when reachable. Back off up to 15
+// minutes between attempts so 30 attempts ride out about 6 hours of calendar
+// outage before the proof is marked FAILED.
+export const OPENTIMESTAMPS_STAMP_MAX_ATTEMPTS = 30;
+
+const stampRetrySchedule: Schedule.Schedule<unknown, number> =
+  Schedule.jittered(
+    Schedule.min([
+      Schedule.exponential("10 seconds"),
+      Schedule.spaced("15 minutes"),
+    ]),
+  );
 
 export const OpenTimestampsStampJobSchema = Schema.Struct({
   postId: Schema.String,
@@ -104,6 +115,7 @@ export const opentimestampsStampJob = defineJob({
   name: OPENTIMESTAMPS_STAMP_QUEUE_NAME,
   payload: OpenTimestampsStampJobSchema,
   maxAttempts: OPENTIMESTAMPS_STAMP_MAX_ATTEMPTS,
+  retrySchedule: stampRetrySchedule,
   concurrency: 2,
   process: (job) => processOpenTimestampsStampJob(job),
   onFinalFailure: (job) => markOpenTimestampsStampFailed(job),

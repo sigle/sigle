@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
-import { Effect, Layer, Schedule } from "effect";
+import { Duration, Effect, Layer, Schedule } from "effect";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { postOts } from "@/db/schema";
@@ -18,9 +18,13 @@ import {
   createTestPost,
   createTestPostOts,
   createTestUser,
+  totalRetryWindow,
 } from "@/test/helpers";
 import { TestDatabaseLayer } from "@/test/layer";
-import { processOpenTimestampsStampJob } from "./opentimestamps-stamp";
+import {
+  opentimestampsStampJob,
+  processOpenTimestampsStampJob,
+} from "./opentimestamps-stamp";
 import { opentimestampsUpgradeJob } from "./opentimestamps-upgrade";
 
 const makeStampTestLayer = (
@@ -170,5 +174,13 @@ describe("opentimestamps stamp job", () => {
 
       expect(yield* admin.getQueueStats).toStrictEqual([]);
     }).pipe(Effect.provide(makeStampTestLayer())),
+  );
+
+  it.effect("keeps retrying a failing stamp for hours, not seconds", () =>
+    Effect.gen(function* () {
+      const window = yield* totalRetryWindow(opentimestampsStampJob);
+
+      expect(Duration.toHours(window)).toBeGreaterThanOrEqual(3);
+    }),
   );
 });
