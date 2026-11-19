@@ -49,8 +49,8 @@ export function PostClientPage(props: Props) {
             alt="Cover post"
             className="size-full rounded-lg object-cover"
             thumbhash={post.coverImage.thumbhash}
-            width={post.coverImage.width ?? undefined}
-            height={post.coverImage.height ?? undefined}
+            width={post.coverImage.width}
+            height={post.coverImage.height}
           />
         </div>
       ) : null}

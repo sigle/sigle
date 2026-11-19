@@ -104,8 +104,8 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                     alt="Cover card"
                     className="size-full rounded-md object-cover"
                     thumbhash={post.coverImage.thumbhash}
-                    width={post.coverImage.width ?? undefined}
-                    height={post.coverImage.height ?? undefined}
+                    width={post.coverImage.width}
+                    height={post.coverImage.height}
                   />
                 </div>
               </div>

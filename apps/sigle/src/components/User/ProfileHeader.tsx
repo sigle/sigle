@@ -64,8 +64,8 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
             sizes="100vw"
             className="size-full object-cover"
             thumbhash={coverPicture.thumbhash}
-            width={coverPicture.width ?? undefined}
-            height={coverPicture.height ?? undefined}
+            width={coverPicture.width}
+            height={coverPicture.height}
           />
         ) : null}
       </div>

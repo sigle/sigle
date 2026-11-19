@@ -35,8 +35,8 @@ export const ProfileAvatar = ({
           alt={user.address}
           className="size-full object-cover"
           thumbhash={picture.thumbhash}
-          width={picture.width ?? undefined}
-          height={picture.height ?? undefined}
+          width={picture.width}
+          height={picture.height}
         />
       ) : (
         // oxlint-disable-next-line no-img-element
