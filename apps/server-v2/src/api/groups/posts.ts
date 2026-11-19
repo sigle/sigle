@@ -24,12 +24,14 @@ export const PostListItem = Schema.Struct({
   excerpt: Schema.String,
   metaTitle: Schema.NullOr(Schema.String),
   metaDescription: Schema.NullOr(Schema.String),
-  coverImage: Schema.NullOr(Schema.String),
+  coverImage: Schema.NullOr(MediaImage),
   tags: Schema.Array(Schema.String),
   canonicalUri: Schema.NullOr(Schema.String),
   arweaveTxId: Schema.String,
   createdAt: DateTime,
   updatedAt: DateTime,
+  // Primary wallet of the user who published the post, with their profile.
+  author: UserProfileResponse,
 }).annotate({ identifier: "PostListItem" });
 
 export const PostOpenTimestamps = Schema.Struct({

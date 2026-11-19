@@ -33,6 +33,8 @@ const AUTHOR_ADDRESS = "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM";
 
 const OTHER_ADDRESS = "ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG";
 
+const NO_PROFILE_ADDRESS = "ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5";
+
 const createAuthorPosts = (address: string, titles: ReadonlyArray<string>) =>
   Effect.gen(function* () {
     const user = yield* createTestUser();
@@ -94,6 +96,104 @@ describe("posts", () => {
         titles: body.results.map((item) => item.title),
         total: body.total,
       }).toStrictEqual({ titles: ["author new"], total: 2 });
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect("GET /api/posts returns each post's author and cover image", () =>
+    Effect.gen(function* () {
+      const client = yield* HttpClient.HttpClient;
+      const coverImage = "https://cdn.test/posts/cover.webp";
+
+      // The author's older wallet is not the primary one and has its own
+      // profile, so the author must be read from the primary wallet.
+      const author = yield* createTestUser();
+      yield* createTestWalletAddress({
+        userId: author.id,
+        address: OTHER_ADDRESS,
+        isPrimary: false,
+      });
+      yield* createTestWalletAddress({
+        userId: author.id,
+        address: AUTHOR_ADDRESS,
+        chainId: 1,
+      });
+      yield* createTestProfile({
+        address: AUTHOR_ADDRESS,
+        displayName: "Author",
+      });
+      yield* createTestProfile({
+        address: OTHER_ADDRESS,
+        displayName: "Other wallet",
+      });
+      yield* createTestMediaImage({
+        id: coverImage,
+        width: 1200,
+        height: 630,
+        thumbhash: "cover-thumbhash",
+      });
+
+      const withoutProfile = yield* createTestUser();
+      yield* createTestWalletAddress({
+        userId: withoutProfile.id,
+        address: NO_PROFILE_ADDRESS,
+      });
+
+      yield* createTestPost({
+        userId: author.id,
+        title: "with cover",
+        coverImage,
+        createdAt: new Date(Date.UTC(2026, 0, 1, 0, 2)),
+      });
+      yield* createTestPost({
+        userId: withoutProfile.id,
+        title: "without profile",
+        createdAt: new Date(Date.UTC(2026, 0, 1, 0, 1)),
+      });
+
+      const response = yield* client.get("/api/posts");
+
+      const body =
+        yield* HttpClientResponse.schemaBodyJson(PostListResponse)(response);
+
+      expect(
+        body.results.map((item) => ({
+          title: item.title,
+          coverImage: item.coverImage,
+          author: {
+            address: item.author.address,
+            displayName: item.author.profile?.displayName ?? null,
+          },
+        })),
+      ).toStrictEqual([
+        {
+          title: "with cover",
+          coverImage: {
+            url: coverImage,
+            width: 1200,
+            height: 630,
+            thumbhash: "cover-thumbhash",
+          },
+          author: { address: AUTHOR_ADDRESS, displayName: "Author" },
+        },
+        {
+          title: "without profile",
+          coverImage: null,
+          author: { address: NO_PROFILE_ADDRESS, displayName: null },
+        },
+      ]);
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect("GET /api/posts fails when an author has no linked wallet", () =>
+    Effect.gen(function* () {
+      const client = yield* HttpClient.HttpClient;
+      yield* createAuthorPosts(AUTHOR_ADDRESS, ["with wallet"]);
+      const withoutWallet = yield* createTestUser();
+      yield* createTestPost({ userId: withoutWallet.id });
+
+      const response = yield* client.get("/api/posts");
+
+      expect(response.status).toBe(500);
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
