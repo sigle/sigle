@@ -11,9 +11,11 @@ import {
   POST_LIST_DEFAULT_LIMIT,
   type PostListQuery,
 } from "@/api/groups/posts";
-import { BadRequest } from "@/api/schemas";
+import { findProfile } from "@/api/handlers/users";
+import { BadRequest, NotFound } from "@/api/schemas";
 import { Database } from "@/db";
-import { post, walletAddress } from "@/db/schema";
+import { mediaImage, post, postOts, walletAddress } from "@/db/schema";
+import { findPrimaryWalletAddress } from "@/services/users";
 
 export const listPosts = (query: typeof PostListQuery.Type) =>
   Effect.gen(function* () {
@@ -88,8 +90,85 @@ export const listPosts = (query: typeof PostListQuery.Type) =>
     };
   });
 
+export const getPost = (postId: string) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+
+    const [found] = yield* db
+      .select({
+        post,
+        coverWidth: mediaImage.width,
+        coverHeight: mediaImage.height,
+        coverThumbhash: mediaImage.thumbhash,
+        otsStatus: postOts.status,
+        otsTxId: postOts.otsTxId,
+        bitcoinBlockHeight: postOts.bitcoinBlockHeight,
+        bitcoinTimestamp: postOts.bitcoinTimestamp,
+      })
+      .from(post)
+      .leftJoin(mediaImage, eq(mediaImage.id, post.coverImage))
+      .leftJoin(postOts, eq(postOts.postId, post.id))
+      .where(eq(post.id, postId))
+      .limit(1)
+      .pipe(Effect.orDie);
+
+    if (!found) {
+      return yield* new NotFound({ message: "Post not found" });
+    }
+
+    const foundPost = found.post;
+    const authorAddress = yield* findPrimaryWalletAddress(foundPost.userId);
+
+    const authorProfile =
+      authorAddress === null ? undefined : yield* findProfile(authorAddress);
+
+    return {
+      id: foundPost.id,
+      title: foundPost.title,
+      content: foundPost.content,
+      excerpt: foundPost.excerpt,
+      metaTitle: foundPost.metaTitle,
+      metaDescription: foundPost.metaDescription,
+      coverImage:
+        foundPost.coverImage === null
+          ? null
+          : {
+              url: foundPost.coverImage,
+              width: found.coverWidth,
+              height: found.coverHeight,
+              thumbhash: found.coverThumbhash,
+            },
+      tags: foundPost.tags ?? [],
+      canonicalUri: foundPost.canonicalUri,
+      metadataUri: foundPost.metadataUri,
+      arweaveTxId: foundPost.arweaveTxId,
+      arweaveBlockHeight: foundPost.arweaveBlockHeight,
+      createdAt: DateTime.fromDateUnsafe(foundPost.createdAt),
+      updatedAt: DateTime.fromDateUnsafe(foundPost.updatedAt),
+      author:
+        authorAddress === null
+          ? null
+          : { address: authorAddress, profile: authorProfile?.profile ?? null },
+      opentimestamps:
+        found.otsStatus === null
+          ? null
+          : {
+              status: found.otsStatus,
+              otsTxId: found.otsTxId,
+              bitcoinBlockHeight: found.bitcoinBlockHeight,
+              bitcoinTimestamp:
+                found.bitcoinTimestamp === null
+                  ? null
+                  : DateTime.fromDateUnsafe(found.bitcoinTimestamp),
+            },
+    };
+  });
+
 export const PostsHandlersLayer = HttpApiBuilder.group(
   SigleApi,
   "posts",
-  (handlers) => handlers.handle("list", ({ query }) => listPosts(query)),
+  (handlers) =>
+    handlers
+      .handle("list", ({ query }) => listPosts(query))
+      .handle("get", ({ params }) => getPost(params.postId)),
 );

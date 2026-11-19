@@ -1,10 +1,29 @@
-import { and, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { Context, Effect, Layer, Option } from "effect";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { walletAddress } from "@/db/schema";
 
 const WHITELISTED_ADDRESSES: ReadonlyArray<string> = [];
+
+/**
+ * Primary Stacks address of a user, falling back to their oldest wallet.
+ * `null` when the user has no linked wallet.
+ */
+export const findPrimaryWalletAddress = (userId: string) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+
+    const [wallet] = yield* db
+      .select({ address: walletAddress.address })
+      .from(walletAddress)
+      .where(eq(walletAddress.userId, userId))
+      .orderBy(desc(walletAddress.isPrimary), asc(walletAddress.createdAt))
+      .limit(1)
+      .pipe(Effect.orDie);
+
+    return wallet?.address ?? null;
+  });
 
 export interface UserWhitelist {
   readonly isUserWhitelisted: (userId: string) => Effect.Effect<boolean>;
