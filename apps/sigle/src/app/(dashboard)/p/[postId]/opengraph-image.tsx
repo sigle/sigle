@@ -13,12 +13,14 @@ export const contentType = "image/png";
 export default async function Image({
   params,
 }: {
-  params: { postId: string };
+  params: Promise<{ postId: string }>;
 }) {
+  const { postId } = await params;
+
   const { data: post } = await sigleApiFetchClient.GET("/api/posts/{postId}", {
     params: {
       path: {
-        postId: params.postId,
+        postId,
       },
     },
   });
@@ -42,12 +44,11 @@ export default async function Image({
 
   const title = post.title;
 
-  const avatar = post.user.profile?.pictureUri
-    ? resolveImageUrl(post.user.profile.pictureUri.id)
-    : undefined;
+  const picture = post.author?.profile?.picture;
+  const avatar = picture ? resolveImageUrl(picture.url) : undefined;
 
-  const username = post.user.profile?.displayName;
-  const handle = post.user.id;
+  const username = post.author?.profile?.displayName;
+  const handle = post.author?.address;
 
   return new ImageResponse(
     <div
@@ -85,14 +86,16 @@ export default async function Image({
           ) : null}
           <div tw="flex flex-col ml-3">
             {username ? <div tw="text-xl">{username}</div> : null}
-            <div
-              tw="text-base"
-              style={{
-                color: "#646464",
-              }}
-            >
-              {`@${handle}`}
-            </div>
+            {handle ? (
+              <div
+                tw="text-base"
+                style={{
+                  color: "#646464",
+                }}
+              >
+                {`@${handle}`}
+              </div>
+            ) : null}
           </div>
         </div>
         <div tw="flex flex-col items-center">

@@ -186,6 +186,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/posts/{postId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get a post
+     * @description Get a published post with its cover image placeholder, its author profile, and its OpenTimestamps proof status.
+     */
+    get: operations["posts.get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/protected/admin/queues": {
     parameters: {
       query?: never;
@@ -325,6 +345,54 @@ export interface components {
       failed: number;
       oldestPendingAgeMillis: number | null;
     };
+    Post: {
+      id: string;
+      title: string;
+      content: string;
+      excerpt: string;
+      metaTitle: string | null;
+      metaDescription: string | null;
+      coverImage: components["schemas"]["MediaImage"] | null;
+      tags: string[];
+      canonicalUri: string | null;
+      metadataUri: string;
+      arweaveTxId: string;
+      arweaveBlockHeight: number | null;
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+      author: components["schemas"]["UserProfileResponse"] | null;
+      opentimestamps: components["schemas"]["PostOpenTimestamps"] | null;
+    };
+    PostOpenTimestamps: {
+      /** @enum {string} */
+      status: "PENDING" | "UPGRADED" | "FAILED";
+      otsTxId: string | null;
+      bitcoinBlockHeight: number | null;
+      bitcoinTimestamp: string | null;
+    };
+    UserProfileResponse: {
+      address: string;
+      profile: components["schemas"]["UserProfile"] | null;
+    };
+    UserProfile: {
+      displayName: string | null;
+      description: string | null;
+      website: string | null;
+      twitter: string | null;
+      picture: components["schemas"]["MediaImage"] | null;
+      coverPicture: components["schemas"]["MediaImage"] | null;
+      arweaveTxId: string;
+      /** Format: date-time */
+      updatedAt: string;
+    };
+    MediaImage: {
+      url: string;
+      width: number | null;
+      height: number | null;
+      thumbhash: string | null;
+    };
     sigle_api_BadRequestEncoded: {
       /** @enum {string} */
       _tag: "BadRequest";
@@ -350,27 +418,6 @@ export interface components {
       createdAt: string;
       /** Format: date-time */
       updatedAt: string;
-    };
-    UserProfileResponse: {
-      address: string;
-      profile: components["schemas"]["UserProfile"] | null;
-    };
-    UserProfile: {
-      displayName: string | null;
-      description: string | null;
-      website: string | null;
-      twitter: string | null;
-      picture: components["schemas"]["MediaImage"] | null;
-      coverPicture: components["schemas"]["MediaImage"] | null;
-      arweaveTxId: string;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    MediaImage: {
-      url: string;
-      width: number | null;
-      height: number | null;
-      thumbhash: string | null;
     };
     sigle_api_UnsupportedMediaTypeEncoded: {
       /** @enum {string} */
@@ -1450,6 +1497,55 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+        };
+      };
+    };
+  };
+  "posts.get": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        postId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Post */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Post"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
         };
       };
       /** @description Too Many Requests */

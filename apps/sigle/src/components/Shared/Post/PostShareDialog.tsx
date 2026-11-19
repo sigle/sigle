@@ -16,7 +16,10 @@ import { Routes } from "@/lib/routes";
 interface PostShareDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"]["results"][number];
+  post: Pick<
+    paths["/api/posts"]["get"]["responses"][200]["content"]["application/json"]["results"][number],
+    "id" | "title" | "metaTitle"
+  >;
 }
 
 export const PostShareDialog = ({
