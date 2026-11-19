@@ -173,11 +173,9 @@ export const uploadImageFromRequest = (
     const stored = yield* storage
       .uploadFile({ body: optimized.buffer, contentType: WEBP, key, version })
       .pipe(
+        // StorageService logs the cause, the client only gets a generic message.
         Effect.mapError(
-          (error) =>
-            new InternalServerError({
-              message: `Failed to upload image, error: ${error.message}`,
-            }),
+          () => new InternalServerError({ message: "Failed to upload image." }),
         ),
       );
 

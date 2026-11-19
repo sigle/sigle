@@ -97,6 +97,14 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
             window: Duration.millis(windowMs),
           })
           .pipe(
+            Effect.tapError((error) =>
+              Predicate.isTagged(error.reason, "RateLimitExceeded")
+                ? Effect.void
+                : Effect.logError("Rate limit store failure", {
+                    cause: error.reason,
+                    policy,
+                  }),
+            ),
             Effect.mapError((error) =>
               Predicate.isTagged(error.reason, "RateLimitExceeded")
                 ? new TooManyRequests({
@@ -107,7 +115,7 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
                     ),
                   })
                 : new InternalServerError({
-                    message: `Rate limit store failure: ${error.reason.message}`,
+                    message: "Rate limit check failed.",
                   }),
             ),
           );

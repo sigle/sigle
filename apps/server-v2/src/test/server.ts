@@ -1,3 +1,4 @@
+import type { RateLimiter } from "effect/persistence";
 import { NodeHttpServer } from "@effect/platform-node";
 import { type Effect, Layer, Schedule } from "effect";
 import { HttpRouter } from "effect/http";
@@ -26,6 +27,7 @@ export interface TestServerOptions {
     options: ArweaveUploadOptions,
   ) => Effect.Effect<ArweaveUploadResult, ArweaveUploadError>;
   readonly pollInterval?: "15 millis" | "50 millis" | "10 seconds";
+  readonly rateLimiter?: Layer.Layer<RateLimiter.RateLimiter>;
 }
 
 export const makeTestServerLayer = (
@@ -46,7 +48,7 @@ export const makeTestServerLayer = (
       }),
     ),
     Layer.provide(AuthLayer),
-    Layer.provide(RateLimiterTest),
+    Layer.provide(options.rateLimiter ?? RateLimiterTest),
     Layer.provideMerge(TestDatabaseLayer),
     Layer.provideMerge(AppConfig.layerTest(overrides)),
     Layer.provide(PostHogService.layerTest(posthogEvents)),
