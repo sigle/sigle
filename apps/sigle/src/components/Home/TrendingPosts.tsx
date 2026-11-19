@@ -11,17 +11,13 @@ import {
 } from "../ui/carousel";
 
 export const HomeTrendingPosts = () => {
-  const { data: posts } = sigleApiClient.useSuspenseQuery(
-    "get",
-    "/api/posts/list",
-    {
-      params: {
-        query: {
-          limit: 20,
-        },
+  const { data: posts } = sigleApiClient.useSuspenseQuery("get", "/api/posts", {
+    params: {
+      query: {
+        limit: 20,
       },
     },
-  );
+  });
 
   return (
     <div className="mx-auto mt-10 max-w-6xl px-4 md:mt-20">

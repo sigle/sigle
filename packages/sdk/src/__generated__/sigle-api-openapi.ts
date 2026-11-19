@@ -410,7 +410,7 @@ export interface components {
       excerpt: string;
       metaTitle: string | null;
       metaDescription: string | null;
-      coverImage: string | null;
+      coverImage: components["schemas"]["MediaImage"] | null;
       tags: string[];
       canonicalUri: string | null;
       arweaveTxId: string;
@@ -418,6 +418,7 @@ export interface components {
       createdAt: string;
       /** Format: date-time */
       updatedAt: string;
+      author: components["schemas"]["UserProfileResponse"] | null;
     };
     sigle_api_UnsupportedMediaTypeEncoded: {
       /** @enum {string} */

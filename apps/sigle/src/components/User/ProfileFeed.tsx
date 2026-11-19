@@ -16,21 +16,24 @@ interface ProfileFeedProps {
 export const ProfileFeed = ({ user }: ProfileFeedProps) => {
   const { data: session } = useSession();
 
-  // TODO useSuspenseQuery or load more button to decide
-  const { data: posts } = sigleApiClient.useSuspenseQuery(
+  const { data: me } = sigleApiClient.useQuery(
     "get",
-    "/api/posts/list",
-    {
-      params: {
-        query: {
-          username: user.id,
-          limit: 25,
-        },
-      },
-    },
+    "/api/protected/me",
+    {},
+    { enabled: !!session },
   );
 
-  if (posts.results.length === 0 && user.id === session?.user.id) {
+  // TODO useSuspenseQuery or load more button to decide
+  const { data: posts } = sigleApiClient.useSuspenseQuery("get", "/api/posts", {
+    params: {
+      query: {
+        username: user.address,
+        limit: 25,
+      },
+    },
+  });
+
+  if (posts.results.length === 0 && user.address === me?.address) {
     return (
       <>
         <div className="my-20 flex flex-col items-center gap-3">

@@ -11,7 +11,7 @@ import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../../NextLink";
 
 interface PostCardProps {
-  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"]["results"][number];
+  post: paths["/api/posts"]["get"]["responses"][200]["content"]["application/json"]["results"][number];
   className?: string;
 }
 
@@ -22,12 +22,15 @@ export const PostCard = ({ post, className }: PostCardProps) => {
       {post.coverImage ? (
         <NextLink href={Routes.post({ postId: post.id })}>
           <BlurImage
-            src={resolveImageUrl(post.coverImage.id)}
+            src={resolveImageUrl(post.coverImage.url)}
             alt="Cover card"
             className="relative aspect-video w-full object-cover"
-            blurhash={post.coverImage.blurhash}
-            width={post.coverImage.width}
-            height={post.coverImage.height}
+            // server-v2 already optimizes cover images and serves them from
+            // its CDN, which is not a Next.js image host.
+            unoptimized
+            thumbhash={post.coverImage.thumbhash}
+            width={post.coverImage.width ?? undefined}
+            height={post.coverImage.height ?? undefined}
           />
         </NextLink>
       ) : (
@@ -52,16 +55,20 @@ export const PostCard = ({ post, className }: PostCardProps) => {
           </p>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          By{" "}
-          <NextLink
-            className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
-            href={Routes.userProfile({ username: post.user.id })}
-          >
-            {post.user.profile?.displayName
-              ? post.user.profile?.displayName
-              : formatReadableAddress(post.user.id)}
-          </NextLink>{" "}
-          • {format(new Date(post.createdAt), "MMM dd, yyyy")}
+          {post.author ? (
+            <>
+              By{" "}
+              <NextLink
+                className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
+                href={Routes.userProfile({ username: post.author.address })}
+              >
+                {post.author.profile?.displayName ||
+                  formatReadableAddress(post.author.address)}
+              </NextLink>{" "}
+              •{" "}
+            </>
+          ) : null}
+          {format(new Date(post.createdAt), "MMM dd, yyyy")}
         </p>
       </CardContent>
     </Card>

@@ -17,7 +17,7 @@ export const ProfileInfo = ({ user }: ProfileInfoProps) => {
         {user.profile?.displayName && (
           <p className="text-lg font-medium">{user.profile.displayName}</p>
         )}
-        <p className="text-sm text-muted-foreground">{user.id}</p>
+        <p className="text-sm text-muted-foreground">{user.address}</p>
       </div>
 
       {user.profile?.description ? (

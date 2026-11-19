@@ -15,19 +15,28 @@ import {
 import { useSession } from "@/lib/auth-hooks";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
+import { sigleApiClient } from "@/lib/sigle";
 import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../../NextLink";
 import { PostShareDialog } from "../PostShareDialog";
 
 interface PostListItemProps {
-  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"]["results"][number];
+  post: paths["/api/posts"]["get"]["responses"][200]["content"]["application/json"]["results"][number];
 }
 
 export const PostListItem = ({ post }: PostListItemProps) => {
   const { data: session } = useSession();
+
+  const { data: me } = sigleApiClient.useQuery(
+    "get",
+    "/api/protected/me",
+    {},
+    { enabled: !!session },
+  );
+
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
-  const isCurrentUser = session?.user.id === post.user.id;
+  const isCurrentUser = !!me?.address && me.address === post.author?.address;
 
   return (
     <div className="space-y-3 border-b border-solid border-border py-5 last:border-b-0">
@@ -49,16 +58,22 @@ export const PostListItem = ({ post }: PostListItemProps) => {
             </NextLink>
             <div className="mt-2 flex items-center gap-2">
               <p className="text-xs text-muted-foreground">
-                By{" "}
-                <NextLink
-                  className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
-                  href={Routes.userProfile({ username: post.user.id })}
-                >
-                  {post.user.profile?.displayName
-                    ? post.user.profile?.displayName
-                    : formatReadableAddress(post.user.id)}
-                </NextLink>{" "}
-                • {format(new Date(post.createdAt), "MMM dd, yyyy")}
+                {post.author ? (
+                  <>
+                    By{" "}
+                    <NextLink
+                      className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
+                      href={Routes.userProfile({
+                        username: post.author.address,
+                      })}
+                    >
+                      {post.author.profile?.displayName ||
+                        formatReadableAddress(post.author.address)}
+                    </NextLink>{" "}
+                    •{" "}
+                  </>
+                ) : null}
+                {format(new Date(post.createdAt), "MMM dd, yyyy")}
               </p>
               <DropdownMenu>
                 <DropdownMenuTrigger
@@ -90,12 +105,15 @@ export const PostListItem = ({ post }: PostListItemProps) => {
               <div className="w-[100px] max-w-full overflow-hidden md:w-[200px]">
                 <div className="aspect-16/10">
                   <BlurImage
-                    src={resolveImageUrl(post.coverImage.id)}
+                    src={resolveImageUrl(post.coverImage.url)}
                     alt="Cover card"
                     className="size-full rounded-md object-cover"
-                    blurhash={post.coverImage.blurhash}
-                    width={post.coverImage.width}
-                    height={post.coverImage.height}
+                    // server-v2 already optimizes cover images and serves
+                    // them from its CDN, which is not a Next.js image host.
+                    unoptimized
+                    thumbhash={post.coverImage.thumbhash}
+                    width={post.coverImage.width ?? undefined}
+                    height={post.coverImage.height ?? undefined}
                   />
                 </div>
               </div>
