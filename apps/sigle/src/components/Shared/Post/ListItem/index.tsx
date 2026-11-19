@@ -15,19 +15,28 @@ import {
 import { useSession } from "@/lib/auth-hooks";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
+import { sigleApiClient } from "@/lib/sigle";
 import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../../NextLink";
 import { PostShareDialog } from "../PostShareDialog";
 
 interface PostListItemProps {
-  post: paths["/api/posts/list"]["get"]["responses"]["200"]["content"]["application/json"]["results"][number];
+  post: paths["/api/posts"]["get"]["responses"][200]["content"]["application/json"]["results"][number];
 }
 
 export const PostListItem = ({ post }: PostListItemProps) => {
   const { data: session } = useSession();
+
+  const { data: me } = sigleApiClient.useQuery(
+    "get",
+    "/api/protected/me",
+    {},
+    { enabled: !!session },
+  );
+
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
-  const isCurrentUser = session?.user.id === post.user.id;
+  const isCurrentUser = me?.address === post.author.address;
 
   return (
     <div className="space-y-3 border-b border-solid border-border py-5 last:border-b-0">
@@ -52,11 +61,12 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                 By{" "}
                 <NextLink
                   className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
-                  href={Routes.userProfile({ username: post.user.id })}
+                  href={Routes.userProfile({
+                    username: post.author.address,
+                  })}
                 >
-                  {post.user.profile?.displayName
-                    ? post.user.profile?.displayName
-                    : formatReadableAddress(post.user.id)}
+                  {post.author.profile?.displayName ||
+                    formatReadableAddress(post.author.address)}
                 </NextLink>{" "}
                 • {format(new Date(post.createdAt), "MMM dd, yyyy")}
               </p>
@@ -90,10 +100,10 @@ export const PostListItem = ({ post }: PostListItemProps) => {
               <div className="w-[100px] max-w-full overflow-hidden md:w-[200px]">
                 <div className="aspect-16/10">
                   <BlurImage
-                    src={resolveImageUrl(post.coverImage.id)}
+                    src={resolveImageUrl(post.coverImage.url)}
                     alt="Cover card"
                     className="size-full rounded-md object-cover"
-                    blurhash={post.coverImage.blurhash}
+                    thumbhash={post.coverImage.thumbhash}
                     width={post.coverImage.width}
                     height={post.coverImage.height}
                   />

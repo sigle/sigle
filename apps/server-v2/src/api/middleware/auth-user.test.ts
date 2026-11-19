@@ -1,15 +1,18 @@
 import { describe, expect, it } from "@effect/vitest";
+import { eq } from "drizzle-orm";
 import { Effect, Schema } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
+import { Database } from "@/db";
+import { walletAddress } from "@/db/schema";
 import {
   createAuthenticatedClient,
   createTestSiwsCredentials,
-  createTestWalletAddress,
 } from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 
 const CurrentUserResponse = Schema.Struct({
   id: Schema.String,
+  address: Schema.String,
   whitelisted: Schema.Boolean,
   plan: Schema.Literals(["free", "pro"]),
 });
@@ -33,7 +36,7 @@ describe("userAuthMiddleware", () => {
 
   it.effect("provides the current user for whitelisted users", () =>
     Effect.gen(function* () {
-      const { client, userId } = yield* createAuthenticatedClient();
+      const { client, userId, address } = yield* createAuthenticatedClient();
 
       const response = yield* client.get("/api/protected/me");
 
@@ -43,15 +46,28 @@ describe("userAuthMiddleware", () => {
       expect(response.status).toBe(200);
       expect(body).toStrictEqual({
         id: userId,
+        address,
         whitelisted: true,
         plan: "free",
       });
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
+  it.effect("rejects users without a linked wallet", () =>
+    Effect.gen(function* () {
+      const db = yield* Database;
+      const { client, userId } = yield* createAuthenticatedClient();
+      yield* db.delete(walletAddress).where(eq(walletAddress.userId, userId));
+
+      const response = yield* client.get("/api/protected/me");
+
+      expect(response.status).toBe(500);
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
   it.effect("reports non-whitelisted users", () =>
     Effect.gen(function* () {
-      const { client, userId } = yield* createAuthenticatedClient();
+      const { client, userId, address } = yield* createAuthenticatedClient();
 
       const response = yield* client.get("/api/protected/me");
 
@@ -61,19 +77,27 @@ describe("userAuthMiddleware", () => {
       expect(response.status).toBe(200);
       expect(body).toStrictEqual({
         id: userId,
+        address,
         whitelisted: false,
         plan: "free",
       });
-    }).pipe(Effect.provide(makeTestServerLayer({ STACKS_ENV: "mainnet" }))),
+    }).pipe(
+      Effect.provide(
+        makeTestServerLayer({
+          STACKS_ENV: "mainnet",
+          // Keeps the mainnet NFT check offline: the failed lookup reports
+          // `free`.
+          STACKS_API_URL: "http://127.0.0.1:9",
+        }),
+      ),
+    ),
   );
 
   it.effect("reports the pro plan for pro wallets", () => {
     const { address } = createTestSiwsCredentials();
 
     return Effect.gen(function* () {
-      const { client, userId } = yield* createAuthenticatedClient();
-
-      yield* createTestWalletAddress({ userId, address });
+      const { client, userId } = yield* createAuthenticatedClient({ address });
 
       const response = yield* client.get("/api/protected/me");
 
@@ -82,6 +106,7 @@ describe("userAuthMiddleware", () => {
 
       expect(body).toStrictEqual({
         id: userId,
+        address,
         whitelisted: true,
         plan: "pro",
       });

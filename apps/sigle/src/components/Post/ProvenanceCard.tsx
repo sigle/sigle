@@ -5,13 +5,12 @@ import {
   IconCircleCheck,
   IconCopy,
   IconDatabase,
+  IconCurrencyBitcoin,
   IconExternalLink,
-  IconHistory,
 } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { env } from "@/env";
-import { getExplorerTransactionUrl } from "@/lib/stacks";
 import { formatNumber } from "@/lib/utils";
 import {
   Accordion,
@@ -22,7 +21,6 @@ import {
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
-import { IconStacksLogo } from "../ui/icons/IconStacksLogo";
 
 interface PostProvenanceCardProps {
   post: paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"];
@@ -80,7 +78,11 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
   const storageLabel = getStorageLabel(storageType);
   const metadataLink = getMetadataLink(post.metadataUri);
   const metadataId = getMetadataId(post.metadataUri);
-  const explorerUrl = getExplorerTransactionUrl(post.txId);
+
+  // A failed timestamp is retried by the server, readers only see a proof
+  // once it is pending or anchored in Bitcoin.
+  const opentimestamps =
+    post.opentimestamps?.status === "FAILED" ? null : post.opentimestamps;
 
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);
@@ -108,19 +110,12 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  {post.revisionsCount && post.revisionsCount > 1 ? (
-                    <Badge variant="outline" className="text-xs font-medium">
-                      Rev #{post.revisionsCount}
-                    </Badge>
-                  ) : null}
-                  <Badge
-                    variant="secondary"
-                    className="text-xs font-medium capitalize"
-                  >
-                    {storageLabel}
-                  </Badge>
-                </div>
+                <Badge
+                  variant="secondary"
+                  className="text-xs font-medium capitalize"
+                >
+                  {storageLabel}
+                </Badge>
               </div>
             </AccordionTrigger>
             <AccordionContent>
@@ -134,7 +129,10 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                   <div className="flex items-center justify-between rounded-lg bg-secondary/50 px-3 py-2.5">
                     <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                       <span className="text-xs text-muted-foreground">
-                        {storageLabel}
+                        {storageLabel} ·{" "}
+                        {post.arweaveBlockHeight === null
+                          ? "Pending confirmation"
+                          : `Block #${formatNumber(post.arweaveBlockHeight)}`}
                       </span>
                       {/* oxlint-disable-next-line better-tailwindcss/enforce-consistent-line-wrapping */}
                       <span className="truncate font-mono text-sm text-foreground">
@@ -174,130 +172,62 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                   </div>
                 </div>
 
-                {post.arweaveL1TxId ? (
+                {/* Bitcoin timestamp */}
+                {opentimestamps ? (
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                      <IconDatabase size={14} />
-                      <span>Arweave L1 Block Proof</span>
+                      <IconCurrencyBitcoin size={14} />
+                      <span>Bitcoin Timestamp</span>
                     </div>
                     <div className="flex items-center justify-between rounded-lg bg-secondary/50 px-3 py-2.5">
                       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
                         <span className="text-xs text-muted-foreground">
-                          L1 Transaction ID
+                          {opentimestamps.bitcoinBlockHeight === null
+                            ? "OpenTimestamps"
+                            : `Block #${formatNumber(opentimestamps.bitcoinBlockHeight)}`}
                         </span>
-                        {/* oxlint-disable-next-line better-tailwindcss/enforce-consistent-line-wrapping */}
-                        <span className="truncate font-mono text-sm text-foreground">
-                          {truncateId(post.arweaveL1TxId, 12, 8)}
-                        </span>
-                      </div>
-                      <div className="ml-3 flex items-center gap-1">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="size-8 p-0 text-muted-foreground hover:text-foreground"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            copyToClipboard(post.arweaveL1TxId!);
-                          }}
-                        >
-                          <IconCopy size={14} />
-                        </Button>
-                        <Button
-                          nativeButton={false}
-                          variant="ghost"
-                          size="sm"
-                          className="size-8 p-0 text-muted-foreground hover:text-foreground"
-                          render={
-                            <a
-                              href={`https://viewblock.io/arweave/tx/${post.arweaveL1TxId}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                            />
-                          }
-                        >
-                          <IconExternalLink size={14} />
-                          <span className="sr-only">
-                            View on Viewblock (Arweave L1)
-                          </span>
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ) : null}
-
-                {/* Stacks Transaction */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                    <IconStacksLogo size={14} height={14} width={14} />
-                    <span>Stacks Transaction</span>
-                  </div>
-                  <div className="flex items-center justify-between rounded-lg bg-secondary/50 px-3 py-2.5">
-                    <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                      <span className="text-xs text-muted-foreground">
-                        Block #{formatNumber(post.blockHeight)}
-                      </span>
-                      {/* oxlint-disable-next-line better-tailwindcss/enforce-consistent-line-wrapping */}
-                      <span className="truncate font-mono text-sm text-foreground">
-                        {truncateId(post.txId, 10, 8)}
-                      </span>
-                    </div>
-                    <div className="ml-3 flex items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="size-8 p-0 text-muted-foreground hover:text-foreground"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          copyToClipboard(post.txId);
-                        }}
-                      >
-                        <IconCopy size={14} />
-                      </Button>
-                      <Button
-                        nativeButton={false}
-                        variant="ghost"
-                        size="sm"
-                        className="size-8 p-0 text-muted-foreground hover:text-foreground"
-                        render={
-                          <a
-                            href={explorerUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        }
-                      >
-                        <IconExternalLink size={14} />
-                        <span className="sr-only">View on {storageLabel}</span>
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                {post.revisionsCount && post.revisionsCount > 1 ? (
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                      <IconHistory size={14} />
-                      <span>Revision History</span>
-                    </div>
-                    <div className="flex items-center justify-between rounded-lg bg-secondary/50 px-3 py-2.5">
-                      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                        <span className="text-xs text-muted-foreground">
-                          Published Revisions
-                        </span>
-                        <span className="font-mono text-sm text-foreground">
-                          {post.revisionsCount} revisions on Arweave
+                        <span className="text-sm text-foreground">
+                          {opentimestamps.bitcoinTimestamp === null
+                            ? "Pending Bitcoin confirmation"
+                            : format(
+                                new Date(opentimestamps.bitcoinTimestamp),
+                                "MMM dd, yyyy HH:mm",
+                              )}
                         </span>
                       </div>
+                      {opentimestamps.otsTxId ? (
+                        <div className="ml-3 flex items-center gap-1">
+                          <Button
+                            nativeButton={false}
+                            variant="ghost"
+                            size="sm"
+                            className="size-8 p-0 text-muted-foreground hover:text-foreground"
+                            render={
+                              <a
+                                href={`${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${opentimestamps.otsTxId}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            }
+                          >
+                            <IconExternalLink size={14} />
+                            <span className="sr-only">
+                              Download the OpenTimestamps proof
+                            </span>
+                          </Button>
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 ) : null}
 
                 <p className="pt-1 text-xs/relaxed text-muted-foreground">
-                  This post&apos;s content is permanently stored on Arweave,
-                  with a reference transaction on the Stacks blockchain that
-                  proves authorship and publication time.
+                  {opentimestamps?.bitcoinTimestamp
+                    ? "This post's content is permanently stored on Arweave and timestamped on the Bitcoin blockchain with OpenTimestamps, proving authorship and publication time."
+                    : opentimestamps
+                      ? "This post's content is permanently stored on Arweave. Its Bitcoin timestamp with OpenTimestamps is waiting for confirmation."
+                      : "This post's content is permanently stored on Arweave."}
                 </p>
               </div>
             </AccordionContent>

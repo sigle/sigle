@@ -11,7 +11,7 @@ import {
   signMessageHashRsv,
 } from "@stacks/transactions";
 import { makeSignature } from "better-auth/crypto";
-import { Effect, Redacted } from "effect";
+import { Duration, Effect, Redacted, Schedule } from "effect";
 import { Cookies, HttpClient, HttpClientRequest } from "effect/http";
 import { createSiwsMessage } from "sign-in-with-stacks";
 import { AppConfig } from "@/config";
@@ -191,6 +191,9 @@ export const createTestPost = (options: {
   readonly content?: string;
   readonly excerpt?: string;
   readonly signature?: string | null;
+  readonly coverImage?: string | null;
+  readonly tags?: Array<string> | null;
+  readonly createdAt?: Date;
 }) =>
   Effect.gen(function* () {
     const db = yield* Database;
@@ -210,6 +213,9 @@ export const createTestPost = (options: {
         content: options.content ?? "Test post content",
         excerpt: options.excerpt ?? "Test excerpt",
         signature: options.signature ?? null,
+        coverImage: options.coverImage ?? null,
+        tags: options.tags ?? null,
+        createdAt: options.createdAt,
         userId: options.userId,
       })
       .returning();
@@ -223,6 +229,8 @@ export const createTestPostOts = (options: {
   readonly contentHash?: string;
   readonly pendingProof?: Buffer | null;
   readonly otsTxId?: string | null;
+  readonly bitcoinBlockHeight?: number | null;
+  readonly bitcoinTimestamp?: Date | null;
   readonly updatedAt?: Date;
 }) =>
   Effect.gen(function* () {
@@ -236,6 +244,8 @@ export const createTestPostOts = (options: {
         contentHash: options.contentHash ?? "a".repeat(64),
         pendingProof: options.pendingProof ?? null,
         otsTxId: options.otsTxId ?? null,
+        bitcoinBlockHeight: options.bitcoinBlockHeight ?? null,
+        bitcoinTimestamp: options.bitcoinTimestamp ?? null,
         updatedAt: options.updatedAt,
       })
       .returning();
@@ -385,13 +395,16 @@ export const createSignedTestPostMetadata = (options: {
 const TEST_SESSION_DURATION_MILLIS = 7 * 24 * 60 * 60 * 1000;
 
 /**
- * Creates a user, a session row and an HTTP client carrying the signed
+ * Creates a user with a primary wallet at `address` (a random testnet address
+ * by default), a session row and an HTTP client carrying the signed
  * `better-auth` session cookie.
  *
  * This skips the SIWS handshake so protected routes can be tested without
  * signing a message, while still exercising the real session middleware.
  */
-export const createAuthenticatedClient = (options: { userId?: string } = {}) =>
+export const createAuthenticatedClient = (
+  options: { userId?: string; address?: string } = {},
+) =>
   Effect.gen(function* () {
     const db = yield* Database;
     const config = yield* AppConfig;
@@ -399,6 +412,9 @@ export const createAuthenticatedClient = (options: { userId?: string } = {}) =>
     const user = yield* createTestUser(
       options.userId === undefined ? {} : { id: options.userId },
     );
+
+    const address = options.address ?? createTestSiwsCredentials().address;
+    yield* createTestWalletAddress({ userId: user.id, address });
 
     const token = crypto.randomUUID();
     const now = new Date();
@@ -430,5 +446,27 @@ export const createAuthenticatedClient = (options: { userId?: string } = {}) =>
         ),
       ),
       userId: user.id,
+      address,
     };
+  });
+
+/**
+ * Total time a job keeps retrying before its final failure: the sum of its
+ * retry schedule's delays over every attempt, stepped the way
+ * `PersistedQueue` replays the schedule from the attempt count.
+ */
+export const totalRetryWindow = (job: {
+  readonly retrySchedule: Schedule.Schedule<unknown, number>;
+  readonly maxAttempts: number;
+}) =>
+  Effect.gen(function* () {
+    const step = yield* Schedule.toStep(job.retrySchedule);
+    let elapsedMillis = 0;
+
+    for (let attempt = 1; attempt < job.maxAttempts; attempt++) {
+      const [, delay] = yield* step(elapsedMillis, attempt);
+      elapsedMillis += Duration.toMillis(delay);
+    }
+
+    return Duration.millis(elapsedMillis);
   });

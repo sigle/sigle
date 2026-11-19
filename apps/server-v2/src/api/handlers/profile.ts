@@ -26,7 +26,6 @@ import {
 } from "@/lib/profile-images";
 import { ArweaveService } from "@/services/arweave";
 import { PostHogService } from "@/services/posthog";
-import { UserWhitelistService } from "@/services/users";
 
 export const uploadProfileMetadata = (
   payload: typeof UploadProfileMetadataPayload.Type,
@@ -37,7 +36,6 @@ export const uploadProfileMetadata = (
     const db = yield* Database;
     const arweave = yield* ArweaveService;
     const posthog = yield* PostHogService;
-    const whitelist = yield* UserWhitelistService;
 
     // Verify that the signature is valid and belongs to a wallet owned by the logged-in user
     const signatureResult = verifyMetadataSignature(payload.metadata, {
@@ -52,12 +50,7 @@ export const uploadProfileMetadata = (
 
     const { recoveredAddress, signature } = signatureResult.value;
 
-    const ownsWallet = yield* whitelist.hasWalletAddress(
-      user.id,
-      recoveredAddress,
-    );
-
-    if (!ownsWallet) {
+    if (!user.walletAddresses.includes(recoveredAddress)) {
       return yield* new BadRequest({
         message:
           "Invalid signature: Signature verification failed or address mismatch",

@@ -476,6 +476,51 @@ describe("drafts", () => {
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
+  it.effect(
+    "PATCH /api/protected/drafts/:draftId rejects updates while publishing",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const db = yield* Database;
+
+        const results = yield* Effect.forEach(
+          ["PENDING", "PROCESSING", "FAILED"],
+          (txStatus) =>
+            Effect.gen(function* () {
+              const draftId = `draft-${txStatus}`;
+              yield* createTestDraft({
+                id: draftId,
+                userId,
+                title: "Before",
+                txStatus,
+              });
+
+              const response = yield* updateDraftRequest(client, draftId, {
+                title: "After",
+              });
+
+              const [stored] = yield* db
+                .select({ title: draft.title })
+                .from(draft)
+                .where(eq(draft.id, draftId));
+
+              return {
+                txStatus,
+                status: response.status,
+                title: stored?.title,
+              };
+            }),
+        );
+
+        // A failed publish leaves the draft editable again.
+        expect(results).toStrictEqual([
+          { txStatus: "PENDING", status: 409, title: "Before" },
+          { txStatus: "PROCESSING", status: 409, title: "Before" },
+          { txStatus: "FAILED", status: 200, title: "After" },
+        ]);
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
   it.effect("DELETE /api/protected/drafts/:draftId deletes a draft", () => {
     const events: Array<PostHogEvent> = [];
 
@@ -1079,17 +1124,8 @@ const QuotaErrorResponse = Schema.Struct({
   retryAfterMillis: Schema.optionalKey(Schema.Finite),
 });
 
-const createProClient = (address = PRO_WALLET_ADDRESSES[0] ?? "") =>
-  Effect.gen(function* () {
-    const authenticated = yield* createAuthenticatedClient();
-
-    yield* createTestWalletAddress({
-      userId: authenticated.userId,
-      address,
-    });
-
-    return authenticated;
-  });
+const createProClient = (address = PRO_WALLET_ADDRESSES[0]) =>
+  createAuthenticatedClient({ address });
 
 const makePngBuffer = (width: number, height: number) =>
   Effect.promise(() =>
@@ -1230,13 +1266,8 @@ describe("draft images", () => {
     const recorder = makeStorageTestRecorder();
 
     return Effect.gen(function* () {
-      // A wallet outside PRO_ADDRESSES, so the user is on the free plan.
+      // A random wallet outside PRO_ADDRESSES, so the user is on the free plan.
       const { client, userId } = yield* createAuthenticatedClient();
-
-      yield* createTestWalletAddress({
-        userId,
-        address: createTestSiwsCredentials().address,
-      });
 
       const created = yield* createTestDraft({ userId });
       const png = yield* makePngBuffer(16, 16);

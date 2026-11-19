@@ -90,7 +90,7 @@ export const useStacksLogin = () => {
   const signMessage = async (user: UserData) => {
     posthog.capture("user_login_sign_message");
 
-    const nonceData = await authClient.siws.nonce({ address: user.stxAddress });
+    const nonceData = await authClient.siws.nonce();
 
     if (!nonceData.data?.nonce) {
       toast.error("Nonce not found");
@@ -125,7 +125,6 @@ export const useStacksLogin = () => {
     }
 
     const signInResult = await authClient.siws.verify({
-      address: user.stxAddress,
       message,
       signature,
     });

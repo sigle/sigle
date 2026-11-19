@@ -29,7 +29,7 @@ export const EditorFormProvider = ({
     mode: "onBlur",
     resolver: zodResolver(editorPostSchema),
     defaultValues: {
-      type: post.type,
+      type: "draft",
       title: post.title,
       content: post.content || "",
       metaTitle: post.metaTitle || undefined,

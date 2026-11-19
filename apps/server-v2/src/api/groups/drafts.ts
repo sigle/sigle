@@ -15,11 +15,14 @@ import {
 } from "@/api/middleware/rate-limit";
 import {
   BadRequest,
+  Conflict,
+  documentPaginationQuery,
   Forbidden,
   imageRequestBody,
   InternalServerError,
   NotFound,
   PayloadTooLarge,
+  paginationQueryFields,
   TooManyRequests,
   UnsupportedMediaType,
 } from "@/api/schemas";
@@ -88,22 +91,9 @@ export const DraftListResponse = Schema.Struct({
   total: Schema.Int,
 }).annotate({ identifier: "DraftListResponse" });
 
-export const DraftListQuery = Schema.Struct({
-  limit: Schema.optionalKey(
-    Schema.FiniteFromString.pipe(
-      Schema.check(
-        Schema.isInt(),
-        Schema.isGreaterThanOrEqualTo(1),
-        Schema.isLessThanOrEqualTo(DRAFT_LIST_MAX_LIMIT),
-      ),
-    ),
-  ),
-  offset: Schema.optionalKey(
-    Schema.FiniteFromString.pipe(
-      Schema.check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(0)),
-    ),
-  ),
-}).annotate({ identifier: "DraftListQuery" });
+export const DraftListQuery = Schema.Struct(
+  paginationQueryFields(DRAFT_LIST_MAX_LIMIT),
+).annotate({ identifier: "DraftListQuery" });
 
 export const CreateDraftPayload = Schema.Struct({
   title: Schema.optionalKey(Schema.String),
@@ -175,6 +165,10 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
     })
       .annotate(OpenApi.Summary, "List drafts")
       .annotate(
+        OpenApi.Transform,
+        documentPaginationQuery(DRAFT_LIST_MAX_LIMIT),
+      )
+      .annotate(
         OpenApi.Description,
         "List the current user drafts, most recently updated first.",
       ),
@@ -191,12 +185,12 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       },
       payload: UpdateDraftPayload,
       success: Draft,
-      error: NotFound,
+      error: [NotFound, Conflict],
     })
       .annotate(OpenApi.Summary, "Update a draft")
       .annotate(
         OpenApi.Description,
-        "Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields.",
+        "Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields. Returns a 409 while the draft is being published.",
       ),
     HttpApiEndpoint.delete("delete", "/:draftId", {
       params: {

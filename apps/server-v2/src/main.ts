@@ -12,6 +12,7 @@ import { AuthRoutesLayer } from "@/api/groups/auth";
 import { AdminHandlersLayer } from "@/api/handlers/admin";
 import { DraftsHandlersLayer } from "@/api/handlers/drafts";
 import { HealthHandlersLayer } from "@/api/handlers/health";
+import { PostsHandlersLayer } from "@/api/handlers/posts";
 import { ProfileHandlersLayer } from "@/api/handlers/profile";
 import { ProtectedHandlersLayer } from "@/api/handlers/protected";
 import { UsersHandlersLayer } from "@/api/handlers/users";
@@ -33,7 +34,6 @@ import { PostHogService } from "@/services/posthog";
 import { RateLimiterLive } from "@/services/rate-limiter";
 import { StorageService } from "@/services/storage";
 import { TelemetryLayer } from "@/services/telemetry";
-import { UserWhitelistService } from "@/services/users";
 
 export const CoreServicesLayer = Layer.mergeAll(
   TelemetryLayer,
@@ -50,6 +50,7 @@ export const ApiHandlersLayer = Layer.mergeAll(
   DraftsHandlersLayer,
   ProfileHandlersLayer,
   UsersHandlersLayer,
+  PostsHandlersLayer,
   AdminHandlersLayer,
 );
 
@@ -60,11 +61,7 @@ export const ApiMiddlewareLayer = Layer.mergeAll(
   AdminMiddlewareLayer,
 );
 
-export const AuthLayer = Layer.mergeAll(
-  AuthService.layer,
-  UserWhitelistService.layer,
-  PlanService.layer,
-);
+export const AuthLayer = Layer.mergeAll(AuthService.layer, PlanService.layer);
 
 export const CorsLayer = Layer.unwrap(
   Effect.map(AppConfig, (config) =>

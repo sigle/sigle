@@ -45,10 +45,10 @@ export function PostClientPage(props: Props) {
       {post.coverImage ? (
         <div className="mx-auto mt-6 max-w-4xl px-4">
           <BlurImage
-            src={resolveImageUrl(post.coverImage.id)}
+            src={resolveImageUrl(post.coverImage.url)}
             alt="Cover post"
             className="size-full rounded-lg object-cover"
-            blurhash={post.coverImage.blurhash}
+            thumbhash={post.coverImage.thumbhash}
             width={post.coverImage.width}
             height={post.coverImage.height}
           />
@@ -66,7 +66,7 @@ export function PostClientPage(props: Props) {
         </Button>
 
         <header className="mb-8 flex flex-col gap-4">
-          {post.tags ? (
+          {post.tags.length > 0 ? (
             <div className="flex flex-wrap items-center gap-2">
               {post.tags.map((tag) => (
                 <Badge key={tag} variant="secondary">

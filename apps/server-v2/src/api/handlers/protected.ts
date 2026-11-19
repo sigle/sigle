@@ -22,7 +22,12 @@ export const getMe = Effect.gen(function* () {
       ),
     );
 
-  return { id: user.id, whitelisted: user.whitelisted, plan };
+  return {
+    id: user.id,
+    address: user.address,
+    whitelisted: user.whitelisted,
+    plan,
+  };
 });
 
 export const ProtectedHandlersLayer = HttpApiBuilder.group(

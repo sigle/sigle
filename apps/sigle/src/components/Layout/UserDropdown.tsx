@@ -28,21 +28,18 @@ export const UserDropdown = () => {
   const { data: session } = useSession();
   const { logout } = useStacksLogin();
 
-  const { data: user } = sigleApiClient.useSuspenseQuery(
+  const { data: me } = sigleApiClient.useQuery("get", "/api/protected/me");
+
+  const { data: user } = sigleApiClient.useQuery(
     "get",
     "/api/users/{username}",
     {
-      params: {
-        path: {
-          username: session?.user.id || "",
-        },
-      },
+      params: { path: { username: me?.address ?? "" } },
+      // The profile response is cacheable for 60s, revalidate so edits show up
+      // right away.
+      cache: "no-cache",
     },
-  );
-
-  const { data: userWhitelist } = sigleApiClient.useQuery(
-    "get",
-    "/api/protected/user/whitelisted",
+    { enabled: !!me?.address },
   );
 
   const onThemeChange = () => {
@@ -63,12 +60,15 @@ export const UserDropdown = () => {
             type="button"
             className="cursor-pointer transition hover:opacity-85"
           >
-            <ProfileAvatar user={user} size="2" />
+            <ProfileAvatar
+              user={user ?? { address: me?.address ?? session.user.id }}
+              size="2"
+            />
           </button>
         }
       />
       <DropdownMenuContent align="end" className="w-40">
-        {userWhitelist?.whitelisted ? (
+        {me?.whitelisted ? (
           <DropdownMenuItem
             render={
               <NextLink href="/p/new">

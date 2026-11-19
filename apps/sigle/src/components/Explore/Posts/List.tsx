@@ -11,7 +11,7 @@ const PAGE_SIZE = 20;
 export const ExplorePostsList = () => {
   const { data: initialPosts } = sigleApiClient.useSuspenseQuery(
     "get",
-    "/api/posts/list",
+    "/api/posts",
     {
       params: {
         query: {
@@ -35,12 +35,11 @@ export const ExplorePostsList = () => {
       setIsLoading(true);
 
       try {
-        const response = await sigleApiFetchClient.GET("/api/posts/list", {
+        const response = await sigleApiFetchClient.GET("/api/posts", {
           params: {
             query: {
               limit: PAGE_SIZE,
               offset: (page - 1) * PAGE_SIZE,
-              page,
             },
           },
         });
