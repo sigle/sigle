@@ -1195,4 +1195,27 @@ describe("editor tiptap - image from url", () => {
       sources: [src],
     });
   });
+
+  it("should round-trip an image url with a backslash before a parenthesis", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+
+    const src = String.raw`https://example.com/photo\).png`;
+    const editor = useEditorStore.getState().editor;
+
+    editor?.commands.insertContent({ type: "image", attrs: { src } });
+
+    const markdown = getMarkdownOutput();
+
+    editor?.commands.setContent(markdown, { contentType: "markdown" });
+
+    expect({ markdown, sources: getImageSources() }).toStrictEqual({
+      markdown: String.raw`![](https://example.com/photo\\\).png)`,
+      sources: [src],
+    });
+  });
 });

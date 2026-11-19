@@ -63,10 +63,11 @@ export const TipTapImage = TipTapImageBase.extend<
     const alt = node.attrs?.alt ?? "";
     const title = node.attrs?.title ?? "";
 
-    // Parentheses are backslash-escaped so an unbalanced `)` does not end the
-    // destination, and whitespace, which is never valid in a URL, is encoded.
+    // Backslashes and parentheses are backslash-escaped so an unbalanced `)`
+    // does not end the destination, and whitespace, which is never valid in a
+    // URL, is encoded.
     const destination = src
-      .replace(/[()]/g, "\\$&")
+      .replace(/[\\()]/g, "\\$&")
       .replace(/\s/g, encodeURIComponent);
 
     return title
