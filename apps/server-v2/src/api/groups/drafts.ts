@@ -197,8 +197,13 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
         draftId: Schema.String,
       },
       success: HttpApiSchema.NoContent,
-      error: NotFound,
-    }).annotate(OpenApi.Summary, "Delete a draft"),
+      error: [NotFound, Conflict],
+    })
+      .annotate(OpenApi.Summary, "Delete a draft")
+      .annotate(
+        OpenApi.Description,
+        "Returns a 409 while the draft is being published.",
+      ),
     HttpApiEndpoint.post("publish", "/:draftId/publish", {
       params: {
         draftId: Schema.String,

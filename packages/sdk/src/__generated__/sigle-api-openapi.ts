@@ -71,7 +71,10 @@ export interface paths {
     get: operations["drafts.get"];
     put?: never;
     post?: never;
-    /** Delete a draft */
+    /**
+     * Delete a draft
+     * @description Returns a 409 while the draft is being published.
+     */
     delete: operations["drafts.delete"];
     options?: never;
     head?: never;
@@ -1050,6 +1053,15 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ConflictEncoded"];
         };
       };
       /** @description Too Many Requests */

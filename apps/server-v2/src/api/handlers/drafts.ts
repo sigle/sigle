@@ -220,14 +220,39 @@ export const deleteDraft = (draftId: string) =>
     const db = yield* Database;
     const posthog = yield* PostHogService;
 
+    // Deleting a draft while it is being published would orphan its Arweave
+    // upload: the job finds no draft to finalize and never stores the post.
     const [deletedDraft] = yield* db
       .delete(draft)
-      .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
+      .where(
+        and(
+          eq(draft.id, draftId),
+          eq(draft.userId, user.id),
+          or(
+            isNull(draft.txStatus),
+            notInArray(draft.txStatus, ["PENDING", "PROCESSING"]),
+          ),
+        ),
+      )
       .returning({ id: draft.id })
       .pipe(Effect.orDie);
 
     if (!deletedDraft) {
-      return yield* new NotFound({ message: "Draft not found" });
+      const [foundDraft] = yield* db
+        .select({ id: draft.id })
+        .from(draft)
+        .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
+        .limit(1)
+        .pipe(Effect.orDie);
+
+      if (!foundDraft) {
+        return yield* new NotFound({ message: "Draft not found" });
+      }
+
+      return yield* new Conflict({
+        message:
+          "This draft is being published, it can be deleted once publishing finishes.",
+      });
     }
 
     yield* posthog.capture({

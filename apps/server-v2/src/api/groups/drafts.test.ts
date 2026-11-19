@@ -557,6 +557,44 @@ describe("drafts", () => {
   });
 
   it.effect(
+    "DELETE /api/protected/drafts/:draftId rejects deletion while publishing",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const db = yield* Database;
+
+        const results = yield* Effect.forEach(
+          ["PENDING", "PROCESSING", "FAILED"],
+          (txStatus) =>
+            Effect.gen(function* () {
+              const draftId = `draft-${txStatus}`;
+              yield* createTestDraft({ id: draftId, userId, txStatus });
+
+              const response = yield* deleteDraftRequest(client, draftId);
+
+              const [stored] = yield* db
+                .select({ id: draft.id })
+                .from(draft)
+                .where(eq(draft.id, draftId));
+
+              return {
+                txStatus,
+                status: response.status,
+                kept: stored !== undefined,
+              };
+            }),
+        );
+
+        // A failed publish leaves the draft deletable again.
+        expect(results).toStrictEqual([
+          { txStatus: "PENDING", status: 409, kept: true },
+          { txStatus: "PROCESSING", status: 409, kept: true },
+          { txStatus: "FAILED", status: 204, kept: false },
+        ]);
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
     "DELETE /api/protected/drafts/:draftId returns 404 when not found",
     () =>
       Effect.gen(function* () {
