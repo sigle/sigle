@@ -16,8 +16,8 @@ import { resolveImageUrl } from "@/lib/images";
 
 const imageUrlSchema = z.object({
   url: z.url({
-    protocol: /^https?$/,
-    message: "Enter a valid image URL starting with http:// or https://",
+    protocol: /^https$/,
+    message: "Enter a valid image URL starting with https://",
   }),
 });
 

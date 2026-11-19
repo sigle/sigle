@@ -1102,7 +1102,7 @@ describe("editor tiptap - image from url", () => {
     });
   });
 
-  it("should reject a url that is not http or https", async () => {
+  it("should reject a url that is not https", async () => {
     const user = userEvent.setup();
     render(
       <EditorFormProvider post={defaultPost}>
@@ -1117,14 +1117,12 @@ describe("editor tiptap - image from url", () => {
       "Paste image URL and press “enter”...",
     );
 
-    await user.type(input, "ftp://example.com/photo.jpg{Enter}");
+    await user.type(input, "http://example.com/photo.jpg{Enter}");
 
     await expect(
-      screen.findByText(
-        "Enter a valid image URL starting with http:// or https://",
-      ),
+      screen.findByText("Enter a valid image URL starting with https://"),
     ).resolves.toBeDefined();
-    expect(getMarkdownOutput()).not.toContain("ftp://");
+    expect(getMarkdownOutput()).not.toContain("http://");
   });
 
   it("should not export an image still waiting for its url", async () => {
