@@ -6,6 +6,7 @@ import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 export const CurrentUserResponse = Schema.Struct({
   id: Schema.String,
   whitelisted: Schema.Boolean,
+  plan: Schema.Literals(["free", "pro"]),
 });
 
 export const ProtectedGroup = HttpApiGroup.make("protected")

@@ -87,6 +87,7 @@ describe("http server", () => {
           "/api/protected/drafts/{draftId}",
           "/api/protected/user/profile/upload-metadata",
           "/api/protected/user/profile/images/{kind}",
+          "/api/protected/drafts/{draftId}/images",
         ]),
         health: expect.arrayContaining(["200", "429"]),
         me: expect.arrayContaining(["200", "401"]),

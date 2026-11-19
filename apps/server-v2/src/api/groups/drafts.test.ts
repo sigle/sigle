@@ -7,6 +7,7 @@ import {
   HttpClientRequest,
   HttpClientResponse,
 } from "effect/http";
+import sharp from "sharp";
 import type { PostHogEvent } from "@/services/posthog";
 import {
   Draft,
@@ -14,9 +15,11 @@ import {
   PublishDraftAccepted,
   PublishDraftStatusResponse,
   UpdateDraftPayload,
+  UploadDraftImageResponse,
 } from "@/api/groups/drafts";
 import { Database } from "@/db";
-import { draft, post, postOts } from "@/db/schema";
+import { draft, mediaImage, post, postOts } from "@/db/schema";
+import { sha256Hex } from "@/lib/hash";
 import {
   ARWEAVE_TEST_UPLOAD,
   ARWEAVE_TEST_UPLOAD_ID,
@@ -24,6 +27,12 @@ import {
   type ArweaveUploadOptions,
   ArweaveUploadError,
 } from "@/services/arweave";
+import {
+  makeStorageTestRecorder,
+  STORAGE_TEST_PUBLIC_URL,
+  StorageService,
+  type StorageTestRecorder,
+} from "@/services/storage";
 import {
   createAuthenticatedClient,
   createSignedTestPostMetadata,
@@ -1022,5 +1031,236 @@ describe("update draft payload", () => {
     expect(() =>
       Schema.decodeUnknownSync(UpdateDraftPayload)({ title: null }),
     ).toThrow("Expected string");
+  });
+});
+
+// On testnet, wallets in PRO_ADDRESSES are on the pro plan.
+const PRO_WALLET_ADDRESS = createTestSiwsCredentials().address;
+
+const draftImageServerLayer = (
+  recorder: StorageTestRecorder,
+  posthogEvents: Array<PostHogEvent> = [],
+) =>
+  makeTestServerLayer({ PRO_ADDRESSES: [PRO_WALLET_ADDRESS] }, posthogEvents, {
+    storage: StorageService.layerTest(recorder),
+  });
+
+const createProClient = () =>
+  Effect.gen(function* () {
+    const authenticated = yield* createAuthenticatedClient();
+
+    yield* createTestWalletAddress({
+      userId: authenticated.userId,
+      address: PRO_WALLET_ADDRESS,
+    });
+
+    return authenticated;
+  });
+
+const makePngBuffer = (width: number, height: number) =>
+  Effect.promise(() =>
+    sharp({
+      create: {
+        width,
+        height,
+        channels: 4,
+        background: { r: 0, g: 128, b: 255, alpha: 1 },
+      },
+    })
+      .png()
+      .toBuffer(),
+  );
+
+const uploadDraftImageRequest = (
+  client: HttpClient.HttpClient,
+  draftId: string,
+  bytes: Uint8Array<ArrayBuffer>,
+) =>
+  client.execute(
+    HttpClientRequest.put(`/api/protected/drafts/${draftId}/images`).pipe(
+      HttpClientRequest.bodyUint8Array(bytes, "image/png"),
+    ),
+  );
+
+describe("draft images", () => {
+  it.effect("PUT /:draftId/images stores a resized webp for pro users", () => {
+    const recorder = makeStorageTestRecorder();
+    const events: Array<PostHogEvent> = [];
+
+    return Effect.gen(function* () {
+      const { client, userId } = yield* createProClient();
+      const created = yield* createTestDraft({ userId });
+      const png = yield* makePngBuffer(2000, 1000);
+
+      const response = yield* uploadDraftImageRequest(
+        client,
+        created.id,
+        new Uint8Array(png),
+      );
+
+      const body = yield* HttpClientResponse.schemaBodyJson(
+        UploadDraftImageResponse,
+      )(response);
+
+      const uploaded = recorder.uploads[0];
+      const uploadedBytes = Buffer.from(uploaded?.body ?? new Uint8Array());
+      const version = sha256Hex(uploadedBytes);
+      const key = `u/${userId}/drafts/${created.id}/${version}.webp`;
+      const url = `${STORAGE_TEST_PUBLIC_URL}/${key}`;
+
+      const metadata = yield* Effect.promise(() =>
+        sharp(uploadedBytes).metadata(),
+      );
+
+      const db = yield* Database;
+
+      const [savedMedia] = yield* db
+        .select()
+        .from(mediaImage)
+        .where(eq(mediaImage.id, url))
+        .limit(1)
+        .pipe(Effect.orDie);
+
+      expect({
+        status: response.status,
+        body,
+        upload: uploaded && {
+          contentType: uploaded.contentType,
+          key: uploaded.key,
+          version: uploaded.version,
+        },
+        format: metadata.format,
+        width: metadata.width,
+        height: metadata.height,
+        media: savedMedia && {
+          status: savedMedia.status,
+          mimeType: savedMedia.mimeType,
+          width: savedMedia.width,
+          height: savedMedia.height,
+          size: savedMedia.size,
+          thumbhash: savedMedia.thumbhash,
+        },
+        events,
+      }).toStrictEqual({
+        status: 200,
+        body: {
+          url,
+          key,
+          width: 1000,
+          height: 500,
+          thumbhash: expect.any(String),
+        },
+        upload: { contentType: "image/webp", key, version },
+        format: "webp",
+        width: 1000,
+        height: 500,
+        media: {
+          status: "READY",
+          mimeType: "image/webp",
+          width: 1000,
+          height: 500,
+          size: uploadedBytes.length,
+          thumbhash: body.thumbhash,
+        },
+        events: [
+          {
+            distinctId: userId,
+            event: "draft media uploaded",
+            properties: {
+              draftId: created.id,
+              key,
+              sizeBytes: uploadedBytes.length,
+              url,
+            },
+          },
+        ],
+      });
+    }).pipe(Effect.provide(draftImageServerLayer(recorder, events)));
+  });
+
+  it.effect("PUT /:draftId/images returns 403 for free users", () => {
+    const recorder = makeStorageTestRecorder();
+
+    return Effect.gen(function* () {
+      // A wallet outside PRO_ADDRESSES, so the user is on the free plan.
+      const { client, userId } = yield* createAuthenticatedClient();
+
+      yield* createTestWalletAddress({
+        userId,
+        address: createTestSiwsCredentials().address,
+      });
+
+      const created = yield* createTestDraft({ userId });
+      const png = yield* makePngBuffer(16, 16);
+
+      const response = yield* uploadDraftImageRequest(
+        client,
+        created.id,
+        new Uint8Array(png),
+      );
+
+      const body =
+        yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
+
+      expect({
+        status: response.status,
+        message: body.message,
+        uploads: recorder.uploads.length,
+      }).toStrictEqual({
+        status: 403,
+        message:
+          "Image uploads are available on the Pro plan. Embed an image from a URL instead.",
+        uploads: 0,
+      });
+    }).pipe(Effect.provide(draftImageServerLayer(recorder)));
+  });
+
+  it.effect("PUT /:draftId/images returns 404 for another user's draft", () => {
+    const recorder = makeStorageTestRecorder();
+
+    return Effect.gen(function* () {
+      const { client } = yield* createProClient();
+      const other = yield* createAuthenticatedClient();
+      const otherDraft = yield* createTestDraft({ userId: other.userId });
+      const png = yield* makePngBuffer(16, 16);
+
+      const responses = yield* Effect.all([
+        uploadDraftImageRequest(client, otherDraft.id, new Uint8Array(png)),
+        uploadDraftImageRequest(client, "missing", new Uint8Array(png)),
+      ]);
+
+      expect({
+        statuses: responses.map((response) => response.status),
+        uploads: recorder.uploads.length,
+      }).toStrictEqual({ statuses: [404, 404], uploads: 0 });
+    }).pipe(Effect.provide(draftImageServerLayer(recorder)));
+  });
+
+  it.effect("PUT /:draftId/images accepts at most 5 MiB", () => {
+    const recorder = makeStorageTestRecorder();
+
+    return Effect.gen(function* () {
+      const { client, userId } = yield* createProClient();
+      const created = yield* createTestDraft({ userId });
+
+      const response = yield* uploadDraftImageRequest(
+        client,
+        created.id,
+        new Uint8Array(5 * 1024 * 1024 + 1),
+      );
+
+      const body =
+        yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
+
+      expect({
+        status: response.status,
+        message: body.message,
+        uploads: recorder.uploads.length,
+      }).toStrictEqual({
+        status: 413,
+        message: "Image is too large, maximum size is 5 MiB.",
+        uploads: 0,
+      });
+    }).pipe(Effect.provide(draftImageServerLayer(recorder)));
   });
 });

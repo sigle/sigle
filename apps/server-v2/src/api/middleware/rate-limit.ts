@@ -12,6 +12,7 @@ export class RateLimitMiddleware extends HttpApiMiddleware.Service<RateLimitMidd
 
 export type RateLimitPolicyName =
   | "default"
+  | "draftImageUpload"
   | "profileImageUpload"
   | "profileMetadataUpload";
 
@@ -29,6 +30,11 @@ export const RATE_LIMITS: Record<RateLimitPolicyName, RateLimitLimit> = {
   // Matches the legacy server limit for profile metadata uploads
   profileMetadataUpload: {
     points: 4,
+    windowMs: 60_000,
+  },
+  // A post can hold several images, so uploads allow bursts of a few at once
+  draftImageUpload: {
+    points: 20,
     windowMs: 60_000,
   },
   // Matches the legacy server limit for profile avatar and cover uploads

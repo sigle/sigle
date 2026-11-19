@@ -7,11 +7,11 @@ import {
 } from "@/api/middleware/rate-limit";
 import {
   BadRequest,
+  imageRequestBody,
   InternalServerError,
   PayloadTooLarge,
   UnsupportedMediaType,
 } from "@/api/schemas";
-import { allowedImageFormats } from "@/lib/images";
 import { ProfileMetadata } from "@/lib/metadata";
 import { profileImageKinds } from "@/lib/profile-images";
 
@@ -36,20 +36,6 @@ export const UploadProfileImageResponse = Schema.Struct({
   // Base64 ThumbHash placeholder for the optimized image.
   thumbhash: Schema.String,
 }).annotate({ identifier: "UploadProfileImageResponse" });
-
-/**
- * The endpoints read the raw request body themselves (see the handlers), so the
- * binary request body is documented manually in the OpenAPI specification.
- */
-const profileImageRequestBody = {
-  required: true,
-  content: Object.fromEntries(
-    allowedImageFormats.map((contentType) => [
-      contentType,
-      { schema: { type: "string", format: "binary" } },
-    ]),
-  ),
-};
 
 export const ProfileGroup = HttpApiGroup.make("profile")
   .add(
@@ -81,7 +67,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
         OpenApi.Description,
         "Upload a profile avatar or cover image as a raw binary body. Re-uploading the same image is a no-op, uploading a different image replaces the previous file.",
       )
-      .annotate(OpenApi.Override, { requestBody: profileImageRequestBody })
+      .annotate(OpenApi.Override, { requestBody: imageRequestBody })
       .annotate(RateLimitPolicy, "profileImageUpload"),
   )
   .prefix("/api/protected/user/profile")

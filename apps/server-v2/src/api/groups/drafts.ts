@@ -9,8 +9,20 @@ import {
   UserAuthMiddleware,
   WhitelistedUserMiddleware,
 } from "@/api/middleware/auth-user";
-import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
-import { BadRequest, NotFound } from "@/api/schemas";
+import {
+  RateLimitMiddleware,
+  RateLimitPolicy,
+} from "@/api/middleware/rate-limit";
+import {
+  BadRequest,
+  Forbidden,
+  imageRequestBody,
+  InternalServerError,
+  NotFound,
+  PayloadTooLarge,
+  UnsupportedMediaType,
+} from "@/api/schemas";
+import { DRAFT_IMAGE_MAX_MIB } from "@/lib/draft-images";
 import { PostMetadata } from "@/lib/metadata";
 
 export const DRAFT_LIST_DEFAULT_LIMIT = 20;
@@ -134,6 +146,15 @@ export const PublishDraftStatusResponse = Schema.Struct({
   arweaveId: Schema.NullOr(Schema.String),
 }).annotate({ identifier: "PublishDraftStatusResponse" });
 
+export const UploadDraftImageResponse = Schema.Struct({
+  url: Schema.String,
+  key: Schema.String,
+  width: Schema.Int,
+  height: Schema.Int,
+  // Base64 ThumbHash placeholder for the optimized image.
+  thumbhash: Schema.String,
+}).annotate({ identifier: "UploadDraftImageResponse" });
+
 export const DraftsGroup = HttpApiGroup.make("drafts")
   .add(
     HttpApiEndpoint.post("create", "/", {
@@ -209,6 +230,27 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
         OpenApi.Description,
         "Poll the asynchronous publishing status of a draft.",
       ),
+    HttpApiEndpoint.put("uploadImage", "/:draftId/images", {
+      params: {
+        draftId: Schema.String,
+      },
+      success: UploadDraftImageResponse,
+      error: [
+        BadRequest,
+        Forbidden,
+        NotFound,
+        PayloadTooLarge,
+        UnsupportedMediaType,
+        InternalServerError,
+      ],
+    })
+      .annotate(OpenApi.Summary, "Upload a draft image")
+      .annotate(
+        OpenApi.Description,
+        `Upload an image to embed in a draft as a raw binary body, up to ${DRAFT_IMAGE_MAX_MIB} MiB. The image is re-encoded as WebP and served from the CDN. Pro plan only, free users get a 403 and can embed external image URLs instead.`,
+      )
+      .annotate(OpenApi.Override, { requestBody: imageRequestBody })
+      .annotate(RateLimitPolicy, "draftImageUpload"),
   )
   .prefix("/api/protected/drafts")
   .middleware(RateLimitMiddleware)
