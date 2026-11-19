@@ -22,6 +22,7 @@ import {
   WhitelistedUserMiddlewareLayer,
 } from "@/api/middleware/auth-user";
 import { RateLimitMiddlewareLayer } from "@/api/middleware/rate-limit";
+import { SchemaErrorMiddlewareLayer } from "@/api/middleware/schema-error";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { JobsLive } from "@/jobs";
@@ -59,6 +60,7 @@ export const ApiMiddlewareLayer = Layer.mergeAll(
   UserAuthMiddlewareLayer,
   WhitelistedUserMiddlewareLayer,
   AdminMiddlewareLayer,
+  SchemaErrorMiddlewareLayer,
 );
 
 export const AuthLayer = Layer.mergeAll(AuthService.layer, PlanService.layer);
