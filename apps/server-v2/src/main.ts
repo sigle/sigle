@@ -28,6 +28,7 @@ import { ArweaveService } from "@/services/arweave";
 import { AuthService } from "@/services/auth";
 import { ImageProcessingService } from "@/services/image-processing";
 import { OpenTimestampsService } from "@/services/opentimestamps";
+import { PlanService } from "@/services/plan";
 import { PostHogService } from "@/services/posthog";
 import { RateLimiterLive } from "@/services/rate-limiter";
 import { StorageService } from "@/services/storage";
@@ -62,6 +63,7 @@ export const ApiMiddlewareLayer = Layer.mergeAll(
 export const AuthLayer = Layer.mergeAll(
   AuthService.layer,
   UserWhitelistService.layer,
+  PlanService.layer,
 );
 
 export const CorsLayer = Layer.unwrap(

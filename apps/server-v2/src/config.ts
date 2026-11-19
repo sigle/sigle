@@ -28,12 +28,25 @@ const CommaSeparatedList = (
     ),
   );
 
+const StacksEnv = Config.Literals(["mainnet", "testnet"], "STACKS_ENV");
+
+const HIRO_API_URLS = {
+  mainnet: "https://api.hiro.so",
+  testnet: "https://api.testnet.hiro.so",
+} as const;
+
 export const appConfig = Config.all({
   NODE_ENV: Config.Literals(
     ["production", "development", "test"],
     "NODE_ENV",
   ).pipe(Config.withDefault("development" as const)),
-  STACKS_ENV: Config.Literals(["mainnet", "testnet"], "STACKS_ENV"),
+  STACKS_ENV: StacksEnv,
+  // The Stacks Blockchain API, defaults to Hiro for the STACKS_ENV network
+  STACKS_API_URL: Config.NonEmptyString("STACKS_API_URL").pipe(
+    Config.orElse(() =>
+      StacksEnv.pipe(Config.map((network) => HIRO_API_URLS[network])),
+    ),
+  ),
   SIGLE_ENV: Config.Literals(["production", "staging", "local"], "SIGLE_ENV"),
   PORT: Config.Port("PORT").pipe(Config.withDefault(3001)),
   AUTH_SECRET: Config.NonEmptyString("AUTH_SECRET").pipe(
@@ -75,6 +88,9 @@ export const appConfig = Config.all({
   POSTHOG_API_HOST: OptionalNonEmptyString("POSTHOG_API_HOST"),
   // Wallet addresses allowed to access the admin jobs API
   ADMIN_ADDRESSES: CommaSeparatedList("ADMIN_ADDRESSES"),
+  // Wallet addresses on the pro plan on testnet, where the Explorer Guild NFT
+  // is not deployed. Ignored on mainnet
+  PRO_ADDRESSES: CommaSeparatedList("PRO_ADDRESSES"),
 });
 
 export type AppConfigValues = Config.Success<typeof appConfig>;
@@ -82,6 +98,7 @@ export type AppConfigValues = Config.Success<typeof appConfig>;
 export const defaultTestConfig: AppConfigValues = {
   NODE_ENV: "test",
   STACKS_ENV: "testnet",
+  STACKS_API_URL: "https://api.testnet.hiro.so",
   SIGLE_ENV: "local",
   PORT: 3001,
   AUTH_SECRET: Redacted.make("sigle-test-auth-secret-change-me"),
@@ -102,6 +119,7 @@ export const defaultTestConfig: AppConfigValues = {
   POSTHOG_API_KEY: Option.none(),
   POSTHOG_API_HOST: Option.none(),
   ADMIN_ADDRESSES: [],
+  PRO_ADDRESSES: [],
 };
 
 export class AppConfig extends Context.Service<AppConfig, AppConfigValues>()(
