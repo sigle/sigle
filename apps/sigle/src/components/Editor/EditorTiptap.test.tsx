@@ -1,4 +1,5 @@
-import { render, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, beforeEach, vi } from "vite-plus/test";
 import { EditorFormProvider } from "./EditorFormProvider";
 import { EditorTipTap } from "./EditorTiptap";
@@ -1069,5 +1070,73 @@ describe("editor tiptap - form integration", () => {
     expect(editor).toBeDefined();
     editor?.commands.setContent("Test content", { contentType: "markdown" });
     expect(getMarkdownOutput()).toBe("Test content");
+  });
+});
+
+describe("editor tiptap - image from url", () => {
+  beforeEach(() => {
+    useEditorStore.setState({ editor: undefined });
+  });
+
+  it("should embed an image from a pasted url", async () => {
+    const user = userEvent.setup();
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+
+    useEditorStore.getState().editor?.commands.insertImageUrlInput();
+
+    const input = await screen.findByPlaceholderText(
+      "Paste image URL and press “enter”...",
+    );
+
+    await user.type(input, "https://example.com/photo.jpg{Enter}");
+
+    await waitFor(() => {
+      expect(getMarkdownOutput()).toContain(
+        "![](https://example.com/photo.jpg)",
+      );
+    });
+  });
+
+  it("should reject a url that is not http or https", async () => {
+    const user = userEvent.setup();
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+
+    useEditorStore.getState().editor?.commands.insertImageUrlInput();
+
+    const input = await screen.findByPlaceholderText(
+      "Paste image URL and press “enter”...",
+    );
+
+    await user.type(input, "ftp://example.com/photo.jpg{Enter}");
+
+    await expect(
+      screen.findByText(
+        "Enter a valid image URL starting with http:// or https://",
+      ),
+    ).resolves.toBeDefined();
+    expect(getMarkdownOutput()).not.toContain("ftp://");
+  });
+
+  it("should not export an image still waiting for its url", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+
+    useEditorStore.getState().editor?.commands.insertImageUrlInput();
+
+    expect(getMarkdownOutput()).not.toContain("![");
   });
 });

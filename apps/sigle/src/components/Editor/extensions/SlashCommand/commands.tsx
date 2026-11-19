@@ -115,6 +115,23 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
+    icon: ImageLight,
+    title: "Image from URL",
+    description: "Embed an image from a link",
+    section: "basic",
+    keywords: ["image", "url", "link"],
+    command: ({ editor, range }) => {
+      let chainCommands = editor.chain().focus();
+
+      if (range) {
+        // Use deleteRange to clear the text from command chars "/im" etc..
+        chainCommands = chainCommands.deleteRange(range);
+      }
+
+      chainCommands.insertImageUrlInput().run();
+    },
+  },
+  {
     icon: BulletedListLight,
     title: "Bulleted list",
     description: "Create a bulleted list",

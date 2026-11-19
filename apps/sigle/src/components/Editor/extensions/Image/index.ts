@@ -16,6 +16,11 @@ declare module "@tiptap/core" {
       }) => ReturnType;
 
       setImageFromFile: (options: { file: File }) => ReturnType;
+
+      /**
+       * Insert an image placeholder asking for the URL of an external image.
+       */
+      insertImageUrlInput: () => ReturnType;
     };
   }
 }
@@ -47,8 +52,26 @@ export const TipTapImage = TipTapImageBase.extend<
     return ReactNodeViewRenderer(ImageComponent);
   },
 
+  // Same as the base extension, except an image still waiting for its URL is
+  // not part of the post content.
+  renderMarkdown(node) {
+    const src = node.attrs?.src ?? "";
+
+    if (!src) return "";
+
+    const alt = node.attrs?.alt ?? "";
+    const title = node.attrs?.title ?? "";
+
+    return title ? `![${alt}](${src} "${title}")` : `![${alt}](${src})`;
+  },
+
   addCommands() {
     return {
+      insertImageUrlInput:
+        () =>
+        ({ commands }) =>
+          commands.insertContent({ type: this.name }),
+
       setImageFromFile:
         ({ file }) =>
         ({ chain, editor }) => {
