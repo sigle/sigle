@@ -1,3 +1,5 @@
+import type { PgQueryResultHKT } from "drizzle-orm/pg-core";
+import type { PgEffectDatabase } from "drizzle-orm/pg-core/effect";
 import type { SqlClient } from "effect/sql";
 import { PgClient } from "@effect/sql-pg";
 import { PgliteClient } from "@effect/sql-pglite";
@@ -22,7 +24,16 @@ import { AppConfig, type AppConfigValues } from "@/config";
 import { relations } from "@/db/relations";
 import * as schema from "@/db/schema";
 
-export type DatabaseClient = PgDrizzle.EffectPgDatabase<typeof relations>;
+/**
+ * Effect Drizzle database, on Postgres or PGlite. The two drivers only differ
+ * in the shape of raw `execute` results, which the app does not read, so the
+ * query result is left generic.
+ */
+export type DatabaseClient = PgEffectDatabase<
+  PgDrizzle.EffectPgQueryEffectHKT,
+  PgQueryResultHKT,
+  typeof relations
+>;
 
 /**
  * Promise-based Drizzle database used by better-auth through
