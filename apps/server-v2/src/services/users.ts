@@ -8,7 +8,7 @@ const WHITELISTED_ADDRESSES: ReadonlyArray<string> = [];
 
 /**
  * Primary Stacks address of a user, falling back to their oldest wallet.
- * `null` when the user has no linked wallet.
+ * Users sign in with a wallet, so a user without one is a defect.
  */
 export const findPrimaryWalletAddress = (userId: string) =>
   Effect.gen(function* () {
@@ -22,12 +22,19 @@ export const findPrimaryWalletAddress = (userId: string) =>
       .limit(1)
       .pipe(Effect.orDie);
 
-    return wallet?.address ?? null;
+    if (!wallet) {
+      return yield* Effect.die(
+        new Error(`User ${userId} has no linked wallet address`),
+      );
+    }
+
+    return wallet.address;
   });
 
 export interface UserWhitelist {
   readonly isUserWhitelisted: (userId: string) => Effect.Effect<boolean>;
   readonly isUserAdmin: (userId: string) => Effect.Effect<boolean>;
+  readonly getPrimaryWalletAddress: (userId: string) => Effect.Effect<string>;
   readonly hasWalletAddress: (
     userId: string,
     address: string,
@@ -88,6 +95,8 @@ export const makeUserWhitelistService = Effect.gen(function* () {
           config.ADMIN_ADDRESSES.includes(wallet.address),
         );
       }),
+    getPrimaryWalletAddress: (userId: string) =>
+      Effect.provideService(findPrimaryWalletAddress(userId), Database, db),
     hasWalletAddress: (userId: string, address: string) =>
       Effect.map(getWalletAddress(userId, address), Option.isSome),
   } satisfies UserWhitelist;

@@ -7,6 +7,8 @@ import { UserWhitelistService } from "@/services/users";
 
 export interface AuthenticatedUser {
   readonly id: string;
+  /** Primary Stacks address of the user. */
+  readonly address: string;
   readonly whitelisted: boolean;
 }
 
@@ -46,10 +48,12 @@ export const UserAuthMiddlewareLayer: Layer.Layer<
           return yield* new Unauthorized({ message: "Unauthorized" });
         }
 
+        const address = yield* users.getPrimaryWalletAddress(session.user.id);
         const whitelisted = yield* users.isUserWhitelisted(session.user.id);
 
         return yield* Effect.provideService(httpEffect, CurrentUser, {
           id: session.user.id,
+          address,
           whitelisted,
         });
       });

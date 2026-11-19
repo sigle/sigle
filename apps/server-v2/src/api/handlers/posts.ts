@@ -119,8 +119,7 @@ export const getPost = (postId: string) =>
     const foundPost = found.post;
     const authorAddress = yield* findPrimaryWalletAddress(foundPost.userId);
 
-    const authorProfile =
-      authorAddress === null ? undefined : yield* findProfile(authorAddress);
+    const authorProfile = yield* findProfile(authorAddress);
 
     return {
       id: foundPost.id,
@@ -145,10 +144,10 @@ export const getPost = (postId: string) =>
       arweaveBlockHeight: foundPost.arweaveBlockHeight,
       createdAt: DateTime.fromDateUnsafe(foundPost.createdAt),
       updatedAt: DateTime.fromDateUnsafe(foundPost.updatedAt),
-      author:
-        authorAddress === null
-          ? null
-          : { address: authorAddress, profile: authorProfile?.profile ?? null },
+      author: {
+        address: authorAddress,
+        profile: authorProfile?.profile ?? null,
+      },
       opentimestamps:
         found.otsStatus === null
           ? null

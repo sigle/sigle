@@ -6,8 +6,8 @@ import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 export const CurrentUserResponse = Schema.Struct({
   id: Schema.String,
   // Primary Stacks address of the user, used to read their public profile and
-  // posts. Null when the user has no linked wallet.
-  address: Schema.NullOr(Schema.String),
+  // posts.
+  address: Schema.String,
   whitelisted: Schema.Boolean,
 });
 
