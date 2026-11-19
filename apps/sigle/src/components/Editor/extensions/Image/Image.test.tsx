@@ -1,4 +1,4 @@
-import { render } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import {
   describe,
   expect,
@@ -82,5 +82,98 @@ describe("image extension - command availability", () => {
     const editor = useEditorStore.getState().editor;
     expect(editor).toBeDefined();
     expect(editor?.commands.setImageFromFile).toBeDefined();
+  });
+});
+
+describe("image extension - uploads by plan", () => {
+  const gaiaImage = "https://gaia.blockstack.org/hub/abc/image.png";
+
+  beforeEach(() => {
+    useEditorStore.setState({ editor: undefined });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  const getImageSources = () => {
+    const sources: unknown[] = [];
+
+    useEditorStore.getState().editor?.state.doc.descendants((node) => {
+      if (node.type.name === "image") sources.push(node.attrs.src);
+    });
+
+    return sources;
+  };
+
+  it("should upload a file and use the returned url on the pro plan", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap canUploadImages />
+      </EditorFormProvider>,
+    );
+
+    await waitFor(() => {
+      expect(useEditorStore.getState().editor).toBeDefined();
+    });
+
+    const inserted = useEditorStore
+      .getState()
+      .editor?.commands.setImageFromFile({
+        file: new File(["image"], "image.png", { type: "image/png" }),
+      });
+
+    expect(inserted).toBe(true);
+
+    await waitFor(() => {
+      expect(getImageSources()).toStrictEqual([
+        "https://example.com/uploaded-image.png",
+      ]);
+    });
+  });
+
+  it("should not insert a file on the free plan", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+
+    await waitFor(() => {
+      expect(useEditorStore.getState().editor).toBeDefined();
+    });
+
+    const inserted = useEditorStore
+      .getState()
+      .editor?.commands.setImageFromFile({
+        file: new File(["image"], "image.png", { type: "image/png" }),
+      });
+
+    expect({ inserted, sources: getImageSources() }).toStrictEqual({
+      inserted: false,
+      sources: [],
+    });
+  });
+
+  it("should keep gaia images it cannot upload on the free plan", async () => {
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(
+      <EditorFormProvider
+        post={{ ...defaultPost, content: `![](${gaiaImage})` }}
+      >
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+
+    await waitFor(() => {
+      expect(useEditorStore.getState().editor).toBeDefined();
+    });
+
+    expect({
+      sources: getImageSources(),
+      fetches: fetchMock.mock.calls.length,
+    }).toStrictEqual({ sources: [gaiaImage], fetches: 0 });
   });
 });

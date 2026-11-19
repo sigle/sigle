@@ -29,13 +29,21 @@ export default function PostEditPage(props: PostEditPageProps) {
     },
   );
 
+  const { data: me } = sigleApiClient.useSuspenseQuery(
+    "get",
+    "/api/protected/me",
+  );
+
+  // Image uploads are only on the Pro plan, free users embed images by URL.
+  const canUploadImages = me.plan === "pro";
+
   return (
     <EditorFormProvider post={post}>
       <EditorHeader />
       <div className="mx-auto max-w-2xl">
         <EditorTitle />
-        <EditorCoverImage />
-        <EditorTipTap />
+        <EditorCoverImage canUploadImages={canUploadImages} />
+        <EditorTipTap canUploadImages={canUploadImages} />
       </div>
       <EditorSettings />
       <PublishDialog postId={params.postId} />

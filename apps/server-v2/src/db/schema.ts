@@ -190,10 +190,11 @@ export const mediaImageStatusEnum = pgEnum("MediaImageStatus", [
 ]);
 
 /**
- * Placeholder metadata for an image referenced by a post cover or a profile
- * picture. `id` is the canonical URL stored on `post.cover_image` and
- * `profile.picture`/`cover_picture`; rows are created eagerly as PENDING by the
- * producers and filled in by the thumbhash job (or inline on upload).
+ * Placeholder metadata for an image, keyed by its canonical URL. Post covers
+ * (`post.cover_image`) and profile pictures (`profile.picture`/`cover_picture`)
+ * get a PENDING row from their producers that the thumbhash job fills in.
+ * Images uploaded through the API (profile and draft images) get a READY row
+ * inline. External image URLs embedded in post content have no row.
  */
 export const mediaImage = pgTable(
   "media_image",

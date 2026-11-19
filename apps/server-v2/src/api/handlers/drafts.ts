@@ -1,3 +1,4 @@
+import type { HttpServerRequest } from "effect/http";
 import { createId } from "@paralleldrive/cuid2";
 import { verifyMetadataSignature } from "@sigle/sdk";
 import { and, count, desc, eq, isNull, notInArray, or, sql } from "drizzle-orm";
@@ -11,10 +12,12 @@ import {
   PublishDraftPayload,
   UpdateDraftPayload,
 } from "@/api/groups/drafts";
+import { uploadImageFromRequest } from "@/api/image-upload";
 import { CurrentUser } from "@/api/middleware/auth-user";
 import {
   BadRequest,
   Conflict,
+  Forbidden,
   InternalServerError,
   NotFound,
 } from "@/api/schemas";
@@ -22,6 +25,12 @@ import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { draft, post } from "@/db/schema";
 import { publishDraftJob } from "@/jobs/publish-draft";
+import {
+  DRAFT_IMAGE_MAX_MIB,
+  draftImageKey,
+  draftImageSettings,
+} from "@/lib/draft-images";
+import { PlanService } from "@/services/plan";
 import { PostHogService } from "@/services/posthog";
 
 const toDraft = (row: typeof draft.$inferSelect) => ({
@@ -383,6 +392,76 @@ export const getDraftPublishStatus = (draftId: string) =>
     });
   });
 
+export const uploadDraftImage = (
+  draftId: string,
+  request: HttpServerRequest.HttpServerRequest,
+) =>
+  Effect.gen(function* () {
+    const user = yield* CurrentUser;
+    const config = yield* AppConfig;
+    const db = yield* Database;
+    const plans = yield* PlanService;
+    const posthog = yield* PostHogService;
+
+    const [foundDraft] = yield* db
+      .select({ id: draft.id })
+      .from(draft)
+      .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
+      .limit(1)
+      .pipe(Effect.orDie);
+
+    if (!foundDraft) {
+      return yield* new NotFound({ message: "Draft not found" });
+    }
+
+    // Checked before reading the body so free users are rejected without
+    // processing the image.
+    const plan = yield* plans.getUserPlan(user.id).pipe(
+      Effect.tapError((error) =>
+        Effect.logWarning("Failed to check the user plan", { cause: error }),
+      ),
+      Effect.mapError(
+        () =>
+          new InternalServerError({
+            message: "Failed to check your plan, please try again.",
+          }),
+      ),
+    );
+
+    if (plan !== "pro") {
+      return yield* new Forbidden({
+        message:
+          "Image uploads are available on the Pro plan. Embed an image from a URL instead.",
+      });
+    }
+
+    const uploaded = yield* uploadImageFromRequest(request, {
+      ...draftImageSettings(config.STACKS_ENV),
+      maxMib: DRAFT_IMAGE_MAX_MIB,
+      key: (version) => draftImageKey(user.id, draftId, version),
+      url: (stored) => stored.url,
+    });
+
+    yield* posthog.capture({
+      distinctId: user.id,
+      event: "draft media uploaded",
+      properties: {
+        draftId,
+        key: uploaded.key,
+        sizeBytes: uploaded.sizeBytes,
+        url: uploaded.url,
+      },
+    });
+
+    return {
+      height: uploaded.height,
+      key: uploaded.key,
+      thumbhash: uploaded.thumbhash,
+      url: uploaded.url,
+      width: uploaded.width,
+    };
+  });
+
 export const DraftsHandlersLayer = HttpApiBuilder.group(
   SigleApi,
   "drafts",
@@ -401,12 +480,7 @@ export const DraftsHandlersLayer = HttpApiBuilder.group(
       .handle("getPublishStatus", ({ params }) =>
         getDraftPublishStatus(params.draftId),
       )
-      // TODO(#1328): upload the image.
-      .handle("uploadImage", () =>
-        Effect.fail(
-          new InternalServerError({
-            message: "Draft image uploads are not available yet.",
-          }),
-        ),
+      .handle("uploadImage", ({ params, request }) =>
+        uploadDraftImage(params.draftId, request),
       ),
 );

@@ -75,6 +75,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     title: "Image",
     description: "Upload from your computer",
     section: "basic",
+    proOnly: true,
     command: ({ editor, range }) => {
       const input = document.createElement("input");
       input.type = "file";
@@ -112,6 +113,23 @@ export const slashCommands: SlashCommandsCommand[] = [
       };
 
       input.click();
+    },
+  },
+  {
+    icon: ImageLight,
+    title: "Image from URL",
+    description: "Embed an image from a link",
+    section: "basic",
+    keywords: ["image", "url", "link"],
+    command: ({ editor, range }) => {
+      let chainCommands = editor.chain().focus();
+
+      if (range) {
+        // Use deleteRange to clear the text from command chars "/im" etc..
+        chainCommands = chainCommands.deleteRange(range);
+      }
+
+      chainCommands.insertImageUrlInput().run();
     },
   },
   {
