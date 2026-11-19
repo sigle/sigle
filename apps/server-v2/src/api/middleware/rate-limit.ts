@@ -1,5 +1,13 @@
-import { Context, Duration, Effect, Layer, Option, Predicate } from "effect";
-import { HttpServerRequest, HttpServerResponse } from "effect/http";
+import {
+  Clock,
+  Context,
+  Duration,
+  Effect,
+  Layer,
+  Option,
+  Predicate,
+} from "effect";
+import { HttpEffect, HttpServerRequest, HttpServerResponse } from "effect/http";
 import { HttpApiMiddleware } from "effect/http-api";
 import { RateLimiter } from "effect/persistence";
 import { CurrentUser } from "@/api/middleware/auth-user";
@@ -62,6 +70,44 @@ const clientKey = (request: HttpServerRequest.HttpServerRequest): string => {
   return `ip:${ip}`;
 };
 
+const appendResponseHeaders = (headers: Record<string, string>) =>
+  HttpEffect.appendPreResponseHandler((_request, response) =>
+    Effect.succeed(HttpServerResponse.setHeaders(response, headers)),
+  );
+
+/**
+ * Adds the rate limit headers to the response of the current request, whether
+ * the handler succeeds, fails, or the request is rejected with a 429.
+ * `x-ratelimit-reset` is the Unix time in seconds at which the window resets,
+ * as is conventional for the `X-RateLimit-*` headers.
+ */
+const setRateLimitHeaders = (state: {
+  readonly limit: number;
+  readonly remaining: number;
+  readonly resetAfter: Duration.Duration;
+}) =>
+  Effect.gen(function* () {
+    const now = yield* Clock.currentTimeMillis;
+    const resetAt = now + Duration.toMillis(state.resetAfter);
+
+    yield* appendResponseHeaders({
+      "x-ratelimit-limit": String(state.limit),
+      "x-ratelimit-remaining": String(state.remaining),
+      "x-ratelimit-reset": String(Math.ceil(resetAt / 1000)),
+    });
+  });
+
+/**
+ * `Retry-After` is a whole number of seconds, rounded up so a client never
+ * retries before the window resets.
+ */
+const setRetryAfterHeader = (retryAfter: Duration.Duration) =>
+  appendResponseHeaders({
+    "retry-after": String(
+      Math.max(0, Math.ceil(Duration.toMillis(retryAfter) / 1000)),
+    ),
+  });
+
 export const RateLimitMiddlewareLayer: Layer.Layer<
   RateLimitMiddleware,
   never,
@@ -97,6 +143,19 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
             window: Duration.millis(windowMs),
           })
           .pipe(
+            Effect.tapError((error) =>
+              Predicate.isTagged(error.reason, "RateLimitExceeded")
+                ? setRateLimitHeaders({
+                    limit: error.reason.limit,
+                    remaining: error.reason.remaining,
+                    resetAfter: error.reason.retryAfter,
+                  }).pipe(
+                    Effect.andThen(
+                      setRetryAfterHeader(error.reason.retryAfter),
+                    ),
+                  )
+                : Effect.void,
+            ),
             Effect.mapError((error) =>
               Predicate.isTagged(error.reason, "RateLimitExceeded")
                 ? new TooManyRequests({
@@ -112,15 +171,9 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
             ),
           );
 
-        const response = yield* httpEffect;
+        yield* setRateLimitHeaders(result);
 
-        return HttpServerResponse.setHeaders(response, {
-          "x-ratelimit-limit": String(result.limit),
-          "x-ratelimit-remaining": String(result.remaining),
-          "x-ratelimit-reset": String(
-            Math.ceil(Duration.toMillis(result.resetAfter) / 1000),
-          ),
-        });
+        return yield* httpEffect;
       });
   }),
 );
