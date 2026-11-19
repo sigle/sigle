@@ -8,7 +8,11 @@ import {
 import { AdminMiddleware } from "@/api/middleware/admin";
 import { UserAuthMiddleware } from "@/api/middleware/auth-user";
 import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
-import { NotFound } from "@/api/schemas";
+import {
+  documentPaginationQuery,
+  NotFound,
+  paginationQueryFields,
+} from "@/api/schemas";
 
 export const ADMIN_LIST_DEFAULT_LIMIT = 20;
 
@@ -40,22 +44,9 @@ export const FailedJobListItem = Schema.Struct({
   updatedAt: DateTime,
 }).annotate({ identifier: "FailedJobListItem" });
 
-export const FailedJobListQuery = Schema.Struct({
-  limit: Schema.optionalKey(
-    Schema.FiniteFromString.pipe(
-      Schema.check(
-        Schema.isInt(),
-        Schema.isGreaterThanOrEqualTo(1),
-        Schema.isLessThanOrEqualTo(ADMIN_LIST_MAX_LIMIT),
-      ),
-    ),
-  ),
-  offset: Schema.optionalKey(
-    Schema.FiniteFromString.pipe(
-      Schema.check(Schema.isInt(), Schema.isGreaterThanOrEqualTo(0)),
-    ),
-  ),
-}).annotate({ identifier: "FailedJobListQuery" });
+export const FailedJobListQuery = Schema.Struct(
+  paginationQueryFields(ADMIN_LIST_MAX_LIMIT),
+).annotate({ identifier: "FailedJobListQuery" });
 
 export const FailedJobListResponse = Schema.Struct({
   results: Schema.Array(FailedJobListItem),
@@ -86,6 +77,10 @@ export const AdminGroup = HttpApiGroup.make("admin")
       success: FailedJobListResponse,
     })
       .annotate(OpenApi.Summary, "List failed jobs")
+      .annotate(
+        OpenApi.Transform,
+        documentPaginationQuery(ADMIN_LIST_MAX_LIMIT),
+      )
       .annotate(
         OpenApi.Description,
         "List dead-lettered jobs of a queue, most recently failed first.",
