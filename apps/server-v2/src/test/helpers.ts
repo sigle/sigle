@@ -11,8 +11,8 @@ import {
   signMessageHashRsv,
 } from "@stacks/transactions";
 import { makeSignature } from "better-auth/crypto";
-import { Effect, Redacted, Ref } from "effect";
-import { Cookies, HttpClient } from "effect/http";
+import { Effect, Redacted } from "effect";
+import { Cookies, HttpClient, HttpClientRequest } from "effect/http";
 import { createSiwsMessage } from "sign-in-with-stacks";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
@@ -416,14 +416,18 @@ export const createAuthenticatedClient = (options: { userId?: string } = {}) =>
       makeSignature(token, Redacted.value(config.AUTH_SECRET)),
     );
 
-    const cookies = Cookies.setUnsafe(
-      SESSION_COOKIE_NAME,
-      `${token}.${signature}`,
-    )(Cookies.empty);
+    const cookieHeader = Cookies.toCookieHeader(
+      Cookies.setUnsafe(
+        SESSION_COOKIE_NAME,
+        `${token}.${signature}`,
+      )(Cookies.empty),
+    );
 
     return {
       client: (yield* HttpClient.HttpClient).pipe(
-        HttpClient.withCookiesRef(yield* Ref.make(cookies)),
+        HttpClient.mapRequest(
+          HttpClientRequest.setHeader("cookie", cookieHeader),
+        ),
       ),
       userId: user.id,
     };
