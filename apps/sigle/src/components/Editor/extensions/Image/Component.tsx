@@ -15,10 +15,13 @@ import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 
 const imageUrlSchema = z.object({
-  url: z.url({
-    protocol: /^https$/,
-    message: "Enter a valid image URL starting with https://",
-  }),
+  url: z
+    .url({
+      protocol: /^https$/,
+      message: "Enter a valid image URL starting with https://",
+    })
+    // Store the normalized URL, so characters such as spaces are encoded.
+    .transform((url) => new URL(url).href),
 });
 
 /**

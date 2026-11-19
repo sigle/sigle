@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
-import { Deferred, Effect, Option, Schema } from "effect";
+import { Deferred, Effect, Layer, Option, Schema, Stream } from "effect";
 import {
   Headers,
   HttpClient,
@@ -20,6 +20,7 @@ import {
 import { Database } from "@/db";
 import { draft, mediaImage, post, postOts } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
+import { ImageOptimizationError, optimizeImage } from "@/lib/images";
 import {
   ARWEAVE_TEST_UPLOAD,
   ARWEAVE_TEST_UPLOAD_ID,
@@ -27,6 +28,7 @@ import {
   type ArweaveUploadOptions,
   ArweaveUploadError,
 } from "@/services/arweave";
+import { ImageProcessingService } from "@/services/image-processing";
 import {
   makeStorageTestRecorder,
   STORAGE_TEST_PUBLIC_URL,
@@ -1294,4 +1296,101 @@ describe("draft images", () => {
       });
     }).pipe(Effect.provide(draftImageServerLayer(recorder)));
   });
+
+  it.effect(
+    "PUT /:draftId/images stores nothing when the placeholder fails",
+    () => {
+      const recorder = makeStorageTestRecorder();
+
+      // Real optimization, failing ThumbHash generation.
+      const imageProcessing = Layer.succeed(ImageProcessingService, {
+        optimize: optimizeImage,
+        generateThumbhash: () =>
+          Effect.fail(
+            new ImageOptimizationError({
+              cause: new Error("thumbhash failed"),
+              message: "thumbhash failed",
+            }),
+          ),
+      });
+
+      return Effect.gen(function* () {
+        const { client, userId } = yield* createProClient();
+        const created = yield* createTestDraft({ userId });
+        const png = yield* makePngBuffer(16, 16);
+
+        const response = yield* uploadDraftImageRequest(
+          client,
+          created.id,
+          new Uint8Array(png),
+        );
+
+        const body =
+          yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
+
+        const db = yield* Database;
+        const mediaRows = yield* db.select().from(mediaImage);
+
+        expect({
+          status: response.status,
+          message: body.message,
+          uploads: recorder.uploads.length,
+          mediaRows: mediaRows.length,
+        }).toStrictEqual({
+          status: 500,
+          message: "Failed to generate image placeholder.",
+          uploads: 0,
+          mediaRows: 0,
+        });
+      }).pipe(
+        Effect.provide(
+          makeTestServerLayer({ PRO_ADDRESSES: [PRO_WALLET_ADDRESS] }, [], {
+            storage: StorageService.layerTest(recorder),
+            imageProcessing,
+          }),
+        ),
+      );
+    },
+  );
+
+  it.effect(
+    "PUT /:draftId/images rejects a body over 5 MiB sent without Content-Length",
+    () => {
+      const recorder = makeStorageTestRecorder();
+
+      return Effect.gen(function* () {
+        const { client, userId } = yield* createProClient();
+        const created = yield* createTestDraft({ userId });
+
+        // A streamed body is sent chunked, so only the body read limit can
+        // reject it.
+        const response = yield* client.execute(
+          HttpClientRequest.put(
+            `/api/protected/drafts/${created.id}/images`,
+          ).pipe(
+            HttpClientRequest.bodyStream(
+              Stream.make(
+                new Uint8Array(3 * 1024 * 1024),
+                new Uint8Array(3 * 1024 * 1024),
+              ),
+              { contentType: "image/png" },
+            ),
+          ),
+        );
+
+        const body =
+          yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
+
+        expect({
+          status: response.status,
+          message: body.message,
+          uploads: recorder.uploads.length,
+        }).toStrictEqual({
+          status: 413,
+          message: "Image is too large, maximum size is 5 MiB.",
+          uploads: 0,
+        });
+      }).pipe(Effect.provide(draftImageServerLayer(recorder)));
+    },
+  );
 });

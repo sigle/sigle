@@ -25,8 +25,9 @@ export const draftImageSettings = (
 ): DraftImageSettings => settingsByStacksEnv[stacksEnv];
 
 /**
- * Draft images are keyed by their content hash, so each object is immutable
- * and re-uploading the same image is a no-op.
+ * Draft images are keyed by their content hash, so each object is immutable,
+ * and uploading the same optimized image again writes the same bytes to the
+ * same key and returns the same URL.
  */
 export const draftImageKey = (
   userId: string,

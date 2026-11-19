@@ -152,21 +152,9 @@ export const uploadImageFromRequest = (
     const version = sha256Hex(optimized.buffer);
     const key = options.key(version);
 
-    const stored = yield* storage
-      .uploadFile({ body: optimized.buffer, contentType: WEBP, key, version })
-      .pipe(
-        Effect.mapError(
-          (error) =>
-            new InternalServerError({
-              message: `Failed to upload image, error: ${error.message}`,
-            }),
-        ),
-      );
-
-    const url = options.url(stored);
-
     // The image bytes are in hand, so the placeholder is computed inline
-    // instead of going through the thumbhash queue.
+    // instead of going through the thumbhash queue. It runs before the upload
+    // so a failure leaves nothing in object storage.
     const generated = yield* images.generateThumbhash(optimized.buffer).pipe(
       Effect.tapError((error) =>
         Effect.logWarning("Failed to generate image thumbhash", {
@@ -181,6 +169,19 @@ export const uploadImageFromRequest = (
           }),
       ),
     );
+
+    const stored = yield* storage
+      .uploadFile({ body: optimized.buffer, contentType: WEBP, key, version })
+      .pipe(
+        Effect.mapError(
+          (error) =>
+            new InternalServerError({
+              message: `Failed to upload image, error: ${error.message}`,
+            }),
+        ),
+      );
+
+    const url = options.url(stored);
 
     const mediaFields = {
       height: optimized.height,

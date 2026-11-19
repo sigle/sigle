@@ -20,6 +20,7 @@ import { TestDatabaseLayer } from "@/test/layer";
 export interface TestServerOptions {
   readonly arweave?: Layer.Layer<ArweaveService>;
   readonly storage?: Layer.Layer<StorageService>;
+  readonly imageProcessing?: Layer.Layer<ImageProcessingService>;
   readonly opentimestamps?: Layer.Layer<OpenTimestampsService>;
   readonly arweaveUploadImpl?: (
     options: ArweaveUploadOptions,
@@ -50,7 +51,7 @@ export const makeTestServerLayer = (
     Layer.provideMerge(AppConfig.layerTest(overrides)),
     Layer.provide(PostHogService.layerTest(posthogEvents)),
     Layer.provide(options.opentimestamps ?? OpenTimestampsService.layerTest()),
-    Layer.provide(ImageProcessingService.layer),
+    Layer.provide(options.imageProcessing ?? ImageProcessingService.layer),
     Layer.provide(
       options.arweave ??
         ArweaveService.layerTest([], options.arweaveUploadImpl),

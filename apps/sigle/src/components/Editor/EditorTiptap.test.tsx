@@ -57,6 +57,16 @@ const getMarkdownOutput = (): string => {
   return editor?.getMarkdown() ?? "";
 };
 
+const getImageSources = () => {
+  const sources: unknown[] = [];
+
+  useEditorStore.getState().editor?.state.doc.descendants((node) => {
+    if (node.type.name === "image") sources.push(node.attrs.src);
+  });
+
+  return sources;
+};
+
 const waitForEditor = async () => {
   await waitFor(() => {
     expect(useEditorStore.getState().editor).not.toBeNull();
@@ -1137,5 +1147,52 @@ describe("editor tiptap - image from url", () => {
     useEditorStore.getState().editor?.commands.insertImageUrlInput();
 
     expect(getMarkdownOutput()).not.toContain("![");
+  });
+
+  it("should store a pasted url with its spaces encoded", async () => {
+    const user = userEvent.setup();
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+
+    useEditorStore.getState().editor?.commands.insertImageUrlInput();
+
+    const input = await screen.findByPlaceholderText(
+      "Paste image URL and press “enter”...",
+    );
+
+    await user.type(input, "https://example.com/my photo.jpg{Enter}");
+
+    await waitFor(() => {
+      expect(getImageSources()).toStrictEqual([
+        "https://example.com/my%20photo.jpg",
+      ]);
+    });
+  });
+
+  it("should round-trip an image url with a closing parenthesis", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+
+    const src = "https://example.com/photo).png";
+    const editor = useEditorStore.getState().editor;
+
+    editor?.commands.insertContent({ type: "image", attrs: { src } });
+
+    const markdown = getMarkdownOutput();
+
+    editor?.commands.setContent(markdown, { contentType: "markdown" });
+
+    expect({ markdown, sources: getImageSources() }).toStrictEqual({
+      markdown: "![](https://example.com/photo\\).png)",
+      sources: [src],
+    });
   });
 });

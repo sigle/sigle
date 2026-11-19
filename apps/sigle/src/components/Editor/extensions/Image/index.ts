@@ -63,7 +63,15 @@ export const TipTapImage = TipTapImageBase.extend<
     const alt = node.attrs?.alt ?? "";
     const title = node.attrs?.title ?? "";
 
-    return title ? `![${alt}](${src} "${title}")` : `![${alt}](${src})`;
+    // Parentheses are backslash-escaped so an unbalanced `)` does not end the
+    // destination, and whitespace, which is never valid in a URL, is encoded.
+    const destination = src
+      .replace(/[()]/g, "\\$&")
+      .replace(/\s/g, encodeURIComponent);
+
+    return title
+      ? `![${alt}](${destination} "${title}")`
+      : `![${alt}](${destination})`;
   },
 
   addCommands() {
