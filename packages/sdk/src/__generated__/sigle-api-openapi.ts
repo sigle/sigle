@@ -313,6 +313,11 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    sigle_api_BadRequestEncoded: {
+      /** @enum {string} */
+      _tag: "BadRequest";
+      message: string;
+    };
     sigle_api_UnauthorizedEncoded: {
       /** @enum {string} */
       _tag: "Unauthorized";
@@ -415,11 +420,6 @@ export interface components {
       width: number | null;
       height: number | null;
       thumbhash: string | null;
-    };
-    sigle_api_BadRequestEncoded: {
-      /** @enum {string} */
-      _tag: "BadRequest";
-      message: string;
     };
     PostListResponse: {
       results: components["schemas"]["PostListItem"][];
@@ -750,6 +750,15 @@ export interface operations {
           };
         };
       };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
+      };
       /** @description Too Many Requests */
       429: {
         headers: {
@@ -792,6 +801,15 @@ export interface operations {
             /** @enum {string} */
             plan: "free" | "pro";
           };
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
         };
       };
       /** @description Unauthorized */
@@ -842,6 +860,15 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["DraftListResponse"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
         };
       };
       /** @description Unauthorized */
@@ -905,6 +932,15 @@ export interface operations {
           "application/json": components["schemas"]["Draft"];
         };
       };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
+      };
       /** @description Unauthorized */
       401: {
         headers: {
@@ -961,6 +997,15 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["Draft"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
         };
       };
       /** @description Unauthorized */
@@ -1027,6 +1072,15 @@ export interface operations {
           [name: string]: unknown;
         };
         content?: never;
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
       };
       /** @description Unauthorized */
       401: {
@@ -1106,6 +1160,15 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["Draft"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
         };
       };
       /** @description Unauthorized */
@@ -1713,6 +1776,15 @@ export interface operations {
           "application/json": components["schemas"]["Post"];
         };
       };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
+      };
       /** @description Not Found */
       404: {
         headers: {
@@ -1758,6 +1830,15 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["AdminQueueListResponse"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
         };
       };
       /** @description Unauthorized */
@@ -1821,6 +1902,15 @@ export interface operations {
           "application/json": components["schemas"]["FailedJobListResponse"];
         };
       };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
+      };
       /** @description Unauthorized */
       401: {
         headers: {
@@ -1878,6 +1968,15 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["RetryFailedJobResponse"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
         };
       };
       /** @description Unauthorized */
@@ -1945,6 +2044,15 @@ export interface operations {
           [name: string]: unknown;
         };
         content?: never;
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+        };
       };
       /** @description Unauthorized */
       401: {
