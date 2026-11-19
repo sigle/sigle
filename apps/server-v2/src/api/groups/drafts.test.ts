@@ -8,7 +8,6 @@ import {
   HttpClientResponse,
 } from "effect/http";
 import sharp from "sharp";
-import type { AppConfigValues } from "@/config";
 import type { PostHogEvent } from "@/services/posthog";
 import {
   Draft,
@@ -19,7 +18,7 @@ import {
   UploadDraftImageResponse,
 } from "@/api/groups/drafts";
 import { Database } from "@/db";
-import { draft, mediaImage, post, postOts, userUpload } from "@/db/schema";
+import { draft, mediaImage, post, postOts } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
 import {
   ARWEAVE_TEST_UPLOAD,
@@ -1081,51 +1080,18 @@ describe("update draft payload", () => {
 });
 
 // On testnet, wallets in PRO_ADDRESSES are on the pro plan.
-const PRO_WALLET_ADDRESSES = [
-  createTestSiwsCredentials().address,
-  createTestSiwsCredentials().address,
-];
+const PRO_WALLET_ADDRESS = createTestSiwsCredentials().address;
 
 const draftImageServerLayer = (
   recorder: StorageTestRecorder,
   posthogEvents: Array<PostHogEvent> = [],
-  overrides: Partial<AppConfigValues> = {},
 ) =>
-  makeTestServerLayer(
-    { PRO_ADDRESSES: PRO_WALLET_ADDRESSES, ...overrides },
-    posthogEvents,
-    { storage: StorageService.layerTest(recorder) },
-  );
-
-const MIB = 1024 * 1024;
-
-const DAY_MILLIS = 24 * 60 * 60 * 1000;
-
-const createTestUserUpload = (options: {
-  readonly userId: string;
-  readonly sizeBytes: number;
-  readonly createdAt?: Date;
-}) =>
-  Effect.gen(function* () {
-    const db = yield* Database;
-
-    yield* db.insert(userUpload).values({
-      id: crypto.randomUUID(),
-      userId: options.userId,
-      key: `u/${options.userId}/seed.webp`,
-      sizeBytes: options.sizeBytes,
-      contentType: "image/webp",
-      createdAt: options.createdAt,
-    });
+  makeTestServerLayer({ PRO_ADDRESSES: [PRO_WALLET_ADDRESS] }, posthogEvents, {
+    storage: StorageService.layerTest(recorder),
   });
 
-const QuotaErrorResponse = Schema.Struct({
-  message: Schema.String,
-  retryAfterMillis: Schema.optionalKey(Schema.Finite),
-});
-
-const createProClient = (address = PRO_WALLET_ADDRESSES[0]) =>
-  createAuthenticatedClient({ address });
+const createProClient = () =>
+  createAuthenticatedClient({ address: PRO_WALLET_ADDRESS });
 
 const makePngBuffer = (width: number, height: number) =>
   Effect.promise(() =>
@@ -1191,20 +1157,9 @@ describe("draft images", () => {
         .limit(1)
         .pipe(Effect.orDie);
 
-      const recordedUploads = yield* db
-        .select({
-          key: userUpload.key,
-          sizeBytes: userUpload.sizeBytes,
-          contentType: userUpload.contentType,
-        })
-        .from(userUpload)
-        .where(eq(userUpload.userId, userId))
-        .pipe(Effect.orDie);
-
       expect({
         status: response.status,
         body,
-        recordedUploads,
         upload: uploaded && {
           contentType: uploaded.contentType,
           key: uploaded.key,
@@ -1231,9 +1186,6 @@ describe("draft images", () => {
           height: 500,
           thumbhash: expect.any(String),
         },
-        recordedUploads: [
-          { key, sizeBytes: uploadedBytes.length, contentType: "image/webp" },
-        ],
         upload: { contentType: "image/webp", key, version },
         format: "webp",
         width: 1000,
@@ -1341,118 +1293,5 @@ describe("draft images", () => {
         uploads: 0,
       });
     }).pipe(Effect.provide(draftImageServerLayer(recorder)));
-  });
-
-  it.effect(
-    "PUT /:draftId/images only counts today's uploads against the daily quota",
-    () => {
-      const recorder = makeStorageTestRecorder();
-
-      return Effect.gen(function* () {
-        const png = yield* makePngBuffer(16, 16);
-
-        // Used the whole daily quota yesterday: today's upload is allowed.
-        const yesterday = yield* createProClient();
-
-        const yesterdayDraft = yield* createTestDraft({
-          userId: yesterday.userId,
-        });
-
-        yield* createTestUserUpload({
-          userId: yesterday.userId,
-          sizeBytes: MIB,
-          createdAt: new Date(Date.now() - DAY_MILLIS),
-        });
-
-        const allowed = yield* uploadDraftImageRequest(
-          yesterday.client,
-          yesterdayDraft.id,
-          new Uint8Array(png),
-        );
-
-        // Used the whole daily quota today: the upload is rejected.
-        const today = yield* createProClient(PRO_WALLET_ADDRESSES[1]);
-        const todayDraft = yield* createTestDraft({ userId: today.userId });
-
-        yield* createTestUserUpload({ userId: today.userId, sizeBytes: MIB });
-
-        const rejected = yield* uploadDraftImageRequest(
-          today.client,
-          todayDraft.id,
-          new Uint8Array(png),
-        );
-
-        const body =
-          yield* HttpClientResponse.schemaBodyJson(QuotaErrorResponse)(
-            rejected,
-          );
-
-        expect({
-          statuses: [allowed.status, rejected.status],
-          message: body.message,
-          retryAfterTomorrow:
-            body.retryAfterMillis !== undefined &&
-            body.retryAfterMillis > 0 &&
-            body.retryAfterMillis <= DAY_MILLIS,
-          uploadedByYesterdayUser: recorder.uploads.map((upload) =>
-            upload.key.startsWith(`u/${yesterday.userId}/`),
-          ),
-        }).toStrictEqual({
-          statuses: [200, 429],
-          message: "Daily upload quota of 1 MiB exceeded.",
-          retryAfterTomorrow: true,
-          uploadedByYesterdayUser: [true],
-        });
-      }).pipe(
-        Effect.provide(
-          draftImageServerLayer(recorder, [], {
-            UPLOAD_QUOTA_DAILY_BYTES: MIB,
-            UPLOAD_QUOTA_TOTAL_BYTES: 10 * MIB,
-          }),
-        ),
-      );
-    },
-  );
-
-  it.effect("PUT /:draftId/images enforces the total upload quota", () => {
-    const recorder = makeStorageTestRecorder();
-
-    return Effect.gen(function* () {
-      const { client, userId } = yield* createProClient();
-      const created = yield* createTestDraft({ userId });
-      const png = yield* makePngBuffer(16, 16);
-
-      yield* createTestUserUpload({
-        userId,
-        sizeBytes: MIB,
-        createdAt: new Date(Date.now() - 10 * DAY_MILLIS),
-      });
-
-      const response = yield* uploadDraftImageRequest(
-        client,
-        created.id,
-        new Uint8Array(png),
-      );
-
-      const body =
-        yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
-
-      expect({
-        status: response.status,
-        message: body.message,
-        uploads: recorder.uploads.length,
-      }).toStrictEqual({
-        status: 403,
-        message: "Total upload quota of 1 MiB exceeded.",
-        uploads: 0,
-      });
-    }).pipe(
-      Effect.provide(
-        draftImageServerLayer(recorder, [], {
-          UPLOAD_QUOTA_DAILY_BYTES: 10 * MIB,
-          UPLOAD_QUOTA_TOTAL_BYTES: MIB,
-        }),
-      ),
-    );
   });
 });

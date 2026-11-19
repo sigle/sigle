@@ -243,7 +243,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       .annotate(OpenApi.Summary, "Upload a draft image")
       .annotate(
         OpenApi.Description,
-        `Upload an image to embed in a draft as a raw binary body, up to ${DRAFT_IMAGE_MAX_MIB} MiB. The image is re-encoded as WebP and served from the CDN. Pro plan only, free users get a 403 and can embed external image URLs instead. Counts against the daily (429) and total (403) upload quotas.`,
+        `Upload an image to embed in a draft as a raw binary body, up to ${DRAFT_IMAGE_MAX_MIB} MiB. The image is re-encoded as WebP and served from the CDN. Pro plan only, free users get a 403 and can embed external image URLs instead.`,
       )
       .annotate(OpenApi.Override, { requestBody: imageRequestBody })
       .annotate(RateLimitPolicy, "draftImageUpload"),

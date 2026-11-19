@@ -436,7 +436,6 @@ export const uploadDraftImage = (
     }
 
     const uploaded = yield* uploadImageFromRequest(request, {
-      userId: user.id,
       ...draftImageSettings(config.STACKS_ENV),
       maxMib: DRAFT_IMAGE_MAX_MIB,
       key: (version) => draftImageKey(user.id, draftId, version),

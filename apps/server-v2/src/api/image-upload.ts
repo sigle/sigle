@@ -1,18 +1,13 @@
-import { createId } from "@paralleldrive/cuid2";
-import { and, eq, gte, sum } from "drizzle-orm";
 import { ByteSize, Effect, Option, Predicate } from "effect";
 import { type HttpServerError, HttpServerRequest } from "effect/http";
 import {
   BadRequest,
-  Forbidden,
   InternalServerError,
   PayloadTooLarge,
-  TooManyRequests,
   UnsupportedMediaType,
 } from "@/api/schemas";
-import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { mediaImage, userUpload } from "@/db/schema";
+import { mediaImage } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
 import {
   detectImageFormat,
@@ -62,64 +57,7 @@ const readImageBody = (
     ),
   );
 
-const MIB = 1024 * 1024;
-
-const GIB = 1024 * MIB;
-
-const formatBytes = (bytes: number): string =>
-  bytes >= GIB
-    ? `${Number((bytes / GIB).toFixed(1))} GiB`
-    : `${Number((bytes / MIB).toFixed(1))} MiB`;
-
-/**
- * Fails when storing `sizeBytes` more would take the user over the bytes
- * allowed per UTC day (429, retry after midnight) or in total (403).
- */
-const checkUploadQuota = (userId: string, sizeBytes: number) =>
-  Effect.gen(function* () {
-    const config = yield* AppConfig;
-    const db = yield* Database;
-
-    const startOfToday = new Date();
-    startOfToday.setUTCHours(0, 0, 0, 0);
-
-    const uploadedBytes = (since?: Date) =>
-      db
-        .select({ bytes: sum(userUpload.sizeBytes) })
-        .from(userUpload)
-        .where(
-          and(
-            eq(userUpload.userId, userId),
-            since === undefined ? undefined : gte(userUpload.createdAt, since),
-          ),
-        )
-        .pipe(
-          Effect.map(([row]) => Number(row?.bytes ?? 0)),
-          Effect.orDie,
-        );
-
-    const [daily, total] = yield* Effect.all([
-      uploadedBytes(startOfToday),
-      uploadedBytes(),
-    ]);
-
-    if (daily + sizeBytes > config.UPLOAD_QUOTA_DAILY_BYTES) {
-      return yield* new TooManyRequests({
-        message: `Daily upload quota of ${formatBytes(config.UPLOAD_QUOTA_DAILY_BYTES)} exceeded.`,
-        retryAfterMillis:
-          startOfToday.getTime() + 24 * 60 * 60 * 1000 - Date.now(),
-      });
-    }
-
-    if (total + sizeBytes > config.UPLOAD_QUOTA_TOTAL_BYTES) {
-      return yield* new Forbidden({
-        message: `Total upload quota of ${formatBytes(config.UPLOAD_QUOTA_TOTAL_BYTES)} exceeded.`,
-      });
-    }
-  });
-
 export interface ImageUploadOptions {
-  readonly userId: string;
   readonly maxMib: number;
   readonly quality: number;
   readonly width: number;
@@ -143,8 +81,7 @@ export interface UploadedImage {
  * storage and records its placeholder metadata as a READY `media_image` row.
  *
  * The declared `Content-Type` and the detected format must both be an allowed
- * image format, the body must fit in `maxMib`, and the optimized image must fit
- * in the user's upload quota.
+ * image format, and the body must fit in `maxMib`.
  */
 export const uploadImageFromRequest = (
   request: HttpServerRequest.HttpServerRequest,
@@ -212,8 +149,6 @@ export const uploadImageFromRequest = (
         ),
       );
 
-    yield* checkUploadQuota(options.userId, optimized.buffer.length);
-
     const version = sha256Hex(optimized.buffer);
     const key = options.key(version);
 
@@ -227,18 +162,6 @@ export const uploadImageFromRequest = (
             }),
         ),
       );
-
-    // Recorded as soon as the bytes are stored, even if a later step fails.
-    yield* db
-      .insert(userUpload)
-      .values({
-        id: createId(),
-        userId: options.userId,
-        key,
-        sizeBytes: optimized.buffer.length,
-        contentType: WEBP,
-      })
-      .pipe(Effect.orDie);
 
     const url = options.url(stored);
 

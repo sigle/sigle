@@ -65,8 +65,6 @@ describe("config service", () => {
             R2_SECRET_ACCESS_KEY: "r2-secret-key",
             R2_BUCKET: "sigle-test",
             R2_PUBLIC_URL: "https://cdn.test",
-            UPLOAD_QUOTA_TOTAL_BYTES: "1073741824",
-            UPLOAD_QUOTA_DAILY_BYTES: "209715200",
             DATABASE_KIND: "pglite",
             DATABASE_URL: "memory://",
             POSTHOG_API_KEY: "phc_secret_key",

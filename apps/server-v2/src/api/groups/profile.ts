@@ -7,11 +7,9 @@ import {
 } from "@/api/middleware/rate-limit";
 import {
   BadRequest,
-  Forbidden,
   imageRequestBody,
   InternalServerError,
   PayloadTooLarge,
-  TooManyRequests,
   UnsupportedMediaType,
 } from "@/api/schemas";
 import { ProfileMetadata } from "@/lib/metadata";
@@ -59,9 +57,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
       success: UploadProfileImageResponse,
       error: [
         BadRequest,
-        Forbidden,
         PayloadTooLarge,
-        TooManyRequests,
         UnsupportedMediaType,
         InternalServerError,
       ],
@@ -69,7 +65,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
       .annotate(OpenApi.Summary, "Upload a profile image")
       .annotate(
         OpenApi.Description,
-        "Upload a profile avatar or cover image as a raw binary body. Re-uploading the same image is a no-op, uploading a different image replaces the previous file. Counts against the daily (429) and total (403) upload quotas.",
+        "Upload a profile avatar or cover image as a raw binary body. Re-uploading the same image is a no-op, uploading a different image replaces the previous file.",
       )
       .annotate(OpenApi.Override, { requestBody: imageRequestBody })
       .annotate(RateLimitPolicy, "profileImageUpload"),
