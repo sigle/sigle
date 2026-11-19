@@ -263,17 +263,17 @@ importers:
         specifier: workspace:*
         version: link:../../packages/sdk
       '@stacks/common':
-        specifier: 7.6.0
-        version: 7.6.0
+        specifier: 7.7.0
+        version: 7.7.0
       '@stacks/encryption':
-        specifier: 7.6.0
-        version: 7.6.0
+        specifier: 7.7.0
+        version: 7.7.0
       '@stacks/network':
-        specifier: 7.6.0
-        version: 7.6.0(encoding@0.1.13)
+        specifier: 7.7.0
+        version: 7.7.0
       '@stacks/transactions':
-        specifier: 7.6.0
-        version: 7.6.0(encoding@0.1.13)
+        specifier: 7.7.0
+        version: 7.7.0
       '@t3-oss/env-core':
         specifier: 0.13.11
         version: 0.13.11(typescript@7.0.2)(valibot@1.4.2(typescript@7.0.2))(zod@4.3.6)
@@ -315,7 +315,7 @@ importers:
         version: 0.35.5(@types/node@26.6.2)
       sign-in-with-stacks:
         specifier: 0.1.6
-        version: 0.1.6(@stacks/common@7.6.0)(@stacks/encryption@7.6.0)(@stacks/network@7.6.0(encoding@0.1.13))(@stacks/transactions@7.6.0(encoding@0.1.13))
+        version: 0.1.6(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)
       zod:
         specifier: 4.3.6
         version: 4.3.6
@@ -375,17 +375,17 @@ importers:
         specifier: workspace:*
         version: link:../../packages/sdk
       '@stacks/common':
-        specifier: 7.6.0
-        version: 7.6.0
+        specifier: 7.7.0
+        version: 7.7.0
       '@stacks/encryption':
-        specifier: 7.6.0
-        version: 7.6.0
+        specifier: 7.7.0
+        version: 7.7.0
       '@stacks/network':
-        specifier: 7.6.0
-        version: 7.6.0(encoding@0.1.13)
+        specifier: 7.7.0
+        version: 7.7.0
       '@stacks/transactions':
-        specifier: 7.6.0
-        version: 7.6.0(encoding@0.1.13)
+        specifier: 7.7.0
+        version: 7.7.0
       better-auth:
         specifier: 1.7.6
         version: 1.7.6(@opentelemetry/api@1.9.1)(@prisma/client@7.9.1(prisma@7.9.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(magicast@0.5.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2))(typescript@7.0.2))(drizzle-kit@1.0.0-rc.5-5935859)(drizzle-orm@1.0.0-rc.5-5935859(@effect/sql-pg@4.1.4(effect@4.1.4))(@effect/sql-pglite@4.1.4(effect@4.1.4))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.4)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.3.6))(mongodb@7.1.0)(mysql2@3.15.3)(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.0)(prisma@7.9.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(magicast@0.5.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.0.3)
@@ -409,7 +409,7 @@ importers:
         version: 0.35.5(@types/node@26.6.2)
       sign-in-with-stacks:
         specifier: 0.4.0
-        version: 0.4.0(508ee32dff1e35132772544398055619)
+        version: 0.4.0(d17f82b45de2ad274c3bcdc5ba30e8b3)
       thumbhash:
         specifier: 0.1.1
         version: 0.1.1
@@ -481,8 +481,8 @@ importers:
         specifier: 8.2.7
         version: 8.2.7(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5-5935859(@effect/sql-pg@4.1.4(effect@4.1.4))(@effect/sql-pglite@4.1.4(effect@4.1.4))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.4)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.3.6))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.3.6)
       '@stacks/network':
-        specifier: 7.6.0
-        version: 7.6.0(encoding@0.1.13)
+        specifier: 7.7.0
+        version: 7.7.0
       '@t3-oss/env-nextjs':
         specifier: 0.13.11
         version: 0.13.11(typescript@7.0.2)(valibot@1.4.2(typescript@7.0.2))(zod@4.3.6)
@@ -665,7 +665,7 @@ importers:
         version: 4.13.0(supports-color@10.2.2)(typescript@7.0.2)
       sign-in-with-stacks:
         specifier: 0.1.6
-        version: 0.1.6(@stacks/common@7.6.0)(@stacks/encryption@7.6.0)(@stacks/network@7.6.0(encoding@0.1.13))(@stacks/transactions@7.6.0(encoding@0.1.13))
+        version: 0.1.6(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)
       sonner:
         specifier: 2.0.7
         version: 2.0.7(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -747,17 +747,17 @@ importers:
         version: 5.0.0(zod@4.3.6)
     devDependencies:
       '@stacks/common':
-        specifier: 7.6.0
-        version: 7.6.0
+        specifier: 7.7.0
+        version: 7.7.0
       '@stacks/encryption':
-        specifier: 7.6.0
-        version: 7.6.0
+        specifier: 7.7.0
+        version: 7.7.0
       '@stacks/network':
-        specifier: 7.6.0
-        version: 7.6.0(encoding@0.1.13)
+        specifier: 7.7.0
+        version: 7.7.0
       '@stacks/transactions':
-        specifier: 7.6.0
-        version: 7.6.0(encoding@0.1.13)
+        specifier: 7.7.0
+        version: 7.7.0
       '@tsconfig/recommended':
         specifier: 1.0.13
         version: 1.0.13
@@ -5168,8 +5168,8 @@ packages:
   '@stacks/common@6.16.0':
     resolution: {integrity: sha512-PnzvhrdGRMVZvxTulitlYafSK4l02gPCBBoI9QEoTqgSnv62oaOXhYAUUkTMFKxdHW1seVEwZsrahuXiZPIAwg==}
 
-  '@stacks/common@7.6.0':
-    resolution: {integrity: sha512-VUW8WDmZP4wXUNWVvpFerV+7LQ0PqIn8YOs8AjSUMA7ZOXIRLxJHoKxjfiHzJqazy7KlyryPW4kSNBCr7tLqhQ==}
+  '@stacks/common@7.7.0':
+    resolution: {integrity: sha512-5ZypU9BN/6jiG9d3pvd5Jgj96vO4vwxLQkYjczeF0ymNtMyv9Niw1F9FjazFJn/Gfcef+WBKFIX65mcA7Xk/SQ==}
 
   '@stacks/connect-ui@8.1.2':
     resolution: {integrity: sha512-C3T1QmEGJocnmsamQnKJvlvHFfjr/FDebLSokrAAwTr6x76JPS5xuACB7u3a7+vVMUdINV+pFvfn442oic2R5w==}
@@ -5177,23 +5177,23 @@ packages:
   '@stacks/connect@8.2.7':
     resolution: {integrity: sha512-O9S4CCeMHJS1xnE+bPEca6zexVDgpyz4ibyi9G0qysaoyFj6eJah+xFfiuKShie4lm9CTHN+6eqVWrjcanvRxQ==}
 
-  '@stacks/encryption@7.6.0':
-    resolution: {integrity: sha512-1D2yazEcC5blc/xZkCPXQRbiAozXiVisLdxdFF3bVvNocUZ7yWkW7SOhhNve8RJ0Yf0XBkG6IbnBa3F1vyOyXA==}
+  '@stacks/encryption@7.7.0':
+    resolution: {integrity: sha512-JWiIj7sAF70kBhvSQKyLHNV0T8w09VXcSdcrmIxXV2R1fDX3VxGxYryLFXW3bSD0m9rcsNVmN2E1j8IAj2J3Dg==}
 
   '@stacks/network@6.17.0':
     resolution: {integrity: sha512-numHbfKjwco/rbkGPOEz8+FcJ2nBnS/tdJ8R422Q70h3SiA9eqk9RjSzB8p4JP8yW1SZvW+eihADHfMpBuZyfw==}
 
-  '@stacks/network@7.6.0':
-    resolution: {integrity: sha512-Blm85nsEbvJoFIFaDp0QE9WMC0Hf+o3Yb0oIDwWu3PPgpVSdndb/bJQUeT6eJTs0ibS26A2E/5d5L0fb4Ff/lA==}
+  '@stacks/network@7.7.0':
+    resolution: {integrity: sha512-35CM8aFSRp+rs+HZKcOktFj6jWhj/SJfXxCeY6EF/Eoy7fVyFQIIaFhkUBhSl5dMVxkxhIUlh5puwP+jGMUIWw==}
 
-  '@stacks/profile@7.6.0':
-    resolution: {integrity: sha512-gFXKl3eLi1vWiCcZ3F5QFBq/X+vYn3TKSbe1iHRW4VdhIB+WFedpJ4h2WrqTzRepRNQzd2z6kl2pKuyD1x+fuA==}
+  '@stacks/profile@7.7.0':
+    resolution: {integrity: sha512-D+8NSsV8nMP+p5oz3Knay8chHJIRZwgUomdU8iFkU028RcEXwxqLirfZHjl+AN742KSUtkCar2Hg/MjEOVPbdQ==}
 
   '@stacks/transactions@6.17.0':
     resolution: {integrity: sha512-FUah2BRgV66ApLcEXGNGhwyFTRXqX5Zco3LpiM3essw8PF0NQlHwwdPgtDko5RfrJl3LhGXXe/30nwsfNnB3+g==}
 
-  '@stacks/transactions@7.6.0':
-    resolution: {integrity: sha512-s7F7eJtQVnZoB79j8pY9SLKhlvvdYZZD1NSDRWrFjzSJTDmxptL8c50S563WFja6KOhFOgg1jd+p0XWTxFAVyA==}
+  '@stacks/transactions@7.7.0':
+    resolution: {integrity: sha512-sBw3kSF3HJM1ivXIg8+UWULojs8AZ0UtB6ebL7M/YSXVHlXzVqH0pezp96ChmSqNfREKV2j9fq/t5c9OV4/qyA==}
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
@@ -6567,10 +6567,6 @@ packages:
         optional: true
       zod:
         optional: true
-
-  abort-controller@3.0.0:
-    resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
-    engines: {node: '>=6.5'}
 
   accepts@2.0.0:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
@@ -8221,10 +8217,6 @@ packages:
   ethers@6.16.0:
     resolution: {integrity: sha512-U1wulmetNymijEhpSEQ7Ct/P/Jw9/e7R1j5XIbPRydgV2DjLVMsULDlNksq3RQnFgKoLlZf88ijYtWEXcPa07A==}
     engines: {node: '>=14.0.0'}
-
-  event-target-shim@5.0.1:
-    resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
-    engines: {node: '>=6'}
 
   eventemitter2@6.4.9:
     resolution: {integrity: sha512-JEPTiaOt9f04oa6NOkc4aH+nVp5I3wEjpHbIPqfgCdD5v5bUzy7xQqwcVO2aDQgOWhI28da57HksMrzK9HlRxg==}
@@ -10598,10 +10590,6 @@ packages:
   process-warning@1.0.0:
     resolution: {integrity: sha512-du4wfLyj4yCZq1VupnVSZmRsPJsNuxoDQFdCFHLaYiEbFBD7QE0a+I4D7hOxrVnh78QE/YipFAj9lXHiXocV+Q==}
 
-  process@0.11.10:
-    resolution: {integrity: sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==}
-    engines: {node: '>= 0.6.0'}
-
   progress@2.0.3:
     resolution: {integrity: sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==}
     engines: {node: '>=0.4.0'}
@@ -10867,10 +10855,6 @@ packages:
     resolution: {integrity: sha512-9u/sniCrY3D5WdsERHzHE4G2YCXqoG5FTHUiCC4SIbr6XcLZBY05ya9EKjYek9O5xOAwjGq+1JdGBAS7Q9ScoA==}
     engines: {node: '>= 6'}
 
-  readable-stream@4.7.0:
-    resolution: {integrity: sha512-oIGGmcpTLwPga8Bn6/Z75SVaH1z5dUut2ibSyAMVhmUggWpmDn2dapB0n7f8nwaSiRtepAsfJyfXIO5DCVAODg==}
-    engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-
   readdirp@5.0.0:
     resolution: {integrity: sha512-9u/XQ1pvrQtYyMpZe7DXKv2p5CNvyVwzUB6uhLAnQwHMSgKMBR62lc7AHljaeteeHXn11XTAaLLUVZYVZyuRBQ==}
     engines: {node: '>= 20.19.0'}
@@ -10988,10 +10972,6 @@ packages:
   reusify@1.1.0:
     resolution: {integrity: sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
-
-  ripemd160-min@0.0.6:
-    resolution: {integrity: sha512-+GcJgQivhs6S9qvLogusiTcS9kQUfgR75whKuy5jIhuiOfQuJ8fjqxV6EGD5duH1Y/FawFUMtMhyeq3Fbnib8A==}
-    engines: {node: '>=8'}
 
   ripemd160@2.0.3:
     resolution: {integrity: sha512-5Di9UC0+8h1L6ZD2d7awM7E/T4uA1fJRlx6zk/NvdCCVEoAnFqvHmCuNeIKoCeIixBX/q8uM+6ycDvF8woqosA==}
@@ -13655,7 +13635,7 @@ snapshots:
       jose: 6.2.12
       kysely: 0.29.6
       nanostores: 1.5.4
-      zod: 4.6.5
+      zod: 4.6.7
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
 
@@ -18741,7 +18721,7 @@ snapshots:
       '@solana/functional': 5.5.1(typescript@7.0.2)
       '@solana/rpc-subscriptions-spec': 5.5.1(typescript@7.0.2)
       '@solana/subscribable': 5.5.1(typescript@7.0.2)
-      ws: 8.22.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      ws: 8.23.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     optionalDependencies:
       typescript: 7.0.2
     transitivePeerDependencies:
@@ -18755,7 +18735,7 @@ snapshots:
       '@solana/functional': 5.5.1(typescript@7.0.2)
       '@solana/rpc-subscriptions-spec': 5.5.1(typescript@7.0.2)
       '@solana/subscribable': 5.5.1(typescript@7.0.2)
-      ws: 8.22.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+      ws: 8.23.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     optionalDependencies:
       typescript: 7.0.2
     transitivePeerDependencies:
@@ -19056,7 +19036,7 @@ snapshots:
       '@types/bn.js': 5.2.0
       '@types/node': 18.19.130
 
-  '@stacks/common@7.6.0': {}
+  '@stacks/common@7.7.0': {}
 
   '@stacks/connect-ui@8.1.2':
     dependencies:
@@ -19067,12 +19047,12 @@ snapshots:
       '@reown/appkit': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5-5935859(@effect/sql-pg@4.1.4(effect@4.1.4))(@effect/sql-pglite@4.1.4(effect@4.1.4))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.4)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.3.6))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.3.6)
       '@reown/appkit-universal-connector': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5-5935859(@effect/sql-pg@4.1.4(effect@4.1.4))(@effect/sql-pglite@4.1.4(effect@4.1.4))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.4)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.3.6))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.3.6)
       '@scure/base': 1.2.6
-      '@stacks/common': 7.6.0
+      '@stacks/common': 7.7.0
       '@stacks/connect-ui': 8.1.2
-      '@stacks/network': 7.6.0(encoding@0.1.13)
+      '@stacks/network': 7.7.0
       '@stacks/network-v6': '@stacks/network@6.17.0(encoding@0.1.13)'
-      '@stacks/profile': 7.6.0(encoding@0.1.13)
-      '@stacks/transactions': 7.6.0(encoding@0.1.13)
+      '@stacks/profile': 7.7.0
+      '@stacks/transactions': 7.7.0
       '@stacks/transactions-v6': '@stacks/transactions@6.17.0(encoding@0.1.13)'
       type-fest: 5.6.0
     transitivePeerDependencies:
@@ -19104,16 +19084,14 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@stacks/encryption@7.6.0':
+  '@stacks/encryption@7.7.0':
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
       '@scure/bip39': 1.1.0
-      '@stacks/common': 7.6.0
+      '@stacks/common': 7.7.0
       base64-js: 1.5.1
       bs58: 5.0.0
-      ripemd160-min: 0.0.6
-      varuint-bitcoin: 1.1.2
 
   '@stacks/network@6.17.0(encoding@0.1.13)':
     dependencies:
@@ -19122,23 +19100,18 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/network@7.6.0(encoding@0.1.13)':
+  '@stacks/network@7.7.0':
     dependencies:
-      '@stacks/common': 7.6.0
-      cross-fetch: 3.2.0(encoding@0.1.13)
-    transitivePeerDependencies:
-      - encoding
+      '@stacks/common': 7.7.0
 
-  '@stacks/profile@7.6.0(encoding@0.1.13)':
+  '@stacks/profile@7.7.0':
     dependencies:
-      '@stacks/common': 7.6.0
-      '@stacks/network': 7.6.0(encoding@0.1.13)
-      '@stacks/transactions': 7.6.0(encoding@0.1.13)
+      '@stacks/common': 7.7.0
+      '@stacks/network': 7.7.0
+      '@stacks/transactions': 7.7.0
       jsontokens: 4.0.1
       schema-inspector: 2.1.0
       zone-file: 2.0.0-beta.3
-    transitivePeerDependencies:
-      - encoding
 
   '@stacks/transactions@6.17.0(encoding@0.1.13)':
     dependencies:
@@ -19151,16 +19124,13 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@stacks/transactions@7.6.0(encoding@0.1.13)':
+  '@stacks/transactions@7.7.0':
     dependencies:
       '@noble/hashes': 1.1.5
       '@noble/secp256k1': 1.7.1
-      '@stacks/common': 7.6.0
-      '@stacks/network': 7.6.0(encoding@0.1.13)
+      '@stacks/common': 7.7.0
+      '@stacks/network': 7.7.0
       c32check: 2.0.0
-      lodash.clonedeep: 4.5.0
-    transitivePeerDependencies:
-      - encoding
 
   '@standard-schema/spec@1.1.0': {}
 
@@ -21610,10 +21580,6 @@ snapshots:
       typescript: 7.0.2
       zod: 4.3.6
 
-  abort-controller@3.0.0:
-    dependencies:
-      event-target-shim: 5.0.1
-
   accepts@2.0.0:
     dependencies:
       mime-types: 3.0.2
@@ -22254,7 +22220,7 @@ snapshots:
 
   c32check@2.0.0:
     dependencies:
-      '@noble/hashes': 1.8.0
+      '@noble/hashes': 1.1.5
       base-x: 4.0.1
 
   call-bind-apply-helpers@1.0.2:
@@ -23271,8 +23237,6 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  event-target-shim@5.0.1: {}
-
   eventemitter2@6.4.9: {}
 
   eventemitter3@5.0.1: {}
@@ -23378,7 +23342,7 @@ snapshots:
 
   extension-port-stream@3.0.0:
     dependencies:
-      readable-stream: 4.7.0
+      readable-stream: 3.6.2
       webextension-polyfill: 0.10.0
 
   eyes@0.1.8: {}
@@ -23718,10 +23682,10 @@ snapshots:
     dependencies:
       '@types/node': 26.6.2
       '@types/whatwg-mimetype': 3.0.2
-      '@types/ws': 8.18.1
+      '@types/ws': 8.18.2
       entities: 7.0.1
       whatwg-mimetype: 3.0.0
-      ws: 8.22.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      ws: 8.23.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -23730,10 +23694,10 @@ snapshots:
     dependencies:
       '@types/node': 26.6.2
       '@types/whatwg-mimetype': 3.0.2
-      '@types/ws': 8.18.1
+      '@types/ws': 8.18.2
       entities: 7.0.1
       whatwg-mimetype: 3.0.0
-      ws: 8.22.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
+      ws: 8.23.0(bufferutil@4.1.0)(utf-8-validate@6.0.6)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -25447,11 +25411,11 @@ snapshots:
   ox@0.6.7(typescript@7.0.2)(zod@3.25.76):
     dependencies:
       '@adraffy/ens-normalize': 1.11.1
-      '@noble/curves': 1.9.7
-      '@noble/hashes': 1.8.0
-      '@scure/bip32': 1.7.0
-      '@scure/bip39': 1.6.0
-      abitype: 1.2.3(typescript@7.0.2)(zod@3.25.76)
+      '@noble/curves': 1.8.1
+      '@noble/hashes': 1.7.1
+      '@scure/bip32': 1.6.2
+      '@scure/bip39': 1.5.4
+      abitype: 1.0.8(typescript@7.0.2)(zod@3.25.76)
       eventemitter3: 5.0.1
     optionalDependencies:
       typescript: 7.0.2
@@ -26012,8 +25976,6 @@ snapshots:
 
   process-warning@1.0.0: {}
 
-  process@0.11.10: {}
-
   progress@2.0.3: {}
 
   prompts@2.4.2:
@@ -26347,14 +26309,6 @@ snapshots:
       string_decoder: 1.3.0
       util-deprecate: 1.0.2
 
-  readable-stream@4.7.0:
-    dependencies:
-      abort-controller: 3.0.0
-      buffer: 6.0.3
-      events: 3.3.0
-      process: 0.11.10
-      string_decoder: 1.3.0
-
   readdirp@5.0.0: {}
 
   readonly-date@1.0.0: {}
@@ -26499,8 +26453,6 @@ snapshots:
     optional: true
 
   reusify@1.1.0: {}
-
-  ripemd160-min@0.0.6: {}
 
   ripemd160@2.0.3:
     dependencies:
@@ -26913,19 +26865,19 @@ snapshots:
       side-channel-map: 1.0.1
       side-channel-weakmap: 1.0.2
 
-  sign-in-with-stacks@0.1.6(@stacks/common@7.6.0)(@stacks/encryption@7.6.0)(@stacks/network@7.6.0(encoding@0.1.13))(@stacks/transactions@7.6.0(encoding@0.1.13)):
+  sign-in-with-stacks@0.1.6(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0):
     dependencies:
-      '@stacks/common': 7.6.0
-      '@stacks/encryption': 7.6.0
-      '@stacks/network': 7.6.0(encoding@0.1.13)
-      '@stacks/transactions': 7.6.0(encoding@0.1.13)
+      '@stacks/common': 7.7.0
+      '@stacks/encryption': 7.7.0
+      '@stacks/network': 7.7.0
+      '@stacks/transactions': 7.7.0
 
-  sign-in-with-stacks@0.4.0(508ee32dff1e35132772544398055619):
+  sign-in-with-stacks@0.4.0(d17f82b45de2ad274c3bcdc5ba30e8b3):
     dependencies:
-      '@stacks/common': 7.6.0
-      '@stacks/encryption': 7.6.0
-      '@stacks/network': 7.6.0(encoding@0.1.13)
-      '@stacks/transactions': 7.6.0(encoding@0.1.13)
+      '@stacks/common': 7.7.0
+      '@stacks/encryption': 7.7.0
+      '@stacks/network': 7.7.0
+      '@stacks/transactions': 7.7.0
     optionalDependencies:
       '@better-auth/core': 1.7.6(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.5))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4)
       better-auth: 1.7.6(@opentelemetry/api@1.9.1)(@prisma/client@7.9.1(prisma@7.9.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(magicast@0.5.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2))(typescript@7.0.2))(drizzle-kit@1.0.0-rc.5-5935859)(drizzle-orm@1.0.0-rc.5-5935859(@effect/sql-pg@4.1.4(effect@4.1.4))(@effect/sql-pglite@4.1.4(effect@4.1.4))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.4)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.3.6))(mongodb@7.1.0)(mysql2@3.15.3)(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.2)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(pg@8.23.0)(prisma@7.9.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(magicast@0.5.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.0.3)
@@ -27688,6 +27640,7 @@ snapshots:
   varuint-bitcoin@1.1.2:
     dependencies:
       safe-buffer: 5.2.1
+    optional: true
 
   vary@1.1.2: {}
 
@@ -28019,7 +27972,7 @@ snapshots:
       chai: 6.2.2
       es-module-lexer: 2.3.2
       expect-type: 1.4.0
-      magic-string: 1.4.1
+      magic-string: 1.4.5
       obug: 2.2.1
       picomatch: 4.0.7
       std-env: 4.2.0
@@ -28044,7 +27997,7 @@ snapshots:
       chai: 6.2.2
       es-module-lexer: 2.3.2
       expect-type: 1.4.0
-      magic-string: 1.4.1
+      magic-string: 1.4.5
       obug: 2.2.1
       picomatch: 4.0.7
       std-env: 4.2.0
@@ -28352,6 +28305,11 @@ snapshots:
     optionalDependencies:
       bufferutil: 4.1.0
       utf-8-validate: 5.0.10
+
+  ws@8.23.0(bufferutil@4.1.0)(utf-8-validate@6.0.6):
+    optionalDependencies:
+      bufferutil: 4.1.0
+      utf-8-validate: 6.0.6
 
   wsl-utils@0.3.1:
     dependencies:

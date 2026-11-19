@@ -21,10 +21,10 @@
     "zod-validation-error": "5.0.0"
   },
   "devDependencies": {
-    "@stacks/common": "7.6.0",
-    "@stacks/encryption": "7.6.0",
-    "@stacks/network": "7.6.0",
-    "@stacks/transactions": "7.6.0",
+    "@stacks/common": "7.7.0",
+    "@stacks/encryption": "7.7.0",
+    "@stacks/network": "7.7.0",
+    "@stacks/transactions": "7.7.0",
     "@tsconfig/recommended": "1.0.13",
     "@types/node": "26.6.2",
     "openapi-typescript": "7.13.0",
