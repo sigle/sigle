@@ -1,6 +1,9 @@
 import { Schema } from "effect";
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/http-api";
-import { UserAuthMiddleware } from "@/api/middleware/auth-user";
+import {
+  UserAuthMiddleware,
+  WhitelistedUserMiddleware,
+} from "@/api/middleware/auth-user";
 import {
   RateLimitMiddleware,
   RateLimitPolicy,
@@ -72,4 +75,5 @@ export const ProfileGroup = HttpApiGroup.make("profile")
   )
   .prefix("/api/protected/user/profile")
   .middleware(RateLimitMiddleware)
+  .middleware(WhitelistedUserMiddleware)
   .middleware(UserAuthMiddleware);

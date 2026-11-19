@@ -93,6 +93,25 @@ describe("userAuthMiddleware", () => {
     ),
   );
 
+  it.effect("whitelists mainnet wallets in WHITELISTED_ADDRESSES", () => {
+    const { address } = createTestSiwsCredentials();
+
+    return Effect.gen(function* () {
+      const { client } = yield* createAuthenticatedClient({ address });
+
+      const response = yield* client.get("/api/protected/drafts");
+
+      expect(response.status).toBe(200);
+    }).pipe(
+      Effect.provide(
+        makeTestServerLayer({
+          STACKS_ENV: "mainnet",
+          WHITELISTED_ADDRESSES: [address],
+        }),
+      ),
+    );
+  });
+
   it.effect("reports the pro plan for pro wallets", () => {
     const { address } = createTestSiwsCredentials();
 

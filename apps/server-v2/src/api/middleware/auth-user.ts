@@ -7,8 +7,6 @@ import { Database } from "@/db";
 import { AuthService } from "@/services/auth";
 import { findWalletAddresses } from "@/services/users";
 
-const WHITELISTED_ADDRESSES: ReadonlyArray<string> = [];
-
 export interface AuthenticatedUser {
   readonly id: string;
   /** Primary Stacks address of the user. */
@@ -66,7 +64,7 @@ export const UserAuthMiddlewareLayer: Layer.Layer<
           whitelisted:
             config.STACKS_ENV === "testnet" ||
             walletAddresses.some((address) =>
-              WHITELISTED_ADDRESSES.includes(address),
+              config.WHITELISTED_ADDRESSES.includes(address),
             ),
         });
       });
