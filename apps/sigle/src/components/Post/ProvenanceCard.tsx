@@ -223,9 +223,11 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                 ) : null}
 
                 <p className="pt-1 text-xs/relaxed text-muted-foreground">
-                  This post&apos;s content is permanently stored on Arweave and
-                  timestamped on the Bitcoin blockchain with OpenTimestamps,
-                  proving authorship and publication time.
+                  {opentimestamps?.bitcoinTimestamp
+                    ? "This post's content is permanently stored on Arweave and timestamped on the Bitcoin blockchain with OpenTimestamps, proving authorship and publication time."
+                    : opentimestamps
+                      ? "This post's content is permanently stored on Arweave. Its Bitcoin timestamp with OpenTimestamps is waiting for confirmation."
+                      : "This post's content is permanently stored on Arweave."}
                 </p>
               </div>
             </AccordionContent>
