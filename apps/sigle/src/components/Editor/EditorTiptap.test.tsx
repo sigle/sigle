@@ -1,4 +1,5 @@
-import { render, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it, beforeEach, vi } from "vite-plus/test";
 import { EditorFormProvider } from "./EditorFormProvider";
 import { EditorTipTap } from "./EditorTiptap";
@@ -54,6 +55,16 @@ const getMarkdownOutput = (): string => {
   expect(editor).toBeDefined();
 
   return editor?.getMarkdown() ?? "";
+};
+
+const getImageSources = () => {
+  const sources: unknown[] = [];
+
+  useEditorStore.getState().editor?.state.doc.descendants((node) => {
+    if (node.type.name === "image") sources.push(node.attrs.src);
+  });
+
+  return sources;
 };
 
 const waitForEditor = async () => {
@@ -1070,5 +1081,141 @@ describe("editor tiptap - form integration", () => {
     expect(editor).toBeDefined();
     editor?.commands.setContent("Test content", { contentType: "markdown" });
     expect(getMarkdownOutput()).toBe("Test content");
+  });
+});
+
+describe("editor tiptap - image from url", () => {
+  beforeEach(() => {
+    useEditorStore.setState({ editor: undefined });
+  });
+
+  it("should embed an image from a pasted url", async () => {
+    const user = userEvent.setup();
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+
+    useEditorStore.getState().editor?.commands.insertImageUrlInput();
+
+    const input = await screen.findByPlaceholderText(
+      "Paste image URL and press “enter”...",
+    );
+
+    await user.type(input, "https://example.com/photo.jpg{Enter}");
+
+    await waitFor(() => {
+      expect(getMarkdownOutput()).toContain(
+        "![](https://example.com/photo.jpg)",
+      );
+    });
+  });
+
+  it("should reject a url that is not https", async () => {
+    const user = userEvent.setup();
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+
+    useEditorStore.getState().editor?.commands.insertImageUrlInput();
+
+    const input = await screen.findByPlaceholderText(
+      "Paste image URL and press “enter”...",
+    );
+
+    await user.type(input, "http://example.com/photo.jpg{Enter}");
+
+    await expect(
+      screen.findByText("Enter a valid image URL starting with https://"),
+    ).resolves.toBeDefined();
+    expect(getMarkdownOutput()).not.toContain("http://");
+  });
+
+  it("should not export an image still waiting for its url", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+
+    useEditorStore.getState().editor?.commands.insertImageUrlInput();
+
+    expect(getMarkdownOutput()).not.toContain("![");
+  });
+
+  it("should store a pasted url with its spaces encoded", async () => {
+    const user = userEvent.setup();
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+
+    useEditorStore.getState().editor?.commands.insertImageUrlInput();
+
+    const input = await screen.findByPlaceholderText(
+      "Paste image URL and press “enter”...",
+    );
+
+    await user.type(input, "https://example.com/my photo.jpg{Enter}");
+
+    await waitFor(() => {
+      expect(getImageSources()).toStrictEqual([
+        "https://example.com/my%20photo.jpg",
+      ]);
+    });
+  });
+
+  it("should round-trip an image url with a closing parenthesis", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+
+    const src = "https://example.com/photo).png";
+    const editor = useEditorStore.getState().editor;
+
+    editor?.commands.insertContent({ type: "image", attrs: { src } });
+
+    const markdown = getMarkdownOutput();
+
+    editor?.commands.setContent(markdown, { contentType: "markdown" });
+
+    expect({ markdown, sources: getImageSources() }).toStrictEqual({
+      markdown: "![](https://example.com/photo\\).png)",
+      sources: [src],
+    });
+  });
+
+  it("should round-trip an image url with a backslash before a parenthesis", async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap />
+      </EditorFormProvider>,
+    );
+    await waitForEditor();
+
+    const src = String.raw`https://example.com/photo\).png`;
+    const editor = useEditorStore.getState().editor;
+
+    editor?.commands.insertContent({ type: "image", attrs: { src } });
+
+    const markdown = getMarkdownOutput();
+
+    editor?.commands.setContent(markdown, { contentType: "markdown" });
+
+    expect({ markdown, sources: getImageSources() }).toStrictEqual({
+      markdown: String.raw`![](https://example.com/photo\\\).png)`,
+      sources: [src],
+    });
   });
 });

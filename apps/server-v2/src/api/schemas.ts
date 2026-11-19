@@ -189,9 +189,9 @@ export const documentPaginationQuery =
   };
 
 /**
- * Image upload endpoints read the raw request body themselves (see the
- * handlers), so the binary request body is documented manually in the OpenAPI
- * specification.
+ * Image upload endpoints read the raw request body themselves (see
+ * `uploadImageFromRequest`), so the binary request body is documented manually
+ * in the OpenAPI specification.
  */
 export const imageRequestBody = {
   required: true,

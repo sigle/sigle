@@ -17,6 +17,8 @@ export interface SlashCommandsCommand {
   keywords?: string[];
   description: string;
   section: "basic" | "embed";
+  /** Only offered to users on the Pro plan. */
+  proOnly?: boolean;
   icon: (props: IconProps) => React.ReactElement;
   command: ({ editor, range }: { editor: Editor; range?: Range }) => void;
 }

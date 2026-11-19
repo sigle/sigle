@@ -9,6 +9,7 @@ export const CurrentUserResponse = Schema.Struct({
   // posts.
   address: Schema.String,
   whitelisted: Schema.Boolean,
+  plan: Schema.Literals(["free", "pro"]),
 });
 
 export const ProtectedGroup = HttpApiGroup.make("protected")

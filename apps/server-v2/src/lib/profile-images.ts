@@ -16,9 +16,6 @@ const maxMibByKind: Record<ProfileImageKind, number> = {
 export const profileImageMaxMib = (kind: ProfileImageKind): number =>
   maxMibByKind[kind];
 
-export const profileImageMaxBytes = (kind: ProfileImageKind): number =>
-  maxMibByKind[kind] * 1024 * 1024;
-
 export interface ProfileImageSettings {
   readonly quality: number;
   readonly width: number;

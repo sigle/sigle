@@ -116,7 +116,7 @@ export interface paths {
     get?: never;
     /**
      * Upload a draft image
-     * @description Upload an image to embed in a draft as a raw binary body. Not implemented yet: always responds with a 500.
+     * @description Upload an image to embed in a draft as a raw binary body, up to 5 MiB. The image is re-encoded as WebP and served from the CDN. Pro plan only, free users get a 403 and can embed external image URLs instead.
      */
     put: operations["drafts.uploadImage"];
     post?: never;
@@ -786,6 +786,8 @@ export interface operations {
             id: string;
             address: string;
             whitelisted: boolean;
+            /** @enum {string} */
+            plan: "free" | "pro";
           };
         };
       };

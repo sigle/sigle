@@ -47,7 +47,14 @@ import { useEditorStore } from "./store";
 
 const lowlight = createLowlight(common);
 
-export const EditorTipTap = () => {
+interface EditorTipTapProps {
+  /** Whether the user can upload images, which is only on the Pro plan. */
+  canUploadImages?: boolean;
+}
+
+export const EditorTipTap = ({
+  canUploadImages = false,
+}: EditorTipTapProps) => {
   const postId = useParams<{ postId: string }>().postId;
   const posthog = usePostHog();
   const { width } = useWindowSize();
@@ -91,45 +98,47 @@ export const EditorTipTap = () => {
         lowlight,
       }),
       TipTapImage.configure({
-        uploadFile: async (file: File) => {
-          posthog.capture("editor_image_upload_start", {
-            postId,
-          });
+        uploadFile: !canUploadImages
+          ? undefined
+          : async (file: File) => {
+              posthog.capture("editor_image_upload_start", {
+                postId,
+              });
 
-          try {
-            // SAFETY: the endpoint reads a raw binary body, but openapi-typescript
-            // models `format: binary` request bodies as strings. The file is
-            // passed through `bodySerializer` unchanged.
-            const data = await uploadImage({
-              params: {
-                path: {
-                  draftId: postId,
-                },
-              },
-              headers: {
-                "Content-Type": file.type,
-              },
-              body: file as never,
-              bodySerializer: () => file,
-            });
+              try {
+                // SAFETY: the endpoint reads a raw binary body, but openapi-typescript
+                // models `format: binary` request bodies as strings. The file is
+                // passed through `bodySerializer` unchanged.
+                const data = await uploadImage({
+                  params: {
+                    path: {
+                      draftId: postId,
+                    },
+                  },
+                  headers: {
+                    "Content-Type": file.type,
+                  },
+                  body: file as never,
+                  bodySerializer: () => file,
+                });
 
-            posthog.capture("editor_image_upload_success", {
-              postId,
-            });
+                posthog.capture("editor_image_upload_success", {
+                  postId,
+                });
 
-            return data.url;
-            // oxlint-disable-next-line typescript/no-explicit-any
-          } catch (error: any) {
-            toast.error("Failed to upload image", {
-              description: error.message,
-            });
-            posthog.capture("editor_image_upload_error", {
-              postId,
-              error: error.message,
-            });
-            throw error;
-          }
-        },
+                return data.url;
+                // oxlint-disable-next-line typescript/no-explicit-any
+              } catch (error: any) {
+                toast.error("Failed to upload image", {
+                  description: error.message,
+                });
+                posthog.capture("editor_image_upload_error", {
+                  postId,
+                  error: error.message,
+                });
+                throw error;
+              }
+            },
       }),
       // Marks
       TipTapBold,
@@ -150,7 +159,9 @@ export const EditorTipTap = () => {
       TipTapEmbed,
       !isMobile
         ? SlashCommands.configure({
-            commands: slashCommands,
+            commands: canUploadImages
+              ? slashCommands
+              : slashCommands.filter((command) => !command.proOnly),
           })
         : undefined,
       isMobile ? TipTapMobileScroll : undefined,

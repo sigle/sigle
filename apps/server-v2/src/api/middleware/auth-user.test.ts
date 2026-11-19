@@ -4,13 +4,17 @@ import { Effect, Schema } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
 import { Database } from "@/db";
 import { walletAddress } from "@/db/schema";
-import { createAuthenticatedClient } from "@/test/helpers";
+import {
+  createAuthenticatedClient,
+  createTestSiwsCredentials,
+} from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 
 const CurrentUserResponse = Schema.Struct({
   id: Schema.String,
   address: Schema.String,
   whitelisted: Schema.Boolean,
+  plan: Schema.Literals(["free", "pro"]),
 });
 
 const ErrorResponse = Schema.Struct({ message: Schema.String });
@@ -44,6 +48,7 @@ describe("userAuthMiddleware", () => {
         id: userId,
         address,
         whitelisted: true,
+        plan: "free",
       });
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
@@ -74,9 +79,39 @@ describe("userAuthMiddleware", () => {
         id: userId,
         address,
         whitelisted: false,
+        plan: "free",
       });
-    }).pipe(Effect.provide(makeTestServerLayer({ STACKS_ENV: "mainnet" }))),
+    }).pipe(
+      Effect.provide(
+        makeTestServerLayer({
+          STACKS_ENV: "mainnet",
+          // Keeps the mainnet NFT check offline: the failed lookup reports
+          // `free`.
+          STACKS_API_URL: "http://127.0.0.1:9",
+        }),
+      ),
+    ),
   );
+
+  it.effect("reports the pro plan for pro wallets", () => {
+    const { address } = createTestSiwsCredentials();
+
+    return Effect.gen(function* () {
+      const { client, userId } = yield* createAuthenticatedClient({ address });
+
+      const response = yield* client.get("/api/protected/me");
+
+      const body =
+        yield* HttpClientResponse.schemaBodyJson(CurrentUserResponse)(response);
+
+      expect(body).toStrictEqual({
+        id: userId,
+        address,
+        whitelisted: true,
+        plan: "pro",
+      });
+    }).pipe(Effect.provide(makeTestServerLayer({ PRO_ADDRESSES: [address] })));
+  });
 
   it.effect("returns 403 when the user is not whitelisted", () =>
     Effect.gen(function* () {
