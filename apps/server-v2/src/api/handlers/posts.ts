@@ -1,8 +1,3 @@
-import {
-  addressToString,
-  createAddress,
-  validateStacksAddress,
-} from "@stacks/transactions";
 import { count, desc, eq, inArray } from "drizzle-orm";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder } from "effect/http-api";
@@ -12,26 +7,25 @@ import {
   type PostListQuery,
 } from "@/api/groups/posts";
 import { findProfiles } from "@/api/handlers/users";
-import { BadRequest, NotFound } from "@/api/schemas";
+import { NotFound } from "@/api/schemas";
 import { Database } from "@/db";
 import { mediaImage, post, postOts, walletAddress } from "@/db/schema";
+import { parseStacksAddress } from "@/lib/stacks-address";
 import { findPrimaryWalletAddresses } from "@/services/users";
 
 /**
- * Author of the posts of each user: their primary wallet address with its
- * profile. Users without a linked wallet are missing from the returned map.
+ * Author of each user's posts, in the order of `userIds`: their primary wallet
+ * address with its profile.
  */
 const findAuthors = (userIds: ReadonlyArray<string>) =>
   Effect.gen(function* () {
-    const addresses = yield* findPrimaryWalletAddresses([...new Set(userIds)]);
-    const profiles = yield* findProfiles([...addresses.values()]);
+    const addresses = yield* findPrimaryWalletAddresses(userIds);
+    const profiles = yield* findProfiles([...new Set(addresses)]);
 
-    return new Map(
-      [...addresses].map(([userId, address]) => [
-        userId,
-        { address, profile: profiles.get(address)?.profile ?? null },
-      ]),
-    );
+    return addresses.map((address) => ({
+      address,
+      profile: profiles.get(address)?.profile ?? null,
+    }));
   });
 
 const toMediaImage = (
@@ -45,35 +39,26 @@ const toMediaImage = (
 
 export const listPosts = (query: typeof PostListQuery.Type) =>
   Effect.gen(function* () {
-    if (
-      query.username !== undefined &&
-      !validateStacksAddress(query.username)
-    ) {
-      return yield* new BadRequest({ message: "Invalid Stacks address" });
-    }
+    const username =
+      query.username === undefined
+        ? undefined
+        : yield* parseStacksAddress(query.username);
 
     const db = yield* Database;
     const limit = query.limit ?? POST_LIST_DEFAULT_LIMIT;
     const offset = query.offset ?? 0;
 
     // Posts belong to a user, who can have several wallets, so an address
-    // matches every post of the user owning it. Wallet addresses are stored in
-    // their canonical c32 form, which validation does not enforce: decoding
-    // folds confusable characters such as `O` and `0`.
+    // matches every post of the user owning it.
     const where =
-      query.username === undefined
+      username === undefined
         ? undefined
         : inArray(
             post.userId,
             db
               .select({ userId: walletAddress.userId })
               .from(walletAddress)
-              .where(
-                eq(
-                  walletAddress.address,
-                  addressToString(createAddress(query.username)),
-                ),
-              ),
+              .where(eq(walletAddress.address, username)),
           );
 
     const [totals] = yield* db
@@ -111,7 +96,7 @@ export const listPosts = (query: typeof PostListQuery.Type) =>
     const authors = yield* findAuthors(posts.map((item) => item.userId));
 
     return {
-      results: posts.map((item) => ({
+      results: posts.map((item, index) => ({
         id: item.id,
         title: item.title,
         excerpt: item.excerpt,
@@ -127,7 +112,7 @@ export const listPosts = (query: typeof PostListQuery.Type) =>
         arweaveTxId: item.arweaveTxId,
         createdAt: DateTime.fromDateUnsafe(item.createdAt),
         updatedAt: DateTime.fromDateUnsafe(item.updatedAt),
-        author: authors.get(item.userId) ?? null,
+        author: authors[index],
       })),
       limit,
       offset,
@@ -162,7 +147,7 @@ export const getPost = (postId: string) =>
     }
 
     const foundPost = found.post;
-    const authors = yield* findAuthors([foundPost.userId]);
+    const [author] = yield* findAuthors([foundPost.userId]);
 
     return {
       id: foundPost.id,
@@ -183,7 +168,7 @@ export const getPost = (postId: string) =>
       arweaveBlockHeight: foundPost.arweaveBlockHeight,
       createdAt: DateTime.fromDateUnsafe(foundPost.createdAt),
       updatedAt: DateTime.fromDateUnsafe(foundPost.updatedAt),
-      author: authors.get(foundPost.userId) ?? null,
+      author,
       opentimestamps:
         found.otsStatus === null
           ? null

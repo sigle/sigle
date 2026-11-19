@@ -138,8 +138,6 @@ describe("posts", () => {
         address: NO_PROFILE_ADDRESS,
       });
 
-      const withoutWallet = yield* createTestUser();
-
       yield* createTestPost({
         userId: author.id,
         title: "with cover",
@@ -151,11 +149,6 @@ describe("posts", () => {
         title: "without profile",
         createdAt: new Date(Date.UTC(2026, 0, 1, 0, 1)),
       });
-      yield* createTestPost({
-        userId: withoutWallet.id,
-        title: "without wallet",
-        createdAt: new Date(Date.UTC(2026, 0, 1, 0, 0)),
-      });
 
       const response = yield* client.get("/api/posts");
 
@@ -166,7 +159,7 @@ describe("posts", () => {
         body.results.map((item) => ({
           title: item.title,
           coverImage: item.coverImage,
-          author: item.author && {
+          author: {
             address: item.author.address,
             displayName: item.author.profile?.displayName ?? null,
           },
@@ -187,8 +180,20 @@ describe("posts", () => {
           coverImage: null,
           author: { address: NO_PROFILE_ADDRESS, displayName: null },
         },
-        { title: "without wallet", coverImage: null, author: null },
       ]);
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect("GET /api/posts fails when an author has no linked wallet", () =>
+    Effect.gen(function* () {
+      const client = yield* HttpClient.HttpClient;
+      yield* createAuthorPosts(AUTHOR_ADDRESS, ["with wallet"]);
+      const withoutWallet = yield* createTestUser();
+      yield* createTestPost({ userId: withoutWallet.id });
+
+      const response = yield* client.get("/api/posts");
+
+      expect(response.status).toBe(500);
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 

@@ -395,13 +395,16 @@ export const createSignedTestPostMetadata = (options: {
 const TEST_SESSION_DURATION_MILLIS = 7 * 24 * 60 * 60 * 1000;
 
 /**
- * Creates a user, a session row and an HTTP client carrying the signed
+ * Creates a user with a primary wallet at `address` (a random testnet address
+ * by default), a session row and an HTTP client carrying the signed
  * `better-auth` session cookie.
  *
  * This skips the SIWS handshake so protected routes can be tested without
  * signing a message, while still exercising the real session middleware.
  */
-export const createAuthenticatedClient = (options: { userId?: string } = {}) =>
+export const createAuthenticatedClient = (
+  options: { userId?: string; address?: string } = {},
+) =>
   Effect.gen(function* () {
     const db = yield* Database;
     const config = yield* AppConfig;
@@ -409,6 +412,9 @@ export const createAuthenticatedClient = (options: { userId?: string } = {}) =>
     const user = yield* createTestUser(
       options.userId === undefined ? {} : { id: options.userId },
     );
+
+    const address = options.address ?? createTestSiwsCredentials().address;
+    yield* createTestWalletAddress({ userId: user.id, address });
 
     const token = crypto.randomUUID();
     const now = new Date();
@@ -440,6 +446,7 @@ export const createAuthenticatedClient = (options: { userId?: string } = {}) =>
         ),
       ),
       userId: user.id,
+      address,
     };
   });
 

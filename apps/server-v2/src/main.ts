@@ -34,7 +34,6 @@ import { PostHogService } from "@/services/posthog";
 import { RateLimiterLive } from "@/services/rate-limiter";
 import { StorageService } from "@/services/storage";
 import { TelemetryLayer } from "@/services/telemetry";
-import { UserWhitelistService } from "@/services/users";
 
 export const CoreServicesLayer = Layer.mergeAll(
   TelemetryLayer,
@@ -62,11 +61,7 @@ export const ApiMiddlewareLayer = Layer.mergeAll(
   AdminMiddlewareLayer,
 );
 
-export const AuthLayer = Layer.mergeAll(
-  AuthService.layer,
-  UserWhitelistService.layer,
-  PlanService.layer,
-);
+export const AuthLayer = Layer.mergeAll(AuthService.layer, PlanService.layer);
 
 export const CorsLayer = Layer.unwrap(
   Effect.map(AppConfig, (config) =>

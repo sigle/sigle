@@ -31,8 +31,7 @@ export const PostListItem = Schema.Struct({
   createdAt: DateTime,
   updatedAt: DateTime,
   // Primary wallet of the user who published the post, with their profile.
-  // Null when that user has no linked wallet.
-  author: Schema.NullOr(UserProfileResponse),
+  author: UserProfileResponse,
 }).annotate({ identifier: "PostListItem" });
 
 export const PostOpenTimestamps = Schema.Struct({
@@ -61,8 +60,7 @@ export const Post = Schema.Struct({
   createdAt: DateTime,
   updatedAt: DateTime,
   // Primary wallet of the user who published the post, with their profile.
-  // Null when that user has no linked wallet.
-  author: Schema.NullOr(UserProfileResponse),
+  author: UserProfileResponse,
   // Null until the post metadata is submitted to OpenTimestamps.
   opentimestamps: Schema.NullOr(PostOpenTimestamps),
 }).annotate({ identifier: "Post" });
