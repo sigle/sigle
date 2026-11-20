@@ -230,6 +230,7 @@ export const createTestPostOts = (options: {
   readonly pendingProof?: Buffer | null;
   readonly otsTxId?: string | null;
   readonly bitcoinBlockHeight?: number | null;
+  readonly bitcoinBlockHash?: string | null;
   readonly bitcoinTimestamp?: Date | null;
   readonly updatedAt?: Date;
 }) =>
@@ -245,6 +246,7 @@ export const createTestPostOts = (options: {
         pendingProof: options.pendingProof ?? null,
         otsTxId: options.otsTxId ?? null,
         bitcoinBlockHeight: options.bitcoinBlockHeight ?? null,
+        bitcoinBlockHash: options.bitcoinBlockHash ?? null,
         bitcoinTimestamp: options.bitcoinTimestamp ?? null,
         updatedAt: options.updatedAt,
       })

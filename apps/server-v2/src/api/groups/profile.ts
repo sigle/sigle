@@ -39,7 +39,8 @@ export const ProfileImageKindSchema = Schema.Literals(profileImageKinds);
 
 export const UploadProfileImageResponse = Schema.Struct({
   url: Schema.String,
-  key: Schema.String,
+  // Size of the stored, optimized image.
+  sizeBytes: Schema.Int,
   width: Schema.Int,
   height: Schema.Int,
   // Base64 ThumbHash placeholder for the optimized image.

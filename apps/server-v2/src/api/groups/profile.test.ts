@@ -49,7 +49,7 @@ const UploadProfileMetadataResponse = Schema.Struct({
 
 const UploadProfileImageResponse = Schema.Struct({
   url: Schema.String,
-  key: Schema.String,
+  sizeBytes: Schema.Int,
   width: Schema.Int,
   height: Schema.Int,
   thumbhash: Schema.String,
@@ -736,7 +736,7 @@ describe("profile", () => {
         status: 200,
         body: {
           height: 300,
-          key,
+          sizeBytes: uploadedBytes.length,
           thumbhash: expect.any(String),
           url,
           width: 600,

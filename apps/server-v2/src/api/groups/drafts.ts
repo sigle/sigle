@@ -122,13 +122,18 @@ const DraftTags = Schema.mutable(
 );
 
 /**
- * Publish state of a draft: null until it is first published, `FAILED` once a
- * publish gave up. A published draft is deleted, so `COMPLETED` never shows.
- * While it is `PENDING` or `PROCESSING`, saving or deleting the draft returns
- * a 409.
+ * Publish state of a draft: null until it is first published, `failed` once a
+ * publish gave up. A published draft is deleted, so `completed` never shows.
+ * While it is `pending` or `processing`, saving or deleting the draft returns
+ * a 409. Like every enum in the API it is lowercase on the wire and decodes to
+ * the uppercase database value.
  */
 export const DraftPublishStatus = Schema.NullOr(
-  Schema.Literals(["PENDING", "PROCESSING", "FAILED"]),
+  Schema.Literals(["pending", "processing", "failed"]).transform([
+    "PENDING",
+    "PROCESSING",
+    "FAILED",
+  ]),
 ).annotate({ identifier: "DraftPublishStatus" });
 
 export const Draft = Schema.Struct({
@@ -196,25 +201,28 @@ export const PublishDraftPayload = Schema.Struct({
 
 export const PublishDraftAccepted = Schema.Struct({
   draftId: Schema.String,
-  status: Schema.Literal("PENDING"),
+  status: Schema.Literal("pending"),
 }).annotate({ identifier: "PublishDraftAccepted" });
 
 export const PublishDraftStatus = Schema.Literals([
-  "PENDING",
-  "PROCESSING",
-  "COMPLETED",
-  "FAILED",
-]).annotate({ identifier: "PublishDraftStatus" });
+  "pending",
+  "processing",
+  "completed",
+  "failed",
+])
+  .transform(["PENDING", "PROCESSING", "COMPLETED", "FAILED"])
+  .annotate({ identifier: "PublishDraftStatus" });
 
 export const PublishDraftStatusResponse = Schema.Struct({
   status: PublishDraftStatus,
   postId: Schema.NullOr(Schema.String),
-  arweaveId: Schema.NullOr(Schema.String),
+  arweaveTxId: Schema.NullOr(Schema.String),
 }).annotate({ identifier: "PublishDraftStatusResponse" });
 
 export const UploadDraftImageResponse = Schema.Struct({
   url: Schema.String,
-  key: Schema.String,
+  // Size of the stored, optimized image.
+  sizeBytes: Schema.Int,
   width: Schema.Int,
   height: Schema.Int,
   // Base64 ThumbHash placeholder for the optimized image.
@@ -288,7 +296,11 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
         draftId: Schema.String,
       },
       payload: PublishDraftPayload,
-      success: HttpApiSchema.status(202)(PublishDraftAccepted),
+      success: HttpApiSchema.WithHeaders(
+        HttpApiSchema.status(202)(PublishDraftAccepted),
+        // The publish status to poll.
+        { location: Schema.String },
+      ),
       error: [BadRequest, NotFound, Conflict],
     })
       .middleware(RateLimitMiddleware)

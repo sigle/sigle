@@ -131,8 +131,10 @@ export const getPost = (postId: string) =>
         coverHeight: mediaImage.height,
         coverThumbhash: mediaImage.thumbhash,
         otsStatus: postOts.status,
+        otsContentHash: postOts.contentHash,
         otsTxId: postOts.otsTxId,
         bitcoinBlockHeight: postOts.bitcoinBlockHeight,
+        bitcoinBlockHash: postOts.bitcoinBlockHash,
         bitcoinTimestamp: postOts.bitcoinTimestamp,
       })
       .from(post)
@@ -170,12 +172,14 @@ export const getPost = (postId: string) =>
       updatedAt: DateTime.fromDateUnsafe(foundPost.updatedAt),
       author,
       opentimestamps:
-        found.otsStatus === null
+        found.otsStatus === null || found.otsContentHash === null
           ? null
           : {
               status: found.otsStatus,
+              contentHash: found.otsContentHash,
               otsTxId: found.otsTxId,
               bitcoinBlockHeight: found.bitcoinBlockHeight,
+              bitcoinBlockHash: found.bitcoinBlockHash,
               bitcoinTimestamp:
                 found.bitcoinTimestamp === null
                   ? null

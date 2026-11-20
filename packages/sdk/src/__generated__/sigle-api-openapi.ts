@@ -270,7 +270,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/admin/queues/{queueName}/failed/{id}/retry": {
+  "/api/admin/queues/{queueName}/failed/{jobId}/retry": {
     parameters: {
       query?: never;
       header?: never;
@@ -281,7 +281,7 @@ export interface paths {
     put?: never;
     /**
      * Retry a failed job
-     * @description Reset a dead-lettered job so workers pick it up again.
+     * @description Reset a dead-lettered job so workers pick it up again. Returns a 204 once it is queued again.
      */
     post: operations["admin.retryFailedJob"];
     delete?: never;
@@ -290,7 +290,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/admin/queues/{queueName}/failed/{id}": {
+  "/api/admin/queues/{queueName}/failed/{jobId}": {
     parameters: {
       query?: never;
       header?: never;
@@ -352,9 +352,6 @@ export interface components {
       | "opentimestamps-upgrade"
       | "generate-image-thumbhash"
       | "index-profile";
-    RetryFailedJobResponse: {
-      success: boolean;
-    };
     FailedJobListResponse: {
       results: components["schemas"]["FailedJobListItem"][];
       limit: number;
@@ -403,9 +400,11 @@ export interface components {
     };
     PostOpenTimestamps: {
       /** @enum {string} */
-      status: "PENDING" | "UPGRADED" | "FAILED";
+      status: "pending" | "upgraded" | "failed";
+      contentHash: string;
       otsTxId: string | null;
       bitcoinBlockHeight: number | null;
+      bitcoinBlockHash: string | null;
       bitcoinTimestamp: string | null;
     };
     UserProfileResponse: {
@@ -463,7 +462,7 @@ export interface components {
     };
     UploadProfileImageResponse: {
       url: string;
-      key: string;
+      sizeBytes: number;
       width: number;
       height: number;
       thumbhash: string;
@@ -564,7 +563,7 @@ export interface components {
     };
     UploadDraftImageResponse: {
       url: string;
-      key: string;
+      sizeBytes: number;
       width: number;
       height: number;
       thumbhash: string;
@@ -572,14 +571,14 @@ export interface components {
     PublishDraftStatusResponse: {
       status: components["schemas"]["PublishDraftStatus"];
       postId: string | null;
-      arweaveId: string | null;
+      arweaveTxId: string | null;
     };
     /** @enum {string} */
-    PublishDraftStatus: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED";
+    PublishDraftStatus: "pending" | "processing" | "completed" | "failed";
     PublishDraftAccepted: {
       draftId: string;
       /** @enum {string} */
-      status: "PENDING";
+      status: "pending";
     };
     PublishDraftPayload: {
       metadata: components["schemas"]["PostMetadata"];
@@ -688,7 +687,7 @@ export interface components {
       /** Format: date-time */
       updatedAt: string;
     };
-    DraftPublishStatus: ("PENDING" | "PROCESSING" | "FAILED") | null;
+    DraftPublishStatus: ("pending" | "processing" | "failed") | null;
     UpdateDraftPayload: {
       /** @description Omit to keep the current value unchanged. */
       title?: string;
@@ -1334,6 +1333,7 @@ export interface operations {
       /** @description PublishDraftAccepted */
       202: {
         headers: {
+          location: string;
           [name: string]: unknown;
         };
         content: {
@@ -1986,20 +1986,18 @@ export interface operations {
       header?: never;
       path: {
         queueName: components["schemas"]["QueueName"];
-        id: string;
+        jobId: string;
       };
       cookie?: never;
     };
     requestBody?: never;
     responses: {
-      /** @description RetryFailedJobResponse */
-      200: {
+      /** @description <No Content> */
+      204: {
         headers: {
           [name: string]: unknown;
         };
-        content: {
-          "application/json": components["schemas"]["RetryFailedJobResponse"];
-        };
+        content?: never;
       };
       /** @description Bad Request */
       400: {
@@ -2063,7 +2061,7 @@ export interface operations {
       header?: never;
       path: {
         queueName: components["schemas"]["QueueName"];
-        id: string;
+        jobId: string;
       };
       cookie?: never;
     };

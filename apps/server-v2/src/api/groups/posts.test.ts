@@ -305,8 +305,10 @@ describe("posts", () => {
         yield* createTestPostOts({
           postId: "post-tx",
           status: "UPGRADED",
+          contentHash: "b".repeat(64),
           otsTxId: "ots-tx",
           bitcoinBlockHeight: 900_000,
+          bitcoinBlockHash: "block-hash",
           bitcoinTimestamp: new Date("2026-01-01T02:00:00.000Z"),
         });
 
@@ -336,10 +338,13 @@ describe("posts", () => {
               address: AUTHOR_ADDRESS,
               profile: { displayName: "Author", arweaveTxId: "profile-tx" },
             },
+            // Enums are lowercase in the API.
             opentimestamps: {
-              status: "UPGRADED",
+              status: "upgraded",
+              contentHash: "b".repeat(64),
               otsTxId: "ots-tx",
               bitcoinBlockHeight: 900_000,
+              bitcoinBlockHash: "block-hash",
               bitcoinTimestamp: "2026-01-01T02:00:00.000Z",
             },
           },
