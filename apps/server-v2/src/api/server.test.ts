@@ -71,8 +71,7 @@ describe("http server", () => {
       const body =
         yield* HttpClientResponse.schemaBodyJson(OpenApiResponse)(response);
 
-      const profileImagePath =
-        body.paths["/api/protected/user/profile/images/{kind}"];
+      const profileImagePath = body.paths["/api/me/profile/images/{kind}"];
 
       expect({
         status: response.status,
@@ -84,7 +83,7 @@ describe("http server", () => {
           .map((tag) => tag.name),
         paths: Object.keys(body.paths),
         health: Object.keys(body.paths["/health"].get?.responses ?? {}),
-        me: Object.keys(body.paths["/api/protected/me"].get?.responses ?? {}),
+        me: Object.keys(body.paths["/api/me"].get?.responses ?? {}),
         uploadImage: Object.keys(profileImagePath?.put?.responses ?? {}),
         requestBody: Object.keys(
           profileImagePath?.put?.requestBody?.content ?? {},
@@ -99,12 +98,12 @@ describe("http server", () => {
         undescribedTags: [],
         paths: expect.arrayContaining([
           "/health",
-          "/api/protected/me",
-          "/api/protected/drafts",
-          "/api/protected/drafts/{draftId}",
-          "/api/protected/user/profile/upload-metadata",
-          "/api/protected/user/profile/images/{kind}",
-          "/api/protected/drafts/{draftId}/images",
+          "/api/me",
+          "/api/drafts",
+          "/api/drafts/{draftId}",
+          "/api/me/profile",
+          "/api/me/profile/images/{kind}",
+          "/api/drafts/{draftId}/images",
         ]),
         health: expect.arrayContaining(["200", "429"]),
         me: expect.arrayContaining(["200", "401"]),

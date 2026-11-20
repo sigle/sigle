@@ -19,7 +19,7 @@ export default function PostEditPage(props: PostEditPageProps) {
 
   const { data: post } = sigleApiClient.useSuspenseQuery(
     "get",
-    "/api/protected/drafts/{draftId}",
+    "/api/drafts/{draftId}",
     {
       params: {
         path: {
@@ -29,10 +29,7 @@ export default function PostEditPage(props: PostEditPageProps) {
     },
   );
 
-  const { data: me } = sigleApiClient.useSuspenseQuery(
-    "get",
-    "/api/protected/me",
-  );
+  const { data: me } = sigleApiClient.useSuspenseQuery("get", "/api/me");
 
   // Image uploads are only on the Pro plan, free users embed images by URL.
   const canUploadImages = me.plan === "pro";

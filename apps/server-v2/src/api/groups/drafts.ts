@@ -297,7 +297,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
         OpenApi.Description,
         "Poll the asynchronous publishing status of a draft.",
       ),
-    HttpApiEndpoint.put("uploadImage", "/:draftId/images", {
+    HttpApiEndpoint.post("uploadImage", "/:draftId/images", {
       params: {
         draftId: Schema.String,
       },
@@ -320,7 +320,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       .annotate(OpenApi.Override, { requestBody: imageRequestBody })
       .annotate(RateLimitPolicy, "draftImageUpload"),
   )
-  .prefix("/api/protected/drafts")
+  .prefix("/api/drafts")
   .middleware(RateLimitMiddleware)
   .middleware(WhitelistedUserMiddleware)
   .middleware(UserAuthMiddleware);

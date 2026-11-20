@@ -22,7 +22,7 @@ export const LatestDrafts = () => {
     data: drafts,
     isLoading: loadingDrafts,
     error: errorDrafts,
-  } = sigleApiClient.useQuery("get", "/api/protected/drafts", {
+  } = sigleApiClient.useQuery("get", "/api/drafts", {
     params: {
       query: {
         limit: 5,

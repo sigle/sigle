@@ -13,12 +13,12 @@ describe("schemaErrorMiddleware", () => {
       const requests = [
         client.get("/api/posts?limit=0"),
         client.execute(
-          HttpClientRequest.post("/api/protected/drafts").pipe(
+          HttpClientRequest.post("/api/drafts").pipe(
             HttpClientRequest.bodyJsonUnsafe({ title: 42 }),
           ),
         ),
         client.execute(
-          HttpClientRequest.post("/api/protected/drafts").pipe(
+          HttpClientRequest.post("/api/drafts").pipe(
             HttpClientRequest.bodyText("{", "application/json"),
           ),
         ),

@@ -7,7 +7,7 @@ import { NextLink } from "../Shared/NextLink";
 import { ProfileMarkdownDescription } from "../Shared/Profile/MarkdownDescription";
 
 interface ProfileInfoProps {
-  user: paths["/api/users/{username}"]["get"]["responses"]["200"]["content"]["application/json"];
+  user: paths["/api/users/{address}"]["get"]["responses"]["200"]["content"]["application/json"];
 }
 
 export const ProfileInfo = ({ user }: ProfileInfoProps) => {

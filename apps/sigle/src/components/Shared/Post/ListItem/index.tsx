@@ -29,7 +29,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
 
   const { data: me } = sigleApiClient.useQuery(
     "get",
-    "/api/protected/me",
+    "/api/me",
     {},
     { enabled: !!session },
   );

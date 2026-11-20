@@ -13,16 +13,13 @@ interface Props {
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params;
 
-  const { data: user } = await sigleApiFetchClient.GET(
-    "/api/users/{username}",
-    {
-      params: {
-        path: {
-          username: params.username,
-        },
+  const { data: user } = await sigleApiFetchClient.GET("/api/users/{address}", {
+    params: {
+      path: {
+        address: params.username,
       },
     },
-  );
+  });
 
   if (!user) {
     notFound();

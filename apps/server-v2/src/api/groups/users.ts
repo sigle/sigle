@@ -46,9 +46,9 @@ export const UserProfileResponseWithHeaders = HttpApiSchema.WithHeaders(
 export const UsersGroup = HttpApiGroup.make("users")
   .annotate(OpenApi.Description, "Public user profiles, by Stacks address.")
   .add(
-    HttpApiEndpoint.get("get", "/:username", {
+    HttpApiEndpoint.get("get", "/:address", {
       params: {
-        username: Schema.String,
+        address: Schema.String,
       },
       success: UserProfileResponseWithHeaders,
       error: [BadRequest, NotFound],

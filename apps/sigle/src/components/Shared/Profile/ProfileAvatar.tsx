@@ -5,7 +5,7 @@ import { resolveImageUrl } from "@/lib/images";
 import { getDefaultAvatarUrl } from "@/lib/users";
 
 type UserProfileResponse =
-  paths["/api/users/{username}"]["get"]["responses"][200]["content"]["application/json"];
+  paths["/api/users/{address}"]["get"]["responses"][200]["content"]["application/json"];
 
 export const ProfileAvatar = ({
   user,

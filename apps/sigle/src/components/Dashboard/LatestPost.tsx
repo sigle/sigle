@@ -20,7 +20,7 @@ export const LatestPost = ({ address }: { address: string }) => {
   const { data: posts } = sigleApiClient.useSuspenseQuery("get", "/api/posts", {
     params: {
       query: {
-        username: address,
+        author: address,
         limit: 1,
       },
     },

@@ -18,7 +18,7 @@ export type EditorPostFormData = z.infer<typeof editorPostSchema>;
 
 interface EditorFormProviderProps {
   children: React.ReactNode;
-  post: paths["/api/protected/drafts/{draftId}"]["get"]["responses"][200]["content"]["application/json"];
+  post: paths["/api/drafts/{draftId}"]["get"]["responses"][200]["content"]["application/json"];
 }
 
 export const EditorFormProvider = ({

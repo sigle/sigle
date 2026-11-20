@@ -117,7 +117,7 @@ export default function MigrationPage() {
 
       // 2. Create a new draft
       const { data: newPost, error: newPostError } =
-        await sigleApiFetchClient.POST("/api/protected/drafts", {
+        await sigleApiFetchClient.POST("/api/drafts", {
           body: {},
         });
 
@@ -131,7 +131,7 @@ export default function MigrationPage() {
 
       // 3. Update the draft with the content from the old post
       const { data: updatePost, error: updatePostError } =
-        await sigleApiFetchClient.PATCH("/api/protected/drafts/{draftId}", {
+        await sigleApiFetchClient.PATCH("/api/drafts/{draftId}", {
           params: {
             path: {
               draftId: newPost.id,
