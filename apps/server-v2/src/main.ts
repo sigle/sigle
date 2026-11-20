@@ -5,7 +5,7 @@ import {
 } from "@effect/platform-node";
 import { Effect, Layer } from "effect";
 import { HttpRouter } from "effect/http";
-import { HttpApiBuilder, HttpApiScalar } from "effect/http-api";
+import { HttpApiBuilder, HttpApiScalar, OpenApi } from "effect/http-api";
 import { createServer } from "node:http";
 import { SigleApi } from "@/api";
 import { AuthRoutesLayer } from "@/api/groups/auth";
@@ -74,9 +74,23 @@ export const CorsLayer = Layer.unwrap(
   ),
 );
 
+// The served spec lists this deployment's URL as its server. It is only known
+// from the config, so it is added here rather than on `SigleApi`.
+const ServedApiLayer = Layer.unwrap(
+  Effect.map(AppConfig, (config) => {
+    const api = SigleApi.annotate(OpenApi.Servers, [
+      { url: config.API_URL, description: config.SIGLE_ENV },
+    ]);
+
+    return Layer.mergeAll(
+      HttpApiBuilder.layer(api, { openapiPath: "/_openapi.json" }),
+      HttpApiScalar.layer(api, { path: "/_scalar" }),
+    );
+  }),
+);
+
 export const ApiRoutesLayer = Layer.mergeAll(
-  HttpApiBuilder.layer(SigleApi, { openapiPath: "/_openapi.json" }),
-  HttpApiScalar.layer(SigleApi, { path: "/_scalar" }),
+  ServedApiLayer,
   AuthRoutesLayer,
   CorsLayer,
 ).pipe(Layer.provide(ApiHandlersLayer), Layer.provide(ApiMiddlewareLayer));

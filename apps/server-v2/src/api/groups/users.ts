@@ -44,6 +44,7 @@ export const UserProfileResponseWithHeaders = HttpApiSchema.WithHeaders(
 );
 
 export const UsersGroup = HttpApiGroup.make("users")
+  .annotate(OpenApi.Description, "Public user profiles, by Stacks address.")
   .add(
     HttpApiEndpoint.get("get", "/:username", {
       params: {
