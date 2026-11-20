@@ -18,7 +18,8 @@ import {
   type PgliteDatabase,
 } from "drizzle-orm/pglite";
 import { Context, Effect, Layer, Redacted } from "effect";
-import { fileURLToPath } from "node:url";
+import { findPackageJSON } from "node:module";
+import { dirname, join } from "node:path";
 import { Pool } from "pg";
 import { AppConfig, type AppConfigValues } from "@/config";
 import { relations } from "@/db/relations";
@@ -46,9 +47,15 @@ export type AuthDatabaseClient =
 
 export const drizzleConfig = { schema, relations };
 
-const migrationsFolder = fileURLToPath(
-  new URL("../../drizzle", import.meta.url),
-);
+// Resolved from the package root rather than this file, which moves to
+// `dist/main.mjs` once the server is bundled.
+const packageJsonPath = findPackageJSON(import.meta.url);
+
+if (packageJsonPath === undefined) {
+  throw new Error("server-v2 package.json not found");
+}
+
+const migrationsFolder = join(dirname(packageJsonPath), "drizzle");
 
 const POSTGRES_MIGRATION_LOCK_ID = 1_936_287_596;
 
