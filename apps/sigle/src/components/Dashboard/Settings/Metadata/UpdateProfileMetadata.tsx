@@ -41,7 +41,7 @@ const updateProfileMetadataSchema = z.object({
 });
 
 interface UpdateProfileMetadataProps {
-  profile: paths["/api/users/{username}"]["get"]["responses"][200]["content"]["application/json"]["profile"];
+  profile: paths["/api/users/{address}"]["get"]["responses"][200]["content"]["application/json"]["profile"];
   setEditingProfileMetadata: (editing: boolean) => void;
 }
 
@@ -64,8 +64,8 @@ export const UpdateProfileMetadata = ({
   });
 
   const uploadProfileMetadata = sigleApiClient.useMutation(
-    "post",
-    "/api/protected/user/profile/upload-metadata",
+    "put",
+    "/api/me/profile",
   );
 
   const {
@@ -146,7 +146,7 @@ export const UpdateProfileMetadata = ({
     // server-v2 stores the profile on upload, no indexing to wait for.
     completeStep("upload");
     await queryClient.invalidateQueries({
-      queryKey: ["get", "/api/users/{username}"],
+      queryKey: ["get", "/api/users/{address}"],
     });
     setEditingProfileMetadata(false);
   });

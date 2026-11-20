@@ -74,11 +74,15 @@ export const PostListResponse = Schema.Struct({
 
 export const PostListQuery = Schema.Struct({
   // Stacks address of the author.
-  username: Schema.optionalKey(Schema.String),
+  author: Schema.optionalKey(Schema.String),
   ...paginationQueryFields(POST_LIST_MAX_LIMIT),
 }).annotate({ identifier: "PostListQuery" });
 
 export const PostsGroup = HttpApiGroup.make("posts")
+  .annotate(
+    OpenApi.Description,
+    "Published posts, newest first, optionally filtered by author.",
+  )
   .add(
     HttpApiEndpoint.get("list", "/", {
       query: PostListQuery,
@@ -88,7 +92,7 @@ export const PostsGroup = HttpApiGroup.make("posts")
       .annotate(OpenApi.Summary, "List posts")
       .annotate(
         OpenApi.Description,
-        "List published posts, newest first. Pass `username` (a Stacks address) to only list the posts of that author.",
+        "List published posts, newest first. Pass `author` (a Stacks address) to only list the posts of that author.",
       )
       .annotate(
         OpenApi.Transform,

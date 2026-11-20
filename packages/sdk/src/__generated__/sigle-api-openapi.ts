@@ -20,14 +20,15 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/protected/me": {
+  "/api/me": {
     parameters: {
       query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    get: operations["protected.me"];
+    /** Get the signed-in user */
+    get: operations["me.get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -36,7 +37,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/protected/drafts": {
+  "/api/drafts": {
     parameters: {
       query?: never;
       header?: never;
@@ -60,7 +61,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/protected/drafts/{draftId}": {
+  "/api/drafts/{draftId}": {
     parameters: {
       query?: never;
       header?: never;
@@ -85,7 +86,7 @@ export interface paths {
     patch: operations["drafts.update"];
     trace?: never;
   };
-  "/api/protected/drafts/{draftId}/publish": {
+  "/api/drafts/{draftId}/publish": {
     parameters: {
       query?: never;
       header?: never;
@@ -109,27 +110,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/protected/drafts/{draftId}/images": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    /**
-     * Upload a draft image
-     * @description Upload an image to embed in a draft as a raw binary body, up to 5 MiB. The image is re-encoded as WebP and served from the CDN. Pro plan only, free users get a 403 and can embed external image URLs instead.
-     */
-    put: operations["drafts.uploadImage"];
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/protected/user/profile/upload-metadata": {
+  "/api/drafts/{draftId}/images": {
     parameters: {
       query?: never;
       header?: never;
@@ -139,17 +120,37 @@ export interface paths {
     get?: never;
     put?: never;
     /**
-     * Upload profile metadata
-     * @description Upload the profile metadata to Arweave and return the transaction id.
+     * Upload a draft image
+     * @description Upload an image to embed in a draft as a raw binary body, up to 5 MiB. The image is re-encoded as WebP and served from the CDN. Pro plan only, free users get a 403 and can embed external image URLs instead.
      */
-    post: operations["profile.uploadMetadata"];
+    post: operations["drafts.uploadImage"];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/api/protected/user/profile/images/{kind}": {
+  "/api/me/profile": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /**
+     * Upload profile metadata
+     * @description Upload the profile metadata to Arweave and return the transaction id.
+     */
+    put: operations["profile.update"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/me/profile/images/{kind}": {
     parameters: {
       query?: never;
       header?: never;
@@ -169,7 +170,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/users/{username}": {
+  "/api/users/{address}": {
     parameters: {
       query?: never;
       header?: never;
@@ -198,7 +199,7 @@ export interface paths {
     };
     /**
      * List posts
-     * @description List published posts, newest first. Pass `username` (a Stacks address) to only list the posts of that author.
+     * @description List published posts, newest first. Pass `author` (a Stacks address) to only list the posts of that author.
      */
     get: operations["posts.list"];
     put?: never;
@@ -229,7 +230,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/protected/admin/queues": {
+  "/api/admin/queues": {
     parameters: {
       query?: never;
       header?: never;
@@ -249,7 +250,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/protected/admin/queues/{queueName}/failed": {
+  "/api/admin/queues/{queueName}/failed": {
     parameters: {
       query?: never;
       header?: never;
@@ -269,7 +270,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/protected/admin/queues/{queueName}/failed/{id}/retry": {
+  "/api/admin/queues/{queueName}/failed/{id}/retry": {
     parameters: {
       query?: never;
       header?: never;
@@ -289,7 +290,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/protected/admin/queues/{queueName}/failed/{id}": {
+  "/api/admin/queues/{queueName}/failed/{id}": {
     parameters: {
       query?: never;
       header?: never;
@@ -789,7 +790,7 @@ export interface operations {
       };
     };
   };
-  "protected.me": {
+  "me.get": {
     parameters: {
       query?: never;
       header?: never;
@@ -1493,7 +1494,7 @@ export interface operations {
       };
     };
   };
-  "profile.uploadMetadata": {
+  "profile.update": {
     parameters: {
       query?: never;
       header?: never;
@@ -1660,7 +1661,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
-        username: string;
+        address: string;
       };
       cookie?: never;
     };
@@ -1718,7 +1719,7 @@ export interface operations {
   "posts.list": {
     parameters: {
       query?: {
-        username?: string;
+        author?: string;
         limit?: number;
         offset?: number;
       };

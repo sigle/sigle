@@ -31,7 +31,7 @@ export const EditorSave = () => {
 
   const { mutate: updatePost } = sigleApiClient.useMutation(
     "patch",
-    "/api/protected/drafts/{draftId}",
+    "/api/drafts/{draftId}",
   );
 
   const editor = useEditorStore((state) => state.editor);

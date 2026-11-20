@@ -41,8 +41,12 @@ export const UploadProfileImageResponse = Schema.Struct({
 }).annotate({ identifier: "UploadProfileImageResponse" });
 
 export const ProfileGroup = HttpApiGroup.make("profile")
+  .annotate(
+    OpenApi.Description,
+    "The signed-in user's profile: upload signed profile metadata to Arweave and the avatar and cover images.",
+  )
   .add(
-    HttpApiEndpoint.post("uploadMetadata", "/upload-metadata", {
+    HttpApiEndpoint.put("update", "/", {
       payload: UploadProfileMetadataPayload,
       success: UploadProfileMetadataResponse,
       error: [BadRequest, InternalServerError],
@@ -73,7 +77,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
       .annotate(OpenApi.Override, { requestBody: imageRequestBody })
       .annotate(RateLimitPolicy, "profileImageUpload"),
   )
-  .prefix("/api/protected/user/profile")
+  .prefix("/api/me/profile")
   .middleware(RateLimitMiddleware)
   .middleware(WhitelistedUserMiddleware)
   .middleware(UserAuthMiddleware);

@@ -24,7 +24,7 @@ const FailedJobListResponse = Schema.Struct({
 describe("admin jobs API", () => {
   it.effect("rejects unauthenticated requests", () =>
     Effect.gen(function* () {
-      const response = yield* HttpClient.get("/api/protected/admin/queues");
+      const response = yield* HttpClient.get("/api/admin/queues");
 
       expect(response.status).toBe(401);
     }).pipe(
@@ -36,7 +36,7 @@ describe("admin jobs API", () => {
     Effect.gen(function* () {
       const { client } = yield* createAuthenticatedClient();
 
-      const response = yield* client.get("/api/protected/admin/queues");
+      const response = yield* client.get("/api/admin/queues");
 
       expect(response.status).toBe(403);
     }).pipe(
@@ -49,7 +49,7 @@ describe("admin jobs API", () => {
       const { client, userId } = yield* createAuthenticatedClient();
       yield* createTestWalletAddress({ userId, address: ADMIN_ADDRESS });
 
-      const response = yield* client.get("/api/protected/admin/queues");
+      const response = yield* client.get("/api/admin/queues");
 
       expect(response.status).toBe(403);
     }).pipe(Effect.provide(makeTestServerLayer())),
@@ -69,7 +69,7 @@ describe("admin jobs API", () => {
           ('job-1', 'publish-draft', '{}', 'failed', 3, NOW(), NOW(), NOW())
       `;
 
-      const queues = yield* client.get("/api/protected/admin/queues");
+      const queues = yield* client.get("/api/admin/queues");
 
       const queuesBody =
         yield* HttpClientResponse.schemaBodyJson(QueueListResponse)(queues);
@@ -98,7 +98,7 @@ describe("admin jobs API", () => {
       });
 
       const failed = yield* client.get(
-        "/api/protected/admin/queues/publish-draft/failed?limit=10&offset=0",
+        "/api/admin/queues/publish-draft/failed?limit=10&offset=0",
       );
 
       const failedBody = yield* HttpClientResponse.schemaBodyJson(
@@ -121,7 +121,7 @@ describe("admin jobs API", () => {
 
       const retry = yield* client.execute(
         HttpClientRequest.post(
-          "/api/protected/admin/queues/publish-draft/failed/unknown/retry",
+          "/api/admin/queues/publish-draft/failed/unknown/retry",
         ),
       );
 
@@ -129,7 +129,7 @@ describe("admin jobs API", () => {
 
       const remove = yield* client.execute(
         HttpClientRequest.delete(
-          "/api/protected/admin/queues/publish-draft/failed/unknown",
+          "/api/admin/queues/publish-draft/failed/unknown",
         ),
       );
 
@@ -145,15 +145,15 @@ describe("admin jobs API", () => {
       yield* createTestWalletAddress({ userId, address: ADMIN_ADDRESS });
 
       const responses = yield* Effect.all([
-        client.get("/api/protected/admin/queues/publish-drafts/failed"),
+        client.get("/api/admin/queues/publish-drafts/failed"),
         client.execute(
           HttpClientRequest.post(
-            "/api/protected/admin/queues/publish-drafts/failed/job-1/retry",
+            "/api/admin/queues/publish-drafts/failed/job-1/retry",
           ),
         ),
         client.execute(
           HttpClientRequest.delete(
-            "/api/protected/admin/queues/publish-drafts/failed/job-1",
+            "/api/admin/queues/publish-drafts/failed/job-1",
           ),
         ),
       ]);

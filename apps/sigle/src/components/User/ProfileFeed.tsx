@@ -10,7 +10,7 @@ import { PostListItem } from "../Shared/Post/ListItem";
 import { PostListItemSkeleton } from "../Shared/Post/ListItem/Skeleton";
 
 interface ProfileFeedProps {
-  user: paths["/api/users/{username}"]["get"]["responses"]["200"]["content"]["application/json"];
+  user: paths["/api/users/{address}"]["get"]["responses"]["200"]["content"]["application/json"];
 }
 
 export const ProfileFeed = ({ user }: ProfileFeedProps) => {
@@ -18,7 +18,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
 
   const { data: me } = sigleApiClient.useQuery(
     "get",
-    "/api/protected/me",
+    "/api/me",
     {},
     { enabled: !!session },
   );
@@ -27,7 +27,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
   const { data: posts } = sigleApiClient.useSuspenseQuery("get", "/api/posts", {
     params: {
       query: {
-        username: user.address,
+        author: user.address,
         limit: 25,
       },
     },

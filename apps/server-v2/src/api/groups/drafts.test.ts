@@ -63,7 +63,7 @@ const createDraftRequest = (
   body: DraftRequestBody = {},
 ) =>
   client.execute(
-    HttpClientRequest.post("/api/protected/drafts").pipe(
+    HttpClientRequest.post("/api/drafts").pipe(
       HttpClientRequest.bodyJsonUnsafe(body),
     ),
   );
@@ -74,13 +74,13 @@ const updateDraftRequest = (
   body: DraftRequestBody,
 ) =>
   client.execute(
-    HttpClientRequest.patch(`/api/protected/drafts/${draftId}`).pipe(
+    HttpClientRequest.patch(`/api/drafts/${draftId}`).pipe(
       HttpClientRequest.bodyJsonUnsafe(body),
     ),
   );
 
 const deleteDraftRequest = (client: HttpClient.HttpClient, draftId: string) =>
-  client.execute(HttpClientRequest.delete(`/api/protected/drafts/${draftId}`));
+  client.execute(HttpClientRequest.delete(`/api/drafts/${draftId}`));
 
 const publishDraftRequest = (
   client: HttpClient.HttpClient,
@@ -89,7 +89,7 @@ const publishDraftRequest = (
   body: { readonly metadata: unknown },
 ) =>
   client.execute(
-    HttpClientRequest.post(`/api/protected/drafts/${draftId}/publish`).pipe(
+    HttpClientRequest.post(`/api/drafts/${draftId}/publish`).pipe(
       HttpClientRequest.bodyJsonUnsafe(body),
     ),
   );
@@ -97,7 +97,7 @@ const publishDraftRequest = (
 const getPublishStatusRequest = (
   client: HttpClient.HttpClient,
   draftId: string,
-) => client.get(`/api/protected/drafts/${draftId}/publish`);
+) => client.get(`/api/drafts/${draftId}/publish`);
 
 const waitForPublishStatus = (
   client: HttpClient.HttpClient,
@@ -149,7 +149,7 @@ const waitForPostOtsStatus = (postId: string, status: string) =>
   });
 
 describe("drafts", () => {
-  it.effect("POST /api/protected/drafts creates a draft", () => {
+  it.effect("POST /api/drafts creates a draft", () => {
     const events: Array<PostHogEvent> = [];
 
     return Effect.gen(function* () {
@@ -168,7 +168,7 @@ describe("drafts", () => {
       expect(response.status).toBe(201);
       expect(
         Option.getOrUndefined(Headers.get(response.headers, "location")),
-      ).toBe(`/api/protected/drafts/${body.id}`);
+      ).toBe(`/api/drafts/${body.id}`);
       expect(body).toMatchObject({
         title: "",
         content: "",
@@ -194,7 +194,7 @@ describe("drafts", () => {
     }).pipe(Effect.provide(makeTestServerLayer({}, events)));
   });
 
-  it.effect("POST /api/protected/drafts accepts initial fields", () =>
+  it.effect("POST /api/drafts accepts initial fields", () =>
     Effect.gen(function* () {
       const { client } = yield* createAuthenticatedClient();
 
@@ -223,7 +223,7 @@ describe("drafts", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("GET /api/protected/drafts returns the list envelope", () =>
+  it.effect("GET /api/drafts returns the list envelope", () =>
     Effect.gen(function* () {
       const { client, userId } = yield* createAuthenticatedClient();
 
@@ -234,7 +234,7 @@ describe("drafts", () => {
         content: "Secret content",
       });
       yield* createTestDraft({ id: "draft-2", userId, title: "Draft 2" });
-      const response = yield* client.get("/api/protected/drafts");
+      const response = yield* client.get("/api/drafts");
 
       const rawJson = yield* response.json;
 
@@ -254,7 +254,7 @@ describe("drafts", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("GET /api/protected/drafts paginates with limit and offset", () =>
+  it.effect("GET /api/drafts paginates with limit and offset", () =>
     Effect.gen(function* () {
       const { client, userId } = yield* createAuthenticatedClient();
 
@@ -274,11 +274,9 @@ describe("drafts", () => {
         updatedAt: new Date("2026-01-01T00:00:03.000Z"),
       });
 
-      const first = yield* client.get("/api/protected/drafts?limit=2");
+      const first = yield* client.get("/api/drafts?limit=2");
 
-      const second = yield* client.get(
-        "/api/protected/drafts?limit=2&offset=2",
-      );
+      const second = yield* client.get("/api/drafts?limit=2&offset=2");
 
       const firstBody =
         yield* HttpClientResponse.schemaBodyJson(DraftListResponse)(first);
@@ -297,24 +295,18 @@ describe("drafts", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("GET /api/protected/drafts validates the query", () =>
+  it.effect("GET /api/drafts validates the query", () =>
     Effect.gen(function* () {
       const { client } = yield* createAuthenticatedClient();
 
-      const zero = yield* client.get("/api/protected/drafts?limit=0");
-      const tooBig = yield* client.get("/api/protected/drafts?limit=101");
+      const zero = yield* client.get("/api/drafts?limit=0");
+      const tooBig = yield* client.get("/api/drafts?limit=101");
 
-      const fractionalLimit = yield* client.get(
-        "/api/protected/drafts?limit=2.5",
-      );
+      const fractionalLimit = yield* client.get("/api/drafts?limit=2.5");
 
-      const negativeOffset = yield* client.get(
-        "/api/protected/drafts?offset=-1",
-      );
+      const negativeOffset = yield* client.get("/api/drafts?offset=-1");
 
-      const fractionalOffset = yield* client.get(
-        "/api/protected/drafts?offset=0.5",
-      );
+      const fractionalOffset = yield* client.get("/api/drafts?offset=0.5");
 
       expect([
         zero.status,
@@ -326,7 +318,7 @@ describe("drafts", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("GET /api/protected/drafts/:draftId returns draft by id", () =>
+  it.effect("GET /api/drafts/:draftId returns draft by id", () =>
     Effect.gen(function* () {
       const { client, userId } = yield* createAuthenticatedClient();
 
@@ -336,7 +328,7 @@ describe("drafts", () => {
         title: "Test Draft",
       });
 
-      const response = yield* client.get("/api/protected/drafts/draft-1");
+      const response = yield* client.get("/api/drafts/draft-1");
 
       const body = yield* HttpClientResponse.schemaBodyJson(Draft)(response);
 
@@ -350,22 +342,18 @@ describe("drafts", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect(
-    "GET /api/protected/drafts/:draftId returns 404 when not found",
-    () =>
-      Effect.gen(function* () {
-        const { client } = yield* createAuthenticatedClient();
+  it.effect("GET /api/drafts/:draftId returns 404 when not found", () =>
+    Effect.gen(function* () {
+      const { client } = yield* createAuthenticatedClient();
 
-        const response = yield* client.get(
-          "/api/protected/drafts/non-existent",
-        );
+      const response = yield* client.get("/api/drafts/non-existent");
 
-        const body =
-          yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
+      const body =
+        yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
 
-        expect(response.status).toBe(404);
-        expect(body.message).toBe("Draft not found");
-      }).pipe(Effect.provide(makeTestServerLayer())),
+      expect(response.status).toBe(404);
+      expect(body.message).toBe("Draft not found");
+    }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
   it.effect("draft routes are scoped to the current user", () =>
@@ -375,7 +363,7 @@ describe("drafts", () => {
 
       yield* createTestDraft({ id: "draft-1", userId: first.userId });
 
-      const get = yield* second.client.get("/api/protected/drafts/draft-1");
+      const get = yield* second.client.get("/api/drafts/draft-1");
 
       const update = yield* updateDraftRequest(second.client, "draft-1", {
         title: "Hijacked",
@@ -389,46 +377,44 @@ describe("drafts", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect(
-    "PATCH /api/protected/drafts/:draftId partially updates a draft",
-    () =>
-      Effect.gen(function* () {
-        const { client, userId } = yield* createAuthenticatedClient();
-        const db = yield* Database;
+  it.effect("PATCH /api/drafts/:draftId partially updates a draft", () =>
+    Effect.gen(function* () {
+      const { client, userId } = yield* createAuthenticatedClient();
+      const db = yield* Database;
 
-        yield* createTestDraft({
-          id: "draft-1",
-          userId,
-          title: "Old title",
-          content: "Old content",
-        });
+      yield* createTestDraft({
+        id: "draft-1",
+        userId,
+        title: "Old title",
+        content: "Old content",
+      });
 
-        const response = yield* updateDraftRequest(client, "draft-1", {
-          content: "New content",
-        });
+      const response = yield* updateDraftRequest(client, "draft-1", {
+        content: "New content",
+      });
 
-        const body = yield* HttpClientResponse.schemaBodyJson(Draft)(response);
+      const body = yield* HttpClientResponse.schemaBodyJson(Draft)(response);
 
-        expect(response.status).toBe(200);
-        expect(body).toMatchObject({
-          id: "draft-1",
-          title: "Old title",
-          content: "New content",
-        });
+      expect(response.status).toBe(200);
+      expect(body).toMatchObject({
+        id: "draft-1",
+        title: "Old title",
+        content: "New content",
+      });
 
-        const [updated] = yield* db
-          .select()
-          .from(draft)
-          .where(eq(draft.id, "draft-1"));
+      const [updated] = yield* db
+        .select()
+        .from(draft)
+        .where(eq(draft.id, "draft-1"));
 
-        expect(updated).toMatchObject({
-          title: "Old title",
-          content: "New content",
-        });
-      }).pipe(Effect.provide(makeTestServerLayer())),
+      expect(updated).toMatchObject({
+        title: "Old title",
+        content: "New content",
+      });
+    }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("PATCH /api/protected/drafts/:draftId clears nullable fields", () =>
+  it.effect("PATCH /api/drafts/:draftId clears nullable fields", () =>
     Effect.gen(function* () {
       const { client } = yield* createAuthenticatedClient();
 
@@ -466,7 +452,7 @@ describe("drafts", () => {
   );
 
   it.effect(
-    "PATCH /api/protected/drafts/:draftId with an empty body changes nothing",
+    "PATCH /api/drafts/:draftId with an empty body changes nothing",
     () =>
       Effect.gen(function* () {
         const { client, userId } = yield* createAuthenticatedClient();
@@ -503,63 +489,59 @@ describe("drafts", () => {
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect(
-    "PATCH /api/protected/drafts/:draftId returns 404 when not found",
-    () =>
-      Effect.gen(function* () {
-        const { client } = yield* createAuthenticatedClient();
+  it.effect("PATCH /api/drafts/:draftId returns 404 when not found", () =>
+    Effect.gen(function* () {
+      const { client } = yield* createAuthenticatedClient();
 
-        const response = yield* updateDraftRequest(client, "non-existent", {
-          title: "Title",
-        });
+      const response = yield* updateDraftRequest(client, "non-existent", {
+        title: "Title",
+      });
 
-        expect(response.status).toBe(404);
-      }).pipe(Effect.provide(makeTestServerLayer())),
+      expect(response.status).toBe(404);
+    }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect(
-    "PATCH /api/protected/drafts/:draftId rejects updates while publishing",
-    () =>
-      Effect.gen(function* () {
-        const { client, userId } = yield* createAuthenticatedClient();
-        const db = yield* Database;
+  it.effect("PATCH /api/drafts/:draftId rejects updates while publishing", () =>
+    Effect.gen(function* () {
+      const { client, userId } = yield* createAuthenticatedClient();
+      const db = yield* Database;
 
-        const results = yield* Effect.forEach(
-          ["PENDING", "PROCESSING", "FAILED"] as const,
-          (txStatus) =>
-            Effect.gen(function* () {
-              const draftId = `draft-${txStatus}`;
-              yield* createTestDraft({
-                id: draftId,
-                userId,
-                title: "Before",
-                txStatus,
-              });
+      const results = yield* Effect.forEach(
+        ["PENDING", "PROCESSING", "FAILED"] as const,
+        (txStatus) =>
+          Effect.gen(function* () {
+            const draftId = `draft-${txStatus}`;
+            yield* createTestDraft({
+              id: draftId,
+              userId,
+              title: "Before",
+              txStatus,
+            });
 
-              const response = yield* updateDraftRequest(client, draftId, {
-                title: "After",
-              });
+            const response = yield* updateDraftRequest(client, draftId, {
+              title: "After",
+            });
 
-              const [stored] = yield* db
-                .select({ title: draft.title })
-                .from(draft)
-                .where(eq(draft.id, draftId));
+            const [stored] = yield* db
+              .select({ title: draft.title })
+              .from(draft)
+              .where(eq(draft.id, draftId));
 
-              return {
-                txStatus,
-                status: response.status,
-                title: stored?.title,
-              };
-            }),
-        );
+            return {
+              txStatus,
+              status: response.status,
+              title: stored?.title,
+            };
+          }),
+      );
 
-        // A failed publish leaves the draft editable again.
-        expect(results).toStrictEqual([
-          { txStatus: "PENDING", status: 409, title: "Before" },
-          { txStatus: "PROCESSING", status: 409, title: "Before" },
-          { txStatus: "FAILED", status: 200, title: "After" },
-        ]);
-      }).pipe(Effect.provide(makeTestServerLayer())),
+      // A failed publish leaves the draft editable again.
+      expect(results).toStrictEqual([
+        { txStatus: "PENDING", status: 409, title: "Before" },
+        { txStatus: "PROCESSING", status: 409, title: "Before" },
+        { txStatus: "FAILED", status: 200, title: "After" },
+      ]);
+    }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
   it.effect("draft routes expose the publish status", () =>
@@ -578,14 +560,12 @@ describe("drafts", () => {
       );
 
       const list = yield* HttpClientResponse.schemaBodyJson(DraftListResponse)(
-        yield* client.get("/api/protected/drafts"),
+        yield* client.get("/api/drafts"),
       );
 
       const single = yield* Effect.forEach(statuses, (_, index) =>
         Effect.gen(function* () {
-          const response = yield* client.get(
-            `/api/protected/drafts/draft-${index}`,
-          );
+          const response = yield* client.get(`/api/drafts/draft-${index}`);
 
           return (yield* HttpClientResponse.schemaBodyJson(Draft)(response))
             .publishStatus;
@@ -603,7 +583,7 @@ describe("drafts", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("DELETE /api/protected/drafts/:draftId deletes a draft", () => {
+  it.effect("DELETE /api/drafts/:draftId deletes a draft", () => {
     const events: Array<PostHogEvent> = [];
 
     return Effect.gen(function* () {
@@ -638,7 +618,7 @@ describe("drafts", () => {
   });
 
   it.effect(
-    "DELETE /api/protected/drafts/:draftId rejects deletion while publishing",
+    "DELETE /api/drafts/:draftId rejects deletion while publishing",
     () =>
       Effect.gen(function* () {
         const { client, userId } = yield* createAuthenticatedClient();
@@ -675,20 +655,18 @@ describe("drafts", () => {
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect(
-    "DELETE /api/protected/drafts/:draftId returns 404 when not found",
-    () =>
-      Effect.gen(function* () {
-        const { client } = yield* createAuthenticatedClient();
+  it.effect("DELETE /api/drafts/:draftId returns 404 when not found", () =>
+    Effect.gen(function* () {
+      const { client } = yield* createAuthenticatedClient();
 
-        const response = yield* deleteDraftRequest(client, "non-existent");
+      const response = yield* deleteDraftRequest(client, "non-existent");
 
-        expect(response.status).toBe(404);
-      }).pipe(Effect.provide(makeTestServerLayer())),
+      expect(response.status).toBe(404);
+    }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
   it.effect(
-    "POST /api/protected/drafts/:draftId/publish validates draft existence, metadata, signature, wallet ownership, and replay",
+    "POST /api/drafts/:draftId/publish validates draft existence, metadata, signature, wallet ownership, and replay",
     () =>
       Effect.gen(function* () {
         const { client, userId } = yield* createAuthenticatedClient();
@@ -771,7 +749,7 @@ describe("drafts", () => {
   );
 
   it.live(
-    "POST & GET /api/protected/drafts/:draftId/publish enqueues and completes publishing",
+    "POST & GET /api/drafts/:draftId/publish enqueues and completes publishing",
     () => {
       const events: Array<PostHogEvent> = [];
 
@@ -870,7 +848,7 @@ describe("drafts", () => {
   );
 
   it.live(
-    "GET /api/protected/drafts/:draftId/publish reports FAILED when upload fails and allows retry via POST",
+    "GET /api/drafts/:draftId/publish reports FAILED when upload fails and allows retry via POST",
     () =>
       Effect.gen(function* () {
         let shouldFail = true;
@@ -957,7 +935,7 @@ describe("drafts", () => {
   );
 
   it.live(
-    "POST /api/protected/drafts/:draftId/publish recovers a draft with a stale in-flight status",
+    "POST /api/drafts/:draftId/publish recovers a draft with a stale in-flight status",
     () =>
       Effect.gen(function* () {
         const { client, userId } = yield* createAuthenticatedClient();
@@ -1008,7 +986,7 @@ describe("drafts", () => {
   );
 
   it.live(
-    "POST /api/protected/drafts/:draftId/publish reuses the Arweave checkpoint when the signed metadata is unchanged",
+    "POST /api/drafts/:draftId/publish reuses the Arweave checkpoint when the signed metadata is unchanged",
     () =>
       Effect.gen(function* () {
         const uploads: Array<ArweaveUploadOptions> = [];
@@ -1079,7 +1057,7 @@ describe("drafts", () => {
   );
 
   it.live(
-    "POST /api/protected/drafts/:draftId/publish clears the Arweave checkpoint when the signed metadata changes",
+    "POST /api/drafts/:draftId/publish clears the Arweave checkpoint when the signed metadata changes",
     () =>
       Effect.gen(function* () {
         const uploads: Array<ArweaveUploadOptions> = [];
@@ -1153,8 +1131,8 @@ describe("drafts", () => {
 
       const responses = yield* Effect.all([
         createDraftRequest(client),
-        client.get("/api/protected/drafts"),
-        client.get("/api/protected/drafts/draft-1"),
+        client.get("/api/drafts"),
+        client.get("/api/drafts/draft-1"),
         updateDraftRequest(client, "draft-1", { title: "Title" }),
         deleteDraftRequest(client, "draft-1"),
         publishDraftRequest(client, "draft-1", {
@@ -1307,13 +1285,13 @@ const uploadDraftImageRequest = (
   bytes: Uint8Array<ArrayBuffer>,
 ) =>
   client.execute(
-    HttpClientRequest.put(`/api/protected/drafts/${draftId}/images`).pipe(
+    HttpClientRequest.post(`/api/drafts/${draftId}/images`).pipe(
       HttpClientRequest.bodyUint8Array(bytes, "image/png"),
     ),
   );
 
 describe("draft images", () => {
-  it.effect("PUT /:draftId/images stores a resized webp for pro users", () => {
+  it.effect("POST /:draftId/images stores a resized webp for pro users", () => {
     const recorder = makeStorageTestRecorder();
     const events: Array<PostHogEvent> = [];
 
@@ -1408,7 +1386,7 @@ describe("draft images", () => {
     }).pipe(Effect.provide(draftImageServerLayer(recorder, events)));
   });
 
-  it.effect("PUT /:draftId/images returns 403 for free users", () => {
+  it.effect("POST /:draftId/images returns 403 for free users", () => {
     const recorder = makeStorageTestRecorder();
 
     return Effect.gen(function* () {
@@ -1440,28 +1418,31 @@ describe("draft images", () => {
     }).pipe(Effect.provide(draftImageServerLayer(recorder)));
   });
 
-  it.effect("PUT /:draftId/images returns 404 for another user's draft", () => {
-    const recorder = makeStorageTestRecorder();
+  it.effect(
+    "POST /:draftId/images returns 404 for another user's draft",
+    () => {
+      const recorder = makeStorageTestRecorder();
 
-    return Effect.gen(function* () {
-      const { client } = yield* createProClient();
-      const other = yield* createAuthenticatedClient();
-      const otherDraft = yield* createTestDraft({ userId: other.userId });
-      const png = yield* makePngBuffer(16, 16);
+      return Effect.gen(function* () {
+        const { client } = yield* createProClient();
+        const other = yield* createAuthenticatedClient();
+        const otherDraft = yield* createTestDraft({ userId: other.userId });
+        const png = yield* makePngBuffer(16, 16);
 
-      const responses = yield* Effect.all([
-        uploadDraftImageRequest(client, otherDraft.id, new Uint8Array(png)),
-        uploadDraftImageRequest(client, "missing", new Uint8Array(png)),
-      ]);
+        const responses = yield* Effect.all([
+          uploadDraftImageRequest(client, otherDraft.id, new Uint8Array(png)),
+          uploadDraftImageRequest(client, "missing", new Uint8Array(png)),
+        ]);
 
-      expect({
-        statuses: responses.map((response) => response.status),
-        uploads: recorder.uploads.length,
-      }).toStrictEqual({ statuses: [404, 404], uploads: 0 });
-    }).pipe(Effect.provide(draftImageServerLayer(recorder)));
-  });
+        expect({
+          statuses: responses.map((response) => response.status),
+          uploads: recorder.uploads.length,
+        }).toStrictEqual({ statuses: [404, 404], uploads: 0 });
+      }).pipe(Effect.provide(draftImageServerLayer(recorder)));
+    },
+  );
 
-  it.effect("PUT /:draftId/images accepts at most 5 MiB", () => {
+  it.effect("POST /:draftId/images accepts at most 5 MiB", () => {
     const recorder = makeStorageTestRecorder();
 
     return Effect.gen(function* () {
@@ -1490,7 +1471,7 @@ describe("draft images", () => {
   });
 
   it.effect(
-    "PUT /:draftId/images stores nothing when the placeholder fails",
+    "POST /:draftId/images stores nothing when the placeholder fails",
     () => {
       const recorder = makeStorageTestRecorder();
 
@@ -1546,7 +1527,7 @@ describe("draft images", () => {
   );
 
   it.effect(
-    "PUT /:draftId/images rejects a body over 5 MiB sent without Content-Length",
+    "POST /:draftId/images rejects a body over 5 MiB sent without Content-Length",
     () => {
       const recorder = makeStorageTestRecorder();
 
@@ -1557,9 +1538,7 @@ describe("draft images", () => {
         // A streamed body is sent chunked, so only the body read limit can
         // reject it.
         const response = yield* client.execute(
-          HttpClientRequest.put(
-            `/api/protected/drafts/${created.id}/images`,
-          ).pipe(
+          HttpClientRequest.post(`/api/drafts/${created.id}/images`).pipe(
             HttpClientRequest.bodyStream(
               Stream.make(
                 new Uint8Array(3 * 1024 * 1024),

@@ -5,16 +5,16 @@ import {
 } from "@effect/platform-node";
 import { Effect, Layer } from "effect";
 import { HttpRouter } from "effect/http";
-import { HttpApiBuilder, HttpApiScalar } from "effect/http-api";
+import { HttpApiBuilder, HttpApiScalar, OpenApi } from "effect/http-api";
 import { createServer } from "node:http";
 import { SigleApi } from "@/api";
 import { AuthRoutesLayer } from "@/api/groups/auth";
 import { AdminHandlersLayer } from "@/api/handlers/admin";
 import { DraftsHandlersLayer } from "@/api/handlers/drafts";
 import { HealthHandlersLayer } from "@/api/handlers/health";
+import { MeHandlersLayer } from "@/api/handlers/me";
 import { PostsHandlersLayer } from "@/api/handlers/posts";
 import { ProfileHandlersLayer } from "@/api/handlers/profile";
-import { ProtectedHandlersLayer } from "@/api/handlers/protected";
 import { UsersHandlersLayer } from "@/api/handlers/users";
 import { AdminMiddlewareLayer } from "@/api/middleware/admin";
 import {
@@ -47,7 +47,7 @@ export const CoreServicesLayer = Layer.mergeAll(
 
 export const ApiHandlersLayer = Layer.mergeAll(
   HealthHandlersLayer,
-  ProtectedHandlersLayer,
+  MeHandlersLayer,
   DraftsHandlersLayer,
   ProfileHandlersLayer,
   UsersHandlersLayer,
@@ -74,9 +74,23 @@ export const CorsLayer = Layer.unwrap(
   ),
 );
 
+// The served spec lists this deployment's URL as its server. It is only known
+// from the config, so it is added here rather than on `SigleApi`.
+const ServedApiLayer = Layer.unwrap(
+  Effect.map(AppConfig, (config) => {
+    const api = SigleApi.annotate(OpenApi.Servers, [
+      { url: config.API_URL, description: config.SIGLE_ENV },
+    ]);
+
+    return Layer.mergeAll(
+      HttpApiBuilder.layer(api, { openapiPath: "/_openapi.json" }),
+      HttpApiScalar.layer(api, { path: "/_scalar" }),
+    );
+  }),
+);
+
 export const ApiRoutesLayer = Layer.mergeAll(
-  HttpApiBuilder.layer(SigleApi, { openapiPath: "/_openapi.json" }),
-  HttpApiScalar.layer(SigleApi, { path: "/_scalar" }),
+  ServedApiLayer,
   AuthRoutesLayer,
   CorsLayer,
 ).pipe(Layer.provide(ApiHandlersLayer), Layer.provide(ApiMiddlewareLayer));

@@ -11,11 +11,11 @@ export async function GET(
   const { username } = await params;
 
   const { data: user, error: userError } = await sigleApiFetchClient.GET(
-    "/api/users/{username}",
+    "/api/users/{address}",
     {
       params: {
         path: {
-          username,
+          address: username,
         },
       },
     },
@@ -38,7 +38,7 @@ export async function GET(
     {
       params: {
         query: {
-          username,
+          author: username,
           limit: 100,
         },
       },

@@ -1,5 +1,5 @@
 import { Schema } from "effect";
-import { HttpApiEndpoint, HttpApiGroup } from "effect/http-api";
+import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/http-api";
 import { UserAuthMiddleware } from "@/api/middleware/auth-user";
 import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 
@@ -12,12 +12,16 @@ export const CurrentUserResponse = Schema.Struct({
   plan: Schema.Literals(["free", "pro"]),
 });
 
-export const ProtectedGroup = HttpApiGroup.make("protected")
-  .add(
-    HttpApiEndpoint.get("me", "/me", {
-      success: CurrentUserResponse,
-    }),
+export const MeGroup = HttpApiGroup.make("me")
+  .annotate(
+    OpenApi.Description,
+    "The signed-in user, with their whitelist status and plan.",
   )
-  .prefix("/api/protected")
+  .add(
+    HttpApiEndpoint.get("get", "/", {
+      success: CurrentUserResponse,
+    }).annotate(OpenApi.Summary, "Get the signed-in user"),
+  )
+  .prefix("/api/me")
   .middleware(RateLimitMiddleware)
   .middleware(UserAuthMiddleware);

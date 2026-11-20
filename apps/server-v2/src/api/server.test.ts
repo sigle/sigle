@@ -4,6 +4,7 @@ import { Headers, HttpClient, HttpClientResponse } from "effect/http";
 import type { AppConfigValues } from "@/config";
 import { RATE_LIMITS } from "@/api/middleware/rate-limit";
 import { makeTestServerLayer } from "@/test/server";
+import packageJson from "../../package.json" with { type: "json" };
 
 const HealthResponse = Schema.Struct({
   success: Schema.Boolean,
@@ -20,6 +21,14 @@ const OpenApiOperation = Schema.Struct({
 
 const OpenApiResponse = Schema.Struct({
   openapi: Schema.String,
+  info: Schema.Struct({ title: Schema.String, version: Schema.String }),
+  servers: Schema.Array(Schema.Struct({ url: Schema.String })),
+  tags: Schema.Array(
+    Schema.Struct({
+      name: Schema.String,
+      description: Schema.optionalKey(Schema.String),
+    }),
+  ),
   components: Schema.Struct({
     schemas: Schema.Record(Schema.String, Schema.Unknown),
   }),
@@ -62,15 +71,19 @@ describe("http server", () => {
       const body =
         yield* HttpClientResponse.schemaBodyJson(OpenApiResponse)(response);
 
-      const profileImagePath =
-        body.paths["/api/protected/user/profile/images/{kind}"];
+      const profileImagePath = body.paths["/api/me/profile/images/{kind}"];
 
       expect({
         status: response.status,
         openapi: body.openapi.startsWith("3."),
+        info: body.info,
+        servers: body.servers.map((server) => server.url),
+        undescribedTags: body.tags
+          .filter((tag) => tag.description === undefined)
+          .map((tag) => tag.name),
         paths: Object.keys(body.paths),
         health: Object.keys(body.paths["/health"].get?.responses ?? {}),
-        me: Object.keys(body.paths["/api/protected/me"].get?.responses ?? {}),
+        me: Object.keys(body.paths["/api/me"].get?.responses ?? {}),
         uploadImage: Object.keys(profileImagePath?.put?.responses ?? {}),
         requestBody: Object.keys(
           profileImagePath?.put?.requestBody?.content ?? {},
@@ -80,14 +93,17 @@ describe("http server", () => {
       }).toStrictEqual({
         status: 200,
         openapi: true,
+        info: { title: "Sigle API", version: packageJson.version },
+        servers: ["https://api.sigle.test"],
+        undescribedTags: [],
         paths: expect.arrayContaining([
           "/health",
-          "/api/protected/me",
-          "/api/protected/drafts",
-          "/api/protected/drafts/{draftId}",
-          "/api/protected/user/profile/upload-metadata",
-          "/api/protected/user/profile/images/{kind}",
-          "/api/protected/drafts/{draftId}/images",
+          "/api/me",
+          "/api/drafts",
+          "/api/drafts/{draftId}",
+          "/api/me/profile",
+          "/api/me/profile/images/{kind}",
+          "/api/drafts/{draftId}/images",
         ]),
         health: expect.arrayContaining(["200", "429"]),
         me: expect.arrayContaining(["200", "401"]),
@@ -115,7 +131,7 @@ describe("http server", () => {
           required: expect.arrayContaining(["$schema", "content"]),
         }),
       });
-    }).pipe(Effect.provide(serverLayer())),
+    }).pipe(Effect.provide(serverLayer({ API_URL: "https://api.sigle.test" }))),
   );
 
   it.effect("GET /_scalar serves the API reference", () =>

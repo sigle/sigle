@@ -33,7 +33,7 @@ export default function DashboardDrafts() {
     isLoading: loadingDrafts,
     error: errorDrafts,
     refetch: refetchDrafts,
-  } = sigleApiClient.useQuery("get", "/api/protected/drafts", {
+  } = sigleApiClient.useQuery("get", "/api/drafts", {
     params: {
       query: {
         limit: 50,
@@ -93,14 +93,14 @@ const Draft = ({
   draft,
   refetchDrafts,
 }: {
-  draft: paths["/api/protected/drafts"]["get"]["responses"][200]["content"]["application/json"]["results"][number];
+  draft: paths["/api/drafts"]["get"]["responses"][200]["content"]["application/json"]["results"][number];
   refetchDrafts: () => Promise<QueryObserverResult<unknown, unknown>>;
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const { mutateAsync: deletePost } = sigleApiClient.useMutation(
     "delete",
-    "/api/protected/drafts/{draftId}",
+    "/api/drafts/{draftId}",
     {
       onError: (error: { message: string }) => {
         toast.error("Failed to upload metadata", {

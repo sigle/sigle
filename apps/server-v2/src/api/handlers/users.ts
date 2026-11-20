@@ -102,9 +102,9 @@ export const findProfiles = (addresses: ReadonlyArray<string>) =>
 export const findProfile = (address: string) =>
   Effect.map(findProfiles([address]), (profiles) => profiles.get(address));
 
-export const getUserProfile = (username: string) =>
+export const getUserProfile = (addressParam: string) =>
   Effect.gen(function* () {
-    const address = yield* parseStacksAddress(username);
+    const address = yield* parseStacksAddress(addressParam);
     const db = yield* Database;
     const found = yield* findProfile(address);
 
@@ -141,5 +141,5 @@ export const UsersHandlersLayer = HttpApiBuilder.group(
   SigleApi,
   "users",
   (handlers) =>
-    handlers.handle("get", ({ params }) => getUserProfile(params.username)),
+    handlers.handle("get", ({ params }) => getUserProfile(params.address)),
 );

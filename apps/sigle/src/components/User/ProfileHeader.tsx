@@ -22,7 +22,7 @@ import { NextLink } from "../Shared/NextLink";
 import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";
 
 interface ProfileHeaderProps {
-  user: paths["/api/users/{username}"]["get"]["responses"]["200"]["content"]["application/json"];
+  user: paths["/api/users/{address}"]["get"]["responses"]["200"]["content"]["application/json"];
 }
 
 export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
@@ -32,7 +32,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
 
   const { data: me } = sigleApiClient.useQuery(
     "get",
-    "/api/protected/me",
+    "/api/me",
     {},
     { enabled: !!session },
   );

@@ -30,8 +30,8 @@ export const getMe = Effect.gen(function* () {
   };
 });
 
-export const ProtectedHandlersLayer = HttpApiBuilder.group(
+export const MeHandlersLayer = HttpApiBuilder.group(
   SigleApi,
-  "protected",
-  (handlers) => handlers.handle("me", () => getMe),
+  "me",
+  (handlers) => handlers.handle("get", () => getMe),
 );

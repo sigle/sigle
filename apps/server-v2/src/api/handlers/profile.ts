@@ -186,7 +186,7 @@ export const ProfileHandlersLayer = HttpApiBuilder.group(
   "profile",
   (handlers) =>
     handlers
-      .handle("uploadMetadata", ({ payload }) => uploadProfileMetadata(payload))
+      .handle("update", ({ payload }) => uploadProfileMetadata(payload))
       .handle("uploadImage", ({ params, request }) =>
         uploadProfileImage(params.kind, request),
       ),

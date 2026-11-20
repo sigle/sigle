@@ -22,10 +22,7 @@ export const UploadProfilePicture = ({
   const posthog = usePostHog();
 
   const { mutate: uploadImage, isPending: loadingUploadImage } =
-    sigleApiClient.useMutation(
-      "put",
-      "/api/protected/user/profile/images/{kind}",
-    );
+    sigleApiClient.useMutation("put", "/api/me/profile/images/{kind}");
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {

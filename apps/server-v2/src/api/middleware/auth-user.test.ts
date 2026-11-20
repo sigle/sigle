@@ -24,7 +24,7 @@ describe("userAuthMiddleware", () => {
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
 
-      const response = yield* client.get("/api/protected/me");
+      const response = yield* client.get("/api/me");
 
       const body =
         yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
@@ -38,7 +38,7 @@ describe("userAuthMiddleware", () => {
     Effect.gen(function* () {
       const { client, userId, address } = yield* createAuthenticatedClient();
 
-      const response = yield* client.get("/api/protected/me");
+      const response = yield* client.get("/api/me");
 
       const body =
         yield* HttpClientResponse.schemaBodyJson(CurrentUserResponse)(response);
@@ -59,7 +59,7 @@ describe("userAuthMiddleware", () => {
       const { client, userId } = yield* createAuthenticatedClient();
       yield* db.delete(walletAddress).where(eq(walletAddress.userId, userId));
 
-      const response = yield* client.get("/api/protected/me");
+      const response = yield* client.get("/api/me");
 
       expect(response.status).toBe(500);
     }).pipe(Effect.provide(makeTestServerLayer())),
@@ -69,7 +69,7 @@ describe("userAuthMiddleware", () => {
     Effect.gen(function* () {
       const { client, userId, address } = yield* createAuthenticatedClient();
 
-      const response = yield* client.get("/api/protected/me");
+      const response = yield* client.get("/api/me");
 
       const body =
         yield* HttpClientResponse.schemaBodyJson(CurrentUserResponse)(response);
@@ -99,7 +99,7 @@ describe("userAuthMiddleware", () => {
     return Effect.gen(function* () {
       const { client } = yield* createAuthenticatedClient({ address });
 
-      const response = yield* client.get("/api/protected/drafts");
+      const response = yield* client.get("/api/drafts");
 
       expect(response.status).toBe(200);
     }).pipe(
@@ -118,7 +118,7 @@ describe("userAuthMiddleware", () => {
     return Effect.gen(function* () {
       const { client, userId } = yield* createAuthenticatedClient({ address });
 
-      const response = yield* client.get("/api/protected/me");
+      const response = yield* client.get("/api/me");
 
       const body =
         yield* HttpClientResponse.schemaBodyJson(CurrentUserResponse)(response);
@@ -136,7 +136,7 @@ describe("userAuthMiddleware", () => {
     Effect.gen(function* () {
       const { client } = yield* createAuthenticatedClient();
 
-      const response = yield* client.get("/api/protected/drafts");
+      const response = yield* client.get("/api/drafts");
 
       const body =
         yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);

@@ -20,11 +20,11 @@ export function UserClientPage(props: Props) {
 
   const { data: user } = sigleApiClient.useSuspenseQuery(
     "get",
-    "/api/users/{username}",
+    "/api/users/{address}",
     {
       params: {
         path: {
-          username: params.username,
+          address: params.username,
         },
       },
     },

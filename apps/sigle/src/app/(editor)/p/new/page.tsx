@@ -13,7 +13,7 @@ export default function PostCreate() {
 
   const { mutate: createPost } = sigleApiClient.useMutation(
     "post",
-    "/api/protected/drafts",
+    "/api/drafts",
     {
       onSuccess: (data) => {
         router.push(Routes.editPost({ postId: data.id }));

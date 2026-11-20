@@ -81,7 +81,7 @@ export const createDraft = (payload: typeof CreateDraftPayload.Type) =>
     return HttpApiSchema.withHeaders({
       body: toDraft(inserted),
       headers: {
-        location: `/api/protected/drafts/${inserted.id}`,
+        location: `/api/drafts/${inserted.id}`,
       },
     });
   });

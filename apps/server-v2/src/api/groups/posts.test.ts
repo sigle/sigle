@@ -25,7 +25,7 @@ const ListPath = Schema.Struct({
 const OpenApiListPaths = Schema.Struct({
   paths: Schema.Struct({
     "/api/posts": ListPath,
-    "/api/protected/drafts": ListPath,
+    "/api/drafts": ListPath,
   }),
 });
 
@@ -86,7 +86,7 @@ describe("posts", () => {
       // A non-canonical spelling of the author address (`O` for `0`) still
       // matches the stored wallet.
       const response = yield* client.get(
-        `/api/posts?username=${AUTHOR_ADDRESS.replaceAll("0", "O")}&limit=1`,
+        `/api/posts?author=${AUTHOR_ADDRESS.replaceAll("0", "O")}&limit=1`,
       );
 
       const body =
@@ -202,7 +202,7 @@ describe("posts", () => {
       const client = yield* HttpClient.HttpClient;
 
       const statuses = yield* Effect.forEach(
-        ["username=not-an-address", "limit=0", "limit=101", "limit=2.5"],
+        ["author=not-an-address", "limit=0", "limit=101", "limit=2.5"],
         (query) =>
           client
             .get(`/api/posts?${query}`)
@@ -210,7 +210,7 @@ describe("posts", () => {
       );
 
       const invalidAddress = yield* client
-        .get("/api/posts?username=not-an-address")
+        .get("/api/posts?author=not-an-address")
         .pipe(Effect.flatMap(HttpClientResponse.schemaBodyJson(ErrorResponse)));
 
       expect({ statuses, message: invalidAddress.message }).toStrictEqual({
@@ -239,10 +239,10 @@ describe("posts", () => {
 
       expect({
         posts: parameters("/api/posts"),
-        drafts: parameters("/api/protected/drafts"),
+        drafts: parameters("/api/drafts"),
       }).toStrictEqual({
         posts: {
-          username: { type: "string" },
+          author: { type: "string" },
           limit: { type: "integer", minimum: 1, maximum: 100 },
           offset: { type: "integer", minimum: 0 },
         },

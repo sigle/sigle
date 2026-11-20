@@ -11,13 +11,13 @@ import { UpdateProfileMetadata } from "./UpdateProfileMetadata";
 export const SettingsProfileMetadata = () => {
   const [editingProfileMetadata, setEditingProfileMetadata] = useState(false);
 
-  const { data: me } = sigleApiClient.useQuery("get", "/api/protected/me");
+  const { data: me } = sigleApiClient.useQuery("get", "/api/me");
 
   const { data: user } = sigleApiClient.useQuery(
     "get",
-    "/api/users/{username}",
+    "/api/users/{address}",
     {
-      params: { path: { username: me?.address ?? "" } },
+      params: { path: { address: me?.address ?? "" } },
       // The profile response is cacheable for 60s, revalidate so edits show up
       // right away.
       cache: "no-cache",
