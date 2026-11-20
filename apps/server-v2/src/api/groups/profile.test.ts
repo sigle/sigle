@@ -11,6 +11,7 @@ import {
 import sharp from "sharp";
 import { afterEach, vi } from "vite-plus/test";
 import type { PostHogEvent } from "@/services/posthog";
+import { UserProfile, UserProfileResponse } from "@/api/groups/users";
 import { Database } from "@/db";
 import { mediaImage, profile as profileTable } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
@@ -38,10 +39,12 @@ import {
 import { makeTestServerLayer } from "@/test/server";
 
 const UploadProfileMetadataResponse = Schema.Struct({
-  id: Schema.String,
+  arweaveTxId: Schema.String,
   uri: Schema.String,
   cid: Schema.String,
   gatewayUrl: Schema.String,
+  address: Schema.String,
+  profile: UserProfile,
 });
 
 const UploadProfileImageResponse = Schema.Struct({
@@ -230,6 +233,10 @@ describe("profile", () => {
         UploadProfileMetadataResponse,
       )(response);
 
+      const user = yield* HttpClientResponse.schemaBodyJson(
+        UserProfileResponse,
+      )(yield* client.get(`/api/users/${address}`));
+
       const uploaded = uploads[0];
 
       const [savedProfile] = yield* db
@@ -242,6 +249,7 @@ describe("profile", () => {
       expect({
         status: response.status,
         body,
+        user,
         contentType: uploaded?.contentType,
         tags: uploaded?.tags,
         metadata: JSON.parse(
@@ -251,7 +259,22 @@ describe("profile", () => {
         events,
       }).toStrictEqual({
         status: 200,
-        body: ARWEAVE_TEST_UPLOAD,
+        // The response holds the same profile a follow-up GET would return.
+        body: {
+          arweaveTxId: ARWEAVE_TEST_UPLOAD.id,
+          uri: ARWEAVE_TEST_UPLOAD.uri,
+          cid: ARWEAVE_TEST_UPLOAD.cid,
+          gatewayUrl: ARWEAVE_TEST_UPLOAD.gatewayUrl,
+          address,
+          profile: user.profile,
+        },
+        user: {
+          address,
+          profile: expect.objectContaining({
+            displayName: "Test profile",
+            arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
+          }),
+        },
         contentType: "application/json",
         tags: [
           { name: "Author", value: address },

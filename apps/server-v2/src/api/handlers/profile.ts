@@ -9,6 +9,7 @@ import { Effect } from "effect";
 import { HttpApiBuilder } from "effect/http-api";
 import type { UploadProfileMetadataPayload } from "@/api/groups/profile";
 import { SigleApi } from "@/api";
+import { findProfile } from "@/api/handlers/users";
 import { uploadImageFromRequest } from "@/api/image-upload";
 import { CurrentUser } from "@/api/middleware/auth-user";
 import { BadRequest, Conflict, InternalServerError } from "@/api/schemas";
@@ -143,7 +144,22 @@ export const uploadProfileMetadata = (
       },
     });
 
-    return result;
+    const stored = yield* findProfile(recoveredAddress);
+
+    if (stored === undefined) {
+      return yield* Effect.die(
+        new Error(`Profile ${recoveredAddress} missing after upsert`),
+      );
+    }
+
+    return {
+      arweaveTxId: result.id,
+      uri: result.uri,
+      cid: result.cid,
+      gatewayUrl: result.gatewayUrl,
+      address: recoveredAddress,
+      profile: stored.profile,
+    };
   });
 
 export const uploadProfileImage = (

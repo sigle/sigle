@@ -40,8 +40,11 @@ const updateProfileMetadataSchema = z.object({
   coverPicture: z.string().optional(),
 });
 
+type UserResponse =
+  paths["/api/users/{address}"]["get"]["responses"][200]["content"]["application/json"];
+
 interface UpdateProfileMetadataProps {
-  profile: paths["/api/users/{address}"]["get"]["responses"][200]["content"]["application/json"]["profile"];
+  profile: UserResponse["profile"];
   setEditingProfileMetadata: (editing: boolean) => void;
 }
 
@@ -143,11 +146,17 @@ export const UpdateProfileMetadata = ({
       return;
     }
 
-    // server-v2 stores the profile on upload, no indexing to wait for.
+    // server-v2 stores the profile on upload and returns it, so the cached
+    // user is updated without fetching it again.
     completeStep("upload");
-    await queryClient.invalidateQueries({
-      queryKey: ["get", "/api/users/{address}"],
-    });
+    const { address, profile: storedProfile } = data.value;
+    queryClient.setQueriesData<UserResponse>(
+      { queryKey: ["get", "/api/users/{address}"] },
+      (cached) =>
+        cached?.address === address
+          ? { address, profile: storedProfile }
+          : cached,
+    );
     setEditingProfileMetadata(false);
   });
 

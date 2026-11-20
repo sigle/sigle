@@ -313,7 +313,8 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       params: {
         draftId: Schema.String,
       },
-      success: UploadDraftImageResponse,
+      // Every upload creates a new content-addressed image.
+      success: HttpApiSchema.status(201)(UploadDraftImageResponse),
       error: [
         BadRequest,
         Forbidden,
