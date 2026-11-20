@@ -38,12 +38,12 @@ RUN apk update && \
 # First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
 COPY --from=builder /app/out/json/ .
+# The lockfile records the pnpmfile checksum, a frozen install needs it
+COPY .pnpmfile.mjs .pnpmfile.mjs
 RUN npm pkg delete scripts.prepare
 RUN pnpm install --frozen-lockfile --prod=false
 
 COPY --from=builder /app/out/full/ .
-# Copy contracts source to avoid cyclic dependency
-COPY --from=builder /app/apps/contracts-next ./apps/contracts-next
 COPY turbo.json turbo.json
 
 WORKDIR /app/apps/$APP_NAME
