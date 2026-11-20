@@ -7,9 +7,7 @@ export const env = createEnv({
    * Serverside Environment variables, not available on the client.
    * Will throw if you access these variables on the client.
    */
-  server: {
-    INTERNAL_API_TOKEN: z.string(),
-  },
+  server: {},
   /*
    * Environment variables available on the client (and server).
    */

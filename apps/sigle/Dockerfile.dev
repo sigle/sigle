@@ -13,7 +13,6 @@ RUN PNPM_VERSION=$(grep -o '"packageManager": "[^"]*' package.json | cut -d'"' -
     npm install -g pnpm@${PNPM_VERSION}
 RUN TURBO_VERSION=$(grep -o '"turbo": "[^"]*' package.json | cut -d'"' -f4) && \
     pnpm install turbo@${TURBO_VERSION} --global
-RUN pnpm install @dotenvx/dotenvx@^2 --global
 
 # --- Turbo stage ---
 
