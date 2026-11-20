@@ -18,7 +18,7 @@
     "@floating-ui/dom": "1.7.6",
     "@hookform/resolvers": "5.2.2",
     "@paralleldrive/cuid2": "3.3.0",
-    "@sentry/nextjs": "10.50.0",
+    "@sentry/nextjs": "11.15.0",
     "@sigle/sdk": "workspace:*",
     "@stacks/connect": "8.2.7",
     "@stacks/network": "7.7.0",
