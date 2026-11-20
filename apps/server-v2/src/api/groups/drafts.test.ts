@@ -1390,7 +1390,7 @@ describe("draft images", () => {
         },
         events,
       }).toStrictEqual({
-        status: 200,
+        status: 201,
         body: {
           url,
           key,

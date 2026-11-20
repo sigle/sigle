@@ -140,7 +140,7 @@ export interface paths {
     get?: never;
     /**
      * Upload profile metadata
-     * @description Upload the profile metadata to Arweave and return the transaction id.
+     * @description Upload the profile metadata to Arweave and return the transaction and the stored profile.
      */
     put: operations["profile.update"];
     post?: never;
@@ -474,10 +474,12 @@ export interface components {
       message: string;
     };
     UploadProfileMetadataResponse: {
-      id: string;
+      arweaveTxId: string;
       uri: string;
       cid: string;
       gatewayUrl: string;
+      address: string;
+      profile: components["schemas"]["UserProfile"];
     };
     /** @description The signed profile metadata to upload to Arweave. */
     ProfileMetadata: {
@@ -1421,7 +1423,7 @@ export interface operations {
     };
     responses: {
       /** @description UploadDraftImageResponse */
-      200: {
+      201: {
         headers: {
           [name: string]: unknown;
         };

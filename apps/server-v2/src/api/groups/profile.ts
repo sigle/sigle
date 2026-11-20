@@ -1,5 +1,6 @@
 import { Schema } from "effect";
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/http-api";
+import { UserProfile } from "@/api/groups/users";
 import {
   UserAuthMiddleware,
   WhitelistedUserMiddleware,
@@ -24,10 +25,14 @@ export const UploadProfileMetadataPayload = Schema.Struct({
 });
 
 export const UploadProfileMetadataResponse = Schema.Struct({
-  id: Schema.String,
+  arweaveTxId: Schema.String,
   uri: Schema.String,
   cid: Schema.String,
   gatewayUrl: Schema.String,
+  // The signing address the profile is stored under.
+  address: Schema.String,
+  // The stored profile, so clients don't need to fetch it again.
+  profile: UserProfile,
 }).annotate({ identifier: "UploadProfileMetadataResponse" });
 
 export const ProfileImageKindSchema = Schema.Literals(profileImageKinds);
@@ -55,7 +60,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
       .annotate(OpenApi.Summary, "Upload profile metadata")
       .annotate(
         OpenApi.Description,
-        "Upload the profile metadata to Arweave and return the transaction id.",
+        "Upload the profile metadata to Arweave and return the transaction and the stored profile.",
       )
       .annotate(RateLimitPolicy, "profileMetadataUpload"),
   )

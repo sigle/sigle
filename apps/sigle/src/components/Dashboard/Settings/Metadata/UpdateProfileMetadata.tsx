@@ -40,8 +40,11 @@ const updateProfileMetadataSchema = z.object({
   coverPicture: z.string().optional(),
 });
 
+type UserResponse =
+  paths["/api/users/{address}"]["get"]["responses"][200]["content"]["application/json"];
+
 interface UpdateProfileMetadataProps {
-  profile: paths["/api/users/{address}"]["get"]["responses"][200]["content"]["application/json"]["profile"];
+  profile: UserResponse["profile"];
   setEditingProfileMetadata: (editing: boolean) => void;
 }
 
@@ -143,11 +146,19 @@ export const UpdateProfileMetadata = ({
       return;
     }
 
-    // server-v2 stores the profile on upload, no indexing to wait for.
+    // server-v2 stores the profile on upload and returns it, so the cached
+    // user is updated without fetching it again.
     completeStep("upload");
-    await queryClient.invalidateQueries({
-      queryKey: ["get", "/api/users/{address}"],
-    });
+    const { address, profile: storedProfile } = data.value;
+    const userQueries = { queryKey: ["get", "/api/users/{address}"] };
+    // A refetch started before the upload, such as on window focus after the
+    // wallet prompt, would otherwise overwrite the cache with the old profile.
+    await queryClient.cancelQueries(userQueries);
+    queryClient.setQueriesData<UserResponse>(userQueries, (cached) =>
+      cached?.address === address
+        ? { address, profile: storedProfile }
+        : cached,
+    );
     setEditingProfileMetadata(false);
   });
 
