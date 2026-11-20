@@ -150,12 +150,14 @@ export const UpdateProfileMetadata = ({
     // user is updated without fetching it again.
     completeStep("upload");
     const { address, profile: storedProfile } = data.value;
-    queryClient.setQueriesData<UserResponse>(
-      { queryKey: ["get", "/api/users/{address}"] },
-      (cached) =>
-        cached?.address === address
-          ? { address, profile: storedProfile }
-          : cached,
+    const userQueries = { queryKey: ["get", "/api/users/{address}"] };
+    // A refetch started before the upload, such as on window focus after the
+    // wallet prompt, would otherwise overwrite the cache with the old profile.
+    await queryClient.cancelQueries(userQueries);
+    queryClient.setQueriesData<UserResponse>(userQueries, (cached) =>
+      cached?.address === address
+        ? { address, profile: storedProfile }
+        : cached,
     );
     setEditingProfileMetadata(false);
   });
