@@ -6,6 +6,7 @@
   "scripts": {
     "build": "vp pack",
     "dev": "dotenvx run --env-file=.env.development --env-file=.env.development.local -- tsx watch src/main.ts",
+    "start": "node dist/main.mjs",
     "test": "dotenvx run --env-file=.env.test -- vp test"
   },
   "dependencies": {
@@ -15,6 +16,8 @@
     "@effect/platform-node": "4.1.4",
     "@effect/platform-node-shared": "4.1.4",
     "@effect/sql-pg": "4.1.4",
+    "@effect/sql-pglite": "4.1.4",
+    "@electric-sql/pglite": "0.5.16",
     "@otskit/client": "0.7.2",
     "@paralleldrive/cuid2": "3.3.0",
     "@sentry/effect": "10.50.0",
@@ -35,9 +38,7 @@
     "zod": "4.3.6"
   },
   "devDependencies": {
-    "@effect/sql-pglite": "4.1.4",
     "@effect/vitest": "4.1.4",
-    "@electric-sql/pglite": "0.5.16",
     "@tsconfig/recommended": "1.0.13",
     "@types/node": "26.6.2",
     "@types/pg": "8.23.1",

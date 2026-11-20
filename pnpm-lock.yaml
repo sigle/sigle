@@ -362,6 +362,12 @@ importers:
       '@effect/sql-pg':
         specifier: 4.1.4
         version: 4.1.4(effect@4.1.4)
+      '@effect/sql-pglite':
+        specifier: 4.1.4
+        version: 4.1.4(effect@4.1.4)
+      '@electric-sql/pglite':
+        specifier: 0.5.16
+        version: 0.5.16
       '@otskit/client':
         specifier: 0.7.2
         version: 0.7.2
@@ -417,15 +423,9 @@ importers:
         specifier: 4.3.6
         version: 4.3.6
     devDependencies:
-      '@effect/sql-pglite':
-        specifier: 4.1.4
-        version: 4.1.4(effect@4.1.4)
       '@effect/vitest':
         specifier: 4.1.4
         version: 4.1.4(effect@4.1.4)(vitest@5.0.3)
-      '@electric-sql/pglite':
-        specifier: 0.5.16
-        version: 0.5.16
       '@tsconfig/recommended':
         specifier: 1.0.13
         version: 1.0.13
