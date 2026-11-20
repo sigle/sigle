@@ -17,7 +17,11 @@ const ErrorResponse = Schema.Struct({ message: Schema.String });
 const ListPath = Schema.Struct({
   get: Schema.Struct({
     parameters: Schema.Array(
-      Schema.Struct({ name: Schema.String, schema: Schema.Unknown }),
+      Schema.Struct({
+        name: Schema.String,
+        description: Schema.optionalKey(Schema.String),
+        schema: Schema.Unknown,
+      }),
     ),
   }),
 });
@@ -220,7 +224,7 @@ describe("posts", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("documents pagination query parameters as integers", () =>
+  it.effect("documents the list query parameters with their defaults", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
 
@@ -233,7 +237,7 @@ describe("posts", () => {
         Object.fromEntries(
           spec.paths[path].get.parameters.map((parameter) => [
             parameter.name,
-            parameter.schema,
+            { description: parameter.description, schema: parameter.schema },
           ]),
         );
 
@@ -242,13 +246,28 @@ describe("posts", () => {
         drafts: parameters("/api/drafts"),
       }).toStrictEqual({
         posts: {
-          author: { type: "string" },
-          limit: { type: "integer", minimum: 1, maximum: 100 },
-          offset: { type: "integer", minimum: 0 },
+          author: {
+            description: "Only list the posts of this Stacks address.",
+            schema: { type: "string" },
+          },
+          limit: {
+            description: "Number of results to return.",
+            schema: { type: "integer", minimum: 1, maximum: 100, default: 20 },
+          },
+          offset: {
+            description: "Number of results to skip.",
+            schema: { type: "integer", minimum: 0, default: 0 },
+          },
         },
         drafts: {
-          limit: { type: "integer", minimum: 1, maximum: 100 },
-          offset: { type: "integer", minimum: 0 },
+          limit: {
+            description: "Number of results to return.",
+            schema: { type: "integer", minimum: 1, maximum: 100, default: 20 },
+          },
+          offset: {
+            description: "Number of results to skip.",
+            schema: { type: "integer", minimum: 0, default: 0 },
+          },
         },
       });
     }).pipe(Effect.provide(makeTestServerLayer())),

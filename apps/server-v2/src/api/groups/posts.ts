@@ -6,6 +6,7 @@ import {
   BadRequest,
   DateTime,
   documentPaginationQuery,
+  NonNegativeInt,
   NotFound,
   paginationQueryFields,
 } from "@/api/schemas";
@@ -41,7 +42,7 @@ export const PostOpenTimestamps = Schema.Struct({
   // Arweave transaction id of the Bitcoin-anchored `.ots` proof, once
   // upgraded.
   otsTxId: Schema.NullOr(Schema.String),
-  bitcoinBlockHeight: Schema.NullOr(Schema.Int),
+  bitcoinBlockHeight: Schema.NullOr(NonNegativeInt),
   bitcoinBlockHash: Schema.NullOr(Schema.String),
   bitcoinTimestamp: Schema.NullOr(DateTime),
 }).annotate({ identifier: "PostOpenTimestamps" });
@@ -59,7 +60,7 @@ export const Post = Schema.Struct({
   metadataUri: Schema.String,
   arweaveTxId: Schema.String,
   // Null until the Arweave bundle is included in a block.
-  arweaveBlockHeight: Schema.NullOr(Schema.Int),
+  arweaveBlockHeight: Schema.NullOr(NonNegativeInt),
   createdAt: DateTime,
   updatedAt: DateTime,
   // Primary wallet of the user who published the post, with their profile.
@@ -70,9 +71,9 @@ export const Post = Schema.Struct({
 
 export const PostListResponse = Schema.Struct({
   results: Schema.Array(PostListItem),
-  limit: Schema.Int,
-  offset: Schema.Int,
-  total: Schema.Int,
+  limit: NonNegativeInt,
+  offset: NonNegativeInt,
+  total: NonNegativeInt,
 }).annotate({ identifier: "PostListResponse" });
 
 export const PostListQuery = Schema.Struct({
@@ -99,7 +100,10 @@ export const PostsGroup = HttpApiGroup.make("posts")
       )
       .annotate(
         OpenApi.Transform,
-        documentPaginationQuery(POST_LIST_MAX_LIMIT),
+        documentPaginationQuery({
+          maxLimit: POST_LIST_MAX_LIMIT,
+          defaultLimit: POST_LIST_DEFAULT_LIMIT,
+        }),
       ),
   )
   .add(

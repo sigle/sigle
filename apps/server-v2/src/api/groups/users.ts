@@ -6,12 +6,12 @@ import {
   OpenApi,
 } from "effect/http-api";
 import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
-import { BadRequest, DateTime, NotFound } from "@/api/schemas";
+import { BadRequest, DateTime, NonNegativeInt, NotFound } from "@/api/schemas";
 
 export const MediaImage = Schema.Struct({
   url: Schema.String,
-  width: Schema.NullOr(Schema.Int),
-  height: Schema.NullOr(Schema.Int),
+  width: Schema.NullOr(NonNegativeInt),
+  height: Schema.NullOr(NonNegativeInt),
   thumbhash: Schema.NullOr(Schema.String),
 }).annotate({ identifier: "MediaImage" });
 
