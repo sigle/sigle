@@ -17,8 +17,6 @@ export const env = createEnv({
     AUTH_SECRET: z.string(),
     // Private key used to send transactions on Arweave
     ARWEAVE_PRIVATE_KEY: z.string(),
-    // An internal API token used to authenticate the internal services with the API
-    INTERNAL_API_TOKEN: z.string(),
     // The URL to the web application
     APP_URL: z.url(),
     // The URL to the API server
