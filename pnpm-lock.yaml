@@ -685,9 +685,6 @@ importers:
         specifier: 5.0.12
         version: 5.0.12(@types/react@19.3.0)(react@19.3.1)(use-sync-external-store@1.6.0(react@19.3.1))
     devDependencies:
-      '@dotenvx/dotenvx':
-        specifier: 2.20.1
-        version: 2.20.1
       '@tailwindcss/postcss':
         specifier: 4.3.3
         version: 4.3.3

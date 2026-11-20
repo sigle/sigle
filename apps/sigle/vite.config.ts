@@ -1,10 +1,12 @@
-import { defineConfig } from "vite-plus";
+import { defineConfig, loadEnv } from "vite-plus";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   resolve: {
     tsconfigPaths: true,
   },
   test: {
+    // Expose .env.test (without a prefix filter) as process.env in the tests
+    env: loadEnv(mode, import.meta.dirname, ""),
     environment: "happy-dom",
     globals: true,
     setupFiles: ["./src/test/setup.ts"],
@@ -15,4 +17,4 @@ export default defineConfig({
       reporter: ["text", "json", "html"],
     },
   },
-});
+}));

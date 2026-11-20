@@ -16,7 +16,6 @@ RUN PNPM_VERSION=$(grep -o '"packageManager": "[^"]*' package.json | cut -d'"' -
     npm install -g pnpm@${PNPM_VERSION}
 RUN TURBO_VERSION=$(grep -o '"turbo": "[^"]*' package.json | cut -d'"' -f4) && \
     pnpm install turbo@${TURBO_VERSION} --global
-RUN pnpm install @dotenvx/dotenvx@^2 --global
 
 # --- Turbo stage ---
 
@@ -64,8 +63,7 @@ WORKDIR /app
 COPY --from=installer /app/apps/$APP_NAME/.next/standalone ./
 COPY --from=installer /app/apps/$APP_NAME/.next/static ./apps/$APP_NAME/.next/static
 COPY --from=installer /app/apps/$APP_NAME/public ./apps/$APP_NAME/public
-COPY ./apps/$APP_NAME/.env.testnet.local ./.env.testnet.local
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 3000
-CMD dotenvx run -- node apps/$APP_NAME/server.js
+CMD node apps/$APP_NAME/server.js

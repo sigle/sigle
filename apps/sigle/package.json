@@ -10,7 +10,7 @@
     "build": "next build --webpack",
     "dev": "next dev",
     "start": "next start",
-    "test": "dotenvx run --env-file=.env.test -- vp test"
+    "test": "vp test"
   },
   "dependencies": {
     "@base-ui/react": "1.4.1",
@@ -91,7 +91,6 @@
     "zustand": "5.0.12"
   },
   "devDependencies": {
-    "@dotenvx/dotenvx": "2.20.1",
     "@tailwindcss/postcss": "4.3.3",
     "@tailwindcss/typography": "0.5.20",
     "@testing-library/jest-dom": "6.9.1",
