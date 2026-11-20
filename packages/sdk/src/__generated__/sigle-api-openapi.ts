@@ -695,8 +695,8 @@ export interface components {
       metaDescription?: string | null;
       /** @description Omit to keep the current value unchanged, set to null to clear it. */
       coverImage?: string | null;
-      /** @description Omit to keep the current value unchanged, set to null to clear it. */
-      tags?: string[] | null;
+      /** @description Omit to keep the current value unchanged. */
+      tags?: string[];
       /** @description Omit to keep the current value unchanged, set to null to clear it. */
       canonicalUri?: string | null;
     };

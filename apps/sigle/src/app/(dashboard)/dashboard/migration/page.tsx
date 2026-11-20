@@ -141,9 +141,10 @@ export default function MigrationPage() {
             title: data.title,
             content: data.content,
             metaTitle: data.metaTitle ?? null,
-            coverImage: data.coverImage ?? null,
+            // Empty strings are sent as null, the server only accepts URLs.
+            coverImage: data.coverImage || null,
             metaDescription: data.metaDescription ?? null,
-            canonicalUri: data.canonicalUrl ?? null,
+            canonicalUri: data.canonicalUrl || null,
           },
         });
 
