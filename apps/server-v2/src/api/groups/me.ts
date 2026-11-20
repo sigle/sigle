@@ -10,7 +10,7 @@ export const CurrentUserResponse = Schema.Struct({
   address: Schema.String,
   whitelisted: Schema.Boolean,
   plan: Schema.Literals(["free", "pro"]),
-});
+}).annotate({ identifier: "CurrentUserResponse" });
 
 export const MeGroup = HttpApiGroup.make("me")
   .annotate(

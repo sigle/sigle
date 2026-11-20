@@ -11,7 +11,7 @@ import {
 import sharp from "sharp";
 import { afterEach, vi } from "vite-plus/test";
 import type { PostHogEvent } from "@/services/posthog";
-import { UserProfile, UserProfileResponse } from "@/api/groups/users";
+import { PublicUser, UserProfile } from "@/api/groups/users";
 import { Database } from "@/db";
 import { mediaImage, profile as profileTable } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
@@ -233,9 +233,9 @@ describe("profile", () => {
         UploadProfileMetadataResponse,
       )(response);
 
-      const user = yield* HttpClientResponse.schemaBodyJson(
-        UserProfileResponse,
-      )(yield* client.get(`/api/users/${address}`));
+      const user = yield* HttpClientResponse.schemaBodyJson(PublicUser)(
+        yield* client.get(`/api/users/${address}`),
+      );
 
       const uploaded = uploads[0];
 

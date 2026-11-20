@@ -6,7 +6,7 @@ import {
   HttpClientRequest,
   HttpClientResponse,
 } from "effect/http";
-import { UserProfileResponse } from "@/api/groups/users";
+import { PublicUser } from "@/api/groups/users";
 import {
   createTestMediaImage,
   createTestProfile,
@@ -68,7 +68,7 @@ describe("users", () => {
       const response = yield* getUserRequest(client, TEST_ADDRESS);
 
       const body =
-        yield* HttpClientResponse.schemaBodyJson(UserProfileResponse)(response);
+        yield* HttpClientResponse.schemaBodyJson(PublicUser)(response);
 
       expect({ status: response.status, body }).toStrictEqual({
         status: 200,
@@ -99,9 +99,7 @@ describe("users", () => {
         );
 
         const body =
-          yield* HttpClientResponse.schemaBodyJson(UserProfileResponse)(
-            response,
-          );
+          yield* HttpClientResponse.schemaBodyJson(PublicUser)(response);
 
         expect({
           status: response.status,
@@ -135,9 +133,7 @@ describe("users", () => {
         const response = yield* getUserRequest(client, TEST_ADDRESS);
 
         const body =
-          yield* HttpClientResponse.schemaBodyJson(UserProfileResponse)(
-            response,
-          );
+          yield* HttpClientResponse.schemaBodyJson(PublicUser)(response);
 
         expect(body).toMatchObject({
           address: TEST_ADDRESS,
@@ -206,9 +202,7 @@ describe("users", () => {
         const response = yield* getUserRequest(client, TEST_ADDRESS);
 
         const body =
-          yield* HttpClientResponse.schemaBodyJson(UserProfileResponse)(
-            response,
-          );
+          yield* HttpClientResponse.schemaBodyJson(PublicUser)(response);
 
         const etag = Option.getOrUndefined(
           Headers.get(response.headers, "etag"),

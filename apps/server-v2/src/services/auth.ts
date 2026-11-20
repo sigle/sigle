@@ -11,6 +11,9 @@ export const AUTH_COOKIE_PREFIX = "sigle";
 
 export const SESSION_COOKIE_NAME = `${AUTH_COOKIE_PREFIX}.session_token`;
 
+/** Session cookie name over HTTPS, where better-auth uses secure cookies. */
+export const SECURE_SESSION_COOKIE_NAME = `__Secure-${SESSION_COOKIE_NAME}`;
+
 export const createAuth = (config: AppConfigValues, db: AuthDatabaseClient) => {
   const useSecureCookies = config.APP_URL.startsWith("https://");
   const hostname = new URL(config.APP_URL).hostname;

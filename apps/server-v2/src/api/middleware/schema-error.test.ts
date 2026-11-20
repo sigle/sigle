@@ -28,7 +28,6 @@ describe("schemaErrorMiddleware", () => {
         Effect.gen(function* () {
           const response = yield* request;
 
-          // Decoding with the BadRequest schema checks the `_tag` too.
           const body =
             yield* HttpClientResponse.schemaBodyJson(BadRequest)(response);
 
