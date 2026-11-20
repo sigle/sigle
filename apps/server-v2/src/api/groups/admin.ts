@@ -131,7 +131,7 @@ export const AdminGroup = HttpApiGroup.make("admin")
         "Permanently remove a dead-lettered job from the queue.",
       ),
   )
-  .prefix("/api/protected/admin")
+  .prefix("/api/admin")
   .middleware(RateLimitMiddleware)
   .middleware(AdminMiddleware)
   .middleware(UserAuthMiddleware);

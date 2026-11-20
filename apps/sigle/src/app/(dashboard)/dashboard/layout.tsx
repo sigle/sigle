@@ -23,7 +23,7 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
 
-  const { data: me } = sigleApiClient.useQuery("get", "/api/protected/me");
+  const { data: me } = sigleApiClient.useQuery("get", "/api/me");
 
   const navigationLinks = [
     {

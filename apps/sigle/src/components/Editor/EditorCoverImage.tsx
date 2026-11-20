@@ -36,7 +36,7 @@ export const EditorCoverImage = ({
   const watchCoverImage = watch("coverImage");
 
   const { mutateAsync: uploadImage, isPending: loadingUploadImage } =
-    sigleApiClient.useMutation("put", "/api/protected/drafts/{draftId}/images");
+    sigleApiClient.useMutation("post", "/api/drafts/{draftId}/images");
 
   const onDrop = useCallback(
     async (acceptedFiles: File[]) => {

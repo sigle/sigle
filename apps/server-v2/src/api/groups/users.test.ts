@@ -19,11 +19,11 @@ const ErrorResponse = Schema.Struct({ message: Schema.String });
 
 const TEST_ADDRESS = "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM";
 
-const getUserRequest = (client: HttpClient.HttpClient, username: string) =>
-  client.execute(HttpClientRequest.get(`/api/users/${username}`));
+const getUserRequest = (client: HttpClient.HttpClient, address: string) =>
+  client.execute(HttpClientRequest.get(`/api/users/${address}`));
 
 describe("users", () => {
-  it.effect("GET /api/users/:username rejects an invalid Stacks address", () =>
+  it.effect("GET /api/users/:address rejects an invalid Stacks address", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
 
@@ -39,7 +39,7 @@ describe("users", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("GET /api/users/:username returns 404 for an unknown address", () =>
+  it.effect("GET /api/users/:address returns 404 for an unknown address", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
 
@@ -55,7 +55,7 @@ describe("users", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("GET /api/users/:username returns a user without a profile", () =>
+  it.effect("GET /api/users/:address returns a user without a profile", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
       const user = yield* createTestUser();
@@ -81,7 +81,7 @@ describe("users", () => {
   );
 
   it.effect(
-    "GET /api/users/:username reads a non-canonical address spelling",
+    "GET /api/users/:address reads a non-canonical address spelling",
     () =>
       Effect.gen(function* () {
         const client = yield* HttpClient.HttpClient;
@@ -116,7 +116,7 @@ describe("users", () => {
   );
 
   it.effect(
-    "GET /api/users/:username returns a profile whose signer has no account",
+    "GET /api/users/:address returns a profile whose signer has no account",
     () =>
       Effect.gen(function* () {
         const client = yield* HttpClient.HttpClient;
@@ -167,7 +167,7 @@ describe("users", () => {
   );
 
   it.effect(
-    "GET /api/users/:username returns image placeholders and versions the ETag",
+    "GET /api/users/:address returns image placeholders and versions the ETag",
     () =>
       Effect.gen(function* () {
         const client = yield* HttpClient.HttpClient;
@@ -236,7 +236,7 @@ describe("users", () => {
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("GET /api/users/:username returns caching headers", () =>
+  it.effect("GET /api/users/:address returns caching headers", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
 

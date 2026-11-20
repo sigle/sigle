@@ -41,7 +41,7 @@ const waitForPublishCompletion = async (draftId: string) => {
     const signal = AbortSignal.timeout(deadline - Date.now());
 
     const response = await sigleApiFetchClient
-      .GET("/api/protected/drafts/{draftId}/publish", {
+      .GET("/api/drafts/{draftId}/publish", {
         params: {
           path: {
             draftId,
@@ -106,7 +106,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
   const { mutateAsync: publishDraft } = sigleApiClient.useMutation(
     "post",
-    "/api/protected/drafts/{draftId}/publish",
+    "/api/drafts/{draftId}/publish",
   );
 
   const { steps, start, completeStep, setStepError, reset } = useMultiStep({

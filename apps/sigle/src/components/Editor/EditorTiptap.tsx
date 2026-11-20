@@ -63,8 +63,8 @@ export const EditorTipTap = ({
   const setEditor = useEditorStore((state) => state.setEditor);
 
   const { mutateAsync: uploadImage } = sigleApiClient.useMutation(
-    "put",
-    "/api/protected/drafts/{draftId}/images",
+    "post",
+    "/api/drafts/{draftId}/images",
   );
 
   const editor = useEditor({

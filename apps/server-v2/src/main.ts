@@ -12,9 +12,9 @@ import { AuthRoutesLayer } from "@/api/groups/auth";
 import { AdminHandlersLayer } from "@/api/handlers/admin";
 import { DraftsHandlersLayer } from "@/api/handlers/drafts";
 import { HealthHandlersLayer } from "@/api/handlers/health";
+import { MeHandlersLayer } from "@/api/handlers/me";
 import { PostsHandlersLayer } from "@/api/handlers/posts";
 import { ProfileHandlersLayer } from "@/api/handlers/profile";
-import { ProtectedHandlersLayer } from "@/api/handlers/protected";
 import { UsersHandlersLayer } from "@/api/handlers/users";
 import { AdminMiddlewareLayer } from "@/api/middleware/admin";
 import {
@@ -47,7 +47,7 @@ export const CoreServicesLayer = Layer.mergeAll(
 
 export const ApiHandlersLayer = Layer.mergeAll(
   HealthHandlersLayer,
-  ProtectedHandlersLayer,
+  MeHandlersLayer,
   DraftsHandlersLayer,
   ProfileHandlersLayer,
   UsersHandlersLayer,

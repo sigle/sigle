@@ -10,7 +10,7 @@ import { sigleApiClient } from "@/lib/sigle";
 export default function Dashboard() {
   const { data: me, isLoading: isLoadingMe } = sigleApiClient.useQuery(
     "get",
-    "/api/protected/me",
+    "/api/me",
   );
 
   return (

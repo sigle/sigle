@@ -39,10 +39,10 @@ const toMediaImage = (
 
 export const listPosts = (query: typeof PostListQuery.Type) =>
   Effect.gen(function* () {
-    const username =
-      query.username === undefined
+    const author =
+      query.author === undefined
         ? undefined
-        : yield* parseStacksAddress(query.username);
+        : yield* parseStacksAddress(query.author);
 
     const db = yield* Database;
     const limit = query.limit ?? POST_LIST_DEFAULT_LIMIT;
@@ -51,14 +51,14 @@ export const listPosts = (query: typeof PostListQuery.Type) =>
     // Posts belong to a user, who can have several wallets, so an address
     // matches every post of the user owning it.
     const where =
-      username === undefined
+      author === undefined
         ? undefined
         : inArray(
             post.userId,
             db
               .select({ userId: walletAddress.userId })
               .from(walletAddress)
-              .where(eq(walletAddress.address, username)),
+              .where(eq(walletAddress.address, author)),
           );
 
     const [totals] = yield* db
