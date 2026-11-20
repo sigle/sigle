@@ -7,16 +7,16 @@ import { allowedImageFormats } from "@/lib/images";
  *
  * Every error carries a human readable `message` and is annotated with the HTTP
  * status code used by `HttpApiBuilder` when rendering the response and by the
- * OpenAPI generator.
+ * OpenAPI generator. The status code identifies the error, so the JSON body
+ * has no `_tag`, and each body schema is named for the OpenAPI components.
  */
 export class BadRequest extends Schema.Error<
   BadRequest,
   { readonly brand: unique symbol }
 >("sigle/api/BadRequest")(
-  {
-    _tag: Schema.tag("BadRequest"),
+  Schema.Struct({
     message: Schema.String,
-  },
+  }).annotate({ identifier: "BadRequestError" }),
   {
     description: "Bad Request",
     httpApiStatus: 400,
@@ -27,10 +27,9 @@ export class Unauthorized extends Schema.Error<
   Unauthorized,
   { readonly brand: unique symbol }
 >("sigle/api/Unauthorized")(
-  {
-    _tag: Schema.tag("Unauthorized"),
+  Schema.Struct({
     message: Schema.String,
-  },
+  }).annotate({ identifier: "UnauthorizedError" }),
   {
     description: "Unauthorized",
     httpApiStatus: 401,
@@ -41,10 +40,9 @@ export class Forbidden extends Schema.Error<
   Forbidden,
   { readonly brand: unique symbol }
 >("sigle/api/Forbidden")(
-  {
-    _tag: Schema.tag("Forbidden"),
+  Schema.Struct({
     message: Schema.String,
-  },
+  }).annotate({ identifier: "ForbiddenError" }),
   {
     description: "Forbidden",
     httpApiStatus: 403,
@@ -55,10 +53,9 @@ export class NotFound extends Schema.Error<
   NotFound,
   { readonly brand: unique symbol }
 >("sigle/api/NotFound")(
-  {
-    _tag: Schema.tag("NotFound"),
+  Schema.Struct({
     message: Schema.String,
-  },
+  }).annotate({ identifier: "NotFoundError" }),
   {
     description: "Not Found",
     httpApiStatus: 404,
@@ -69,10 +66,9 @@ export class Conflict extends Schema.Error<
   Conflict,
   { readonly brand: unique symbol }
 >("sigle/api/Conflict")(
-  {
-    _tag: Schema.tag("Conflict"),
+  Schema.Struct({
     message: Schema.String,
-  },
+  }).annotate({ identifier: "ConflictError" }),
   {
     description: "Conflict",
     httpApiStatus: 409,
@@ -83,10 +79,9 @@ export class UnsupportedMediaType extends Schema.Error<
   UnsupportedMediaType,
   { readonly brand: unique symbol }
 >("sigle/api/UnsupportedMediaType")(
-  {
-    _tag: Schema.tag("UnsupportedMediaType"),
+  Schema.Struct({
     message: Schema.String,
-  },
+  }).annotate({ identifier: "UnsupportedMediaTypeError" }),
   {
     description: "Unsupported Media Type",
     httpApiStatus: 415,
@@ -97,10 +92,9 @@ export class PayloadTooLarge extends Schema.Error<
   PayloadTooLarge,
   { readonly brand: unique symbol }
 >("sigle/api/PayloadTooLarge")(
-  {
-    _tag: Schema.tag("PayloadTooLarge"),
+  Schema.Struct({
     message: Schema.String,
-  },
+  }).annotate({ identifier: "PayloadTooLargeError" }),
   {
     description: "Payload Too Large",
     httpApiStatus: 413,
@@ -111,11 +105,10 @@ export class TooManyRequests extends Schema.Error<
   TooManyRequests,
   { readonly brand: unique symbol }
 >("sigle/api/TooManyRequests")(
-  {
-    _tag: Schema.tag("TooManyRequests"),
+  Schema.Struct({
     message: Schema.String,
     retryAfterMillis: Schema.Finite,
-  },
+  }).annotate({ identifier: "TooManyRequestsError" }),
   {
     description: "Too Many Requests",
     httpApiStatus: 429,
@@ -126,15 +119,34 @@ export class InternalServerError extends Schema.Error<
   InternalServerError,
   { readonly brand: unique symbol }
 >("sigle/api/InternalServerError")(
-  {
-    _tag: Schema.tag("InternalServerError"),
+  Schema.Struct({
     message: Schema.String,
-  },
+  }).annotate({ identifier: "InternalServerError" }),
   {
     description: "Internal Server Error",
     httpApiStatus: 500,
   },
 ) {}
+
+/**
+ * Date-time encoded as an ISO 8601 string.
+ */
+export const DateTime = Schema.DateTimeUtcFromString.pipe(
+  Schema.annotateEncoded({ format: "date-time" }),
+);
+
+/**
+ * Response of the draft and profile image uploads.
+ */
+export const UploadedImageResponse = Schema.Struct({
+  url: Schema.String,
+  // Size of the stored, optimized image.
+  sizeBytes: Schema.Int,
+  width: Schema.Int,
+  height: Schema.Int,
+  // Base64 ThumbHash placeholder for the optimized image.
+  thumbhash: Schema.String,
+}).annotate({ identifier: "UploadedImageResponse" });
 
 /**
  * `limit` and `offset` query fields shared by the paginated list endpoints.

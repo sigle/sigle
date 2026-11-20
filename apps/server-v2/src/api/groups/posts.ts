@@ -1,9 +1,10 @@
 import { Schema } from "effect";
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/http-api";
-import { MediaImage, UserProfileResponse } from "@/api/groups/users";
+import { MediaImage, PublicUser } from "@/api/groups/users";
 import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 import {
   BadRequest,
+  DateTime,
   documentPaginationQuery,
   NotFound,
   paginationQueryFields,
@@ -13,10 +14,6 @@ import { postOtsStatusEnum } from "@/db/schema";
 export const POST_LIST_DEFAULT_LIMIT = 20;
 
 export const POST_LIST_MAX_LIMIT = 100;
-
-const DateTime = Schema.DateTimeUtcFromString.pipe(
-  Schema.annotateEncoded({ format: "date-time" }),
-);
 
 export const PostListItem = Schema.Struct({
   id: Schema.String,
@@ -31,7 +28,7 @@ export const PostListItem = Schema.Struct({
   createdAt: DateTime,
   updatedAt: DateTime,
   // Primary wallet of the user who published the post, with their profile.
-  author: UserProfileResponse,
+  author: PublicUser,
 }).annotate({ identifier: "PostListItem" });
 
 export const PostOpenTimestamps = Schema.Struct({
@@ -66,7 +63,7 @@ export const Post = Schema.Struct({
   createdAt: DateTime,
   updatedAt: DateTime,
   // Primary wallet of the user who published the post, with their profile.
-  author: UserProfileResponse,
+  author: PublicUser,
   // Null until the post metadata is submitted to OpenTimestamps.
   opentimestamps: Schema.NullOr(PostOpenTimestamps),
 }).annotate({ identifier: "Post" });

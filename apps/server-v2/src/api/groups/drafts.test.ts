@@ -17,8 +17,8 @@ import {
   PublishDraftAccepted,
   PublishDraftStatusResponse,
   UpdateDraftPayload,
-  UploadDraftImageResponse,
 } from "@/api/groups/drafts";
+import { UploadedImageResponse } from "@/api/schemas";
 import { Database } from "@/db";
 import { draft, mediaImage, post, postOts } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
@@ -1370,7 +1370,7 @@ describe("draft images", () => {
       );
 
       const body = yield* HttpClientResponse.schemaBodyJson(
-        UploadDraftImageResponse,
+        UploadedImageResponse,
       )(response);
 
       const uploaded = recorder.uploads[0];

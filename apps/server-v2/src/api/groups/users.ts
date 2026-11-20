@@ -6,11 +6,7 @@ import {
   OpenApi,
 } from "effect/http-api";
 import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
-import { BadRequest, NotFound } from "@/api/schemas";
-
-const DateTime = Schema.DateTimeUtcFromString.pipe(
-  Schema.annotateEncoded({ format: "date-time" }),
-);
+import { BadRequest, DateTime, NotFound } from "@/api/schemas";
 
 export const MediaImage = Schema.Struct({
   url: Schema.String,
@@ -30,18 +26,19 @@ export const UserProfile = Schema.Struct({
   updatedAt: DateTime,
 }).annotate({ identifier: "UserProfile" });
 
-export const UserProfileResponse = Schema.Struct({
+/**
+ * A user as anyone can see them: their primary Stacks address and the profile
+ * it published, if any. Also the author of a post.
+ */
+export const PublicUser = Schema.Struct({
   address: Schema.String,
   profile: Schema.NullOr(UserProfile),
-}).annotate({ identifier: "UserProfileResponse" });
+}).annotate({ identifier: "PublicUser" });
 
-export const UserProfileResponseWithHeaders = HttpApiSchema.WithHeaders(
-  UserProfileResponse,
-  {
-    "cache-control": Schema.String,
-    etag: Schema.String,
-  },
-);
+export const PublicUserWithHeaders = HttpApiSchema.WithHeaders(PublicUser, {
+  "cache-control": Schema.String,
+  etag: Schema.String,
+});
 
 export const UsersGroup = HttpApiGroup.make("users")
   .annotate(OpenApi.Description, "Public user profiles, by Stacks address.")
@@ -50,7 +47,7 @@ export const UsersGroup = HttpApiGroup.make("users")
       params: {
         address: Schema.String,
       },
-      success: UserProfileResponseWithHeaders,
+      success: PublicUserWithHeaders,
       error: [BadRequest, NotFound],
     })
       .annotate(OpenApi.Summary, "Get a user profile")

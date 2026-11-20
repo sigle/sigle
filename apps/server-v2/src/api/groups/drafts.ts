@@ -16,6 +16,7 @@ import {
 import {
   BadRequest,
   Conflict,
+  DateTime,
   documentPaginationQuery,
   Forbidden,
   imageRequestBody,
@@ -25,6 +26,7 @@ import {
   paginationQueryFields,
   TooManyRequests,
   UnsupportedMediaType,
+  UploadedImageResponse,
 } from "@/api/schemas";
 import { DRAFT_IMAGE_MAX_MIB } from "@/lib/draft-images";
 import { PostMetadata } from "@/lib/metadata";
@@ -32,10 +34,6 @@ import { PostMetadata } from "@/lib/metadata";
 export const DRAFT_LIST_DEFAULT_LIMIT = 20;
 
 export const DRAFT_LIST_MAX_LIMIT = 100;
-
-const DateTime = Schema.DateTimeUtcFromString.pipe(
-  Schema.annotateEncoded({ format: "date-time" }),
-);
 
 /**
  * PATCH field: omit to leave the current value unchanged.
@@ -219,16 +217,6 @@ export const PublishDraftStatusResponse = Schema.Struct({
   arweaveTxId: Schema.NullOr(Schema.String),
 }).annotate({ identifier: "PublishDraftStatusResponse" });
 
-export const UploadDraftImageResponse = Schema.Struct({
-  url: Schema.String,
-  // Size of the stored, optimized image.
-  sizeBytes: Schema.Int,
-  width: Schema.Int,
-  height: Schema.Int,
-  // Base64 ThumbHash placeholder for the optimized image.
-  thumbhash: Schema.String,
-}).annotate({ identifier: "UploadDraftImageResponse" });
-
 export const DraftsGroup = HttpApiGroup.make("drafts")
   .annotate(
     OpenApi.Description,
@@ -326,7 +314,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
         draftId: Schema.String,
       },
       // Every upload creates a new content-addressed image.
-      success: HttpApiSchema.status(201)(UploadDraftImageResponse),
+      success: HttpApiSchema.status(201)(UploadedImageResponse),
       error: [
         BadRequest,
         Forbidden,

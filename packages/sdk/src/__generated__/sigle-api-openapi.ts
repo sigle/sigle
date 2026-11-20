@@ -314,35 +314,23 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
-    sigle_api_UnauthorizedEncoded: {
-      /** @enum {string} */
-      _tag: "Unauthorized";
+    UnauthorizedError: {
       message: string;
     };
-    sigle_api_ForbiddenEncoded: {
-      /** @enum {string} */
-      _tag: "Forbidden";
+    ForbiddenError: {
       message: string;
     };
-    sigle_api_InternalServerErrorEncoded: {
-      /** @enum {string} */
-      _tag: "InternalServerError";
+    InternalServerError: {
       message: string;
     };
-    sigle_api_TooManyRequestsEncoded: {
-      /** @enum {string} */
-      _tag: "TooManyRequests";
+    TooManyRequestsError: {
       message: string;
       retryAfterMillis: number;
     };
-    sigle_api_NotFoundEncoded: {
-      /** @enum {string} */
-      _tag: "NotFound";
+    NotFoundError: {
       message: string;
     };
-    sigle_api_BadRequestEncoded: {
-      /** @enum {string} */
-      _tag: "BadRequest";
+    BadRequestError: {
       message: string;
     };
     /** @enum {string} */
@@ -395,7 +383,7 @@ export interface components {
       createdAt: string;
       /** Format: date-time */
       updatedAt: string;
-      author: components["schemas"]["UserProfileResponse"];
+      author: components["schemas"]["PublicUser"];
       opentimestamps: components["schemas"]["PostOpenTimestamps"] | null;
     };
     PostOpenTimestamps: {
@@ -407,7 +395,7 @@ export interface components {
       bitcoinBlockHash: string | null;
       bitcoinTimestamp: string | null;
     };
-    UserProfileResponse: {
+    PublicUser: {
       address: string;
       profile: components["schemas"]["UserProfile"] | null;
     };
@@ -448,28 +436,24 @@ export interface components {
       createdAt: string;
       /** Format: date-time */
       updatedAt: string;
-      author: components["schemas"]["UserProfileResponse"];
+      author: components["schemas"]["PublicUser"];
     };
-    sigle_api_UnsupportedMediaTypeEncoded: {
-      /** @enum {string} */
-      _tag: "UnsupportedMediaType";
+    UnsupportedMediaTypeError: {
       message: string;
     };
-    sigle_api_PayloadTooLargeEncoded: {
-      /** @enum {string} */
-      _tag: "PayloadTooLarge";
+    PayloadTooLargeError: {
       message: string;
     };
-    UploadProfileImageResponse: {
+    UploadedImageResponse: {
       url: string;
       sizeBytes: number;
       width: number;
       height: number;
       thumbhash: string;
     };
-    sigle_api_ConflictEncoded: {
-      /** @enum {string} */
-      _tag: "Conflict";
+    /** @enum {string} */
+    ProfileImageKind: "avatar" | "cover";
+    ConflictError: {
       message: string;
     };
     UploadProfileMetadataResponse: {
@@ -479,6 +463,9 @@ export interface components {
       gatewayUrl: string;
       address: string;
       profile: components["schemas"]["UserProfile"];
+    };
+    UploadProfileMetadataPayload: {
+      metadata: components["schemas"]["ProfileMetadata"];
     };
     /** @description The signed profile metadata to upload to Arweave. */
     ProfileMetadata: {
@@ -560,13 +547,6 @@ export interface components {
       };
       /** @description A cryptographic signature of the `content` data. */
       signature?: string;
-    };
-    UploadDraftImageResponse: {
-      url: string;
-      sizeBytes: number;
-      width: number;
-      height: number;
-      thumbhash: string;
     };
     PublishDraftStatusResponse: {
       status: components["schemas"]["PublishDraftStatus"];
@@ -733,6 +713,16 @@ export interface components {
       tags?: string[];
       canonicalUri?: string | null;
     };
+    CurrentUserResponse: {
+      id: string;
+      address: string;
+      whitelisted: boolean;
+      /** @enum {string} */
+      plan: "free" | "pro";
+    };
+    HealthResponse: {
+      success: boolean;
+    };
   };
   responses: never;
   parameters: never;
@@ -751,15 +741,13 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Success */
+      /** @description HealthResponse */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": {
-            success: boolean;
-          };
+          "application/json": components["schemas"]["HealthResponse"];
         };
       };
       /** @description Bad Request */
@@ -768,7 +756,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Too Many Requests */
@@ -777,7 +765,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -786,7 +774,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -800,19 +788,13 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Success */
+      /** @description CurrentUserResponse */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": {
-            id: string;
-            address: string;
-            whitelisted: boolean;
-            /** @enum {string} */
-            plan: "free" | "pro";
-          };
+          "application/json": components["schemas"]["CurrentUserResponse"];
         };
       };
       /** @description Bad Request */
@@ -821,7 +803,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -830,7 +812,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Too Many Requests */
@@ -839,7 +821,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -848,7 +830,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -880,7 +862,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -889,7 +871,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Forbidden */
@@ -898,7 +880,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Too Many Requests */
@@ -907,7 +889,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -916,7 +898,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -950,7 +932,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -959,7 +941,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Forbidden */
@@ -968,7 +950,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Too Many Requests */
@@ -977,7 +959,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -986,7 +968,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -1017,7 +999,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -1026,7 +1008,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Forbidden */
@@ -1035,7 +1017,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */
@@ -1044,7 +1026,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+          "application/json": components["schemas"]["NotFoundError"];
         };
       };
       /** @description Too Many Requests */
@@ -1053,7 +1035,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -1062,7 +1044,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -1091,7 +1073,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -1100,7 +1082,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Forbidden */
@@ -1109,7 +1091,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */
@@ -1118,7 +1100,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+          "application/json": components["schemas"]["NotFoundError"];
         };
       };
       /** @description Conflict */
@@ -1127,7 +1109,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ConflictEncoded"];
+          "application/json": components["schemas"]["ConflictError"];
         };
       };
       /** @description Too Many Requests */
@@ -1136,7 +1118,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -1145,7 +1127,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -1180,7 +1162,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -1189,7 +1171,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Forbidden */
@@ -1198,7 +1180,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */
@@ -1207,7 +1189,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+          "application/json": components["schemas"]["NotFoundError"];
         };
       };
       /** @description Conflict */
@@ -1216,7 +1198,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ConflictEncoded"];
+          "application/json": components["schemas"]["ConflictError"];
         };
       };
       /** @description Too Many Requests */
@@ -1225,7 +1207,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -1234,7 +1216,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -1265,7 +1247,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -1274,7 +1256,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Forbidden */
@@ -1283,7 +1265,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */
@@ -1292,7 +1274,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+          "application/json": components["schemas"]["NotFoundError"];
         };
       };
       /** @description Too Many Requests */
@@ -1301,7 +1283,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -1310,7 +1292,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -1346,7 +1328,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -1355,7 +1337,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Forbidden */
@@ -1364,7 +1346,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */
@@ -1373,7 +1355,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+          "application/json": components["schemas"]["NotFoundError"];
         };
       };
       /** @description Conflict */
@@ -1382,7 +1364,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ConflictEncoded"];
+          "application/json": components["schemas"]["ConflictError"];
         };
       };
       /** @description Too Many Requests */
@@ -1391,7 +1373,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -1400,7 +1382,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -1422,13 +1404,13 @@ export interface operations {
       };
     };
     responses: {
-      /** @description UploadDraftImageResponse */
+      /** @description UploadedImageResponse */
       201: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["UploadDraftImageResponse"];
+          "application/json": components["schemas"]["UploadedImageResponse"];
         };
       };
       /** @description Bad Request */
@@ -1437,7 +1419,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -1446,7 +1428,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Forbidden */
@@ -1455,7 +1437,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */
@@ -1464,7 +1446,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+          "application/json": components["schemas"]["NotFoundError"];
         };
       };
       /** @description Payload Too Large */
@@ -1473,7 +1455,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_PayloadTooLargeEncoded"];
+          "application/json": components["schemas"]["PayloadTooLargeError"];
         };
       };
       /** @description Unsupported Media Type */
@@ -1482,7 +1464,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnsupportedMediaTypeEncoded"];
+          "application/json": components["schemas"]["UnsupportedMediaTypeError"];
         };
       };
       /** @description Too Many Requests */
@@ -1491,7 +1473,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -1500,7 +1482,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -1514,9 +1496,7 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": {
-          metadata: components["schemas"]["ProfileMetadata"];
-        };
+        "application/json": components["schemas"]["UploadProfileMetadataPayload"];
       };
     };
     responses: {
@@ -1535,7 +1515,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -1544,7 +1524,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Forbidden */
@@ -1553,7 +1533,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Conflict */
@@ -1562,7 +1542,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ConflictEncoded"];
+          "application/json": components["schemas"]["ConflictError"];
         };
       };
       /** @description Too Many Requests */
@@ -1571,7 +1551,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -1580,7 +1560,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -1590,7 +1570,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
-        kind: "avatar" | "cover";
+        kind: components["schemas"]["ProfileImageKind"];
       };
       cookie?: never;
     };
@@ -1602,13 +1582,13 @@ export interface operations {
       };
     };
     responses: {
-      /** @description UploadProfileImageResponse */
+      /** @description UploadedImageResponse */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["UploadProfileImageResponse"];
+          "application/json": components["schemas"]["UploadedImageResponse"];
         };
       };
       /** @description Bad Request */
@@ -1617,7 +1597,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -1626,7 +1606,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Forbidden */
@@ -1635,7 +1615,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Payload Too Large */
@@ -1644,7 +1624,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_PayloadTooLargeEncoded"];
+          "application/json": components["schemas"]["PayloadTooLargeError"];
         };
       };
       /** @description Unsupported Media Type */
@@ -1653,7 +1633,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnsupportedMediaTypeEncoded"];
+          "application/json": components["schemas"]["UnsupportedMediaTypeError"];
         };
       };
       /** @description Too Many Requests */
@@ -1662,7 +1642,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -1671,7 +1651,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -1687,7 +1667,7 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description UserProfileResponse */
+      /** @description PublicUser */
       200: {
         headers: {
           "cache-control": string;
@@ -1695,7 +1675,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["UserProfileResponse"];
+          "application/json": components["schemas"]["PublicUser"];
         };
       };
       /** @description Bad Request */
@@ -1704,7 +1684,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Not Found */
@@ -1713,7 +1693,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+          "application/json": components["schemas"]["NotFoundError"];
         };
       };
       /** @description Too Many Requests */
@@ -1722,7 +1702,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -1731,7 +1711,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -1764,7 +1744,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Too Many Requests */
@@ -1773,7 +1753,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -1782,7 +1762,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -1813,7 +1793,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Not Found */
@@ -1822,7 +1802,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+          "application/json": components["schemas"]["NotFoundError"];
         };
       };
       /** @description Too Many Requests */
@@ -1831,7 +1811,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -1840,7 +1820,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -1869,7 +1849,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -1878,7 +1858,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Forbidden */
@@ -1887,7 +1867,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Too Many Requests */
@@ -1896,7 +1876,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -1905,7 +1885,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -1939,7 +1919,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -1948,7 +1928,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Forbidden */
@@ -1957,7 +1937,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Too Many Requests */
@@ -1966,7 +1946,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -1975,7 +1955,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -2005,7 +1985,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -2014,7 +1994,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Forbidden */
@@ -2023,7 +2003,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */
@@ -2032,7 +2012,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+          "application/json": components["schemas"]["NotFoundError"];
         };
       };
       /** @description Too Many Requests */
@@ -2041,7 +2021,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -2050,7 +2030,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -2080,7 +2060,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_BadRequestEncoded"];
+          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -2089,7 +2069,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_UnauthorizedEncoded"];
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Forbidden */
@@ -2098,7 +2078,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */
@@ -2107,7 +2087,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
+          "application/json": components["schemas"]["NotFoundError"];
         };
       };
       /** @description Too Many Requests */
@@ -2116,7 +2096,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_TooManyRequestsEncoded"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
       /** @description Internal Server Error */
@@ -2125,7 +2105,7 @@ export interface operations {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["sigle_api_InternalServerErrorEncoded"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };

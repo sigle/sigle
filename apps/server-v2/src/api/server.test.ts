@@ -45,15 +45,24 @@ const OpenApiResponse = Schema.Struct({
   ),
 });
 
-const TooManyRequestsResponse = Schema.TaggedStruct("TooManyRequests", {
-  message: Schema.String,
-  retryAfterMillis: Schema.Finite,
-});
-
 // A fixed wall clock, so `x-ratelimit-reset` is an exact Unix timestamp. It is
 // set before the server starts: moving the TestClock afterwards would run
 // every queue poll scheduled in between.
 const NOW_MILLIS = 1_800_000_000_000;
+
+const OpenApiSecurityDocument = Schema.Struct({
+  components: Schema.Struct({
+    securitySchemes: Schema.Record(Schema.String, Schema.Unknown),
+    schemas: Schema.Record(Schema.String, Schema.Unknown),
+  }),
+  paths: Schema.Record(
+    Schema.String,
+    Schema.Record(
+      Schema.String,
+      Schema.Struct({ security: Schema.optionalKey(Schema.Unknown) }),
+    ),
+  ),
+});
 
 const rateLimitHeaders = (response: HttpClientResponse.HttpClientResponse) =>
   Object.fromEntries(
@@ -180,6 +189,47 @@ describe("http server", () => {
     }).pipe(Effect.provide(serverLayer({ API_URL: "https://api.sigle.test" }))),
   );
 
+  it.effect("GET /_openapi.json documents auth and names its schemas", () =>
+    Effect.gen(function* () {
+      const response = yield* HttpClient.get("/_openapi.json");
+
+      const json = yield* response.text;
+
+      const doc = yield* HttpClientResponse.schemaBodyJson(
+        OpenApiSecurityDocument,
+      )(response);
+
+      expect({
+        securitySchemes: Object.keys(doc.components.securitySchemes),
+        meSecurity: doc.paths["/api/me"]?.get?.security,
+        postsSecurity: doc.paths["/api/posts"]?.get?.security,
+        internalNames: Object.keys(doc.components.schemas).filter((name) =>
+          name.startsWith("sigle_api_"),
+        ),
+        errorSchema: doc.components.schemas["NotFoundError"],
+        postAuthor: json.includes(
+          '"author":{"$ref":"#/components/schemas/PublicUser"}',
+        ),
+        healthRef: json.includes(
+          '"$ref":"#/components/schemas/HealthResponse"',
+        ),
+      }).toStrictEqual({
+        securitySchemes: ["sessionCookie"],
+        meSecurity: [{ sessionCookie: [] }],
+        postsSecurity: [],
+        internalNames: [],
+        errorSchema: {
+          type: "object",
+          properties: { message: { type: "string" } },
+          required: ["message"],
+          additionalProperties: false,
+        },
+        postAuthor: true,
+        healthRef: true,
+      });
+    }).pipe(Effect.provide(serverLayer())),
+  );
+
   it.effect("GET /_scalar serves the API reference", () =>
     Effect.gen(function* () {
       const response = yield* HttpClient.get("/_scalar");
@@ -281,17 +331,12 @@ describe("http server", () => {
       const previous = responses[limit - 1];
       const last = responses[limit];
 
-      const body =
-        last === undefined
-          ? undefined
-          : yield* HttpClientResponse.schemaBodyJson(TooManyRequestsResponse)(
-              last,
-            );
+      const body = last === undefined ? undefined : yield* last.json;
 
       expect({
         before: previous?.status,
         last: last?.status,
-        message: body?.message,
+        body,
         remaining:
           previous === undefined
             ? undefined
@@ -303,7 +348,11 @@ describe("http server", () => {
       }).toStrictEqual({
         before: 200,
         last: 429,
-        message: "Rate limit exceeded",
+        // The status identifies the error, the body has no `_tag`.
+        body: {
+          message: "Rate limit exceeded",
+          retryAfterMillis: expect.any(Number),
+        },
         remaining: "0",
         rejectedHeaders: {
           "retry-after": "60",

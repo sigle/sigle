@@ -16,13 +16,14 @@ import {
   InternalServerError,
   PayloadTooLarge,
   UnsupportedMediaType,
+  UploadedImageResponse,
 } from "@/api/schemas";
 import { ProfileMetadata } from "@/lib/metadata";
 import { profileImageKinds } from "@/lib/profile-images";
 
 export const UploadProfileMetadataPayload = Schema.Struct({
   metadata: ProfileMetadata,
-});
+}).annotate({ identifier: "UploadProfileMetadataPayload" });
 
 export const UploadProfileMetadataResponse = Schema.Struct({
   arweaveTxId: Schema.String,
@@ -35,17 +36,9 @@ export const UploadProfileMetadataResponse = Schema.Struct({
   profile: UserProfile,
 }).annotate({ identifier: "UploadProfileMetadataResponse" });
 
-export const ProfileImageKindSchema = Schema.Literals(profileImageKinds);
-
-export const UploadProfileImageResponse = Schema.Struct({
-  url: Schema.String,
-  // Size of the stored, optimized image.
-  sizeBytes: Schema.Int,
-  width: Schema.Int,
-  height: Schema.Int,
-  // Base64 ThumbHash placeholder for the optimized image.
-  thumbhash: Schema.String,
-}).annotate({ identifier: "UploadProfileImageResponse" });
+export const ProfileImageKindSchema = Schema.Literals(
+  profileImageKinds,
+).annotate({ identifier: "ProfileImageKind" });
 
 export const ProfileGroup = HttpApiGroup.make("profile")
   .annotate(
@@ -68,7 +61,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
   .add(
     HttpApiEndpoint.put("uploadImage", "/images/:kind", {
       params: { kind: ProfileImageKindSchema },
-      success: UploadProfileImageResponse,
+      success: UploadedImageResponse,
       error: [
         BadRequest,
         PayloadTooLarge,

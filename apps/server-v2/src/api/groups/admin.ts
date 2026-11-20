@@ -10,6 +10,7 @@ import { UserAuthMiddleware } from "@/api/middleware/auth-user";
 import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 import {
   BadRequest,
+  DateTime,
   documentPaginationQuery,
   NotFound,
   paginationQueryFields,
@@ -19,10 +20,6 @@ import { queueNames } from "@/jobs";
 export const ADMIN_LIST_DEFAULT_LIMIT = 20;
 
 export const ADMIN_LIST_MAX_LIMIT = 100;
-
-const DateTime = Schema.DateTimeUtcFromString.pipe(
-  Schema.annotateEncoded({ format: "date-time" }),
-);
 
 /**
  * Queue of a registered job. An unknown name is rejected with a 400 instead of
