@@ -48,6 +48,11 @@ export const jobs = [
   indexProfileJob,
 ] as const;
 
+/** Names of the queues of the registered jobs. */
+export const queueNames = jobs.map((job) => job.name);
+
+export type QueueName = (typeof queueNames)[number];
+
 export const QueueCleanupLive = PersistedQueue.layerCleanup({
   interval: "1 hour",
   timeToLive: "7 days",

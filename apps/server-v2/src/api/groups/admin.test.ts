@@ -1,6 +1,7 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Effect, Schema } from "effect";
 import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/http";
+import { SqlClient } from "effect/sql";
 import {
   createAuthenticatedClient,
   createTestWalletAddress,
@@ -58,16 +59,43 @@ describe("admin jobs API", () => {
     Effect.gen(function* () {
       const { client, userId } = yield* createAuthenticatedClient();
       yield* createTestWalletAddress({ userId, address: ADMIN_ADDRESS });
+      const sql = (yield* SqlClient.SqlClient).withoutTransforms();
+
+      // One failed job in a queue that has rows; the other queues have none.
+      yield* sql`
+        INSERT INTO effect_queue
+          (id, queue_name, element, state, attempts, created_at, updated_at, visible_at)
+        VALUES
+          ('job-1', 'publish-draft', '{}', 'failed', 3, NOW(), NOW(), NOW())
+      `;
 
       const queues = yield* client.get("/api/protected/admin/queues");
 
       const queuesBody =
         yield* HttpClientResponse.schemaBodyJson(QueueListResponse)(queues);
 
+      const emptyQueue = (queueName: string) => ({
+        queueName,
+        pending: 0,
+        active: 0,
+        completed: 0,
+        failed: 0,
+        oldestPendingAgeMillis: null,
+      });
+
       expect({
         status: queues.status,
         results: queuesBody.results,
-      }).toStrictEqual({ status: 200, results: [] });
+      }).toStrictEqual({
+        status: 200,
+        results: [
+          emptyQueue("generate-image-thumbhash"),
+          emptyQueue("index-profile"),
+          emptyQueue("opentimestamps-stamp"),
+          emptyQueue("opentimestamps-upgrade"),
+          { ...emptyQueue("publish-draft"), failed: 1 },
+        ],
+      });
 
       const failed = yield* client.get(
         "/api/protected/admin/queues/publish-draft/failed?limit=10&offset=0",
@@ -79,16 +107,16 @@ describe("admin jobs API", () => {
 
       expect({
         status: failed.status,
-        results: failedBody.results,
+        results: failedBody.results.length,
         limit: failedBody.limit,
         offset: failedBody.offset,
         total: failedBody.total,
       }).toStrictEqual({
         status: 200,
-        results: [],
+        results: 1,
         limit: 10,
         offset: 0,
-        total: 0,
+        total: 1,
       });
 
       const retry = yield* client.execute(
@@ -106,6 +134,33 @@ describe("admin jobs API", () => {
       );
 
       expect(remove.status).toBe(404);
+    }).pipe(
+      Effect.provide(makeTestServerLayer({ ADMIN_ADDRESSES: [ADMIN_ADDRESS] })),
+    ),
+  );
+
+  it.effect("rejects unknown queue names with a 400", () =>
+    Effect.gen(function* () {
+      const { client, userId } = yield* createAuthenticatedClient();
+      yield* createTestWalletAddress({ userId, address: ADMIN_ADDRESS });
+
+      const responses = yield* Effect.all([
+        client.get("/api/protected/admin/queues/publish-drafts/failed"),
+        client.execute(
+          HttpClientRequest.post(
+            "/api/protected/admin/queues/publish-drafts/failed/job-1/retry",
+          ),
+        ),
+        client.execute(
+          HttpClientRequest.delete(
+            "/api/protected/admin/queues/publish-drafts/failed/job-1",
+          ),
+        ),
+      ]);
+
+      expect(responses.map((response) => response.status)).toStrictEqual([
+        400, 400, 400,
+      ]);
     }).pipe(
       Effect.provide(makeTestServerLayer({ ADMIN_ADDRESSES: [ADMIN_ADDRESS] })),
     ),
