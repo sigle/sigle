@@ -679,11 +679,13 @@ export interface components {
       coverImage: string | null;
       tags: string[];
       canonicalUri: string | null;
+      publishStatus: components["schemas"]["DraftPublishStatus"];
       /** Format: date-time */
       createdAt: string;
       /** Format: date-time */
       updatedAt: string;
     };
+    DraftPublishStatus: ("PENDING" | "PROCESSING" | "FAILED") | null;
     UpdateDraftPayload: {
       /** @description Omit to keep the current value unchanged. */
       title?: string;
@@ -714,6 +716,7 @@ export interface components {
       coverImage: string | null;
       tags: string[];
       canonicalUri: string | null;
+      publishStatus: components["schemas"]["DraftPublishStatus"];
       /** Format: date-time */
       createdAt: string;
       /** Format: date-time */

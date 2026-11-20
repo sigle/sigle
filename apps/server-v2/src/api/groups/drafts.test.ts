@@ -188,7 +188,7 @@ describe("drafts", () => {
         {
           distinctId: userId,
           event: "draft created",
-          properties: { postId: body.id },
+          properties: { draftId: body.id },
         },
       ]);
     }).pipe(Effect.provide(makeTestServerLayer({}, events)));
@@ -525,7 +525,7 @@ describe("drafts", () => {
         const db = yield* Database;
 
         const results = yield* Effect.forEach(
-          ["PENDING", "PROCESSING", "FAILED"],
+          ["PENDING", "PROCESSING", "FAILED"] as const,
           (txStatus) =>
             Effect.gen(function* () {
               const draftId = `draft-${txStatus}`;
@@ -560,6 +560,47 @@ describe("drafts", () => {
           { txStatus: "FAILED", status: 200, title: "After" },
         ]);
       }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect("draft routes expose the publish status", () =>
+    Effect.gen(function* () {
+      const { client, userId } = yield* createAuthenticatedClient();
+
+      const statuses = [null, "PENDING", "PROCESSING", "FAILED"] as const;
+
+      yield* Effect.forEach(statuses, (txStatus, index) =>
+        createTestDraft({
+          id: `draft-${index}`,
+          userId,
+          txStatus,
+          updatedAt: new Date(Date.UTC(2026, 0, 1, 0, 0, index)),
+        }),
+      );
+
+      const list = yield* HttpClientResponse.schemaBodyJson(DraftListResponse)(
+        yield* client.get("/api/protected/drafts"),
+      );
+
+      const single = yield* Effect.forEach(statuses, (_, index) =>
+        Effect.gen(function* () {
+          const response = yield* client.get(
+            `/api/protected/drafts/draft-${index}`,
+          );
+
+          return (yield* HttpClientResponse.schemaBodyJson(Draft)(response))
+            .publishStatus;
+        }),
+      );
+
+      expect({
+        // The list is newest first.
+        list: list.results.map((item) => item.publishStatus),
+        single,
+      }).toStrictEqual({
+        list: ["FAILED", "PROCESSING", "PENDING", null],
+        single: [null, "PENDING", "PROCESSING", "FAILED"],
+      });
+    }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
   it.effect("DELETE /api/protected/drafts/:draftId deletes a draft", () => {
@@ -604,7 +645,7 @@ describe("drafts", () => {
         const db = yield* Database;
 
         const results = yield* Effect.forEach(
-          ["PENDING", "PROCESSING", "FAILED"],
+          ["PENDING", "PROCESSING", "FAILED"] as const,
           (txStatus) =>
             Effect.gen(function* () {
               const draftId = `draft-${txStatus}`;

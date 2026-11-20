@@ -84,7 +84,7 @@ export const createTestDraft = (options: {
   readonly title?: string;
   readonly content?: string;
   readonly arweaveTxId?: string | null;
-  readonly txStatus?: string | null;
+  readonly txStatus?: (typeof draft.$inferInsert)["txStatus"];
   readonly publishSignature?: string | null;
   readonly uploadClaimedAt?: Date | null;
   readonly createdAt?: Date;

@@ -1,5 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Effect, Option } from "effect";
+import { crc32, deflateSync } from "node:zlib";
 import sharp from "sharp";
 import {
   detectImageFormat,
@@ -25,6 +26,35 @@ const ONE_PIXEL_GIF = Buffer.from(
   "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
   "base64",
 );
+
+const pngChunk = (type: string, data: Buffer) => {
+  const length = Buffer.alloc(4);
+  length.writeUInt32BE(data.length);
+
+  const body = Buffer.concat([Buffer.from(type), data]);
+  const crc = Buffer.alloc(4);
+  crc.writeUInt32BE(crc32(body));
+
+  return Buffer.concat([length, body, crc]);
+};
+
+/**
+ * A PNG of a few bytes whose header declares `width` x `height` grayscale
+ * pixels, to test pixel limits without encoding a large image.
+ */
+const makePngHeader = (width: number, height: number) => {
+  const header = Buffer.alloc(13);
+  header.writeUInt32BE(width, 0);
+  header.writeUInt32BE(height, 4);
+  header[8] = 8;
+
+  return Buffer.concat([
+    Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
+    pngChunk("IHDR", header),
+    pngChunk("IDAT", deflateSync(Buffer.alloc(1))),
+    pngChunk("IEND", Buffer.alloc(0)),
+  ]);
+};
 
 describe("images", () => {
   it.effect("optimizes an image to webp and resizes it down", () =>
@@ -96,6 +126,17 @@ describe("images", () => {
         quality: 75,
         width: 32,
       }).pipe(Effect.flip);
+
+      expect(error).toBeInstanceOf(ImageOptimizationError);
+    }),
+  );
+
+  it.effect("rejects images above the default pixel limit on detection", () =>
+    Effect.gen(function* () {
+      // 8000 x 8000 is 64M pixels, above MAX_INPUT_PIXELS (50M).
+      const error = yield* detectImageFormat(
+        new Uint8Array(makePngHeader(8000, 8000)),
+      ).pipe(Effect.flip);
 
       expect(error).toBeInstanceOf(ImageOptimizationError);
     }),
