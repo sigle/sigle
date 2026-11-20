@@ -11,7 +11,7 @@ import type { UploadProfileMetadataPayload } from "@/api/groups/profile";
 import { SigleApi } from "@/api";
 import { uploadImageFromRequest } from "@/api/image-upload";
 import { CurrentUser } from "@/api/middleware/auth-user";
-import { BadRequest, InternalServerError } from "@/api/schemas";
+import { BadRequest, Conflict, InternalServerError } from "@/api/schemas";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { profile } from "@/db/schema";
@@ -65,7 +65,7 @@ export const uploadProfileMetadata = (
       .pipe(Effect.orDie);
 
     if (existingProfileWithSignature) {
-      return yield* new BadRequest({
+      return yield* new Conflict({
         message: "Metadata signature has already been published",
       });
     }

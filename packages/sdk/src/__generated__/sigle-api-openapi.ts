@@ -468,6 +468,11 @@ export interface components {
       height: number;
       thumbhash: string;
     };
+    sigle_api_ConflictEncoded: {
+      /** @enum {string} */
+      _tag: "Conflict";
+      message: string;
+    };
     UploadProfileMetadataResponse: {
       id: string;
       uri: string;
@@ -665,11 +670,6 @@ export interface components {
       };
       /** @description A cryptographic signature of the `content` data. */
       signature?: string;
-    };
-    sigle_api_ConflictEncoded: {
-      /** @enum {string} */
-      _tag: "Conflict";
-      message: string;
     };
     Draft: {
       id: string;
@@ -1374,6 +1374,15 @@ export interface operations {
           "application/json": components["schemas"]["sigle_api_NotFoundEncoded"];
         };
       };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ConflictEncoded"];
+        };
+      };
       /** @description Too Many Requests */
       429: {
         headers: {
@@ -1543,6 +1552,15 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["sigle_api_ForbiddenEncoded"];
+        };
+      };
+      /** @description Conflict */
+      409: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["sigle_api_ConflictEncoded"];
         };
       };
       /** @description Too Many Requests */

@@ -439,7 +439,7 @@ describe("profile", () => {
         second: secondResponse.status,
       }).toStrictEqual({
         first: 200,
-        second: 400,
+        second: 409,
       });
     }).pipe(Effect.provide(makeTestServerLayer())),
   );

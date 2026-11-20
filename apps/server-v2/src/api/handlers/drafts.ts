@@ -328,7 +328,7 @@ export const publishDraft = (
       .pipe(Effect.orDie);
 
     if (existingPostWithSignature) {
-      return yield* new BadRequest({
+      return yield* new Conflict({
         message: "Metadata signature has already been published",
       });
     }
@@ -421,7 +421,9 @@ export const getDraftPublishStatus = (draftId: string) =>
       } as const;
     }
 
-    return yield* new BadRequest({
+    // The publish status is a resource of the publish job: a draft that was
+    // never published has none.
+    return yield* new NotFound({
       message: "Draft publishing has not been started",
     });
   });
