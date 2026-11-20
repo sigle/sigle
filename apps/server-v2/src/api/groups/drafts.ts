@@ -210,6 +210,10 @@ export const UploadDraftImageResponse = Schema.Struct({
 }).annotate({ identifier: "UploadDraftImageResponse" });
 
 export const DraftsGroup = HttpApiGroup.make("drafts")
+  .annotate(
+    OpenApi.Description,
+    "The signed-in user's drafts: create, edit, delete, upload images, and publish them to Arweave.",
+  )
   .add(
     HttpApiEndpoint.post("create", "/", {
       payload: CreateDraftPayload,

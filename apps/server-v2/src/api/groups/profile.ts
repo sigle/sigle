@@ -41,6 +41,10 @@ export const UploadProfileImageResponse = Schema.Struct({
 }).annotate({ identifier: "UploadProfileImageResponse" });
 
 export const ProfileGroup = HttpApiGroup.make("profile")
+  .annotate(
+    OpenApi.Description,
+    "The signed-in user's profile: upload signed profile metadata to Arweave and the avatar and cover images.",
+  )
   .add(
     HttpApiEndpoint.post("uploadMetadata", "/upload-metadata", {
       payload: UploadProfileMetadataPayload,

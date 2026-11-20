@@ -70,6 +70,10 @@ export const RetryFailedJobResponse = Schema.Struct({
 }).annotate({ identifier: "RetryFailedJobResponse" });
 
 export const AdminGroup = HttpApiGroup.make("admin")
+  .annotate(
+    OpenApi.Description,
+    "Background job queues, for admin wallets only.",
+  )
   .add(
     HttpApiEndpoint.get("listQueues", "/queues", {
       success: AdminQueueListResponse,

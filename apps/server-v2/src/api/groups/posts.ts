@@ -79,6 +79,10 @@ export const PostListQuery = Schema.Struct({
 }).annotate({ identifier: "PostListQuery" });
 
 export const PostsGroup = HttpApiGroup.make("posts")
+  .annotate(
+    OpenApi.Description,
+    "Published posts, newest first, optionally filtered by author.",
+  )
   .add(
     HttpApiEndpoint.get("list", "/", {
       query: PostListQuery,
