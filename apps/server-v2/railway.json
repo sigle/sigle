@@ -20,7 +20,7 @@
       }
     },
     "healthcheckPath": "/health",
-    "sleepApplication": false,
+    "sleepApplication": true,
     "multiRegionConfig": {
       "us-west2": {
         "numReplicas": 1
