@@ -597,9 +597,7 @@ describe("profile", () => {
         yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
 
       expect(response.status).toBe(500);
-      expect(body.message).toBe(
-        "Failed to upload to Arweave, error: turbo unreachable",
-      );
+      expect(body.message).toBe("Failed to upload to Arweave.");
     }).pipe(
       Effect.provide(makeTestServerLayer({}, [], { arweave: arweaveLayer })),
     );
@@ -983,7 +981,7 @@ describe("profile", () => {
 
       expect({ status: response.status, message: body.message }).toStrictEqual({
         status: 500,
-        message: "Failed to upload image, error: r2 unreachable",
+        message: "Failed to upload image.",
       });
     }).pipe(
       Effect.provide(

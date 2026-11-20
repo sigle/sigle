@@ -6,6 +6,7 @@ import { PostsGroup } from "@/api/groups/posts";
 import { ProfileGroup } from "@/api/groups/profile";
 import { ProtectedGroup } from "@/api/groups/protected";
 import { UsersGroup } from "@/api/groups/users";
+import { SchemaErrorMiddleware } from "@/api/middleware/schema-error";
 
 export const SigleApi = HttpApi.make("sigle")
   .add(HealthGroup)
@@ -14,4 +15,5 @@ export const SigleApi = HttpApi.make("sigle")
   .add(ProfileGroup)
   .add(UsersGroup)
   .add(PostsGroup)
-  .add(AdminGroup);
+  .add(AdminGroup)
+  .middleware(SchemaErrorMiddleware);

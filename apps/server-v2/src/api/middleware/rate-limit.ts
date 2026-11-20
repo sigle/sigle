@@ -154,7 +154,10 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
                       setRetryAfterHeader(error.reason.retryAfter),
                     ),
                   )
-                : Effect.void,
+                : Effect.logError("Rate limit store failure", {
+                    cause: error.reason,
+                    policy,
+                  }),
             ),
             Effect.mapError((error) =>
               Predicate.isTagged(error.reason, "RateLimitExceeded")
@@ -166,7 +169,7 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
                     ),
                   })
                 : new InternalServerError({
-                    message: `Rate limit store failure: ${error.reason.message}`,
+                    message: "Rate limit check failed.",
                   }),
             ),
           );
