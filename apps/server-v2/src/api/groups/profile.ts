@@ -10,6 +10,7 @@ import {
 } from "@/api/middleware/rate-limit";
 import {
   BadRequest,
+  Conflict,
   imageRequestBody,
   InternalServerError,
   PayloadTooLarge,
@@ -49,7 +50,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
     HttpApiEndpoint.put("update", "/", {
       payload: UploadProfileMetadataPayload,
       success: UploadProfileMetadataResponse,
-      error: [BadRequest, InternalServerError],
+      error: [BadRequest, Conflict, InternalServerError],
     })
       .annotate(OpenApi.Summary, "Upload profile metadata")
       .annotate(

@@ -277,7 +277,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       },
       payload: PublishDraftPayload,
       success: HttpApiSchema.status(202)(PublishDraftAccepted),
-      error: [BadRequest, NotFound],
+      error: [BadRequest, NotFound, Conflict],
     })
       .middleware(RateLimitMiddleware)
       .annotate(OpenApi.Summary, "Publish a draft")
@@ -290,7 +290,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
         draftId: Schema.String,
       },
       success: PublishDraftStatusResponse,
-      error: [BadRequest, NotFound],
+      error: NotFound,
     })
       .annotate(OpenApi.Summary, "Get draft publish status")
       .annotate(

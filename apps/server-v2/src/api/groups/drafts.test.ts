@@ -705,7 +705,18 @@ describe("drafts", () => {
           },
         );
 
-        expect(duplicateSigRes.status).toBe(400);
+        const duplicateSigBody =
+          yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(
+            duplicateSigRes,
+          );
+
+        expect({
+          status: duplicateSigRes.status,
+          message: duplicateSigBody.message,
+        }).toStrictEqual({
+          status: 409,
+          message: "Metadata signature has already been published",
+        });
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
@@ -777,7 +788,7 @@ describe("drafts", () => {
           otsStatus: postOtsRow.status,
           otsTxId: postOtsRow.otsTxId,
         }).toStrictEqual({
-          unstartedStatus: 400,
+          unstartedStatus: 404,
           publishStatus: 202,
           publishBody: {
             draftId: "draft-pub-1",
@@ -1084,6 +1095,35 @@ describe("drafts", () => {
           });
         }).pipe(Effect.provide(layer));
       }),
+  );
+
+  it.effect(
+    "GET /api/protected/drafts/:draftId/publish returns 404 before publishing",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        yield* createTestDraft({ id: "draft-1", userId });
+
+        const responses = yield* Effect.forEach(
+          ["draft-1", "missing"],
+          (draftId) =>
+            Effect.gen(function* () {
+              const response = yield* getPublishStatusRequest(client, draftId);
+
+              const body =
+                yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(
+                  response,
+                );
+
+              return { status: response.status, message: body.message };
+            }),
+        );
+
+        expect(responses).toStrictEqual([
+          { status: 404, message: "Draft publishing has not been started" },
+          { status: 404, message: "Draft not found" },
+        ]);
+      }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
   it.effect("draft routes return 401 without a session", () =>
