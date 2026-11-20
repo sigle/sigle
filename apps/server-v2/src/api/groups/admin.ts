@@ -12,6 +12,7 @@ import {
   BadRequest,
   DateTime,
   documentPaginationQuery,
+  NonNegativeInt,
   NotFound,
   paginationQueryFields,
 } from "@/api/schemas";
@@ -31,11 +32,11 @@ export const QueueNameParam = Schema.Literals(queueNames).annotate({
 
 export const QueueStatsItem = Schema.Struct({
   queueName: Schema.String,
-  pending: Schema.Int,
-  active: Schema.Int,
-  completed: Schema.Int,
-  failed: Schema.Int,
-  oldestPendingAgeMillis: Schema.NullOr(Schema.Int),
+  pending: NonNegativeInt,
+  active: NonNegativeInt,
+  completed: NonNegativeInt,
+  failed: NonNegativeInt,
+  oldestPendingAgeMillis: Schema.NullOr(NonNegativeInt),
 }).annotate({ identifier: "QueueStatsItem" });
 
 export const AdminQueueListResponse = Schema.Struct({
@@ -46,7 +47,7 @@ export const FailedJobListItem = Schema.Struct({
   id: Schema.String,
   queueName: Schema.String,
   payload: Schema.Json,
-  attempts: Schema.Int,
+  attempts: NonNegativeInt,
   lastFailure: Schema.NullOr(Schema.String),
   updatedAt: DateTime,
 }).annotate({ identifier: "FailedJobListItem" });
@@ -57,9 +58,9 @@ export const FailedJobListQuery = Schema.Struct(
 
 export const FailedJobListResponse = Schema.Struct({
   results: Schema.Array(FailedJobListItem),
-  limit: Schema.Int,
-  offset: Schema.Int,
-  total: Schema.Int,
+  limit: NonNegativeInt,
+  offset: NonNegativeInt,
+  total: NonNegativeInt,
 }).annotate({ identifier: "FailedJobListResponse" });
 
 export const AdminGroup = HttpApiGroup.make("admin")
@@ -67,6 +68,8 @@ export const AdminGroup = HttpApiGroup.make("admin")
     OpenApi.Description,
     "Background job queues, for admin wallets only.",
   )
+  // Internal routes, kept out of the public OpenAPI document and the SDK.
+  .annotate(OpenApi.Exclude, true)
   .add(
     HttpApiEndpoint.get("listQueues", "/queues", {
       success: AdminQueueListResponse,
@@ -87,7 +90,10 @@ export const AdminGroup = HttpApiGroup.make("admin")
       .annotate(OpenApi.Summary, "List failed jobs")
       .annotate(
         OpenApi.Transform,
-        documentPaginationQuery(ADMIN_LIST_MAX_LIMIT),
+        documentPaginationQuery({
+          maxLimit: ADMIN_LIST_MAX_LIMIT,
+          defaultLimit: ADMIN_LIST_DEFAULT_LIMIT,
+        }),
       )
       .annotate(
         OpenApi.Description,

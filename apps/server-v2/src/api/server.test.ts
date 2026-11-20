@@ -64,6 +64,26 @@ const OpenApiSecurityDocument = Schema.Struct({
   ),
 });
 
+const OpenApiOperationsDocument = Schema.Struct({
+  paths: Schema.Record(
+    Schema.String,
+    Schema.Record(
+      Schema.String,
+      Schema.Struct({
+        summary: Schema.optionalKey(Schema.String),
+        description: Schema.optionalKey(Schema.String),
+        parameters: Schema.Array(
+          Schema.Struct({
+            name: Schema.String,
+            description: Schema.optionalKey(Schema.String),
+          }),
+        ),
+        responses: Schema.Record(Schema.String, Schema.Unknown),
+      }),
+    ),
+  ),
+});
+
 const rateLimitHeaders = (response: HttpClientResponse.HttpClientResponse) =>
   Object.fromEntries(
     [
@@ -226,6 +246,56 @@ describe("http server", () => {
         },
         postAuthor: true,
         healthRef: true,
+      });
+    }).pipe(Effect.provide(serverLayer())),
+  );
+
+  it.effect("GET /_openapi.json describes every public operation", () =>
+    Effect.gen(function* () {
+      const response = yield* HttpClient.get("/_openapi.json");
+
+      const json = yield* response.text;
+
+      const doc = yield* HttpClientResponse.schemaBodyJson(
+        OpenApiOperationsDocument,
+      )(response);
+
+      const operations = Object.entries(doc.paths).flatMap(([path, item]) =>
+        Object.entries(item).map(([method, operation]) => ({
+          name: `${method.toUpperCase()} ${path}`,
+          operation,
+        })),
+      );
+
+      expect({
+        adminPaths: Object.keys(doc.paths).filter((path) =>
+          path.startsWith("/api/admin"),
+        ),
+        undocumented: operations
+          .filter(
+            ({ operation }) =>
+              operation.summary === undefined ||
+              operation.description === undefined,
+          )
+          .map(({ name }) => name),
+        undescribedParameters: operations.flatMap(({ name, operation }) =>
+          operation.parameters
+            .filter((parameter) => parameter.description === undefined)
+            .map((parameter) => `${name} ${parameter.name}`),
+        ),
+        // `Schema.Int` alone documents `minimum: -(2^53 - 1)`.
+        negativeIntegers: json.includes("-9007199254740991"),
+        // The rate limit middleware adds them, the endpoint no longer lists
+        // them itself.
+        draftImageResponses: Object.keys(
+          doc.paths["/api/drafts/{draftId}/images"]?.post?.responses ?? {},
+        ),
+      }).toStrictEqual({
+        adminPaths: [],
+        undocumented: [],
+        undescribedParameters: [],
+        negativeIntegers: false,
+        draftImageResponses: expect.arrayContaining(["429", "500"]),
       });
     }).pipe(Effect.provide(serverLayer())),
   );

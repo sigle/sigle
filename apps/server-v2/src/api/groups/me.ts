@@ -20,7 +20,12 @@ export const MeGroup = HttpApiGroup.make("me")
   .add(
     HttpApiEndpoint.get("get", "/", {
       success: CurrentUserResponse,
-    }).annotate(OpenApi.Summary, "Get the signed-in user"),
+    })
+      .annotate(OpenApi.Summary, "Get the signed-in user")
+      .annotate(
+        OpenApi.Description,
+        "Return the signed-in user's id, primary Stacks address, whitelist status, and plan. Returns a 401 without a session.",
+      ),
   )
   .prefix("/api/me")
   .middleware(RateLimitMiddleware)

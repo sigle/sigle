@@ -11,6 +11,11 @@ export const HealthGroup = HttpApiGroup.make("health")
   .add(
     HttpApiEndpoint.get("get", "/health", {
       success: HealthResponse,
-    }),
+    })
+      .annotate(OpenApi.Summary, "Check the API health")
+      .annotate(
+        OpenApi.Description,
+        "Return `{ success: true }` while the API is up. Used by uptime monitoring.",
+      ),
   )
   .middleware(RateLimitMiddleware);

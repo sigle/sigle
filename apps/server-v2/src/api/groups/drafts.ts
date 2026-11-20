@@ -20,11 +20,10 @@ import {
   documentPaginationQuery,
   Forbidden,
   imageRequestBody,
-  InternalServerError,
+  NonNegativeInt,
   NotFound,
   PayloadTooLarge,
   paginationQueryFields,
-  TooManyRequests,
   UnsupportedMediaType,
   UploadedImageResponse,
 } from "@/api/schemas";
@@ -163,9 +162,9 @@ export const DraftListItem = Schema.Struct({
 
 export const DraftListResponse = Schema.Struct({
   results: Schema.Array(DraftListItem),
-  limit: Schema.Int,
-  offset: Schema.Int,
-  total: Schema.Int,
+  limit: NonNegativeInt,
+  offset: NonNegativeInt,
+  total: NonNegativeInt,
 }).annotate({ identifier: "DraftListResponse" });
 
 export const DraftListQuery = Schema.Struct(
@@ -232,7 +231,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       .annotate(OpenApi.Summary, "Create a draft")
       .annotate(
         OpenApi.Description,
-        "Create a new draft, optionally seeded with the provided fields.",
+        "Create a new draft, optionally seeded with the provided fields. Every field is optional, send `{}` to create an empty draft.",
       ),
     HttpApiEndpoint.get("list", "/", {
       query: DraftListQuery,
@@ -241,7 +240,10 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       .annotate(OpenApi.Summary, "List drafts")
       .annotate(
         OpenApi.Transform,
-        documentPaginationQuery(DRAFT_LIST_MAX_LIMIT),
+        documentPaginationQuery({
+          maxLimit: DRAFT_LIST_MAX_LIMIT,
+          defaultLimit: DRAFT_LIST_DEFAULT_LIMIT,
+        }),
       )
       .annotate(
         OpenApi.Description,
@@ -253,7 +255,12 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       },
       success: Draft,
       error: NotFound,
-    }).annotate(OpenApi.Summary, "Get a draft"),
+    })
+      .annotate(OpenApi.Summary, "Get a draft")
+      .annotate(
+        OpenApi.Description,
+        "Get a draft of the current user with its content and publish status.",
+      ),
     HttpApiEndpoint.patch("update", "/:draftId", {
       params: {
         draftId: Schema.String,
@@ -277,7 +284,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       .annotate(OpenApi.Summary, "Delete a draft")
       .annotate(
         OpenApi.Description,
-        "Returns a 409 while the draft is being published.",
+        "Permanently delete a draft of the current user. Returns a 409 while the draft is being published.",
       ),
     HttpApiEndpoint.post("publish", "/:draftId/publish", {
       params: {
@@ -315,14 +322,13 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       },
       // Every upload creates a new content-addressed image.
       success: HttpApiSchema.status(201)(UploadedImageResponse),
+      // The group's `RateLimitMiddleware` adds the 429 and 500 responses.
       error: [
         BadRequest,
         Forbidden,
         NotFound,
         PayloadTooLarge,
-        TooManyRequests,
         UnsupportedMediaType,
-        InternalServerError,
       ],
     })
       .annotate(OpenApi.Summary, "Upload a draft image")

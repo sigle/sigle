@@ -11,6 +11,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
+    /**
+     * Check the API health
+     * @description Return `{ success: true }` while the API is up. Used by uptime monitoring.
+     */
     get: operations["health.get"];
     put?: never;
     post?: never;
@@ -27,7 +31,10 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Get the signed-in user */
+    /**
+     * Get the signed-in user
+     * @description Return the signed-in user's id, primary Stacks address, whitelist status, and plan. Returns a 401 without a session.
+     */
     get: operations["me.get"];
     put?: never;
     post?: never;
@@ -52,7 +59,7 @@ export interface paths {
     put?: never;
     /**
      * Create a draft
-     * @description Create a new draft, optionally seeded with the provided fields.
+     * @description Create a new draft, optionally seeded with the provided fields. Every field is optional, send `{}` to create an empty draft.
      */
     post: operations["drafts.create"];
     delete?: never;
@@ -68,13 +75,16 @@ export interface paths {
       path?: never;
       cookie?: never;
     };
-    /** Get a draft */
+    /**
+     * Get a draft
+     * @description Get a draft of the current user with its content and publish status.
+     */
     get: operations["drafts.get"];
     put?: never;
     post?: never;
     /**
      * Delete a draft
-     * @description Returns a 409 while the draft is being published.
+     * @description Permanently delete a draft of the current user. Returns a 409 while the draft is being published.
      */
     delete: operations["drafts.delete"];
     options?: never;
@@ -230,94 +240,11 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/admin/queues": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List queue statistics
-     * @description Return pending, active, completed, and failed job counts per queue, including registered queues without jobs.
-     */
-    get: operations["admin.listQueues"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/queues/{queueName}/failed": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List failed jobs
-     * @description List dead-lettered jobs of a queue, most recently failed first.
-     */
-    get: operations["admin.listFailedJobs"];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/queues/{queueName}/failed/{jobId}/retry": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Retry a failed job
-     * @description Reset a dead-lettered job so workers pick it up again. Returns a 204 once it is queued again.
-     */
-    post: operations["admin.retryFailedJob"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/admin/queues/{queueName}/failed/{jobId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    post?: never;
-    /**
-     * Delete a failed job
-     * @description Permanently remove a dead-lettered job from the queue.
-     */
-    delete: operations["admin.deleteFailedJob"];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
-    UnauthorizedError: {
-      message: string;
-    };
-    ForbiddenError: {
+    BadRequestError: {
       message: string;
     };
     InternalServerError: {
@@ -329,42 +256,6 @@ export interface components {
     };
     NotFoundError: {
       message: string;
-    };
-    BadRequestError: {
-      message: string;
-    };
-    /** @enum {string} */
-    QueueName:
-      | "publish-draft"
-      | "opentimestamps-stamp"
-      | "opentimestamps-upgrade"
-      | "generate-image-thumbhash"
-      | "index-profile";
-    FailedJobListResponse: {
-      results: components["schemas"]["FailedJobListItem"][];
-      limit: number;
-      offset: number;
-      total: number;
-    };
-    FailedJobListItem: {
-      id: string;
-      queueName: string;
-      payload: unknown;
-      attempts: number;
-      lastFailure: string | null;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    AdminQueueListResponse: {
-      results: components["schemas"]["QueueStatsItem"][];
-    };
-    QueueStatsItem: {
-      queueName: string;
-      pending: number;
-      active: number;
-      completed: number;
-      failed: number;
-      oldestPendingAgeMillis: number | null;
     };
     Post: {
       id: string;
@@ -437,6 +328,12 @@ export interface components {
       /** Format: date-time */
       updatedAt: string;
       author: components["schemas"]["PublicUser"];
+    };
+    UnauthorizedError: {
+      message: string;
+    };
+    ForbiddenError: {
+      message: string;
     };
     UnsupportedMediaTypeError: {
       message: string;
@@ -838,7 +735,9 @@ export interface operations {
   "drafts.list": {
     parameters: {
       query?: {
+        /** @description Number of results to return. */
         limit?: number;
+        /** @description Number of results to skip. */
         offset?: number;
       };
       header?: never;
@@ -978,6 +877,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
+        /** @description ID of the draft. */
         draftId: string;
       };
       cookie?: never;
@@ -1054,6 +954,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
+        /** @description ID of the draft. */
         draftId: string;
       };
       cookie?: never;
@@ -1137,6 +1038,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
+        /** @description ID of the draft. */
         draftId: string;
       };
       cookie?: never;
@@ -1226,6 +1128,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
+        /** @description ID of the draft. */
         draftId: string;
       };
       cookie?: never;
@@ -1302,6 +1205,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
+        /** @description ID of the draft. */
         draftId: string;
       };
       cookie?: never;
@@ -1392,6 +1296,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
+        /** @description ID of the draft. */
         draftId: string;
       };
       cookie?: never;
@@ -1570,6 +1475,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
+        /** @description Which profile image to replace. */
         kind: components["schemas"]["ProfileImageKind"];
       };
       cookie?: never;
@@ -1661,6 +1567,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
+        /** @description Stacks address of the user. */
         address: string;
       };
       cookie?: never;
@@ -1719,8 +1626,11 @@ export interface operations {
   "posts.list": {
     parameters: {
       query?: {
+        /** @description Only list the posts of this Stacks address. */
         author?: string;
+        /** @description Number of results to return. */
         limit?: number;
+        /** @description Number of results to skip. */
         offset?: number;
       };
       header?: never;
@@ -1772,6 +1682,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
+        /** @description ID of the post, its Arweave transaction ID. */
         postId: string;
       };
       cookie?: never;
@@ -1794,291 +1705,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["NotFoundError"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TooManyRequestsError"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InternalServerError"];
-        };
-      };
-    };
-  };
-  "admin.listQueues": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description AdminQueueListResponse */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["AdminQueueListResponse"];
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TooManyRequestsError"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InternalServerError"];
-        };
-      };
-    };
-  };
-  "admin.listFailedJobs": {
-    parameters: {
-      query?: {
-        limit?: number;
-        offset?: number;
-      };
-      header?: never;
-      path: {
-        queueName: components["schemas"]["QueueName"];
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description FailedJobListResponse */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["FailedJobListResponse"];
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TooManyRequestsError"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InternalServerError"];
-        };
-      };
-    };
-  };
-  "admin.retryFailedJob": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        queueName: components["schemas"]["QueueName"];
-        jobId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description <No Content> */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
-        };
-      };
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["NotFoundError"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TooManyRequestsError"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InternalServerError"];
-        };
-      };
-    };
-  };
-  "admin.deleteFailedJob": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        queueName: components["schemas"]["QueueName"];
-        jobId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description <No Content> */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */

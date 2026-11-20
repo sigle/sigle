@@ -3,6 +3,13 @@ import { Schema } from "effect";
 import { allowedImageFormats } from "@/lib/images";
 
 /**
+ * Integer that is never negative, such as a count, a size, or a block height.
+ */
+export const NonNegativeInt = Schema.Int.check(
+  Schema.isGreaterThanOrEqualTo(0),
+);
+
+/**
  * Shared HTTP API error schemas.
  *
  * Every error carries a human readable `message` and is annotated with the HTTP
@@ -107,7 +114,7 @@ export class TooManyRequests extends Schema.Error<
 >("sigle/api/TooManyRequests")(
   Schema.Struct({
     message: Schema.String,
-    retryAfterMillis: Schema.Finite,
+    retryAfterMillis: NonNegativeInt,
   }).annotate({ identifier: "TooManyRequestsError" }),
   {
     description: "Too Many Requests",
@@ -141,9 +148,9 @@ export const DateTime = Schema.DateTimeUtcFromString.pipe(
 export const UploadedImageResponse = Schema.Struct({
   url: Schema.String,
   // Size of the stored, optimized image.
-  sizeBytes: Schema.Int,
-  width: Schema.Int,
-  height: Schema.Int,
+  sizeBytes: NonNegativeInt,
+  width: NonNegativeInt,
+  height: NonNegativeInt,
   // Base64 ThumbHash placeholder for the optimized image.
   thumbhash: Schema.String,
 }).annotate({ identifier: "UploadedImageResponse" });
@@ -160,18 +167,19 @@ export const paginationQueryFields = (maxLimit: number) => ({
       ),
     ),
   ),
-  offset: Schema.optionalKey(
-    Schema.Int.pipe(Schema.check(Schema.isGreaterThanOrEqualTo(0))),
-  ),
+  offset: Schema.optionalKey(NonNegativeInt),
 });
 
 /**
  * Query values are decoded from their string form, so the generated OpenAPI
  * documents `limit` and `offset` as strings. Document them as integers instead
- * so the generated SDK accepts numbers.
+ * so the generated SDK accepts numbers, with the defaults the handler applies.
  */
 export const documentPaginationQuery =
-  (maxLimit: number): Parameters<typeof OpenApi.Transform.of>[0] =>
+  (options: {
+    readonly maxLimit: number;
+    readonly defaultLimit: number;
+  }): Parameters<typeof OpenApi.Transform.of>[0] =>
   (spec) => {
     // SAFETY: an endpoint `OpenApi.Transform` is applied to the operation
     // object generated for that endpoint.
@@ -187,12 +195,22 @@ export const documentPaginationQuery =
         if (parameter.name === "limit") {
           return {
             ...parameter,
-            schema: { type: "integer", minimum: 1, maximum: maxLimit },
+            description: "Number of results to return.",
+            schema: {
+              type: "integer",
+              minimum: 1,
+              maximum: options.maxLimit,
+              default: options.defaultLimit,
+            },
           };
         }
 
         if (parameter.name === "offset") {
-          return { ...parameter, schema: { type: "integer", minimum: 0 } };
+          return {
+            ...parameter,
+            description: "Number of results to skip.",
+            schema: { type: "integer", minimum: 0, default: 0 },
+          };
         }
 
         return parameter;
@@ -213,4 +231,47 @@ export const imageRequestBody = {
       { schema: { type: "string", format: "binary" } },
     ]),
   ),
+};
+
+/**
+ * Description of each path and query parameter, by name. Parameters with the
+ * same name mean the same thing on every endpoint.
+ */
+const parameterDescriptions: ReadonlyMap<string, string> = new Map([
+  ["address", "Stacks address of the user."],
+  ["author", "Only list the posts of this Stacks address."],
+  ["draftId", "ID of the draft."],
+  ["postId", "ID of the post, its Arweave transaction ID."],
+  ["kind", "Which profile image to replace."],
+  ["queueName", "Name of the job queue."],
+  ["jobId", "ID of the failed job."],
+]);
+
+/**
+ * API `OpenApi.Transform` adding the descriptions of
+ * {@link parameterDescriptions} to the parameters that have none.
+ */
+export const documentParameters: Parameters<typeof OpenApi.Transform.of>[0] = (
+  spec,
+) => {
+  // SAFETY: an API `OpenApi.Transform` is applied to the whole document.
+  const document = spec as OpenApi.OpenAPISpec;
+
+  const methods: ReadonlyArray<OpenApi.OpenAPISpecMethodName> = [
+    "get",
+    "put",
+    "post",
+    "delete",
+    "patch",
+  ];
+
+  for (const pathItem of Object.values(document.paths)) {
+    for (const method of methods) {
+      for (const parameter of pathItem[method]?.parameters ?? []) {
+        parameter.description ??= parameterDescriptions.get(parameter.name);
+      }
+    }
+  }
+
+  return document;
 };
