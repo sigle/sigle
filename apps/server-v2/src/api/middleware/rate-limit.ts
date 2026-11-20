@@ -81,20 +81,20 @@ const appendResponseHeaders = (headers: Record<string, string>) =>
  * `x-ratelimit-reset` is the Unix time in seconds at which the window resets,
  * as is conventional for the `X-RateLimit-*` headers.
  */
-const setRateLimitHeaders = (state: {
-  readonly limit: number;
-  readonly remaining: number;
-  readonly resetAfter: Duration.Duration;
-}) =>
-  Effect.gen(function* () {
-    const now = yield* Clock.currentTimeMillis;
-    const resetAt = now + Duration.toMillis(state.resetAfter);
-
-    yield* appendResponseHeaders({
-      "x-ratelimit-limit": String(state.limit),
-      "x-ratelimit-remaining": String(state.remaining),
-      "x-ratelimit-reset": String(Math.ceil(resetAt / 1000)),
-    });
+const setRateLimitHeaders = (
+  observedAt: number,
+  state: {
+    readonly limit: number;
+    readonly remaining: number;
+    readonly resetAfter: Duration.Duration;
+  },
+) =>
+  appendResponseHeaders({
+    "x-ratelimit-limit": String(state.limit),
+    "x-ratelimit-remaining": String(state.remaining),
+    "x-ratelimit-reset": String(
+      Math.ceil((observedAt + Duration.toMillis(state.resetAfter)) / 1000),
+    ),
   });
 
 /**
@@ -132,6 +132,11 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
 
         const { points, windowMs } = RATE_LIMITS[policy];
 
+        // The store measures `resetAfter` from the time it reads when the
+        // operation starts. Reading the clock after the store returns would
+        // push the reset time back by the store's latency.
+        const observedAt = yield* Clock.currentTimeMillis;
+
         const result = yield* limiter
           .consume({
             algorithm: "fixed-window",
@@ -145,7 +150,7 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
           .pipe(
             Effect.tapError((error) =>
               Predicate.isTagged(error.reason, "RateLimitExceeded")
-                ? setRateLimitHeaders({
+                ? setRateLimitHeaders(observedAt, {
                     limit: error.reason.limit,
                     remaining: error.reason.remaining,
                     resetAfter: error.reason.retryAfter,
@@ -174,7 +179,7 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
             ),
           );
 
-        yield* setRateLimitHeaders(result);
+        yield* setRateLimitHeaders(observedAt, result);
 
         return yield* httpEffect;
       });
