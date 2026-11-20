@@ -121,6 +121,16 @@ const DraftTags = Schema.mutable(
   ).check(Schema.isMaxLength(DRAFT_LIMITS.tags)),
 );
 
+/**
+ * Publish state of a draft: null until it is first published, `FAILED` once a
+ * publish gave up. A published draft is deleted, so `COMPLETED` never shows.
+ * While it is `PENDING` or `PROCESSING`, saving or deleting the draft returns
+ * a 409.
+ */
+export const DraftPublishStatus = Schema.NullOr(
+  Schema.Literals(["PENDING", "PROCESSING", "FAILED"]),
+).annotate({ identifier: "DraftPublishStatus" });
+
 export const Draft = Schema.Struct({
   id: Schema.String,
   title: Schema.String,
@@ -130,6 +140,7 @@ export const Draft = Schema.Struct({
   coverImage: Schema.NullOr(Schema.String),
   tags: Schema.Array(Schema.String),
   canonicalUri: Schema.NullOr(Schema.String),
+  publishStatus: DraftPublishStatus,
   createdAt: DateTime,
   updatedAt: DateTime,
 }).annotate({ identifier: "Draft" });
@@ -142,6 +153,7 @@ export const DraftListItem = Schema.Struct({
   coverImage: Schema.NullOr(Schema.String),
   tags: Schema.Array(Schema.String),
   canonicalUri: Schema.NullOr(Schema.String),
+  publishStatus: DraftPublishStatus,
   createdAt: DateTime,
   updatedAt: DateTime,
 }).annotate({ identifier: "DraftListItem" });

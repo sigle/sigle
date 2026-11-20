@@ -136,7 +136,8 @@ export const draft = pgTable(
     coverImage: text("cover_image"),
     canonicalUri: text("canonical_uri"),
     arweaveTxId: text("arweave_tx_id"),
-    txStatus: text("tx_status"),
+    // Publish state, null until the draft is first published.
+    txStatus: text("tx_status").$type<"PENDING" | "PROCESSING" | "FAILED">(),
     // Signature of the signed post metadata the draft is publishing (or last
     // attempted). `arweaveTxId` is a valid checkpoint only while it matches.
     publishSignature: text("publish_signature"),
@@ -251,6 +252,11 @@ export const post = pgTable(
   },
   (table) => [
     index("post_user_id_idx").on(table.userId),
+    // Serves the `GET /api/posts` order (`created_at DESC, id DESC`) with a
+    // backward scan, so a feed page reads the first rows of the index instead
+    // of sorting every post. Drizzle's `.desc()` would add `NULLS LAST`, which
+    // does not match `DESC` and still sorts.
+    index("post_created_at_id_idx").on(table.createdAt, table.id),
     index("post_arweave_pending_idx")
       .on(table.createdAt)
       .where(sql`arweave_block_height is null`),

@@ -58,6 +58,7 @@ const defaultPost = {
   coverImage: null,
   tags: [],
   canonicalUri: null,
+  publishStatus: null,
   createdAt: "2024-01-01T00:00:00.000Z",
   updatedAt: "2024-01-01T00:00:00.000Z",
 };

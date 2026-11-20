@@ -42,6 +42,7 @@ const toDraft = (row: typeof draft.$inferSelect) => ({
   coverImage: row.coverImage,
   tags: row.tags ?? [],
   canonicalUri: row.canonicalUri,
+  publishStatus: row.txStatus,
   createdAt: DateTime.fromDateUnsafe(row.createdAt),
   updatedAt: DateTime.fromDateUnsafe(row.updatedAt),
 });
@@ -73,7 +74,7 @@ export const createDraft = (payload: typeof CreateDraftPayload.Type) =>
       distinctId: user.id,
       event: "draft created",
       properties: {
-        postId: inserted.id,
+        draftId: inserted.id,
       },
     });
 
@@ -107,6 +108,7 @@ export const listDrafts = (query: typeof DraftListQuery.Type) =>
         coverImage: draft.coverImage,
         tags: draft.tags,
         canonicalUri: draft.canonicalUri,
+        publishStatus: draft.txStatus,
         createdAt: draft.createdAt,
         updatedAt: draft.updatedAt,
       })

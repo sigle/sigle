@@ -80,10 +80,15 @@ export const mimeTypeForSharpFormat = (
  */
 export const detectImageFormat = (
   buffer: Uint8Array,
+  {
+    limitInputPixels = MAX_INPUT_PIXELS,
+  }: { readonly limitInputPixels?: number | undefined } = {},
 ): Effect.Effect<Option.Option<string>, ImageOptimizationError> =>
   Effect.tryPromise({
     try: async () =>
-      Option.fromNullishOr((await sharp(buffer).metadata()).format),
+      Option.fromNullishOr(
+        (await sharp(buffer, { limitInputPixels }).metadata()).format,
+      ),
     catch: (cause) =>
       new ImageOptimizationError({
         cause,
