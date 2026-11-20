@@ -1,5 +1,13 @@
-import { Context, Duration, Effect, Layer, Option, Predicate } from "effect";
-import { HttpServerRequest, HttpServerResponse } from "effect/http";
+import {
+  Clock,
+  Context,
+  Duration,
+  Effect,
+  Layer,
+  Option,
+  Predicate,
+} from "effect";
+import { HttpEffect, HttpServerRequest, HttpServerResponse } from "effect/http";
 import { HttpApiMiddleware } from "effect/http-api";
 import { RateLimiter } from "effect/persistence";
 import { CurrentUser } from "@/api/middleware/auth-user";
@@ -62,6 +70,44 @@ const clientKey = (request: HttpServerRequest.HttpServerRequest): string => {
   return `ip:${ip}`;
 };
 
+const appendResponseHeaders = (headers: Record<string, string>) =>
+  HttpEffect.appendPreResponseHandler((_request, response) =>
+    Effect.succeed(HttpServerResponse.setHeaders(response, headers)),
+  );
+
+/**
+ * Adds the rate limit headers to the response of the current request, whether
+ * the handler succeeds, fails, or the request is rejected with a 429.
+ * `x-ratelimit-reset` is the Unix time in seconds at which the window resets,
+ * as is conventional for the `X-RateLimit-*` headers.
+ */
+const setRateLimitHeaders = (
+  observedAt: number,
+  state: {
+    readonly limit: number;
+    readonly remaining: number;
+    readonly resetAfter: Duration.Duration;
+  },
+) =>
+  appendResponseHeaders({
+    "x-ratelimit-limit": String(state.limit),
+    "x-ratelimit-remaining": String(state.remaining),
+    "x-ratelimit-reset": String(
+      Math.ceil((observedAt + Duration.toMillis(state.resetAfter)) / 1000),
+    ),
+  });
+
+/**
+ * `Retry-After` is a whole number of seconds, rounded up so a client never
+ * retries before the window resets.
+ */
+const setRetryAfterHeader = (retryAfter: Duration.Duration) =>
+  appendResponseHeaders({
+    "retry-after": String(
+      Math.max(0, Math.ceil(Duration.toMillis(retryAfter) / 1000)),
+    ),
+  });
+
 export const RateLimitMiddlewareLayer: Layer.Layer<
   RateLimitMiddleware,
   never,
@@ -86,6 +132,11 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
 
         const { points, windowMs } = RATE_LIMITS[policy];
 
+        // The store measures `resetAfter` from the time it reads when the
+        // operation starts. Reading the clock after the store returns would
+        // push the reset time back by the store's latency.
+        const observedAt = yield* Clock.currentTimeMillis;
+
         const result = yield* limiter
           .consume({
             algorithm: "fixed-window",
@@ -99,7 +150,15 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
           .pipe(
             Effect.tapError((error) =>
               Predicate.isTagged(error.reason, "RateLimitExceeded")
-                ? Effect.void
+                ? setRateLimitHeaders(observedAt, {
+                    limit: error.reason.limit,
+                    remaining: error.reason.remaining,
+                    resetAfter: error.reason.retryAfter,
+                  }).pipe(
+                    Effect.andThen(
+                      setRetryAfterHeader(error.reason.retryAfter),
+                    ),
+                  )
                 : Effect.logError("Rate limit store failure", {
                     cause: error.reason,
                     policy,
@@ -120,15 +179,9 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
             ),
           );
 
-        const response = yield* httpEffect;
+        yield* setRateLimitHeaders(observedAt, result);
 
-        return HttpServerResponse.setHeaders(response, {
-          "x-ratelimit-limit": String(result.limit),
-          "x-ratelimit-remaining": String(result.remaining),
-          "x-ratelimit-reset": String(
-            Math.ceil(Duration.toMillis(result.resetAfter) / 1000),
-          ),
-        });
+        return yield* httpEffect;
       });
   }),
 );

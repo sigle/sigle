@@ -1,6 +1,8 @@
 import { describe, expect, it } from "@effect/vitest";
-import { Effect, Option, Schema } from "effect";
+import { Effect, Layer, Option, Schema } from "effect";
 import { Headers, HttpClient, HttpClientResponse } from "effect/http";
+import { RateLimiter } from "effect/persistence";
+import { TestClock } from "effect/testing";
 import type { AppConfigValues } from "@/config";
 import { RATE_LIMITS } from "@/api/middleware/rate-limit";
 import { makeTestServerLayer } from "@/test/server";
@@ -48,8 +50,52 @@ const TooManyRequestsResponse = Schema.TaggedStruct("TooManyRequests", {
   retryAfterMillis: Schema.Finite,
 });
 
+// A fixed wall clock, so `x-ratelimit-reset` is an exact Unix timestamp. It is
+// set before the server starts: moving the TestClock afterwards would run
+// every queue poll scheduled in between.
+const NOW_MILLIS = 1_800_000_000_000;
+
+const rateLimitHeaders = (response: HttpClientResponse.HttpClientResponse) =>
+  Object.fromEntries(
+    [
+      "retry-after",
+      "x-ratelimit-limit",
+      "x-ratelimit-remaining",
+      "x-ratelimit-reset",
+    ].map((name) => [
+      name,
+      Option.getOrUndefined(Headers.get(response.headers, name)),
+    ]),
+  );
+
 const serverLayer = (overrides: Partial<AppConfigValues> = {}) =>
   makeTestServerLayer(overrides);
+
+const withServerAt = <A, E, R>(effect: Effect.Effect<A, E, R>) =>
+  TestClock.setTime(NOW_MILLIS).pipe(
+    Effect.andThen(effect.pipe(Effect.provide(serverLayer()))),
+  );
+
+// An in-memory store whose operations take 5 seconds after reading the clock,
+// like a slow database transaction.
+const SlowRateLimiter = RateLimiter.layer.pipe(
+  Layer.provide(
+    Layer.effect(
+      RateLimiter.RateLimiterStore,
+      Effect.gen(function* () {
+        const store = yield* RateLimiter.RateLimiterStore;
+
+        return RateLimiter.RateLimiterStore.of({
+          ...store,
+          fixedWindow: (options) =>
+            store
+              .fixedWindow(options)
+              .pipe(Effect.tap(() => TestClock.adjust("5 seconds"))),
+        });
+      }),
+    ).pipe(Layer.provide(RateLimiter.layerStoreMemory)),
+  ),
+);
 
 describe("http server", () => {
   it.effect("GET /health returns 200", () =>
@@ -184,6 +230,44 @@ describe("http server", () => {
     }).pipe(Effect.provide(serverLayer())),
   );
 
+  it.effect("sets rate limit headers on error responses", () =>
+    Effect.gen(function* () {
+      const response = yield* HttpClient.get("/api/posts/missing");
+
+      expect({
+        status: response.status,
+        headers: rateLimitHeaders(response),
+      }).toStrictEqual({
+        status: 404,
+        headers: {
+          "retry-after": undefined,
+          "x-ratelimit-limit": "60",
+          "x-ratelimit-remaining": "59",
+          "x-ratelimit-reset": String(NOW_MILLIS / 1000 + 60),
+        },
+      });
+    }).pipe(withServerAt),
+  );
+
+  it.effect("does not shift the reset time by the store latency", () =>
+    Effect.gen(function* () {
+      const response = yield* HttpClient.get("/health");
+
+      expect(rateLimitHeaders(response)["x-ratelimit-reset"]).toBe(
+        String(NOW_MILLIS / 1000 + 60),
+      );
+    }).pipe(
+      Effect.provide(
+        // Polls every 10 seconds so the 5 second store delay runs no queue poll
+        makeTestServerLayer({}, [], {
+          pollInterval: "10 seconds",
+          rateLimiter: SlowRateLimiter,
+        }),
+      ),
+      (effect) => TestClock.setTime(NOW_MILLIS).pipe(Effect.andThen(effect)),
+    ),
+  );
+
   it.effect("returns 429 once the rate limit is exceeded", () =>
     Effect.gen(function* () {
       const limit = RATE_LIMITS.default.points;
@@ -214,12 +298,20 @@ describe("http server", () => {
             : Option.getOrUndefined(
                 Headers.get(previous.headers, "x-ratelimit-remaining"),
               ),
+        rejectedHeaders:
+          last === undefined ? undefined : rateLimitHeaders(last),
       }).toStrictEqual({
         before: 200,
         last: 429,
         message: "Rate limit exceeded",
         remaining: "0",
+        rejectedHeaders: {
+          "retry-after": "60",
+          "x-ratelimit-limit": "60",
+          "x-ratelimit-remaining": "0",
+          "x-ratelimit-reset": String(NOW_MILLIS / 1000 + 60),
+        },
       });
-    }).pipe(Effect.provide(serverLayer())),
+    }).pipe(withServerAt),
   );
 });
