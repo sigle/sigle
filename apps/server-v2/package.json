@@ -20,7 +20,7 @@
     "@electric-sql/pglite": "0.5.16",
     "@otskit/client": "0.7.2",
     "@paralleldrive/cuid2": "3.3.0",
-    "@sentry/effect": "10.50.0",
+    "@sentry/effect": "11.15.0",
     "@sigle/sdk": "workspace:*",
     "@stacks/common": "7.7.0",
     "@stacks/encryption": "7.7.0",

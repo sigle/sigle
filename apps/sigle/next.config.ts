@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import { withSentryConfig } from "@sentry/nextjs";
+import { withSentryConfig } from "@sentry/nextjs/config";
 
 // Public URL of the server-v2 image CDN (`R2_PUBLIC_URL` on the server), which
 // serves uploaded profile and post images.
