@@ -60,22 +60,20 @@ export const listFailedJobs = (
     };
   });
 
-export const retryFailedJob = (queueName: string, id: string) =>
+export const retryFailedJob = (queueName: string, jobId: string) =>
   Effect.gen(function* () {
     const admin = yield* JobAdminService;
-    const retried = yield* admin.retryFailedJob(queueName, id);
+    const retried = yield* admin.retryFailedJob(queueName, jobId);
 
     if (!retried) {
       return yield* new NotFound({ message: "Failed job not found" });
     }
-
-    return { success: true };
   });
 
-export const deleteFailedJob = (queueName: string, id: string) =>
+export const deleteFailedJob = (queueName: string, jobId: string) =>
   Effect.gen(function* () {
     const admin = yield* JobAdminService;
-    const deleted = yield* admin.deleteFailedJob(queueName, id);
+    const deleted = yield* admin.deleteFailedJob(queueName, jobId);
 
     if (!deleted) {
       return yield* new NotFound({ message: "Failed job not found" });
@@ -92,9 +90,9 @@ export const AdminHandlersLayer = HttpApiBuilder.group(
         listFailedJobs(params.queueName, query),
       )
       .handle("retryFailedJob", ({ params }) =>
-        retryFailedJob(params.queueName, params.id),
+        retryFailedJob(params.queueName, params.jobId),
       )
       .handle("deleteFailedJob", ({ params }) =>
-        deleteFailedJob(params.queueName, params.id),
+        deleteFailedJob(params.queueName, params.jobId),
       ),
 );

@@ -190,7 +190,7 @@ export const uploadProfileImage = (
 
     return {
       height: uploaded.height,
-      key: uploaded.key,
+      sizeBytes: uploaded.sizeBytes,
       thumbhash: uploaded.thumbhash,
       url: uploaded.url,
       width: uploaded.width,

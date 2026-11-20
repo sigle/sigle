@@ -82,7 +82,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
   // A failed timestamp is retried by the server, readers only see a proof
   // once it is pending or anchored in Bitcoin.
   const opentimestamps =
-    post.opentimestamps?.status === "FAILED" ? null : post.opentimestamps;
+    post.opentimestamps?.status === "failed" ? null : post.opentimestamps;
 
   const copyToClipboard = async (text: string) => {
     await navigator.clipboard.writeText(text);

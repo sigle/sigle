@@ -559,16 +559,23 @@ describe("drafts", () => {
         }),
       );
 
-      const list = yield* HttpClientResponse.schemaBodyJson(DraftListResponse)(
-        yield* client.get("/api/drafts"),
-      );
+      // Reads the status as sent, the API schema would decode it to the
+      // database value.
+      const WireStatus = Schema.Struct({
+        publishStatus: Schema.NullOr(Schema.String),
+      });
+
+      const list = yield* HttpClientResponse.schemaBodyJson(
+        Schema.Struct({ results: Schema.Array(WireStatus) }),
+      )(yield* client.get("/api/drafts"));
 
       const single = yield* Effect.forEach(statuses, (_, index) =>
         Effect.gen(function* () {
           const response = yield* client.get(`/api/drafts/draft-${index}`);
 
-          return (yield* HttpClientResponse.schemaBodyJson(Draft)(response))
-            .publishStatus;
+          return (yield* HttpClientResponse.schemaBodyJson(WireStatus)(
+            response,
+          )).publishStatus;
         }),
       );
 
@@ -577,8 +584,8 @@ describe("drafts", () => {
         list: list.results.map((item) => item.publishStatus),
         single,
       }).toStrictEqual({
-        list: ["FAILED", "PROCESSING", "PENDING", null],
-        single: [null, "PENDING", "PROCESSING", "FAILED"],
+        list: ["failed", "processing", "pending", null],
+        single: [null, "pending", "processing", "failed"],
       });
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
@@ -800,6 +807,12 @@ describe("drafts", () => {
           (status) => status.status === "COMPLETED",
         );
 
+        // The JSON holds the lowercase status the schema decodes to the
+        // database value.
+        const completedJson = yield* (yield* client.get(
+          "/api/drafts/draft-pub-1/publish",
+        )).json;
+
         const [deletedDraft] = yield* db
           .select()
           .from(draft)
@@ -819,8 +832,12 @@ describe("drafts", () => {
         expect({
           unstartedStatus: unstartedRes.status,
           publishStatus: publishRes.status,
+          publishLocation: Option.getOrUndefined(
+            Headers.get(publishRes.headers, "location"),
+          ),
           publishBody,
           currentStatus,
+          completedJson,
           deletedDraft,
           createdPostId: createdPost.id,
           createdPostArweaveId: createdPost.arweaveTxId,
@@ -829,14 +846,20 @@ describe("drafts", () => {
         }).toStrictEqual({
           unstartedStatus: 404,
           publishStatus: 202,
+          publishLocation: "/api/drafts/draft-pub-1/publish",
           publishBody: {
             draftId: "draft-pub-1",
-            status: "PENDING",
+            status: "pending",
           },
           currentStatus: {
             status: "COMPLETED",
             postId: ARWEAVE_TEST_UPLOAD_ID,
-            arweaveId: ARWEAVE_TEST_UPLOAD_ID,
+            arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
+          },
+          completedJson: {
+            status: "completed",
+            postId: ARWEAVE_TEST_UPLOAD_ID,
+            arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
           },
           deletedDraft: undefined,
           createdPostId: ARWEAVE_TEST_UPLOAD_ID,
@@ -918,7 +941,7 @@ describe("drafts", () => {
           expect(failedStatus).toStrictEqual({
             status: "FAILED",
             postId: null,
-            arweaveId: null,
+            arweaveTxId: null,
           });
 
           // Now recover Arweave and re-trigger publish via POST
@@ -939,7 +962,7 @@ describe("drafts", () => {
           expect(finalStatus).toStrictEqual({
             status: "COMPLETED",
             postId: "recovered-arweave-tx",
-            arweaveId: "recovered-arweave-tx",
+            arweaveTxId: "recovered-arweave-tx",
           });
         }).pipe(Effect.provide(layer));
       }),
@@ -1393,7 +1416,7 @@ describe("draft images", () => {
         status: 201,
         body: {
           url,
-          key,
+          sizeBytes: uploadedBytes.length,
           width: 1000,
           height: 500,
           thumbhash: expect.any(String),

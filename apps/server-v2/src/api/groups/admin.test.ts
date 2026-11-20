@@ -139,6 +139,34 @@ describe("admin jobs API", () => {
     ),
   );
 
+  it.effect("retries a failed job with an empty 204", () =>
+    Effect.gen(function* () {
+      const { client, userId } = yield* createAuthenticatedClient();
+      yield* createTestWalletAddress({ userId, address: ADMIN_ADDRESS });
+      const sql = (yield* SqlClient.SqlClient).withoutTransforms();
+
+      yield* sql`
+        INSERT INTO effect_queue
+          (id, queue_name, element, state, attempts, created_at, updated_at, visible_at)
+        VALUES
+          ('job-1', 'publish-draft', '{}', 'failed', 3, NOW(), NOW(), NOW())
+      `;
+
+      const retry = yield* client.execute(
+        HttpClientRequest.post(
+          "/api/admin/queues/publish-draft/failed/job-1/retry",
+        ),
+      );
+
+      expect({
+        status: retry.status,
+        body: yield* retry.text,
+      }).toStrictEqual({ status: 204, body: "" });
+    }).pipe(
+      Effect.provide(makeTestServerLayer({ ADMIN_ADDRESSES: [ADMIN_ADDRESS] })),
+    ),
+  );
+
   it.effect("rejects unknown queue names with a 400", () =>
     Effect.gen(function* () {
       const { client, userId } = yield* createAuthenticatedClient();

@@ -71,14 +71,14 @@ const waitForPublishCompletion = async (draftId: string) => {
 
     const { data } = response;
 
-    if (data.status === "FAILED") {
+    if (data.status === "failed") {
       return Result.err({ message: "Failed to publish post" });
     }
 
-    if (data.status === "COMPLETED" && data.postId) {
+    if (data.status === "completed" && data.postId) {
       return Result.ok({
         postId: data.postId,
-        arweaveId: data.arweaveId,
+        arweaveTxId: data.arweaveTxId,
       });
     }
 
@@ -245,10 +245,10 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
         completeStep("arweave");
 
-        const { postId: targetPostId, arweaveId } = publishStatus.value;
+        const { postId: targetPostId, arweaveTxId } = publishStatus.value;
         posthog.capture("post_publish_success", {
           postId: targetPostId,
-          arweaveId,
+          arweaveId: arweaveTxId,
         });
 
         // wait 1s for a better UX

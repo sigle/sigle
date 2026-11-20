@@ -372,10 +372,10 @@ export const publishDraft = (
       })
       .pipe(Effect.orDie);
 
-    return {
-      draftId,
-      status: "PENDING" as const,
-    };
+    return HttpApiSchema.withHeaders({
+      body: { draftId, status: "pending" as const },
+      headers: { location: `/api/drafts/${draftId}/publish` },
+    });
   });
 
 export const getDraftPublishStatus = (draftId: string) =>
@@ -394,7 +394,7 @@ export const getDraftPublishStatus = (draftId: string) =>
       return {
         status: "COMPLETED" as const,
         postId: publishedPost.id,
-        arweaveId: publishedPost.arweaveTxId,
+        arweaveTxId: publishedPost.arweaveTxId,
       };
     }
 
@@ -417,7 +417,7 @@ export const getDraftPublishStatus = (draftId: string) =>
       return {
         status: foundDraft.txStatus,
         postId: null,
-        arweaveId: foundDraft.arweaveTxId,
+        arweaveTxId: foundDraft.arweaveTxId,
       } as const;
     }
 
@@ -491,7 +491,7 @@ export const uploadDraftImage = (
 
     return {
       height: uploaded.height,
-      key: uploaded.key,
+      sizeBytes: uploaded.sizeBytes,
       thumbhash: uploaded.thumbhash,
       url: uploaded.url,
       width: uploaded.width,

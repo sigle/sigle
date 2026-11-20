@@ -35,11 +35,17 @@ export const PostListItem = Schema.Struct({
 }).annotate({ identifier: "PostListItem" });
 
 export const PostOpenTimestamps = Schema.Struct({
-  status: Schema.Literals(postOtsStatusEnum.enumValues),
+  status: Schema.Literals(["pending", "upgraded", "failed"]).transform(
+    postOtsStatusEnum.enumValues,
+  ),
+  // Hex SHA-256 of the post metadata stored on Arweave, the file the proof
+  // anchors.
+  contentHash: Schema.String,
   // Arweave transaction id of the Bitcoin-anchored `.ots` proof, once
   // upgraded.
   otsTxId: Schema.NullOr(Schema.String),
   bitcoinBlockHeight: Schema.NullOr(Schema.Int),
+  bitcoinBlockHash: Schema.NullOr(Schema.String),
   bitcoinTimestamp: Schema.NullOr(DateTime),
 }).annotate({ identifier: "PostOpenTimestamps" });
 

@@ -65,10 +65,6 @@ export const FailedJobListResponse = Schema.Struct({
   total: Schema.Int,
 }).annotate({ identifier: "FailedJobListResponse" });
 
-export const RetryFailedJobResponse = Schema.Struct({
-  success: Schema.Boolean,
-}).annotate({ identifier: "RetryFailedJobResponse" });
-
 export const AdminGroup = HttpApiGroup.make("admin")
   .annotate(
     OpenApi.Description,
@@ -102,29 +98,33 @@ export const AdminGroup = HttpApiGroup.make("admin")
       ),
     HttpApiEndpoint.post(
       "retryFailedJob",
-      "/queues/:queueName/failed/:id/retry",
+      "/queues/:queueName/failed/:jobId/retry",
       {
         params: {
           queueName: QueueNameParam,
-          id: Schema.String,
+          jobId: Schema.String,
         },
-        success: RetryFailedJobResponse,
+        success: HttpApiSchema.NoContent,
         error: [BadRequest, NotFound],
       },
     )
       .annotate(OpenApi.Summary, "Retry a failed job")
       .annotate(
         OpenApi.Description,
-        "Reset a dead-lettered job so workers pick it up again.",
+        "Reset a dead-lettered job so workers pick it up again. Returns a 204 once it is queued again.",
       ),
-    HttpApiEndpoint.delete("deleteFailedJob", "/queues/:queueName/failed/:id", {
-      params: {
-        queueName: QueueNameParam,
-        id: Schema.String,
+    HttpApiEndpoint.delete(
+      "deleteFailedJob",
+      "/queues/:queueName/failed/:jobId",
+      {
+        params: {
+          queueName: QueueNameParam,
+          jobId: Schema.String,
+        },
+        success: HttpApiSchema.NoContent,
+        error: [BadRequest, NotFound],
       },
-      success: HttpApiSchema.NoContent,
-      error: [BadRequest, NotFound],
-    })
+    )
       .annotate(OpenApi.Summary, "Delete a failed job")
       .annotate(
         OpenApi.Description,
