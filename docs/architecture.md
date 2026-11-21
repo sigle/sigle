@@ -25,6 +25,22 @@ Rate limiting is implemented using rate-limiter-flexible backed by PostgreSQL.
 
 To verify the user's identity, we use better-auth. We ask the user to sign a message following the [Sign in with Stack SIP](https://github.com/stacksgov/sips/pull/70). The user unique identifier (stacks address) is stored in the session as an encrypted JSON Web Tokens (JWE). The server can then extract the address from the JWT and use it to verify the user's identity.
 
+### Arweave key
+
+`server` uploads to Arweave through [Turbo](https://docs.ar.io/build/upload/bundling-services), signing with the Solana key in `ARWEAVE_PRIVATE_KEY`. Uploads are paid with Turbo Credits held by that key's address.
+
+To generate a new key, run in a terminal (requires [Bun](https://bun.sh/)):
+
+```sh
+npx solana-keygen@0.3.0
+```
+
+From the same output, set `base58` as `ARWEAVE_PRIVATE_KEY`. Buy credits at [console.ar.io/topup](https://console.ar.io/topup). Check the balance with:
+
+```sh
+curl "https://payment.ardrive.io/v1/account/balance/solana?address=<address>"
+```
+
 ## Data Flow
 
 The content lifecycle from editor to reader:
