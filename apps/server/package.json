@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@ardrive/turbo-upload": "0.7.0",
-    "@aws-sdk/client-s3": "3.782.0",
+    "@distilled.cloud/s3": "1.0.0-rc.20",
     "@effect/platform-node": "4.1.4",
     "@effect/platform-node-shared": "4.1.4",
     "@effect/sql-sqlite-node": "4.1.4",
