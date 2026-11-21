@@ -36,3 +36,13 @@ Railway does not read this file when deploying, so merging a change does nothing
   `.railway/railway.ts` owns every variable of the services it declares, so a new secret must also be listed there with `preserve()`, or the next apply deletes it.
 
 - **References** to other services, such as the server's `DATABASE_URL`, are set in `.railway/railway.ts`.
+
+## Tracing
+
+`web` and `server` send their traces to Railway, where they appear on the project's **Traces** page next to the spans of Railway's edge. One trace follows a request from the edge through the website, into the API calls it makes, and down to the server's SQL queries.
+
+- Tracing is switched on per service with `tracing` in [`.railway/railway.ts`](../.railway/railway.ts). On the next deploy Railway adds the `OTEL_*` variables the apps export with.
+- The server exports its Effect spans with Effect's OTLP exporter (`apps/server/src/services/telemetry.ts`). It also needs `OTEL_TRACES_EXPORTER=otlp`, which Railway doesn't set, so it is set in `.railway/railway.ts`.
+- The website exports Next.js spans with `@vercel/otel` (`apps/sigle/src/instrumentation.ts`), and sends the trace context to the API on server-side `fetch` calls.
+- Without the `OTEL_*` variables, such as in local development, neither app exports anything.
+- Sentry keeps reporting errors. When the server also has `SENTRY_DSN`, its spans go to Railway rather than Sentry.

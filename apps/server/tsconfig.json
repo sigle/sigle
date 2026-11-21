@@ -15,6 +15,7 @@
         "allowedUnstableApis": [
           "effect/http",
           "effect/http-api",
+          "effect/observability",
           "effect/persistence",
           "effect/sql",
           "effect/ErrorReporter",

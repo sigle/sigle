@@ -1,5 +1,13 @@
 import { describe, expect, it } from "@effect/vitest";
-import { Data, Effect, ErrorReporter } from "effect";
+import * as Sentry from "@sentry/effect/server";
+import {
+  ConfigProvider,
+  Data,
+  Effect,
+  ErrorReporter,
+  Option,
+  Tracer,
+} from "effect";
 import { AppConfig } from "@/config";
 import {
   type ErrorAttributes,
@@ -77,5 +85,32 @@ describe("telemetry service", () => {
       Effect.provide(TelemetryLayer),
       Effect.provide(AppConfig.layerTest()),
     ),
+  );
+
+  it.effect("traces with OTLP instead of Sentry when OTLP export is on", () =>
+    Effect.gen(function* () {
+      const tracerWith = (env: Record<string, string>) =>
+        Effect.service(Tracer.Tracer).pipe(
+          Effect.provide(TelemetryLayer),
+          Effect.provide(
+            AppConfig.layerTest({
+              SENTRY_DSN: Option.some("http://public@127.0.0.1:9/1"),
+            }),
+          ),
+          Effect.provide(ConfigProvider.layer(ConfigProvider.fromEnv({ env }))),
+        );
+
+      expect(yield* tracerWith({})).toBe(Sentry.SentryEffectTracer);
+
+      // The variables Railway sets on a traced service, plus the exporter.
+      const otlpTracer = yield* tracerWith({
+        OTEL_TRACES_EXPORTER: "otlp",
+        OTEL_EXPORTER_OTLP_ENDPOINT: "http://127.0.0.1:4318",
+        OTEL_SERVICE_NAME: "server",
+      });
+
+      expect(otlpTracer).not.toBe(Sentry.SentryEffectTracer);
+      expect(otlpTracer).not.toBe(Tracer.Tracer.defaultValue());
+    }),
   );
 });

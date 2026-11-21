@@ -4,6 +4,23 @@ export const onRequestError = Sentry.captureRequestError;
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === "nodejs") {
+    // Railway sets the OTLP endpoint, headers and service name on traced
+    // services. Without them, nothing registers and no span is recorded.
+    if (process.env.OTEL_EXPORTER_OTLP_ENDPOINT) {
+      const [{ registerOTel }, { env }] = await Promise.all([
+        import("@vercel/otel"),
+        import("@/env"),
+      ]);
+
+      registerOTel({
+        instrumentationConfig: {
+          // Continue the trace into the API: off Vercel, the `traceparent`
+          // header is only sent to the URLs listed here.
+          fetch: { propagateContextUrls: [env.NEXT_PUBLIC_API_URL] },
+        },
+      });
+    }
+
     await import("./sentry.server.config");
   }
 

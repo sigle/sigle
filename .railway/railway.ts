@@ -72,6 +72,9 @@ export default defineRailway(() => {
     },
     domains: ["testnet.sigle.io"],
     networking: { privateNetworkEndpoint: "sigle-030004d6" },
+    // Railway adds the OTEL_* variables on the next deploy, and
+    // src/instrumentation.ts exports the app's spans with them.
+    tracing: { enabled: true },
   });
 
   const server = service("server", {
@@ -93,8 +96,12 @@ export default defineRailway(() => {
     },
     domains: ["testnet-api.sigle.io"],
     networking: { privateNetworkEndpoint: "sigle" },
+    // Railway adds the OTEL_* variables on the next deploy. Effect's exporter
+    // also needs OTEL_TRACES_EXPORTER, which Railway doesn't set.
+    tracing: { enabled: true },
     env: {
       DATABASE_URL: postgresDb.env.DATABASE_URL,
+      OTEL_TRACES_EXPORTER: "otlp",
       // Secrets, set from 1Password by scripts/sync-railway-env.sh. A secret
       // added to 1Password must also be listed here or the next apply
       // deletes it.
