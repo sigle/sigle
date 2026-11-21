@@ -149,8 +149,8 @@ export interface paths {
     };
     get?: never;
     /**
-     * Upload profile metadata
-     * @description Upload the profile metadata to Arweave and return the transaction and the stored profile.
+     * Update the profile
+     * @description Update the profile with signed profile metadata: upload it to Arweave, store it as the profile of the signing address, and return the transaction and the stored profile.
      */
     put: operations["profile.update"];
     post?: never;
@@ -353,7 +353,7 @@ export interface components {
     ConflictError: {
       message: string;
     };
-    UploadProfileMetadataResponse: {
+    UpdateProfileResponse: {
       arweaveTxId: string;
       uri: string;
       cid: string;
@@ -361,7 +361,7 @@ export interface components {
       address: string;
       profile: components["schemas"]["UserProfile"];
     };
-    UploadProfileMetadataPayload: {
+    UpdateProfilePayload: {
       metadata: components["schemas"]["ProfileMetadata"];
     };
     /** @description The signed profile metadata to upload to Arweave. */
@@ -647,15 +647,6 @@ export interface operations {
           "application/json": components["schemas"]["HealthResponse"];
         };
       };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
       /** @description Too Many Requests */
       429: {
         headers: {
@@ -692,15 +683,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["CurrentUserResponse"];
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
         };
       };
       /** @description Unauthorized */
@@ -1401,17 +1383,17 @@ export interface operations {
     };
     requestBody: {
       content: {
-        "application/json": components["schemas"]["UploadProfileMetadataPayload"];
+        "application/json": components["schemas"]["UpdateProfilePayload"];
       };
     };
     responses: {
-      /** @description UploadProfileMetadataResponse */
+      /** @description UpdateProfileResponse */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["UploadProfileMetadataResponse"];
+          "application/json": components["schemas"]["UpdateProfileResponse"];
         };
       };
       /** @description Bad Request */

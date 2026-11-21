@@ -247,6 +247,14 @@ const parameterDescriptions: ReadonlyMap<string, string> = new Map([
   ["jobId", "ID of the failed job."],
 ]);
 
+const operationMethods: ReadonlyArray<OpenApi.OpenAPISpecMethodName> = [
+  "get",
+  "put",
+  "post",
+  "delete",
+  "patch",
+];
+
 /**
  * API `OpenApi.Transform` adding the descriptions of
  * {@link parameterDescriptions} to the parameters that have none.
@@ -257,18 +265,40 @@ export const documentParameters: Parameters<typeof OpenApi.Transform.of>[0] = (
   // SAFETY: an API `OpenApi.Transform` is applied to the whole document.
   const document = spec as OpenApi.OpenAPISpec;
 
-  const methods: ReadonlyArray<OpenApi.OpenAPISpecMethodName> = [
-    "get",
-    "put",
-    "post",
-    "delete",
-    "patch",
-  ];
-
   for (const pathItem of Object.values(document.paths)) {
-    for (const method of methods) {
+    for (const method of operationMethods) {
       for (const parameter of pathItem[method]?.parameters ?? []) {
         parameter.description ??= parameterDescriptions.get(parameter.name);
+      }
+    }
+  }
+
+  return document;
+};
+
+/**
+ * API `OpenApi.Transform` removing the 400 response of operations without path
+ * parameters, query, headers, or body. `SchemaErrorMiddleware` is attached to
+ * the whole API, so every operation documents its `BadRequest`, but a request
+ * without inputs has nothing to decode. No such operation fails with
+ * `BadRequest` on its own.
+ */
+export const omitBadRequestWithoutInputs: Parameters<
+  typeof OpenApi.Transform.of
+>[0] = (spec) => {
+  // SAFETY: an API `OpenApi.Transform` is applied to the whole document.
+  const document = spec as OpenApi.OpenAPISpec;
+
+  for (const pathItem of Object.values(document.paths)) {
+    for (const method of operationMethods) {
+      const operation = pathItem[method];
+
+      if (
+        operation !== undefined &&
+        operation.parameters.length === 0 &&
+        operation.requestBody === undefined
+      ) {
+        delete operation.responses["400"];
       }
     }
   }

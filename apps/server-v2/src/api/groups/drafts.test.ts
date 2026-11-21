@@ -1285,6 +1285,23 @@ describe("draft payload limits", () => {
       invalid: "data:image/png;base64,AAAA",
     },
     {
+      field: "coverImage",
+      valid: "ar://bNbA3TEQVL60xlgCcqdz4ZPHFZ711cZ3hmkpGttDt_U",
+      invalid: "ftp://example.com/cover.png",
+    },
+    {
+      field: "coverImage",
+      valid:
+        "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
+      invalid: "file:///etc/passwd",
+    },
+    // Canonical URIs point to a web page, Arweave and IPFS URLs are rejected.
+    {
+      field: "canonicalUri",
+      valid: "http://example.com/post",
+      invalid: "ar://bNbA3TEQVL60xlgCcqdz4ZPHFZ711cZ3hmkpGttDt_U",
+    },
+    {
       field: "canonicalUri",
       valid: "https://example.com/post",
       invalid: "ftp://example.com/post",

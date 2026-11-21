@@ -38,7 +38,7 @@ import {
 } from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 
-const UploadProfileMetadataResponse = Schema.Struct({
+const UpdateProfileResponse = Schema.Struct({
   arweaveTxId: Schema.String,
   uri: Schema.String,
   cid: Schema.String,
@@ -141,7 +141,7 @@ interface ProfileMetadataInput {
   readonly signature?: string;
 }
 
-const uploadProfileMetadataRequest = (
+const updateProfileRequest = (
   client: HttpClient.HttpClient,
   metadata: ProfileMetadataInput | undefined,
 ) =>
@@ -227,10 +227,10 @@ describe("profile", () => {
 
       const db = yield* Database;
 
-      const response = yield* uploadProfileMetadataRequest(client, metadata);
+      const response = yield* updateProfileRequest(client, metadata);
 
       const body = yield* HttpClientResponse.schemaBodyJson(
-        UploadProfileMetadataResponse,
+        UpdateProfileResponse,
       )(response);
 
       const user = yield* HttpClientResponse.schemaBodyJson(PublicUser)(
@@ -323,10 +323,7 @@ describe("profile", () => {
 
         const db = yield* Database;
 
-        const firstResponse = yield* uploadProfileMetadataRequest(
-          client,
-          metadata,
-        );
+        const firstResponse = yield* updateProfileRequest(client, metadata);
 
         // The first profile got mined; the new upload is not mined yet.
         yield* db
@@ -340,7 +337,7 @@ describe("profile", () => {
           displayName: "Updated profile",
         });
 
-        const secondResponse = yield* uploadProfileMetadataRequest(
+        const secondResponse = yield* updateProfileRequest(
           client,
           updatedMetadata,
         );
@@ -413,7 +410,7 @@ describe("profile", () => {
           picture: imageUrl,
         });
 
-        const response = yield* uploadProfileMetadataRequest(client, metadata);
+        const response = yield* updateProfileRequest(client, metadata);
 
         const mediaRow = yield* waitForMediaImageStatus(imageUrl, "READY");
 
@@ -447,15 +444,9 @@ describe("profile", () => {
     Effect.gen(function* () {
       const { client, metadata } = yield* createSignedProfileClient();
 
-      const firstResponse = yield* uploadProfileMetadataRequest(
-        client,
-        metadata,
-      );
+      const firstResponse = yield* updateProfileRequest(client, metadata);
 
-      const secondResponse = yield* uploadProfileMetadataRequest(
-        client,
-        metadata,
-      );
+      const secondResponse = yield* updateProfileRequest(client, metadata);
 
       expect({
         first: firstResponse.status,
@@ -474,7 +465,7 @@ describe("profile", () => {
       const responses = yield* Effect.forEach(
         Array.from({ length: 5 }, (_, index) => index),
         (index) =>
-          uploadProfileMetadataRequest(
+          updateProfileRequest(
             client,
             signMetadata({
               id: `profile-${index}`,
@@ -517,7 +508,7 @@ describe("profile", () => {
       const firstResponses = yield* Effect.forEach(
         Array.from({ length: 4 }, (_, index) => index),
         (index) =>
-          uploadProfileMetadataRequest(
+          updateProfileRequest(
             first.client,
             first.signMetadata({
               id: `first-${index}`,
@@ -527,7 +518,7 @@ describe("profile", () => {
         { concurrency: 1 },
       );
 
-      const secondResponse = yield* uploadProfileMetadataRequest(
+      const secondResponse = yield* updateProfileRequest(
         second.client,
         second.metadata,
       );
@@ -553,15 +544,15 @@ describe("profile", () => {
       const { client } = yield* createAuthenticatedClient();
 
       const responses = yield* Effect.all([
-        uploadProfileMetadataRequest(client, { content: { id: "profile-1" } }),
-        uploadProfileMetadataRequest(client, {
+        updateProfileRequest(client, { content: { id: "profile-1" } }),
+        updateProfileRequest(client, {
           $schema: "https://example.com/profile.json",
           content: { id: "profile-1" },
         }),
-        uploadProfileMetadataRequest(client, {
+        updateProfileRequest(client, {
           $schema: validMetadata.$schema,
         }),
-        uploadProfileMetadataRequest(client, undefined),
+        updateProfileRequest(client, undefined),
       ]);
 
       expect(responses.map((response) => response.status)).toStrictEqual([
@@ -574,10 +565,7 @@ describe("profile", () => {
     Effect.gen(function* () {
       const { client } = yield* createAuthenticatedClient();
 
-      const response = yield* uploadProfileMetadataRequest(
-        client,
-        validMetadata,
-      );
+      const response = yield* updateProfileRequest(client, validMetadata);
 
       expect(response.status).toBe(400);
     }).pipe(Effect.provide(makeTestServerLayer())),
@@ -592,7 +580,7 @@ describe("profile", () => {
         privateKey: credentials.privateKey,
       });
 
-      const response = yield* uploadProfileMetadataRequest(client, metadata);
+      const response = yield* updateProfileRequest(client, metadata);
 
       expect(response.status).toBe(400);
     }).pipe(Effect.provide(makeTestServerLayer())),
@@ -611,7 +599,7 @@ describe("profile", () => {
     return Effect.gen(function* () {
       const { client, metadata } = yield* createSignedProfileClient();
 
-      const response = yield* uploadProfileMetadataRequest(client, metadata);
+      const response = yield* updateProfileRequest(client, metadata);
 
       const body =
         yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
@@ -627,10 +615,7 @@ describe("profile", () => {
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
 
-      const response = yield* uploadProfileMetadataRequest(
-        client,
-        validMetadata,
-      );
+      const response = yield* updateProfileRequest(client, validMetadata);
 
       expect(response.status).toBe(401);
     }).pipe(Effect.provide(makeTestServerLayer())),
@@ -655,7 +640,7 @@ describe("profile", () => {
       const png = yield* Effect.promise(() => makePngBuffer());
 
       const responses = yield* Effect.all([
-        uploadProfileMetadataRequest(client, metadata),
+        updateProfileRequest(client, metadata),
         uploadImageRequest(client, "avatar", {
           bytes: new Uint8Array(png),
           contentType: "image/png",
