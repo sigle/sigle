@@ -22,8 +22,7 @@
           "effect/ByteSize#mebibytes",
           "effect/Effect#withErrorReporting",
           "@effect/platform-node",
-          "@effect/sql-pg",
-          "@effect/sql-pglite",
+          "@effect/sql-sqlite-node",
           "@effect/vitest"
         ]
       }

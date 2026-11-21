@@ -14,7 +14,7 @@ sigle/
 │   └── docs/           - Nextra documentation
 ├── packages/
 │   └── sdk/            - Shared TypeScript SDK
-└── docker-compose.yaml - Local dev services (PostgreSQL)
+└── docker-compose.yaml - Local dev services
 ```
 
 ## Key Commands
@@ -48,14 +48,11 @@ cd packages/sdk && pnpm test -- test-file.spec.ts
 ### Server Development
 
 ```bash
-# Start the API server with hot reload, on PGlite by default
+# Start the API server with hot reload, on SQLite (apps/server/.data/sigle.db)
 cd apps/server && pnpm dev
 
 # Create a Drizzle migration after changing src/db/schema.ts
 cd apps/server && pnpm drizzle-kit generate --name <migration-name>
-
-# Start PostgreSQL in Docker
-pnpm db:up
 ```
 
 ## Vendored Repositories

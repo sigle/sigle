@@ -14,7 +14,7 @@ import {
 import { ImageProcessingService } from "@/services/image-processing";
 import { OpenTimestampsService } from "@/services/opentimestamps";
 import { PostHogService, type PostHogEvent } from "@/services/posthog";
-import { RateLimiterTest } from "@/services/rate-limiter";
+import { RateLimiterLive } from "@/services/rate-limiter";
 import { StorageService } from "@/services/storage";
 import { TestDatabaseLayer } from "@/test/layer";
 
@@ -48,7 +48,7 @@ export const makeTestServerLayer = (
       }),
     ),
     Layer.provide(AuthLayer),
-    Layer.provide(options.rateLimiter ?? RateLimiterTest),
+    Layer.provide(options.rateLimiter ?? RateLimiterLive),
     Layer.provideMerge(TestDatabaseLayer),
     Layer.provideMerge(AppConfig.layerTest(overrides)),
     Layer.provide(PostHogService.layerTest(posthogEvents)),

@@ -16,7 +16,7 @@ import {
   paginationQueryFields,
   PublicCacheHeaders,
 } from "@/api/schemas";
-import { postOtsStatusEnum } from "@/db/schema";
+import { postOtsStatuses } from "@/db/schema";
 
 export const POST_LIST_DEFAULT_LIMIT = 20;
 
@@ -40,7 +40,7 @@ export const PostListItem = Schema.Struct({
 
 export const PostOpenTimestamps = Schema.Struct({
   status: Schema.Literals(["pending", "upgraded", "failed"]).transform(
-    postOtsStatusEnum.enumValues,
+    postOtsStatuses,
   ),
   // Hex SHA-256 of the post metadata stored on Arweave, the file the proof
   // anchors.

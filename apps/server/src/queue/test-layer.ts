@@ -6,7 +6,7 @@ import { TestDatabaseLayer } from "@/test/layer";
 
 /**
  * Builds the queue framework (store, queue, workers, admin service) against a
- * PGlite database for integration tests.
+ * fresh in-memory SQLite database for integration tests.
  */
 export const makeJobTestLayer = <S extends Schema.Constraint, R>(
   job: Job<S, R>,

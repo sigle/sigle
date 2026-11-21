@@ -66,7 +66,7 @@ describe("admin jobs API", () => {
         INSERT INTO effect_queue
           (id, queue_name, element, state, attempts, created_at, updated_at, visible_at)
         VALUES
-          ('job-1', 'publish-draft', '{}', 'failed', 3, NOW(), NOW(), NOW())
+          ('job-1', 'publish-draft', '{}', 'failed', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
       `;
 
       const queues = yield* client.get("/api/admin/queues");
@@ -149,7 +149,7 @@ describe("admin jobs API", () => {
         INSERT INTO effect_queue
           (id, queue_name, element, state, attempts, created_at, updated_at, visible_at)
         VALUES
-          ('job-1', 'publish-draft', '{}', 'failed', 3, NOW(), NOW(), NOW())
+          ('job-1', 'publish-draft', '{}', 'failed', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
       `;
 
       const retry = yield* client.execute(

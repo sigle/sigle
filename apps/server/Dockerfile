@@ -50,11 +50,22 @@ COPY .pnpmfile.mjs .pnpmfile.mjs
 RUN npm pkg delete scripts.prepare
 RUN pnpm install --frozen-lockfile --prod --filter @sigle/server
 
+# Ships the database to R2 when `LITESTREAM_BUCKET` is set; see `start.sh`.
+# The binary is static, so it runs on Alpine.
+COPY --from=litestream/litestream:0.5.14 /usr/local/bin/litestream /usr/local/bin/litestream
+COPY apps/server/litestream.yml /etc/litestream.yml
+
 # The server applies the Drizzle migrations from ./drizzle on startup
 COPY --from=builder --chown=server:nodejs /app/apps/server/dist ./apps/server/dist
 COPY --from=pruner --chown=server:nodejs /app/out/full/apps/server/drizzle ./apps/server/drizzle
 # Copied by name: a glob would also pick up local files such as .env.development.local
 COPY --chown=server:nodejs apps/server/.env.testnet ./apps/server/.env.testnet
+COPY --chown=server:nodejs --chmod=0755 apps/server/start.sh ./apps/server/start.sh
+
+# The SQLite database lives on the volume mounted at /data. Railway mounts
+# volumes as root, so the service sets RAILWAY_RUN_UID=0.
+RUN mkdir /data && chown server:nodejs /data
+ENV DATABASE_PATH=/data/sigle.db
 
 USER server
 WORKDIR /app/apps/server
@@ -63,4 +74,4 @@ WORKDIR /app/apps/server
 # .env.<railway environment> file adds the non-secret values; variables already
 # set on Railway take precedence over it.
 EXPOSE 3001
-CMD ["sh", "-c", "exec node --env-file-if-exists=.env.${RAILWAY_ENVIRONMENT_NAME} dist/main.mjs"]
+CMD ["./start.sh"]

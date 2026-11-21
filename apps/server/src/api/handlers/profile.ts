@@ -4,7 +4,7 @@ import {
   ArweaveTransactionTypes,
   verifyMetadataSignature,
 } from "@sigle/sdk";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { Effect } from "effect";
 import { HttpApiBuilder } from "effect/http-api";
 import type { UpdateProfilePayload } from "@/api/groups/profile";
@@ -28,11 +28,42 @@ import {
 import { ArweaveService } from "@/services/arweave";
 import { PostHogService } from "@/services/posthog";
 
+/** Signatures of the profile metadata being uploaded by this process. */
+const uploadingSignatures = new Set<string>();
+
 /**
- * First key of the advisory locks held while uploading profile metadata, the
- * second being the hash of its signature.
+ * Runs `effect` while holding the upload claim on `signature`, or fails with a
+ * 409 when another request holds it.
  */
-const PROFILE_UPLOAD_LOCK_NAMESPACE = 1_886_547_814;
+const withUploadClaim = <A, E, R>(
+  signature: string,
+  effect: Effect.Effect<A, E, R>,
+): Effect.Effect<A, E | Conflict, R> =>
+  Effect.acquireUseRelease(
+    Effect.sync(() => {
+      if (uploadingSignatures.has(signature)) {
+        return false;
+      }
+
+      uploadingSignatures.add(signature);
+
+      return true;
+    }),
+    (claimed): Effect.Effect<A, E | Conflict, R> =>
+      claimed
+        ? effect
+        : Effect.fail(
+            new Conflict({
+              message: "Metadata signature is already being published",
+            }),
+          ),
+    (claimed) =>
+      Effect.sync(() => {
+        if (claimed) {
+          uploadingSignatures.delete(signature);
+        }
+      }),
+  );
 
 export const updateProfile = (payload: typeof UpdateProfilePayload.Type) =>
   Effect.gen(function* () {
@@ -63,114 +94,109 @@ export const updateProfile = (payload: typeof UpdateProfilePayload.Type) =>
     }
 
     // Concurrent requests with the same signed metadata would all pass the
-    // signature check and each pay for an Arweave upload. The transaction
-    // holds a lock on the signature until the profile is stored, so the
-    // other requests get a 409 instead of waiting for it.
-    const { result, existingProfile, profileFields } = yield* db
-      .transaction((tx) =>
-        Effect.gen(function* () {
-          const [lock] = yield* tx
-            .select({
-              locked: sql<boolean>`pg_try_advisory_xact_lock(${PROFILE_UPLOAD_LOCK_NAMESPACE}, hashtext(${signature}))`,
-            })
-            .from(sql`(values (1)) as lock`)
-            .pipe(Effect.orDie);
+    // signature check and each pay for an Arweave upload. A claim on the
+    // signature is held until the profile is stored, so the other requests
+    // get a 409 instead of waiting for it. The claim lives in this process:
+    // the server runs as a single instance on its SQLite database. The upload
+    // runs outside any transaction, which would hold the database's only
+    // connection for its whole duration.
+    const { result, existingProfile, profileFields } = yield* withUploadClaim(
+      signature,
+      Effect.gen(function* () {
+        const [existingProfileWithSignature] = yield* db
+          .select({ address: profile.address })
+          .from(profile)
+          .where(eq(profile.signature, signature))
+          .limit(1)
+          .pipe(Effect.orDie);
 
-          if (lock?.locked !== true) {
-            return yield* new Conflict({
-              message: "Metadata signature is already being published",
-            });
-          }
+        if (existingProfileWithSignature) {
+          return yield* new Conflict({
+            message: "Metadata signature has already been published",
+          });
+        }
 
-          const [existingProfileWithSignature] = yield* tx
-            .select({ address: profile.address })
-            .from(profile)
-            .where(eq(profile.signature, signature))
-            .limit(1)
-            .pipe(Effect.orDie);
+        const file = Buffer.from(JSON.stringify(payload.metadata));
 
-          if (existingProfileWithSignature) {
-            return yield* new Conflict({
-              message: "Metadata signature has already been published",
-            });
-          }
+        const uploaded = yield* arweave
+          .uploadFile({
+            file,
+            contentType: "application/json",
+            tags: [
+              { name: ArweaveTags.author, value: recoveredAddress },
+              {
+                name: ArweaveTags.type,
+                value: ArweaveTransactionTypes.profile,
+              },
+            ],
+          })
+          .pipe(
+            // ArweaveService logs the cause, the client only gets a generic
+            // message.
+            Effect.mapError(
+              () =>
+                new InternalServerError({
+                  message: "Failed to upload to Arweave.",
+                }),
+            ),
+          );
 
-          const file = Buffer.from(JSON.stringify(payload.metadata));
+        const now = new Date();
+        const { content } = payload.metadata;
 
-          const uploaded = yield* arweave
-            .uploadFile({
-              file,
-              contentType: "application/json",
-              tags: [
-                { name: ArweaveTags.author, value: recoveredAddress },
-                {
-                  name: ArweaveTags.type,
-                  value: ArweaveTransactionTypes.profile,
-                },
-              ],
-            })
-            .pipe(
-              // ArweaveService logs the cause, the client only gets a generic
-              // message.
-              Effect.mapError(
-                () =>
-                  new InternalServerError({
-                    message: "Failed to upload to Arweave.",
-                  }),
-              ),
-            );
+        // Store the signed metadata on upload so the profile is immediately
+        // readable. The profile indexer sets the block once the transaction
+        // is mined.
+        const fields = {
+          arweaveTxId: uploaded.id,
+          arweaveBlockHeight: null,
+          signature,
+          displayName: content.displayName ?? null,
+          description: content.description ?? null,
+          website: content.website ?? null,
+          twitter: content.twitter ?? null,
+          picture: content.picture ?? null,
+          coverPicture: content.coverPicture ?? null,
+          updatedAt: now,
+        };
 
-          const now = new Date();
-          const { content } = payload.metadata;
+        const previousProfile = yield* db
+          .transaction((tx) =>
+            Effect.gen(function* () {
+              const [previous] = yield* tx
+                .select({
+                  coverPicture: profile.coverPicture,
+                  picture: profile.picture,
+                })
+                .from(profile)
+                .where(eq(profile.address, recoveredAddress))
+                .limit(1);
 
-          const [previousProfile] = yield* tx
-            .select({
-              coverPicture: profile.coverPicture,
-              picture: profile.picture,
-            })
-            .from(profile)
-            .where(eq(profile.address, recoveredAddress))
-            .limit(1)
-            .pipe(Effect.orDie);
+              yield* tx
+                .insert(profile)
+                .values({
+                  ...fields,
+                  address: recoveredAddress,
+                  createdAt: now,
+                })
+                .onConflictDoUpdate({
+                  target: profile.address,
+                  set: fields,
+                });
 
-          // Store the signed metadata on upload so the profile is immediately
-          // readable. The profile indexer sets the block once the transaction
-          // is mined.
-          const fields = {
-            arweaveTxId: uploaded.id,
-            arweaveBlockHeight: null,
-            signature,
-            displayName: content.displayName ?? null,
-            description: content.description ?? null,
-            website: content.website ?? null,
-            twitter: content.twitter ?? null,
-            picture: content.picture ?? null,
-            coverPicture: content.coverPicture ?? null,
-            updatedAt: now,
-          };
+              return previous;
+            }),
+          )
+          // Like the queries, a failed transaction is a defect.
+          .pipe(Effect.orDie);
 
-          yield* tx
-            .insert(profile)
-            .values({
-              ...fields,
-              address: recoveredAddress,
-              createdAt: now,
-            })
-            .onConflictDoUpdate({
-              target: profile.address,
-              set: fields,
-            })
-            .pipe(Effect.orDie);
-
-          return {
-            result: uploaded,
-            existingProfile: previousProfile,
-            profileFields: fields,
-          };
-        }),
-      )
-      // Like the queries, a failed transaction is a defect.
-      .pipe(Effect.catchTag("SqlError", Effect.die));
+        return {
+          result: uploaded,
+          existingProfile: previousProfile,
+          profileFields: fields,
+        };
+      }),
+    );
 
     yield* scheduleChangedProfileImages(existingProfile, profileFields);
 
