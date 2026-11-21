@@ -1,7 +1,4 @@
-import {
-  type TurboAuthenticatedClient,
-  TurboFactory,
-} from "@ardrive/turbo-sdk";
+import { addressFromOwner, TurboUpload } from "@ardrive/turbo-upload";
 import { Context, Data, Effect, Layer, Redacted, Schema } from "effect";
 import {
   FetchHttpClient,
@@ -12,7 +9,6 @@ import {
 import { CID } from "multiformats/cid";
 import { code } from "multiformats/codecs/raw";
 import { sha256 } from "multiformats/hashes/sha2";
-import { createHash } from "node:crypto";
 import { AppConfig } from "@/config";
 
 export type ArweaveContentType =
@@ -173,28 +169,13 @@ const createCIDv1FromBuffer = async (buffer: Uint8Array): Promise<string> => {
   return CID.create(1, code, hash).toString();
 };
 
-const makeTurboUploader = (
-  turbo: TurboAuthenticatedClient,
-): ArweaveUploader => {
+const makeTurboUploader = (turbo: TurboUpload): ArweaveUploader => {
   return {
     uploadFile: ({ file, tags, signal }) =>
-      turbo.uploadFile({
-        signal,
-        fileStreamFactory: () => file,
-        fileSizeFactory: () => file.byteLength,
-        dataItemOpts: {
-          tags: [...tags],
-        },
-      }),
+      turbo.upload({ data: file, tags: [...tags], signal }),
     // Gateways index every data item under the base64url SHA-256 of its
     // signer's public key, whatever the signature type.
-    getOwnerAddress: async () => {
-      const publicKey = await turbo.signer.getPublicKey();
-
-      return createHash("sha256")
-        .update(Uint8Array.from(publicKey))
-        .digest("base64url");
-    },
+    getOwnerAddress: async () => addressFromOwner(turbo.owner),
   };
 };
 
@@ -410,17 +391,15 @@ export class ArweaveService extends Context.Service<
       Effect.gen(function* () {
         const config = yield* AppConfig;
 
-        const turbo = TurboFactory.authenticated({
-          privateKey: Redacted.value(config.ARWEAVE_PRIVATE_KEY),
+        const turbo = TurboUpload.production({
+          jwk: Redacted.value(config.ARWEAVE_PRIVATE_KEY),
           token: "solana",
         });
 
         // The Turbo Credits paying for uploads are held by this address:
         // top it up at https://console.ar.io/topup.
         yield* Effect.logInfo("Arweave uploader initialized", {
-          solanaAddress: yield* Effect.promise(() =>
-            turbo.signer.getNativeAddress(),
-          ),
+          solanaAddress: turbo.address,
         });
 
         return yield* makeArweaveService(makeTurboUploader(turbo));

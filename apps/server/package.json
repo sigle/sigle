@@ -10,7 +10,7 @@
     "test": "vp test"
   },
   "dependencies": {
-    "@ardrive/turbo-sdk": "2.1.0",
+    "@ardrive/turbo-upload": "0.7.0",
     "@aws-sdk/client-s3": "3.782.0",
     "@effect/platform-node": "4.1.4",
     "@effect/platform-node-shared": "4.1.4",
