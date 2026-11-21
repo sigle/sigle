@@ -53,10 +53,14 @@ RUN pnpm install --frozen-lockfile --prod --filter @sigle/server-v2
 # The server applies the Drizzle migrations from ./drizzle on startup
 COPY --from=builder --chown=server:nodejs /app/apps/server-v2/dist ./apps/server-v2/dist
 COPY --from=pruner --chown=server:nodejs /app/out/full/apps/server-v2/drizzle ./apps/server-v2/drizzle
+# Copied by name: a glob would also pick up local files such as .env.development.local
+COPY --chown=server:nodejs apps/server-v2/.env.testnet ./apps/server-v2/.env.testnet
 
 USER server
 WORKDIR /app/apps/server-v2
 
-# Configuration is read from the environment, see src/config.ts
+# Configuration is read from the environment, see src/config.ts. The committed
+# .env.<railway environment> file adds the non-secret values; variables already
+# set on Railway take precedence over it.
 EXPOSE 3001
-CMD ["node", "dist/main.mjs"]
+CMD ["sh", "-c", "exec node --env-file-if-exists=.env.${RAILWAY_ENVIRONMENT_NAME} dist/main.mjs"]
