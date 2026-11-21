@@ -1,8 +1,7 @@
 "use client";
 
+import type { paths } from "@sigle/sdk";
 import { IconArrowLeft } from "@tabler/icons-react";
-import { notFound } from "next/navigation";
-import { use } from "react";
 import { PostMarkdownContent } from "@/components/Post/MarkdownContent";
 import { PostProvenanceCard } from "@/components/Post/ProvenanceCard";
 import { PostUserActions } from "@/components/Post/UserActions";
@@ -15,31 +14,12 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
-import { sigleApiClient } from "@/lib/sigle";
 
 interface Props {
-  params: Promise<{ postId: string }>;
+  post: paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"];
 }
 
-export function PostClientPage(props: Props) {
-  const params = use(props.params);
-
-  const { data: post } = sigleApiClient.useSuspenseQuery(
-    "get",
-    "/api/posts/{postId}",
-    {
-      params: {
-        path: {
-          postId: params.postId,
-        },
-      },
-    },
-  );
-
-  if (!post) {
-    notFound();
-  }
-
+export function PostClientPage({ post }: Props) {
   return (
     <FadeSlideBottom>
       {post.coverImage ? (

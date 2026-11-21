@@ -111,10 +111,102 @@ const SentryLifecycleLayer = Layer.effectDiscard(
   ),
 );
 
+// The first statement keyword wins, so `WITH cte AS (UPDATE ...)` is an
+// UPDATE and `SELECT ... FOR UPDATE` a SELECT. The table can be quoted and
+// qualified by its schema, as in `"drizzle"."__drizzle_migrations"`.
+const SQL_STATEMENTS = [
+  ["SELECT", /\bselect\b[\s\S]*?\bfrom\s+(?:"?\w+"?\.)?"?(\w+)/i],
+  ["INSERT", /\binsert\s+into\s+(?:"?\w+"?\.)?"?(\w+)/i],
+  ["UPDATE", /\bupdate\s+(?:"?\w+"?\.)?"?(\w+)/i],
+  ["DELETE", /\bdelete\s+from\s+(?:"?\w+"?\.)?"?(\w+)/i],
+] as const;
+
+const SpanNameAttributes = Schema.Struct({
+  "http.request.method": Schema.optionalKey(Schema.String),
+  "http.route": Schema.optionalKey(Schema.String),
+  "db.query.text": Schema.optionalKey(Schema.String),
+});
+
+const decodeSpanNameAttributes = Schema.decodeUnknownOption(SpanNameAttributes);
+
+/**
+ * The OpenTelemetry name of a span, from attributes only known once it ends:
+ * `GET /api/posts/:postId` for a routed request and the query summary, such
+ * as `SELECT post`, for an SQL statement. Effect names the first before
+ * routing (`GET`) and the second after its database (`railway`).
+ */
+export const conventionalSpanName = (
+  span: Pick<Tracer.Span, "kind" | "attributes">,
+): string | undefined => {
+  const attributes = decodeSpanNameAttributes(
+    Object.fromEntries(span.attributes),
+  );
+
+  if (Option.isNone(attributes)) {
+    return undefined;
+  }
+
+  const {
+    "http.request.method": method,
+    "http.route": route,
+    "db.query.text": query,
+  } = attributes.value;
+
+  if (span.kind === "server" && method !== undefined && route !== undefined) {
+    return `${method} ${route}`;
+  }
+
+  if (span.kind !== "client" || query === undefined) {
+    return undefined;
+  }
+
+  return SQL_STATEMENTS.flatMap(([statement, pattern]) => {
+    const match = pattern.exec(query);
+
+    return match === null
+      ? []
+      : [{ index: match.index, name: `${statement} ${match[1]}` }];
+  }).toSorted((first, second) => first.index - second.index)[0]?.name;
+};
+
+// Effect spans have no rename, but the OTLP exporter reads the name when the
+// span ends, so it is set just before.
+const withConventionalSpanNames = (tracer: Tracer.Tracer): Tracer.Tracer =>
+  Tracer.make({
+    context: tracer.context,
+    span: (options) => {
+      const span = tracer.span(options);
+      const end = span.end.bind(span);
+
+      // SAFETY: `end` and `name` are plain properties of the OTLP tracer's
+      // spans; the interface only marks them readonly for callers.
+      const mutableSpan = span as { end: Tracer.Span["end"]; name: string };
+
+      mutableSpan.end = (endTime, exit) => {
+        const name = conventionalSpanName(span);
+
+        if (name !== undefined) {
+          mutableSpan.name = name;
+        }
+
+        end(endTime, exit);
+      };
+
+      return span;
+    },
+  });
+
 // Exports spans over OTLP/HTTP when `OTEL_TRACES_EXPORTER=otlp` and an OTLP
 // endpoint are set: Railway provides the endpoint, headers and service name
 // on traced services. Otherwise it provides no tracer.
-const OtlpTracingLayer = OtlpTracer.layerFromConfig().pipe(
+const OtlpTracingLayer = Layer.unwrap(
+  Effect.map(Effect.service(Tracer.Tracer), (tracer) =>
+    tracer === Tracer.nativeTracer
+      ? Layer.empty
+      : Layer.succeed(Tracer.Tracer, withConventionalSpanNames(tracer)),
+  ),
+).pipe(
+  Layer.provide(OtlpTracer.layerFromConfig()),
   Layer.provide([OtlpSerialization.layerProtobuf, FetchHttpClient.layer]),
 );
 
