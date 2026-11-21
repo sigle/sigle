@@ -81,6 +81,9 @@ export default defineRailway(() => {
       limitOverride: { containers: { cpu: 1, memoryBytes: 1000000000 } },
       sleepApplication: true,
       restartPolicyMaxRetries: 5,
+      // Time between SIGTERM and SIGKILL, 0 by default. Litestream uploads
+      // the commits of the last minute once the server has exited.
+      drainingSeconds: 30,
     },
     domains: ["testnet-api.sigle.io"],
     networking: { privateNetworkEndpoint: "sigle" },

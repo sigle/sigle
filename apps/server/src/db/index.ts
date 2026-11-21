@@ -8,6 +8,7 @@ import {
 } from "drizzle-orm/sqlite-proxy";
 import { Context, Effect, Layer } from "effect";
 import { SqlClient, type SqlError } from "effect/sql";
+import { mkdirSync } from "node:fs";
 import { findPackageJSON } from "node:module";
 import { dirname, join } from "node:path";
 import { AppConfig } from "@/config";
@@ -135,13 +136,19 @@ export class Database extends Context.Service<Database, DatabaseClient>()(
     unknown,
     AppConfig
   > = Layer.unwrap(
-    Effect.map(AppConfig, (config) =>
-      databasesLayer.pipe(
-        Layer.provideMerge(
-          SqliteClient.layer({ filename: config.DATABASE_PATH }),
-        ),
-      ),
-    ),
+    Effect.gen(function* () {
+      const { DATABASE_PATH } = yield* AppConfig;
+
+      // SQLite creates the file but not its directory, such as `.data` on a
+      // fresh checkout.
+      if (DATABASE_PATH !== ":memory:") {
+        mkdirSync(dirname(DATABASE_PATH), { recursive: true });
+      }
+
+      return databasesLayer.pipe(
+        Layer.provideMerge(SqliteClient.layer({ filename: DATABASE_PATH })),
+      );
+    }),
   );
 }
 

@@ -43,7 +43,8 @@ CREATE TABLE `media_image` (
 	`size` integer,
 	`thumbhash` text,
 	`created_at` integer NOT NULL,
-	`updated_at` integer NOT NULL
+	`updated_at` integer NOT NULL,
+	CONSTRAINT "media_image_status_check" CHECK("status" IN ('PENDING', 'READY', 'FAILED'))
 );
 --> statement-breakpoint
 CREATE TABLE `post` (
@@ -79,7 +80,8 @@ CREATE TABLE `post_ots` (
 	`bitcoin_timestamp` integer,
 	`created_at` integer NOT NULL,
 	`updated_at` integer NOT NULL,
-	CONSTRAINT `fk_post_ots_post_id_post_id_fk` FOREIGN KEY (`post_id`) REFERENCES `post`(`id`) ON DELETE CASCADE
+	CONSTRAINT `fk_post_ots_post_id_post_id_fk` FOREIGN KEY (`post_id`) REFERENCES `post`(`id`) ON DELETE CASCADE,
+	CONSTRAINT "post_ots_status_check" CHECK("status" IN ('PENDING', 'UPGRADED', 'FAILED'))
 );
 --> statement-breakpoint
 CREATE TABLE `profile` (
@@ -118,7 +120,8 @@ CREATE TABLE `user` (
 	`email_verified` integer DEFAULT false NOT NULL,
 	`image` text,
 	`created_at` integer NOT NULL,
-	`updated_at` integer NOT NULL
+	`updated_at` integer NOT NULL,
+	CONSTRAINT "user_flag_check" CHECK("flag" IN ('NONE', 'VERIFIED'))
 );
 --> statement-breakpoint
 CREATE TABLE `verification` (

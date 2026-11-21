@@ -52,7 +52,7 @@ To start the API server (http://localhost:3001) in watch mode:
 cd apps/server && pnpm dev
 ```
 
-It stores its data in the SQLite database `apps/server/.data/sigle.db` and applies the migrations on startup. Delete the file to start over.
+It stores its data in the SQLite database `apps/server/.data/sigle.db` and applies the migrations on startup. To start over, stop the server, delete the `apps/server/.data` directory and start the server again.
 
 To start the website (http://localhost:3000):
 

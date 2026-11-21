@@ -1,7 +1,7 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "19ef9685-60ba-4d8e-9fb6-606743fbac75",
+  "id": "c1ec6069-ecb4-49e0-9c58-6438eefd7f67",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -1510,6 +1510,24 @@
       ],
       "nameExplicit": true,
       "entityType": "uniques"
+    },
+    {
+      "table": "media_image",
+      "name": "media_image_status_check",
+      "value": "\"status\" IN ('PENDING', 'READY', 'FAILED')",
+      "entityType": "checks"
+    },
+    {
+      "table": "post_ots",
+      "name": "post_ots_status_check",
+      "value": "\"status\" IN ('PENDING', 'UPGRADED', 'FAILED')",
+      "entityType": "checks"
+    },
+    {
+      "table": "user",
+      "name": "user_flag_check",
+      "value": "\"flag\" IN ('NONE', 'VERIFIED')",
+      "entityType": "checks"
     }
   ],
   "renames": []

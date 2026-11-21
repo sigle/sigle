@@ -1,11 +1,13 @@
 import { sql } from "drizzle-orm";
 import {
   blob,
+  check,
   index,
   integer,
   sqliteTable,
   text,
   uniqueIndex,
+  type SQLiteColumn,
 } from "drizzle-orm/sqlite-core";
 
 /** Millisecond timestamp, read back as a `Date`. */
@@ -20,23 +22,41 @@ const textArray = (name: string) =>
 
 const now = () => new Date();
 
+/**
+ * Limits a text column to `values`. Drizzle's `enum` option only narrows the
+ * TypeScript type, SQLite stores any text without this constraint.
+ */
+const oneOf = (
+  name: string,
+  column: SQLiteColumn,
+  values: ReadonlyArray<string>,
+) =>
+  check(
+    name,
+    sql`${column} IN (${sql.raw(values.map((value) => `'${value}'`).join(", "))})`,
+  );
+
+const userFlags = ["NONE", "VERIFIED"] as const;
+
 // --
 // better-auth models
 // --
 
-export const user = sqliteTable("user", {
-  id: text("id").primaryKey(),
-  lastLoginAt: timestamp("last_login_at"),
-  flag: text("flag", { enum: ["NONE", "VERIFIED"] })
-    .default("NONE")
-    .notNull(),
-  name: text("name"),
-  email: text("email").unique("user_email_key"),
-  emailVerified: boolean("email_verified").default(false).notNull(),
-  image: text("image"),
-  createdAt: timestamp("created_at").$defaultFn(now).notNull(),
-  updatedAt: timestamp("updated_at").$defaultFn(now).notNull(),
-});
+export const user = sqliteTable(
+  "user",
+  {
+    id: text("id").primaryKey(),
+    lastLoginAt: timestamp("last_login_at"),
+    flag: text("flag", { enum: userFlags }).default("NONE").notNull(),
+    name: text("name"),
+    email: text("email").unique("user_email_key"),
+    emailVerified: boolean("email_verified").default(false).notNull(),
+    image: text("image"),
+    createdAt: timestamp("created_at").$defaultFn(now).notNull(),
+    updatedAt: timestamp("updated_at").$defaultFn(now).notNull(),
+  },
+  (table) => [oneOf("user_flag_check", table.flag, userFlags)],
+);
 
 export const session = sqliteTable(
   "session",
@@ -186,11 +206,13 @@ export const profile = sqliteTable("profile", {
  * Images uploaded through the API (profile and draft images) get a READY row
  * inline. External image URLs embedded in post content have no row.
  */
+const mediaImageStatuses = ["PENDING", "READY", "FAILED"] as const;
+
 export const mediaImage = sqliteTable(
   "media_image",
   {
     id: text("id").primaryKey(),
-    status: text("status", { enum: ["PENDING", "READY", "FAILED"] })
+    status: text("status", { enum: mediaImageStatuses })
       .default("PENDING")
       .notNull(),
     mimeType: text("mime_type"),
@@ -203,6 +225,7 @@ export const mediaImage = sqliteTable(
     updatedAt: timestamp("updated_at").$defaultFn(now).notNull(),
   },
   (table) => [
+    oneOf("media_image_status_check", table.status, mediaImageStatuses),
     index("media_image_pending_idx")
       .on(table.createdAt)
       .where(sql`status = 'PENDING'`),
@@ -283,5 +306,8 @@ export const postOts = sqliteTable(
     createdAt: timestamp("created_at").$defaultFn(now).notNull(),
     updatedAt: timestamp("updated_at").$defaultFn(now).notNull(),
   },
-  (table) => [index("post_ots_status_idx").on(table.status)],
+  (table) => [
+    oneOf("post_ots_status_check", table.status, postOtsStatuses),
+    index("post_ots_status_idx").on(table.status),
+  ],
 );
