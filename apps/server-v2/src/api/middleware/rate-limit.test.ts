@@ -36,7 +36,7 @@ describe("rateLimitMiddleware", () => {
       ]);
 
       return Effect.gen(function* () {
-        const response = yield* HttpClient.get("/health");
+        const response = yield* HttpClient.get("/api/posts/missing");
 
         const body =
           yield* HttpClientResponse.schemaBodyJson(InternalServerError)(

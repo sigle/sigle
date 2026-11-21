@@ -1,11 +1,12 @@
 import { Schema } from "effect";
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/http-api";
-import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 
 export const HealthResponse = Schema.Struct({
   success: Schema.Boolean,
 }).annotate({ identifier: "HealthResponse" });
 
+// Not rate limited: load balancer and uptime probes must not get a 429, nor
+// fail while the rate limit store, the database, is unavailable.
 export const HealthGroup = HttpApiGroup.make("health")
   .annotate(OpenApi.Description, "Liveness check of the API.")
   .add(
@@ -17,5 +18,4 @@ export const HealthGroup = HttpApiGroup.make("health")
         OpenApi.Description,
         "Return `{ success: true }` while the API is up. Used by uptime monitoring.",
       ),
-  )
-  .middleware(RateLimitMiddleware);
+  );

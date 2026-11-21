@@ -83,6 +83,13 @@ export const appConfig = Config.all({
   DATABASE_URL: Config.NonEmptyString("DATABASE_URL").pipe(
     Config.map(Redacted.make),
   ),
+  // Request header holding the client IP, set by the proxy in front of the
+  // API, such as `x-real-ip` on Railway. Only set it when every request goes
+  // through that proxy, clients can send any header otherwise. Rate limits
+  // fall back to the socket address when unset.
+  CLIENT_IP_HEADER: OptionalNonEmptyString("CLIENT_IP_HEADER").pipe(
+    Config.map(Option.map((name) => name.toLowerCase())),
+  ),
   SENTRY_DSN: OptionalNonEmptyString("SENTRY_DSN"),
   POSTHOG_API_KEY: OptionalNonEmptyRedacted("POSTHOG_API_KEY"),
   POSTHOG_API_HOST: OptionalNonEmptyString("POSTHOG_API_HOST"),
@@ -118,6 +125,7 @@ export const defaultTestConfig: AppConfigValues = {
   R2_PUBLIC_URL: "https://cdn.test",
   DATABASE_KIND: "pglite",
   DATABASE_URL: Redacted.make("memory://"),
+  CLIENT_IP_HEADER: Option.none(),
   SENTRY_DSN: Option.none(),
   POSTHOG_API_KEY: Option.none(),
   POSTHOG_API_HOST: Option.none(),

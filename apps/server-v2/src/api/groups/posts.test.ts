@@ -1,6 +1,11 @@
 import { describe, expect, it } from "@effect/vitest";
-import { Effect, Schema } from "effect";
-import { HttpClient, HttpClientResponse } from "effect/http";
+import { Effect, Option, Schema } from "effect";
+import {
+  Headers,
+  HttpClient,
+  HttpClientRequest,
+  HttpClientResponse,
+} from "effect/http";
 import { PostListResponse } from "@/api/groups/posts";
 import {
   createTestMediaImage,
@@ -394,6 +399,72 @@ describe("posts", () => {
           opentimestamps: null,
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect("GET /api/posts and /api/posts/:postId revalidate by ETag", () =>
+    Effect.gen(function* () {
+      const client = yield* HttpClient.HttpClient;
+      const user = yield* createTestUser();
+      yield* createTestWalletAddress({
+        userId: user.id,
+        address: AUTHOR_ADDRESS,
+      });
+      yield* createTestPost({ id: "cached-post", userId: user.id });
+
+      const get = (path: string, etag?: string) =>
+        client
+          .execute(
+            HttpClientRequest.get(path).pipe(
+              HttpClientRequest.setHeaders(
+                etag === undefined ? {} : { "if-none-match": etag },
+              ),
+            ),
+          )
+          .pipe(
+            Effect.map((response) => ({
+              status: response.status,
+              cacheControl: Option.getOrUndefined(
+                Headers.get(response.headers, "cache-control"),
+              ),
+              etag: Option.getOrUndefined(
+                Headers.get(response.headers, "etag"),
+              ),
+            })),
+          );
+
+      const list = yield* get("/api/posts");
+      const post = yield* get("/api/posts/cached-post");
+
+      const revalidated = {
+        list: (yield* get("/api/posts", list.etag)).status,
+        post: (yield* get("/api/posts/cached-post", post.etag)).status,
+      };
+
+      // Any field of the post changes its ETag, such as its proof status.
+      yield* createTestPostOts({ postId: "cached-post" });
+
+      const changed = yield* get("/api/posts/cached-post", post.etag);
+
+      expect({
+        list,
+        post,
+        revalidated,
+        changed: changed.status,
+      }).toStrictEqual({
+        list: {
+          status: 200,
+          cacheControl: "public, max-age=60",
+          etag: expect.any(String),
+        },
+        post: {
+          status: 200,
+          cacheControl: "public, max-age=60",
+          etag: expect.any(String),
+        },
+        revalidated: { list: 304, post: 304 },
+        changed: 200,
+      });
+    }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
   it.effect("GET /api/posts/:postId returns 404 for an unknown post", () =>

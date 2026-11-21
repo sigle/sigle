@@ -3,12 +3,11 @@ import { alias } from "drizzle-orm/pg-core";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
 import { SigleApi } from "@/api";
+import { PUBLIC_CACHE_CONTROL } from "@/api/middleware/etag";
 import { NotFound } from "@/api/schemas";
 import { Database } from "@/db";
 import { mediaImage, profile, walletAddress } from "@/db/schema";
 import { parseStacksAddress } from "@/lib/stacks-address";
-
-const CACHE_CONTROL = "public, max-age=60";
 
 const pictureImage = alias(mediaImage, "picture_image");
 
@@ -16,8 +15,8 @@ const coverPictureImage = alias(mediaImage, "cover_picture_image");
 
 /**
  * Reads the profiles published by addresses, with the placeholders of their
- * images, and the ETag of each representation. Addresses that never published
- * a profile are missing from the returned map.
+ * images. Addresses that never published a profile are missing from the
+ * returned map.
  */
 export const findProfiles = (addresses: ReadonlyArray<string>) =>
   Effect.gen(function* () {
@@ -32,11 +31,9 @@ export const findProfiles = (addresses: ReadonlyArray<string>) =>
               pictureThumbhash: pictureImage.thumbhash,
               pictureWidth: pictureImage.width,
               pictureHeight: pictureImage.height,
-              pictureUpdatedAt: pictureImage.updatedAt,
               coverThumbhash: coverPictureImage.thumbhash,
               coverWidth: coverPictureImage.width,
               coverHeight: coverPictureImage.height,
-              coverUpdatedAt: coverPictureImage.updatedAt,
             })
             .from(profile)
             .leftJoin(pictureImage, eq(pictureImage.id, profile.picture))
@@ -51,18 +48,9 @@ export const findProfiles = (addresses: ReadonlyArray<string>) =>
       rows.map((found) => {
         const foundProfile = found.profile;
 
-        // The thumbnail is filled in asynchronously after the profile metadata
-        // is stored, so its `updatedAt` is part of the ETag to invalidate
-        // caches when the placeholder becomes available.
-        const mediaUpdatedAt = [found.pictureUpdatedAt, found.coverUpdatedAt]
-          .flatMap((date) => (date === null ? [] : [date.getTime()]))
-          .sort((first, second) => first - second)
-          .join(".");
-
         return [
           foundProfile.address,
           {
-            etag: `"${foundProfile.arweaveTxId}${mediaUpdatedAt === "" ? "" : `-${mediaUpdatedAt}`}"`,
             profile: {
               displayName: foundProfile.displayName,
               description: foundProfile.description,
@@ -124,16 +112,13 @@ export const getUserProfile = (addressParam: string) =>
 
       return HttpApiSchema.withHeaders({
         body: { address, profile: null },
-        headers: { "cache-control": CACHE_CONTROL, etag: `"none"` },
+        headers: { "cache-control": PUBLIC_CACHE_CONTROL },
       });
     }
 
     return HttpApiSchema.withHeaders({
       body: { address, profile: found.profile },
-      headers: {
-        "cache-control": CACHE_CONTROL,
-        etag: found.etag,
-      },
+      headers: { "cache-control": PUBLIC_CACHE_CONTROL },
     });
   });
 

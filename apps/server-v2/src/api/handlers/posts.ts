@@ -1,12 +1,13 @@
 import { count, desc, eq, inArray } from "drizzle-orm";
 import { DateTime, Effect } from "effect";
-import { HttpApiBuilder } from "effect/http-api";
+import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
 import { SigleApi } from "@/api";
 import {
   POST_LIST_DEFAULT_LIMIT,
   type PostListQuery,
 } from "@/api/groups/posts";
 import { findProfiles } from "@/api/handlers/users";
+import { PUBLIC_CACHE_CONTROL } from "@/api/middleware/etag";
 import { NotFound } from "@/api/schemas";
 import { Database } from "@/db";
 import { mediaImage, post, postOts, walletAddress } from "@/db/schema";
@@ -95,7 +96,7 @@ export const listPosts = (query: typeof PostListQuery.Type) =>
 
     const authors = yield* findAuthors(posts.map((item) => item.userId));
 
-    return {
+    const body = {
       results: posts.map((item, index) => ({
         id: item.id,
         title: item.title,
@@ -118,6 +119,11 @@ export const listPosts = (query: typeof PostListQuery.Type) =>
       offset,
       total: totals.count,
     };
+
+    return HttpApiSchema.withHeaders({
+      body,
+      headers: { "cache-control": PUBLIC_CACHE_CONTROL },
+    });
   });
 
 export const getPost = (postId: string) =>
@@ -151,7 +157,7 @@ export const getPost = (postId: string) =>
     const foundPost = found.post;
     const [author] = yield* findAuthors([foundPost.userId]);
 
-    return {
+    const body = {
       id: foundPost.id,
       title: foundPost.title,
       content: foundPost.content,
@@ -186,6 +192,11 @@ export const getPost = (postId: string) =>
                   : DateTime.fromDateUnsafe(found.bitcoinTimestamp),
             },
     };
+
+    return HttpApiSchema.withHeaders({
+      body,
+      headers: { "cache-control": PUBLIC_CACHE_CONTROL },
+    });
   });
 
 export const PostsHandlersLayer = HttpApiBuilder.group(

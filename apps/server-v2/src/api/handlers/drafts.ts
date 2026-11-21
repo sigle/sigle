@@ -1,7 +1,17 @@
 import type { HttpServerRequest } from "effect/http";
 import { createId } from "@paralleldrive/cuid2";
 import { verifyMetadataSignature } from "@sigle/sdk";
-import { and, count, desc, eq, isNull, notInArray, or, sql } from "drizzle-orm";
+import {
+  and,
+  count,
+  desc,
+  eq,
+  isNull,
+  lt,
+  notInArray,
+  or,
+  sql,
+} from "drizzle-orm";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
 import { SigleApi } from "@/api";
@@ -24,7 +34,10 @@ import {
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { draft, post } from "@/db/schema";
-import { publishDraftJob } from "@/jobs/publish-draft";
+import {
+  PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS,
+  publishDraftJob,
+} from "@/jobs/publish-draft";
 import {
   DRAFT_IMAGE_MAX_MIB,
   draftImageKey,
@@ -337,8 +350,14 @@ export const publishDraft = (
     // payload being published, and the Arweave checkpoint/upload claim only
     // survive while they belong to that payload. Workers whose job signature no
     // longer matches the draft no-op, so the newest request wins without any
-    // queue reconciliation. The CASE reads the current row, so a checkpoint or
-    // in-flight upload claim from the same signature is never clobbered.
+    // queue reconciliation, which also recovers a draft stuck in flight. The
+    // CASE reads the current row, so a checkpoint or in-flight upload claim
+    // from the same signature is never clobbered. Another signature cannot
+    // take over while a worker holds the upload claim: the Arweave upload in
+    // flight would be paid for and discarded. The claim is checked in the
+    // same statement as the write.
+    const now = new Date();
+
     const [acceptedDraft] = yield* db
       .update(draft)
       .set({
@@ -352,14 +371,41 @@ export const publishDraft = (
           WHEN ${draft.publishSignature} = ${signature} THEN ${draft.uploadClaimedAt}
           ELSE NULL
         END`,
-        updatedAt: new Date(),
+        updatedAt: now,
       })
-      .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
+      .where(
+        and(
+          eq(draft.id, draftId),
+          eq(draft.userId, user.id),
+          or(
+            eq(draft.publishSignature, signature),
+            isNull(draft.uploadClaimedAt),
+            lt(
+              draft.uploadClaimedAt,
+              new Date(now.getTime() - PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS),
+            ),
+          ),
+        ),
+      )
       .returning({ id: draft.id })
       .pipe(Effect.orDie);
 
     if (!acceptedDraft) {
-      return yield* new NotFound({ message: "Draft not found" });
+      const [currentDraft] = yield* db
+        .select({ id: draft.id })
+        .from(draft)
+        .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
+        .limit(1)
+        .pipe(Effect.orDie);
+
+      if (!currentDraft) {
+        return yield* new NotFound({ message: "Draft not found" });
+      }
+
+      return yield* new Conflict({
+        message:
+          "This draft is being uploaded to Arweave, it can be published again once the upload finishes.",
+      });
     }
 
     yield* publishDraftJob

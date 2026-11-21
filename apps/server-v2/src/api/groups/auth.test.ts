@@ -1,7 +1,13 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
-import { Effect, Schema } from "effect";
-import { HttpClient, HttpClientRequest, HttpClientResponse } from "effect/http";
+import { Effect, Option, Schema } from "effect";
+import {
+  Headers,
+  HttpClient,
+  HttpClientRequest,
+  HttpClientResponse,
+} from "effect/http";
+import { RATE_LIMITS } from "@/api/middleware/rate-limit";
 import { Database } from "@/db";
 import { session, user, verification, walletAddress } from "@/db/schema";
 import {
@@ -41,6 +47,37 @@ const requestVerify = (
 ) => client.execute(postJson("/api/auth/siws/verify", payload));
 
 describe("auth siws", () => {
+  it.effect("POST /api/auth/siws/nonce is rate limited per IP", () =>
+    Effect.gen(function* () {
+      const client = yield* HttpClient.HttpClient;
+      const { points } = RATE_LIMITS.signIn;
+
+      const responses = yield* Effect.forEach(
+        Array.from({ length: points + 1 }),
+        () => client.execute(postJson("/api/auth/siws/nonce", {})),
+        { concurrency: 1 },
+      );
+
+      const last = responses[points];
+
+      expect({
+        statuses: responses.map((response) => response.status),
+        body: last === undefined ? undefined : yield* last.json,
+        retryAfter:
+          last === undefined
+            ? undefined
+            : Option.getOrUndefined(Headers.get(last.headers, "retry-after")),
+      }).toStrictEqual({
+        statuses: [...Array.from({ length: points }, () => 200), 429],
+        body: {
+          message: "Rate limit exceeded",
+          retryAfterMillis: expect.any(Number),
+        },
+        retryAfter: "60",
+      });
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
   it.effect("POST /api/auth/siws/nonce creates and stores a nonce", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;

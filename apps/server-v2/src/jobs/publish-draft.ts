@@ -56,7 +56,7 @@ export class PublishDraftUploadClaimedError extends Data.TaggedError(
  * with the queue's lock expiration so a worker that crashed mid-upload can be
  * replaced as soon as its queue row is re-taken.
  */
-const PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS = 2 * 60 * 1000;
+export const PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS = 2 * 60 * 1000;
 
 const publishDraftRetrySchedule: Schedule.Schedule<unknown, number> =
   Schedule.jittered(

@@ -178,16 +178,19 @@ describe("users", () => {
           coverPicture,
         });
 
-        const pictureUpdatedAt = new Date("2026-01-01T00:00:00.000Z");
-        const coverUpdatedAt = new Date("2026-01-02T00:00:00.000Z");
+        const before = yield* getUserRequest(client, TEST_ADDRESS);
 
+        const beforeEtag = Option.getOrUndefined(
+          Headers.get(before.headers, "etag"),
+        );
+
+        // The placeholders are filled in after the profile is stored.
         yield* createTestMediaImage({
           id: picture,
           status: "READY",
           width: 100,
           height: 100,
           thumbhash: "avatar-thumbhash",
-          updatedAt: pictureUpdatedAt,
         });
 
         yield* createTestMediaImage({
@@ -196,10 +199,14 @@ describe("users", () => {
           width: 2000,
           height: 1000,
           thumbhash: "cover-thumbhash",
-          updatedAt: coverUpdatedAt,
         });
 
-        const response = yield* getUserRequest(client, TEST_ADDRESS);
+        // Revalidating the copy cached before the placeholders gets them.
+        const response = yield* client.execute(
+          HttpClientRequest.get(`/api/users/${TEST_ADDRESS}`).pipe(
+            HttpClientRequest.setHeader("if-none-match", beforeEtag ?? ""),
+          ),
+        );
 
         const body =
           yield* HttpClientResponse.schemaBodyJson(PublicUser)(response);
@@ -209,10 +216,12 @@ describe("users", () => {
         );
 
         expect({
+          status: response.status,
           picture: body.profile?.picture,
           coverPicture: body.profile?.coverPicture,
-          etag,
+          etagChanged: beforeEtag !== undefined && etag !== beforeEtag,
         }).toStrictEqual({
+          status: 200,
           picture: {
             url: picture,
             width: 100,
@@ -225,38 +234,86 @@ describe("users", () => {
             height: 1000,
             thumbhash: "cover-thumbhash",
           },
-          etag: `"arweave-profile-tx-${pictureUpdatedAt.getTime()}.${coverUpdatedAt.getTime()}"`,
+          etagChanged: true,
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("GET /api/users/:address returns caching headers", () =>
-    Effect.gen(function* () {
-      const client = yield* HttpClient.HttpClient;
+  it.effect(
+    "GET /api/users/:address answers a matching If-None-Match with a 304",
+    () =>
+      Effect.gen(function* () {
+        const client = yield* HttpClient.HttpClient;
 
-      yield* createTestProfile({
-        address: TEST_ADDRESS,
-        arweaveTxId: "arweave-profile-tx",
-        displayName: "Alice",
-      });
+        yield* createTestProfile({
+          address: TEST_ADDRESS,
+          arweaveTxId: "arweave-profile-tx",
+          displayName: "Alice",
+        });
 
-      const response = yield* getUserRequest(client, TEST_ADDRESS);
+        const response = yield* getUserRequest(client, TEST_ADDRESS);
 
-      const cacheControl = Option.getOrUndefined(
-        Headers.get(response.headers, "cache-control"),
-      );
+        const etag = Option.getOrUndefined(
+          Headers.get(response.headers, "etag"),
+        );
 
-      const etag = Option.getOrUndefined(Headers.get(response.headers, "etag"));
+        const revalidate = (ifNoneMatch: string) =>
+          client
+            .execute(
+              HttpClientRequest.get(`/api/users/${TEST_ADDRESS}`).pipe(
+                HttpClientRequest.setHeaders({
+                  origin: "http://localhost:3000",
+                  "if-none-match": ifNoneMatch,
+                }),
+              ),
+            )
+            .pipe(
+              Effect.flatMap((revalidated) =>
+                Effect.map(revalidated.text, (text) => ({
+                  status: revalidated.status,
+                  body: text,
+                  etag: Option.getOrUndefined(
+                    Headers.get(revalidated.headers, "etag"),
+                  ),
+                  cacheControl: Option.getOrUndefined(
+                    Headers.get(revalidated.headers, "cache-control"),
+                  ),
+                  allowOrigin: Option.getOrUndefined(
+                    Headers.get(
+                      revalidated.headers,
+                      "access-control-allow-origin",
+                    ),
+                  ),
+                })),
+              ),
+            );
 
-      expect({
-        status: response.status,
-        cacheControl,
-        etag,
-      }).toStrictEqual({
-        status: 200,
-        cacheControl: "public, max-age=60",
-        etag: '"arweave-profile-tx"',
-      });
-    }).pipe(Effect.provide(makeTestServerLayer())),
+        const notModified = {
+          status: 304,
+          body: "",
+          etag,
+          cacheControl: "public, max-age=60",
+          allowOrigin: "http://localhost:3000",
+        };
+
+        expect({
+          status: response.status,
+          cacheControl: Option.getOrUndefined(
+            Headers.get(response.headers, "cache-control"),
+          ),
+          etag,
+          matching: yield* revalidate(etag ?? ""),
+          // Proxies that compress the response weaken its ETag.
+          weak: yield* revalidate(`"other", W/${etag ?? ""}`),
+          other: (yield* revalidate('"other"')).status,
+        }).toStrictEqual({
+          status: 200,
+          cacheControl: "public, max-age=60",
+          etag: expect.stringMatching(/^"[\w-]{43}"$/),
+          matching: notModified,
+          weak: notModified,
+          other: 200,
+        });
+      }).pipe(Effect.provide(makeTestServerLayer())),
   );
 });

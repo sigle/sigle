@@ -12,6 +12,7 @@ import { HttpApiMiddleware } from "effect/http-api";
 import { RateLimiter } from "effect/persistence";
 import { CurrentUser } from "@/api/middleware/auth-user";
 import { InternalServerError, TooManyRequests } from "@/api/schemas";
+import { AppConfig, type AppConfigValues } from "@/config";
 
 export class RateLimitMiddleware extends HttpApiMiddleware.Service<RateLimitMiddleware>()(
   "sigle/RateLimitMiddleware",
@@ -21,8 +22,10 @@ export class RateLimitMiddleware extends HttpApiMiddleware.Service<RateLimitMidd
 export type RateLimitPolicyName =
   | "default"
   | "draftImageUpload"
+  | "draftPublish"
   | "profileImageUpload"
-  | "profileMetadataUpload";
+  | "profileMetadataUpload"
+  | "signIn";
 
 export interface RateLimitLimit {
   readonly points: number;
@@ -40,6 +43,12 @@ export const RATE_LIMITS: Record<RateLimitPolicyName, RateLimitLimit> = {
     points: 4,
     windowMs: 60_000,
   },
+  // Matches the legacy server limit for post metadata uploads, each publish
+  // pays for an Arweave upload
+  draftPublish: {
+    points: 4,
+    windowMs: 60_000,
+  },
   // A post can hold several images, so uploads allow bursts of a few at once
   draftImageUpload: {
     points: 20,
@@ -48,6 +57,12 @@ export const RATE_LIMITS: Record<RateLimitPolicyName, RateLimitLimit> = {
   // Matches the legacy server limit for profile avatar and cover uploads
   profileImageUpload: {
     points: 4,
+    windowMs: 60_000,
+  },
+  // Per IP on the Sign in with Stacks routes, a sign-in needs one nonce and
+  // one verification
+  signIn: {
+    points: 10,
     windowMs: 60_000,
   },
 };
@@ -61,11 +76,22 @@ export class RateLimitPolicy extends Context.Service<
   RateLimitPolicyName
 >()("sigle/RateLimitPolicy") {}
 
-const clientKey = (request: HttpServerRequest.HttpServerRequest): string => {
-  const address = request.remoteAddress;
+/**
+ * Rate limit key of an unauthenticated client: its IP from `CLIENT_IP_HEADER`
+ * when the proxy in front of the API sets one, else the socket address.
+ */
+export const clientKey = (
+  request: HttpServerRequest.HttpServerRequest,
+  config: AppConfigValues,
+): string => {
+  const forwarded = Option.flatMap(config.CLIENT_IP_HEADER, (name) =>
+    Option.fromNullishOr(request.headers[name]?.trim() || undefined),
+  );
 
-  const ip =
-    address !== undefined && Option.isSome(address) ? address.value : "unknown";
+  const ip = Option.getOrElse(
+    Option.orElse(forwarded, () => request.remoteAddress),
+    () => "unknown",
+  );
 
   return `ip:${ip}`;
 };
@@ -108,14 +134,77 @@ const setRetryAfterHeader = (retryAfter: Duration.Duration) =>
     ),
   });
 
+/**
+ * Consumes a point of `policy` for `key`, setting the rate limit headers of the
+ * current response. Fails with a `TooManyRequests` once the limit is exceeded.
+ */
+export const consumeRateLimit = (
+  limiter: RateLimiter.RateLimiter,
+  key: string,
+  policy: RateLimitPolicyName,
+): Effect.Effect<
+  void,
+  TooManyRequests | InternalServerError,
+  HttpServerRequest.HttpServerRequest
+> =>
+  Effect.gen(function* () {
+    const { points, windowMs } = RATE_LIMITS[policy];
+
+    // The store measures `resetAfter` from the time it reads when the
+    // operation starts. Reading the clock after the store returns would push
+    // the reset time back by the store's latency.
+    const observedAt = yield* Clock.currentTimeMillis;
+
+    const result = yield* limiter
+      .consume({
+        algorithm: "fixed-window",
+        onExceeded: "fail",
+        key,
+        limit: points,
+        window: Duration.millis(windowMs),
+      })
+      .pipe(
+        Effect.tapError((error) =>
+          Predicate.isTagged(error.reason, "RateLimitExceeded")
+            ? setRateLimitHeaders(observedAt, {
+                limit: error.reason.limit,
+                remaining: error.reason.remaining,
+                resetAfter: error.reason.retryAfter,
+              }).pipe(
+                Effect.andThen(setRetryAfterHeader(error.reason.retryAfter)),
+              )
+            : Effect.logError("Rate limit store failure", {
+                cause: error.reason,
+                policy,
+              }),
+        ),
+        Effect.mapError((error) =>
+          Predicate.isTagged(error.reason, "RateLimitExceeded")
+            ? new TooManyRequests({
+                message: "Rate limit exceeded",
+                retryAfterMillis: Math.max(
+                  0,
+                  Math.ceil(Duration.toMillis(error.reason.retryAfter)),
+                ),
+              })
+            : new InternalServerError({
+                message: "Rate limit check failed.",
+              }),
+        ),
+      );
+
+    yield* setRateLimitHeaders(observedAt, result);
+  });
+
 export const RateLimitMiddlewareLayer: Layer.Layer<
   RateLimitMiddleware,
   never,
-  RateLimiter.RateLimiter
+  RateLimiter.RateLimiter | AppConfig
 > = Layer.effect(
   RateLimitMiddleware,
   Effect.gen(function* () {
     const limiter = yield* RateLimiter.RateLimiter;
+    const config = yield* AppConfig;
 
     return (httpEffect, { endpoint }) =>
       Effect.gen(function* () {
@@ -130,56 +219,13 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
             Context.getOption(endpoint.annotations, RateLimitPolicy),
           ) ?? "default";
 
-        const { points, windowMs } = RATE_LIMITS[policy];
-
-        // The store measures `resetAfter` from the time it reads when the
-        // operation starts. Reading the clock after the store returns would
-        // push the reset time back by the store's latency.
-        const observedAt = yield* Clock.currentTimeMillis;
-
-        const result = yield* limiter
-          .consume({
-            algorithm: "fixed-window",
-            onExceeded: "fail",
-            key: `${endpoint.method}:${endpoint.path}:${
-              user === undefined ? clientKey(request) : `user:${user.id}`
-            }`,
-            limit: points,
-            window: Duration.millis(windowMs),
-          })
-          .pipe(
-            Effect.tapError((error) =>
-              Predicate.isTagged(error.reason, "RateLimitExceeded")
-                ? setRateLimitHeaders(observedAt, {
-                    limit: error.reason.limit,
-                    remaining: error.reason.remaining,
-                    resetAfter: error.reason.retryAfter,
-                  }).pipe(
-                    Effect.andThen(
-                      setRetryAfterHeader(error.reason.retryAfter),
-                    ),
-                  )
-                : Effect.logError("Rate limit store failure", {
-                    cause: error.reason,
-                    policy,
-                  }),
-            ),
-            Effect.mapError((error) =>
-              Predicate.isTagged(error.reason, "RateLimitExceeded")
-                ? new TooManyRequests({
-                    message: "Rate limit exceeded",
-                    retryAfterMillis: Math.max(
-                      0,
-                      Math.ceil(Duration.toMillis(error.reason.retryAfter)),
-                    ),
-                  })
-                : new InternalServerError({
-                    message: "Rate limit check failed.",
-                  }),
-            ),
-          );
-
-        yield* setRateLimitHeaders(observedAt, result);
+        yield* consumeRateLimit(
+          limiter,
+          `${endpoint.method}:${endpoint.path}:${
+            user === undefined ? clientKey(request, config) : `user:${user.id}`
+          }`,
+          policy,
+        );
 
         return yield* httpEffect;
       });

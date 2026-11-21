@@ -621,6 +621,42 @@ describe("profile", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
+  it.live(
+    "PUT /api/me/profile uploads concurrent identical requests once",
+    () => {
+      const uploads: Array<ArweaveUploadOptions> = [];
+
+      return Effect.gen(function* () {
+        const { client, metadata } = yield* createSignedProfileClient();
+
+        const responses = yield* Effect.all(
+          [
+            updateProfileRequest(client, metadata),
+            updateProfileRequest(client, metadata),
+          ],
+          { concurrency: "unbounded" },
+        );
+
+        expect({
+          statuses: responses.map((response) => response.status).sort(),
+          uploads: uploads.length,
+        }).toStrictEqual({ statuses: [200, 409], uploads: 1 });
+      }).pipe(
+        Effect.provide(
+          makeTestServerLayer({}, [], {
+            // A slow upload, so both requests check the signature before
+            // the first one stores the profile.
+            arweave: ArweaveService.layerTest(uploads, () =>
+              Effect.succeed(ARWEAVE_TEST_UPLOAD).pipe(
+                Effect.delay("50 millis"),
+              ),
+            ),
+          }),
+        ),
+      );
+    },
+  );
+
   it.effect("profile uploads return 403 for non-whitelisted users", () => {
     const arweaveUploads: Array<ArweaveUploadOptions> = [];
     const recorder = makeStorageTestRecorder();
