@@ -125,7 +125,7 @@ export const TelemetryLayer: Layer.Layer<never, never, AppConfig> =
         return Layer.mergeAll(
           Sentry.effectLayer({
             dsn: config.SENTRY_DSN.value,
-            environment: config.SIGLE_ENV,
+            environment: config.STACKS_ENV,
             // Sentry v11 collects cookies, user IPs, request/response bodies,
             // and database queries by default. Keep the v10 defaults so session
             // cookies and request payloads stay out of Sentry.

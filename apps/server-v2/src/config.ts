@@ -47,7 +47,6 @@ export const appConfig = Config.all({
       StacksEnv.pipe(Config.map((network) => HIRO_API_URLS[network])),
     ),
   ),
-  SIGLE_ENV: Config.Literals(["production", "staging", "local"], "SIGLE_ENV"),
   PORT: Config.Port("PORT").pipe(Config.withDefault(3001)),
   AUTH_SECRET: Config.NonEmptyString("AUTH_SECRET").pipe(
     Config.map(Redacted.make),
@@ -109,7 +108,6 @@ export const defaultTestConfig: AppConfigValues = {
   NODE_ENV: "test",
   STACKS_ENV: "testnet",
   STACKS_API_URL: "https://api.testnet.hiro.so",
-  SIGLE_ENV: "local",
   PORT: 3001,
   AUTH_SECRET: Redacted.make("sigle-test-auth-secret-change-me"),
   APP_ID: "sigle-test",

@@ -11,7 +11,6 @@ describe("config service", () => {
         NODE_ENV: config.NODE_ENV,
         STACKS_ENV: config.STACKS_ENV,
         STACKS_API_URL: config.STACKS_API_URL,
-        SIGLE_ENV: config.SIGLE_ENV,
         PORT: config.PORT,
         APP_ID: config.APP_ID,
         APP_URL: config.APP_URL,
@@ -20,7 +19,6 @@ describe("config service", () => {
         NODE_ENV: "development",
         STACKS_ENV: "testnet",
         STACKS_API_URL: "https://api.testnet.hiro.so",
-        SIGLE_ENV: "local",
         PORT: 3001,
         APP_ID: "sigle-test",
         APP_URL: "http://localhost:3000",
@@ -55,7 +53,6 @@ describe("config service", () => {
           ConfigProvider.fromUnknown({
             AUTH_SECRET: "sigle-test-auth-secret",
             STACKS_ENV: "testnet",
-            SIGLE_ENV: "local",
             APP_ID: "sigle-test",
             APP_URL: "http://localhost:3000",
             API_URL: "http://localhost:3001",

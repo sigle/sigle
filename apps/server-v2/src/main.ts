@@ -90,7 +90,7 @@ export const CorsLayer = Layer.unwrap(
 const ServedApiLayer = Layer.unwrap(
   Effect.map(AppConfig, (config) => {
     const api = SigleApi.annotate(OpenApi.Servers, [
-      { url: config.API_URL, description: config.SIGLE_ENV },
+      { url: config.API_URL, description: config.STACKS_ENV },
     ]);
 
     return Layer.mergeAll(
@@ -127,7 +127,6 @@ export const MainLayer = HttpServerLayer.pipe(
 export const startupProgram = Effect.gen(function* () {
   const config = yield* AppConfig;
   yield* Effect.logInfo("Sigle server-v2 initialized", {
-    env: config.SIGLE_ENV,
     stacksEnv: config.STACKS_ENV,
     port: config.PORT,
   });
