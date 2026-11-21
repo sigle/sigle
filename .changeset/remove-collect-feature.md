@@ -1,7 +1,6 @@
 ---
 "@sigle/docs": patch
 "@sigle/sdk": patch
-"@sigle/server": patch
 "@sigle/sigle": patch
 ---
 

@@ -176,7 +176,7 @@ export default defineConfig({
     },
     overrides: [
       {
-        files: ["apps/server-v2/**"],
+        files: ["apps/server/**"],
         plugins: ["effecttsgo"],
         rules: {
           ...recommended.rules,

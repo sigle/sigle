@@ -3,79 +3,64 @@ FROM node:${NODE_VERSION}-alpine AS base
 
 WORKDIR /app
 
-# Set production environment
 ENV NODE_ENV="production"
-ENV APP_NAME="server"
 
-# Install pnpm
+# Install pnpm and turbo at the versions pinned in the root package.json
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME/bin:$PATH"
-RUN apk add --no-cache git
 COPY --link ./package.json ./
 RUN PNPM_VERSION=$(grep -o '"packageManager": "[^"]*' package.json | cut -d'"' -f4 | cut -d'@' -f2) && \
     npm install -g pnpm@${PNPM_VERSION}
 RUN TURBO_VERSION=$(grep -o '"turbo": "[^"]*' package.json | cut -d'"' -f4) && \
     pnpm install turbo@${TURBO_VERSION} --global
-RUN pnpm install @dotenvx/dotenvx@^2 --global
 
-# --- Turbo stage ---
+# --- Prune stage: keep only the server and the workspace packages it uses ---
 
-FROM base AS builder
-WORKDIR /app
+FROM base AS pruner
 COPY . .
-RUN turbo prune @sigle/$APP_NAME --docker
+RUN turbo prune @sigle/server --docker
 
 # --- Build stage ---
 
-FROM base AS installer
-WORKDIR /app
+FROM base AS builder
 
-RUN apk update && \
-    apk add --no-cache libc6-compat python3 g++ make
-
-# First install the dependencies (as they change less often)
-COPY .gitignore .gitignore
-COPY --from=builder /app/out/json/ .
-COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
+# Install the dependencies first, they change less often than the source
+COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+# The lockfile records the pnpmfile checksum, a frozen install needs it
+COPY .pnpmfile.mjs .pnpmfile.mjs
+# `prepare` sets up local git hooks and tooling
 RUN npm pkg delete scripts.prepare
-RUN pnpm install --frozen-lockfile --prod=false
+RUN pnpm install --frozen-lockfile --prod=false --filter @sigle/server...
 
-COPY --from=builder /app/out/full/ .
-# Copy contracts source to avoid cyclic dependency
-COPY --from=builder /app/apps/contracts-next ./apps/contracts-next
-COPY turbo.json turbo.json
-
-WORKDIR /app/apps/$APP_NAME
-
-# Build application
-RUN turbo run db:generate --filter=@sigle/$APP_NAME
-RUN turbo run build --filter=@sigle/$APP_NAME...
+COPY --from=pruner /app/out/full/ .
+RUN turbo run build --filter=@sigle/server...
 
 # --- Runner stage ---
 
 FROM base AS runner
-WORKDIR /app
 
-# Don't run production as root
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nitro
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 server
 
-# Copy built application
-COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/.output ./.output
-COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/package.json ./package.json
-COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/scripts ./scripts
-COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/prisma.config.ts ./prisma.config.ts
-COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/prisma ./prisma
-# Copy the generated prisma client as it contains the required Query engine
-COPY --from=installer --chown=nitro:nodejs /app/apps/$APP_NAME/src/__generated__/prisma ./apps/$APP_NAME/src/__generated__/prisma
-COPY --from=builder --chown=nitro:nodejs /app/apps/$APP_NAME/.env.testnet.local ./.env.testnet.local
-RUN node scripts/prod-deps.cjs
+# Production dependencies only. The SDK is bundled into dist/main.mjs.
+COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY .pnpmfile.mjs .pnpmfile.mjs
 RUN npm pkg delete scripts.prepare
-RUN pnpm install --dangerously-allow-all-builds
+RUN pnpm install --frozen-lockfile --prod --filter @sigle/server
 
-USER nitro
+# The server applies the Drizzle migrations from ./drizzle on startup
+COPY --from=builder --chown=server:nodejs /app/apps/server/dist ./apps/server/dist
+COPY --from=pruner --chown=server:nodejs /app/out/full/apps/server/drizzle ./apps/server/drizzle
+# Copied by name: a glob would also pick up local files such as .env.development.local
+COPY --chown=server:nodejs apps/server/.env.testnet ./apps/server/.env.testnet
 
-# Start the server by default, this can be overwritten at runtime
-EXPOSE 3000
-CMD dotenvx run -- node .output/server/index.mjs
+USER server
+WORKDIR /app/apps/server
+
+# Configuration is read from the environment, see src/config.ts. The committed
+# .env.<railway environment> file adds the non-secret values; variables already
+# set on Railway take precedence over it.
+EXPOSE 3001
+CMD ["sh", "-c", "exec node --env-file-if-exists=.env.${RAILWAY_ENVIRONMENT_NAME} dist/main.mjs"]

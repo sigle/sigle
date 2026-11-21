@@ -2,7 +2,7 @@
 
 ## Overview
 
-Sigle is a decentralized Web3 blogging platform built as a pnpm monorepo with Next.js 16, Nitro/Fastify, and Stacks blockchain integration. The repository uses Turbo for task orchestration and requires Node.js 26+ with pnpm 12.
+Sigle is a decentralized Web3 blogging platform built as a pnpm monorepo with Next.js 16, an Effect API server, and Stacks blockchain integration. The repository uses Turbo for task orchestration and requires Node.js 26+ with pnpm 12.
 
 ## Architecture
 
@@ -10,7 +10,7 @@ Sigle is a decentralized Web3 blogging platform built as a pnpm monorepo with Ne
 sigle/
 ├── apps/
 │   ├── sigle/          - Next.js frontend (port 3000)
-│   ├── server/         - Nitro API backend (port 3001)
+│   ├── server/         - Effect API backend (port 3001)
 │   └── docs/           - Nextra documentation
 ├── packages/
 │   └── sdk/            - Shared TypeScript SDK
@@ -45,23 +45,17 @@ pnpm repos:sync
 cd packages/sdk && pnpm test -- test-file.spec.ts
 ```
 
-### Docker Development
+### Server Development
 
 ```bash
-# Start backend & database with hot reload
-pnpm docker:dev
+# Start the API server with hot reload, on PGlite by default
+cd apps/server && pnpm dev
 
-# Start full stack (server + sigle)
-pnpm docker:dev:full
+# Create a Drizzle migration after changing src/db/schema.ts
+cd apps/server && pnpm drizzle-kit generate --name <migration-name>
 
-# Reset database (one-off server container)
-pnpm db:reset
-
-# Create Prisma migration (one-off server container)
-pnpm db:migrate --name <migration-name>
-
-# Open Prisma Studio GUI
-pnpm db:studio
+# Start PostgreSQL in Docker
+pnpm db:up
 ```
 
 ## Vendored Repositories

@@ -1,0 +1,101 @@
+import { describe, expect, it } from "@effect/vitest";
+import { ConfigProvider, Effect, Option, Redacted } from "effect";
+import { AppConfig } from "@/config";
+
+describe("config service", () => {
+  it.effect("loads valid configuration and redacts secrets", () =>
+    Effect.gen(function* () {
+      const config = yield* AppConfig;
+
+      expect({
+        NODE_ENV: config.NODE_ENV,
+        STACKS_ENV: config.STACKS_ENV,
+        STACKS_API_URL: config.STACKS_API_URL,
+        PORT: config.PORT,
+        APP_ID: config.APP_ID,
+        APP_URL: config.APP_URL,
+        API_URL: config.API_URL,
+      }).toStrictEqual({
+        NODE_ENV: "development",
+        STACKS_ENV: "testnet",
+        STACKS_API_URL: "https://api.testnet.hiro.so",
+        PORT: 3001,
+        APP_ID: "sigle-test",
+        APP_URL: "http://localhost:3000",
+        API_URL: "http://localhost:3001",
+      });
+
+      // Secrets must be wrapped in Redacted and hide values when stringified
+      const posthogKey = Option.getOrThrow(config.POSTHOG_API_KEY);
+      expect({
+        redactedKey: String(posthogKey),
+        revealedKey: Redacted.value(posthogKey),
+        redactedArweaveKey: String(config.ARWEAVE_PRIVATE_KEY),
+        arweaveKey: Redacted.value(config.ARWEAVE_PRIVATE_KEY),
+        redactedR2Key: String(config.R2_SECRET_ACCESS_KEY),
+        r2Key: Redacted.value(config.R2_SECRET_ACCESS_KEY),
+        sentry: Option.isNone(config.SENTRY_DSN),
+        posthogHost: Option.isNone(config.POSTHOG_API_HOST),
+      }).toStrictEqual({
+        redactedKey: "<redacted>",
+        revealedKey: "phc_secret_key",
+        redactedArweaveKey: "<redacted>",
+        arweaveKey: "arweave-secret-key",
+        redactedR2Key: "<redacted>",
+        r2Key: "r2-secret-key",
+        sentry: true,
+        posthogHost: true,
+      });
+    }).pipe(
+      Effect.provide(AppConfig.layer),
+      Effect.provide(
+        ConfigProvider.layer(
+          ConfigProvider.fromUnknown({
+            AUTH_SECRET: "sigle-test-auth-secret",
+            STACKS_ENV: "testnet",
+            APP_ID: "sigle-test",
+            APP_URL: "http://localhost:3000",
+            API_URL: "http://localhost:3001",
+            ARWEAVE_PRIVATE_KEY: "arweave-secret-key",
+            R2_ENDPOINT: "https://r2.test",
+            R2_ACCESS_KEY_ID: "r2-access-key-id",
+            R2_SECRET_ACCESS_KEY: "r2-secret-key",
+            R2_BUCKET: "sigle-test",
+            R2_PUBLIC_URL: "https://cdn.test",
+            DATABASE_KIND: "pglite",
+            DATABASE_URL: "memory://",
+            POSTHOG_API_KEY: "phc_secret_key",
+            POSTHOG_API_HOST: "",
+          }),
+        ),
+      ),
+    ),
+  );
+
+  it.effect("fails with ConfigError when required variables are missing", () =>
+    Effect.gen(function* () {
+      const exit = yield* Effect.exit(
+        AppConfig.pipe(
+          Effect.provide(AppConfig.layer),
+          Effect.provide(ConfigProvider.layer(ConfigProvider.fromUnknown({}))),
+        ),
+      );
+
+      expect(exit._tag).toBe("Failure");
+    }),
+  );
+
+  it.effect("provides test layer with overrides", () =>
+    Effect.gen(function* () {
+      const config = yield* AppConfig;
+      expect(config.APP_ID).toBe("custom-app-id");
+      expect(config.NODE_ENV).toBe("test");
+    }).pipe(
+      Effect.provide(
+        AppConfig.layerTest({
+          APP_ID: "custom-app-id",
+        }),
+      ),
+    ),
+  );
+});
