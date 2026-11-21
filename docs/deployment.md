@@ -2,16 +2,35 @@
 
 Every app is hosted on [Railway](https://railway.com/), in the `sigle-v2` project. Its `testnet` environment runs:
 
-| Service       | App           | Domain                        |
-| ------------- | ------------- | ----------------------------- |
-| `web`         | `apps/sigle`  | `testnet.sigle.io`            |
-| `server`      | `apps/server` | `testnet-api.sigle.io`        |
-| `docs`        | `apps/docs`   | `docs-testnet.up.railway.app` |
-| `postgres-db` | PostgreSQL    | private network only          |
+| Service  | App           | Domain                        |
+| -------- | ------------- | ----------------------------- |
+| `web`    | `apps/sigle`  | `testnet.sigle.io`            |
+| `server` | `apps/server` | `testnet-api.sigle.io`        |
+| `docs`   | `apps/docs`   | `docs-testnet.up.railway.app` |
 
 ## Deploys
 
 Railway deploys a service on every push to `main` that changes one of its watched paths, once the GitHub checks of the commit pass. `web` and `server` are built from their `Dockerfile`, `docs` with Railpack.
+
+`server` has a volume, so Railway stops the running deployment before starting the new one: the API is down for a few seconds on each deploy, and the service runs a single replica.
+
+## Database and backups
+
+`server` stores its data in a SQLite database on its `server-volume` volume, at `/data/sigle.db`. [Litestream](https://litestream.io) runs beside the server (`apps/server/start.sh`) and ships the database to its own R2 bucket: changes every minute, a full snapshot every day, and the last changes when the server stops (on a deploy or when it sleeps). Snapshots are kept 30 days. Losing the volume loses about the last minute of writes. Litestream logs each failed upload as an error.
+
+Backups are off while `LITESTREAM_BUCKET` is unset. The backup token (`LITESTREAM_ACCESS_KEY_ID`, `LITESTREAM_SECRET_ACCESS_KEY`) is an R2 API token with **Object Read & Write** on that bucket only.
+
+When the volume has no database, such as a new or wiped volume, `start.sh` restores the latest backup before starting the server. To roll back to the latest backup, wipe `server-volume` from its settings in the Railway dashboard; Railway redeploys the service, which restores it.
+
+To read the database at an earlier point, restore a copy with the backup credentials, for example on your machine with `R2_ENDPOINT` and the `LITESTREAM_*` variables set:
+
+```sh
+litestream restore -config apps/server/litestream.yml -timestamp 2026-11-02T10:00:00Z -o sigle.db "$DATABASE_PATH"
+```
+
+Set `DATABASE_PATH` to any path, it only picks the database entry in the config. Restore points begin at the oldest daily snapshot still kept.
+
+`server` sleeps after 5 to 10 minutes without outbound traffic. Its background jobs (profile indexing, OpenTimestamps upgrades, retries) wait until the next request wakes it.
 
 ## Railway configuration
 
@@ -35,7 +54,7 @@ Railway does not read this file when deploying, so merging a change does nothing
 
   `.railway/railway.ts` owns every variable of the services it declares, so a new secret must also be listed there with `preserve()`, or the next apply deletes it.
 
-- **References** to other services, such as the server's `DATABASE_URL`, are set in `.railway/railway.ts`.
+- **References** to other services are set in `.railway/railway.ts`.
 
 ## Tracing
 

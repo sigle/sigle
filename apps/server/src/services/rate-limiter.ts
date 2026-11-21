@@ -18,7 +18,8 @@ const adaptiveUnsupported = () =>
  *
  * Fixed-window counters and token buckets are stored in the shared
  * `key`/`points`/`expire` row and updated inside a transaction so concurrent
- * requests cannot corrupt the state. Adaptive rate limiting is not implemented.
+ * requests cannot corrupt the state: SQLite transactions start with
+ * `BEGIN IMMEDIATE`, which takes the write lock before the row is read. Adaptive rate limiting is not implemented.
  */
 export const makeDrizzleRateLimiterStore = Effect.gen(function* () {
   const db = yield* Database;
@@ -56,8 +57,7 @@ export const makeDrizzleRateLimiterStore = Effect.gen(function* () {
               const [existing] = yield* tx
                 .select()
                 .from(rateLimiterFlexible)
-                .where(eq(rateLimiterFlexible.key, options.key))
-                .for("update");
+                .where(eq(rateLimiterFlexible.key, options.key));
 
               if (
                 existing !== undefined &&
@@ -121,8 +121,7 @@ export const makeDrizzleRateLimiterStore = Effect.gen(function* () {
               const [existing] = yield* tx
                 .select()
                 .from(rateLimiterFlexible)
-                .where(eq(rateLimiterFlexible.key, key))
-                .for("update");
+                .where(eq(rateLimiterFlexible.key, key));
 
               let tokens = options.limit;
               let lastRefill = now;

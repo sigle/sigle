@@ -1,1 +1,0 @@
-ALTER TABLE "profile" ADD COLUMN "arweave_block_height" integer;

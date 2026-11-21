@@ -52,7 +52,7 @@ To start the API server (http://localhost:3001) in watch mode:
 cd apps/server && pnpm dev
 ```
 
-It uses an embedded PGlite database by default and applies the migrations on startup. To use PostgreSQL instead, start it in Docker with `pnpm db:up` and set `DATABASE_KIND="postgres"` and `DATABASE_URL` in `apps/server/.env.development.local`.
+It stores its data in the SQLite database `apps/server/.data/sigle.db` and applies the migrations on startup. Delete the file to start over.
 
 To start the website (http://localhost:3000):
 
