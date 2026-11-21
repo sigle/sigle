@@ -1,5 +1,5 @@
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
-import { and, eq, gte, inArray, isNotNull, ne } from "drizzle-orm";
+import { and, eq, gt, gte, inArray, isNotNull, ne } from "drizzle-orm";
 import { Cache, Context, Data, Effect, Exit, Layer, Schema } from "effect";
 import {
   FetchHttpClient,
@@ -115,7 +115,8 @@ export const findProfileUpdateUsage = (
       .where(
         and(
           eq(profileUpdate.userId, userId),
-          gte(
+          // An update stops counting at its reset time.
+          gt(
             profileUpdate.createdAt,
             new Date(now.getTime() - DAILY_LIMIT_WINDOW_MILLIS),
           ),

@@ -100,8 +100,10 @@ export const updateProfile = (payload: typeof UpdateProfilePayload.Type) =>
       });
     }
 
-    // Like the publish limit, concurrent updates can each pass the check, by
-    // as many as the per-minute limit allows.
+    // A soft limit, like the publish limit: an update only counts once it is
+    // stored, so updates whose Arweave upload is still running are not
+    // counted. The per-minute limit and the upload timeout keep the overshoot
+    // to a few updates.
     const checkedAt = new Date();
 
     const usage = yield* findProfileUpdateUsage(db, {
