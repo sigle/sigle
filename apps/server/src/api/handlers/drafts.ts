@@ -45,13 +45,8 @@ import {
   draftImageKey,
   draftImageSettings,
 } from "@/lib/draft-images";
-import { PlanService } from "@/services/plan";
+import { findPublishUsage, PlanService, PUBLISH_LIMITS } from "@/services/plan";
 import { PostHogService } from "@/services/posthog";
-import {
-  findPublishUsage,
-  lockUserPublishes,
-  PUBLISH_LIMITS,
-} from "@/services/publish-limit";
 
 const toDraft = (row: typeof draft.$inferSelect) => ({
   id: row.id,
@@ -370,80 +365,12 @@ export const publishDraft = (
 
     const limit = PUBLISH_LIMITS[plan];
     const now = new Date();
+    const usage = yield* findPublishUsage(db, user.id, now);
 
-    // The limit is checked in the same transaction as the takeover, under a
-    // lock on the user, so concurrent publishes cannot both take the last
-    // slot. Nothing in it waits on the network.
-    const accepted = yield* db
-      .transaction((tx) =>
-        Effect.gen(function* () {
-          yield* lockUserPublishes(tx, user.id);
-
-          const usage = yield* findPublishUsage(tx, {
-            userId: user.id,
-            now,
-            excludeDraftId: draftId,
-          });
-
-          if (usage.used >= limit) {
-            return { limited: true as const, usage };
-          }
-
-          // Take ownership of the draft row: `publishSignature` identifies the
-          // signed payload being published, and the Arweave checkpoint/upload
-          // claim only survive while they belong to that payload. Workers whose
-          // job signature no longer matches the draft no-op, so the newest
-          // request wins without any queue reconciliation, which also recovers
-          // a draft stuck in flight. The CASE reads the current row, so a
-          // checkpoint or in-flight upload claim from the same signature is
-          // never clobbered. Another signature cannot take over while a worker
-          // holds the upload claim: the Arweave upload in flight would be paid
-          // for and discarded. The claim is checked in the same statement as
-          // the write.
-          const [acceptedDraft] = yield* tx
-            .update(draft)
-            .set({
-              txStatus: "PENDING",
-              publishSignature: signature,
-              arweaveTxId: sql`CASE
-          WHEN ${draft.publishSignature} = ${signature} THEN ${draft.arweaveTxId}
-          ELSE NULL
-        END`,
-              uploadClaimedAt: sql`CASE
-          WHEN ${draft.publishSignature} = ${signature} THEN ${draft.uploadClaimedAt}
-          ELSE NULL
-        END`,
-              updatedAt: now,
-            })
-            .where(
-              and(
-                eq(draft.id, draftId),
-                eq(draft.userId, user.id),
-                or(
-                  eq(draft.publishSignature, signature),
-                  isNull(draft.uploadClaimedAt),
-                  lt(
-                    draft.uploadClaimedAt,
-                    new Date(
-                      now.getTime() - PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS,
-                    ),
-                  ),
-                ),
-              ),
-            )
-            .returning({ id: draft.id })
-            .pipe(Effect.orDie);
-
-          return { limited: false as const, acceptedDraft };
-        }),
-      )
-      // Like the queries, a failed transaction is a defect.
-      .pipe(Effect.catchTag("SqlError", Effect.die));
-
-    if (accepted.limited) {
+    if (usage.used >= limit) {
       const retryAfterMillis = Math.max(
         0,
-        (accepted.usage.resetsAt?.getTime() ?? now.getTime()) - now.getTime(),
+        (usage.resetsAt?.getTime() ?? now.getTime()) - now.getTime(),
       );
 
       yield* setRetryAfterHeader(Duration.millis(retryAfterMillis));
@@ -457,7 +384,48 @@ export const publishDraft = (
       });
     }
 
-    const { acceptedDraft } = accepted;
+    // Take ownership of the draft row: `publishSignature` identifies the signed
+    // payload being published, and the Arweave checkpoint/upload claim only
+    // survive while they belong to that payload. Workers whose job signature no
+    // longer matches the draft no-op, so the newest request wins without any
+    // queue reconciliation, which also recovers a draft stuck in flight. The
+    // CASE reads the current row, so a checkpoint or in-flight upload claim
+    // from the same signature is never clobbered. Another signature cannot
+    // take over while a worker holds the upload claim: the Arweave upload in
+    // flight would be paid for and discarded. The claim is checked in the
+    // same statement as the write.
+
+    const [acceptedDraft] = yield* db
+      .update(draft)
+      .set({
+        txStatus: "PENDING",
+        publishSignature: signature,
+        arweaveTxId: sql`CASE
+          WHEN ${draft.publishSignature} = ${signature} THEN ${draft.arweaveTxId}
+          ELSE NULL
+        END`,
+        uploadClaimedAt: sql`CASE
+          WHEN ${draft.publishSignature} = ${signature} THEN ${draft.uploadClaimedAt}
+          ELSE NULL
+        END`,
+        updatedAt: now,
+      })
+      .where(
+        and(
+          eq(draft.id, draftId),
+          eq(draft.userId, user.id),
+          or(
+            eq(draft.publishSignature, signature),
+            isNull(draft.uploadClaimedAt),
+            lt(
+              draft.uploadClaimedAt,
+              new Date(now.getTime() - PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS),
+            ),
+          ),
+        ),
+      )
+      .returning({ id: draft.id })
+      .pipe(Effect.orDie);
 
     if (!acceptedDraft) {
       const [currentDraft] = yield* db

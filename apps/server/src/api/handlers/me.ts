@@ -3,8 +3,7 @@ import { HttpApiBuilder } from "effect/http-api";
 import { SigleApi } from "@/api";
 import { CurrentUser } from "@/api/middleware/auth-user";
 import { Database } from "@/db";
-import { PlanService } from "@/services/plan";
-import { findPublishUsage, PUBLISH_LIMITS } from "@/services/publish-limit";
+import { findPublishUsage, PlanService, PUBLISH_LIMITS } from "@/services/plan";
 
 export const getMe = Effect.gen(function* () {
   const user = yield* CurrentUser;
@@ -25,10 +24,7 @@ export const getMe = Effect.gen(function* () {
       ),
     );
 
-  const usage = yield* findPublishUsage(db, {
-    userId: user.id,
-    now: new Date(),
-  });
+  const usage = yield* findPublishUsage(db, user.id, new Date());
 
   return {
     id: user.id,

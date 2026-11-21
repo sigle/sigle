@@ -30,7 +30,7 @@ import {
 } from "@/api/schemas";
 import { DRAFT_IMAGE_MAX_MIB } from "@/lib/draft-images";
 import { PostMetadata } from "@/lib/metadata";
-import { PUBLISH_LIMITS } from "@/services/publish-limit";
+import { PUBLISH_LIMITS } from "@/services/plan";
 
 export const DRAFT_LIST_DEFAULT_LIMIT = 20;
 
@@ -312,7 +312,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       .annotate(OpenApi.Summary, "Publish a draft")
       .annotate(
         OpenApi.Description,
-        `Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being uploaded to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, ${PUBLISH_LIMITS.free} posts on Free and ${PUBLISH_LIMITS.pro} on Pro, counting the publishes in flight.`,
+        `Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being uploaded to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, ${PUBLISH_LIMITS.free} posts on Free and ${PUBLISH_LIMITS.pro} on Pro.`,
       )
       .annotate(RateLimitPolicy, "draftPublish"),
     HttpApiEndpoint.get("getPublishStatus", "/:draftId/publish", {

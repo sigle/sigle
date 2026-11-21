@@ -1097,31 +1097,22 @@ describe("drafts", () => {
           address: ownerWallet.address,
         });
 
-        // Counted: two posts of the last 24 hours and a publish in flight.
-        yield* createTestPost({ userId, createdAt: hoursAgo(1) });
-        yield* createTestPost({ userId, createdAt: hoursAgo(2) });
+        // Counted: three posts published from a draft in the last 24 hours.
+        yield* Effect.forEach([1, 2, 3], (hours) =>
+          createTestPost({
+            userId,
+            draftId: `published-${hours}`,
+            createdAt: hoursAgo(hours),
+          }),
+        );
 
-        const retrySigned = createSignedTestPostMetadata({
-          draftId: "draft-retry",
-          privateKey: ownerWallet.privateKey,
-        });
-
-        yield* createTestDraft({
-          id: "draft-retry",
+        // Not counted: an older post, and a recent post indexed from Arweave.
+        yield* createTestPost({
           userId,
-          txStatus: "PENDING",
-          publishSignature: retrySigned.signature,
+          draftId: "published-old",
+          createdAt: hoursAgo(25),
         });
-
-        // Not counted: an older post, a failed publish, and a publish stuck
-        // in flight for over a day.
-        yield* createTestPost({ userId, createdAt: hoursAgo(25) });
-        yield* createTestDraft({ userId, txStatus: "FAILED" });
-        yield* createTestDraft({
-          userId,
-          txStatus: "PENDING",
-          updatedAt: hoursAgo(25),
-        });
+        yield* createTestPost({ userId, draftId: null });
 
         yield* createTestDraft({ id: "draft-next", userId });
 
@@ -1134,18 +1125,12 @@ describe("drafts", () => {
 
         const limitedBody = yield* limited.json;
 
-        // Retrying the publish in flight replaces it, so it is not counted
-        // against itself.
-        const retry = yield* publishDraftRequest(client, "draft-retry", {
-          metadata: retrySigned,
-        });
-
         const me = yield* client
           .get("/api/me")
-          .pipe(Effect.flatMap((r) => r.json));
+          .pipe(Effect.flatMap((response) => response.json));
 
-        // The oldest counted post leaves the window in 22 hours.
-        const resetInMillis = 22 * 60 * 60 * 1000;
+        // The oldest counted post leaves the window in 21 hours.
+        const resetInMillis = 21 * 60 * 60 * 1000;
 
         expect({
           limited: limited.status,
@@ -1153,7 +1138,6 @@ describe("drafts", () => {
           retryAfter: Number(
             Option.getOrUndefined(Headers.get(limited.headers, "retry-after")),
           ),
-          retry: retry.status,
           me,
         }).toStrictEqual({
           limited: 429,
@@ -1170,7 +1154,6 @@ describe("drafts", () => {
               seconds <= resetInMillis / 1000 &&
               seconds > resetInMillis / 1000 - 60,
           ),
-          retry: 202,
           me: expect.objectContaining({
             plan: "free",
             publishLimit: {
@@ -1201,8 +1184,9 @@ describe("drafts", () => {
           address: ownerWallet.address,
         });
 
-        yield* Effect.forEach(Array.from({ length: 3 }), () =>
-          createTestPost({ userId }),
+        // Over the free limit.
+        yield* Effect.forEach([1, 2, 3], (index) =>
+          createTestPost({ userId, draftId: `published-${index}` }),
         );
 
         yield* createTestDraft({ id: "draft-pro", userId });
@@ -1216,14 +1200,13 @@ describe("drafts", () => {
 
         const me = yield* client
           .get("/api/me")
-          .pipe(Effect.flatMap((r) => r.json));
+          .pipe(Effect.flatMap((response) => response.json));
 
         expect({ publish: publish.status, me }).toStrictEqual({
           publish: 202,
           me: expect.objectContaining({
             plan: "pro",
-            // The three posts and the publish in flight, or its post.
-            publishLimit: expect.objectContaining({ limit: 20, used: 4 }),
+            publishLimit: expect.objectContaining({ limit: 20 }),
           }),
         });
       }).pipe(

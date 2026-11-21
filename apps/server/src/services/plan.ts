@@ -1,5 +1,5 @@
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
-import { eq } from "drizzle-orm";
+import { and, count, eq, gte, isNotNull, min } from "drizzle-orm";
 import { Cache, Context, Data, Effect, Exit, Layer, Schema } from "effect";
 import {
   FetchHttpClient,
@@ -8,10 +8,59 @@ import {
   HttpClientResponse,
 } from "effect/http";
 import { AppConfig } from "@/config";
-import { Database } from "@/db";
-import { walletAddress } from "@/db/schema";
+import { Database, type DatabaseClient } from "@/db";
+import { post, walletAddress } from "@/db/schema";
 
 export type UserPlan = "free" | "pro";
+
+/** Posts a user can publish per {@link PUBLISH_LIMIT_WINDOW_MILLIS}. */
+export const PUBLISH_LIMITS: Record<UserPlan, number> = {
+  free: 3,
+  pro: 20,
+};
+
+/** Rolling window of the publish limit. */
+export const PUBLISH_LIMIT_WINDOW_MILLIS = 24 * 60 * 60 * 1000;
+
+/**
+ * Posts a user published from a draft in the last 24 hours, and when the
+ * oldest of them leaves the window (null when none). Posts indexed from
+ * Arweave have no draft and do not count.
+ *
+ * Publishes still in flight are not counted, so parallel publishes can exceed
+ * the limit by a few posts until their jobs finish.
+ */
+export const findPublishUsage = (
+  db: DatabaseClient,
+  userId: string,
+  now: Date,
+) =>
+  Effect.gen(function* () {
+    const [usage] = yield* db
+      .select({ used: count(), oldest: min(post.createdAt) })
+      .from(post)
+      .where(
+        and(
+          eq(post.userId, userId),
+          isNotNull(post.draftId),
+          gte(
+            post.createdAt,
+            new Date(now.getTime() - PUBLISH_LIMIT_WINDOW_MILLIS),
+          ),
+        ),
+      )
+      .pipe(Effect.orDie);
+
+    const oldest = usage?.oldest ?? null;
+
+    return {
+      used: usage?.used ?? 0,
+      resetsAt:
+        oldest === null
+          ? null
+          : new Date(oldest.getTime() + PUBLISH_LIMIT_WINDOW_MILLIS),
+    };
+  });
 
 const STACKS_API_TIMEOUT = "10 seconds";
 
