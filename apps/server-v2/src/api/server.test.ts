@@ -157,12 +157,13 @@ describe("http server", () => {
           .filter((tag) => tag.description === undefined)
           .map((tag) => tag.name),
         paths: Object.keys(body.paths),
-        health: Object.keys(body.paths["/health"].get?.responses ?? {}),
-        me: Object.keys(body.paths["/api/me"].get?.responses ?? {}),
+        health: Object.keys(body.paths["/health"].get?.responses ?? {}).sort(),
+        me: Object.keys(body.paths["/api/me"].get?.responses ?? {}).sort(),
         uploadImage: Object.keys(profileImagePath?.put?.responses ?? {}),
         requestBody: Object.keys(
           profileImagePath?.put?.requestBody?.content ?? {},
         ),
+        createDraft: body.components.schemas["CreateDraftPayload"],
         postMetadata: body.components.schemas["PostMetadata"],
         profileMetadata: body.components.schemas["ProfileMetadata"],
       }).toStrictEqual({
@@ -180,8 +181,10 @@ describe("http server", () => {
           "/api/me/profile/images/{kind}",
           "/api/drafts/{draftId}/images",
         ]),
-        health: expect.arrayContaining(["200", "429"]),
-        me: expect.arrayContaining(["200", "401"]),
+        // Endpoints without inputs cannot fail schema validation, so they
+        // document no 400 response.
+        health: ["200", "429", "500"],
+        me: ["200", "401", "429", "500"],
         uploadImage: expect.arrayContaining([
           "200",
           "400",
@@ -195,6 +198,22 @@ describe("http server", () => {
           "image/png",
           "image/webp",
         ]),
+        createDraft: expect.objectContaining({
+          properties: expect.objectContaining({
+            coverImage: {
+              anyOf: [
+                { type: "string", format: "uri", maxLength: 2048 },
+                { type: "null" },
+              ],
+            },
+            canonicalUri: {
+              anyOf: [
+                { type: "string", format: "uri", maxLength: 200 },
+                { type: "null" },
+              ],
+            },
+          }),
+        }),
         // Signed metadata schemas are generated from the `@sigle/sdk` zod
         // schemas instead of being documented as opaque values.
         postMetadata: expect.objectContaining({
@@ -324,6 +343,14 @@ describe("http server", () => {
           Headers.get(response.headers, "access-control-allow-credentials"),
         ),
       ).toBe("true");
+      // Without them the app cannot read redirects, ETags or rate limits.
+      expect(
+        Option.getOrUndefined(
+          Headers.get(response.headers, "access-control-expose-headers"),
+        ),
+      ).toBe(
+        "location,etag,retry-after,x-ratelimit-limit,x-ratelimit-remaining,x-ratelimit-reset",
+      );
     }).pipe(Effect.provide(serverLayer())),
   );
 

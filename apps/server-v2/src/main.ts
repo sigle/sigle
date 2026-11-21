@@ -70,6 +70,16 @@ export const CorsLayer = Layer.unwrap(
     HttpRouter.cors({
       allowedOrigins: [config.APP_URL],
       credentials: true,
+      // Browsers only let cross-origin pages read CORS-safelisted response
+      // headers unless they are exposed.
+      exposedHeaders: [
+        "location",
+        "etag",
+        "retry-after",
+        "x-ratelimit-limit",
+        "x-ratelimit-remaining",
+        "x-ratelimit-reset",
+      ],
     }),
   ),
 );

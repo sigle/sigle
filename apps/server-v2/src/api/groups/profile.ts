@@ -13,7 +13,6 @@ import {
   BadRequest,
   Conflict,
   imageRequestBody,
-  InternalServerError,
   PayloadTooLarge,
   UnsupportedMediaType,
   UploadedImageResponse,
@@ -21,11 +20,11 @@ import {
 import { ProfileMetadata } from "@/lib/metadata";
 import { profileImageKinds } from "@/lib/profile-images";
 
-export const UploadProfileMetadataPayload = Schema.Struct({
+export const UpdateProfilePayload = Schema.Struct({
   metadata: ProfileMetadata,
-}).annotate({ identifier: "UploadProfileMetadataPayload" });
+}).annotate({ identifier: "UpdateProfilePayload" });
 
-export const UploadProfileMetadataResponse = Schema.Struct({
+export const UpdateProfileResponse = Schema.Struct({
   arweaveTxId: Schema.String,
   uri: Schema.String,
   cid: Schema.String,
@@ -34,7 +33,7 @@ export const UploadProfileMetadataResponse = Schema.Struct({
   address: Schema.String,
   // The stored profile, so clients don't need to fetch it again.
   profile: UserProfile,
-}).annotate({ identifier: "UploadProfileMetadataResponse" });
+}).annotate({ identifier: "UpdateProfileResponse" });
 
 export const ProfileImageKindSchema = Schema.Literals(
   profileImageKinds,
@@ -47,14 +46,14 @@ export const ProfileGroup = HttpApiGroup.make("profile")
   )
   .add(
     HttpApiEndpoint.put("update", "/", {
-      payload: UploadProfileMetadataPayload,
-      success: UploadProfileMetadataResponse,
-      error: [BadRequest, Conflict, InternalServerError],
+      payload: UpdateProfilePayload,
+      success: UpdateProfileResponse,
+      error: [BadRequest, Conflict],
     })
-      .annotate(OpenApi.Summary, "Upload profile metadata")
+      .annotate(OpenApi.Summary, "Update the profile")
       .annotate(
         OpenApi.Description,
-        "Upload the profile metadata to Arweave and return the transaction and the stored profile.",
+        "Update the profile with signed profile metadata: upload it to Arweave, store it as the profile of the signing address, and return the transaction and the stored profile.",
       )
       .annotate(RateLimitPolicy, "profileMetadataUpload"),
   )
@@ -62,12 +61,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
     HttpApiEndpoint.put("uploadImage", "/images/:kind", {
       params: { kind: ProfileImageKindSchema },
       success: UploadedImageResponse,
-      error: [
-        BadRequest,
-        PayloadTooLarge,
-        UnsupportedMediaType,
-        InternalServerError,
-      ],
+      error: [BadRequest, PayloadTooLarge, UnsupportedMediaType],
     })
       .annotate(OpenApi.Summary, "Upload a profile image")
       .annotate(

@@ -7,7 +7,7 @@ import {
 import { eq } from "drizzle-orm";
 import { Effect } from "effect";
 import { HttpApiBuilder } from "effect/http-api";
-import type { UploadProfileMetadataPayload } from "@/api/groups/profile";
+import type { UpdateProfilePayload } from "@/api/groups/profile";
 import { SigleApi } from "@/api";
 import { findProfile } from "@/api/handlers/users";
 import { uploadImageFromRequest } from "@/api/image-upload";
@@ -28,9 +28,7 @@ import {
 import { ArweaveService } from "@/services/arweave";
 import { PostHogService } from "@/services/posthog";
 
-export const uploadProfileMetadata = (
-  payload: typeof UploadProfileMetadataPayload.Type,
-) =>
+export const updateProfile = (payload: typeof UpdateProfilePayload.Type) =>
   Effect.gen(function* () {
     const user = yield* CurrentUser;
     const config = yield* AppConfig;
@@ -202,7 +200,7 @@ export const ProfileHandlersLayer = HttpApiBuilder.group(
   "profile",
   (handlers) =>
     handlers
-      .handle("update", ({ payload }) => uploadProfileMetadata(payload))
+      .handle("update", ({ payload }) => updateProfile(payload))
       .handle("uploadImage", ({ params, request }) =>
         uploadProfileImage(params.kind, request),
       ),

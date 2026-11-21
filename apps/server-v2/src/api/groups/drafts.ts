@@ -73,17 +73,18 @@ export const DRAFT_LIMITS = {
   tag: 50,
 } as const;
 
-const isHttpUrl = Schema.makeFilter((value: string) => {
-  if (!URL.canParse(value)) {
-    return "Expected an http(s) URL";
-  }
-
-  const { protocol } = new URL(value);
-
-  return protocol === "http:" || protocol === "https:"
-    ? true
-    : "Expected an http(s) URL";
-});
+/**
+ * URL filter accepting only the given protocols, such as `"https:"`.
+ */
+const isUrlWithProtocol = (
+  protocols: ReadonlyArray<string>,
+  expected: string,
+) =>
+  Schema.makeFilter((value: string) =>
+    URL.canParse(value) && protocols.includes(new URL(value).protocol)
+      ? true
+      : `Expected ${expected}`,
+  );
 
 const DraftTitle = Schema.String.check(Schema.isMaxLength(DRAFT_LIMITS.title));
 
@@ -99,14 +100,20 @@ const DraftMetaDescription = Schema.String.check(
   Schema.isMaxLength(DRAFT_LIMITS.metaDescription),
 );
 
-const DraftCoverImage = Schema.String.check(
+// Covers can live on Arweave or IPFS, like the cover image of the signed post
+// metadata, which the thumbhash job resolves through the gateways.
+const DraftCoverImage = Schema.String.annotate({ format: "uri" }).check(
   Schema.isMaxLength(DRAFT_LIMITS.coverImage),
-  isHttpUrl,
+  isUrlWithProtocol(
+    ["http:", "https:", "ipfs:", "ar:"],
+    "an http(s), ipfs:// or ar:// URL",
+  ),
 );
 
-const DraftCanonicalUri = Schema.String.check(
+// The canonical URI points readers to the original web page of the post.
+const DraftCanonicalUri = Schema.String.annotate({ format: "uri" }).check(
   Schema.isMaxLength(DRAFT_LIMITS.canonicalUri),
-  isHttpUrl,
+  isUrlWithProtocol(["http:", "https:"], "an http(s) URL"),
 );
 
 const DraftTags = Schema.mutable(
