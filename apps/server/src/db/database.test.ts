@@ -2,7 +2,7 @@ import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
 import { Data, Effect, Result } from "effect";
 import { SqlClient } from "effect/sql";
-import { Database } from "@/db";
+import { AuthDatabase, Database } from "@/db";
 import { account, post, session, user, verification } from "@/db/schema";
 import { createTestPost, createTestUser } from "@/test/helpers";
 import { TestDatabaseLayer } from "@/test/layer";
@@ -142,6 +142,38 @@ describe("database", () => {
       }),
     );
 
+    // better-auth reads through the promise-based auth database, which runs
+    // its queries on the Effect database's connection.
+    it.effect("auth database: reads Effect writes with decoded values", () =>
+      Effect.gen(function* () {
+        const db = yield* Database;
+        const authDb = yield* AuthDatabase;
+
+        const created = yield* createTestUser();
+        const expiresAt = new Date("2027-01-02T03:04:05.678Z");
+
+        yield* db.insert(session).values({
+          id: crypto.randomUUID(),
+          userId: created.id,
+          token: crypto.randomUUID(),
+          expiresAt,
+        });
+
+        const [found] = yield* Effect.promise(() =>
+          authDb
+            .select({
+              expiresAt: session.expiresAt,
+              emailVerified: user.emailVerified,
+            })
+            .from(session)
+            .innerJoin(user, eq(user.id, session.userId))
+            .where(eq(session.userId, created.id)),
+        );
+
+        expect(found).toStrictEqual({ expiresAt, emailVerified: false });
+      }),
+    );
+
     it.effect("transactions: commits and rolls back", () =>
       Effect.gen(function* () {
         const db = yield* Database;
@@ -229,7 +261,7 @@ describe("database", () => {
           SELECT id FROM post WHERE id = ${createdPost.id}
         `;
 
-        expect(rows).toStrictEqual([{ id: "arweave-tx-1" }]);
+        expect(rows.map((row) => row.id)).toStrictEqual(["arweave-tx-1"]);
       }),
     );
   });

@@ -1,9 +1,8 @@
 # Jobs & queue
 
 Effect-native background jobs for the server, built on `PersistedQueue`
-(`effect/persistence`) with the Postgres/PGlite SQL store. Jobs survive
-restarts, are claimed with row locks (safe across replicas), and are retried
-with backoff.
+(`effect/persistence`) with the SQLite SQL store. Jobs survive restarts, are
+claimed atomically, and are retried with backoff.
 
 ## Defining a job
 
@@ -74,7 +73,7 @@ and `clearJob`.
 ## Testing
 
 `makeJobTestLayer` from `@/queue/test-layer` builds the store, queue, workers,
-and `JobAdminService` against PGlite for integration tests. Unit-test handlers
+and `JobAdminService` against in-memory SQLite for integration tests. Unit-test handlers
 by calling the `process` function directly.
 
 ## Deferred

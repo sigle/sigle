@@ -67,12 +67,17 @@ const parseElementJson = (raw: string): Schema.Json =>
     () => raw,
   );
 
-const pendingAgeMillis = (
-  oldestPending: Date | string | null,
-): number | null =>
+/**
+ * Reads a queue timestamp. SQLite stores them as UTC text without a zone,
+ * such as `2026-11-21 10:00:00`, which `Date` would read as local time.
+ */
+const parseQueueTimestamp = (value: string): Date =>
+  new Date(`${value.replace(" ", "T")}Z`);
+
+const pendingAgeMillis = (oldestPending: string | null): number | null =>
   oldestPending === null
     ? null
-    : Math.max(0, Date.now() - new Date(oldestPending).getTime());
+    : Math.max(0, Date.now() - parseQueueTimestamp(oldestPending).getTime());
 
 export const makeJobAdmin = Effect.gen(function* () {
   const sql = (yield* SqlClient.SqlClient).withoutTransforms();
@@ -85,14 +90,14 @@ export const makeJobAdmin = Effect.gen(function* () {
         readonly active: number;
         readonly completed: number;
         readonly failed: number;
-        readonly oldest_pending: Date | string | null;
+        readonly oldest_pending: string | null;
       }>`
         SELECT
           queue_name,
-          COUNT(*) FILTER (WHERE state = 'pending' AND acquired_by IS NULL)::INT AS pending,
-          COUNT(*) FILTER (WHERE state = 'pending' AND acquired_by IS NOT NULL)::INT AS active,
-          COUNT(*) FILTER (WHERE state = 'completed')::INT AS completed,
-          COUNT(*) FILTER (WHERE state = 'failed')::INT AS failed,
+          COUNT(*) FILTER (WHERE state = 'pending' AND acquired_by IS NULL)AS pending,
+          COUNT(*) FILTER (WHERE state = 'pending' AND acquired_by IS NOT NULL)AS active,
+          COUNT(*) FILTER (WHERE state = 'completed')AS completed,
+          COUNT(*) FILTER (WHERE state = 'failed')AS failed,
           MIN(created_at) FILTER (WHERE state = 'pending' AND acquired_by IS NULL) AS oldest_pending
         FROM effect_queue
         GROUP BY queue_name
@@ -160,7 +165,7 @@ export const makeJobAdmin = Effect.gen(function* () {
   ): Effect.Effect<FailedJobPage> =>
     Effect.gen(function* () {
       const [totals] = yield* sql<{ readonly count: number }>`
-        SELECT COUNT(*)::INT AS count
+        SELECT COUNT(*)AS count
         FROM effect_queue
         WHERE state = 'failed' AND queue_name = ${options.queueName}
       `;
@@ -170,7 +175,7 @@ export const makeJobAdmin = Effect.gen(function* () {
         readonly element: string;
         readonly attempts: number;
         readonly last_failure: string | null;
-        readonly updated_at: Date | string;
+        readonly updated_at: string;
       }>`
         SELECT id, element, attempts, last_failure, updated_at
         FROM effect_queue
@@ -186,7 +191,7 @@ export const makeJobAdmin = Effect.gen(function* () {
           payload: parseElementJson(row.element),
           attempts: Number(row.attempts),
           lastFailure: row.last_failure,
-          updatedAt: new Date(row.updated_at),
+          updatedAt: parseQueueTimestamp(row.updated_at),
         })),
         total: Number(totals?.count ?? 0),
       };
@@ -203,8 +208,8 @@ export const makeJobAdmin = Effect.gen(function* () {
             attempts = 0,
             acquired_at = NULL,
             acquired_by = NULL,
-            visible_at = NOW(),
-            updated_at = NOW()
+            visible_at = strftime('%Y-%m-%d %H:%M:%f', 'now'),
+            updated_at = CURRENT_TIMESTAMP
         WHERE queue_name = ${queueName}
           AND id = ${id}
           AND state = 'failed'

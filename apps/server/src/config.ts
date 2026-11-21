@@ -78,10 +78,9 @@ export const appConfig = Config.all({
   R2_BUCKET: Config.NonEmptyString("R2_BUCKET"),
   // The public base URL used to serve uploaded files
   R2_PUBLIC_URL: Config.NonEmptyString("R2_PUBLIC_URL"),
-  DATABASE_KIND: Config.Literals(["postgres", "pglite"], "DATABASE_KIND"),
-  DATABASE_URL: Config.NonEmptyString("DATABASE_URL").pipe(
-    Config.map(Redacted.make),
-  ),
+  // The SQLite database file, or `:memory:`. Litestream backs up this file
+  // when the server runs through `start.sh` with backups configured.
+  DATABASE_PATH: Config.NonEmptyString("DATABASE_PATH"),
   // Request header holding the client IP, set by the proxy in front of the
   // API, such as `x-real-ip` on Railway. Only set it when every request goes
   // through that proxy, clients can send any header otherwise. Rate limits
@@ -121,8 +120,7 @@ export const defaultTestConfig: AppConfigValues = {
   R2_SECRET_ACCESS_KEY: Redacted.make("r2-test-secret-access-key"),
   R2_BUCKET: "sigle-test",
   R2_PUBLIC_URL: "https://cdn.test",
-  DATABASE_KIND: "pglite",
-  DATABASE_URL: Redacted.make("memory://"),
+  DATABASE_PATH: ":memory:",
   CLIENT_IP_HEADER: Option.none(),
   SENTRY_DSN: Option.none(),
   POSTHOG_API_KEY: Option.none(),

@@ -21,7 +21,7 @@ export const createAuth = (config: AppConfigValues, db: AuthDatabaseClient) => {
 
   return betterAuth({
     database: drizzleAdapter(db, {
-      provider: "pg",
+      provider: "sqlite",
       schema,
     }),
     secret: Redacted.value(config.AUTH_SECRET),

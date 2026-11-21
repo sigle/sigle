@@ -187,7 +187,7 @@ describe("job admin service", () => {
     Effect.gen(function* () {
       const sql = (yield* SqlClient.SqlClient).withoutTransforms();
       const admin = yield* JobAdminService;
-      const failedAt = "2026-01-01T00:00:00.000Z";
+      const failedAt = "2026-01-01 00:00:00.000";
 
       for (const id of ["job-1", "job-2", "job-3", "job-4", "job-5"]) {
         yield* sql`

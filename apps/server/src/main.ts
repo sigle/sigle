@@ -3,7 +3,7 @@ import {
   NodeRuntime,
   NodeServices,
 } from "@effect/platform-node";
-import { Effect, Layer } from "effect";
+import { Cause, Effect, Exit, Layer, Runtime } from "effect";
 import { HttpRouter } from "effect/http";
 import { HttpApiBuilder, HttpApiScalar, OpenApi } from "effect/http-api";
 import { createServer } from "node:http";
@@ -132,10 +132,24 @@ export const startupProgram = Effect.gen(function* () {
   });
 });
 
+/**
+ * A stop signal (SIGTERM, SIGINT) ends the server with code 0 rather than
+ * Effect's 130: Litestream, which runs the server in production (`start.sh`),
+ * only syncs the last database changes after a server it stopped exits
+ * cleanly. Railway sends SIGTERM on every deploy and before sleeping.
+ */
+const teardown: Runtime.Teardown = (exit, onExit) => {
+  if (Exit.isFailure(exit) && Cause.hasInterruptsOnly(exit.cause)) {
+    onExit(0);
+  } else {
+    Runtime.defaultTeardown(exit, onExit);
+  }
+};
+
 if (import.meta.main) {
   startupProgram.pipe(
     Effect.andThen(Layer.launch(MainLayer)),
     Effect.provide(CoreServicesLayer),
-    NodeRuntime.runMain,
+    NodeRuntime.runMain({ teardown }),
   );
 }

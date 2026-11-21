@@ -1,0 +1,36 @@
+# Litestream runs beside the server (`start.sh`) and ships the SQLite database
+# to the Cloudflare R2 backup bucket. Tuned so that it costs little and lets
+# an idle server sleep (Railway sleeps a service after 5 minutes without
+# outbound traffic):
+# - It reads new writes from the database file every 5 seconds, which stays
+#   on the machine, and uploads them every minute, so losing the volume loses
+#   about the last minute. A deploy or a sleep stops the server first, and
+#   Litestream uploads the last changes when it exits. It only does that once
+#   it has read the database, so a read every minute would skip the writes
+#   of a server stopped within a minute of starting.
+#   A minute with writes uploads one file per 5-second read that found
+#   changes, at most 12; a minute without writes uploads nothing.
+# - It merges the uploaded changes every 15 minutes (30 seconds by default),
+#   and deletes merged ones every hour (every 15 seconds by default): each
+#   lists the bucket, so after the last write it goes quiet for 15 minutes.
+l0-retention-check-interval: 1h
+levels:
+  - interval: 15m
+  - interval: 1h
+  - interval: 24h
+snapshot:
+  # A full snapshot every day (the default), kept 30 days.
+  retention: 720h
+dbs:
+  - path: ${DATABASE_PATH}
+    monitor-interval: 5s
+    replica:
+      type: s3
+      bucket: ${LITESTREAM_BUCKET}
+      path: litestream
+      endpoint: ${R2_ENDPOINT}
+      region: auto
+      force-path-style: true
+      access-key-id: ${LITESTREAM_ACCESS_KEY_ID}
+      secret-access-key: ${LITESTREAM_SECRET_ACCESS_KEY}
+      sync-interval: 1m

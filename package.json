@@ -4,8 +4,6 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
-    "db:up": "docker compose up postgres -d --wait",
-    "db:down": "docker compose stop postgres",
     "docker:dev:full": "docker compose --profile full up --build --watch",
     "docker:down": "docker compose --profile '*' down",
     "release": "pnpm changeset publish",

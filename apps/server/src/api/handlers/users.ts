@@ -1,5 +1,5 @@
 import { eq, inArray } from "drizzle-orm";
-import { alias } from "drizzle-orm/pg-core";
+import { alias } from "drizzle-orm/sqlite-core";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
 import { SigleApi } from "@/api";

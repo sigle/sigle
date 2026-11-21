@@ -1,25 +1,4 @@
 services:
-  postgres:
-    container_name: sigle-postgres
-    image: postgres:18-alpine
-    ports:
-      - 5432:5432
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    volumes:
-      - postgres_data:/var/lib/postgresql
-    environment:
-      - POSTGRES_PASSWORD=sigle_password
-      - POSTGRES_USER=sigle_user
-      - POSTGRES_DB=sigle_db
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -d sigle_db -U sigle_user"]
-      interval: 1s
-      timeout: 5s
-      retries: 10
-    networks:
-      - sigle-network
-
   sigle:
     container_name: sigle-app
     profiles:
@@ -48,9 +27,6 @@ services:
           action: sync
     networks:
       - sigle-network
-
-volumes:
-  postgres_data:
 
 networks:
   sigle-network:
