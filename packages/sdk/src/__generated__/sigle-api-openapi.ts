@@ -33,9 +33,29 @@ export interface paths {
     };
     /**
      * Get the signed-in user
-     * @description Return the signed-in user's id, primary Stacks address, whitelist status, plan, and daily publish limit. Returns a 401 without a session.
+     * @description Return the signed-in user's id, primary Stacks address, whitelist status, and plan. Returns a 401 without a session.
      */
     get: operations["me.get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/me/limits": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get the signed-in user's limits
+     * @description Return the limits of the signed-in user's plan and how much of them is used, such as the posts they can still publish in the last 24 hours. Returns a 401 without a session.
+     */
+    get: operations["me.limits"];
     put?: never;
     post?: never;
     delete?: never;
@@ -610,18 +630,20 @@ export interface components {
       tags?: string[];
       canonicalUri?: string | null;
     };
+    UserLimitsResponse: {
+      publish: components["schemas"]["PublishLimit"];
+    };
+    PublishLimit: {
+      limit: number;
+      used: number;
+      resetsAt: string | null;
+    };
     CurrentUserResponse: {
       id: string;
       address: string;
       whitelisted: boolean;
       /** @enum {string} */
       plan: "free" | "pro";
-      publishLimit: components["schemas"]["PublishLimit"];
-    };
-    PublishLimit: {
-      limit: number;
-      used: number;
-      resetsAt: string | null;
     };
     HealthResponse: {
       success: boolean;
@@ -671,6 +693,53 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["CurrentUserResponse"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TooManyRequestsError"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["InternalServerError"];
+        };
+      };
+    };
+  };
+  "me.limits": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description UserLimitsResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UserLimitsResponse"];
         };
       };
       /** @description Unauthorized */

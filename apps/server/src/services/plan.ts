@@ -196,3 +196,18 @@ export class PlanService extends Context.Service<PlanService, PlanClient>()(
       Layer.provide(FetchHttpClient.layer),
     );
 }
+
+/**
+ * The user's plan, or `free` when the NFT lookup fails: the plan only unlocks
+ * features and higher limits, so a Stacks API outage must not fail requests.
+ * Failures are not cached, so the next call retries the lookup.
+ */
+export const getUserPlanOrFree = (userId: string) =>
+  PlanService.use((plans) => plans.getUserPlan(userId)).pipe(
+    Effect.catchTag("NftHoldingsError", (error) =>
+      Effect.as(
+        Effect.logWarning("Failed to check the user plan", { cause: error }),
+        "free" as const,
+      ),
+    ),
+  );

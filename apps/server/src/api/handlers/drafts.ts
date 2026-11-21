@@ -45,7 +45,12 @@ import {
   draftImageKey,
   draftImageSettings,
 } from "@/lib/draft-images";
-import { findPublishUsage, PlanService, PUBLISH_LIMITS } from "@/services/plan";
+import {
+  findPublishUsage,
+  getUserPlanOrFree,
+  PlanService,
+  PUBLISH_LIMITS,
+} from "@/services/plan";
 import { PostHogService } from "@/services/posthog";
 
 const toDraft = (row: typeof draft.$inferSelect) => ({
@@ -348,21 +353,7 @@ export const publishDraft = (
       });
     }
 
-    const plans = yield* PlanService;
-
-    // Like `GET /api/me`, a failed NFT lookup applies the free limit rather
-    // than blocking the publish.
-    const plan = yield* plans.getUserPlan(user.id).pipe(
-      Effect.catchTag("NftHoldingsError", (error) =>
-        Effect.as(
-          Effect.logWarning("Failed to check the user plan", {
-            cause: error,
-          }),
-          "free" as const,
-        ),
-      ),
-    );
-
+    const plan = yield* getUserPlanOrFree(user.id);
     const limit = PUBLISH_LIMITS[plan];
     const now = new Date();
 

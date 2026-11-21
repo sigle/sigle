@@ -1151,8 +1151,8 @@ describe("drafts", () => {
           metadata: retrySigned,
         });
 
-        const me = yield* client
-          .get("/api/me")
+        const limits = yield* client
+          .get("/api/me/limits")
           .pipe(Effect.flatMap((response) => response.json));
 
         // The oldest counted post leaves the window in 22 hours.
@@ -1165,7 +1165,7 @@ describe("drafts", () => {
             Option.getOrUndefined(Headers.get(limited.headers, "retry-after")),
           ),
           retry: retry.status,
-          me,
+          limits,
         }).toStrictEqual({
           limited: 429,
           limitedBody: {
@@ -1182,9 +1182,8 @@ describe("drafts", () => {
               seconds > resetInMillis / 1000 - 60,
           ),
           retry: 202,
-          me: expect.objectContaining({
-            plan: "free",
-            publishLimit: {
+          limits: {
+            publish: {
               limit: 3,
               used: 3,
               resetsAt: expect.toSatisfy(
@@ -1194,7 +1193,7 @@ describe("drafts", () => {
                   ) < 60_000,
               ),
             },
-          }),
+          },
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
@@ -1226,16 +1225,13 @@ describe("drafts", () => {
           }),
         });
 
-        const me = yield* client
-          .get("/api/me")
+        const limits = yield* client
+          .get("/api/me/limits")
           .pipe(Effect.flatMap((response) => response.json));
 
-        expect({ publish: publish.status, me }).toStrictEqual({
+        expect({ publish: publish.status, limits }).toStrictEqual({
           publish: 202,
-          me: expect.objectContaining({
-            plan: "pro",
-            publishLimit: expect.objectContaining({ limit: 20 }),
-          }),
+          limits: { publish: expect.objectContaining({ limit: 20 }) },
         });
       }).pipe(
         Effect.provide(
