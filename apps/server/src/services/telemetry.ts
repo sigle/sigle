@@ -11,6 +11,8 @@ import {
   Schema,
   Tracer,
 } from "effect";
+import { FetchHttpClient } from "effect/http";
+import { OtlpSerialization, OtlpTracer } from "effect/observability";
 import { AppConfig } from "@/config";
 
 declare global {
@@ -109,6 +111,13 @@ const SentryLifecycleLayer = Layer.effectDiscard(
   ),
 );
 
+// Exports spans over OTLP/HTTP when `OTEL_TRACES_EXPORTER=otlp` and an OTLP
+// endpoint are set: Railway provides the endpoint, headers and service name
+// on traced services. Otherwise it provides no tracer.
+const OtlpTracingLayer = OtlpTracer.layerFromConfig().pipe(
+  Layer.provide([OtlpSerialization.layerProtobuf, FetchHttpClient.layer]),
+);
+
 export const TelemetryLayer: Layer.Layer<never, never, AppConfig> =
   Layer.unwrap(
     Effect.gen(function* () {
@@ -160,12 +169,16 @@ export const TelemetryLayer: Layer.Layer<never, never, AppConfig> =
           ]),
           ErrorReporter.layer([SentryErrorReporter]),
           Layer.succeed(References.MinimumLogLevel, minLogLevel),
+          // Last, so when OTLP export is on its tracer replaces Sentry's:
+          // Sentry still receives errors and logs.
+          OtlpTracingLayer,
         );
       }
 
       return Layer.mergeAll(
         Logger.layer([consoleLogger, Logger.tracerLogger]),
         Layer.succeed(References.MinimumLogLevel, minLogLevel),
+        OtlpTracingLayer,
       );
     }),
   );
