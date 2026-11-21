@@ -127,7 +127,7 @@ const setRateLimitHeaders = (
  * `Retry-After` is a whole number of seconds, rounded up so a client never
  * retries before the window resets.
  */
-const setRetryAfterHeader = (retryAfter: Duration.Duration) =>
+export const setRetryAfterHeader = (retryAfter: Duration.Duration) =>
   appendResponseHeaders({
     "retry-after": String(
       Math.max(0, Math.ceil(Duration.toMillis(retryAfter) / 1000)),

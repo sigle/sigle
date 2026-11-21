@@ -33,7 +33,7 @@ export interface paths {
     };
     /**
      * Get the signed-in user
-     * @description Return the signed-in user's id, primary Stacks address, whitelist status, and plan. Returns a 401 without a session.
+     * @description Return the signed-in user's id, primary Stacks address, whitelist status, plan, and daily publish limit. Returns a 401 without a session.
      */
     get: operations["me.get"];
     put?: never;
@@ -111,7 +111,7 @@ export interface paths {
     put?: never;
     /**
      * Publish a draft
-     * @description Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being uploaded to Arweave for another signature.
+     * @description Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being uploaded to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, 3 posts on Free and 20 on Pro, counting the publishes in flight.
      */
     post: operations["drafts.publish"];
     delete?: never;
@@ -616,6 +616,12 @@ export interface components {
       whitelisted: boolean;
       /** @enum {string} */
       plan: "free" | "pro";
+      publishLimit: components["schemas"]["PublishLimit"];
+    };
+    PublishLimit: {
+      limit: number;
+      used: number;
+      resetsAt: string | null;
     };
     HealthResponse: {
       success: boolean;
