@@ -1,5 +1,5 @@
 import { describe, expect, it } from "@effect/vitest";
-import { Effect, Layer } from "effect";
+import { Data, Effect, Layer } from "effect";
 import { AppConfig } from "@/config";
 import {
   makeStorageService,
@@ -9,6 +9,10 @@ import {
 } from "@/services/storage";
 
 const TEST_BODY = new Uint8Array([1, 2, 3, 4]);
+
+class R2Unreachable extends Data.TaggedError("R2Unreachable")<{
+  readonly message: string;
+}> {}
 
 const makeTestStorageLayer = (
   uploader: StorageUploader,
@@ -28,9 +32,10 @@ interface RecordedUpload {
 const makeRecordingUploader = (
   uploads: Array<RecordedUpload>,
 ): StorageUploader => ({
-  uploadFile: async (options) => {
-    uploads.push(options);
-  },
+  uploadFile: (options) =>
+    Effect.sync(() => {
+      uploads.push(options);
+    }),
 });
 
 describe("storage service", () => {
@@ -76,9 +81,8 @@ describe("storage service", () => {
 
   it.effect("wraps upload failures in StorageUploadError", () => {
     const uploader: StorageUploader = {
-      uploadFile: async () => {
-        throw new Error("r2 unreachable");
-      },
+      uploadFile: () =>
+        Effect.fail(new R2Unreachable({ message: "r2 unreachable" })),
     };
 
     return Effect.gen(function* () {
@@ -96,7 +100,7 @@ describe("storage service", () => {
       expect(error).toBeInstanceOf(StorageUploadError);
       expect(error._tag).toBe("StorageUploadError");
       expect(error.message).toBe("r2 unreachable");
-      expect(error.cause).toBeInstanceOf(Error);
+      expect(error.cause).toBeInstanceOf(R2Unreachable);
     }).pipe(Effect.provide(makeTestStorageLayer(uploader)));
   });
 });

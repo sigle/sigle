@@ -1,6 +1,9 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import * as S3 from "@distilled.cloud/s3";
+import { Credentials } from "@distilled.cloud/s3/Credentials";
+import { Endpoint } from "@distilled.cloud/s3/Endpoint";
 import { Context, Data, Effect, Layer, Redacted } from "effect";
-import { AppConfig, type AppConfigValues } from "@/config";
+import { FetchHttpClient, type HttpClient } from "effect/http";
+import { AppConfig } from "@/config";
 
 export interface StorageUploadOptions {
   readonly body: Uint8Array;
@@ -21,7 +24,7 @@ export interface StoredObject {
  */
 const CACHE_CONTROL = "public, max-age=31536000, immutable";
 
-/** Minimal object storage port, implemented by the S3 client in production. */
+/** Minimal object storage port, implemented by R2 in production. */
 export interface StorageUploader {
   readonly uploadFile: (options: {
     readonly body: Uint8Array;
@@ -29,7 +32,7 @@ export interface StorageUploader {
     readonly contentType: string;
     readonly key: string;
     readonly version: string;
-  }) => Promise<void>;
+  }) => Effect.Effect<void, unknown>;
 }
 
 export class StorageUploadError extends Data.TaggedError("StorageUploadError")<{
@@ -57,32 +60,46 @@ const logStorageError =
       operation,
     });
 
-const makeS3Uploader = (config: AppConfigValues): StorageUploader => {
-  const client = new S3Client({
-    endpoint: config.R2_ENDPOINT,
-    region: "auto",
-    credentials: {
-      accessKeyId: config.R2_ACCESS_KEY_ID,
-      secretAccessKey: Redacted.value(config.R2_SECRET_ACCESS_KEY),
-    },
-    forcePathStyle: true,
-  });
+/** The R2 bucket's S3 API, signed with the configured keys. */
+const r2Layer = Layer.unwrap(
+  Effect.map(AppConfig, (config) =>
+    Layer.mergeAll(
+      FetchHttpClient.layer,
+      // A custom endpoint bypasses S3's endpoint rules, so objects are
+      // addressed path-style: `<endpoint>/<bucket>/<key>`.
+      Layer.succeed(Endpoint, Effect.succeed(config.R2_ENDPOINT)),
+      Layer.succeed(
+        Credentials,
+        Effect.succeed({
+          accessKeyId: Redacted.make(config.R2_ACCESS_KEY_ID),
+          secretAccessKey: config.R2_SECRET_ACCESS_KEY,
+          sessionToken: undefined,
+          region: "auto",
+        }),
+      ),
+    ),
+  ),
+);
+
+const makeR2Uploader = Effect.gen(function* () {
+  const config = yield* AppConfig;
+
+  const r2 = yield* Effect.context<
+    Credentials | Endpoint | HttpClient.HttpClient
+  >();
 
   return {
-    uploadFile: async ({ body, cacheControl, contentType, key, version }) => {
-      await client.send(
-        new PutObjectCommand({
-          Bucket: config.R2_BUCKET,
-          Key: key,
-          Body: body,
-          CacheControl: cacheControl,
-          ContentType: contentType,
-          Metadata: { version },
-        }),
-      );
-    },
-  };
-};
+    uploadFile: ({ body, cacheControl, contentType, key, version }) =>
+      S3.putObject({
+        Bucket: config.R2_BUCKET,
+        Key: key,
+        Body: body,
+        CacheControl: cacheControl,
+        ContentType: contentType,
+        Metadata: { version },
+      }).pipe(Effect.asVoid, Effect.provide(r2)),
+  } satisfies StorageUploader;
+});
 
 export const makeStorageService = (uploader: StorageUploader) =>
   Effect.gen(function* () {
@@ -98,17 +115,18 @@ export const makeStorageService = (uploader: StorageUploader) =>
     return {
       uploadFile: ({ body, contentType, key, version }: StorageUploadOptions) =>
         Effect.gen(function* () {
-          yield* Effect.tryPromise({
-            try: () =>
-              uploader.uploadFile({
-                body,
-                cacheControl: CACHE_CONTROL,
-                contentType,
-                key,
-                version,
-              }),
-            catch: toStorageError,
-          }).pipe(Effect.tapError(logStorageError("upload", key)));
+          yield* uploader
+            .uploadFile({
+              body,
+              cacheControl: CACHE_CONTROL,
+              contentType,
+              key,
+              version,
+            })
+            .pipe(
+              Effect.mapError(toStorageError),
+              Effect.tapError(logStorageError("upload", key)),
+            );
 
           return toStoredObject(key, version);
         }),
@@ -138,12 +156,8 @@ export class StorageService extends Context.Service<
   static readonly layer: Layer.Layer<StorageService, never, AppConfig> =
     Layer.effect(
       StorageService,
-      Effect.gen(function* () {
-        const config = yield* AppConfig;
-
-        return yield* makeStorageService(makeS3Uploader(config));
-      }),
-    );
+      Effect.flatMap(makeR2Uploader, makeStorageService),
+    ).pipe(Layer.provide(r2Layer));
 
   /**
    * Recording storage fake used by endpoint tests.
