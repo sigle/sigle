@@ -5,14 +5,13 @@
   "type": "module",
   "scripts": {
     "build": "vp pack",
-    "dev": "dotenvx run --env-file=.env.development --env-file=.env.development.local -- tsx watch src/main.ts",
+    "dev": "tsx watch --env-file=.env.development --env-file-if-exists=.env.development.local src/main.ts",
     "start": "node dist/main.mjs",
-    "test": "dotenvx run --env-file=.env.test -- vp test"
+    "test": "vp test"
   },
   "dependencies": {
     "@ardrive/turbo-sdk": "2.1.0",
     "@aws-sdk/client-s3": "3.782.0",
-    "@dotenvx/dotenvx": "2.20.1",
     "@effect/platform-node": "4.1.4",
     "@effect/platform-node-shared": "4.1.4",
     "@effect/sql-pg": "4.1.4",

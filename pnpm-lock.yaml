@@ -350,9 +350,6 @@ importers:
       '@aws-sdk/client-s3':
         specifier: 3.782.0
         version: 3.782.0
-      '@dotenvx/dotenvx':
-        specifier: 2.20.1
-        version: 2.20.1
       '@effect/platform-node':
         specifier: 4.1.4
         version: 4.1.4(bufferutil@4.1.0)(effect@4.1.4)(redis@6.2.1(@opentelemetry/api@1.9.1))(utf-8-validate@5.0.10)

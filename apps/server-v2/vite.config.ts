@@ -1,6 +1,6 @@
-import { defineConfig } from "vite-plus";
+import { defineConfig, loadEnv } from "vite-plus";
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   pack: {
     entry: ["src/main.ts"],
     format: ["esm"],
@@ -15,10 +15,12 @@ export default defineConfig({
     tsconfigPaths: true,
   },
   test: {
+    // Expose .env.test (without a prefix filter) as process.env in the tests
+    env: loadEnv(mode, import.meta.dirname, ""),
     environment: "node",
     include: ["src/**/*.test.ts"],
     globalSetup: ["src/test/global-setup.ts"],
     testTimeout: 30_000,
     hookTimeout: 30_000,
   },
-});
+}));
