@@ -1,6 +1,6 @@
 # Jobs & queue
 
-Effect-native background jobs for server-v2, built on `PersistedQueue`
+Effect-native background jobs for the server, built on `PersistedQueue`
 (`effect/persistence`) with the Postgres/PGlite SQL store. Jobs survive
 restarts, are claimed with row locks (safe across replicas), and are retried
 with backoff.
