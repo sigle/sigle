@@ -24,7 +24,10 @@ export const getMe = Effect.gen(function* () {
       ),
     );
 
-  const usage = yield* findPublishUsage(db, user.id, new Date());
+  const usage = yield* findPublishUsage(db, {
+    userId: user.id,
+    now: new Date(),
+  });
 
   return {
     id: user.id,

@@ -7,7 +7,7 @@ import { DateTime, NonNegativeInt } from "@/api/schemas";
 export const PublishLimit = Schema.Struct({
   // Posts the plan allows per rolling 24 hours.
   limit: NonNegativeInt,
-  // Posts published in the last 24 hours.
+  // Posts published in the last 24 hours, and publishes in flight.
   used: NonNegativeInt,
   // When the oldest counted publish stops counting, null when none.
   resetsAt: Schema.NullOr(DateTime),

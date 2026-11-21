@@ -1,5 +1,5 @@
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
-import { and, count, eq, gte, isNotNull, min } from "drizzle-orm";
+import { and, eq, gte, inArray, isNotNull, ne } from "drizzle-orm";
 import { Cache, Context, Data, Effect, Exit, Layer, Schema } from "effect";
 import {
   FetchHttpClient,
@@ -9,7 +9,7 @@ import {
 } from "effect/http";
 import { AppConfig } from "@/config";
 import { Database, type DatabaseClient } from "@/db";
-import { post, walletAddress } from "@/db/schema";
+import { draft, post, walletAddress } from "@/db/schema";
 
 export type UserPlan = "free" | "pro";
 
@@ -23,42 +23,66 @@ export const PUBLISH_LIMITS: Record<UserPlan, number> = {
 export const PUBLISH_LIMIT_WINDOW_MILLIS = 24 * 60 * 60 * 1000;
 
 /**
- * Posts a user published from a draft in the last 24 hours, and when the
- * oldest of them leaves the window (null when none). Posts indexed from
- * Arweave have no draft and do not count.
+ * Publishes of a user counted against their daily limit, and when the oldest
+ * of them leaves the window (null when none): the posts they published from a
+ * draft in the last 24 hours, and their drafts being published. Posts indexed
+ * from Arweave have no draft and do not count, nor do failed publishes.
  *
- * Publishes still in flight are not counted, so parallel publishes can exceed
- * the limit by a few posts until their jobs finish.
+ * `excludeDraftId` leaves out the draft being published, whose earlier publish
+ * request it replaces. A single statement, so a draft turning into a post
+ * meanwhile is counted once.
  */
 export const findPublishUsage = (
   db: DatabaseClient,
-  userId: string,
-  now: Date,
+  {
+    userId,
+    now,
+    excludeDraftId,
+  }: {
+    readonly userId: string;
+    readonly now: Date;
+    readonly excludeDraftId?: string;
+  },
 ) =>
   Effect.gen(function* () {
-    const [usage] = yield* db
-      .select({ used: count(), oldest: min(post.createdAt) })
+    const windowStart = new Date(now.getTime() - PUBLISH_LIMIT_WINDOW_MILLIS);
+
+    const publishes = yield* db
+      .select({ at: post.createdAt })
       .from(post)
       .where(
         and(
           eq(post.userId, userId),
           isNotNull(post.draftId),
-          gte(
-            post.createdAt,
-            new Date(now.getTime() - PUBLISH_LIMIT_WINDOW_MILLIS),
-          ),
+          gte(post.createdAt, windowStart),
         ),
+      )
+      .unionAll(
+        db
+          .select({ at: draft.updatedAt })
+          .from(draft)
+          .where(
+            and(
+              eq(draft.userId, userId),
+              inArray(draft.txStatus, ["PENDING", "PROCESSING"]),
+              // A publish stuck in flight for a day no longer counts.
+              gte(draft.updatedAt, windowStart),
+              excludeDraftId === undefined
+                ? undefined
+                : ne(draft.id, excludeDraftId),
+            ),
+          ),
       )
       .pipe(Effect.orDie);
 
-    const oldest = usage?.oldest ?? null;
+    const oldest = Math.min(...publishes.map(({ at }) => at.getTime()));
 
     return {
-      used: usage?.used ?? 0,
+      used: publishes.length,
       resetsAt:
-        oldest === null
+        publishes.length === 0
           ? null
-          : new Date(oldest.getTime() + PUBLISH_LIMIT_WINDOW_MILLIS),
+          : new Date(oldest + PUBLISH_LIMIT_WINDOW_MILLIS),
     };
   });
 

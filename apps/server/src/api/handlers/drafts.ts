@@ -365,7 +365,12 @@ export const publishDraft = (
 
     const limit = PUBLISH_LIMITS[plan];
     const now = new Date();
-    const usage = yield* findPublishUsage(db, user.id, now);
+
+    const usage = yield* findPublishUsage(db, {
+      userId: user.id,
+      now,
+      excludeDraftId: draftId,
+    });
 
     if (usage.used >= limit) {
       const retryAfterMillis = Math.max(

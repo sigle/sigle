@@ -1097,8 +1097,9 @@ describe("drafts", () => {
           address: ownerWallet.address,
         });
 
-        // Counted: three posts published from a draft in the last 24 hours.
-        yield* Effect.forEach([1, 2, 3], (hours) =>
+        // Counted: two posts published from a draft in the last 24 hours, and
+        // a publish in flight.
+        yield* Effect.forEach([1, 2], (hours) =>
           createTestPost({
             userId,
             draftId: `published-${hours}`,
@@ -1106,13 +1107,32 @@ describe("drafts", () => {
           }),
         );
 
-        // Not counted: an older post, and a recent post indexed from Arweave.
+        const retrySigned = createSignedTestPostMetadata({
+          draftId: "draft-retry",
+          privateKey: ownerWallet.privateKey,
+        });
+
+        yield* createTestDraft({
+          id: "draft-retry",
+          userId,
+          txStatus: "PENDING",
+          publishSignature: retrySigned.signature,
+        });
+
+        // Not counted: an older post, a recent post indexed from Arweave, a
+        // failed publish, and a publish stuck in flight for over a day.
         yield* createTestPost({
           userId,
           draftId: "published-old",
           createdAt: hoursAgo(25),
         });
         yield* createTestPost({ userId, draftId: null });
+        yield* createTestDraft({ userId, txStatus: "FAILED" });
+        yield* createTestDraft({
+          userId,
+          txStatus: "PENDING",
+          updatedAt: hoursAgo(25),
+        });
 
         yield* createTestDraft({ id: "draft-next", userId });
 
@@ -1125,12 +1145,18 @@ describe("drafts", () => {
 
         const limitedBody = yield* limited.json;
 
+        // Retrying the publish in flight replaces it, so it is not counted
+        // against itself.
+        const retry = yield* publishDraftRequest(client, "draft-retry", {
+          metadata: retrySigned,
+        });
+
         const me = yield* client
           .get("/api/me")
           .pipe(Effect.flatMap((response) => response.json));
 
-        // The oldest counted post leaves the window in 21 hours.
-        const resetInMillis = 21 * 60 * 60 * 1000;
+        // The oldest counted post leaves the window in 22 hours.
+        const resetInMillis = 22 * 60 * 60 * 1000;
 
         expect({
           limited: limited.status,
@@ -1138,6 +1164,7 @@ describe("drafts", () => {
           retryAfter: Number(
             Option.getOrUndefined(Headers.get(limited.headers, "retry-after")),
           ),
+          retry: retry.status,
           me,
         }).toStrictEqual({
           limited: 429,
@@ -1154,6 +1181,7 @@ describe("drafts", () => {
               seconds <= resetInMillis / 1000 &&
               seconds > resetInMillis / 1000 - 60,
           ),
+          retry: 202,
           me: expect.objectContaining({
             plan: "free",
             publishLimit: {
