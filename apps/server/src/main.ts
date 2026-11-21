@@ -126,7 +126,7 @@ export const MainLayer = HttpServerLayer.pipe(
 
 export const startupProgram = Effect.gen(function* () {
   const config = yield* AppConfig;
-  yield* Effect.logInfo("Sigle server-v2 initialized", {
+  yield* Effect.logInfo("Sigle server initialized", {
     stacksEnv: config.STACKS_ENV,
     port: config.PORT,
   });

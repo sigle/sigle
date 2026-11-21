@@ -14,11 +14,11 @@ RUN PNPM_VERSION=$(grep -o '"packageManager": "[^"]*' package.json | cut -d'"' -
 RUN TURBO_VERSION=$(grep -o '"turbo": "[^"]*' package.json | cut -d'"' -f4) && \
     pnpm install turbo@${TURBO_VERSION} --global
 
-# --- Prune stage: keep only server-v2 and the workspace packages it uses ---
+# --- Prune stage: keep only the server and the workspace packages it uses ---
 
 FROM base AS pruner
 COPY . .
-RUN turbo prune @sigle/server-v2 --docker
+RUN turbo prune @sigle/server --docker
 
 # --- Build stage ---
 
@@ -31,10 +31,10 @@ COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY .pnpmfile.mjs .pnpmfile.mjs
 # `prepare` sets up local git hooks and tooling
 RUN npm pkg delete scripts.prepare
-RUN pnpm install --frozen-lockfile --prod=false --filter @sigle/server-v2...
+RUN pnpm install --frozen-lockfile --prod=false --filter @sigle/server...
 
 COPY --from=pruner /app/out/full/ .
-RUN turbo run build --filter=@sigle/server-v2...
+RUN turbo run build --filter=@sigle/server...
 
 # --- Runner stage ---
 
@@ -48,16 +48,16 @@ COPY --from=pruner /app/out/json/ .
 COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY .pnpmfile.mjs .pnpmfile.mjs
 RUN npm pkg delete scripts.prepare
-RUN pnpm install --frozen-lockfile --prod --filter @sigle/server-v2
+RUN pnpm install --frozen-lockfile --prod --filter @sigle/server
 
 # The server applies the Drizzle migrations from ./drizzle on startup
-COPY --from=builder --chown=server:nodejs /app/apps/server-v2/dist ./apps/server-v2/dist
-COPY --from=pruner --chown=server:nodejs /app/out/full/apps/server-v2/drizzle ./apps/server-v2/drizzle
+COPY --from=builder --chown=server:nodejs /app/apps/server/dist ./apps/server/dist
+COPY --from=pruner --chown=server:nodejs /app/out/full/apps/server/drizzle ./apps/server/drizzle
 # Copied by name: a glob would also pick up local files such as .env.development.local
-COPY --chown=server:nodejs apps/server-v2/.env.testnet ./apps/server-v2/.env.testnet
+COPY --chown=server:nodejs apps/server/.env.testnet ./apps/server/.env.testnet
 
 USER server
-WORKDIR /app/apps/server-v2
+WORKDIR /app/apps/server
 
 # Configuration is read from the environment, see src/config.ts. The committed
 # .env.<railway environment> file adds the non-secret values; variables already

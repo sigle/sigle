@@ -52,7 +52,7 @@ export const drizzleConfig = { schema, relations };
 const packageJsonPath = findPackageJSON(import.meta.url);
 
 if (packageJsonPath === undefined) {
-  throw new Error("server-v2 package.json not found");
+  throw new Error("server package.json not found");
 }
 
 const migrationsFolder = join(dirname(packageJsonPath), "drizzle");

@@ -2,12 +2,12 @@
 
 Every app is hosted on [Railway](https://railway.com/), in the `sigle-v2` project. Its `testnet` environment runs:
 
-| Service       | App              | Domain                        |
-| ------------- | ---------------- | ----------------------------- |
-| `web`         | `apps/sigle`     | `testnet.sigle.io`            |
-| `server`      | `apps/server-v2` | `testnet-api.sigle.io`        |
-| `docs`        | `apps/docs`      | `docs-testnet.up.railway.app` |
-| `postgres-db` | PostgreSQL       | private network only          |
+| Service       | App           | Domain                        |
+| ------------- | ------------- | ----------------------------- |
+| `web`         | `apps/sigle`  | `testnet.sigle.io`            |
+| `server`      | `apps/server` | `testnet-api.sigle.io`        |
+| `docs`        | `apps/docs`   | `docs-testnet.up.railway.app` |
+| `postgres-db` | PostgreSQL    | private network only          |
 
 ## Deploys
 

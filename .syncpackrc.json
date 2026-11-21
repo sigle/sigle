@@ -22,8 +22,8 @@
       "isIgnored": true
     },
     {
-      "label": "server-v2 Arweave tooling ahead until the client migrates",
-      "packages": ["@sigle/server-v2"],
+      "label": "server Arweave tooling ahead until the client migrates",
+      "packages": ["@sigle/server"],
       "dependencies": ["@ardrive/turbo-sdk", "multiformats"],
       "isIgnored": true
     }

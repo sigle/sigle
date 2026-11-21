@@ -79,12 +79,8 @@ export default defineRailway(() => {
     build: {
       buildEnvironment: "V3",
       builder: "DOCKERFILE",
-      dockerfilePath: "/apps/server-v2/Dockerfile",
-      watchPatterns: [
-        "/apps/server-v2/**",
-        "/packages/sdk/**",
-        "/pnpm-lock.yaml",
-      ],
+      dockerfilePath: "/apps/server/Dockerfile",
+      watchPatterns: ["/apps/server/**", "/packages/sdk/**", "/pnpm-lock.yaml"],
     },
     // No pre-deploy command: the server applies its migrations on startup
     healthcheck: "/health",
