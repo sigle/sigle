@@ -1,9 +1,11 @@
-import { IconAlertCircle } from "@tabler/icons-react";
+import { IconAlertCircle, IconClock } from "@tabler/icons-react";
+import { formatDistanceToNow } from "date-fns";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
+import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { PublishReviewGeneral } from "./ReviewGeneral";
 
@@ -29,6 +31,16 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
     useFormContext<EditorPostFormData>();
 
   const type = watch("type");
+
+  // Refetched each time the dialog opens. The server enforces the limit, this
+  // only saves the user a wallet signature that would be rejected.
+  const { data: limits } = sigleApiClient.useQuery("get", "/api/me/limits");
+  const { data: me } = sigleApiClient.useQuery("get", "/api/me");
+
+  const publishLimit = limits?.publish;
+
+  const publishLimitReached =
+    publishLimit !== undefined && publishLimit.used >= publishLimit.limit;
 
   // Validate form on mount so we can show the various error messages in the callout
   // and disable the publish button
@@ -79,6 +91,26 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
         </Alert>
       ) : null}
 
+      {publishLimit !== undefined && publishLimitReached ? (
+        <Alert>
+          <IconClock size={16} />
+          <AlertTitle>Daily publish limit reached</AlertTitle>
+          <AlertDescription>
+            You published {publishLimit.limit} posts in the last 24 hours. You
+            can publish again{" "}
+            {publishLimit.resetsAt === null
+              ? "later"
+              : formatDistanceToNow(publishLimit.resetsAt, {
+                  addSuffix: true,
+                })}
+            .
+            {me?.plan === "free"
+              ? " Pro members can publish more posts per day."
+              : null}
+          </AlertDescription>
+        </Alert>
+      ) : null}
+
       <div className="grid gap-4">
         <PublishReviewGeneral />
       </div>
@@ -100,6 +132,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
           disabled={
             isFormValid === "loading" ||
             !isFormValid.valid ||
+            publishLimitReached ||
             formState.isSubmitting
           }
           loading={formState.isSubmitting}
