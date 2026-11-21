@@ -1,13 +1,13 @@
 # Litestream runs beside the server (`start.sh`) and ships the SQLite database
-# to the Cloudflare R2 backup bucket. Tuned like revive-st, apart from the
-# 5-second reads below, so that it costs little and lets an idle server sleep (Railway sleeps a service after
-# 5 minutes without outbound traffic):
+# to the Cloudflare R2 backup bucket. Tuned so that it costs little and lets
+# an idle server sleep (Railway sleeps a service after 5 minutes without
+# outbound traffic):
 # - It reads new writes from the database file every 5 seconds, which stays
 #   on the machine, and uploads them every minute, so losing the volume loses
 #   about the last minute. A deploy or a sleep stops the server first, and
 #   Litestream uploads the last changes when it exits. It only does that once
-#   it has read the database, so a read every minute (revive-st's setting)
-#   would skip the writes of a server stopped within a minute of starting.
+#   it has read the database, so a read every minute would skip the writes
+#   of a server stopped within a minute of starting.
 #   A minute with writes uploads one file per 5-second read that found
 #   changes, at most 12; a minute without writes uploads nothing.
 # - It merges the uploaded changes every 15 minutes (30 seconds by default),
