@@ -1,5 +1,10 @@
 import { Schema } from "effect";
-import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/http-api";
+import {
+  HttpApiEndpoint,
+  HttpApiGroup,
+  HttpApiSchema,
+  OpenApi,
+} from "effect/http-api";
 import { MediaImage, PublicUser } from "@/api/groups/users";
 import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 import {
@@ -9,6 +14,7 @@ import {
   NonNegativeInt,
   NotFound,
   paginationQueryFields,
+  PublicCacheHeaders,
 } from "@/api/schemas";
 import { postOtsStatusEnum } from "@/db/schema";
 
@@ -90,13 +96,13 @@ export const PostsGroup = HttpApiGroup.make("posts")
   .add(
     HttpApiEndpoint.get("list", "/", {
       query: PostListQuery,
-      success: PostListResponse,
+      success: HttpApiSchema.WithHeaders(PostListResponse, PublicCacheHeaders),
       error: BadRequest,
     })
       .annotate(OpenApi.Summary, "List posts")
       .annotate(
         OpenApi.Description,
-        "List published posts, newest first. Pass `author` (a Stacks address) to only list the posts of that author.",
+        "List published posts, newest first. Pass `author` (a Stacks address) to only list the posts of that author. Responses are cacheable for a minute and carry an `ETag` for `If-None-Match`.",
       )
       .annotate(
         OpenApi.Transform,
@@ -111,13 +117,13 @@ export const PostsGroup = HttpApiGroup.make("posts")
       params: {
         postId: Schema.String,
       },
-      success: Post,
+      success: HttpApiSchema.WithHeaders(Post, PublicCacheHeaders),
       error: NotFound,
     })
       .annotate(OpenApi.Summary, "Get a post")
       .annotate(
         OpenApi.Description,
-        "Get a published post with its cover image placeholder, its author profile, and its OpenTimestamps proof status.",
+        "Get a published post with its cover image placeholder, its author profile, and its OpenTimestamps proof status. Responses are cacheable for a minute and carry an `ETag` for `If-None-Match`.",
       ),
   )
   .prefix("/api/posts")

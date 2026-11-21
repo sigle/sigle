@@ -6,7 +6,13 @@ import {
   OpenApi,
 } from "effect/http-api";
 import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
-import { BadRequest, DateTime, NonNegativeInt, NotFound } from "@/api/schemas";
+import {
+  BadRequest,
+  DateTime,
+  NonNegativeInt,
+  NotFound,
+  PublicCacheHeaders,
+} from "@/api/schemas";
 
 export const MediaImage = Schema.Struct({
   url: Schema.String,
@@ -35,10 +41,10 @@ export const PublicUser = Schema.Struct({
   profile: Schema.NullOr(UserProfile),
 }).annotate({ identifier: "PublicUser" });
 
-export const PublicUserWithHeaders = HttpApiSchema.WithHeaders(PublicUser, {
-  "cache-control": Schema.String,
-  etag: Schema.String,
-});
+export const PublicUserWithHeaders = HttpApiSchema.WithHeaders(
+  PublicUser,
+  PublicCacheHeaders,
+);
 
 export const UsersGroup = HttpApiGroup.make("users")
   .annotate(OpenApi.Description, "Public user profiles, by Stacks address.")
@@ -53,7 +59,7 @@ export const UsersGroup = HttpApiGroup.make("users")
       .annotate(OpenApi.Summary, "Get a user profile")
       .annotate(
         OpenApi.Description,
-        "Get a public user by Stacks address with their profile. Responses are cacheable via `Cache-Control` and `ETag`.",
+        "Get a public user by Stacks address with their profile. Responses are cacheable for a minute and carry an `ETag`, send it back in `If-None-Match` to get a 304 while the user is unchanged.",
       ),
   )
   .prefix("/api/users")

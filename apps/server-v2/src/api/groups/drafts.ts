@@ -305,12 +305,12 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       ),
       error: [BadRequest, NotFound, Conflict],
     })
-      .middleware(RateLimitMiddleware)
       .annotate(OpenApi.Summary, "Publish a draft")
       .annotate(
         OpenApi.Description,
-        "Validate signed post metadata and enqueue an asynchronous publish job.",
-      ),
+        "Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being uploaded to Arweave for another signature.",
+      )
+      .annotate(RateLimitPolicy, "draftPublish"),
     HttpApiEndpoint.get("getPublishStatus", "/:draftId/publish", {
       params: {
         draftId: Schema.String,

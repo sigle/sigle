@@ -61,6 +61,7 @@ export interface ArweaveUploader {
   readonly uploadFile: (options: {
     readonly file: Buffer;
     readonly tags: ReadonlyArray<ArweaveTag>;
+    readonly signal: AbortSignal;
   }) => Promise<{ readonly id: string }>;
   /** Arweave address of the key signing the uploads. */
   readonly getOwnerAddress: () => Promise<string>;
@@ -95,6 +96,10 @@ export interface ArweaveClient {
 const TRANSACTIONS_PAGE_SIZE = 100;
 
 const GATEWAY_TIMEOUT = "30 seconds";
+
+// Below the 2 minute upload claim lease of the publish job, so an upload is
+// given up before another worker can take over the claim and upload again.
+export const UPLOAD_TIMEOUT = "60 seconds";
 
 const TRANSACTIONS_QUERY = `
   query Transactions(
@@ -172,8 +177,9 @@ const makeTurboUploader = (config: AppConfigValues): ArweaveUploader => {
   });
 
   return {
-    uploadFile: ({ file, tags }) =>
+    uploadFile: ({ file, tags, signal }) =>
       turbo.uploadFile({
+        signal,
         fileStreamFactory: () => file,
         fileSizeFactory: () => file.byteLength,
         dataItemOpts: {
@@ -221,13 +227,24 @@ export const makeArweaveService = (uploader: ArweaveUploader) =>
           ];
 
           const { id } = yield* Effect.tryPromise({
-            try: () => uploader.uploadFile({ file: data, tags: arweaveTags }),
+            // Aborted when the upload times out.
+            try: (signal) =>
+              uploader.uploadFile({ file: data, tags: arweaveTags, signal }),
             catch: (cause) =>
               new ArweaveUploadError({
                 cause,
                 message: cause instanceof Error ? cause.message : String(cause),
               }),
           }).pipe(
+            Effect.timeout(UPLOAD_TIMEOUT),
+            Effect.catchTag("TimeoutError", (cause) =>
+              Effect.fail(
+                new ArweaveUploadError({
+                  cause,
+                  message: `Arweave upload timed out after ${UPLOAD_TIMEOUT}`,
+                }),
+              ),
+            ),
             Effect.tapError((error) =>
               Effect.logError("Failed to upload to Arweave", {
                 cause: error.cause,

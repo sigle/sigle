@@ -1,6 +1,7 @@
 import { describe, expect, it } from "@effect/vitest";
-import { Effect, Layer, Predicate } from "effect";
+import { Effect, Fiber, Layer, Predicate } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
+import { TestClock } from "effect/testing";
 import { AppConfig } from "@/config";
 import {
   ArweaveService,
@@ -9,6 +10,7 @@ import {
   type ArweaveTransactionsResponse,
   type ArweaveUploader,
   makeArweaveService,
+  UPLOAD_TIMEOUT,
 } from "@/services/arweave";
 
 const unusedUploader: ArweaveUploader = {
@@ -62,6 +64,46 @@ const makeTestArweaveLayer = (
   );
 
 describe("arweave service", () => {
+  it.effect("gives up and aborts an upload after the upload timeout", () => {
+    let aborted = false;
+
+    const uploader: ArweaveUploader = {
+      // Like turbo, a hung upload only settles once aborted.
+      uploadFile: ({ signal }) =>
+        new Promise((_resolve, reject) => {
+          signal.addEventListener("abort", () => {
+            aborted = true;
+            reject(signal.reason);
+          });
+        }),
+      getOwnerAddress: async () => "owner-address",
+    };
+
+    return Effect.gen(function* () {
+      const arweave = yield* ArweaveService;
+
+      const upload = yield* Effect.forkChild(
+        arweave
+          .uploadFile({ file: TEST_FILE, contentType: "application/json" })
+          .pipe(Effect.flip),
+      );
+
+      yield* TestClock.adjust(UPLOAD_TIMEOUT);
+
+      const error = yield* Fiber.join(upload);
+
+      expect({
+        tag: error._tag,
+        message: error.message,
+        aborted,
+      }).toStrictEqual({
+        tag: "ArweaveUploadError",
+        message: "Arweave upload timed out after 60 seconds",
+        aborted: true,
+      });
+    }).pipe(Effect.provide(makeTestArweaveLayer(uploader)));
+  });
+
   it.effect(
     "uploads the file with content type, app name and IPFS CID tags",
     () => {

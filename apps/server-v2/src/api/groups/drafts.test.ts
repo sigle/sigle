@@ -7,6 +7,7 @@ import {
   HttpClientRequest,
   HttpClientResponse,
 } from "effect/http";
+import { TestClock } from "effect/testing";
 import sharp from "sharp";
 import type { PostHogEvent } from "@/services/posthog";
 import {
@@ -743,6 +744,9 @@ describe("drafts", () => {
           signature: validSigned.signature,
         });
 
+        // The four rejected publishes used the per-minute publish limit.
+        yield* TestClock.adjust("1 minute");
+
         const duplicateSigRes = yield* publishDraftRequest(
           client,
           "draft-val",
@@ -1015,6 +1019,65 @@ describe("drafts", () => {
         }).toStrictEqual({
           status: "COMPLETED",
           arweaveId: ARWEAVE_TEST_UPLOAD_ID,
+        });
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
+    "POST /api/drafts/:draftId/publish returns 409 while another signature is uploading",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const db = yield* Database;
+        const ownerWallet = createTestSiwsCredentials("testnet");
+
+        yield* createTestWalletAddress({
+          userId,
+          address: ownerWallet.address,
+        });
+
+        // A worker is uploading the metadata of another signature.
+        yield* createTestDraft({
+          id: "draft-uploading",
+          userId,
+          txStatus: "PROCESSING",
+          publishSignature: "other-signature",
+          uploadClaimedAt: new Date(),
+        });
+
+        // Its worker crashed, the claim lease expired.
+        yield* createTestDraft({
+          id: "draft-abandoned",
+          userId,
+          txStatus: "PROCESSING",
+          publishSignature: "other-signature",
+          uploadClaimedAt: new Date(Date.now() - 3 * 60 * 1000),
+        });
+
+        const publish = (draftId: string) =>
+          publishDraftRequest(client, draftId, {
+            metadata: createSignedTestPostMetadata({
+              draftId,
+              privateKey: ownerWallet.privateKey,
+            }),
+          }).pipe(Effect.map((response) => response.status));
+
+        const uploading = yield* publish("draft-uploading");
+        const abandoned = yield* publish("draft-abandoned");
+
+        const [uploadingDraft] = yield* db
+          .select({ publishSignature: draft.publishSignature })
+          .from(draft)
+          .where(eq(draft.id, "draft-uploading"));
+
+        expect({
+          uploading,
+          abandoned,
+          signature: uploadingDraft?.publishSignature,
+        }).toStrictEqual({
+          uploading: 409,
+          abandoned: 202,
+          signature: "other-signature",
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
   );

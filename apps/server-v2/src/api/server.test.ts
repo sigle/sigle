@@ -134,8 +134,16 @@ describe("http server", () => {
       const body =
         yield* HttpClientResponse.schemaBodyJson(HealthResponse)(response);
 
-      expect(response.status).toBe(200);
-      expect(body).toStrictEqual({ success: true });
+      expect({
+        status: response.status,
+        body,
+        // Probes are not rate limited.
+        rateLimit: rateLimitHeaders(response)["x-ratelimit-limit"],
+      }).toStrictEqual({
+        status: 200,
+        body: { success: true },
+        rateLimit: undefined,
+      });
     }).pipe(Effect.provide(serverLayer())),
   );
 
@@ -183,7 +191,8 @@ describe("http server", () => {
         ]),
         // Endpoints without inputs cannot fail schema validation, so they
         // document no 400 response.
-        health: ["200", "429", "500"],
+        // Not rate limited either.
+        health: ["200"],
         me: ["200", "401", "429", "500"],
         uploadImage: expect.arrayContaining([
           "200",
@@ -396,9 +405,39 @@ describe("http server", () => {
     }).pipe(withServerAt),
   );
 
+  it.effect("keys unauthenticated clients by the configured IP header", () => {
+    const remaining = Effect.forEach(
+      ["203.0.113.1", "203.0.113.2", "203.0.113.1"],
+      (ip) =>
+        HttpClient.get("/api/posts/missing", {
+          headers: { "x-real-ip": ip },
+        }).pipe(
+          Effect.map(
+            (response) => rateLimitHeaders(response)["x-ratelimit-remaining"],
+          ),
+        ),
+      { concurrency: 1 },
+    );
+
+    return Effect.gen(function* () {
+      expect({
+        configured: yield* remaining.pipe(
+          Effect.provide(
+            serverLayer({ CLIENT_IP_HEADER: Option.some("x-real-ip") }),
+          ),
+        ),
+        // Without a proxy setting it, clients could pick any value.
+        unset: yield* remaining.pipe(Effect.provide(serverLayer())),
+      }).toStrictEqual({
+        configured: ["59", "59", "58"],
+        unset: ["59", "58", "57"],
+      });
+    });
+  });
+
   it.effect("does not shift the reset time by the store latency", () =>
     Effect.gen(function* () {
-      const response = yield* HttpClient.get("/health");
+      const response = yield* HttpClient.get("/api/posts/missing");
 
       expect(rateLimitHeaders(response)["x-ratelimit-reset"]).toBe(
         String(NOW_MILLIS / 1000 + 60),
@@ -421,7 +460,7 @@ describe("http server", () => {
 
       const responses = yield* Effect.forEach(
         Array.from({ length: limit + 1 }, (_, index) => index),
-        () => HttpClient.get("/health"),
+        () => HttpClient.get("/api/posts/missing"),
         { concurrency: 1 },
       );
 
@@ -443,7 +482,7 @@ describe("http server", () => {
         rejectedHeaders:
           last === undefined ? undefined : rateLimitHeaders(last),
       }).toStrictEqual({
-        before: 200,
+        before: 404,
         last: 429,
         // The status identifies the error, the body has no `_tag`.
         body: {

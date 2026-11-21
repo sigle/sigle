@@ -108,6 +108,12 @@ export class PayloadTooLarge extends Schema.Error<
   },
 ) {}
 
+/**
+ * Headers of publicly cacheable reads, set to `PUBLIC_CACHE_CONTROL`. The
+ * ETag is added by `EtagLayer`.
+ */
+export const PublicCacheHeaders = { "cache-control": Schema.String };
+
 export class TooManyRequests extends Schema.Error<
   TooManyRequests,
   { readonly brand: unique symbol }

@@ -111,7 +111,7 @@ export interface paths {
     put?: never;
     /**
      * Publish a draft
-     * @description Validate signed post metadata and enqueue an asynchronous publish job.
+     * @description Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being uploaded to Arweave for another signature.
      */
     post: operations["drafts.publish"];
     delete?: never;
@@ -189,7 +189,7 @@ export interface paths {
     };
     /**
      * Get a user profile
-     * @description Get a public user by Stacks address with their profile. Responses are cacheable via `Cache-Control` and `ETag`.
+     * @description Get a public user by Stacks address with their profile. Responses are cacheable for a minute and carry an `ETag`, send it back in `If-None-Match` to get a 304 while the user is unchanged.
      */
     get: operations["users.get"];
     put?: never;
@@ -209,7 +209,7 @@ export interface paths {
     };
     /**
      * List posts
-     * @description List published posts, newest first. Pass `author` (a Stacks address) to only list the posts of that author.
+     * @description List published posts, newest first. Pass `author` (a Stacks address) to only list the posts of that author. Responses are cacheable for a minute and carry an `ETag` for `If-None-Match`.
      */
     get: operations["posts.list"];
     put?: never;
@@ -229,7 +229,7 @@ export interface paths {
     };
     /**
      * Get a post
-     * @description Get a published post with its cover image placeholder, its author profile, and its OpenTimestamps proof status.
+     * @description Get a published post with its cover image placeholder, its author profile, and its OpenTimestamps proof status. Responses are cacheable for a minute and carry an `ETag` for `If-None-Match`.
      */
     get: operations["posts.get"];
     put?: never;
@@ -645,24 +645,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["HealthResponse"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TooManyRequestsError"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -1560,7 +1542,6 @@ export interface operations {
       200: {
         headers: {
           "cache-control": string;
-          etag: string;
           [name: string]: unknown;
         };
         content: {
@@ -1624,6 +1605,7 @@ export interface operations {
       /** @description PostListResponse */
       200: {
         headers: {
+          "cache-control": string;
           [name: string]: unknown;
         };
         content: {
@@ -1674,6 +1656,7 @@ export interface operations {
       /** @description Post */
       200: {
         headers: {
+          "cache-control": string;
           [name: string]: unknown;
         };
         content: {
