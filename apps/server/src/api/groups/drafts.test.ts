@@ -1082,6 +1082,165 @@ describe("drafts", () => {
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
+  it.effect(
+    "POST /api/drafts/:draftId/publish enforces the daily publish limit of the free plan",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const ownerWallet = createTestSiwsCredentials("testnet");
+
+        const hoursAgo = (hours: number) =>
+          new Date(Date.now() - hours * 60 * 60 * 1000);
+
+        yield* createTestWalletAddress({
+          userId,
+          address: ownerWallet.address,
+        });
+
+        // Counted: two posts published from a draft in the last 24 hours, and
+        // a publish in flight.
+        yield* Effect.forEach([1, 2], (hours) =>
+          createTestPost({
+            userId,
+            draftId: `published-${hours}`,
+            createdAt: hoursAgo(hours),
+          }),
+        );
+
+        const retrySigned = createSignedTestPostMetadata({
+          draftId: "draft-retry",
+          privateKey: ownerWallet.privateKey,
+        });
+
+        yield* createTestDraft({
+          id: "draft-retry",
+          userId,
+          txStatus: "PENDING",
+          publishSignature: retrySigned.signature,
+        });
+
+        // Not counted: an older post, a recent post indexed from Arweave, a
+        // failed publish, and a publish stuck in flight for over a day.
+        yield* createTestPost({
+          userId,
+          draftId: "published-old",
+          createdAt: hoursAgo(25),
+        });
+        yield* createTestPost({ userId, draftId: null });
+        yield* createTestDraft({ userId, txStatus: "FAILED" });
+        yield* createTestDraft({
+          userId,
+          txStatus: "PENDING",
+          updatedAt: hoursAgo(25),
+        });
+
+        yield* createTestDraft({ id: "draft-next", userId });
+
+        const limited = yield* publishDraftRequest(client, "draft-next", {
+          metadata: createSignedTestPostMetadata({
+            draftId: "draft-next",
+            privateKey: ownerWallet.privateKey,
+          }),
+        });
+
+        const limitedBody = yield* limited.json;
+
+        // Retrying the publish in flight replaces it, so it is not counted
+        // against itself.
+        const retry = yield* publishDraftRequest(client, "draft-retry", {
+          metadata: retrySigned,
+        });
+
+        const limits = yield* client
+          .get("/api/me/limits")
+          .pipe(Effect.flatMap((response) => response.json));
+
+        // The oldest counted post leaves the window in 22 hours.
+        const resetInMillis = 22 * 60 * 60 * 1000;
+
+        expect({
+          limited: limited.status,
+          limitedBody,
+          retryAfter: Number(
+            Option.getOrUndefined(Headers.get(limited.headers, "retry-after")),
+          ),
+          retry: retry.status,
+          limits,
+        }).toStrictEqual({
+          limited: 429,
+          limitedBody: {
+            message:
+              "You can publish 3 posts per day on the Free plan. Try again later, or upgrade to Pro to publish up to 20 posts per day.",
+            retryAfterMillis: expect.toSatisfy(
+              (millis: number) =>
+                millis <= resetInMillis && millis > resetInMillis - 60_000,
+            ),
+          },
+          retryAfter: expect.toSatisfy(
+            (seconds: number) =>
+              seconds <= resetInMillis / 1000 &&
+              seconds > resetInMillis / 1000 - 60,
+          ),
+          retry: 202,
+          limits: {
+            publish: {
+              limit: 3,
+              used: 3,
+              resetsAt: expect.toSatisfy(
+                (resetsAt: string) =>
+                  Math.abs(
+                    new Date(resetsAt).getTime() - (Date.now() + resetInMillis),
+                  ) < 60_000,
+              ),
+            },
+          },
+        });
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
+    "POST /api/drafts/:draftId/publish allows the daily publish limit of the pro plan",
+    () => {
+      const ownerWallet = createTestSiwsCredentials("testnet");
+
+      return Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+
+        yield* createTestWalletAddress({
+          userId,
+          address: ownerWallet.address,
+        });
+
+        // Over the free limit.
+        yield* Effect.forEach([1, 2, 3], (index) =>
+          createTestPost({ userId, draftId: `published-${index}` }),
+        );
+
+        yield* createTestDraft({ id: "draft-pro", userId });
+
+        const publish = yield* publishDraftRequest(client, "draft-pro", {
+          metadata: createSignedTestPostMetadata({
+            draftId: "draft-pro",
+            privateKey: ownerWallet.privateKey,
+          }),
+        });
+
+        const limits = yield* client
+          .get("/api/me/limits")
+          .pipe(Effect.flatMap((response) => response.json));
+
+        expect({ publish: publish.status, limits }).toStrictEqual({
+          publish: 202,
+          limits: { publish: expect.objectContaining({ limit: 20 }) },
+        });
+      }).pipe(
+        Effect.provide(
+          makeTestServerLayer({ PRO_ADDRESSES: [ownerWallet.address] }),
+        ),
+      );
+    },
+  );
+
   it.live(
     "POST /api/drafts/:draftId/publish reuses the Arweave checkpoint when the signed metadata is unchanged",
     () =>

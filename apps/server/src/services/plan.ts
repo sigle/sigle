@@ -1,5 +1,5 @@
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
-import { eq } from "drizzle-orm";
+import { and, eq, gte, inArray, isNotNull, ne } from "drizzle-orm";
 import { Cache, Context, Data, Effect, Exit, Layer, Schema } from "effect";
 import {
   FetchHttpClient,
@@ -8,10 +8,83 @@ import {
   HttpClientResponse,
 } from "effect/http";
 import { AppConfig } from "@/config";
-import { Database } from "@/db";
-import { walletAddress } from "@/db/schema";
+import { Database, type DatabaseClient } from "@/db";
+import { draft, post, walletAddress } from "@/db/schema";
 
 export type UserPlan = "free" | "pro";
+
+/** Posts a user can publish per {@link PUBLISH_LIMIT_WINDOW_MILLIS}. */
+export const PUBLISH_LIMITS: Record<UserPlan, number> = {
+  free: 3,
+  pro: 20,
+};
+
+/** Rolling window of the publish limit. */
+export const PUBLISH_LIMIT_WINDOW_MILLIS = 24 * 60 * 60 * 1000;
+
+/**
+ * Publishes of a user counted against their daily limit, and when the oldest
+ * of them leaves the window (null when none): the posts they published from a
+ * draft in the last 24 hours, and their drafts being published. Posts indexed
+ * from Arweave have no draft and do not count, nor do failed publishes.
+ *
+ * `excludeDraftId` leaves out the draft being published, whose earlier publish
+ * request it replaces. A single statement, so a draft turning into a post
+ * meanwhile is counted once.
+ */
+export const findPublishUsage = (
+  db: DatabaseClient,
+  {
+    userId,
+    now,
+    excludeDraftId,
+  }: {
+    readonly userId: string;
+    readonly now: Date;
+    readonly excludeDraftId?: string;
+  },
+) =>
+  Effect.gen(function* () {
+    const windowStart = new Date(now.getTime() - PUBLISH_LIMIT_WINDOW_MILLIS);
+
+    const publishes = yield* db
+      .select({ at: post.createdAt })
+      .from(post)
+      .where(
+        and(
+          eq(post.userId, userId),
+          isNotNull(post.draftId),
+          gte(post.createdAt, windowStart),
+        ),
+      )
+      .unionAll(
+        db
+          .select({ at: draft.updatedAt })
+          .from(draft)
+          .where(
+            and(
+              eq(draft.userId, userId),
+              inArray(draft.txStatus, ["PENDING", "PROCESSING"]),
+              // A publish stuck in flight for a day no longer counts.
+              gte(draft.updatedAt, windowStart),
+              excludeDraftId === undefined
+                ? undefined
+                : ne(draft.id, excludeDraftId),
+            ),
+          ),
+      )
+      .pipe(Effect.orDie);
+
+    const oldest = Math.min(...publishes.map(({ at }) => at.getTime()));
+
+    return {
+      used: publishes.length,
+      resetsAt:
+        publishes.length === 0
+          ? null
+          : new Date(oldest + PUBLISH_LIMIT_WINDOW_MILLIS),
+    };
+  });
 
 const STACKS_API_TIMEOUT = "10 seconds";
 
@@ -123,3 +196,18 @@ export class PlanService extends Context.Service<PlanService, PlanClient>()(
       Layer.provide(FetchHttpClient.layer),
     );
 }
+
+/**
+ * The user's plan, or `free` when the NFT lookup fails: the plan only unlocks
+ * features and higher limits, so a Stacks API outage must not fail requests.
+ * Failures are not cached, so the next call retries the lookup.
+ */
+export const getUserPlanOrFree = (userId: string) =>
+  PlanService.use((plans) => plans.getUserPlan(userId)).pipe(
+    Effect.catchTag("NftHoldingsError", (error) =>
+      Effect.as(
+        Effect.logWarning("Failed to check the user plan", { cause: error }),
+        "free" as const,
+      ),
+    ),
+  );

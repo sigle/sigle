@@ -12,7 +12,7 @@ import {
   or,
   sql,
 } from "drizzle-orm";
-import { DateTime, Effect } from "effect";
+import { DateTime, Duration, Effect } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
 import { SigleApi } from "@/api";
 import {
@@ -24,12 +24,14 @@ import {
 } from "@/api/groups/drafts";
 import { uploadImageFromRequest } from "@/api/image-upload";
 import { CurrentUser } from "@/api/middleware/auth-user";
+import { setRetryAfterHeader } from "@/api/middleware/rate-limit";
 import {
   BadRequest,
   Conflict,
   Forbidden,
   InternalServerError,
   NotFound,
+  TooManyRequests,
 } from "@/api/schemas";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
@@ -43,7 +45,12 @@ import {
   draftImageKey,
   draftImageSettings,
 } from "@/lib/draft-images";
-import { PlanService } from "@/services/plan";
+import {
+  findPublishUsage,
+  getUserPlanOrFree,
+  PlanService,
+  PUBLISH_LIMITS,
+} from "@/services/plan";
 import { PostHogService } from "@/services/posthog";
 
 const toDraft = (row: typeof draft.$inferSelect) => ({
@@ -346,6 +353,33 @@ export const publishDraft = (
       });
     }
 
+    const plan = yield* getUserPlanOrFree(user.id);
+    const limit = PUBLISH_LIMITS[plan];
+    const now = new Date();
+
+    const usage = yield* findPublishUsage(db, {
+      userId: user.id,
+      now,
+      excludeDraftId: draftId,
+    });
+
+    if (usage.used >= limit) {
+      const retryAfterMillis = Math.max(
+        0,
+        (usage.resetsAt?.getTime() ?? now.getTime()) - now.getTime(),
+      );
+
+      yield* setRetryAfterHeader(Duration.millis(retryAfterMillis));
+
+      return yield* new TooManyRequests({
+        message:
+          plan === "free"
+            ? `You can publish ${limit} posts per day on the Free plan. Try again later, or upgrade to Pro to publish up to ${PUBLISH_LIMITS.pro} posts per day.`
+            : `You can publish ${limit} posts per day on the Pro plan. Try again later.`,
+        retryAfterMillis,
+      });
+    }
+
     // Take ownership of the draft row: `publishSignature` identifies the signed
     // payload being published, and the Arweave checkpoint/upload claim only
     // survive while they belong to that payload. Workers whose job signature no
@@ -356,7 +390,6 @@ export const publishDraft = (
     // take over while a worker holds the upload claim: the Arweave upload in
     // flight would be paid for and discarded. The claim is checked in the
     // same statement as the write.
-    const now = new Date();
 
     const [acceptedDraft] = yield* db
       .update(draft)
