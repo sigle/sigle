@@ -1,9 +1,0 @@
-node_modules
-dist
-.data
-.env*
-!.env.development
-!.env.test
-!.env.testnet
-!.env.testnet.local
-.vitest/

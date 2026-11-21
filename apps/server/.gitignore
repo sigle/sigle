@@ -1,14 +1,9 @@
 node_modules
 dist
 .data
-.nitro
-.cache
-.output
-src/__generated__/prisma
 .env*
 !.env.development
 !.env.test
 !.env.testnet
 !.env.testnet.local
-dev.db*
 .vitest/

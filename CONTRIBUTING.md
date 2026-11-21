@@ -46,58 +46,26 @@ If you are using AI coding agents, sync the reference repositories (such as Effe
 pnpm repos:sync
 ```
 
-To start the database and backend server in development/watch mode:
+To start the API server (http://localhost:3001) in watch mode:
 
 ```sh
-pnpm docker:dev
+cd apps/server && pnpm dev
 ```
 
-To run the complete full-stack environment in Docker (including Next.js apps):
+It uses an embedded PGlite database by default and applies the migrations on startup. To use PostgreSQL instead, start it in Docker with `pnpm db:up` and set `DATABASE_KIND="postgres"` and `DATABASE_URL` in `apps/server/.env.development.local`.
+
+To start the website (http://localhost:3000):
 
 ```sh
-pnpm docker:dev:full
+cd apps/sigle && pnpm dev
 ```
 
-Alternatively, to run only PostgreSQL in Docker while developing apps locally:
+### Create a database migration
+
+After changing `apps/server/src/db/schema.ts`, generate a Drizzle migration:
 
 ```sh
-pnpm db:up
-```
-
-### Docker services
-
-| Name          | Link                  | Profile |
-| ------------- | --------------------- | ------- |
-| @sigle/server | http://localhost:3001 | Default |
-| @sigle/sigle  | http://localhost:3000 | `full`  |
-| Prisma Studio | http://localhost:5555 | `tools` |
-
-### Seed the database (optional)
-
-To apply schemas and seed the database using a one-off server container, run:
-
-```sh
-pnpm db:reset
-```
-
-Or run directly via Docker Compose:
-
-```sh
-docker compose run --rm --build server pnpm prisma migrate reset --force
-```
-
-### Create prisma migration
-
-To create a new Prisma migration using a one-off server container:
-
-```sh
-pnpm db:migrate --name <migration-name>
-```
-
-Or run directly via Docker Compose:
-
-```sh
-docker compose run --rm --build server pnpm prisma migrate dev --name <migration-name>
+cd apps/server && pnpm drizzle-kit generate --name <migration-name>
 ```
 
 ### Update the e2e tests snapshots

@@ -1,120 +1,208 @@
-import { Result, TaggedError } from "better-result";
-import { encode } from "blurhash";
+import { Data, Effect, Option } from "effect";
 import sharp from "sharp";
-import { env } from "../env";
+import { rgbaToThumbHash } from "thumbhash";
 
-export const resolveImageUrl = (image: string) => {
-  if (image?.startsWith("ipfs://")) {
-    const cid = image.slice(7);
-    image = `${env.IPFS_GATEWAY_URL}/${cid}`;
+export const WEBP = "image/webp";
+
+export const PNG = "image/png";
+
+export const JPEG = "image/jpeg";
+
+export interface ImageGateways {
+  readonly arweave: string;
+  readonly ipfs: string;
+}
+
+/**
+ * Resolves an `ipfs://` or `ar://` URL to its gateway URL. Other URLs are
+ * returned unchanged.
+ */
+export const resolveImageUrl = (
+  image: string,
+  gateways: ImageGateways,
+): string => {
+  if (image.startsWith("ipfs://")) {
+    return `${gateways.ipfs.replace(/\/+$/, "")}/${image.slice(7)}`;
   }
 
-  if (image?.startsWith("ar://")) {
-    image = `${env.ARWEAVE_GATEWAY_URL}/${image.slice(5)}`;
+  if (image.startsWith("ar://")) {
+    return `${gateways.arweave.replace(/\/+$/, "")}/${image.slice(5)}`;
   }
 
   return image;
 };
 
-const WEBP = "image/webp";
+export const allowedImageFormats = [WEBP, PNG, JPEG] as const;
 
-const PNG = "image/png";
+export type AllowedImageFormat = (typeof allowedImageFormats)[number];
 
-const JPEG = "image/jpeg";
+const allowedImageFormatSet: ReadonlySet<string> = new Set(allowedImageFormats);
 
-export const allowedFormats = [WEBP, PNG, JPEG] as const;
+export const isAllowedImageFormat = (
+  contentType: string,
+): contentType is AllowedImageFormat => allowedImageFormatSet.has(contentType);
 
-export class ImageOptimizationFailedError extends TaggedError(
-  "ImageOptimizationFailedError",
+export class ImageOptimizationError extends Data.TaggedError(
+  "ImageOptimizationError",
 )<{
-  cause: unknown;
+  readonly cause: unknown;
+  readonly message: string;
 }> {}
 
-export async function optimizeImage({
+/**
+ * Upper bound on the number of pixels sharp is allowed to decode, guarding
+ * against decompression bombs.
+ */
+export const MAX_INPUT_PIXELS = 50_000_000;
+
+/**
+ * Time budget for a single sharp pipeline, applied natively by libvips so
+ * long-running work is stopped instead of only being abandoned by the caller.
+ */
+export const IMAGE_PROCESSING_TIMEOUT_SECONDS = 10;
+
+const mimeTypeBySharpFormat: ReadonlyMap<string, AllowedImageFormat> = new Map([
+  ["jpeg", JPEG],
+  ["png", PNG],
+  ["webp", WEBP],
+]);
+
+export const mimeTypeForSharpFormat = (
+  format: string,
+): AllowedImageFormat | undefined => mimeTypeBySharpFormat.get(format);
+
+/**
+ * Reads the image header to detect the actual format, ignoring what the client
+ * declared in the request `Content-Type`.
+ *
+ * Returns `None` when the bytes are not a readable image, and the sharp format
+ * name (e.g. `png`, `gif`) otherwise.
+ */
+export const detectImageFormat = (
+  buffer: Uint8Array,
+  {
+    limitInputPixels = MAX_INPUT_PIXELS,
+  }: { readonly limitInputPixels?: number | undefined } = {},
+): Effect.Effect<Option.Option<string>, ImageOptimizationError> =>
+  Effect.tryPromise({
+    try: async () =>
+      Option.fromNullishOr(
+        (await sharp(buffer, { limitInputPixels }).metadata()).format,
+      ),
+    catch: (cause) =>
+      new ImageOptimizationError({
+        cause,
+        message: cause instanceof Error ? cause.message : String(cause),
+      }),
+  });
+
+export interface OptimizedImage {
+  readonly buffer: Uint8Array;
+  readonly height: number;
+  readonly width: number;
+}
+
+export interface ThumbhashResult {
+  readonly thumbhash: string;
+  readonly height: number;
+  readonly width: number;
+}
+
+/**
+ * ThumbHash expects an input image of at most 100px in either dimension.
+ */
+export const THUMBHASH_MAX_INPUT_SIZE = 100;
+
+/**
+ * Encodes a compact ThumbHash placeholder for an image, along with the
+ * EXIF-orientation-aware dimensions of the original image so readers can lay
+ * the image out before it loads.
+ */
+export const generateThumbhash = ({
   buffer,
+  limitInputPixels = MAX_INPUT_PIXELS,
+}: {
+  readonly buffer: Uint8Array;
+  readonly limitInputPixels?: number | undefined;
+}): Effect.Effect<ThumbhashResult, ImageOptimizationError> =>
+  Effect.tryPromise({
+    try: async () => {
+      const metadata = await sharp(buffer, {
+        limitInputPixels,
+        sequentialRead: true,
+      }).metadata();
+
+      const { data, info } = await sharp(buffer, {
+        limitInputPixels,
+        sequentialRead: true,
+      })
+        .timeout({ seconds: IMAGE_PROCESSING_TIMEOUT_SECONDS })
+        .rotate()
+        .resize(THUMBHASH_MAX_INPUT_SIZE, THUMBHASH_MAX_INPUT_SIZE, {
+          fit: "inside",
+        })
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+
+      return {
+        thumbhash: Buffer.from(
+          rgbaToThumbHash(info.width, info.height, data),
+        ).toString("base64"),
+        height: metadata.autoOrient.height,
+        width: metadata.autoOrient.width,
+      };
+    },
+    catch: (cause) =>
+      new ImageOptimizationError({
+        cause,
+        message: cause instanceof Error ? cause.message : String(cause),
+      }),
+  });
+
+export interface OptimizeImageOptions {
+  readonly buffer: Uint8Array;
+  readonly limitInputPixels?: number | undefined;
+  readonly quality: number;
+  readonly width: number;
+}
+
+/**
+ * Re-encodes an image as WebP, resizing it to `width` without ever enlarging it.
+ *
+ * Mirrors the legacy server image pipeline so uploaded profile pictures keep
+ * the same dimensions and quality.
+ */
+export const optimizeImage = ({
+  buffer,
+  limitInputPixels = MAX_INPUT_PIXELS,
   quality,
   width,
-  height,
-}: {
-  buffer: Buffer | ArrayBuffer;
-  quality: number;
-  width: number;
-  height?: number;
-}): Promise<Result<Buffer, ImageOptimizationFailedError>> {
-  return Result.tryPromise({
+}: OptimizeImageOptions): Effect.Effect<
+  OptimizedImage,
+  ImageOptimizationError
+> =>
+  Effect.tryPromise({
     try: async () => {
-      const transformer = sharp(buffer, {
+      const { data, info } = await sharp(buffer, {
+        limitInputPixels,
         sequentialRead: true,
-      });
+      })
+        .timeout({ seconds: IMAGE_PROCESSING_TIMEOUT_SECONDS })
+        .rotate()
+        .resize(width, undefined, { withoutEnlargement: true })
+        .webp({ quality, effort: 6, smartSubsample: true })
+        .toBuffer({ resolveWithObject: true });
 
-      transformer.rotate();
-
-      if (height) {
-        transformer.resize(width, height);
-      } else {
-        transformer.resize(width, undefined, {
-          withoutEnlargement: true,
-        });
-      }
-
-      transformer.webp({ quality, effort: 6, smartSubsample: true });
-
-      const optimizedBuffer = await transformer.toBuffer();
-
-      return optimizedBuffer;
+      return {
+        buffer: new Uint8Array(data),
+        height: info.height,
+        width: info.width,
+      };
     },
-    catch: (cause) => new ImageOptimizationFailedError({ cause }),
+    catch: (cause) =>
+      new ImageOptimizationError({
+        cause,
+        message: cause instanceof Error ? cause.message : String(cause),
+      }),
   });
-}
-
-export function mimeTypeToExtension(mimeType: string): string {
-  switch (mimeType) {
-    case WEBP:
-      return "webp";
-    case PNG:
-      return "png";
-    case JPEG:
-      return "jpeg";
-  }
-
-  throw new Error("Unsupported mimeType");
-}
-
-export class BlurhashGenerationFailedError extends TaggedError(
-  "BlurhashGenerationFailedError",
-)<{
-  cause: unknown;
-}> {}
-
-export async function generateBlurhash({
-  buffer,
-  size = 20,
-}: {
-  buffer: Buffer | ArrayBuffer;
-  size?: number;
-}): Promise<Result<string, BlurhashGenerationFailedError>> {
-  return Result.tryPromise({
-    try: async () => {
-      return new Promise<string>((resolve, reject) => {
-        sharp(buffer)
-          .raw()
-          .ensureAlpha()
-          .resize(size, size, { fit: "inside" })
-          .toBuffer((err, buffer, { width, height }) => {
-            if (err) return reject(err);
-
-            const hash = encode(
-              new Uint8ClampedArray(buffer),
-              width,
-              height,
-              4,
-              4,
-            );
-
-            resolve(hash);
-          });
-      });
-    },
-    catch: (cause) => new BlurhashGenerationFailedError({ cause }),
-  });
-}

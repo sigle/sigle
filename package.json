@@ -6,10 +6,6 @@
     "build": "turbo build",
     "db:up": "docker compose up postgres -d --wait",
     "db:down": "docker compose stop postgres",
-    "db:reset": "docker compose run --rm --build server pnpm prisma migrate reset --force",
-    "db:migrate": "docker compose run --rm --build server pnpm prisma migrate dev",
-    "db:studio": "docker compose --profile tools up --build studio",
-    "docker:dev": "docker compose up --build --watch",
     "docker:dev:full": "docker compose --profile full up --build --watch",
     "docker:down": "docker compose --profile '*' down",
     "release": "pnpm changeset publish",
@@ -21,6 +17,7 @@
   "devDependencies": {
     "@changesets/cli": "2.31.1",
     "@effect/tsgo": "0.56.0",
+    "railway": "3.17.0",
     "syncpack": "15.3.2",
     "turbo": "2.11.2",
     "typescript": "7.0.2",

@@ -14,7 +14,7 @@ Installed entry points:
 - `index.ts` — generic plugin, registered as `anti-slop` in the root
   `vite.config.ts`.
 - `effect/index.ts` — opt-in Effect plugin, registered as `anti-slop-effect`
-  because `apps/server-v2` declares `effect` directly.
+  because `apps/server` declares `effect` directly.
 
 ## Local adaptations
 

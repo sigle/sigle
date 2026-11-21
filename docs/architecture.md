@@ -4,7 +4,7 @@ The Sigle monorepo is composed of the following components:
 
 ## Third party dependencies
 
-- [Railway](https://railway.com/) - Hosting for all applications via Docker.
+- [Railway](https://railway.com/) - Hosting for all applications via Docker, see [Deployment](./deployment.md).
 - [Plausible](https://plausible.io/) - Privacy protecting analytics.
 - [PostHog](https://posthog.com/) - Product analytics.
 - [Sentry](https://sentry.io/) - Track errors.
@@ -18,8 +18,8 @@ A React.js application that serves as the frontend for the Sigle service. It is 
 
 ## Server
 
-A Node.js application that serves as the backend for the Sigle service. We use Fastify for the we server responsible for handling the API requests.
-Rate limiting is implemented using rate-limiter-flexible backed by PostgreSQL.
+A Node.js application built with [Effect](https://effect.website/) that serves as the backend for the Sigle service. It serves the API, stores its data in PostgreSQL with Drizzle, and runs the background jobs on a queue backed by the same database.
+Rate limiting is backed by PostgreSQL.
 
 ### Authentication
 
