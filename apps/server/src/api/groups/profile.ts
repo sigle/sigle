@@ -14,11 +14,13 @@ import {
   Conflict,
   imageRequestBody,
   PayloadTooLarge,
+  TooManyRequests,
   UnsupportedMediaType,
   UploadedImageResponse,
 } from "@/api/schemas";
 import { ProfileMetadata } from "@/lib/metadata";
 import { profileImageKinds } from "@/lib/profile-images";
+import { PROFILE_UPDATE_LIMIT } from "@/services/plan";
 
 export const UpdateProfilePayload = Schema.Struct({
   metadata: ProfileMetadata,
@@ -48,12 +50,14 @@ export const ProfileGroup = HttpApiGroup.make("profile")
     HttpApiEndpoint.put("update", "/", {
       payload: UpdateProfilePayload,
       success: UpdateProfileResponse,
-      error: [BadRequest, Conflict],
+      // The 429 is also returned once the daily profile update limit is
+      // reached.
+      error: [BadRequest, Conflict, TooManyRequests],
     })
       .annotate(OpenApi.Summary, "Update the profile")
       .annotate(
         OpenApi.Description,
-        "Update the profile with signed profile metadata: upload it to Arweave, store it as the profile of the signing address, and return the transaction and the stored profile.",
+        `Update the profile with signed profile metadata: upload it to Arweave, store it as the profile of the signing address, and return the transaction and the stored profile. Returns a 429 once the user has updated their profile ${PROFILE_UPDATE_LIMIT} times in the last 24 hours.`,
       )
       .annotate(RateLimitPolicy, "profileMetadataUpload"),
   )

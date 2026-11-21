@@ -53,7 +53,7 @@ export interface paths {
     };
     /**
      * Get the signed-in user's limits
-     * @description Return the limits of the signed-in user's plan and how much of them is used, such as the posts they can still publish in the last 24 hours. Returns a 401 without a session.
+     * @description Return the limits of the signed-in user's plan and how much of them is used, such as the posts they can still publish and the profile updates they can still make in the last 24 hours. Returns a 401 without a session.
      */
     get: operations["me.limits"];
     put?: never;
@@ -170,7 +170,7 @@ export interface paths {
     get?: never;
     /**
      * Update the profile
-     * @description Update the profile with signed profile metadata: upload it to Arweave, store it as the profile of the signing address, and return the transaction and the stored profile.
+     * @description Update the profile with signed profile metadata: upload it to Arweave, store it as the profile of the signing address, and return the transaction and the stored profile. Returns a 429 once the user has updated their profile 10 times in the last 24 hours.
      */
     put: operations["profile.update"];
     post?: never;
@@ -631,9 +631,10 @@ export interface components {
       canonicalUri?: string | null;
     };
     UserLimitsResponse: {
-      publish: components["schemas"]["PublishLimit"];
+      publish: components["schemas"]["DailyLimit"];
+      profileUpdate: components["schemas"]["DailyLimit"];
     };
-    PublishLimit: {
+    DailyLimit: {
       limit: number;
       used: number;
       resetsAt: string | null;

@@ -1285,6 +1285,7 @@ describe("drafts", () => {
                   ) < 60_000,
               ),
             },
+            profileUpdate: { limit: 10, used: 0, resetsAt: null },
           },
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
@@ -1323,7 +1324,10 @@ describe("drafts", () => {
 
         expect({ publish: publish.status, limits }).toStrictEqual({
           publish: 202,
-          limits: { publish: expect.objectContaining({ limit: 20 }) },
+          limits: {
+            publish: expect.objectContaining({ limit: 20 }),
+            profileUpdate: expect.objectContaining({ limit: 10 }),
+          },
         });
       }).pipe(
         Effect.provide(

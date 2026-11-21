@@ -1,5 +1,5 @@
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
-import { and, eq, gte, inArray, isNotNull, ne } from "drizzle-orm";
+import { and, eq, gt, gte, inArray, isNotNull, ne } from "drizzle-orm";
 import { Cache, Context, Data, Effect, Exit, Layer, Schema } from "effect";
 import {
   FetchHttpClient,
@@ -9,18 +9,39 @@ import {
 } from "effect/http";
 import { AppConfig } from "@/config";
 import { Database, type DatabaseClient } from "@/db";
-import { draft, post, walletAddress } from "@/db/schema";
+import { draft, post, profileUpdate, walletAddress } from "@/db/schema";
 
 export type UserPlan = "free" | "pro";
 
-/** Posts a user can publish per {@link PUBLISH_LIMIT_WINDOW_MILLIS}. */
+/** Rolling window of the daily limits. */
+export const DAILY_LIMIT_WINDOW_MILLIS = 24 * 60 * 60 * 1000;
+
+/** Posts a user can publish per {@link DAILY_LIMIT_WINDOW_MILLIS}. */
 export const PUBLISH_LIMITS: Record<UserPlan, number> = {
   free: 3,
   pro: 20,
 };
 
-/** Rolling window of the publish limit. */
-export const PUBLISH_LIMIT_WINDOW_MILLIS = 24 * 60 * 60 * 1000;
+/**
+ * Profile updates a user can make per {@link DAILY_LIMIT_WINDOW_MILLIS}, on
+ * every plan.
+ */
+export const PROFILE_UPDATE_LIMIT = 10;
+
+/**
+ * Usage of a daily limit from the times of the counted actions: how many, and
+ * when the oldest leaves the window (null when none).
+ */
+const toDailyUsage = (times: ReadonlyArray<Date>) => ({
+  used: times.length,
+  resetsAt:
+    times.length === 0
+      ? null
+      : new Date(
+          Math.min(...times.map((time) => time.getTime())) +
+            DAILY_LIMIT_WINDOW_MILLIS,
+        ),
+});
 
 /**
  * Publishes of a user counted against their daily limit, and when the oldest
@@ -45,7 +66,7 @@ export const findPublishUsage = (
   },
 ) =>
   Effect.gen(function* () {
-    const windowStart = new Date(now.getTime() - PUBLISH_LIMIT_WINDOW_MILLIS);
+    const windowStart = new Date(now.getTime() - DAILY_LIMIT_WINDOW_MILLIS);
 
     const publishes = yield* db
       .select({ at: post.createdAt })
@@ -75,15 +96,35 @@ export const findPublishUsage = (
       )
       .pipe(Effect.orDie);
 
-    const oldest = Math.min(...publishes.map(({ at }) => at.getTime()));
+    return toDailyUsage(publishes.map(({ at }) => at));
+  });
 
-    return {
-      used: publishes.length,
-      resetsAt:
-        publishes.length === 0
-          ? null
-          : new Date(oldest + PUBLISH_LIMIT_WINDOW_MILLIS),
-    };
+/**
+ * Profile updates of a user counted against their daily limit, see
+ * {@link toDailyUsage}: the successful updates of the last 24 hours, across all
+ * their addresses.
+ */
+export const findProfileUpdateUsage = (
+  db: DatabaseClient,
+  { userId, now }: { readonly userId: string; readonly now: Date },
+) =>
+  Effect.gen(function* () {
+    const updates = yield* db
+      .select({ at: profileUpdate.createdAt })
+      .from(profileUpdate)
+      .where(
+        and(
+          eq(profileUpdate.userId, userId),
+          // An update stops counting at its reset time.
+          gt(
+            profileUpdate.createdAt,
+            new Date(now.getTime() - DAILY_LIMIT_WINDOW_MILLIS),
+          ),
+        ),
+      )
+      .pipe(Effect.orDie);
+
+    return toDailyUsage(updates.map(({ at }) => at));
   });
 
 const STACKS_API_TIMEOUT = "10 seconds";

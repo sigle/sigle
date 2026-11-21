@@ -5,17 +5,23 @@ import {
   verifyMetadataSignature,
 } from "@sigle/sdk";
 import { eq } from "drizzle-orm";
-import { Effect } from "effect";
+import { Duration, Effect } from "effect";
 import { HttpApiBuilder } from "effect/http-api";
 import type { UpdateProfilePayload } from "@/api/groups/profile";
 import { SigleApi } from "@/api";
 import { findProfile } from "@/api/handlers/users";
 import { uploadImageFromRequest } from "@/api/image-upload";
 import { CurrentUser } from "@/api/middleware/auth-user";
-import { BadRequest, Conflict, InternalServerError } from "@/api/schemas";
+import { setRetryAfterHeader } from "@/api/middleware/rate-limit";
+import {
+  BadRequest,
+  Conflict,
+  InternalServerError,
+  TooManyRequests,
+} from "@/api/schemas";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { profile } from "@/db/schema";
+import { profile, profileUpdate } from "@/db/schema";
 import { scheduleChangedProfileImages } from "@/jobs/index-profile";
 import {
   profileImageKey,
@@ -26,6 +32,7 @@ import {
   versionProfileImageUrl,
 } from "@/lib/profile-images";
 import { ArweaveService } from "@/services/arweave";
+import { findProfileUpdateUsage, PROFILE_UPDATE_LIMIT } from "@/services/plan";
 import { PostHogService } from "@/services/posthog";
 
 /** Signatures of the profile metadata being uploaded by this process. */
@@ -90,6 +97,32 @@ export const updateProfile = (payload: typeof UpdateProfilePayload.Type) =>
       return yield* new BadRequest({
         message:
           "Invalid signature: Signature verification failed or address mismatch",
+      });
+    }
+
+    // A soft limit, like the publish limit: an update only counts once it is
+    // stored, so updates whose Arweave upload is still running are not
+    // counted. The per-minute limit and the upload timeout keep the overshoot
+    // to a few updates.
+    const checkedAt = new Date();
+
+    const usage = yield* findProfileUpdateUsage(db, {
+      userId: user.id,
+      now: checkedAt,
+    });
+
+    if (usage.used >= PROFILE_UPDATE_LIMIT) {
+      const retryAfterMillis = Math.max(
+        0,
+        (usage.resetsAt?.getTime() ?? checkedAt.getTime()) -
+          checkedAt.getTime(),
+      );
+
+      yield* setRetryAfterHeader(Duration.millis(retryAfterMillis));
+
+      return yield* new TooManyRequests({
+        message: `You can update your profile ${PROFILE_UPDATE_LIMIT} times per day. Try again later.`,
+        retryAfterMillis,
       });
     }
 
@@ -183,6 +216,12 @@ export const updateProfile = (payload: typeof UpdateProfilePayload.Type) =>
                   target: profile.address,
                   set: fields,
                 });
+
+              yield* tx.insert(profileUpdate).values({
+                arweaveTxId: uploaded.id,
+                userId: user.id,
+                address: recoveredAddress,
+              });
 
               return previous;
             }),
