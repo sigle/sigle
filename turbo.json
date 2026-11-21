@@ -2,14 +2,8 @@
   "$schema": "https://v2-11-2.turborepo.dev/schema.json",
   "tasks": {
     "build": {
-      "dependsOn": ["db:generate", "^build"],
-      "outputs": [
-        ".next/**",
-        "!.next/cache/**",
-        ".output/**",
-        "dist/**",
-        ".astro/**"
-      ]
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", ".astro/**"]
     },
     "test": {
       "dependsOn": ["^build"]
@@ -21,12 +15,6 @@
       "persistent": true
     },
     "clean": {
-      "cache": false
-    },
-    "db:generate": {
-      "cache": false
-    },
-    "db:deploy": {
       "cache": false
     }
   }
