@@ -28,22 +28,54 @@ fi
 ENVIRONMENT="$1"
 ONLY_SERVICE="${2:-}"
 
-sync_service() {
+# Prints the names of the secrets in a 1Password Environment. Only the names
+# come from this listing; `op run` hands over the values exactly as stored,
+# without dotenv quoting to undo.
+secret_names() {
+  op environment secret list "$1" --format=dotenv |
+    sed -n 's/^\([A-Za-z_][A-Za-z0-9_]*\)=.*/\1/p'
+}
+
+# `railway variable set --stdin` strips a value's trailing CR/LF, and passing
+# the value as an argument would expose it in the process list, so such values
+# are rejected before anything is written.
+check_service() {
   local service="$1" op_environment="$2"
 
-  # Only the names come from this listing; `op run` below hands over the
-  # values exactly as stored, without dotenv quoting to undo.
-  local names
-  names="$(op environment secret list "$op_environment" --format=dotenv |
-    sed -n 's/^\([A-Za-z_][A-Za-z0-9_]*\)=.*/\1/p')"
+  NAMES="$(secret_names "$op_environment")" SERVICE="$service" CR=$'\r' LF=$'\n' \
+    op run --environment "$op_environment" -- bash -c '
+      set -euo pipefail
+      status=0
+      for key in $NAMES; do
+        case "${!key}" in
+          *"$CR" | *"$LF")
+            echo "$key for $SERVICE ends with a CR or LF, which Railway would strip" >&2
+            status=1
+            ;;
+        esac
+      done
+      exit "$status"
+    '
+}
 
-  # Values go through stdin so they stay out of the process list
+sync_service() {
+  local service="$1" op_environment="$2"
+  local names
+  names="$(secret_names "$op_environment")"
+
+  # Values go through stdin so they stay out of the process list. Railway
+  # rejects an empty value on stdin, so empty values use `KEY=` instead.
   NAMES="$names" PROJECT_ID="$PROJECT_ID" ENVIRONMENT="$ENVIRONMENT" SERVICE="$service" \
     op run --environment "$op_environment" -- bash -c '
       set -euo pipefail
       for key in $NAMES; do
-        printf "%s" "${!key}" | railway variable set "$key" --stdin --skip-deploys \
-          -p "$PROJECT_ID" -e "$ENVIRONMENT" -s "$SERVICE" >/dev/null
+        if [ -z "${!key}" ]; then
+          railway variable set "$key=" --skip-deploys \
+            -p "$PROJECT_ID" -e "$ENVIRONMENT" -s "$SERVICE" >/dev/null
+        else
+          printf "%s" "${!key}" | railway variable set "$key" --stdin --skip-deploys \
+            -p "$PROJECT_ID" -e "$ENVIRONMENT" -s "$SERVICE" >/dev/null
+        fi
         echo "Set $key"
       done
     '
@@ -52,16 +84,25 @@ sync_service() {
   railway redeploy -p "$PROJECT_ID" -e "$ENVIRONMENT" -s "$service" --yes
 }
 
-synced=0
-# TARGETS is read on fd 3 so the commands in the loop cannot consume it from stdin
-while read -r environment service op_environment <&3; do
+services=()
+op_environments=()
+while read -r environment service op_environment; do
   [ "$environment" = "$ENVIRONMENT" ] || continue
   [ -z "$ONLY_SERVICE" ] || [ "$service" = "$ONLY_SERVICE" ] || continue
-  sync_service "$service" "$op_environment"
-  synced=$((synced + 1))
-done 3<<< "$TARGETS"
+  services+=("$service")
+  op_environments+=("$op_environment")
+done <<< "$TARGETS"
 
-if [ "$synced" -eq 0 ]; then
+if [ "${#services[@]}" -eq 0 ]; then
   echo "No target for environment '$ENVIRONMENT'${ONLY_SERVICE:+ and service '$ONLY_SERVICE'} in TARGETS" >&2
   exit 1
 fi
+
+# Check every target before writing to any of them
+for i in "${!services[@]}"; do
+  check_service "${services[$i]}" "${op_environments[$i]}"
+done
+
+for i in "${!services[@]}"; do
+  sync_service "${services[$i]}" "${op_environments[$i]}"
+done
