@@ -387,9 +387,16 @@ export const publishDraft = (
     // queue reconciliation, which also recovers a draft stuck in flight. The
     // CASE reads the current row, so a checkpoint or in-flight upload claim
     // from the same signature is never clobbered. Another signature cannot
-    // take over while a worker holds the upload claim: the Arweave upload in
-    // flight would be paid for and discarded. The claim is checked in the
-    // same statement as the write.
+    // take over while a worker holds the upload claim, or while a checkpointed
+    // upload waits for a worker to create the post, including after a retry
+    // of the same signature reset the status to PENDING: either way an
+    // Arweave upload paid for would be discarded. A FAILED publish has no
+    // worker left, and both checks expire after the claim lease, so a worker
+    // that crashed doesn't block the draft forever. Both run in the same
+    // statement as the write.
+    const leaseCutoff = new Date(
+      now.getTime() - PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS,
+    );
 
     const [acceptedDraft] = yield* db
       .update(draft)
@@ -412,10 +419,18 @@ export const publishDraft = (
           eq(draft.userId, user.id),
           or(
             eq(draft.publishSignature, signature),
-            isNull(draft.uploadClaimedAt),
-            lt(
-              draft.uploadClaimedAt,
-              new Date(now.getTime() - PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS),
+            and(
+              or(
+                isNull(draft.uploadClaimedAt),
+                lt(draft.uploadClaimedAt, leaseCutoff),
+              ),
+              // The checkpoint write and every accepted publish set
+              // `updatedAt`.
+              or(
+                isNull(draft.arweaveTxId),
+                eq(draft.txStatus, "FAILED"),
+                lt(draft.updatedAt, leaseCutoff),
+              ),
             ),
           ),
         ),
@@ -437,7 +452,7 @@ export const publishDraft = (
 
       return yield* new Conflict({
         message:
-          "This draft is being uploaded to Arweave, it can be published again once the upload finishes.",
+          "This draft is being published to Arweave, it can be published again once that finishes.",
       });
     }
 

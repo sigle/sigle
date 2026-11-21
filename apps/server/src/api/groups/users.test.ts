@@ -284,6 +284,9 @@ describe("users", () => {
                       "access-control-allow-origin",
                     ),
                   ),
+                  rateLimit: Option.getOrUndefined(
+                    Headers.get(revalidated.headers, "x-ratelimit-limit"),
+                  ),
                 })),
               ),
             );
@@ -294,6 +297,8 @@ describe("users", () => {
           etag,
           cacheControl: "public, max-age=60",
           allowOrigin: "http://localhost:3000",
+          // A 304 still counts against the rate limit, so it tells the client.
+          rateLimit: "60",
         };
 
         expect({

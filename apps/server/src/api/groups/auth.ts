@@ -33,13 +33,19 @@ export const AuthRoutesLayer = Layer.unwrap(
       Effect.gen(function* () {
         // The routes are not part of `SigleApi`, so they are limited here
         // rather than by `RateLimitMiddleware`, always per IP as they run
-        // before the user is known.
+        // before the user is known. The bucket is the policy, not the path:
+        // the wildcard matches any path, and a key per path would give each
+        // made-up path a fresh limit and the store an unbounded set of keys.
         const { pathname } = new URL(request.url, config.API_URL);
+
+        const policy = pathname.startsWith("/api/auth/siws/")
+          ? "signIn"
+          : "default";
 
         yield* consumeRateLimit(
           limiter,
-          `${request.method}:${pathname}:${clientKey(request, config)}`,
-          pathname.startsWith("/api/auth/siws/") ? "signIn" : "default",
+          `auth:${policy}:${clientKey(request, config)}`,
+          policy,
         );
 
         const webRequest = yield* HttpServerRequest.toWeb(request);

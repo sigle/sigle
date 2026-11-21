@@ -1,5 +1,5 @@
 import { describe, expect, it } from "@effect/vitest";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { Deferred, Effect, Exit, Layer, Option, Schema, Stream } from "effect";
 import {
   Headers,
@@ -985,12 +985,14 @@ describe("drafts", () => {
           address: ownerWallet.address,
         });
         // A checkpoint without a live queue job (e.g. the FAILED write failed)
-        // which used to block re-publishing forever.
+        // which used to block re-publishing forever. It is older than the
+        // claim lease, a fresh one is protected.
         yield* createTestDraft({
           id: "draft-stuck",
           userId,
           txStatus: "PENDING",
           arweaveTxId: "stale-arweave-tx",
+          updatedAt: new Date(Date.now() - 3 * 60 * 1000),
         });
 
         const publishRes = yield* publishDraftRequest(client, "draft-stuck", {
@@ -1078,6 +1080,96 @@ describe("drafts", () => {
           uploading: 409,
           abandoned: 202,
           signature: "other-signature",
+        });
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
+    "POST /api/drafts/:draftId/publish returns 409 once another signature has checkpointed its upload",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const db = yield* Database;
+        const ownerWallet = createTestSiwsCredentials("testnet");
+
+        yield* createTestWalletAddress({
+          userId,
+          address: ownerWallet.address,
+        });
+
+        // A worker has uploaded the metadata of another signature and is
+        // creating the post: the upload claim is released.
+        yield* createTestDraft({
+          id: "draft-checkpointed",
+          userId,
+          txStatus: "PROCESSING",
+          publishSignature: "other-signature",
+          arweaveTxId: "checkpointed-arweave-tx",
+        });
+
+        // A retry of that signature reset the status, its new job will
+        // create the post from the checkpoint.
+        yield* createTestDraft({
+          id: "draft-checkpoint-retried",
+          userId,
+          txStatus: "PENDING",
+          publishSignature: "other-signature",
+          arweaveTxId: "retried-arweave-tx",
+        });
+
+        // Its worker crashed after the checkpoint, the lease expired.
+        yield* createTestDraft({
+          id: "draft-checkpoint-abandoned",
+          userId,
+          txStatus: "PROCESSING",
+          publishSignature: "other-signature",
+          arweaveTxId: "abandoned-arweave-tx",
+          updatedAt: new Date(Date.now() - 3 * 60 * 1000),
+        });
+
+        const publish = (draftId: string) =>
+          publishDraftRequest(client, draftId, {
+            metadata: createSignedTestPostMetadata({
+              draftId,
+              privateKey: ownerWallet.privateKey,
+            }),
+          }).pipe(Effect.map((response) => response.status));
+
+        const checkpointed = yield* publish("draft-checkpointed");
+        const retried = yield* publish("draft-checkpoint-retried");
+        const abandoned = yield* publish("draft-checkpoint-abandoned");
+
+        const kept = yield* db
+          .select({
+            id: draft.id,
+            publishSignature: draft.publishSignature,
+            arweaveTxId: draft.arweaveTxId,
+          })
+          .from(draft)
+          .where(
+            inArray(draft.id, [
+              "draft-checkpointed",
+              "draft-checkpoint-retried",
+            ]),
+          )
+          .orderBy(draft.id);
+
+        expect({ checkpointed, retried, abandoned, kept }).toStrictEqual({
+          checkpointed: 409,
+          retried: 409,
+          abandoned: 202,
+          kept: [
+            {
+              id: "draft-checkpoint-retried",
+              publishSignature: "other-signature",
+              arweaveTxId: "retried-arweave-tx",
+            },
+            {
+              id: "draft-checkpointed",
+              publishSignature: "other-signature",
+              arweaveTxId: "checkpointed-arweave-tx",
+            },
+          ],
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
   );

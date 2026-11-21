@@ -110,9 +110,18 @@ export class PayloadTooLarge extends Schema.Error<
 
 /**
  * Headers of publicly cacheable reads, set to `PUBLIC_CACHE_CONTROL`. The
- * ETag is added by `EtagLayer`.
+ * ETag is added by `EtagLayer` after the handler, so it is optional here: the
+ * handlers don't set it, and it is listed for the OpenAPI document.
  */
-export const PublicCacheHeaders = { "cache-control": Schema.String };
+export const PublicCacheHeaders = {
+  "cache-control": Schema.String,
+  etag: Schema.optionalKey(
+    Schema.String.annotate({
+      description:
+        "Hash of the body, send it back in `If-None-Match` to get a 304 while the resource is unchanged.",
+    }),
+  ),
+};
 
 export class TooManyRequests extends Schema.Error<
   TooManyRequests,
