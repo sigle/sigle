@@ -78,6 +78,24 @@ describe("auth siws", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
+  it.effect("every /api/auth/siws/* path shares one rate limit per IP", () =>
+    Effect.gen(function* () {
+      const client = yield* HttpClient.HttpClient;
+      const { points } = RATE_LIMITS.signIn;
+
+      yield* Effect.forEach(
+        Array.from({ length: points }, (_, index) => index),
+        (index) =>
+          client.execute(postJson(`/api/auth/siws/made-up-${index}`, {})),
+        { concurrency: 1 },
+      );
+
+      const nonce = yield* client.execute(postJson("/api/auth/siws/nonce", {}));
+
+      expect(nonce.status).toBe(429);
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
   it.effect("POST /api/auth/siws/nonce creates and stores a nonce", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;

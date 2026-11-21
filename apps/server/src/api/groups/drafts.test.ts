@@ -1083,6 +1083,69 @@ describe("drafts", () => {
   );
 
   it.effect(
+    "POST /api/drafts/:draftId/publish returns 409 once another signature has checkpointed its upload",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const db = yield* Database;
+        const ownerWallet = createTestSiwsCredentials("testnet");
+
+        yield* createTestWalletAddress({
+          userId,
+          address: ownerWallet.address,
+        });
+
+        // A worker has uploaded the metadata of another signature and is
+        // creating the post: the upload claim is released.
+        yield* createTestDraft({
+          id: "draft-checkpointed",
+          userId,
+          txStatus: "PROCESSING",
+          publishSignature: "other-signature",
+          arweaveTxId: "checkpointed-arweave-tx",
+        });
+
+        // Its worker crashed after the checkpoint, the lease expired.
+        yield* createTestDraft({
+          id: "draft-checkpoint-abandoned",
+          userId,
+          txStatus: "PROCESSING",
+          publishSignature: "other-signature",
+          arweaveTxId: "abandoned-arweave-tx",
+          updatedAt: new Date(Date.now() - 3 * 60 * 1000),
+        });
+
+        const publish = (draftId: string) =>
+          publishDraftRequest(client, draftId, {
+            metadata: createSignedTestPostMetadata({
+              draftId,
+              privateKey: ownerWallet.privateKey,
+            }),
+          }).pipe(Effect.map((response) => response.status));
+
+        const checkpointed = yield* publish("draft-checkpointed");
+        const abandoned = yield* publish("draft-checkpoint-abandoned");
+
+        const [checkpointedDraft] = yield* db
+          .select({
+            publishSignature: draft.publishSignature,
+            arweaveTxId: draft.arweaveTxId,
+          })
+          .from(draft)
+          .where(eq(draft.id, "draft-checkpointed"));
+
+        expect({ checkpointed, abandoned, checkpointedDraft }).toStrictEqual({
+          checkpointed: 409,
+          abandoned: 202,
+          checkpointedDraft: {
+            publishSignature: "other-signature",
+            arweaveTxId: "checkpointed-arweave-tx",
+          },
+        });
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
     "POST /api/drafts/:draftId/publish enforces the daily publish limit of the free plan",
     () =>
       Effect.gen(function* () {
