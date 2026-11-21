@@ -1,5 +1,5 @@
 import { describe, expect, it } from "@effect/vitest";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { Deferred, Effect, Exit, Layer, Option, Schema, Stream } from "effect";
 import {
   Headers,
@@ -985,12 +985,14 @@ describe("drafts", () => {
           address: ownerWallet.address,
         });
         // A checkpoint without a live queue job (e.g. the FAILED write failed)
-        // which used to block re-publishing forever.
+        // which used to block re-publishing forever. It is older than the
+        // claim lease, a fresh one is protected.
         yield* createTestDraft({
           id: "draft-stuck",
           userId,
           txStatus: "PENDING",
           arweaveTxId: "stale-arweave-tx",
+          updatedAt: new Date(Date.now() - 3 * 60 * 1000),
         });
 
         const publishRes = yield* publishDraftRequest(client, "draft-stuck", {
@@ -1105,6 +1107,16 @@ describe("drafts", () => {
           arweaveTxId: "checkpointed-arweave-tx",
         });
 
+        // A retry of that signature reset the status, its new job will
+        // create the post from the checkpoint.
+        yield* createTestDraft({
+          id: "draft-checkpoint-retried",
+          userId,
+          txStatus: "PENDING",
+          publishSignature: "other-signature",
+          arweaveTxId: "retried-arweave-tx",
+        });
+
         // Its worker crashed after the checkpoint, the lease expired.
         yield* createTestDraft({
           id: "draft-checkpoint-abandoned",
@@ -1124,23 +1136,40 @@ describe("drafts", () => {
           }).pipe(Effect.map((response) => response.status));
 
         const checkpointed = yield* publish("draft-checkpointed");
+        const retried = yield* publish("draft-checkpoint-retried");
         const abandoned = yield* publish("draft-checkpoint-abandoned");
 
-        const [checkpointedDraft] = yield* db
+        const kept = yield* db
           .select({
+            id: draft.id,
             publishSignature: draft.publishSignature,
             arweaveTxId: draft.arweaveTxId,
           })
           .from(draft)
-          .where(eq(draft.id, "draft-checkpointed"));
+          .where(
+            inArray(draft.id, [
+              "draft-checkpointed",
+              "draft-checkpoint-retried",
+            ]),
+          )
+          .orderBy(draft.id);
 
-        expect({ checkpointed, abandoned, checkpointedDraft }).toStrictEqual({
+        expect({ checkpointed, retried, abandoned, kept }).toStrictEqual({
           checkpointed: 409,
+          retried: 409,
           abandoned: 202,
-          checkpointedDraft: {
-            publishSignature: "other-signature",
-            arweaveTxId: "checkpointed-arweave-tx",
-          },
+          kept: [
+            {
+              id: "draft-checkpoint-retried",
+              publishSignature: "other-signature",
+              arweaveTxId: "retried-arweave-tx",
+            },
+            {
+              id: "draft-checkpointed",
+              publishSignature: "other-signature",
+              arweaveTxId: "checkpointed-arweave-tx",
+            },
+          ],
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
