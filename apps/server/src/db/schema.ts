@@ -3,7 +3,6 @@ import {
   blob,
   index,
   integer,
-  real,
   sqliteTable,
   text,
   uniqueIndex,
@@ -116,14 +115,6 @@ export const walletAddress = sqliteTable(
 // --
 // End of better-auth models
 // --
-
-// Backing store for the persistent rate limiter (`RateLimiterFlexible` in the
-// legacy Prisma schema).
-export const rateLimiterFlexible = sqliteTable("rate_limiter_flexible", {
-  key: text("key").primaryKey(),
-  points: real("points").notNull(),
-  expire: timestamp("expire"),
-});
 
 // --
 // Drafts

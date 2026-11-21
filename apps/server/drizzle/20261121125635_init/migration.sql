@@ -97,12 +97,6 @@ CREATE TABLE `profile` (
 	`updated_at` integer NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE `rate_limiter_flexible` (
-	`key` text PRIMARY KEY,
-	`points` real NOT NULL,
-	`expire` integer
-);
---> statement-breakpoint
 CREATE TABLE `session` (
 	`id` text PRIMARY KEY,
 	`expires_at` integer NOT NULL,

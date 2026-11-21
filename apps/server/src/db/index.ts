@@ -97,11 +97,17 @@ export const makeDatabases = Effect.gen(function* () {
 
   yield* migrate(db, { migrationsFolder });
 
-  // SQLite enforces foreign keys (and their cascades) only when enabled on
-  // the connection. The client has a single connection, so this holds for
-  // every later query.
+  // Both settings apply to the connection. The client has a single
+  // connection, so they hold for every later query.
   const sql = yield* SqlClient.SqlClient;
+  // SQLite enforces foreign keys (and their cascades) only when enabled.
   yield* sql`PRAGMA foreign_keys = ON`;
+  // In WAL mode, NORMAL flushes to disk at checkpoints rather than on every
+  // commit, which would block the event loop (`node:sqlite` is synchronous).
+  // The database cannot be corrupted: a power loss or host crash can only
+  // roll back the last commits, which Litestream may already have uploaded.
+  // It then detects the database behind its replica and carries on.
+  yield* sql`PRAGMA synchronous = NORMAL`;
 
   const authDb = yield* makeAuthDatabase;
 

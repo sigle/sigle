@@ -1,7 +1,7 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "966146d6-072a-4d69-b13b-7d370d3b8d50",
+  "id": "19ef9685-60ba-4d8e-9fb6-606743fbac75",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -28,10 +28,6 @@
     },
     {
       "name": "profile",
-      "entityType": "tables"
-    },
-    {
-      "name": "rate_limiter_flexible",
       "entityType": "tables"
     },
     {
@@ -821,36 +817,6 @@
       "entityType": "columns"
     },
     {
-      "table": "rate_limiter_flexible",
-      "name": "key",
-      "type": "text",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "entityType": "columns"
-    },
-    {
-      "table": "rate_limiter_flexible",
-      "name": "points",
-      "type": "real",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "entityType": "columns"
-    },
-    {
-      "table": "rate_limiter_flexible",
-      "name": "expire",
-      "type": "integer",
-      "notNull": false,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "entityType": "columns"
-    },
-    {
       "table": "session",
       "name": "id",
       "type": "text",
@@ -1442,15 +1408,6 @@
       "name": "profile_pk",
       "columns": [
         "address"
-      ],
-      "nameExplicit": false,
-      "entityType": "pks"
-    },
-    {
-      "table": "rate_limiter_flexible",
-      "name": "rate_limiter_flexible_pk",
-      "columns": [
-        "key"
       ],
       "nameExplicit": false,
       "entityType": "pks"
