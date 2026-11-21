@@ -180,6 +180,28 @@ export const profile = pgTable("profile", {
   updatedAt: timestamp("updated_at", { precision: 3 }).defaultNow().notNull(),
 });
 
+// Successful profile updates through the API, one row per uploaded profile
+// metadata, counted against the daily profile update limit. Profiles indexed
+// from Arweave have no row.
+export const profileUpdate = pgTable(
+  "profile_update",
+  {
+    arweaveTxId: text("arweave_tx_id").primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    // Signing address of the uploaded profile.
+    address: text("address").notNull(),
+    createdAt: timestamp("created_at", { precision: 3 }).defaultNow().notNull(),
+  },
+  (table) => [
+    index("profile_update_user_id_created_at_idx").on(
+      table.userId,
+      table.createdAt,
+    ),
+  ],
+);
+
 // --
 // Media images
 // --

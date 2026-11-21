@@ -13,7 +13,11 @@ import { afterEach, vi } from "vite-plus/test";
 import type { PostHogEvent } from "@/services/posthog";
 import { PublicUser, UserProfile } from "@/api/groups/users";
 import { Database } from "@/db";
-import { mediaImage, profile as profileTable } from "@/db/schema";
+import {
+  mediaImage,
+  profile as profileTable,
+  profileUpdate,
+} from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
 import {
   ARWEAVE_TEST_UPLOAD,
@@ -246,6 +250,8 @@ describe("profile", () => {
         .limit(1)
         .pipe(Effect.orDie);
 
+      const updates = yield* db.select().from(profileUpdate).pipe(Effect.orDie);
+
       expect({
         status: response.status,
         body,
@@ -256,6 +262,7 @@ describe("profile", () => {
           Buffer.from(uploaded?.file ?? new Uint8Array()).toString(),
         ),
         profile: savedProfile,
+        updates,
         events,
       }).toStrictEqual({
         status: 200,
@@ -295,6 +302,15 @@ describe("profile", () => {
           createdAt: expect.any(Date),
           updatedAt: expect.any(Date),
         },
+        // Counted against the daily profile update limit.
+        updates: [
+          {
+            arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
+            userId,
+            address,
+            createdAt: expect.any(Date),
+          },
+        ],
         events: [
           {
             distinctId: userId,
@@ -498,6 +514,157 @@ describe("profile", () => {
         }),
       ),
     ),
+  );
+
+  it.effect(
+    "PUT /api/me/profile enforces the daily profile update limit",
+    () => {
+      const uploads: Array<ArweaveUploadOptions> = [];
+      const hourMillis = 60 * 60 * 1000;
+
+      return Effect.gen(function* () {
+        const { address, client, metadata, userId } =
+          yield* createSignedProfileClient();
+
+        const db = yield* Database;
+
+        // The oldest update leaves the window in 2 hours.
+        yield* db
+          .insert(profileUpdate)
+          .values(
+            Array.from({ length: 10 }, (_, index) => ({
+              arweaveTxId: `previous-${index}`,
+              userId,
+              address,
+              createdAt: new Date(Date.now() - (22 - index) * hourMillis),
+            })),
+          )
+          .pipe(Effect.orDie);
+
+        const response = yield* updateProfileRequest(client, metadata);
+        const body = yield* response.json;
+
+        const limits = yield* client
+          .get("/api/me/limits")
+          .pipe(Effect.flatMap((limitsResponse) => limitsResponse.json));
+
+        const resetInMillis = 2 * hourMillis;
+
+        expect({
+          status: response.status,
+          body,
+          retryAfter: Number(
+            Option.getOrUndefined(Headers.get(response.headers, "retry-after")),
+          ),
+          uploads: uploads.length,
+          limits,
+        }).toStrictEqual({
+          status: 429,
+          body: {
+            message:
+              "You can update your profile 10 times per day. Try again later.",
+            retryAfterMillis: expect.toSatisfy(
+              (millis: number) =>
+                millis <= resetInMillis && millis > resetInMillis - 60_000,
+            ),
+          },
+          retryAfter: expect.toSatisfy(
+            (seconds: number) =>
+              seconds <= resetInMillis / 1000 &&
+              seconds > resetInMillis / 1000 - 60,
+          ),
+          // Rejected before paying for an upload.
+          uploads: 0,
+          limits: expect.objectContaining({
+            profileUpdate: {
+              limit: 10,
+              used: 10,
+              resetsAt: expect.toSatisfy(
+                (resetsAt: string) =>
+                  Math.abs(
+                    new Date(resetsAt).getTime() - (Date.now() + resetInMillis),
+                  ) < 60_000,
+              ),
+            },
+          }),
+        });
+      }).pipe(
+        Effect.provide(
+          makeTestServerLayer({}, [], {
+            arweave: ArweaveService.layerTest(uploads),
+          }),
+        ),
+      );
+    },
+  );
+
+  it.effect(
+    "PUT /api/me/profile counts only the user's updates of the last 24 hours",
+    () => {
+      const hourMillis = 60 * 60 * 1000;
+
+      return Effect.gen(function* () {
+        const { address, client, metadata, userId } =
+          yield* createSignedProfileClient();
+
+        const other = yield* createSignedProfileClient();
+        const db = yield* Database;
+
+        yield* db
+          .insert(profileUpdate)
+          .values([
+            // 9 counted updates, one under the limit.
+            ...Array.from({ length: 9 }, (_, index) => ({
+              arweaveTxId: `recent-${index}`,
+              userId,
+              address,
+              createdAt: new Date(Date.now() - (20 - index) * hourMillis),
+            })),
+            // Out of the window.
+            ...Array.from({ length: 5 }, (_, index) => ({
+              arweaveTxId: `old-${index}`,
+              userId,
+              address,
+              createdAt: new Date(Date.now() - (25 + index) * hourMillis),
+            })),
+            // Another user's updates.
+            ...Array.from({ length: 10 }, (_, index) => ({
+              arweaveTxId: `other-${index}`,
+              userId: other.userId,
+              address: other.address,
+              createdAt: new Date(Date.now() - hourMillis),
+            })),
+          ])
+          .pipe(Effect.orDie);
+
+        const response = yield* updateProfileRequest(client, metadata);
+
+        const limits = yield* client
+          .get("/api/me/limits")
+          .pipe(Effect.flatMap((limitsResponse) => limitsResponse.json));
+
+        expect({
+          status: response.status,
+          limits,
+        }).toStrictEqual({
+          status: 200,
+          // The successful update now counts too.
+          limits: expect.objectContaining({
+            profileUpdate: {
+              limit: 10,
+              used: 10,
+              resetsAt: expect.toSatisfy(
+                (resetsAt: string) =>
+                  Math.abs(
+                    new Date(resetsAt).getTime() -
+                      (Date.now() + 4 * hourMillis),
+                  ) < 60_000,
+              ),
+            },
+          }),
+        });
+      }).pipe(Effect.provide(makeTestServerLayer()));
+    },
   );
 
   it.effect("PUT /api/me/profile rate limits each user independently", () =>
