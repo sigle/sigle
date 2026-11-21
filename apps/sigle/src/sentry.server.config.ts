@@ -9,4 +9,10 @@ Sentry.init({
   // Sentry only reports errors here. Registering its own OpenTelemetry tracer
   // provider would take the spans meant for Railway (see instrumentation.ts).
   enableOpenTelemetrySetup: false,
+  integrations: [
+    // By default every incoming request is tracked as a release health
+    // session, and the sessions are sent to Sentry a minute later. That send
+    // shows up as a `POST *.ingest.us.sentry.io` span in the request's trace.
+    Sentry.httpIntegration({ sessions: false }),
+  ],
 });

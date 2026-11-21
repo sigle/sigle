@@ -14,9 +14,16 @@ export async function register() {
 
       registerOTel({
         instrumentationConfig: {
-          // Continue the trace into the API: off Vercel, the `traceparent`
-          // header is only sent to the URLs listed here.
-          fetch: { propagateContextUrls: [env.NEXT_PUBLIC_API_URL] },
+          fetch: {
+            // Continue the trace into the API: off Vercel, the `traceparent`
+            // header is only sent to the URLs listed here.
+            propagateContextUrls: [env.NEXT_PUBLIC_API_URL],
+            // Sending errors to Sentry is not part of the request, but would
+            // show up as a span in its trace.
+            ignoreUrls: env.NEXT_PUBLIC_SENTRY_DSN
+              ? [new URL(env.NEXT_PUBLIC_SENTRY_DSN).origin]
+              : [],
+          },
         },
       });
     }
