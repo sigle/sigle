@@ -72,6 +72,7 @@ export const LatestDrafts = () => {
               </EmptyHeader>
               <EmptyContent>
                 <Button
+                  nativeButton={false}
                   render={<NextLink href="/p/new">Create a new draft</NextLink>}
                 />
               </EmptyContent>
