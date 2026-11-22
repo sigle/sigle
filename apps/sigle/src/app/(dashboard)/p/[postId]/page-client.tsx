@@ -11,8 +11,9 @@ import { NextLink } from "@/components/Shared/NextLink";
 import { FadeSlideBottom } from "@/components/ui";
 import { Badge } from "@/components/ui/badge";
 import { BlurImage } from "@/components/ui/blur-image";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
@@ -56,14 +57,12 @@ export function PostClientPage(props: Props) {
       ) : null}
 
       <div className="mx-auto my-8 max-w-2xl px-4 md:my-10">
-        <Button
-          variant="ghost"
-          className="mb-6"
-          nativeButton={false}
-          render={<NextLink href={Routes.explore()} />}
+        <NextLink
+          href={Routes.explore()}
+          className={cn(buttonVariants({ variant: "ghost" }), "mb-6")}
         >
           <IconArrowLeft size={14} /> All articles
-        </Button>
+        </NextLink>
 
         <header className="mb-8 flex flex-col gap-4">
           {post.tags.length > 0 ? (

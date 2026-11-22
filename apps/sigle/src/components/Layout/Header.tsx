@@ -5,7 +5,7 @@ import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { Suspense, useLayoutEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { useIsClient } from "@/hooks/useIsClient";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
 import { LogoImage } from "@/images/Logo";
@@ -40,13 +40,12 @@ export const Header = () => {
         <NextLink href="/">
           <LogoImage height={28} />
         </NextLink>
-        <Button
-          variant="ghost"
-          nativeButton={false}
-          render={<NextLink href={Routes.explore()} />}
+        <NextLink
+          href={Routes.explore()}
+          className={buttonVariants({ variant: "ghost" })}
         >
           Explore
-        </Button>
+        </NextLink>
       </div>
       {!session ? (
         <div className="flex items-center gap-6">
@@ -66,9 +65,9 @@ export const Header = () => {
       ) : null}
       {session ? (
         <div className="flex items-center gap-5">
-          <Button nativeButton={false} render={<NextLink href="/dashboard" />}>
+          <NextLink href="/dashboard" className={buttonVariants()}>
             Dashboard
-          </Button>
+          </NextLink>
           <Suspense fallback={null}>
             <UserDropdown />
           </Suspense>

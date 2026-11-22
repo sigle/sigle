@@ -7,7 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { NextLink } from "@/components/Shared/NextLink";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
@@ -65,15 +65,13 @@ export const EditorHeader = () => {
     >
       <div className="flex flex-1 items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            nativeButton={false}
-            render={<NextLink href="/dashboard/drafts" />}
+          <NextLink
+            href="/dashboard/drafts"
+            className={buttonVariants({ variant: "ghost", size: "icon" })}
             aria-label="Back to drafts"
           >
             <IconArrowLeft size={headerIconSize} />
-          </Button>
+          </NextLink>
           {type === "draft" ? <EditorSave /> : null}
         </div>
         <div className="flex items-center gap-6">

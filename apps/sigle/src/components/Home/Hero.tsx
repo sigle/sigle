@@ -4,7 +4,7 @@ import { useStacksLogin } from "@/hooks/useStacksLogin";
 import { useSession } from "@/lib/auth-hooks";
 import { Routes } from "@/lib/routes";
 import { NextLink } from "../Shared/NextLink";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 
 export const HomeHero = () => {
   const { login } = useStacksLogin();
@@ -21,24 +21,23 @@ export const HomeHero = () => {
       </h2>
 
       <div className="mt-10 space-x-3">
-        <Button
-          size="lg"
-          variant="outline"
-          nativeButton={false}
-          render={<NextLink href={Routes.explore()}>Explore</NextLink>}
-        />
+        <NextLink
+          href={Routes.explore()}
+          className={buttonVariants({ size: "lg", variant: "outline" })}
+        >
+          Explore
+        </NextLink>
         {!session ? (
           <Button size="lg" onClick={login}>
             Start Writing
           </Button>
         ) : (
-          <Button
-            size="lg"
-            nativeButton={false}
-            render={
-              <NextLink href={Routes.dashboard()}>View Dashboard</NextLink>
-            }
-          />
+          <NextLink
+            href={Routes.dashboard()}
+            className={buttonVariants({ size: "lg" })}
+          >
+            View Dashboard
+          </NextLink>
         )}
       </div>
     </div>
