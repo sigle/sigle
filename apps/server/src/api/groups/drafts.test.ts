@@ -13,6 +13,8 @@ import type { PostHogEvent } from "@/services/posthog";
 import {
   CreateDraftPayload,
   Draft,
+  DRAFT_CONTENT_TOTAL_MAX_MIB,
+  DRAFT_COUNT_LIMIT,
   DRAFT_LIMITS,
   DraftListResponse,
   PublishDraftAccepted,
@@ -220,6 +222,97 @@ describe("drafts", () => {
         coverImage: "https://cdn.test/cover.png",
         tags: ["stacks", "writing"],
         canonicalUri: "https://example.com/post",
+      });
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect("POST /api/drafts allows 100 drafts per user", () =>
+    Effect.gen(function* () {
+      const { client, userId } = yield* createAuthenticatedClient();
+      const other = yield* createAuthenticatedClient();
+
+      yield* Effect.forEach(Array.from({ length: DRAFT_COUNT_LIMIT - 1 }), () =>
+        createTestDraft({ userId }),
+      );
+
+      const last = yield* createDraftRequest(client);
+      const overLimit = yield* createDraftRequest(client);
+      const otherUser = yield* createDraftRequest(other.client);
+
+      expect({
+        last: last.status,
+        overLimit: overLimit.status,
+        body: yield* overLimit.json,
+        otherUser: otherUser.status,
+      }).toStrictEqual({
+        last: 201,
+        overLimit: 403,
+        body: {
+          message:
+            "You can have up to 100 drafts. Delete a draft to create a new one.",
+        },
+        otherUser: 201,
+      });
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect("drafts hold up to 10 MiB of content per user", () =>
+    Effect.gen(function* () {
+      const { client, userId } = yield* createAuthenticatedClient();
+      const db = yield* Database;
+      const maxBytes = DRAFT_CONTENT_TOTAL_MAX_MIB * 1024 * 1024;
+
+      // 2-byte characters, so the limit counts bytes, not characters.
+      yield* createTestDraft({
+        id: "big",
+        userId,
+        content: "é".repeat(maxBytes / 2 - 50),
+      });
+      yield* createTestDraft({ id: "draft-1", userId, content: "" });
+
+      const save = (content: string) =>
+        updateDraftRequest(client, "draft-1", { content });
+
+      const atLimit = yield* save("a".repeat(100));
+      const overLimit = yield* save("a".repeat(101));
+
+      const createWithContent = yield* createDraftRequest(client, {
+        content: "a",
+      });
+
+      const createEmpty = yield* createDraftRequest(client, {});
+
+      // A user over the limit can still shorten a draft.
+      yield* db
+        .update(draft)
+        .set({ content: "é".repeat(maxBytes / 2) })
+        .where(eq(draft.id, "big"));
+      const shorten = yield* save("a".repeat(50));
+
+      const [stored] = yield* db
+        .select({ content: draft.content })
+        .from(draft)
+        .where(eq(draft.id, "draft-1"));
+
+      expect({
+        atLimit: atLimit.status,
+        overLimit: overLimit.status,
+        body: yield* overLimit.json,
+        createWithContent: createWithContent.status,
+        createEmpty: createEmpty.status,
+        shorten: shorten.status,
+        stored: stored?.content,
+      }).toStrictEqual({
+        atLimit: 200,
+        overLimit: 403,
+        body: {
+          message:
+            "Your drafts can hold up to 10 MiB of content in total. Delete or shorten a draft to save this one.",
+        },
+        createWithContent: 403,
+        createEmpty: 201,
+        shorten: 200,
+        stored: "a".repeat(50),
       });
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
@@ -488,6 +581,43 @@ describe("drafts", () => {
           missingStatus: 404,
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect("PATCH /api/drafts/:draftId reads bodies up to 4 MiB", () =>
+    Effect.gen(function* () {
+      const { client, userId } = yield* createAuthenticatedClient();
+      const db = yield* Database;
+      const maxBytes = 4 * 1024 * 1024;
+
+      yield* createTestDraft({ id: "draft-1", userId, content: "Before" });
+
+      // `{"content":"..."}` around the content takes 14 bytes.
+      const patch = (bytes: number) =>
+        client.execute(
+          HttpClientRequest.patch("/api/drafts/draft-1").pipe(
+            HttpClientRequest.bodyText(
+              JSON.stringify({ content: "a".repeat(bytes - 14) }),
+              "application/json",
+            ),
+          ),
+        );
+
+      const overLimit = yield* patch(maxBytes + 1);
+
+      const [stored] = yield* db
+        .select({ content: draft.content })
+        .from(draft)
+        .where(eq(draft.id, "draft-1"));
+
+      // A body at the limit is read, then rejected by the content limit.
+      const atLimit = yield* patch(maxBytes);
+
+      expect({
+        overLimit: overLimit.status,
+        stored: stored?.content,
+        atLimit: atLimit.status,
+      }).toStrictEqual({ overLimit: 413, stored: "Before", atLimit: 400 });
+    }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
   it.effect("PATCH /api/drafts/:draftId returns 404 when not found", () =>

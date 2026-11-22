@@ -22,6 +22,13 @@ import { ProfileMetadata } from "@/lib/metadata";
 import { profileImageKinds } from "@/lib/profile-images";
 import { PROFILE_UPDATE_LIMIT } from "@/services/plan";
 
+/**
+ * Largest signed profile metadata uploaded to Arweave, as JSON. The server's
+ * Arweave key pays for each upload, and the metadata schema doesn't limit the
+ * description or attributes.
+ */
+export const PROFILE_METADATA_MAX_KIB = 32;
+
 export const UpdateProfilePayload = Schema.Struct({
   metadata: ProfileMetadata,
 }).annotate({ identifier: "UpdateProfilePayload" });
@@ -52,12 +59,12 @@ export const ProfileGroup = HttpApiGroup.make("profile")
       success: UpdateProfileResponse,
       // The 429 is also returned once the daily profile update limit is
       // reached.
-      error: [BadRequest, Conflict, TooManyRequests],
+      error: [BadRequest, Conflict, PayloadTooLarge, TooManyRequests],
     })
       .annotate(OpenApi.Summary, "Update the profile")
       .annotate(
         OpenApi.Description,
-        `Update the profile with signed profile metadata: upload it to Arweave, store it as the profile of the signing address, and return the transaction and the stored profile. Returns a 429 once the user has updated their profile ${PROFILE_UPDATE_LIMIT} times in the last 24 hours.`,
+        `Update the profile with signed profile metadata: upload it to Arweave, store it as the profile of the signing address, and return the transaction and the stored profile. Returns a 413 when the metadata is over ${PROFILE_METADATA_MAX_KIB} KiB as JSON, and a 429 once the user has updated their profile ${PROFILE_UPDATE_LIMIT} times in the last 24 hours.`,
       )
       .annotate(RateLimitPolicy, "profileMetadataUpload"),
   )

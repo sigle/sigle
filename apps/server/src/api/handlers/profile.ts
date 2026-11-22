@@ -7,8 +7,11 @@ import {
 import { eq } from "drizzle-orm";
 import { Duration, Effect } from "effect";
 import { HttpApiBuilder } from "effect/http-api";
-import type { UpdateProfilePayload } from "@/api/groups/profile";
 import { SigleApi } from "@/api";
+import {
+  PROFILE_METADATA_MAX_KIB,
+  type UpdateProfilePayload,
+} from "@/api/groups/profile";
 import { findProfile } from "@/api/handlers/users";
 import { uploadImageFromRequest } from "@/api/image-upload";
 import { CurrentUser } from "@/api/middleware/auth-user";
@@ -17,6 +20,7 @@ import {
   BadRequest,
   Conflict,
   InternalServerError,
+  PayloadTooLarge,
   TooManyRequests,
 } from "@/api/schemas";
 import { AppConfig } from "@/config";
@@ -79,6 +83,14 @@ export const updateProfile = (payload: typeof UpdateProfilePayload.Type) =>
     const db = yield* Database;
     const arweave = yield* ArweaveService;
     const posthog = yield* PostHogService;
+
+    const file = Buffer.from(JSON.stringify(payload.metadata));
+
+    if (file.length > PROFILE_METADATA_MAX_KIB * 1024) {
+      return yield* new PayloadTooLarge({
+        message: `Profile metadata is too large, maximum size is ${PROFILE_METADATA_MAX_KIB} KiB.`,
+      });
+    }
 
     // Verify that the signature is valid and belongs to a wallet owned by the logged-in user
     const signatureResult = verifyMetadataSignature(payload.metadata, {
@@ -148,8 +160,6 @@ export const updateProfile = (payload: typeof UpdateProfilePayload.Type) =>
             message: "Metadata signature has already been published",
           });
         }
-
-        const file = Buffer.from(JSON.stringify(payload.metadata));
 
         const uploaded = yield* arweave
           .uploadFile({
