@@ -1,9 +1,12 @@
+import { eq } from "drizzle-orm";
 import { Context, Effect, Layer } from "effect";
 import { HttpServerRequest } from "effect/http";
 import { HttpApiMiddleware, HttpApiSecurity, OpenApi } from "effect/http-api";
+import type { UserPlan } from "@/services/plan";
 import { Forbidden, Unauthorized } from "@/api/schemas";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
+import { user } from "@/db/schema";
 import {
   AuthService,
   SECURE_SESSION_COOKIE_NAME,
@@ -18,6 +21,8 @@ export interface AuthenticatedUser {
   /** Addresses of all the user's wallets, the primary one first. */
   readonly walletAddresses: ReadonlyArray<string>;
   readonly whitelisted: boolean;
+  /** The plan stored on the user, see `PlanClient.checkUserPlan`. */
+  readonly plan: UserPlan;
 }
 
 export class CurrentUser extends Context.Service<
@@ -79,6 +84,12 @@ export const UserAuthMiddlewareLayer: Layer.Layer<
             session.user.id,
           ).pipe(Effect.provideService(Database, db));
 
+          const [{ plan } = { plan: "free" as const }] = yield* db
+            .select({ plan: user.plan })
+            .from(user)
+            .where(eq(user.id, session.user.id))
+            .pipe(Effect.orDie);
+
           return yield* Effect.provideService(httpEffect, CurrentUser, {
             id: session.user.id,
             address: walletAddresses[0],
@@ -88,6 +99,7 @@ export const UserAuthMiddlewareLayer: Layer.Layer<
               walletAddresses.some((address) =>
                 config.WHITELISTED_ADDRESSES.includes(address),
               ),
+            plan,
           });
         }),
     };

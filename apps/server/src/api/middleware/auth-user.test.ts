@@ -112,24 +112,30 @@ describe("userAuthMiddleware", () => {
     );
   });
 
-  it.effect("reports the pro plan for pro wallets", () => {
-    const { address } = createTestSiwsCredentials();
+  it.effect("reports the stored plan, not the wallet holdings", () => {
+    const { address: eligibleAddress } = createTestSiwsCredentials();
 
     return Effect.gen(function* () {
-      const { client, userId } = yield* createAuthenticatedClient({ address });
+      const pro = yield* createAuthenticatedClient({ plan: "pro" });
 
-      const response = yield* client.get("/api/me");
-
-      const body =
-        yield* HttpClientResponse.schemaBodyJson(CurrentUserResponse)(response);
-
-      expect(body).toStrictEqual({
-        id: userId,
-        address,
-        whitelisted: true,
-        plan: "pro",
+      // Eligible for Pro, but never activated it.
+      const eligible = yield* createAuthenticatedClient({
+        address: eligibleAddress,
       });
-    }).pipe(Effect.provide(makeTestServerLayer({ PRO_ADDRESSES: [address] })));
+
+      const plans = yield* Effect.forEach([pro, eligible], ({ client }) =>
+        client.get("/api/me").pipe(
+          Effect.flatMap(
+            HttpClientResponse.schemaBodyJson(CurrentUserResponse),
+          ),
+          Effect.map((body) => body.plan),
+        ),
+      );
+
+      expect(plans).toStrictEqual(["pro", "free"]);
+    }).pipe(
+      Effect.provide(makeTestServerLayer({ PRO_ADDRESSES: [eligibleAddress] })),
+    );
   });
 
   it.effect("returns 403 when the user is not whitelisted", () =>

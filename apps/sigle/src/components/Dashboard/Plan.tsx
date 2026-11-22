@@ -1,6 +1,5 @@
 "use client";
 
-import { PUBLISH_LIMITS } from "@sigle/sdk";
 import { IconCheck, IconExternalLink } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePostHog } from "posthog-js/react";
@@ -19,6 +18,7 @@ import {
 import { Progress } from "@/components/ui/progress";
 import { appConfig } from "@/config";
 import { cn } from "@/lib/cn";
+import { PUBLISH_LIMITS } from "@/lib/plans";
 import { sigleApiClient } from "@/lib/sigle";
 import { formatReadableAddress } from "@/lib/stacks";
 import { ProWelcomeDialog } from "./ProWelcomeDialog";

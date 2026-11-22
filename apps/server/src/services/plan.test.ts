@@ -1,9 +1,12 @@
 import { describe, expect, it } from "@effect/vitest";
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
+import { eq } from "drizzle-orm";
 import { Effect, Layer, Option, Redacted } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
-import { TestClock } from "effect/testing";
 import { AppConfig, type AppConfigValues } from "@/config";
+import { Database } from "@/db";
+import { user } from "@/db/schema";
+import { reconcileUserPlans } from "@/jobs/plan-reconcile";
 import {
   makePlanService,
   NftHoldingsError,
@@ -27,7 +30,7 @@ const MAINNET_CONFIG: Partial<AppConfigValues> = {
 const makeStacksApiLayer = (
   holdings: Readonly<Record<string, number>>,
   requests: Array<URL> = [],
-  status: () => number = () => 200,
+  status: (principal: string) => number = () => 200,
 ) =>
   Layer.succeed(
     HttpClient.HttpClient,
@@ -44,7 +47,7 @@ const makeStacksApiLayer = (
           request,
           Response.json(
             { limit: 1, total: holdings[principal] ?? 0, results: [] },
-            { status: status() },
+            { status: status(principal) },
           ),
         );
       }),
@@ -61,16 +64,35 @@ const makePlanTestLayer = (
     Layer.provideMerge(TestDatabaseLayer),
   );
 
-const createUserWithWallets = (addresses: ReadonlyArray<string>) =>
+const createUserWithWallets = (
+  addresses: ReadonlyArray<string>,
+  overrides: Partial<typeof user.$inferInsert> = {},
+) =>
   Effect.gen(function* () {
-    const user = yield* createTestUser();
+    const created = yield* createTestUser(overrides);
 
     for (const address of addresses) {
-      yield* createTestWalletAddress({ userId: user.id, address });
+      yield* createTestWalletAddress({ userId: created.id, address });
     }
 
-    return user.id;
+    return created.id;
   });
+
+const findStoredPlan = (userId: string) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+
+    const [row] = yield* db
+      .select({ plan: user.plan, planCheckedAt: user.planCheckedAt })
+      .from(user)
+      .where(eq(user.id, userId));
+
+    return row;
+  });
+
+const HOUR_MILLIS = 60 * 60 * 1000;
+
+const hoursAgo = (hours: number) => new Date(Date.now() - hours * HOUR_MILLIS);
 
 describe("plan service", () => {
   it.effect(
@@ -164,7 +186,7 @@ describe("plan service", () => {
   );
 
   it.effect(
-    "on mainnet, returns pro when a wallet holds the NFT and ignores PRO_ADDRESSES",
+    "on mainnet, stores pro when a wallet holds the NFT and ignores PRO_ADDRESSES",
     () =>
       Effect.gen(function* () {
         const plans = yield* PlanService;
@@ -178,13 +200,19 @@ describe("plan service", () => {
         const walletlessUserId = yield* createUserWithWallets([]);
 
         expect({
-          holder: yield* plans.getUserPlan(holderUserId),
-          nonHolder: yield* plans.getUserPlan(nonHolderUserId),
-          walletless: yield* plans.getUserPlan(walletlessUserId),
+          holder: yield* plans.checkUserPlan(holderUserId),
+          nonHolder: yield* plans.checkUserPlan(nonHolderUserId),
+          walletless: yield* plans.checkUserPlan(walletlessUserId),
+          stored: [
+            (yield* findStoredPlan(holderUserId))?.plan,
+            (yield* findStoredPlan(nonHolderUserId))?.plan,
+            (yield* findStoredPlan(walletlessUserId))?.plan,
+          ],
         }).toStrictEqual({
           holder: "pro",
           nonHolder: "free",
           walletless: "free",
+          stored: ["pro", "free", "free"],
         });
       }).pipe(
         Effect.provide(
@@ -208,8 +236,8 @@ describe("plan service", () => {
         const holderUserId = yield* createUserWithWallets([HOLDER]);
 
         expect({
-          emulated: yield* plans.getUserPlan(emulatedUserId),
-          holder: yield* plans.getUserPlan(holderUserId),
+          emulated: yield* plans.checkUserPlan(emulatedUserId),
+          holder: yield* plans.checkUserPlan(holderUserId),
           hasTegNft: yield* plans.hasTegNft(HOLDER),
           requests: requests.length,
         }).toStrictEqual({
@@ -228,91 +256,103 @@ describe("plan service", () => {
       );
     },
   );
-  it.effect("caches user plans for 12 hours and retries failed lookups", () => {
-    const requests: Array<URL> = [];
-    let status = 503;
+
+  it.effect("keeps the stored plan when the check fails", () => {
+    let status = 200;
 
     return Effect.gen(function* () {
       const plans = yield* PlanService;
       const userId = yield* createUserWithWallets([HOLDER]);
 
-      yield* Effect.flip(plans.getUserPlan(userId));
-      status = 200;
+      yield* plans.checkUserPlan(userId);
+      const afterCheck = yield* findStoredPlan(userId);
 
-      const plansWithinTtl = [
-        yield* plans.getUserPlan(userId),
-        yield* plans.getUserPlan(userId),
-      ];
-
-      const requestsWithinTtl = requests.length;
-
-      yield* TestClock.adjust("12 hours");
-      yield* plans.getUserPlan(userId);
+      status = 503;
+      yield* Effect.flip(plans.checkUserPlan(userId));
 
       expect({
-        plansWithinTtl,
-        requestsWithinTtl,
-        requestsAfterTtl: requests.length,
+        plan: afterCheck?.plan,
+        checked: afterCheck?.planCheckedAt instanceof Date,
+        afterFailure: yield* findStoredPlan(userId),
       }).toStrictEqual({
-        plansWithinTtl: ["pro", "pro"],
-        requestsWithinTtl: 2,
-        requestsAfterTtl: 3,
+        plan: "pro",
+        checked: true,
+        afterFailure: afterCheck,
       });
     }).pipe(
       Effect.provide(
         makePlanTestLayer(
           MAINNET_CONFIG,
-          makeStacksApiLayer({ [HOLDER]: 1 }, requests, () => status),
+          makeStacksApiLayer({ [HOLDER]: 1 }, [], () => status),
         ),
       ),
     );
   });
+});
+
+describe("plan reconciliation", () => {
+  const SELLER = "SP1P72Z3704VMT3DMHPP2CB8TGQWGDBHD3RPR9GZS";
+  const UNREACHABLE = "SP3D6PV2ACBPEKYJTCMH7HEN02KP87QSP8KTEH335";
 
   it.effect(
-    "refreshing a plan replaces the cached plan, and a failed refresh drops it",
-    () => {
-      const holdings: Record<string, number> = {};
-      let status = 200;
+    "re-checks only the pro users not checked recently, and never upgrades",
+    () =>
+      Effect.gen(function* () {
+        const proSince = (hours: number) => ({
+          plan: "pro" as const,
+          planCheckedAt: hoursAgo(hours),
+        });
 
-      return Effect.gen(function* () {
-        const plans = yield* PlanService;
-        const userId = yield* createUserWithWallets([HOLDER]);
+        const users = {
+          seller: yield* createUserWithWallets([SELLER], proSince(7)),
+          holder: yield* createUserWithWallets([HOLDER], proSince(7)),
+          recentSeller: yield* createUserWithWallets(
+            [OTHER_NON_HOLDER],
+            proSince(1),
+          ),
+          unreachable: yield* createUserWithWallets([UNREACHABLE], proSince(7)),
+          // Holds the NFT but never activated Pro.
+          freeHolder: yield* createUserWithWallets([NON_HOLDER]),
+        };
 
-        const beforeBuying = yield* plans.getUserPlan(userId);
-        // The user buys the NFT after their plan was cached.
-        holdings[HOLDER] = 1;
+        yield* reconcileUserPlans;
 
-        const cachedAfterBuying = yield* plans.getUserPlan(userId);
-        const refreshed = yield* plans.refreshUserPlan(userId);
-        const cachedAfterRefresh = yield* plans.getUserPlan(userId);
+        const plansAfter = Object.fromEntries(
+          yield* Effect.forEach(Object.entries(users), ([name, id]) =>
+            Effect.map(findStoredPlan(id), (row) => [name, row?.plan]),
+          ),
+        );
 
-        // The user sells the NFT, and the refresh cannot reach the Stacks API.
-        holdings[HOLDER] = 0;
-        status = 503;
-        yield* Effect.flip(plans.refreshUserPlan(userId));
-        status = 200;
+        const holderCheckedAt = (yield* findStoredPlan(users.holder))
+          ?.planCheckedAt;
 
         expect({
-          beforeBuying,
-          cachedAfterBuying,
-          refreshed,
-          cachedAfterRefresh,
-          afterFailedRefresh: yield* plans.getUserPlan(userId),
+          plansAfter,
+          holderRechecked:
+            holderCheckedAt !== undefined &&
+            holderCheckedAt !== null &&
+            holderCheckedAt > hoursAgo(1),
         }).toStrictEqual({
-          beforeBuying: "free",
-          cachedAfterBuying: "free",
-          refreshed: "pro",
-          cachedAfterRefresh: "pro",
-          afterFailedRefresh: "free",
+          plansAfter: {
+            seller: "free",
+            holder: "pro",
+            recentSeller: "pro",
+            unreachable: "pro",
+            freeHolder: "free",
+          },
+          holderRechecked: true,
         });
       }).pipe(
         Effect.provide(
           makePlanTestLayer(
             MAINNET_CONFIG,
-            makeStacksApiLayer(holdings, [], () => status),
+            makeStacksApiLayer(
+              { [HOLDER]: 1, [NON_HOLDER]: 1 },
+              [],
+              (principal) => (principal === UNREACHABLE ? 503 : 200),
+            ),
           ),
         ),
-      );
-    },
+      ),
   );
 });

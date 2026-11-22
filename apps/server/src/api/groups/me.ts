@@ -66,7 +66,7 @@ export const MeGroup = HttpApiGroup.make("me")
       .annotate(OpenApi.Summary, "Refresh the signed-in user's plan")
       .annotate(
         OpenApi.Description,
-        "Check right away whether one of the signed-in user's wallets holds an Explorer Guild NFT, such as after buying one, instead of waiting for the cached plan to expire. Return the plan the user is now on. Returns a 500 when the Stacks API cannot be reached, and a 401 without a session.",
+        "Activate Pro: check whether one of the signed-in user's wallets holds an Explorer Guild NFT, store the resulting plan, and return it. This is the only way to get Pro; Pro users are re-checked twice a day. Returns a 500 when the Stacks API cannot be reached, which keeps the stored plan, and a 401 without a session.",
       )
       .annotate(RateLimitPolicy, "planRefresh"),
   )

@@ -1,6 +1,5 @@
 "use client";
 
-import { PUBLISH_LIMITS } from "@sigle/sdk";
 import { IconCheck } from "@tabler/icons-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { NextLink } from "@/components/Shared/NextLink";
@@ -14,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { PUBLISH_LIMITS } from "@/lib/plans";
 
 const UNLOCKED_FEATURES = [
   `${PUBLISH_LIMITS.pro} posts per day`,

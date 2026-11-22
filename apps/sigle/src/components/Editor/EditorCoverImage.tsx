@@ -1,6 +1,5 @@
 "use client";
 
-import { PUBLISH_LIMITS } from "@sigle/sdk";
 import { IconCameraPlus, IconHandGrab, IconTrash } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { useParams } from "next/navigation";
@@ -20,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
+import { PUBLISH_LIMITS } from "@/lib/plans";
 import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "./EditorFormProvider";
 

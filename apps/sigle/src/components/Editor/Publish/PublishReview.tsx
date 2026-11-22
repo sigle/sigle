@@ -1,4 +1,3 @@
-import { PUBLISH_LIMITS } from "@sigle/sdk";
 import {
   IconAlertCircle,
   IconClock,
@@ -10,6 +9,7 @@ import { useFormContext } from "react-hook-form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { DialogClose, DialogFooter } from "@/components/ui/dialog";
+import { PUBLISH_LIMITS } from "@/lib/plans";
 import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { PublishReviewGeneral } from "./ReviewGeneral";

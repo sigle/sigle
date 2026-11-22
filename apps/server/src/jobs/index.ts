@@ -25,6 +25,7 @@ import {
   opentimestampsUpgradeJob,
   OpenTimestampsUpgradeWorkerLive,
 } from "@/jobs/opentimestamps-upgrade";
+import { PlanReconcileLive } from "@/jobs/plan-reconcile";
 import { ProfileIndexScanLive } from "@/jobs/profile-index-scan";
 import {
   publishDraftJob,
@@ -66,6 +67,7 @@ export const JobsLive = Layer.mergeAll(
   IndexProfileWorkerLive,
   OpenTimestampsReconcileLive,
   MediaImageReconcileLive,
+  PlanReconcileLive,
   ProfileIndexScanLive,
   JobAdminService.layer,
   QueueCleanupLive,
