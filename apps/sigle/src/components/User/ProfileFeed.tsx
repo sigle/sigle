@@ -1,7 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient } from "@/lib/sigle";
 import { GetFamiliarCards } from "../Dashboard/GetFamiliarCards";
@@ -40,9 +40,9 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
           <p className="text-sm font-medium text-muted-foreground">
             You haven&apos;t published anything yet.
           </p>
-          <Button nativeButton={false} render={<NextLink href="/p/new" />}>
+          <NextLink href="/p/new" className={buttonVariants()}>
             Start writing
-          </Button>
+          </NextLink>
         </div>
 
         <GetFamiliarCards />
@@ -54,9 +54,9 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
     return (
       <div className="my-20 flex flex-col items-center gap-3">
         <p>This user has not published anything yet.</p>
-        <Button nativeButton={false} render={<NextLink href="/" />}>
+        <NextLink href="/" className={buttonVariants()}>
           Explore
-        </Button>
+        </NextLink>
       </div>
     );
   }

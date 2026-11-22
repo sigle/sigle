@@ -13,7 +13,7 @@
     "test": "vp test"
   },
   "dependencies": {
-    "@base-ui/react": "1.4.1",
+    "@base-ui/react": "1.9.0",
     "@daveyplate/better-auth-tanstack": "1.3.6",
     "@floating-ui/dom": "1.7.6",
     "@hookform/resolvers": "5.2.2",
@@ -63,7 +63,7 @@
     "better-auth": "1.7.6",
     "better-result": "3.0.1",
     "class-variance-authority": "0.7.1",
-    "clsx": "2.1.1",
+    "cn": "0.5.2",
     "date-fns": "4.1.0",
     "embla-carousel-react": "8.6.0",
     "feed": "5.2.0",
@@ -91,10 +91,8 @@
     "shadcn": "4.13.0",
     "sign-in-with-stacks": "0.4.0",
     "sonner": "2.0.7",
-    "tailwind-merge": "3.6.0",
     "thumbhash": "0.1.1",
     "valid-url": "1.0.9",
-    "vaul": "1.1.2",
     "zod": "4.3.6",
     "zustand": "5.0.12"
   },

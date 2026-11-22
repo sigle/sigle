@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
 import { NextLink } from "@/components/Shared/NextLink";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -73,9 +73,9 @@ export default function DashboardDrafts() {
                 </EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
-                <Button
-                  render={<NextLink href="/p/new">Create a new draft</NextLink>}
-                />
+                <NextLink href="/p/new" className={buttonVariants()}>
+                  Create a new draft
+                </NextLink>
               </EmptyContent>
             </Empty>
           ) : null}

@@ -4,7 +4,7 @@ import type { paths } from "@sigle/sdk";
 import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
 import { usePostHog } from "posthog-js/react";
 import { BlurImage } from "@/components/ui/blur-image";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -78,13 +78,12 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
 
           <div className="mt-4 flex items-center gap-4">
             {isCurrentUser ? (
-              <Button
-                variant="secondary"
-                nativeButton={false}
-                render={<NextLink href="/dashboard/settings" />}
+              <NextLink
+                href="/dashboard/settings"
+                className={buttonVariants({ variant: "secondary" })}
               >
                 Edit profile <IconPencil size={16} />
-              </Button>
+              </NextLink>
             ) : null}
 
             <DropdownMenu>

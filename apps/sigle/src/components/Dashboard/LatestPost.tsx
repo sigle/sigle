@@ -3,10 +3,11 @@
 import { IconPencil } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/cn";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { NextLink } from "../Shared/NextLink";
-import { Button } from "../ui/button";
+import { buttonVariants } from "../ui/button";
 import {
   Empty,
   EmptyContent,
@@ -47,12 +48,9 @@ export const LatestPost = ({ address }: { address: string }) => {
                 </EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
-                <Button
-                  nativeButton={false}
-                  render={
-                    <NextLink href="/p/new">Publish your first post</NextLink>
-                  }
-                />
+                <NextLink href="/p/new" className={buttonVariants()}>
+                  Publish your first post
+                </NextLink>
               </EmptyContent>
             </Empty>
           ) : null}
@@ -66,16 +64,12 @@ export const LatestPost = ({ address }: { address: string }) => {
                 <p className="mt-1 text-xs text-muted-foreground uppercase">
                   {format(new Date(post.createdAt), "MMM dd")}
                 </p>
-                <Button
-                  size="lg"
-                  className="mt-3 w-full"
-                  nativeButton={false}
-                  render={
-                    <NextLink href={Routes.post({ postId: post.id })}>
-                      View post
-                    </NextLink>
-                  }
-                />
+                <NextLink
+                  href={Routes.post({ postId: post.id })}
+                  className={cn(buttonVariants({ size: "lg" }), "mt-3 w-full")}
+                >
+                  View post
+                </NextLink>
               </div>
             </>
           ) : null}

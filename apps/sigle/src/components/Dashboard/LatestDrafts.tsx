@@ -4,10 +4,11 @@ import { IconPencil } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/cn";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { NextLink } from "../Shared/NextLink";
-import { Button } from "../ui/button";
+import { buttonVariants } from "../ui/button";
 import {
   Empty,
   EmptyContent,
@@ -34,13 +35,15 @@ export const LatestDrafts = () => {
     <div>
       <div className="flex items-center justify-between">
         <p className="text-sm font-medium">Drafts</p>
-        <Button
-          className="text-muted-foreground"
-          size="xs"
-          variant="link"
-          nativeButton={false}
-          render={<NextLink href="/dashboard/drafts">View all</NextLink>}
-        />
+        <NextLink
+          href="/dashboard/drafts"
+          className={cn(
+            buttonVariants({ size: "xs", variant: "link" }),
+            "text-muted-foreground",
+          )}
+        >
+          View all
+        </NextLink>
       </div>
       <Card className="mt-2">
         <CardContent>
@@ -71,9 +74,9 @@ export const LatestDrafts = () => {
                 </EmptyDescription>
               </EmptyHeader>
               <EmptyContent>
-                <Button
-                  render={<NextLink href="/p/new">Create a new draft</NextLink>}
-                />
+                <NextLink href="/p/new" className={buttonVariants()}>
+                  Create a new draft
+                </NextLink>
               </EmptyContent>
             </Empty>
           ) : null}

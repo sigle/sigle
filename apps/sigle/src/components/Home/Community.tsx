@@ -1,7 +1,8 @@
 // oxlint-disable react/no-array-index-key
 import { IconArrowRight } from "@tabler/icons-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { appConfig } from "@/config";
+import { cn } from "@/lib/cn";
 
 function GitHubMockup() {
   return (
@@ -169,21 +170,15 @@ export function HomeCommunitySection() {
               Sigle is an open-source platform. Want to contribute to the
               development? Join us and give us a star!
             </p>
-            <Button
-              variant="outline"
-              className="mt-6"
-              nativeButton={false}
-              render={
-                <a
-                  href={appConfig.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Go to GitHub
-                  <IconArrowRight className="size-4" />
-                </a>
-              }
-            />
+            <a
+              href={appConfig.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(buttonVariants({ variant: "outline" }), "mt-6")}
+            >
+              Go to GitHub
+              <IconArrowRight className="size-4" />
+            </a>
           </div>
           <div className="hidden md:relative md:block md:w-1/3">
             <div className="absolute top-[95px] left-[20px] w-[400px]">
@@ -202,21 +197,15 @@ export function HomeCommunitySection() {
               Our community of thousands of amazing people are collaborating to
               help each other build the next writing platform generation.
             </p>
-            <Button
-              variant="outline"
-              className="mt-6"
-              nativeButton={false}
-              render={
-                <a
-                  href={appConfig.discordUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Join the Discord
-                  <IconArrowRight className="size-4" />
-                </a>
-              }
-            />
+            <a
+              href={appConfig.discordUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(buttonVariants({ variant: "outline" }), "mt-6")}
+            >
+              Join the Discord
+              <IconArrowRight className="size-4" />
+            </a>
           </div>
           <div className="hidden md:relative md:block md:w-1/3">
             <div className="absolute top-[95px] left-[20px] w-[400px]">

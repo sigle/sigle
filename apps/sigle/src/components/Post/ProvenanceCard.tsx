@@ -11,6 +11,7 @@ import {
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { env } from "@/env";
+import { cn } from "@/lib/cn";
 import { formatNumber } from "@/lib/utils";
 import {
   Accordion,
@@ -19,7 +20,7 @@ import {
   AccordionTrigger,
 } from "../ui/accordion";
 import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 
 interface PostProvenanceCardProps {
@@ -151,23 +152,19 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                       >
                         <IconCopy size={14} />
                       </Button>
-                      <Button
-                        nativeButton={false}
-                        variant="ghost"
-                        size="sm"
-                        className="size-8 p-0 text-muted-foreground hover:text-foreground"
-                        render={
-                          <a
-                            href={metadataLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        }
+                      <a
+                        href={metadataLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className={cn(
+                          buttonVariants({ variant: "ghost", size: "sm" }),
+                          "size-8 p-0 text-muted-foreground hover:text-foreground",
+                        )}
                       >
                         <IconExternalLink size={14} />
                         <span className="sr-only">View on {storageLabel}</span>
-                      </Button>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -197,25 +194,21 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
                       </div>
                       {opentimestamps.otsTxId ? (
                         <div className="ml-3 flex items-center gap-1">
-                          <Button
-                            nativeButton={false}
-                            variant="ghost"
-                            size="sm"
-                            className="size-8 p-0 text-muted-foreground hover:text-foreground"
-                            render={
-                              <a
-                                href={`${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${opentimestamps.otsTxId}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                            }
+                          <a
+                            href={`${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${opentimestamps.otsTxId}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className={cn(
+                              buttonVariants({ variant: "ghost", size: "sm" }),
+                              "size-8 p-0 text-muted-foreground hover:text-foreground",
+                            )}
                           >
                             <IconExternalLink size={14} />
                             <span className="sr-only">
                               Download the OpenTimestamps proof
                             </span>
-                          </Button>
+                          </a>
                         </div>
                       ) : null}
                     </div>

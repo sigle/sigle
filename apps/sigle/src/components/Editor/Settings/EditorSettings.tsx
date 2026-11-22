@@ -15,7 +15,7 @@ export const EditorSettings = () => {
   const setMenuOpen = useEditorStore((state) => state.setMenuOpen);
 
   return (
-    <Drawer open={!!menuOpen} onOpenChange={setMenuOpen} direction="right">
+    <Drawer open={!!menuOpen} onOpenChange={setMenuOpen} swipeDirection="right">
       <DrawerContent>
         {menuOpen === true ? (
           <div className="animate-in slide-in-from-right-5 fade-in">

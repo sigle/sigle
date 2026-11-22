@@ -3,7 +3,7 @@ import {
   IconBrandGithubFilled,
   IconBrandXFilled,
 } from "@tabler/icons-react";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { appConfig } from "@/config";
 
@@ -18,54 +18,36 @@ export const Footer = () => {
               <p className="text-sm text-muted-foreground">
                 © {new Date().getFullYear()} Sigle
               </p>
-              <Button
-                variant="ghost"
-                size="icon"
-                nativeButton={false}
-                render={
-                  <a
-                    href={appConfig.twitterUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  />
-                }
+              <a
+                href={appConfig.twitterUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={buttonVariants({ variant: "ghost", size: "icon" })}
               >
                 <IconBrandXFilled className="text-muted-foreground" size={16} />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                nativeButton={false}
-                render={
-                  <a
-                    href={appConfig.discordUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  />
-                }
+              </a>
+              <a
+                href={appConfig.discordUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={buttonVariants({ variant: "ghost", size: "icon" })}
               >
                 <IconBrandDiscordFilled
                   className="text-muted-foreground"
                   size={16}
                 />
-              </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                nativeButton={false}
-                render={
-                  <a
-                    href={appConfig.githubUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  />
-                }
+              </a>
+              <a
+                href={appConfig.githubUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={buttonVariants({ variant: "ghost", size: "icon" })}
               >
                 <IconBrandGithubFilled
                   className="text-muted-foreground"
                   size={16}
                 />
-              </Button>
+              </a>
             </div>
           </div>
 

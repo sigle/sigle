@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { AuthProtect } from "@/components/Auth/AuthProtect";
 import { NextLink } from "@/components/Shared/NextLink";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -58,16 +58,16 @@ export default function DashboardLayout({
             <ul className="space-y-3">
               {navigationLinks.map((link) => (
                 <li key={link.href}>
-                  <Button
-                    variant="ghost"
-                    className={cn("m-0 w-full justify-start", {
-                      "bg-muted": pathname === link.href,
-                    })}
-                    nativeButton={false}
-                    render={<NextLink href={link.href} />}
+                  <NextLink
+                    href={link.href}
+                    className={cn(
+                      buttonVariants({ variant: "ghost" }),
+                      "m-0 w-full justify-start",
+                      { "bg-muted": pathname === link.href },
+                    )}
                   >
                     {link.label}
-                  </Button>
+                  </NextLink>
                 </li>
               ))}
             </ul>
