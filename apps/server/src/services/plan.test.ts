@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
-import { Effect, Layer } from "effect";
+import { Effect, Layer, Option, Redacted } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
 import { TestClock } from "effect/testing";
 import { AppConfig, type AppConfigValues } from "@/config";
@@ -105,6 +105,46 @@ describe("plan service", () => {
       );
     },
   );
+
+  it.effect("sends HIRO_API_KEY as x-api-key only when it is set", () => {
+    const apiKeys: Array<string | undefined> = [];
+
+    const recordApiKey = Layer.succeed(
+      HttpClient.HttpClient,
+      HttpClient.make((request) =>
+        Effect.sync(() => {
+          apiKeys.push(request.headers["x-api-key"]);
+
+          return HttpClientResponse.fromWeb(
+            request,
+            Response.json({ limit: 1, total: 0, results: [] }),
+          );
+        }),
+      ),
+    );
+
+    const hasTegNft = PlanService.use((plans) => plans.hasTegNft(HOLDER));
+
+    return Effect.gen(function* () {
+      yield* hasTegNft.pipe(
+        Effect.provide(
+          makePlanTestLayer(
+            {
+              ...MAINNET_CONFIG,
+              HIRO_API_KEY: Option.some(Redacted.make("hiro-test-key")),
+            },
+            recordApiKey,
+          ),
+        ),
+      );
+
+      yield* hasTegNft.pipe(
+        Effect.provide(makePlanTestLayer(MAINNET_CONFIG, recordApiKey)),
+      );
+
+      expect(apiKeys).toStrictEqual(["hiro-test-key", undefined]);
+    });
+  });
 
   it.effect("fails with NftHoldingsError when the Stacks API errors", () =>
     Effect.gen(function* () {

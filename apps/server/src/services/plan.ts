@@ -1,6 +1,16 @@
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
 import { and, eq, gt, gte, inArray, isNotNull, ne } from "drizzle-orm";
-import { Cache, Context, Data, Effect, Exit, Layer, Schema } from "effect";
+import {
+  Cache,
+  Context,
+  Data,
+  Effect,
+  Exit,
+  Layer,
+  Option,
+  Redacted,
+  Schema,
+} from "effect";
 import {
   FetchHttpClient,
   HttpClient,
@@ -162,6 +172,17 @@ export const makePlanService = Effect.gen(function* () {
   const stacksApi = (yield* HttpClient.HttpClient).pipe(
     HttpClient.mapRequest(
       HttpClientRequest.prependUrl(config.STACKS_API_URL.replace(/\/+$/, "")),
+    ),
+    HttpClient.mapRequest((request) =>
+      Option.match(config.HIRO_API_KEY, {
+        onNone: () => request,
+        onSome: (apiKey) =>
+          HttpClientRequest.setHeader(
+            request,
+            "x-api-key",
+            Redacted.value(apiKey),
+          ),
+      }),
     ),
     HttpClient.filterStatusOk,
   );

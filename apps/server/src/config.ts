@@ -47,6 +47,9 @@ export const appConfig = Config.all({
       StacksEnv.pipe(Config.map((network) => HIRO_API_URLS[network])),
     ),
   ),
+  // Hiro API key, sent as the `x-api-key` header to STACKS_API_URL for higher
+  // rate limits. Requests are anonymous when unset
+  HIRO_API_KEY: OptionalNonEmptyRedacted("HIRO_API_KEY"),
   PORT: Config.Port("PORT").pipe(Config.withDefault(3001)),
   AUTH_SECRET: Config.NonEmptyString("AUTH_SECRET").pipe(
     Config.map(Redacted.make),
@@ -107,6 +110,7 @@ export const defaultTestConfig: AppConfigValues = {
   NODE_ENV: "test",
   STACKS_ENV: "testnet",
   STACKS_API_URL: "https://api.testnet.hiro.so",
+  HIRO_API_KEY: Option.none(),
   PORT: 3001,
   AUTH_SECRET: Redacted.make("sigle-test-auth-secret-change-me"),
   APP_ID: "sigle-test",
