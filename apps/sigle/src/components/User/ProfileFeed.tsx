@@ -2,6 +2,7 @@
 
 import type { paths } from "@sigle/sdk";
 import { buttonVariants } from "@/components/ui/button";
+import { useIsClient } from "@/hooks/useIsClient";
 import { useSession } from "@/lib/auth-hooks";
 import { sigleApiClient } from "@/lib/sigle";
 import { GetFamiliarCards } from "../Dashboard/GetFamiliarCards";
@@ -14,6 +15,7 @@ interface ProfileFeedProps {
 }
 
 export const ProfileFeed = ({ user }: ProfileFeedProps) => {
+  const isClient = useIsClient();
   const { data: session } = useSession();
 
   const { data: me } = sigleApiClient.useQuery(
@@ -33,7 +35,10 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
     },
   });
 
-  if (posts.results.length === 0 && user.address === me?.address) {
+  // The server renders without the session, so the first client render must
+  // not depend on it either: this component hydrates after its posts load, by
+  // which time the client may already know the user.
+  if (posts.results.length === 0 && isClient && user.address === me?.address) {
     return (
       <>
         <div className="my-20 flex flex-col items-center gap-3">
