@@ -100,6 +100,8 @@ export default defineRailway(() => {
       // deletes it.
       ARWEAVE_PRIVATE_KEY: preserve(),
       AUTH_SECRET: preserve(),
+      // Optional, raises the Hiro API rate limits
+      HIRO_API_KEY: preserve(),
       // Litestream backups: an R2 bucket of their own, with an API token
       // allowed to read and write that bucket only. Backups are off while
       // LITESTREAM_BUCKET is unset, see apps/server/start.sh.
