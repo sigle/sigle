@@ -7,5 +7,3 @@ export * from "./explorer-guild.js";
 export * from "./lib/unit.js";
 
 export * from "./metadata/index.js";
-
-export * from "./plan.js";

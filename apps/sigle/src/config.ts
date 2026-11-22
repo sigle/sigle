@@ -4,5 +4,5 @@ export const appConfig = {
   githubUrl: "https://app.sigle.io/github",
   discordUrl: "https://app.sigle.io/discord",
   explorerGuildMarketplaceUrl:
-    "https://gamma.io/collections/the-explorer-guild",
+    "https://gamma.io/stacks/collections/the-explorer-guild/items",
 };
