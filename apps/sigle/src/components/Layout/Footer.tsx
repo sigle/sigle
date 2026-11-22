@@ -22,6 +22,7 @@ export const Footer = () => {
                 href={appConfig.twitterUrl}
                 target="_blank"
                 rel="noreferrer"
+                aria-label="Sigle on X"
                 className={buttonVariants({ variant: "ghost", size: "icon" })}
               >
                 <IconBrandXFilled className="text-muted-foreground" size={16} />
@@ -30,6 +31,7 @@ export const Footer = () => {
                 href={appConfig.discordUrl}
                 target="_blank"
                 rel="noreferrer"
+                aria-label="Sigle on Discord"
                 className={buttonVariants({ variant: "ghost", size: "icon" })}
               >
                 <IconBrandDiscordFilled
@@ -41,6 +43,7 @@ export const Footer = () => {
                 href={appConfig.githubUrl}
                 target="_blank"
                 rel="noreferrer"
+                aria-label="Sigle on GitHub"
                 className={buttonVariants({ variant: "ghost", size: "icon" })}
               >
                 <IconBrandGithubFilled
