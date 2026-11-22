@@ -3,4 +3,6 @@ export const appConfig = {
   twitterUrl: "https://app.sigle.io/twitter",
   githubUrl: "https://app.sigle.io/github",
   discordUrl: "https://app.sigle.io/discord",
+  explorerGuildMarketplaceUrl:
+    "https://gamma.io/collections/the-explorer-guild",
 };

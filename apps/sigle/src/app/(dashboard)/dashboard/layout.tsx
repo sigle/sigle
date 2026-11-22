@@ -36,6 +36,10 @@ export default function DashboardLayout({
             label: "Drafts",
             href: "/dashboard/drafts",
           },
+          {
+            label: "Plan",
+            href: "/dashboard/plan",
+          },
         ]
       : []),
     {
