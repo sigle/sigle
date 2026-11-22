@@ -7,7 +7,12 @@ export const env = createEnv({
    * Serverside Environment variables, not available on the client.
    * Will throw if you access these variables on the client.
    */
-  server: {},
+  server: {
+    // The API on Railway's private network, such as
+    // `http://sigle.railway.internal:8080`. Server-side calls use it instead
+    // of `NEXT_PUBLIC_API_URL` when set.
+    API_INTERNAL_URL: z.string().optional(),
+  },
   /*
    * Environment variables available on the client (and server).
    */

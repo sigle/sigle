@@ -56,6 +56,12 @@ Railway does not read this file when deploying, so merging a change does nothing
 
 - **References** to other services are set in `.railway/railway.ts`.
 
+## Private network
+
+The website's server-side calls to the API (page renders, the RSS feed, Open Graph images) go to `API_INTERNAL_URL`, the server on Railway's private network, instead of the public `NEXT_PUBLIC_API_URL`. The browser keeps calling the public URL.
+
+The API rate limits by the `X-Real-IP` header, which Railway's edge sets on public requests. The private network bypasses the edge, so the website forwards each visitor's IP in that header itself (`apps/sigle/src/lib/visitor-ip.ts`); otherwise every visitor would share the website's limit. Only services of the project can reach the private network, so the server can trust the header there too.
+
 ## Tracing
 
 `web` and `server` send their traces to Railway, where they appear on the project's **Traces** page next to the spans of Railway's edge. One trace follows a request from the edge through the website, into the API calls it makes, and down to the server's SQL queries.
