@@ -79,7 +79,7 @@ export interface paths {
     put?: never;
     /**
      * Create a draft
-     * @description Create a new draft, optionally seeded with the provided fields. Every field is optional, send `{}` to create an empty draft.
+     * @description Create a new draft, optionally seeded with the provided fields. Every field is optional, send `{}` to create an empty draft. Returns a 403 once the user has 100 drafts, or when the content would take their drafts over 10 MiB in total.
      */
     post: operations["drafts.create"];
     delete?: never;
@@ -111,7 +111,7 @@ export interface paths {
     head?: never;
     /**
      * Update a draft
-     * @description Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields. Returns a 409 while the draft is being published.
+     * @description Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields. Returns a 409 while the draft is being published, and a 403 when a longer content would take the user's drafts over 10 MiB in total.
      */
     patch: operations["drafts.update"];
     trace?: never;
@@ -170,7 +170,7 @@ export interface paths {
     get?: never;
     /**
      * Update the profile
-     * @description Update the profile with signed profile metadata: upload it to Arweave, store it as the profile of the signing address, and return the transaction and the stored profile. Returns a 429 once the user has updated their profile 10 times in the last 24 hours.
+     * @description Update the profile with signed profile metadata: upload it to Arweave, store it as the profile of the signing address, and return the transaction and the stored profile. Returns a 413 when the metadata is over 32 KiB as JSON, and a 429 once the user has updated their profile 10 times in the last 24 hours.
      */
     put: operations["profile.update"];
     post?: never;
@@ -1488,6 +1488,15 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["ConflictError"];
+        };
+      };
+      /** @description Payload Too Large */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PayloadTooLargeError"];
         };
       };
       /** @description Too Many Requests */

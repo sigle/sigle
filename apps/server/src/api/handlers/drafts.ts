@@ -17,6 +17,8 @@ import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
 import { SigleApi } from "@/api";
 import {
   CreateDraftPayload,
+  DRAFT_CONTENT_TOTAL_MAX_MIB,
+  DRAFT_COUNT_LIMIT,
   DRAFT_LIST_DEFAULT_LIMIT,
   DraftListQuery,
   PublishDraftPayload,
@@ -67,11 +69,67 @@ const toDraft = (row: typeof draft.$inferSelect) => ({
   updatedAt: DateTime.fromDateUnsafe(row.updatedAt),
 });
 
+/**
+ * Fails when writing `content` to the user's draft `draftId` (a new draft
+ * when undefined) would take their drafts' content over
+ * `DRAFT_CONTENT_TOTAL_MAX_MIB`. A write that doesn't grow the draft's
+ * content always passes, so a user over the limit can still shorten their
+ * drafts. A soft limit like `DRAFT_COUNT_LIMIT`.
+ */
+const checkDraftContentTotal = (options: {
+  readonly userId: string;
+  readonly draftId?: string;
+  readonly content: string;
+}) =>
+  Effect.gen(function* () {
+    const db = yield* Database;
+    const contentBytes = Buffer.byteLength(options.content);
+
+    // `octet_length` reads the stored size of the text, not the text.
+    const [usage] = yield* db
+      .select({
+        total: sql<number>`coalesce(sum(octet_length(${draft.content})), 0)`,
+        current: sql<number>`coalesce(sum(CASE WHEN ${draft.id} = ${options.draftId ?? null} THEN octet_length(${draft.content}) END), 0)`,
+      })
+      .from(draft)
+      .where(eq(draft.userId, options.userId))
+      .pipe(Effect.orDie);
+
+    if (
+      contentBytes > usage.current &&
+      usage.total - usage.current + contentBytes >
+        DRAFT_CONTENT_TOTAL_MAX_MIB * 1024 * 1024
+    ) {
+      return yield* new Forbidden({
+        message: `Your drafts can hold up to ${DRAFT_CONTENT_TOTAL_MAX_MIB} MiB of content in total. Delete or shorten a draft to save this one.`,
+      });
+    }
+  });
+
 export const createDraft = (payload: typeof CreateDraftPayload.Type) =>
   Effect.gen(function* () {
     const user = yield* CurrentUser;
     const db = yield* Database;
     const posthog = yield* PostHogService;
+
+    // A soft limit: concurrent creates can each pass the count, the
+    // per-minute rate limit keeps the overshoot to a few drafts.
+    const [totals] = yield* db
+      .select({ count: count() })
+      .from(draft)
+      .where(eq(draft.userId, user.id))
+      .pipe(Effect.orDie);
+
+    if (totals.count >= DRAFT_COUNT_LIMIT) {
+      return yield* new Forbidden({
+        message: `You can have up to ${DRAFT_COUNT_LIMIT} drafts. Delete a draft to create a new one.`,
+      });
+    }
+
+    yield* checkDraftContentTotal({
+      userId: user.id,
+      content: payload.content ?? "",
+    });
 
     const [inserted] = yield* db
       .insert(draft)
@@ -201,6 +259,14 @@ export const updateDraft = (
     // reorder the draft list.
     if (Object.values(fields).every((value) => value === undefined)) {
       return yield* getDraft(draftId);
+    }
+
+    if (fields.content !== undefined) {
+      yield* checkDraftContentTotal({
+        userId: user.id,
+        draftId,
+        content: fields.content,
+      });
     }
 
     // A publish signs a snapshot of the draft and deletes the draft once the

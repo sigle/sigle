@@ -37,6 +37,20 @@ export const DRAFT_LIST_DEFAULT_LIMIT = 20;
 export const DRAFT_LIST_MAX_LIMIT = 100;
 
 /**
+ * Drafts a user can have, publishes in flight included. Drafts are stored on
+ * the server's volume, at up to `DRAFT_LIMITS.content` characters each. Fits
+ * in one page of the draft list.
+ */
+export const DRAFT_COUNT_LIMIT = 100;
+
+/**
+ * Content all the drafts of a user can hold, in UTF-8 bytes. A single draft
+ * can take about 3 MiB at its `DRAFT_LIMITS.content` length, so without it
+ * `DRAFT_COUNT_LIMIT` drafts could take hundreds of MiB on the volume.
+ */
+export const DRAFT_CONTENT_TOTAL_MAX_MIB = 10;
+
+/**
  * PATCH field: omit to leave the current value unchanged.
  */
 const Patch = <S extends Schema.Top>(schema: S) =>
@@ -236,11 +250,12 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       success: HttpApiSchema.WithHeaders(HttpApiSchema.status(201)(Draft), {
         location: Schema.String,
       }),
+      error: Forbidden,
     })
       .annotate(OpenApi.Summary, "Create a draft")
       .annotate(
         OpenApi.Description,
-        "Create a new draft, optionally seeded with the provided fields. Every field is optional, send `{}` to create an empty draft.",
+        `Create a new draft, optionally seeded with the provided fields. Every field is optional, send \`{}\` to create an empty draft. Returns a 403 once the user has ${DRAFT_COUNT_LIMIT} drafts, or when the content would take their drafts over ${DRAFT_CONTENT_TOTAL_MAX_MIB} MiB in total.`,
       ),
     HttpApiEndpoint.get("list", "/", {
       query: DraftListQuery,
@@ -281,7 +296,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       .annotate(OpenApi.Summary, "Update a draft")
       .annotate(
         OpenApi.Description,
-        "Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields. Returns a 409 while the draft is being published.",
+        `Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and \`null\` clears nullable fields. Returns a 409 while the draft is being published, and a 403 when a longer content would take the user's drafts over ${DRAFT_CONTENT_TOTAL_MAX_MIB} MiB in total.`,
       ),
     HttpApiEndpoint.delete("delete", "/:draftId", {
       params: {

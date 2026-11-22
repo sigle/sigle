@@ -96,6 +96,40 @@ describe("auth siws", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
+  it.effect("/api/auth/* reads bodies up to 64 KiB", () =>
+    Effect.gen(function* () {
+      const client = yield* HttpClient.HttpClient;
+      const maxBytes = 64 * 1024;
+
+      // `{"message":"..."}` around the message takes 14 bytes.
+      const verify = (bytes: number) =>
+        client.execute(
+          HttpClientRequest.post("/api/auth/siws/verify").pipe(
+            HttpClientRequest.bodyText(
+              JSON.stringify({ message: "a".repeat(bytes - 14) }),
+              "application/json",
+            ),
+          ),
+        );
+
+      const overLimit = yield* verify(maxBytes + 1);
+      // Read and handed to better-auth, which rejects the missing signature.
+      const atLimit = yield* verify(maxBytes);
+
+      expect({
+        overLimit: overLimit.status,
+        body: yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(
+          overLimit,
+        ),
+        atLimit: atLimit.status,
+      }).toStrictEqual({
+        overLimit: 413,
+        body: { message: "Request body is too large." },
+        atLimit: 400,
+      });
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
   it.effect("POST /api/auth/siws/nonce creates and stores a nonce", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;

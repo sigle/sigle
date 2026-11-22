@@ -305,6 +305,7 @@ export const signTestSiwsMessage = (
 interface TestProfileMetadataContent {
   id: string;
   displayName: string;
+  description?: string;
   picture?: string;
   coverPicture?: string;
 }
@@ -313,6 +314,7 @@ export const createSignedTestProfileMetadata = (options: {
   readonly privateKey: string;
   readonly id?: string;
   readonly displayName?: string;
+  readonly description?: string;
   readonly picture?: string;
   readonly coverPicture?: string;
 }) => {
@@ -320,6 +322,10 @@ export const createSignedTestProfileMetadata = (options: {
     id: options.id ?? "profile-1",
     displayName: options.displayName ?? "Test profile",
   };
+
+  if (options.description !== undefined) {
+    content.description = options.description;
+  }
 
   if (options.picture !== undefined) {
     content.picture = options.picture;

@@ -21,6 +21,7 @@ import {
   UserAuthMiddlewareLayer,
   WhitelistedUserMiddlewareLayer,
 } from "@/api/middleware/auth-user";
+import { BodyLimitLayer } from "@/api/middleware/body-limit";
 import { EtagLayer } from "@/api/middleware/etag";
 import { RateLimitMiddlewareLayer } from "@/api/middleware/rate-limit";
 import { SchemaErrorMiddlewareLayer } from "@/api/middleware/schema-error";
@@ -105,6 +106,7 @@ export const ApiRoutesLayer = Layer.mergeAll(
   AuthRoutesLayer,
   CorsLayer,
   EtagLayer,
+  BodyLimitLayer,
 ).pipe(Layer.provide(ApiHandlersLayer), Layer.provide(ApiMiddlewareLayer));
 
 export const HttpServerLayer = Layer.unwrap(

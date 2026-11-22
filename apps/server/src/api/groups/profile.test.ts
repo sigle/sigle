@@ -11,6 +11,7 @@ import {
 import sharp from "sharp";
 import { afterEach, vi } from "vite-plus/test";
 import type { PostHogEvent } from "@/services/posthog";
+import { PROFILE_METADATA_MAX_KIB } from "@/api/groups/profile";
 import { PublicUser, UserProfile } from "@/api/groups/users";
 import { Database } from "@/db";
 import {
@@ -194,6 +195,7 @@ const createSignedProfileClient = () =>
     const signMetadata = (options: {
       readonly id: string;
       readonly displayName?: string;
+      readonly description?: string;
       readonly picture?: string;
       readonly coverPicture?: string;
     }) =>
@@ -201,6 +203,7 @@ const createSignedProfileClient = () =>
         privateKey: credentials.privateKey,
         id: options.id,
         displayName: options.displayName,
+        description: options.description,
         picture: options.picture,
         coverPicture: options.coverPicture,
       });
@@ -752,6 +755,62 @@ describe("profile", () => {
       expect(response.status).toBe(400);
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
+
+  it.effect("PUT /api/me/profile uploads metadata up to 32 KiB as JSON", () => {
+    const uploads: Array<ArweaveUploadOptions> = [];
+
+    return Effect.gen(function* () {
+      const { client, signMetadata } = yield* createSignedProfileClient();
+      const maxBytes = PROFILE_METADATA_MAX_KIB * 1024;
+
+      // The signature has a fixed length, so the JSON grows with the
+      // description. Its 2-byte characters make the limit count UTF-8
+      // bytes, not characters.
+      const sized = (bytes: number, id: string) => {
+        const remaining =
+          bytes -
+          Buffer.byteLength(
+            JSON.stringify(signMetadata({ id, description: "" })),
+          );
+
+        return signMetadata({
+          id,
+          description:
+            "é".repeat(Math.floor(remaining / 2)) + "a".repeat(remaining % 2),
+        });
+      };
+
+      const atLimit = sized(maxBytes, "profile-1");
+      const overLimit = sized(maxBytes + 1, "profile-2");
+
+      const accepted = yield* updateProfileRequest(client, atLimit);
+      const rejected = yield* updateProfileRequest(client, overLimit);
+
+      expect({
+        sizes: [atLimit, overLimit].map((metadata) =>
+          Buffer.byteLength(JSON.stringify(metadata)),
+        ),
+        accepted: accepted.status,
+        rejected: rejected.status,
+        body: yield* rejected.json,
+        uploads: uploads.length,
+      }).toStrictEqual({
+        sizes: [maxBytes, maxBytes + 1],
+        accepted: 200,
+        rejected: 413,
+        body: {
+          message: "Profile metadata is too large, maximum size is 32 KiB.",
+        },
+        uploads: 1,
+      });
+    }).pipe(
+      Effect.provide(
+        makeTestServerLayer({}, [], {
+          arweave: makeUniqueArweaveUploadLayer(uploads),
+        }),
+      ),
+    );
+  });
 
   it.effect("PUT /api/me/profile returns 500 when Arweave fails", () => {
     const arweaveLayer = ArweaveService.layerTest([], () =>
