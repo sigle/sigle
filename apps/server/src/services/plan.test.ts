@@ -267,4 +267,52 @@ describe("plan service", () => {
       ),
     );
   });
+
+  it.effect(
+    "refreshing a plan replaces the cached plan, and a failed refresh drops it",
+    () => {
+      const holdings: Record<string, number> = {};
+      let status = 200;
+
+      return Effect.gen(function* () {
+        const plans = yield* PlanService;
+        const userId = yield* createUserWithWallets([HOLDER]);
+
+        const beforeBuying = yield* plans.getUserPlan(userId);
+        // The user buys the NFT after their plan was cached.
+        holdings[HOLDER] = 1;
+
+        const cachedAfterBuying = yield* plans.getUserPlan(userId);
+        const refreshed = yield* plans.refreshUserPlan(userId);
+        const cachedAfterRefresh = yield* plans.getUserPlan(userId);
+
+        // The user sells the NFT, and the refresh cannot reach the Stacks API.
+        holdings[HOLDER] = 0;
+        status = 503;
+        yield* Effect.flip(plans.refreshUserPlan(userId));
+        status = 200;
+
+        expect({
+          beforeBuying,
+          cachedAfterBuying,
+          refreshed,
+          cachedAfterRefresh,
+          afterFailedRefresh: yield* plans.getUserPlan(userId),
+        }).toStrictEqual({
+          beforeBuying: "free",
+          cachedAfterBuying: "free",
+          refreshed: "pro",
+          cachedAfterRefresh: "pro",
+          afterFailedRefresh: "free",
+        });
+      }).pipe(
+        Effect.provide(
+          makePlanTestLayer(
+            MAINNET_CONFIG,
+            makeStacksApiLayer(holdings, [], () => status),
+          ),
+        ),
+      );
+    },
+  );
 });

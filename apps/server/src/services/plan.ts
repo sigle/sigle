@@ -1,4 +1,4 @@
-import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
+import { TEG_NFT_ASSET_IDENTIFIER, type UserPlan } from "@sigle/sdk";
 import { and, eq, gt, gte, inArray, isNotNull, ne } from "drizzle-orm";
 import {
   Cache,
@@ -21,16 +21,8 @@ import { AppConfig } from "@/config";
 import { Database, type DatabaseClient } from "@/db";
 import { draft, post, profileUpdate, walletAddress } from "@/db/schema";
 
-export type UserPlan = "free" | "pro";
-
 /** Rolling window of the daily limits. */
 export const DAILY_LIMIT_WINDOW_MILLIS = 24 * 60 * 60 * 1000;
-
-/** Posts a user can publish per {@link DAILY_LIMIT_WINDOW_MILLIS}. */
-export const PUBLISH_LIMITS: Record<UserPlan, number> = {
-  free: 3,
-  pro: 20,
-};
 
 /**
  * Profile updates a user can make per {@link DAILY_LIMIT_WINDOW_MILLIS}, on
@@ -139,7 +131,8 @@ export const findProfileUpdateUsage = (
 
 const STACKS_API_TIMEOUT = "10 seconds";
 
-// A plan change, such as buying or selling the NFT, can take this long to show.
+// A plan change, such as buying or selling the NFT, can take this long to show,
+// unless the user refreshes their plan from the website.
 const USER_PLAN_CACHE_TTL = "12 hours";
 
 const USER_PLAN_CACHE_CAPACITY = 10_000;
@@ -161,6 +154,13 @@ export interface PlanClient {
    * testnet is in `PRO_ADDRESSES`. Results are cached in memory per user.
    */
   readonly getUserPlan: (
+    userId: string,
+  ) => Effect.Effect<UserPlan, NftHoldingsError>;
+  /**
+   * Looks the user's plan up again, ignoring the cache, such as when they
+   * just bought the NFT. A failed lookup also drops the cached plan.
+   */
+  readonly refreshUserPlan: (
     userId: string,
   ) => Effect.Effect<UserPlan, NftHoldingsError>;
 }
@@ -247,6 +247,7 @@ export const makePlanService = Effect.gen(function* () {
   return {
     hasTegNft,
     getUserPlan: (userId: string) => Cache.get(userPlans, userId),
+    refreshUserPlan: (userId: string) => Cache.refresh(userPlans, userId),
   } satisfies PlanClient;
 });
 

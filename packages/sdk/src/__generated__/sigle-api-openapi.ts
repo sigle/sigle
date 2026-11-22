@@ -64,6 +64,26 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/me/plan/refresh": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Refresh the signed-in user's plan
+     * @description Check right away whether one of the signed-in user's wallets holds an Explorer Guild NFT, such as after buying one, instead of waiting for the cached plan to expire. Return the plan the user is now on. Returns a 500 when the Stacks API cannot be reached, and a 401 without a session.
+     */
+    post: operations["me.refreshPlan"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/drafts": {
     parameters: {
       query?: never;
@@ -630,6 +650,10 @@ export interface components {
       tags?: string[];
       canonicalUri?: string | null;
     };
+    UserPlanResponse: {
+      /** @enum {string} */
+      plan: "free" | "pro";
+    };
     UserLimitsResponse: {
       publish: components["schemas"]["DailyLimit"];
       profileUpdate: components["schemas"]["DailyLimit"];
@@ -741,6 +765,53 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UserLimitsResponse"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TooManyRequestsError"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["InternalServerError"];
+        };
+      };
+    };
+  };
+  "me.refreshPlan": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description UserPlanResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UserPlanResponse"];
         };
       };
       /** @description Unauthorized */
