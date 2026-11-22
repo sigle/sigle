@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vite-plus/test";
 import { EditorCoverImage } from "./EditorCoverImage";
 import { EditorFormProvider } from "./EditorFormProvider";
@@ -57,14 +57,23 @@ describe("editor cover image", () => {
     ).not.toBeNull();
   });
 
-  it("should not offer to add a cover on the free plan", () => {
-    const { container } = render(
+  it("should offer pro instead of a cover upload on the free plan", async () => {
+    render(
       <EditorFormProvider post={defaultPost}>
         <EditorCoverImage />
       </EditorFormProvider>,
     );
 
-    expect(container.innerHTML).toBe("");
+    fireEvent.click(screen.getByRole("button", { name: /add cover image/i }));
+
+    const upgrade = await screen.findByRole("button", {
+      name: /upgrade to pro/i,
+    });
+
+    expect({
+      fileInputs: document.querySelectorAll('input[type="file"]').length,
+      upgradeHref: upgrade.getAttribute("href"),
+    }).toStrictEqual({ fileInputs: 0, upgradeHref: "/dashboard/plan" });
   });
 
   it("should keep an existing cover on the free plan", () => {

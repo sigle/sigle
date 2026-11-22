@@ -1,4 +1,9 @@
-import { IconAlertCircle, IconClock } from "@tabler/icons-react";
+import { PUBLISH_LIMITS } from "@sigle/sdk";
+import {
+  IconAlertCircle,
+  IconClock,
+  IconExternalLink,
+} from "@tabler/icons-react";
 import { formatDistanceToNow } from "date-fns";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
@@ -33,9 +38,21 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
   const type = watch("type");
 
   // Refetched each time the dialog opens. The server enforces the limit, this
-  // only saves the user a wallet signature that would be rejected.
-  const { data: limits } = sigleApiClient.useQuery("get", "/api/me/limits");
-  const { data: me } = sigleApiClient.useQuery("get", "/api/me");
+  // only saves the user a wallet signature that would be rejected. Also
+  // refetched on focus, so upgrading to Pro in another tab unlocks publishing.
+  const { data: limits } = sigleApiClient.useQuery(
+    "get",
+    "/api/me/limits",
+    {},
+    { refetchOnWindowFocus: true },
+  );
+
+  const { data: me } = sigleApiClient.useQuery(
+    "get",
+    "/api/me",
+    {},
+    { refetchOnWindowFocus: true },
+  );
 
   const publishLimit = limits?.publish;
 
@@ -104,9 +121,30 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
                   addSuffix: true,
                 })}
             .
-            {me?.plan === "free"
-              ? " Pro members can publish more posts per day."
-              : null}
+            {me?.plan === "free" ? (
+              <>
+                {" "}
+                Pro members can publish up to {PUBLISH_LIMITS.pro} posts per
+                day.
+                <Button
+                  size="sm"
+                  // The alert underlines its links, not wanted on a button.
+                  className="mt-2 flex w-fit no-underline!"
+                  nativeButton={false}
+                  render={
+                    // A new tab keeps this draft and the dialog open.
+                    <a
+                      href="/dashboard/plan"
+                      target="_blank"
+                      rel="noreferrer"
+                    />
+                  }
+                >
+                  Upgrade to Pro
+                  <IconExternalLink size={14} />
+                </Button>
+              </>
+            ) : null}
           </AlertDescription>
         </Alert>
       ) : null}

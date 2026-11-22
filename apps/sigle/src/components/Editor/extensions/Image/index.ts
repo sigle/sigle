@@ -1,4 +1,5 @@
 import TipTapImageBase, { type ImageOptions } from "@tiptap/extension-image";
+import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import { nanoid } from "nanoid";
 import { ImageComponent } from "./Component";
@@ -32,6 +33,11 @@ export const TipTapImage = TipTapImageBase.extend<
      * images, such as on the free plan.
      */
     uploadFile?: (file: File) => Promise<string>;
+    /**
+     * Called when the user drops or pastes an image file without
+     * `uploadFile`, such as to offer the free plan an upgrade.
+     */
+    onUploadUnavailable?: () => void;
   }
 >({
   draggable: true,
@@ -73,6 +79,65 @@ export const TipTapImage = TipTapImageBase.extend<
     return title
       ? `![${alt}](${destination} "${title}")`
       : `![${alt}](${destination})`;
+  },
+
+  // Uploads the image files dropped or pasted in the editor.
+  addProseMirrorPlugins() {
+    const insertFiles = (files: File[], position?: number) => {
+      const { uploadFile, onUploadUnavailable } = this.options;
+
+      if (!uploadFile) {
+        onUploadUnavailable?.();
+
+        return;
+      }
+
+      for (const file of files) {
+        const chain = this.editor.chain().focus();
+
+        (position === undefined ? chain : chain.setTextSelection(position))
+          .setImageFromFile({ file })
+          .run();
+      }
+    };
+
+    return [
+      ...(this.parent?.() ?? []),
+      new Plugin({
+        key: new PluginKey("imageFiles"),
+        props: {
+          handleDrop: (view, event) => {
+            const files = getImageFiles(event.dataTransfer);
+
+            // Moving an image already in the post carries no file, and is
+            // left to ProseMirror.
+            if (files.length === 0) return false;
+
+            event.preventDefault();
+            insertFiles(
+              files,
+              view.posAtCoords({ left: event.clientX, top: event.clientY })
+                ?.pos,
+            );
+
+            return true;
+          },
+          handlePaste: (_view, event) => {
+            // An image copied from a web page also comes with HTML linking to
+            // it, which ProseMirror pastes as an image from that URL.
+            if (event.clipboardData?.types.includes("text/html")) return false;
+
+            const files = getImageFiles(event.clipboardData);
+
+            if (files.length === 0) return false;
+
+            insertFiles(files);
+
+            return true;
+          },
+        },
+      }),
+    ];
   },
 
   addCommands() {
@@ -229,3 +294,8 @@ export const TipTapImage = TipTapImageBase.extend<
     editor.view.dispatch(transaction);
   },
 });
+
+const getImageFiles = (data: DataTransfer | null) =>
+  Array.from(data?.files ?? []).filter((file) =>
+    file.type.startsWith("image/"),
+  );
