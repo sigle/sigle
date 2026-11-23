@@ -29,7 +29,7 @@
     "multiformats": "14.0.5",
     "posthog-node": "5.30.2",
     "sharp": "0.35.5",
-    "sign-in-with-stacks": "0.4.0",
+    "sign-in-with-stacks": "0.4.1",
     "thumbhash": "0.1.1",
     "zod": "4.3.6"
   },

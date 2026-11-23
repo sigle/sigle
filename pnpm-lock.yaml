@@ -299,8 +299,8 @@ importers:
         specifier: 0.35.5
         version: 0.35.5(@types/node@26.6.2)
       sign-in-with-stacks:
-        specifier: 0.4.0
-        version: 0.4.0(@better-auth/core@1.7.6(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.6(e3e8636a199472bb82d946dd55ca09cf))(zod@4.3.6)
+        specifier: 0.4.1
+        version: 0.4.1(@better-auth/core@1.7.6(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.6(e3e8636a199472bb82d946dd55ca09cf))(zod@4.3.6)
       thumbhash:
         specifier: 0.1.1
         version: 0.1.1
@@ -567,8 +567,8 @@ importers:
         specifier: 4.13.0
         version: 4.13.0(supports-color@10.2.2)(typescript@7.0.2)
       sign-in-with-stacks:
-        specifier: 0.4.0
-        version: 0.4.0(@better-auth/core@1.7.6(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.3.6))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.6(e3e8636a199472bb82d946dd55ca09cf))(zod@4.3.6)
+        specifier: 0.4.1
+        version: 0.4.1(@better-auth/core@1.7.6(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.3.6))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.6(e3e8636a199472bb82d946dd55ca09cf))(zod@4.3.6)
       sonner:
         specifier: 2.0.7
         version: 2.0.7(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -8513,8 +8513,8 @@ packages:
     resolution: {integrity: sha512-ZX99e6tRweoUXqR+VBrslhda51Nh5MTQwou5tnUDgbtyM0dBgmhEDtWGP/xbKn6hqfPRHujUNwz5fy/wbbhnpw==}
     engines: {node: '>= 0.4'}
 
-  sign-in-with-stacks@0.4.0:
-    resolution: {integrity: sha512-MG4yoFjz85rnZr/DUNG2cBOeUItVgpucr0Ft2/Rhc8U/RimhJzYa3775snSSWBhEMKWMi6hvCBm4LYfrBnpcPQ==}
+  sign-in-with-stacks@0.4.1:
+    resolution: {integrity: sha512-ukzwyURjEhZ0tsehwiSXRWOaDbm0kd3IS95LqZu76SpbBOTj7AQ6fRxEocdoxYbOTd6Y5JPr4YgrzRochunraQ==}
     peerDependencies:
       '@better-auth/core': ^1.7.0
       '@stacks/common': ^7.0.2
@@ -18312,7 +18312,7 @@ snapshots:
       side-channel-map: 1.0.1
       side-channel-weakmap: 1.0.2
 
-  sign-in-with-stacks@0.4.0(@better-auth/core@1.7.6(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.3.6))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.6(e3e8636a199472bb82d946dd55ca09cf))(zod@4.3.6):
+  sign-in-with-stacks@0.4.1(@better-auth/core@1.7.6(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.3.6))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.6(e3e8636a199472bb82d946dd55ca09cf))(zod@4.3.6):
     dependencies:
       '@stacks/common': 7.7.0
       '@stacks/encryption': 7.7.0
@@ -18323,7 +18323,7 @@ snapshots:
       better-auth: 1.7.6(e3e8636a199472bb82d946dd55ca09cf)
       zod: 4.3.6
 
-  sign-in-with-stacks@0.4.0(@better-auth/core@1.7.6(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.6(e3e8636a199472bb82d946dd55ca09cf))(zod@4.3.6):
+  sign-in-with-stacks@0.4.1(@better-auth/core@1.7.6(@better-auth/utils@0.4.2)(@better-fetch/fetch@1.3.2)(@opentelemetry/api@1.9.1)(better-call@1.4.0(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.6(e3e8636a199472bb82d946dd55ca09cf))(zod@4.3.6):
     dependencies:
       '@stacks/common': 7.7.0
       '@stacks/encryption': 7.7.0
