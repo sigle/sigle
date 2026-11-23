@@ -11,3 +11,5 @@ The profile and editor loading skeletons follow the new layouts, and the footer 
 The share dialog is redesigned and its X and Bluesky links now include the post URL. The Open Graph image of a post uses the site fonts, with the title in Newsreader and the Arweave and Bitcoin logos.
 
 Outline buttons used as links, such as Edit profile, show their border again.
+
+Embedded posts from X no longer crash the editor and post pages: react-tweet is upgraded to 3.3.1, which handles the entity lists X's API now leaves out.
