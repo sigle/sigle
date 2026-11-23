@@ -1,7 +1,11 @@
 import { ByteSize, Effect, Layer, Predicate } from "effect";
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/http";
 import { RateLimiter } from "effect/persistence";
-import { clientKey, consumeRateLimit } from "@/api/middleware/rate-limit";
+import {
+  clientKey,
+  consumeGlobalRateLimit,
+  consumeRateLimit,
+} from "@/api/middleware/rate-limit";
 import { BadRequest, PayloadTooLarge, TooManyRequests } from "@/api/schemas";
 import { AppConfig } from "@/config";
 import { AuthService } from "@/services/auth";
@@ -58,6 +62,8 @@ export const AuthRoutesLayer = Layer.unwrap(
         const policy = pathname.startsWith("/api/auth/siws/")
           ? "signIn"
           : "default";
+
+        yield* consumeGlobalRateLimit(limiter, request, config);
 
         yield* consumeRateLimit(
           limiter,
