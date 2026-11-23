@@ -43,7 +43,7 @@ export default function DashboardDrafts() {
 
   return (
     <div className="py-10">
-      <h2 className="mb-5 text-2xl font-bold">Drafts</h2>
+      <h2 className="mb-5 headline text-3xl">Drafts</h2>
 
       <Card>
         <CardContent>
@@ -130,11 +130,11 @@ const Draft = ({
 
   const heading =
     draft.metaTitle || draft.title ? (
-      <h3 className="line-clamp-2 text-lg font-medium">
+      <h3 className="line-clamp-2 headline text-xl">
         {draft.metaTitle || draft.title}
       </h3>
     ) : (
-      <h3 className="line-clamp-2 text-lg font-medium text-muted-foreground">
+      <h3 className="line-clamp-2 headline text-xl text-muted-foreground">
         No title
       </h3>
     );

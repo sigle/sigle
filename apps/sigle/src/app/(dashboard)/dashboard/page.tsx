@@ -15,7 +15,7 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-5 py-10">
-      <h2 className="text-2xl font-bold">Dashboard</h2>
+      <h2 className="headline text-3xl">Dashboard</h2>
 
       {!isLoadingMe && !me?.whitelisted ? (
         <Alert>

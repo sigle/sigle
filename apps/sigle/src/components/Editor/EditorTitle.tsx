@@ -12,7 +12,7 @@ export const EditorTitle = () => {
     <div className="mt-4 space-y-2">
       <div>
         <input
-          className="w-full border-none bg-transparent text-2xl font-bold outline-none"
+          className="w-full border-none bg-transparent headline text-3xl outline-none"
           placeholder="Title"
           {...register("title")}
         />

@@ -84,11 +84,11 @@ export const LatestDrafts = () => {
           {drafts?.results.map((draft) => {
             const heading =
               draft.metaTitle || draft.title ? (
-                <h3 className="line-clamp-2 text-lg font-bold">
+                <h3 className="line-clamp-2 headline text-xl">
                   {draft.metaTitle || draft.title}
                 </h3>
               ) : (
-                <h3 className="line-clamp-2 text-lg font-bold text-muted-foreground">
+                <h3 className="line-clamp-2 headline text-xl text-muted-foreground">
                   No title
                 </h3>
               );

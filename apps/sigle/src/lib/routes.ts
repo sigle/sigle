@@ -10,7 +10,6 @@ import { z } from "zod";
 
 export const Routes = {
   home: makeRoute(() => "/"),
-  explore: makeRoute(() => "/explore"),
   userProfile: makeRoute(
     ({ username }) => `/u/${username}`,
     z.object({

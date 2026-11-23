@@ -58,7 +58,7 @@ export const LatestPost = ({ address }: { address: string }) => {
           {post ? (
             <>
               <div className="rounded-md bg-muted p-4">
-                <h3 className="line-clamp-2 text-lg font-bold">
+                <h3 className="line-clamp-2 headline text-xl">
                   {post.metaTitle || post.title}
                 </h3>
                 <p className="mt-1 text-xs text-muted-foreground uppercase">

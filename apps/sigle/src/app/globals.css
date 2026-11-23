@@ -133,6 +133,13 @@ body {
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Titles: Newsreader at medium weight with tight tracking. */
+@utility headline {
+  font-family: var(--font-newsreader), serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

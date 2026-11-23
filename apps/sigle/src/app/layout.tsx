@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Newsreader } from "next/font/google";
 import { env } from "@/env";
 import { cn } from "@/lib/cn";
 import { Providers } from "./providers";
@@ -9,6 +9,15 @@ const inter = Inter({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-inter",
+});
+
+// The serif of the headlines, see the `headline` utility in globals.css. The
+// variable font, with optical sizing so large headlines get finer details.
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  display: "swap",
+  axes: ["opsz"],
+  variable: "--font-newsreader",
 });
 
 export const metadata: Metadata = {
@@ -46,7 +55,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         // oxlint-disable-next-line better-tailwindcss/no-unknown-classes
-        className={cn(inter.className, "root antialiased")}
+        className={cn(inter.className, newsreader.variable, "root antialiased")}
         suppressHydrationWarning
       >
         <Providers>{children}</Providers>
