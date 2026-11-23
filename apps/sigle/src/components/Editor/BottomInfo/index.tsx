@@ -47,7 +47,7 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
           <Button
             variant="ghost"
             size="icon-sm"
-            aria-label="Toggle theme"
+            aria-label="Keyboard shortcuts"
             className="pointer-events-auto text-muted-foreground"
             onClick={() => setShowShortcutsDialog(true)}
           >

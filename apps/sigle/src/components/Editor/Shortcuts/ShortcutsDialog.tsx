@@ -2,251 +2,129 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Kbd } from "@/components/ui/kbd";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
 
 interface ShortcutsDialogProps {
   open: boolean;
   onOpenChange: () => void;
 }
 
-const essentials = [
+/**
+ * A key of a shortcut. `Mod` is Cmd on macOS and Control elsewhere, as in
+ * TipTap's keyboard shortcuts.
+ */
+type Key = "Mod" | "Shift" | "Alt" | (string & {});
+
+interface Shortcut {
+  action: string;
+  keys: Key[];
+}
+
+const sections: { title: string; items: Shortcut[] }[] = [
   {
-    action: "Copy",
-    winCommand: ["Control", "C"],
-    macCommand: ["Cmd", "C"],
+    title: "Essentials",
+    items: [
+      { action: "Copy", keys: ["Mod", "C"] },
+      { action: "Cut", keys: ["Mod", "X"] },
+      { action: "Paste", keys: ["Mod", "V"] },
+      { action: "Paste without formatting", keys: ["Mod", "Shift", "V"] },
+      { action: "Undo", keys: ["Mod", "Z"] },
+      { action: "Redo", keys: ["Mod", "Shift", "Z"] },
+      { action: "Line break", keys: ["Shift", "Enter"] },
+    ],
   },
   {
-    action: "Cut",
-    winCommand: ["Control", "X"],
-    macCommand: ["Cmd", "X"],
+    title: "Text",
+    items: [
+      { action: "Bold", keys: ["Mod", "B"] },
+      { action: "Italic", keys: ["Mod", "I"] },
+      { action: "Underline", keys: ["Mod", "U"] },
+      { action: "Strikethrough", keys: ["Mod", "Shift", "S"] },
+      { action: "Inline code", keys: ["Mod", "E"] },
+      { action: "Link", keys: ["Mod", "K"] },
+    ],
   },
   {
-    action: "Paste",
-    winCommand: ["Control", "V"],
-    macCommand: ["Cmd", "V"],
+    title: "Paragraphs",
+    items: [
+      { action: "Normal text", keys: ["Mod", "Alt", "0"] },
+      { action: "Big heading", keys: ["Mod", "Alt", "2"] },
+      { action: "Small heading", keys: ["Mod", "Alt", "3"] },
+      { action: "Numbered list", keys: ["Mod", "Shift", "7"] },
+      { action: "Bulleted list", keys: ["Mod", "Shift", "8"] },
+      { action: "Quote", keys: ["Mod", "Shift", "B"] },
+      { action: "Code block", keys: ["Mod", "Alt", "C"] },
+    ],
   },
   {
-    action: "Paste without formatting",
-    winCommand: ["Control", "Shift", "V"],
-    macCommand: ["Cmd", "Shift", "V"],
-  },
-  {
-    action: "Undo",
-    winCommand: ["Control", "Z"],
-    macCommand: ["Cmd", "Z"],
-  },
-  {
-    action: "Redo",
-    winCommand: ["Control", "Shift", "Z"],
-    macCommand: ["Cmd", "Shift", "Z"],
-  },
-  {
-    action: "Add a line break",
-    winCommand: ["Shift", "Enter"],
-    macCommand: ["Shift", "Enter"],
+    title: "Selection",
+    items: [
+      { action: "Select all", keys: ["Mod", "A"] },
+      { action: "Extend by a character", keys: ["Shift", "←", "→"] },
+      { action: "Extend by a line", keys: ["Shift", "↑", "↓"] },
+      { action: "Extend to the start", keys: ["Mod", "Shift", "↑"] },
+      { action: "Extend to the end", keys: ["Mod", "Shift", "↓"] },
+    ],
   },
 ];
 
-const textFormatting = [
-  {
-    action: "Bold",
-    winCommand: ["Control", "B"],
-    macCommand: ["Cmd", "B"],
-  },
-  {
-    action: "Italicize",
-    winCommand: ["Control", "I"],
-    macCommand: ["Cmd", "I"],
-  },
-  {
-    action: "Underline",
-    winCommand: ["Control", "U"],
-    macCommand: ["Cmd", "U"],
-  },
-  {
-    action: "Strikethrough",
-    winCommand: ["Control", "Shift", "X"],
-    macCommand: ["Cmd", "Shift", "X"],
-  },
-  {
-    action: "Code",
-    winCommand: ["Control", "E"],
-    macCommand: ["Cmd", "E"],
-  },
-  {
-    action: "Link",
-    winCommand: ["Control", "K"],
-    macCommand: ["Cmd", "K"],
-  },
-];
+/** The label of `key` on the user's keyboard. */
+const keyLabel = (key: Key, isMac: boolean) => {
+  if (key === "Mod") return isMac ? "⌘" : "Ctrl";
 
-const paragraphFormatting = [
-  {
-    action: "Apply normal text style",
-    winCommand: ["Control", "Alt", "0"],
-    macCommand: ["Cmd", "Alt", "0"],
-  },
-  {
-    action: "Apply heading style 2",
-    winCommand: ["Control", "Alt", "2"],
-    macCommand: ["Cmd", "Alt", "2"],
-  },
-  {
-    action: "Apply heading style 3",
-    winCommand: ["Control", "Alt", "3"],
-    macCommand: ["Cmd", "Alt", "3"],
-  },
-  {
-    action: "Ordered list",
-    winCommand: ["Control", "Shift", "7"],
-    macCommand: ["Cmd", "Shift", "7"],
-  },
-  {
-    action: "Bullet list",
-    winCommand: ["Control", "Shift", "8"],
-    macCommand: ["Cmd", "Shift", "8"],
-  },
-  {
-    action: "Blockquote",
-    winCommand: ["Control", "Shift", "B"],
-    macCommand: ["Cmd", "Shift", "B"],
-  },
-  {
-    action: "Code block",
-    winCommand: ["Control", "Alt", "C"],
-    macCommand: ["Cmd", "Alt", "C"],
-  },
-];
+  if (isMac && key === "Shift") return "⇧";
 
-const textSelection = [
-  {
-    action: "Select all",
-    winCommand: ["Control", "A"],
-    macCommand: ["Cmd", "A"],
-  },
-  {
-    action: "Extend selection one character to left",
-    winCommand: ["Shift", "←"],
-    macCommand: ["Shift", "←"],
-  },
-  {
-    action: "Extend selection one character to right",
-    winCommand: ["Shift", "→"],
-    macCommand: ["Shift", "→"],
-  },
-  {
-    action: "Extend selection one line up",
-    winCommand: ["Shift", "↑"],
-    macCommand: ["Shift", "↑"],
-  },
-  {
-    action: "Extend selection one line down",
-    winCommand: ["Shift", "↓"],
-    macCommand: ["Shift", "↓"],
-  },
-  {
-    action: "Extend selection to the beginning of the document",
-    winCommand: ["Control", "Shift", "↑"],
-    macCommand: ["Cmd", "Shift", "↑"],
-  },
-  {
-    action: "Extend selection to the end of the document",
-    winCommand: ["Control", "Shift", "↓"],
-    macCommand: ["Cmd", "Shift", "↓"],
-  },
-];
+  if (isMac && key === "Alt") return "⌥";
 
-const shortcuts = [
-  {
-    value: "essentials",
-    items: essentials,
-  },
-  {
-    value: "text-formatting",
-    items: textFormatting,
-  },
-  {
-    value: "p-formatting",
-    items: paragraphFormatting,
-  },
-  {
-    value: "selection",
-    items: textSelection,
-  },
-];
+  return key;
+};
 
 export const ShortcutsDialog = ({
   open,
   onOpenChange,
 }: ShortcutsDialogProps) => {
+  // Only rendered in the browser, once the dialog opens.
+  const isMac = /Mac|iPhone|iPad/.test(navigator.userAgent);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTitle className="sr-only">Keyboard shortcuts</DialogTitle>
-      <DialogDescription className="sr-only">
-        Explore keyboard shortcuts and hints
-      </DialogDescription>
-      <DialogContent className="md:max-w-lg">
-        <Tabs defaultValue="shortcuts">
-          <TabsList
-            variant="line"
-            aria-label="Find keyboard shortcuts and hints"
-          >
-            <TabsTrigger value="shortcuts">Keyboard Shortcuts</TabsTrigger>
-          </TabsList>
+      <DialogContent className="gap-0 p-0 sm:max-w-md">
+        <DialogHeader className="p-4 pb-3">
+          <DialogTitle className="headline text-2xl leading-tight">
+            Keyboard shortcuts
+          </DialogTitle>
+          <DialogDescription>
+            Type <Kbd>/</Kbd> on an empty line to insert blocks.
+          </DialogDescription>
+        </DialogHeader>
 
-          <TabsContent value="shortcuts">
-            <Tabs defaultValue="essentials">
-              <TabsList variant="line" aria-label="Explore shortcut types">
-                <TabsTrigger value="essentials">Essentials</TabsTrigger>
-                <TabsTrigger value="text-formatting">
-                  Text Formatting
-                </TabsTrigger>
-                <TabsTrigger value="p-formatting">
-                  Paragraph Formatting
-                </TabsTrigger>
-                <TabsTrigger value="selection">Text Selection</TabsTrigger>
-              </TabsList>
-              {shortcuts.map((shortcut) => (
-                <TabsContent key={shortcut.value} value={shortcut.value}>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Command</TableHead>
-                        <TableHead>Windows/Linux</TableHead>
-                        <TableHead>macOS</TableHead>
-                      </TableRow>
-                    </TableHeader>
-
-                    <TableBody>
-                      {shortcut.items.map((shortcut) => (
-                        <TableRow key={shortcut.action}>
-                          <TableCell>{shortcut.action}</TableCell>
-                          <TableCell>
-                            <Kbd>{shortcut.winCommand.join(" + ")}</Kbd>
-                          </TableCell>
-                          <TableCell>
-                            <Kbd>{shortcut.macCommand.join(" + ")}</Kbd>
-                          </TableCell>
-                        </TableRow>
+        <div className="max-h-[60vh] overflow-y-auto px-4 pb-4">
+          {sections.map((section) => (
+            <section key={section.title} className="pt-4">
+              <h3 className="pb-1 font-mono text-xs text-muted-foreground uppercase">
+                {section.title}
+              </h3>
+              <ul className="border-t border-border">
+                {section.items.map((item) => (
+                  <li
+                    key={item.action}
+                    className="flex items-center justify-between gap-4 border-b border-border py-2 text-sm"
+                  >
+                    <span>{item.action}</span>
+                    <KbdGroup>
+                      {item.keys.map((key) => (
+                        <Kbd key={key}>{keyLabel(key, isMac)}</Kbd>
                       ))}
-                    </TableBody>
-                  </Table>
-                </TabsContent>
-              ))}
-            </Tabs>
-          </TabsContent>
-        </Tabs>
+                    </KbdGroup>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
       </DialogContent>
     </Dialog>
   );
