@@ -265,7 +265,11 @@ export const UpdateProfileMetadata = ({
         >
           Cancel
         </Button>
-        <Button type="submit" disabled={!isDirty} loading={isSubmitting}>
+        <Button
+          type="submit"
+          disabled={!isDirty || isSubmitting}
+          loading={isSubmitting}
+        >
           Save changes
         </Button>
       </div>
