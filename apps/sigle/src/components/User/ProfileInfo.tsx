@@ -1,59 +1,66 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { IconLink } from "@tabler/icons-react";
+import { formatReadableAddress } from "@/lib/stacks";
 import { prettifyUrl } from "@/lib/urls";
-import { NextLink } from "../Shared/NextLink";
 import { ProfileMarkdownDescription } from "../Shared/Profile/MarkdownDescription";
 
 interface ProfileInfoProps {
   user: paths["/api/users/{address}"]["get"]["responses"]["200"]["content"]["application/json"];
 }
 
+const linkClassName =
+  "text-muted-foreground underline-offset-4 hover:text-foreground hover:underline";
+
 export const ProfileInfo = ({ user }: ProfileInfoProps) => {
+  const { profile } = user;
+
   return (
-    <>
-      <div className="mt-4 space-y-1">
-        {user.profile?.displayName && (
-          <p className="text-lg font-medium">{user.profile.displayName}</p>
-        )}
-        <p className="text-sm text-muted-foreground">{user.address}</p>
+    <div className="mt-4">
+      <h1 className="headline text-3xl break-words">
+        {profile?.displayName || formatReadableAddress(user.address)}
+      </h1>
+      <p className="mt-1 font-mono text-xs break-all text-muted-foreground">
+        {user.address}
+      </p>
+
+      {profile?.description ? (
+        <ProfileMarkdownDescription
+          content={profile.description}
+          className="mt-4 text-sm text-pretty text-muted-foreground"
+        />
+      ) : null}
+
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
+        {profile?.twitter ? (
+          <a
+            className={linkClassName}
+            href={`https://x.com/${profile.twitter}`}
+            target="_blank"
+            rel="noreferrer"
+          >
+            @{profile.twitter}
+          </a>
+        ) : null}
+        {profile?.website ? (
+          <a
+            className={linkClassName}
+            href={profile.website}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {prettifyUrl(profile.website)}
+          </a>
+        ) : null}
+        <a
+          className={linkClassName}
+          href={`/api/feed/${user.address}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          RSS
+        </a>
       </div>
-
-      {user.profile?.description ? (
-        <div className="mt-3 text-sm text-muted-foreground">
-          <ProfileMarkdownDescription content={user.profile.description} />
-        </div>
-      ) : null}
-
-      {user.profile && (user.profile.twitter || user.profile.website) ? (
-        <div className="mt-3 flex items-center gap-4">
-          {user.profile.twitter && (
-            <NextLink
-              className="text-sm text-muted-foreground underline-offset-2 hover:underline"
-              href={`https://x.com/${user.profile.twitter}`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              @{user.profile.twitter}
-            </NextLink>
-          )}
-
-          {user.profile.website && (
-            <NextLink
-              className="text-sm text-muted-foreground underline-offset-2 hover:underline"
-              href={user.profile.website}
-              target="_blank"
-              rel="noreferrer"
-            >
-              <div className="flex items-center gap-1">
-                <IconLink size={16} />
-                {prettifyUrl(user.profile.website)}
-              </div>
-            </NextLink>
-          )}
-        </div>
-      ) : null}
-    </>
+    </div>
   );
 };

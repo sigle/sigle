@@ -1,5 +1,6 @@
 import type { paths } from "@sigle/sdk";
 import { IconShare } from "@tabler/icons-react";
+import { format } from "date-fns";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Routes } from "@/lib/routes";
@@ -12,40 +13,49 @@ interface PostUserActionsProps {
   post: paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"];
 }
 
+/** Words read per minute, used to estimate the reading time. */
+const WORDS_PER_MINUTE = 230;
+
 export const PostUserActions = ({ post }: PostUserActionsProps) => {
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const { author } = post;
+  const profileHref = Routes.userProfile({ username: author.address });
 
-  // TODO add published time + read time under user name in the format "Mar 1, 2026 (clock icon) 6 min read"
+  const words = post.content.split(/\s+/).filter(Boolean).length;
+  const readingMinutes = Math.max(1, Math.round(words / WORDS_PER_MINUTE));
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <NextLink href={Routes.userProfile({ username: author.address })}>
-            <ProfileAvatar user={author} size="2" />
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex min-w-0 items-center gap-3">
+          <NextLink href={profileHref} className="shrink-0">
+            <ProfileAvatar user={author} size="3" />
           </NextLink>
-          <div className="grid gap-0.5">
-            <NextLink href={Routes.userProfile({ username: author.address })}>
-              <p className="text-sm font-medium">
-                {author.profile?.displayName}
-              </p>
+          <div className="min-w-0 text-sm">
+            <NextLink
+              href={profileHref}
+              title={author.address}
+              className="block truncate font-medium underline-offset-4 hover:underline"
+            >
+              {author.profile?.displayName ||
+                formatReadableAddress(author.address)}
             </NextLink>
-            <NextLink href={Routes.userProfile({ username: author.address })}>
-              <p
-                className="text-xs text-muted-foreground"
-                title={author.address}
-              >
-                {formatReadableAddress(author.address)}
-              </p>
-            </NextLink>
+            <p className="text-muted-foreground">
+              <time dateTime={post.createdAt}>
+                {format(new Date(post.createdAt), "MMM d, yyyy")}
+              </time>{" "}
+              · {readingMinutes} min read
+            </p>
           </div>
         </div>
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={() => setShareDialogOpen(true)}>
-            <IconShare size={16} /> Share
-          </Button>
-        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-muted-foreground"
+          onClick={() => setShareDialogOpen(true)}
+        >
+          <IconShare size={16} /> Share
+        </Button>
       </div>
 
       <PostShareDialog

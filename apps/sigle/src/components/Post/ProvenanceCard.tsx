@@ -1,27 +1,12 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import {
-  IconCircleCheck,
-  IconCopy,
-  IconDatabase,
-  IconCurrencyBitcoin,
-  IconExternalLink,
-} from "@tabler/icons-react";
+import { IconArrowUpRight, IconCopy } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { env } from "@/env";
-import { cn } from "@/lib/cn";
 import { formatNumber } from "@/lib/utils";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "../ui/accordion";
-import { Badge } from "../ui/badge";
 import { Button, buttonVariants } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
 
 interface PostProvenanceCardProps {
   post: paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"];
@@ -91,142 +76,93 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
   };
 
   return (
-    <Card>
-      <CardContent>
-        <Accordion>
-          <AccordionItem value="provenance">
-            <AccordionTrigger className="items-center py-0 hover:no-underline">
-              <div className="mr-2 flex w-full items-center justify-between text-left">
-                <div className="flex items-center gap-3">
-                  <div className="flex size-9 items-center justify-center rounded-lg bg-accent/10">
-                    <IconCircleCheck size={18} className="text-accent" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">
-                      Verified On-Chain
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Published{" "}
-                      {format(new Date(post.createdAt), "MMM dd, yyyy")}
-                    </p>
-                  </div>
-                </div>
-                <Badge
-                  variant="secondary"
-                  className="text-xs font-medium capitalize"
-                >
-                  {storageLabel}
-                </Badge>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className="mt-4 space-y-4 border-t border-border pt-4">
-                {/* Metadata Storage */}
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                    <IconDatabase size={14} />
-                    <span>Content Metadata</span>
-                  </div>
-                  <div className="flex items-center justify-between rounded-lg bg-secondary/50 px-3 py-2.5">
-                    <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                      <span className="text-xs text-muted-foreground">
-                        {storageLabel} ·{" "}
-                        {post.arweaveBlockHeight === null
-                          ? "Pending confirmation"
-                          : `Block #${formatNumber(post.arweaveBlockHeight)}`}
-                      </span>
-                      {/* oxlint-disable-next-line better-tailwindcss/enforce-consistent-line-wrapping */}
-                      <span className="truncate font-mono text-sm text-foreground">
-                        {truncateId(metadataId, 12, 8)}
-                      </span>
-                    </div>
-                    <div className="ml-3 flex items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="size-8 p-0 text-muted-foreground hover:text-foreground"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          copyToClipboard(metadataId);
-                        }}
-                      >
-                        <IconCopy size={14} />
-                      </Button>
-                      <a
-                        href={metadataLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className={cn(
-                          buttonVariants({ variant: "ghost", size: "sm" }),
-                          "size-8 p-0 text-muted-foreground hover:text-foreground",
-                        )}
-                      >
-                        <IconExternalLink size={14} />
-                        <span className="sr-only">View on {storageLabel}</span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
+    <section>
+      <div className="flex items-baseline justify-between gap-4">
+        <h2 className="headline text-xl">Verified on-chain</h2>
+        <span className="text-xs text-muted-foreground">
+          Published {format(new Date(post.createdAt), "MMM d, yyyy")}
+        </span>
+      </div>
 
-                {/* Bitcoin timestamp */}
-                {opentimestamps ? (
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 text-xs font-medium tracking-wider text-muted-foreground uppercase">
-                      <IconCurrencyBitcoin size={14} />
-                      <span>Bitcoin Timestamp</span>
-                    </div>
-                    <div className="flex items-center justify-between rounded-lg bg-secondary/50 px-3 py-2.5">
-                      <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                        <span className="text-xs text-muted-foreground">
-                          {opentimestamps.bitcoinBlockHeight === null
-                            ? "OpenTimestamps"
-                            : `Block #${formatNumber(opentimestamps.bitcoinBlockHeight)}`}
-                        </span>
-                        <span className="text-sm text-foreground">
-                          {opentimestamps.bitcoinTimestamp === null
-                            ? "Pending Bitcoin confirmation"
-                            : format(
-                                new Date(opentimestamps.bitcoinTimestamp),
-                                "MMM dd, yyyy HH:mm",
-                              )}
-                        </span>
-                      </div>
-                      {opentimestamps.otsTxId ? (
-                        <div className="ml-3 flex items-center gap-1">
-                          <a
-                            href={`${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${opentimestamps.otsTxId}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className={cn(
-                              buttonVariants({ variant: "ghost", size: "sm" }),
-                              "size-8 p-0 text-muted-foreground hover:text-foreground",
-                            )}
-                          >
-                            <IconExternalLink size={14} />
-                            <span className="sr-only">
-                              Download the OpenTimestamps proof
-                            </span>
-                          </a>
-                        </div>
-                      ) : null}
-                    </div>
-                  </div>
-                ) : null}
+      <dl className="mt-3 border-t border-border text-sm">
+        <div className="flex items-center justify-between gap-4 border-b border-border py-3">
+          <div className="min-w-0">
+            <dt className="text-xs text-muted-foreground">
+              {storageLabel} ·{" "}
+              {post.arweaveBlockHeight === null
+                ? "Pending confirmation"
+                : `Block #${formatNumber(post.arweaveBlockHeight)}`}
+            </dt>
+            <dd className="truncate font-mono text-sm">
+              {truncateId(metadataId, 12, 8)}
+            </dd>
+          </div>
+          <div className="flex shrink-0 items-center">
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              aria-label="Copy the content ID"
+              className="text-muted-foreground"
+              onClick={() => copyToClipboard(metadataId)}
+            >
+              <IconCopy size={14} />
+            </Button>
+            <a
+              href={metadataLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`View on ${storageLabel}`}
+              className={buttonVariants({
+                variant: "ghost",
+                size: "icon-sm",
+                className: "text-muted-foreground",
+              })}
+            >
+              <IconArrowUpRight size={14} />
+            </a>
+          </div>
+        </div>
 
-                <p className="pt-1 text-xs/relaxed text-muted-foreground">
-                  {opentimestamps?.bitcoinTimestamp
-                    ? "This post's content is permanently stored on Arweave and timestamped on the Bitcoin blockchain with OpenTimestamps, proving authorship and publication time."
-                    : opentimestamps
-                      ? "This post's content is permanently stored on Arweave. Its Bitcoin timestamp with OpenTimestamps is waiting for confirmation."
-                      : "This post's content is permanently stored on Arweave."}
-                </p>
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      </CardContent>
-    </Card>
+        {opentimestamps ? (
+          <div className="flex items-center justify-between gap-4 border-b border-border py-3">
+            <div className="min-w-0">
+              <dt className="text-xs text-muted-foreground">
+                Bitcoin
+                {opentimestamps.bitcoinBlockHeight === null
+                  ? " · OpenTimestamps"
+                  : ` · Block #${formatNumber(opentimestamps.bitcoinBlockHeight)}`}
+              </dt>
+              <dd>
+                {opentimestamps.bitcoinTimestamp === null
+                  ? "Pending Bitcoin confirmation"
+                  : format(
+                      new Date(opentimestamps.bitcoinTimestamp),
+                      "MMM d, yyyy HH:mm",
+                    )}
+              </dd>
+            </div>
+            {opentimestamps.otsTxId ? (
+              <a
+                href={`${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${opentimestamps.otsTxId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex shrink-0 items-center gap-1 text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+              >
+                .ots proof
+                <IconArrowUpRight size={12} />
+              </a>
+            ) : null}
+          </div>
+        ) : null}
+      </dl>
+
+      <p className="mt-3 text-xs/relaxed text-pretty text-muted-foreground">
+        {opentimestamps?.bitcoinTimestamp
+          ? "Stored permanently on Arweave and timestamped on Bitcoin with OpenTimestamps, proving who wrote it and when."
+          : opentimestamps
+            ? "Stored permanently on Arweave. The Bitcoin timestamp is waiting for confirmation."
+            : "Stored permanently on Arweave."}
+      </p>
+    </section>
   );
 };

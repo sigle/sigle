@@ -1,0 +1,5 @@
+---
+"@sigle/sigle": patch
+---
+
+Redesign the profile and post pages in the minimal style of the home page. The profile shows a contained cover, a Newsreader name, an RSS link, and posts as plain rows. The post page shows the date and reading time in the byline, the author block after the article, and the Arweave and Bitcoin proof as two rows that are always visible.
