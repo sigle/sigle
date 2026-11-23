@@ -545,23 +545,27 @@ describe("http server", () => {
         HttpClient.get(path, { headers: { "x-real-ip": ip, ...headers } });
 
       // 300 requests, 50 on each of six endpoints, half of them signed in, so
-      // no endpoint limit of 60 is reached.
-      yield* Effect.forEach(
+      // no endpoint limit of 60 is reached. Anonymous requests to a signed-in
+      // route count too, though they fail the session check.
+      const statuses = yield* Effect.forEach(
         [
           ["/api/me", first.cookie],
           ["/api/drafts", first.cookie],
           ["/api/drafts/missing", first.cookie],
           ["/api/posts", undefined],
           ["/api/posts/missing", undefined],
-          ["/api/users/missing", undefined],
+          ["/api/drafts", undefined],
         ] as const,
         ([path, cookie]) =>
           Effect.forEach(
             Array.from({ length: 50 }),
-            () => get(path, cookie === undefined ? {} : { cookie }),
-            { concurrency: 1, discard: true },
+            () =>
+              get(path, cookie === undefined ? {} : { cookie }).pipe(
+                Effect.map(({ status }) => status),
+              ),
+            { concurrency: 1 },
           ),
-        { concurrency: 1, discard: true },
+        { concurrency: 1 },
       );
 
       // Another account from the same IP shares its global limit.
@@ -572,9 +576,13 @@ describe("http server", () => {
       });
 
       expect({
+        // Each request counts once, so the first 300 all pass
+        limitedBefore: statuses.flat().filter((status) => status === 429)
+          .length,
         rejected: [rejected.status, rateLimitHeaders(rejected)],
         otherIp: [otherIp.status, rateLimitHeaders(otherIp)],
       }).toStrictEqual({
+        limitedBefore: 0,
         rejected: [
           429,
           {

@@ -7,6 +7,7 @@ import {
 } from "effect/http-api";
 import { UserAuthMiddleware } from "@/api/middleware/auth-user";
 import {
+  GlobalRateLimitMiddleware,
   RateLimitMiddleware,
   RateLimitPolicy,
 } from "@/api/middleware/rate-limit";
@@ -352,4 +353,5 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
   )
   .prefix("/api/drafts")
   .middleware(RateLimitMiddleware)
-  .middleware(UserAuthMiddleware);
+  .middleware(UserAuthMiddleware)
+  .middleware(GlobalRateLimitMiddleware);
