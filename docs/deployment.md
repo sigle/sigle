@@ -60,7 +60,7 @@ Railway does not read this file when deploying, so merging a change does nothing
 
 The website's server-side calls to the API (page renders, the RSS feed, Open Graph images) go to `API_INTERNAL_URL`, the server on Railway's private network, instead of the public `NEXT_PUBLIC_API_URL`. The browser keeps calling the public URL.
 
-The API rate limits by the `X-Real-IP` header, which Railway's edge sets on public requests. The private network bypasses the edge, so the website forwards each visitor's IP in that header itself (`apps/sigle/src/lib/visitor-ip.ts`); otherwise every visitor would share the website's limit. Only services of the project can reach the private network, so the server can trust the header there too.
+The API rate limits clients by IP, but these calls come from the website for every visitor at once, so the API doesn't rate limit GET requests addressed to its private domain (`RAILWAY_PRIVATE_DOMAIN`, set by Railway). Railway's edge answers requests for a `*.railway.internal` host itself, so only the project's services can send one. Other methods stay limited, whoever calls them. Page floods are not limited by the API this way; limit them in front of the website instead.
 
 ## Tracing
 

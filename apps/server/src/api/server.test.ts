@@ -1,10 +1,17 @@
 import { describe, expect, it } from "@effect/vitest";
-import { Effect, Layer, Option, Schema } from "effect";
-import { Headers, HttpClient, HttpClientResponse } from "effect/http";
+import { Effect, Layer, Option, Predicate, Schema } from "effect";
+import {
+  Headers,
+  HttpClient,
+  HttpClientResponse,
+  HttpServer,
+} from "effect/http";
 import { RateLimiter } from "effect/persistence";
 import { TestClock } from "effect/testing";
+import { type IncomingHttpHeaders, request as httpRequest } from "node:http";
 import type { AppConfigValues } from "@/config";
 import { RATE_LIMITS } from "@/api/middleware/rate-limit";
+import { createAuthenticatedClient } from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 import packageJson from "../../package.json" with { type: "json" };
 
@@ -96,6 +103,53 @@ const rateLimitHeaders = (response: HttpClientResponse.HttpClientResponse) =>
       Option.getOrUndefined(Headers.get(response.headers, name)),
     ]),
   );
+
+/**
+ * Sends a request with its own `Host` header, which the fetch-based test
+ * client replaces with the server's address.
+ */
+const requestWithHost = (options: {
+  readonly method: string;
+  readonly path: string;
+  readonly headers: { readonly host: string; readonly cookie?: string };
+}) =>
+  Effect.gen(function* () {
+    const { address } = yield* HttpServer.HttpServer;
+
+    if (Predicate.isTagged(address, "UnixPathAddress")) {
+      return yield* Effect.die("The test server listens on TCP");
+    }
+
+    return yield* Effect.promise(
+      () =>
+        new Promise<{
+          readonly status: number | undefined;
+          readonly headers: IncomingHttpHeaders;
+        }>((resolve, reject) => {
+          const request = httpRequest(
+            {
+              host: "127.0.0.1",
+              port: address.port,
+              method: options.method,
+              path: options.path,
+              headers: options.headers,
+            },
+            (response) => {
+              response.resume();
+              response.on("end", () =>
+                resolve({
+                  status: response.statusCode,
+                  headers: response.headers,
+                }),
+              );
+            },
+          );
+
+          request.on("error", reject);
+          request.end();
+        }),
+    );
+  });
 
 const serverLayer = (overrides: Partial<AppConfigValues> = {}) =>
   makeTestServerLayer(overrides);
@@ -431,6 +485,75 @@ describe("http server", () => {
       }).toStrictEqual({
         configured: ["59", "59", "58"],
         unset: ["59", "58", "57"],
+      });
+    });
+  });
+
+  it.effect("does not rate limit GET requests from the private network", () => {
+    const privateHost = "sigle.railway.internal:8080";
+
+    // Past the default limit of the endpoint, then a write with the same host.
+    const requests = Effect.gen(function* () {
+      const reads = yield* Effect.forEach(
+        Array.from({ length: RATE_LIMITS.default.points + 1 }),
+        () =>
+          requestWithHost({
+            method: "GET",
+            path: "/api/posts/missing",
+            headers: { host: privateHost },
+          }),
+        { concurrency: 1 },
+      );
+
+      const { cookie } = yield* createAuthenticatedClient();
+
+      const write = yield* requestWithHost({
+        method: "DELETE",
+        path: "/api/drafts/missing",
+        headers: { host: privateHost, cookie },
+      });
+
+      const publicRead = yield* requestWithHost({
+        method: "GET",
+        path: "/api/posts/missing",
+        headers: { host: "api.sigle.test" },
+      });
+
+      return {
+        lastRead: reads.at(-1)?.status,
+        readLimited: reads.some(
+          ({ headers }) => headers["x-ratelimit-limit"] !== undefined,
+        ),
+        write: [write.status, write.headers["x-ratelimit-remaining"]],
+        publicRead: [
+          publicRead.status,
+          publicRead.headers["x-ratelimit-remaining"],
+        ],
+      };
+    });
+
+    return Effect.gen(function* () {
+      expect({
+        configured: yield* requests.pipe(
+          Effect.provide(
+            serverLayer({
+              RAILWAY_PRIVATE_DOMAIN: Option.some("sigle.railway.internal"),
+            }),
+          ),
+        ),
+        // Off Railway, any client could send that host.
+        unset: yield* requests.pipe(
+          Effect.map(({ lastRead }) => lastRead),
+          Effect.provide(serverLayer()),
+        ),
+      }).toStrictEqual({
+        configured: {
+          lastRead: 404,
+          readLimited: false,
+          write: [404, "59"],
+          publicRead: [404, "59"],
+        },
+        unset: 429,
       });
     });
   });

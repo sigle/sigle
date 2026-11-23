@@ -455,6 +455,7 @@ export const createAuthenticatedClient = (
       ),
       userId: user.id,
       address,
+      cookie: cookieHeader,
     };
   });
 

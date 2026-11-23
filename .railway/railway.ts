@@ -64,7 +64,7 @@ export default defineRailway(() => {
     tracing: { enabled: true },
     env: {
       // Server-side calls to the API go over the private network, where the
-      // website forwards each visitor's IP for the API's rate limits.
+      // API doesn't rate limit reads.
       API_INTERNAL_URL:
         // oxlint-disable-next-line no-template-curly-in-string Railway references
         "http://${{server.RAILWAY_PRIVATE_DOMAIN}}:${{server.PORT}}",
