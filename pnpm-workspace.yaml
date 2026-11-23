@@ -15,9 +15,11 @@ allowBuilds:
   "sharp": false
   "tiny-secp256k1": false
   "utf-8-validate": false
+  "workerd": false
 minimumReleaseAge: 1440 # 1 day
 packages:
   - apps/*
+  - infra
   - packages/*
 catalog:
   vite: npm:@voidzero-dev/vite-plus-core@1.1.0

@@ -1,0 +1,16 @@
+{
+  "name": "@sigle/infra",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@alchemy.run/cloudflare": "2.0.0-beta.87",
+    "@alchemy.run/railway": "2.0.0-beta.87",
+    "@effect/platform-node": "4.1.4",
+    "alchemy": "2.0.0-beta.87",
+    "effect": "4.1.4"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2"
+  }
+}

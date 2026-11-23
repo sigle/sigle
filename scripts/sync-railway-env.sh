@@ -7,7 +7,8 @@
 # Syncs every service of the Railway environment, or only the one given.
 # Requires the 1Password CLI (v2.42+, signed in through the desktop app) and
 # the Railway CLI (signed in with `railway login`). Variables removed from
-# 1Password are not removed from Railway.
+# 1Password are not removed from Railway. The R2_* and LITESTREAM_* variables
+# are set by infra/alchemy.run.ts and must not be in 1Password.
 set -euo pipefail
 
 # Railway project "sigle-v2"
