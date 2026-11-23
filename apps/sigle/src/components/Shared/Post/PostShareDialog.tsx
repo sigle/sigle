@@ -16,7 +16,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { env } from "@/env";
-import { cn } from "@/lib/cn";
 import { Routes } from "@/lib/routes";
 
 interface PostShareDialogProps {
@@ -105,7 +104,7 @@ export const PostShareDialog = ({
               href={network.href}
               target="_blank"
               rel="noreferrer noopener"
-              className={cn(buttonVariants({ variant: "outline" }))}
+              className={buttonVariants({ variant: "outline" })}
             >
               <network.icon size={16} />
               {network.name}

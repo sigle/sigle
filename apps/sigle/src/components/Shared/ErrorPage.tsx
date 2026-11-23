@@ -3,7 +3,6 @@
 import * as Sentry from "@sentry/nextjs";
 import { useEffect } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/cn";
 import { StatusPage } from "./StatusPage";
 
 interface ErrorPageProps {
@@ -45,7 +44,7 @@ export const ErrorPage = ({ error, retry }: ErrorPageProps) => {
       </Button>
       <a
         href="/"
-        className={cn(buttonVariants({ size: "lg", variant: "outline" }))}
+        className={buttonVariants({ size: "lg", variant: "outline" })}
       >
         Back to home
       </a>
