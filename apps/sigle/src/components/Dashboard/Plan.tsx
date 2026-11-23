@@ -113,31 +113,35 @@ export const Plan = () => {
       document.removeEventListener("visibilitychange", onVisibilityChange);
   });
 
-  if (!me || !limits) {
+  if (!me) {
     return null;
   }
 
   const isPro = me.plan === "pro";
-  const { publish } = limits;
+  // The usage is left out when it fails to load, so the plans and the
+  // activation stay available.
+  const publish = limits?.publish;
 
   return (
     <div className="space-y-5">
       <ProWelcomeDialog open={isWelcomeOpen} onOpenChange={setIsWelcomeOpen} />
 
-      <Card>
-        <CardContent className="space-y-2">
-          <p>
-            You published{" "}
-            <span className="font-bold">
-              {publish.used} of {publish.limit}
-            </span>{" "}
-            posts in the last 24 hours.
-          </p>
-          <Progress
-            value={Math.min(100, (publish.used / publish.limit) * 100)}
-          />
-        </CardContent>
-      </Card>
+      {publish ? (
+        <Card>
+          <CardContent className="space-y-2">
+            <p>
+              You published{" "}
+              <span className="font-bold">
+                {publish.used} of {publish.limit}
+              </span>{" "}
+              posts in the last 24 hours.
+            </p>
+            <Progress
+              value={Math.min(100, (publish.used / publish.limit) * 100)}
+            />
+          </CardContent>
+        </Card>
+      ) : null}
 
       <div className="grid gap-5 md:grid-cols-2">
         <Card>

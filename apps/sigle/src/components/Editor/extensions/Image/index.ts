@@ -92,12 +92,13 @@ export const TipTapImage = TipTapImageBase.extend<
         return;
       }
 
-      for (const file of files) {
-        const chain = this.editor.chain().focus();
+      // Each insertion moves the selection after its image, so the files keep
+      // their order.
+      if (position !== undefined)
+        this.editor.commands.setTextSelection(position);
 
-        (position === undefined ? chain : chain.setTextSelection(position))
-          .setImageFromFile({ file })
-          .run();
+      for (const file of files) {
+        this.editor.chain().focus().setImageFromFile({ file }).run();
       }
     };
 
@@ -124,8 +125,9 @@ export const TipTapImage = TipTapImageBase.extend<
           },
           handlePaste: (_view, event) => {
             // An image copied from a web page also comes with HTML linking to
-            // it, which ProseMirror pastes as an image from that URL.
-            if (event.clipboardData?.types.includes("text/html")) return false;
+            // it, which ProseMirror pastes as an image from that URL, and text
+            // copied from a document can come with an image of itself.
+            if (hasPastableHtml(event.clipboardData)) return false;
 
             const files = getImageFiles(event.clipboardData);
 
@@ -294,6 +296,25 @@ export const TipTapImage = TipTapImageBase.extend<
     editor.view.dispatch(transaction);
   },
 });
+
+/**
+ * Whether ProseMirror can paste the HTML. HTML holding only `data:` images is
+ * not, as the image extension does not accept them.
+ */
+const hasPastableHtml = (data: DataTransfer | null) => {
+  const html = data?.getData("text/html");
+
+  if (!html) return false;
+
+  const document = new DOMParser().parseFromString(html, "text/html");
+  const images = Array.from(document.querySelectorAll("img"));
+
+  return (
+    images.length === 0 ||
+    document.body.textContent?.trim() !== "" ||
+    images.some((image) => !image.getAttribute("src")?.startsWith("data:"))
+  );
+};
 
 const getImageFiles = (data: DataTransfer | null) =>
   Array.from(data?.files ?? []).filter((file) =>

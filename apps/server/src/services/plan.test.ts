@@ -56,7 +56,7 @@ const makeStacksApiLayer = (
 
 const makePlanTestLayer = (
   config: Partial<AppConfigValues>,
-  stacksApi: Layer.Layer<HttpClient.HttpClient>,
+  stacksApi: Layer.Layer<HttpClient.HttpClient, never, Database>,
 ) =>
   Layer.effect(PlanService, makePlanService).pipe(
     Layer.provide(stacksApi),
@@ -354,5 +354,47 @@ describe("plan reconciliation", () => {
           ),
         ),
       ),
+  );
+
+  it.effect(
+    "does not upgrade a user who went back to free during their check",
+    () => {
+      // The user's refresh stores Free while the job checks their wallet,
+      // which by then holds the NFT again.
+      const downgradeDuringCheck = Layer.effect(
+        HttpClient.HttpClient,
+        Effect.gen(function* () {
+          const db = yield* Database;
+
+          return HttpClient.make((request) =>
+            db
+              .update(user)
+              .set({ plan: "free" })
+              .pipe(
+                Effect.orDie,
+                Effect.as(
+                  HttpClientResponse.fromWeb(
+                    request,
+                    Response.json({ limit: 1, total: 1, results: [] }),
+                  ),
+                ),
+              ),
+          );
+        }),
+      );
+
+      return Effect.gen(function* () {
+        const userId = yield* createUserWithWallets([HOLDER], {
+          plan: "pro",
+          planCheckedAt: hoursAgo(7),
+        });
+
+        yield* reconcileUserPlans;
+
+        expect((yield* findStoredPlan(userId))?.plan).toBe("free");
+      }).pipe(
+        Effect.provide(makePlanTestLayer(MAINNET_CONFIG, downgradeDuringCheck)),
+      );
+    },
   );
 });

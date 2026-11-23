@@ -16,7 +16,8 @@ export const PLAN_RECHECK_AFTER_MILLIS = 6 * 60 * 60 * 1000;
 /**
  * Checks the NFT holdings of the Pro users again, so a user who sold their
  * Explorer Guild NFT goes back to Free within a day. A user whose check fails
- * stays on Pro until the next run.
+ * stays on Pro until the next run. It never upgrades anyone: only activating
+ * Pro on the Plan page does.
  */
 export const reconcileUserPlans = Effect.gen(function* () {
   const db = yield* Database;
@@ -36,21 +37,31 @@ export const reconcileUserPlans = Effect.gen(function* () {
     .pipe(Effect.orDie);
 
   for (const { id } of proUsers) {
-    const plan = yield* plans.checkUserPlan(id).pipe(
+    yield* plans.findUserPlan(id).pipe(
+      Effect.flatMap((plan) =>
+        Effect.gen(function* () {
+          // Only written while the user is still on Pro, so a user who went
+          // back to Free since the query above is not upgraded.
+          yield* db
+            .update(user)
+            .set({ plan, planCheckedAt: new Date() })
+            .where(and(eq(user.id, id), eq(user.plan, "pro")))
+            .pipe(Effect.orDie);
+
+          if (plan === "free") {
+            yield* Effect.logInfo("User moved back to the free plan", {
+              userId: id,
+            });
+          }
+        }),
+      ),
       Effect.catchTag("NftHoldingsError", (error) =>
-        Effect.as(
-          Effect.logWarning("Failed to re-check a user plan", {
-            userId: id,
-            cause: error,
-          }),
-          "pro" as const,
-        ),
+        Effect.logWarning("Failed to re-check a user plan", {
+          userId: id,
+          cause: error,
+        }),
       ),
     );
-
-    if (plan === "free") {
-      yield* Effect.logInfo("User moved back to the free plan", { userId: id });
-    }
   }
 });
 

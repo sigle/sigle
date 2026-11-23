@@ -149,9 +149,15 @@ export interface PlanClient {
     address: string,
   ) => Effect.Effect<boolean, NftHoldingsError>;
   /**
-   * Checks whether one of the user's wallets holds an Explorer Guild NFT, or
-   * on testnet is in `PRO_ADDRESSES`, and stores the resulting plan on the
-   * user. A failed check stores nothing, so the stored plan is kept.
+   * The plan the user's wallets qualify for: Pro when one of them holds an
+   * Explorer Guild NFT, or on testnet is in `PRO_ADDRESSES`. Stores nothing.
+   */
+  readonly findUserPlan: (
+    userId: string,
+  ) => Effect.Effect<UserPlan, NftHoldingsError>;
+  /**
+   * Stores the plan from `findUserPlan` on the user. A failed check stores
+   * nothing, so the stored plan is kept.
    */
   readonly checkUserPlan: (
     userId: string,
@@ -209,7 +215,7 @@ export const makePlanService = Effect.gen(function* () {
       return total > 0;
     });
 
-  const checkUserPlan = (userId: string) =>
+  const findUserPlan = (userId: string) =>
     Effect.gen(function* () {
       const wallets = yield* db
         .select({ address: walletAddress.address })
@@ -217,18 +223,22 @@ export const makePlanService = Effect.gen(function* () {
         .where(eq(walletAddress.userId, userId))
         .pipe(Effect.orDie);
 
-      let plan: UserPlan = "free";
-
       for (const { address } of wallets) {
         if (
           (config.STACKS_ENV === "testnet" &&
             config.PRO_ADDRESSES.includes(address)) ||
           (yield* hasTegNft(address))
         ) {
-          plan = "pro";
-          break;
+          return "pro" as const;
         }
       }
+
+      return "free" as const;
+    });
+
+  const checkUserPlan = (userId: string) =>
+    Effect.gen(function* () {
+      const plan = yield* findUserPlan(userId);
 
       yield* db
         .update(user)
@@ -239,7 +249,7 @@ export const makePlanService = Effect.gen(function* () {
       return plan;
     });
 
-  return { hasTegNft, checkUserPlan } satisfies PlanClient;
+  return { hasTegNft, findUserPlan, checkUserPlan } satisfies PlanClient;
 });
 
 export class PlanService extends Context.Service<PlanService, PlanClient>()(
