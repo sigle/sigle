@@ -1,4 +1,4 @@
-import { IconHelpCircle } from "@tabler/icons-react";
+import { IconArrowUpRight } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import {
   Field,
@@ -8,9 +8,32 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/cn";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { DialogTitleGoBack } from "./DialogTitleGoBack";
 import { SeoPreview } from "./SeoPreview";
+
+/** Characters used out of the recommended length, muted until it is passed. */
+const CharacterCount = ({
+  value,
+  recommended,
+}: {
+  value: string | undefined;
+  recommended: number;
+}) => {
+  const count = (value || "").length;
+
+  return (
+    <span
+      className={cn("ml-auto font-mono text-xs font-normal", {
+        "text-muted-foreground": count <= recommended,
+        "text-destructive": count > recommended,
+      })}
+    >
+      {count} / {recommended}
+    </span>
+  );
+};
 
 export const MetaSettings = () => {
   const { register, watch } = useFormContext<EditorPostFormData>();
@@ -18,65 +41,57 @@ export const MetaSettings = () => {
   const watchMetaDescription = watch("metaDescription");
 
   return (
-    <div className="animate-in px-4 slide-in-from-right-5 fade-in">
-      <DialogTitleGoBack
-        title="Meta SEO"
-        description="Edit your post SEO settings"
-      />
+    <div className="animate-in px-4 pb-6 slide-in-from-right-5 fade-in">
+      <DialogTitleGoBack title="Search and social preview" />
 
-      <FieldGroup>
+      <FieldGroup className="mt-2 border-t border-border pt-5">
         <Field>
-          <FieldLabel htmlFor="metaTitle">Meta title</FieldLabel>
+          <FieldLabel htmlFor="metaTitle">
+            Title
+            <CharacterCount value={watchMetaTitle} recommended={70} />
+          </FieldLabel>
           <Input
             id="metaTitle"
-            placeholder="Meta title"
+            placeholder="Defaults to the post title"
             maxLength={100}
             {...register("metaTitle")}
           />
-          <FieldDescription className="text-xs">
-            Recommended: <span className="font-medium">70</span> characters. You
-            have used{" "}
-            <span className="font-medium">{(watchMetaTitle || "").length}</span>{" "}
-            characters.
-          </FieldDescription>
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="metaDescription">Meta description</FieldLabel>
+          <FieldLabel htmlFor="metaDescription">
+            Description
+            <CharacterCount value={watchMetaDescription} recommended={156} />
+          </FieldLabel>
           <Textarea
             id="metaDescription"
-            placeholder="Meta description"
+            placeholder="Defaults to the start of the post"
             maxLength={250}
-            rows={4}
+            rows={3}
             {...register("metaDescription")}
           />
-          <FieldDescription className="text-xs">
-            Recommended: <span className="font-medium">156</span> characters.
-            You have used{" "}
-            <span className="font-medium">
-              {(watchMetaDescription || "").length}
-            </span>{" "}
-            characters.
-          </FieldDescription>
         </Field>
 
         <Field>
-          <FieldLabel htmlFor="canonicalUri">
-            Canonical URI{" "}
-            <a
-              href="https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <IconHelpCircle size={16} />
-            </a>
-          </FieldLabel>
+          <FieldLabel htmlFor="canonicalUri">Canonical link</FieldLabel>
           <Input
             id="canonicalUri"
             placeholder="https://"
             maxLength={200}
             {...register("canonicalUri")}
           />
+          <FieldDescription>
+            If this post first appeared elsewhere, link to the original.{" "}
+            <a
+              href="https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-0.5"
+            >
+              Learn more
+              <IconArrowUpRight size={12} />
+            </a>
+          </FieldDescription>
         </Field>
 
         <SeoPreview />

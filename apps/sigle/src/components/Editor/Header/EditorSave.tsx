@@ -1,8 +1,7 @@
-import { IconInfoCircle } from "@tabler/icons-react";
+import { IconAlertCircle } from "@tabler/icons-react";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useDebouncedCallback } from "@/hooks/useDebouncedCallback";
 import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "../EditorFormProvider";
@@ -10,7 +9,7 @@ import { useEditorStore } from "../store";
 
 const saveStateLabels = {
   idle: "",
-  saving: "Saving...",
+  saving: "Saving…",
   saved: "Saved",
 };
 
@@ -98,14 +97,18 @@ export const EditorSave = () => {
 
   if (saveState === "error") {
     return (
-      <Alert variant="destructive" className="mt-4">
-        <IconInfoCircle size={14} />
-        <AlertDescription>
-          {saveError ?? "Error Saving, please try again"}
-        </AlertDescription>
-      </Alert>
+      <p className="flex min-w-0 items-center gap-1.5 text-sm text-destructive">
+        <IconAlertCircle size={14} className="shrink-0" />
+        <span className="truncate">
+          {saveError ?? "Error saving, please try again"}
+        </span>
+      </p>
     );
   }
 
-  return <p className="text-sm">{saveStateLabels[saveState]}</p>;
+  return (
+    <p className="text-sm text-muted-foreground">
+      {saveStateLabels[saveState]}
+    </p>
+  );
 };

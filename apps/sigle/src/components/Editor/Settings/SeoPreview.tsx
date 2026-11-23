@@ -1,11 +1,4 @@
-import { IconHelpCircle } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
-import { Card, CardContent } from "@/components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
 import { prettifyUrl } from "@/lib/urls";
@@ -29,40 +22,29 @@ export const SeoPreview = () => {
 
   return (
     <div>
-      <p className="mb-1 flex items-center gap-1 text-sm">
-        Preview
-        <span className="text-muted-foreground">
-          <Tooltip>
-            <TooltipTrigger render={<IconHelpCircle size={16} />} />
-            <TooltipContent>
-              This is how the post will be displayed when sharing the link on
-              social media
-            </TooltipContent>
-          </Tooltip>
-        </span>
+      <p className="text-sm font-medium">Link preview</p>
+      <p className="mt-1 mb-3 text-sm text-muted-foreground">
+        How the post looks when shared on social media.
       </p>
-      <Card size="sm" className="relative mx-auto pt-0!">
+      <div className="overflow-hidden rounded-lg border border-border">
         {metaImage ? (
-          <>
-            <div className="absolute inset-0 z-30 aspect-video bg-black/35" />
-            {/* oxlint-disable-next-line no-img-element */}
-            <img
-              src={resolveImageUrl(metaImage)}
-              alt="Cover social media preview"
-              className="relative z-20 aspect-video w-full object-cover"
-            />
-          </>
+          // oxlint-disable-next-line no-img-element
+          <img
+            src={resolveImageUrl(metaImage)}
+            alt="Cover social media preview"
+            className="aspect-video w-full border-b border-border object-cover"
+          />
         ) : null}
-        <CardContent>
-          <div className="truncate">{metaTitle}</div>
-          <div className="mt-0.5 truncate text-muted-foreground">
-            {metaDescription}
-          </div>
-          <div className="truncate text-sm text-muted-foreground">
+        <div className="space-y-0.5 p-3 text-sm">
+          <p className="truncate font-mono text-xs text-muted-foreground">
             {prettifyUrl(env.NEXT_PUBLIC_APP_URL)}
-          </div>
-        </CardContent>
-      </Card>
+          </p>
+          <p className="truncate font-medium">{metaTitle}</p>
+          <p className="line-clamp-2 text-muted-foreground">
+            {metaDescription}
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

@@ -1,4 +1,3 @@
-import { IconRocket } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import type { EditorPostFormData } from "../EditorFormProvider";
@@ -9,18 +8,9 @@ export const EditorPublish = () => {
   const type = watch("type");
   const setPublishOpen = useEditorStore((state) => state.setPublishOpen);
 
-  if (type === "published") {
-    return (
-      <Button variant="ghost" onClick={() => setPublishOpen(true)}>
-        Update
-      </Button>
-    );
-  }
-
   return (
-    <Button variant="ghost" onClick={() => setPublishOpen(true)}>
-      Publish
-      <IconRocket size={16} />
+    <Button size="sm" onClick={() => setPublishOpen(true)}>
+      {type === "published" ? "Update" : "Publish"}
     </Button>
   );
 };
