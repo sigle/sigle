@@ -506,9 +506,6 @@ importers:
       framer-motion:
         specifier: 12.38.0
         version: 12.38.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      highlight.js:
-        specifier: 11.11.1
-        version: 11.11.1
       lowlight:
         specifier: 3.3.0
         version: 3.3.0

@@ -13,3 +13,5 @@ The share dialog is redesigned and its X and Bluesky links now include the post 
 Outline buttons used as links, such as Edit profile, show their border again.
 
 Embedded posts from X no longer crash the editor and post pages: react-tweet is upgraded to 3.3.1, which handles the entity lists X's API now leaves out.
+
+The editor's cover picker, image, code and embed blocks, insert button and progress steps follow the minimal style, and code blocks are a light panel on published posts too.

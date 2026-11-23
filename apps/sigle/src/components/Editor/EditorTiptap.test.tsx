@@ -1102,7 +1102,7 @@ describe("editor tiptap - image from url", () => {
     useEditorStore.getState().editor?.commands.insertImageUrlInput();
 
     const input = await screen.findByPlaceholderText(
-      "Paste image URL and press “enter”...",
+      "Paste an image link and press Enter",
     );
 
     await user.type(input, "https://example.com/photo.jpg{Enter}");
@@ -1126,7 +1126,7 @@ describe("editor tiptap - image from url", () => {
     useEditorStore.getState().editor?.commands.insertImageUrlInput();
 
     const input = await screen.findByPlaceholderText(
-      "Paste image URL and press “enter”...",
+      "Paste an image link and press Enter",
     );
 
     await user.type(input, "http://example.com/photo.jpg{Enter}");
@@ -1162,7 +1162,7 @@ describe("editor tiptap - image from url", () => {
     useEditorStore.getState().editor?.commands.insertImageUrlInput();
 
     const input = await screen.findByPlaceholderText(
-      "Paste image URL and press “enter”...",
+      "Paste an image link and press Enter",
     );
 
     await user.type(input, "https://example.com/my photo.jpg{Enter}");
