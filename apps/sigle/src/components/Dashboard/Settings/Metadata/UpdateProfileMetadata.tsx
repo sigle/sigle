@@ -6,20 +6,14 @@ import {
   ProfileMetadataSchemaId,
 } from "@sigle/sdk";
 import { request } from "@stacks/connect";
-import { IconAt, IconBrandX } from "@tabler/icons-react";
+import { IconAt } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Result } from "better-result";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useMultiStepToast } from "@/components/Shared/MultiStepToast";
 import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
+import { FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   InputGroup,
@@ -28,6 +22,7 @@ import {
 } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
 import { sigleApiClient } from "@/lib/sigle";
+import { SettingsRow } from "../SettingsRow";
 import { UploadProfileCoverPicture } from "./UploadProfileCoverPicture";
 import { UploadProfilePicture } from "./UploadProfilePicture";
 
@@ -75,8 +70,8 @@ export const UpdateProfileMetadata = ({
     register,
     handleSubmit,
     setValue,
-    getValues,
-    formState: { errors, isSubmitting },
+    watch,
+    formState: { errors, isDirty, isSubmitting },
   } = useForm({
     resolver: zodResolver(updateProfileMetadataSchema),
     values: {
@@ -170,104 +165,110 @@ export const UpdateProfileMetadata = ({
       value = value.split("/").pop() || "";
     }
 
-    setValue("twitter", value, { shouldValidate: true });
+    setValue("twitter", value, { shouldValidate: true, shouldDirty: true });
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <FieldGroup>
-        <Field>
-          <FieldLabel htmlFor="displayName">Name</FieldLabel>
-          <Input
-            id="displayName"
-            aria-invalid={!!errors.displayName}
-            placeholder="Your name"
-            {...register("displayName")}
-          />
-          {errors.displayName ? (
-            <FieldError>{errors.displayName.message}</FieldError>
-          ) : null}
-        </Field>
-
-        <Field>
-          <FieldLabel htmlFor="description">Description</FieldLabel>
-          <FieldDescription>
-            Markdown supported (limited to bold, italic, links)
-          </FieldDescription>
-          <Textarea
-            id="description"
-            aria-invalid={!!errors.description}
-            placeholder="Describe yourself in a few words (supports markdown)"
-            rows={4}
-            {...register("description")}
-          />
-          {errors.description ? (
-            <FieldError>{errors.description.message}</FieldError>
-          ) : null}
-        </Field>
-
-        <Field>
-          <FieldLabel htmlFor="website">Website</FieldLabel>
-          <Input
-            id="website"
-            aria-invalid={!!errors.website}
-            placeholder="https://my-website.com"
-            {...register("website")}
-          />
-          {errors.website ? (
-            <FieldError>{errors.website.message}</FieldError>
-          ) : null}
-        </Field>
-
-        <Field>
-          <FieldLabel htmlFor="twitter">
-            <IconBrandX height="16" width="16" /> (Twitter)
-          </FieldLabel>
-          <InputGroup>
-            <InputGroupInput
-              id="twitter"
-              aria-invalid={!!errors.twitter}
-              placeholder="username"
-              {...register("twitter")}
-              onChange={handleXChange}
-            />
-            <InputGroupAddon align="inline-start">
-              <IconAt size={16} className="text-muted-foreground" />
-            </InputGroupAddon>
-          </InputGroup>
-          {errors.twitter ? (
-            <FieldError>{errors.twitter.message}</FieldError>
-          ) : null}
-        </Field>
-
+    <form onSubmit={onSubmit}>
+      <SettingsRow label="Picture" description="A square JPG or PNG.">
         <UploadProfilePicture
-          picture={getValues("picture")}
+          picture={watch("picture")}
           setPicture={(value) =>
-            setValue("picture", value, { shouldValidate: true })
+            setValue("picture", value, {
+              shouldValidate: true,
+              shouldDirty: true,
+            })
           }
         />
+      </SettingsRow>
 
+      <SettingsRow
+        label="Cover"
+        description="A wide JPG or PNG for the top of your blog."
+      >
         <UploadProfileCoverPicture
-          picture={getValues("coverPicture")}
+          picture={watch("coverPicture")}
           setPicture={(value) =>
-            setValue("coverPicture", value, { shouldValidate: true })
+            setValue("coverPicture", value, {
+              shouldValidate: true,
+              shouldDirty: true,
+            })
           }
         />
+      </SettingsRow>
 
-        <Field orientation="horizontal" className="justify-end">
-          <Button
-            variant="outline"
-            type="button"
-            disabled={isSubmitting}
-            onClick={() => setEditingProfileMetadata(false)}
-          >
-            Cancel
-          </Button>
-          <Button type="submit" loading={isSubmitting}>
-            Save
-          </Button>
-        </Field>
-      </FieldGroup>
+      <SettingsRow label="Name" htmlFor="displayName">
+        <Input
+          id="displayName"
+          aria-invalid={!!errors.displayName}
+          placeholder="Your name"
+          {...register("displayName")}
+        />
+        {errors.displayName ? (
+          <FieldError>{errors.displayName.message}</FieldError>
+        ) : null}
+      </SettingsRow>
+
+      <SettingsRow
+        label="Bio"
+        htmlFor="description"
+        description="Markdown for bold, italic and links."
+      >
+        <Textarea
+          id="description"
+          aria-invalid={!!errors.description}
+          placeholder="Describe yourself in a few words"
+          rows={4}
+          {...register("description")}
+        />
+        {errors.description ? (
+          <FieldError>{errors.description.message}</FieldError>
+        ) : null}
+      </SettingsRow>
+
+      <SettingsRow label="Website" htmlFor="website">
+        <Input
+          id="website"
+          aria-invalid={!!errors.website}
+          placeholder="https://my-website.com"
+          {...register("website")}
+        />
+        {errors.website ? (
+          <FieldError>{errors.website.message}</FieldError>
+        ) : null}
+      </SettingsRow>
+
+      <SettingsRow label="X (Twitter)" htmlFor="twitter">
+        <InputGroup>
+          <InputGroupInput
+            id="twitter"
+            aria-invalid={!!errors.twitter}
+            placeholder="username"
+            {...register("twitter")}
+            onChange={handleXChange}
+          />
+          <InputGroupAddon align="inline-start">
+            <IconAt size={16} className="text-muted-foreground" />
+          </InputGroupAddon>
+        </InputGroup>
+        {errors.twitter ? (
+          <FieldError>{errors.twitter.message}</FieldError>
+        ) : null}
+      </SettingsRow>
+
+      <div className="flex items-center justify-end gap-2 pt-6">
+        <Button
+          variant="ghost"
+          type="button"
+          disabled={isSubmitting}
+          onClick={() => setEditingProfileMetadata(false)}
+        >
+          Cancel
+        </Button>
+        <Button type="submit" disabled={!isDirty} loading={isSubmitting}>
+          Save changes
+        </Button>
+      </div>
     </form>
   );
 };
