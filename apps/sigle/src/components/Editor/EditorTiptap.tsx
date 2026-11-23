@@ -28,8 +28,11 @@ import { EditorContent, ReactNodeViewRenderer, useEditor } from "@tiptap/react";
 import { common, createLowlight } from "lowlight";
 import { useParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
+import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { UpgradeDialog } from "@/components/Shared/UpgradeDialog";
+import { Button } from "@/components/ui/button";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "./EditorFormProvider";
@@ -61,6 +64,11 @@ export const EditorTipTap = ({
   const isMobile = width ? width < 768 : false;
   const { setValue, getValues } = useFormContext<EditorPostFormData>();
   const setEditor = useEditorStore((state) => state.setEditor);
+
+  // What offered a free user to upgrade for image uploads, null when closed.
+  const [imageUpgradeTrigger, setImageUpgradeTrigger] = useState<
+    "slash_image" | "image_drop" | null
+  >(null);
 
   const { mutateAsync: uploadImage } = sigleApiClient.useMutation(
     "post",
@@ -98,6 +106,7 @@ export const EditorTipTap = ({
         lowlight,
       }),
       TipTapImage.configure({
+        onUploadUnavailable: () => setImageUpgradeTrigger("image_drop"),
         uploadFile: !canUploadImages
           ? undefined
           : async (file: File) => {
@@ -159,9 +168,24 @@ export const EditorTipTap = ({
       TipTapEmbed,
       !isMobile
         ? SlashCommands.configure({
+            // Free users see the Pro commands, which offer them Pro.
             commands: canUploadImages
               ? slashCommands
-              : slashCommands.filter((command) => !command.proOnly),
+              : slashCommands.map((command) =>
+                  command.proOnly
+                    ? {
+                        ...command,
+                        locked: true,
+                        command: ({ editor, range }) => {
+                          if (range) {
+                            editor.chain().focus().deleteRange(range).run();
+                          }
+
+                          setImageUpgradeTrigger("slash_image");
+                        },
+                      }
+                    : command,
+                ),
           })
         : undefined,
       isMobile ? TipTapMobileScroll : undefined,
@@ -191,6 +215,25 @@ export const EditorTipTap = ({
       {editor && !isMobile && <EditorBubbleMenu editor={editor} />}
       {editor && !isMobile && <EditorFloatingMenu editor={editor} />}
       {editor && !isMobile && <EditorBottomInfo editor={editor} />}
+      <UpgradeDialog
+        open={imageUpgradeTrigger !== null}
+        onOpenChange={(open) => {
+          if (!open) setImageUpgradeTrigger(null);
+        }}
+        trigger={imageUpgradeTrigger ?? "slash_image"}
+        title="Upload images with Pro"
+        description="Image uploads are part of Pro, unlocked by holding an Explorer Guild NFT. You can still embed an image from a link."
+      >
+        <Button
+          variant="outline"
+          onClick={() => {
+            setImageUpgradeTrigger(null);
+            editor?.chain().focus().insertImageUrlInput().run();
+          }}
+        >
+          Embed from URL
+        </Button>
+      </UpgradeDialog>
     </div>
   );
 };

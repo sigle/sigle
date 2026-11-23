@@ -411,15 +411,23 @@ const TEST_SESSION_DURATION_MILLIS = 7 * 24 * 60 * 60 * 1000;
  * signing a message, while still exercising the real session middleware.
  */
 export const createAuthenticatedClient = (
-  options: { userId?: string; address?: string } = {},
+  options: {
+    userId?: string;
+    address?: string;
+    plan?: (typeof user.$inferInsert)["plan"];
+  } = {},
 ) =>
   Effect.gen(function* () {
     const db = yield* Database;
     const config = yield* AppConfig;
 
-    const user = yield* createTestUser(
-      options.userId === undefined ? {} : { id: options.userId },
-    );
+    const overrides: Parameters<typeof createTestUser>[0] = {};
+
+    if (options.userId !== undefined) overrides.id = options.userId;
+
+    if (options.plan !== undefined) overrides.plan = options.plan;
+
+    const user = yield* createTestUser(overrides);
 
     const address = options.address ?? createTestSiwsCredentials().address;
     yield* createTestWalletAddress({ userId: user.id, address });
