@@ -3,7 +3,6 @@
 import { usePathname, useRouter } from "next/navigation";
 import { AuthProtect } from "@/components/Auth/AuthProtect";
 import { NextLink } from "@/components/Shared/NextLink";
-import { buttonVariants } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -58,22 +57,28 @@ export default function DashboardLayout({
     <div className="mx-auto max-w-4xl px-4">
       <div className="relative">
         <aside className="absolute inset-y-0 left-[-200px] hidden w-[150px] lg:block">
-          <nav className="sticky top-(--header-height) py-10">
-            <ul className="space-y-3">
-              {navigationLinks.map((link) => (
-                <li key={link.href}>
-                  <NextLink
-                    href={link.href}
-                    className={cn(
-                      buttonVariants({ variant: "ghost" }),
-                      "m-0 w-full justify-start",
-                      { "bg-muted": pathname === link.href },
-                    )}
-                  >
-                    {link.label}
-                  </NextLink>
-                </li>
-              ))}
+          <nav className="sticky top-(--header-height) py-12">
+            <ul className="border-l border-border">
+              {navigationLinks.map((link) => {
+                const isActive = pathname === link.href;
+
+                return (
+                  <li key={link.href}>
+                    <NextLink
+                      href={link.href}
+                      aria-current={isActive ? "page" : undefined}
+                      className={cn(
+                        "-ml-px block border-l py-1.5 pl-4 text-sm transition-colors",
+                        isActive
+                          ? "border-foreground font-medium text-foreground"
+                          : "border-transparent text-muted-foreground hover:border-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      {link.label}
+                    </NextLink>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
         </aside>
