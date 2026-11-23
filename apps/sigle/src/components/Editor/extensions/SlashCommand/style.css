@@ -1,5 +1,5 @@
 @reference "#global.css";
 
 .slash-command-popup {
-  @apply min-w-[280px] overflow-hidden rounded-md bg-background p-0 shadow-md;
+  @apply w-72 overflow-hidden rounded-lg bg-popover p-0 text-popover-foreground shadow-md ring-1 ring-foreground/10;
 }
