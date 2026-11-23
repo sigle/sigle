@@ -1,18 +1,16 @@
-import { NextResponse } from "next/server";
+import {
+  fetchLegacyGaia,
+  invalidParameter,
+  isLegacyUsername,
+} from "../legacy-api";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const username = searchParams.get("username");
+  const username = searchParams.get("username")?.trim().toLowerCase() ?? null;
 
-  if (!username) {
-    return NextResponse.json(
-      { error: "username is required" },
-      { status: 400 },
-    );
+  if (!isLegacyUsername(username)) {
+    return invalidParameter("A valid username is required");
   }
 
-  const res = await fetch(`https://api.sigle.io/api/gaia/${username}/stories`);
-  const data = await res.json();
-
-  return NextResponse.json(data);
+  return fetchLegacyGaia(`${username}/stories`);
 }
