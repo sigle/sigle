@@ -2,28 +2,21 @@
 
 import type { paths } from "@sigle/sdk";
 import type { QueryObserverResult } from "@tanstack/react-query";
-import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
+import { IconDots, IconPlus } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
 import { NextLink } from "@/components/Shared/NextLink";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Empty,
-  EmptyContent,
-  EmptyDescription,
-  EmptyHeader,
-  EmptyMedia,
-  EmptyTitle,
-} from "@/components/ui/empty";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
+import { cn } from "@/lib/cn";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 
@@ -41,50 +34,64 @@ export default function DashboardDrafts() {
     },
   });
 
-  return (
-    <div className="py-10">
-      <h2 className="mb-5 text-2xl font-bold">Drafts</h2>
+  const isEmpty = drafts?.total === 0;
 
-      <Card>
-        <CardContent>
-          {loadingDrafts ? (
-            <div className="flex justify-center py-7">
-              <Spinner />
-            </div>
+  return (
+    <div className="space-y-8 py-10">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h2 className="headline text-3xl">
+          Drafts
+          {drafts?.total ? (
+            <span className="ml-2 font-mono text-base font-normal tracking-normal text-muted-foreground">
+              {drafts.total}
+            </span>
           ) : null}
+        </h2>
+
+        {!isEmpty ? (
+          <NextLink href="/p/new" className={buttonVariants()}>
+            <IconPlus />
+            New post
+          </NextLink>
+        ) : null}
+      </div>
+
+      {isEmpty ? (
+        <section className="border-y border-border py-14 text-center">
+          <h3 className="headline text-2xl">No drafts yet</h3>
+          <p className="mx-auto mt-2 max-w-sm text-sm text-pretty text-muted-foreground">
+            Drafts save as you type, so you can pick up a story right where you
+            left off.
+          </p>
+          <NextLink
+            href="/p/new"
+            className={cn(buttonVariants({ size: "lg" }), "mt-6")}
+          >
+            Start writing
+          </NextLink>
+        </section>
+      ) : (
+        <ul className="border-t border-border">
+          {loadingDrafts
+            ? [0, 1, 2].map((index) => (
+                <li key={index} className="border-b border-border py-4">
+                  <Skeleton className="h-6 w-2/3" />
+                  <Skeleton className="mt-2 h-4 w-40" />
+                </li>
+              ))
+            : null}
 
           {errorDrafts ? (
-            <div className="flex justify-center py-7">
-              <p className="text-sm text-destructive">
-                An error occurred, please try again later. {errorDrafts.message}
-              </p>
-            </div>
-          ) : null}
-
-          {drafts?.results.length === 0 ? (
-            <Empty>
-              <EmptyHeader>
-                <EmptyMedia variant="icon">
-                  <IconPencil size={20} />
-                </EmptyMedia>
-                <EmptyTitle>No Drafts</EmptyTitle>
-                <EmptyDescription className="max-w-xs text-pretty">
-                  Create a new draft to get started.
-                </EmptyDescription>
-              </EmptyHeader>
-              <EmptyContent>
-                <NextLink href="/p/new" className={buttonVariants()}>
-                  Create a new draft
-                </NextLink>
-              </EmptyContent>
-            </Empty>
+            <li className="border-b border-border py-4 text-sm text-destructive">
+              An error occurred, please try again later. {errorDrafts.message}
+            </li>
           ) : null}
 
           {drafts?.results.map((draft) => (
             <Draft key={draft.id} draft={draft} refetchDrafts={refetchDrafts} />
           ))}
-        </CardContent>
-      </Card>
+        </ul>
+      )}
     </div>
   );
 }
@@ -103,7 +110,7 @@ const Draft = ({
     "/api/drafts/{draftId}",
     {
       onError: (error: { message: string }) => {
-        toast.error("Failed to upload metadata", {
+        toast.error("Failed to delete draft", {
           description: error.message,
         });
       },
@@ -128,50 +135,54 @@ const Draft = ({
     toast.message("Draft deleted");
   };
 
-  const heading =
-    draft.metaTitle || draft.title ? (
-      <h3 className="line-clamp-2 text-lg font-medium">
-        {draft.metaTitle || draft.title}
-      </h3>
-    ) : (
-      <h3 className="line-clamp-2 text-lg font-medium text-muted-foreground">
-        No title
-      </h3>
-    );
+  const title = draft.metaTitle || draft.title;
 
   return (
-    <div className="border-b border-solid border-border py-5 first:pt-0 last:border-b-0 last:pb-0">
-      <NextLink href={Routes.editPost({ postId: draft.id })}>
-        {heading}
+    <li className="flex items-center gap-4 border-b border-border">
+      <NextLink
+        href={Routes.editPost({ postId: draft.id })}
+        className="group min-w-0 flex-1 py-4"
+      >
+        <span className="line-clamp-1 headline text-lg underline-offset-4 group-hover:underline">
+          {title || <span className="text-muted-foreground">Untitled</span>}
+        </span>
+        <span className="mt-1 block text-xs text-muted-foreground">
+          Edited{" "}
+          <time dateTime={draft.updatedAt}>
+            {format(new Date(draft.updatedAt), "MMM d, yyyy 'at' h:mm a")}
+          </time>
+        </span>
       </NextLink>
-      <div className="flex items-center justify-between">
-        <p className="mt-3 text-xs text-muted-foreground">
-          Created {format(new Date(draft.createdAt), "MMM dd, yyyy")} • Last
-          updated {format(new Date(draft.updatedAt), "MMM dd, yyyy h:mm a")}
-        </p>
-        {isDeleting ? <Spinner /> : null}
-        {!isDeleting ? (
-          <DropdownMenu>
-            <DropdownMenuTrigger
+
+      {isDeleting ? <Spinner /> : null}
+      {!isDeleting ? (
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            render={
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                aria-label="Draft actions"
+                className="text-muted-foreground"
+              >
+                <IconDots size={16} />
+              </Button>
+            }
+          />
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
               render={
-                <Button variant="ghost" size="icon">
-                  <IconDotsVertical size={16} />
-                </Button>
+                <NextLink href={Routes.editPost({ postId: draft.id })}>
+                  Edit
+                </NextLink>
               }
             />
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                render={
-                  <NextLink href={Routes.editPost({ postId: draft.id })}>
-                    Edit
-                  </NextLink>
-                }
-              />
-              <DropdownMenuItem onClick={onDelete}>Delete</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        ) : null}
-      </div>
-    </div>
+            <DropdownMenuItem variant="destructive" onClick={onDelete}>
+              Delete
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      ) : null}
+    </li>
   );
 };

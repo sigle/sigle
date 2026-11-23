@@ -187,7 +187,7 @@ export default function MigrationPage() {
 
   return (
     <div className="py-10">
-      <h2 className="text-2xl font-bold">Migration</h2>
+      <h2 className="headline text-3xl">Migration</h2>
       <p className="mt-2 text-sm text-muted-foreground">
         One click migration for your old posts
       </p>

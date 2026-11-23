@@ -22,7 +22,7 @@ export const PagePostSkeleton = () => {
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl font-medium text-pretty">
+          <h1 className="headline text-4xl text-pretty md:text-5xl">
             <Skeleton>Lorem ipsum dolor sit amet</Skeleton>
           </h1>
 

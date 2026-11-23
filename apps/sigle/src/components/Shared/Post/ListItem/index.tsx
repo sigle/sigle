@@ -45,7 +45,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
           <div className="flex h-full flex-1 flex-col justify-between">
             <NextLink href={Routes.post({ postId: post.id })}>
               <h4
-                className="mb-2 line-clamp-2 text-lg/tight font-medium"
+                className="mb-2 line-clamp-2 headline text-xl/tight"
                 style={{
                   wordBreak: "break-word",
                 }}

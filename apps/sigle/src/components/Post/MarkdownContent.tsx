@@ -45,7 +45,7 @@ interface PostMarkdownContentProps {
 
 export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
   return (
-    <div className="prose lg:prose-lg dark:prose-invert">
+    <div className="prose lg:prose-lg dark:prose-invert prose-h1:headline prose-h2:headline prose-h3:headline prose-h4:headline">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         urlTransform={customUrlTransform}
