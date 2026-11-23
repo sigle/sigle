@@ -1,4 +1,5 @@
 import { describe, expect, it } from "@effect/vitest";
+import { getAddressFromPrivateKey } from "@stacks/transactions";
 import { eq } from "drizzle-orm";
 import { Effect, Option, Schema } from "effect";
 import {
@@ -236,6 +237,36 @@ describe("auth siws", () => {
           sessionUserId: body.user.id,
           remainingNonces: [],
         });
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
+    "POST /api/auth/siws/verify signs in a wallet with a 39-character address",
+    () =>
+      Effect.gen(function* () {
+        const client = yield* HttpClient.HttpClient;
+        const { chainId } = createTestSiwsCredentials();
+
+        // About 1 in 256 addresses have 39 characters. sign-in-with-stacks
+        // 0.4.0 couldn't parse them, so those wallets couldn't sign in.
+        const privateKey =
+          "c9184ab8c4f87ce2ceed798ef71b6db6c03f1ccd7a898acb7d71bd252ed7ab4601";
+
+        const address = getAddressFromPrivateKey(privateKey, "testnet");
+
+        const { nonce } = yield* requestNonce(client);
+        const message = createTestSiwsMessage({ address, nonce, chainId });
+        const signature = signTestSiwsMessage(message, privateKey);
+
+        const response = yield* requestVerify(client, { message, signature });
+
+        const body =
+          yield* HttpClientResponse.schemaBodyJson(VerifyResponse)(response);
+
+        expect([response.status, body.user.walletAddress]).toStrictEqual([
+          200,
+          "STX4E0VZD1M4TKS53P5D8XPTQC6152KTTX9K68C",
+        ]);
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
