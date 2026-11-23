@@ -35,6 +35,7 @@ export type RateLimitPolicyName =
   | "global"
   | "draftImageUpload"
   | "draftPublish"
+  | "planRefresh"
   | "profileImageUpload"
   | "profileMetadataUpload"
   | "signIn";
@@ -70,6 +71,11 @@ export const RATE_LIMITS: Record<RateLimitPolicyName, RateLimitLimit> = {
   // A post can hold several images, so uploads allow bursts of a few at once
   draftImageUpload: {
     points: 20,
+    windowMs: 60_000,
+  },
+  // Each refresh checks every wallet of the user on the Stacks API
+  planRefresh: {
+    points: 6,
     windowMs: 60_000,
   },
   // Matches the legacy server limit for profile avatar and cover uploads

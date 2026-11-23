@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { ProBadge } from "@/components/Shared/UpgradeDialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/cn";
 import type { SlashCommandsCommand } from "./SlashCommands";
@@ -85,7 +86,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
             <p className="text-sm text-muted-foreground">Basics</p>
           </div>
         )}
-        {basicItems.map(({ title, description, icon: Icon }, index) => (
+        {basicItems.map(({ title, description, icon: Icon, locked }, index) => (
           <CommandListItem
             key={title}
             index={index}
@@ -93,6 +94,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
             title={title}
             description={description}
             icon={Icon}
+            isLocked={locked}
             selectItem={selectItem}
           />
         ))}
@@ -101,7 +103,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
             <p className="text-sm text-muted-foreground">Embeds</p>
           </div>
         )}
-        {embedItems.map(({ title, description, icon: Icon }, index) => (
+        {embedItems.map(({ title, description, icon: Icon, locked }, index) => (
           <CommandListItem
             key={title}
             index={basicItems.length + index}
@@ -109,6 +111,7 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
             title={title}
             description={description}
             icon={Icon}
+            isLocked={locked}
             selectItem={selectItem}
           />
         ))}
@@ -125,6 +128,7 @@ const CommandListItem = ({
   title,
   description,
   icon: Icon,
+  isLocked,
   selectItem,
 }: {
   index: number;
@@ -132,6 +136,7 @@ const CommandListItem = ({
   title: string;
   description: string;
   icon: Icon;
+  isLocked?: boolean;
   selectItem: (index: number) => void;
 }) => {
   return (
@@ -148,7 +153,10 @@ const CommandListItem = ({
       <div className="flex items-center">
         <Icon width={30} height={30} />
         <div className="ml-2 flex flex-col">
-          <p className="text-sm font-medium text-foreground">{title}</p>
+          <p className="flex items-center gap-2 text-sm font-medium text-foreground">
+            {title}
+            {isLocked ? <ProBadge /> : null}
+          </p>
           <p className="text-xs text-muted-foreground">{description}</p>
         </div>
       </div>

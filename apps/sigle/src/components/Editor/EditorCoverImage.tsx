@@ -14,10 +14,12 @@ import {
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
+import { ProBadge, UpgradeDialog } from "@/components/Shared/UpgradeDialog";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
+import { PUBLISH_LIMITS } from "@/lib/plans";
 import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "./EditorFormProvider";
 
@@ -32,6 +34,7 @@ export const EditorCoverImage = ({
   const postId = useParams<{ postId: string }>().postId;
   const posthog = usePostHog();
   const [preview, setPreview] = useState<string | null>(null);
+  const [isUpgradeOpen, setIsUpgradeOpen] = useState(false);
   const { setValue, watch } = useFormContext<EditorPostFormData>();
   const watchCoverImage = watch("coverImage");
 
@@ -140,9 +143,27 @@ export const EditorCoverImage = ({
     : null;
 
   // Free users keep an existing cover, which they can remove, but cannot add
-  // one.
+  // one: the button offers them Pro instead.
   if (!canUploadImages && !preview && !resolvedWatchCoverImage) {
-    return null;
+    return (
+      <div className="mt-4">
+        <Button
+          size="lg"
+          variant="secondary"
+          onClick={() => setIsUpgradeOpen(true)}
+        >
+          Add cover image <IconCameraPlus size={16} />
+          <ProBadge />
+        </Button>
+        <UpgradeDialog
+          open={isUpgradeOpen}
+          onOpenChange={setIsUpgradeOpen}
+          trigger="cover"
+          title="Add a cover image with Pro"
+          description={`Cover images are part of Pro, unlocked by holding an Explorer Guild NFT. Pro also lets you publish up to ${PUBLISH_LIMITS.pro} posts per day.`}
+        />
+      </div>
+    );
   }
 
   return (

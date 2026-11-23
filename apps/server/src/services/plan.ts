@@ -1,16 +1,6 @@
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
 import { and, eq, gt, gte, inArray, isNotNull, ne } from "drizzle-orm";
-import {
-  Cache,
-  Context,
-  Data,
-  Effect,
-  Exit,
-  Layer,
-  Option,
-  Redacted,
-  Schema,
-} from "effect";
+import { Context, Data, Effect, Layer, Option, Redacted, Schema } from "effect";
 import {
   FetchHttpClient,
   HttpClient,
@@ -19,9 +9,16 @@ import {
 } from "effect/http";
 import { AppConfig } from "@/config";
 import { Database, type DatabaseClient } from "@/db";
-import { draft, post, profileUpdate, walletAddress } from "@/db/schema";
+import {
+  draft,
+  post,
+  profileUpdate,
+  user,
+  type userPlans,
+  walletAddress,
+} from "@/db/schema";
 
-export type UserPlan = "free" | "pro";
+export type UserPlan = (typeof userPlans)[number];
 
 /** Rolling window of the daily limits. */
 export const DAILY_LIMIT_WINDOW_MILLIS = 24 * 60 * 60 * 1000;
@@ -139,11 +136,6 @@ export const findProfileUpdateUsage = (
 
 const STACKS_API_TIMEOUT = "10 seconds";
 
-// A plan change, such as buying or selling the NFT, can take this long to show.
-const USER_PLAN_CACHE_TTL = "12 hours";
-
-const USER_PLAN_CACHE_CAPACITY = 10_000;
-
 const NftBalancesResponse = Schema.Struct({ total: Schema.Int });
 
 export class NftHoldingsError extends Data.TaggedError("NftHoldingsError")<{
@@ -157,10 +149,17 @@ export interface PlanClient {
     address: string,
   ) => Effect.Effect<boolean, NftHoldingsError>;
   /**
-   * `pro` when one of the user's wallets holds an Explorer Guild NFT, or on
-   * testnet is in `PRO_ADDRESSES`. Results are cached in memory per user.
+   * The plan the user's wallets qualify for: Pro when one of them holds an
+   * Explorer Guild NFT, or on testnet is in `PRO_ADDRESSES`. Stores nothing.
    */
-  readonly getUserPlan: (
+  readonly findUserPlan: (
+    userId: string,
+  ) => Effect.Effect<UserPlan, NftHoldingsError>;
+  /**
+   * Stores the plan from `findUserPlan` on the user. A failed check stores
+   * nothing, so the stored plan is kept.
+   */
+  readonly checkUserPlan: (
     userId: string,
   ) => Effect.Effect<UserPlan, NftHoldingsError>;
 }
@@ -216,38 +215,41 @@ export const makePlanService = Effect.gen(function* () {
       return total > 0;
     });
 
-  const userPlans = yield* Cache.makeWith(
-    (userId: string) =>
-      Effect.gen(function* () {
-        const wallets = yield* db
-          .select({ address: walletAddress.address })
-          .from(walletAddress)
-          .where(eq(walletAddress.userId, userId))
-          .pipe(Effect.orDie);
+  const findUserPlan = (userId: string) =>
+    Effect.gen(function* () {
+      const wallets = yield* db
+        .select({ address: walletAddress.address })
+        .from(walletAddress)
+        .where(eq(walletAddress.userId, userId))
+        .pipe(Effect.orDie);
 
-        for (const { address } of wallets) {
-          if (
-            (config.STACKS_ENV === "testnet" &&
-              config.PRO_ADDRESSES.includes(address)) ||
-            (yield* hasTegNft(address))
-          ) {
-            return "pro" as const;
-          }
+      for (const { address } of wallets) {
+        if (
+          (config.STACKS_ENV === "testnet" &&
+            config.PRO_ADDRESSES.includes(address)) ||
+          (yield* hasTegNft(address))
+        ) {
+          return "pro" as const;
         }
+      }
 
-        return "free" as const;
-      }),
-    {
-      capacity: USER_PLAN_CACHE_CAPACITY,
-      // Failed lookups are not cached so the next call retries the Stacks API.
-      timeToLive: (exit) => (Exit.isSuccess(exit) ? USER_PLAN_CACHE_TTL : 0),
-    },
-  );
+      return "free" as const;
+    });
 
-  return {
-    hasTegNft,
-    getUserPlan: (userId: string) => Cache.get(userPlans, userId),
-  } satisfies PlanClient;
+  const checkUserPlan = (userId: string) =>
+    Effect.gen(function* () {
+      const plan = yield* findUserPlan(userId);
+
+      yield* db
+        .update(user)
+        .set({ plan, planCheckedAt: new Date() })
+        .where(eq(user.id, userId))
+        .pipe(Effect.orDie);
+
+      return plan;
+    });
+
+  return { hasTegNft, findUserPlan, checkUserPlan } satisfies PlanClient;
 });
 
 export class PlanService extends Context.Service<PlanService, PlanClient>()(
@@ -258,18 +260,3 @@ export class PlanService extends Context.Service<PlanService, PlanClient>()(
       Layer.provide(FetchHttpClient.layer),
     );
 }
-
-/**
- * The user's plan, or `free` when the NFT lookup fails: the plan only unlocks
- * features and higher limits, so a Stacks API outage must not fail requests.
- * Failures are not cached, so the next call retries the lookup.
- */
-export const getUserPlanOrFree = (userId: string) =>
-  PlanService.use((plans) => plans.getUserPlan(userId)).pipe(
-    Effect.catchTag("NftHoldingsError", (error) =>
-      Effect.as(
-        Effect.logWarning("Failed to check the user plan", { cause: error }),
-        "free" as const,
-      ),
-    ),
-  );

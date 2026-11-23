@@ -38,6 +38,8 @@ const oneOf = (
 
 const userFlags = ["NONE", "VERIFIED"] as const;
 
+export const userPlans = ["free", "pro"] as const;
+
 // --
 // better-auth models
 // --
@@ -48,6 +50,12 @@ export const user = sqliteTable(
     id: text("id").primaryKey(),
     lastLoginAt: timestamp("last_login_at"),
     flag: text("flag", { enum: userFlags }).default("NONE").notNull(),
+    // Set when the user activates Pro from the website, and re-checked twice a
+    // day while they are on Pro.
+    plan: text("plan", { enum: userPlans }).default("free").notNull(),
+    // When the plan was last checked against the user's NFT holdings, null
+    // when never.
+    planCheckedAt: timestamp("plan_checked_at"),
     name: text("name"),
     email: text("email").unique("user_email_key"),
     emailVerified: boolean("email_verified").default(false).notNull(),
@@ -55,6 +63,8 @@ export const user = sqliteTable(
     createdAt: timestamp("created_at").$defaultFn(now).notNull(),
     updatedAt: timestamp("updated_at").$defaultFn(now).notNull(),
   },
+  // No CHECK on `plan`: adding one to an existing SQLite table rebuilds it,
+  // and the rows referencing users would be deleted with it.
   (table) => [oneOf("user_flag_check", table.flag, userFlags)],
 );
 

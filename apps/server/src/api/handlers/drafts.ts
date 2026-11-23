@@ -31,7 +31,6 @@ import {
   BadRequest,
   Conflict,
   Forbidden,
-  InternalServerError,
   NotFound,
   TooManyRequests,
 } from "@/api/schemas";
@@ -47,12 +46,7 @@ import {
   draftImageKey,
   draftImageSettings,
 } from "@/lib/draft-images";
-import {
-  findPublishUsage,
-  getUserPlanOrFree,
-  PlanService,
-  PUBLISH_LIMITS,
-} from "@/services/plan";
+import { findPublishUsage, PUBLISH_LIMITS } from "@/services/plan";
 import { PostHogService } from "@/services/posthog";
 
 const toDraft = (row: typeof draft.$inferSelect) => ({
@@ -419,7 +413,7 @@ export const publishDraft = (
       });
     }
 
-    const plan = yield* getUserPlanOrFree(user.id);
+    const { plan } = user;
     const limit = PUBLISH_LIMITS[plan];
     const now = new Date();
 
@@ -596,7 +590,6 @@ export const uploadDraftImage = (
     const user = yield* CurrentUser;
     const config = yield* AppConfig;
     const db = yield* Database;
-    const plans = yield* PlanService;
     const posthog = yield* PostHogService;
 
     const [foundDraft] = yield* db
@@ -612,19 +605,7 @@ export const uploadDraftImage = (
 
     // Checked before reading the body so free users are rejected without
     // processing the image.
-    const plan = yield* plans.getUserPlan(user.id).pipe(
-      Effect.tapError((error) =>
-        Effect.logWarning("Failed to check the user plan", { cause: error }),
-      ),
-      Effect.mapError(
-        () =>
-          new InternalServerError({
-            message: "Failed to check your plan, please try again.",
-          }),
-      ),
-    );
-
-    if (plan !== "pro") {
+    if (user.plan !== "pro") {
       return yield* new Forbidden({
         message:
           "Image uploads are available on the Pro plan. Embed an image from a URL instead.",

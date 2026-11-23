@@ -1427,7 +1427,9 @@ describe("drafts", () => {
       const ownerWallet = createTestSiwsCredentials("testnet");
 
       return Effect.gen(function* () {
-        const { client, userId } = yield* createAuthenticatedClient();
+        const { client, userId } = yield* createAuthenticatedClient({
+          plan: "pro",
+        });
 
         yield* createTestWalletAddress({
           userId,
@@ -1459,11 +1461,7 @@ describe("drafts", () => {
             profileUpdate: expect.objectContaining({ limit: 10 }),
           },
         });
-      }).pipe(
-        Effect.provide(
-          makeTestServerLayer({ PRO_ADDRESSES: [ownerWallet.address] }),
-        ),
-      );
+      }).pipe(Effect.provide(makeTestServerLayer()));
     },
   );
 
@@ -1779,19 +1777,15 @@ describe("draft payload limits", () => {
   });
 });
 
-// On testnet, wallets in PRO_ADDRESSES are on the pro plan.
-const PRO_WALLET_ADDRESS = createTestSiwsCredentials().address;
-
 const draftImageServerLayer = (
   recorder: StorageTestRecorder,
   posthogEvents: Array<PostHogEvent> = [],
 ) =>
-  makeTestServerLayer({ PRO_ADDRESSES: [PRO_WALLET_ADDRESS] }, posthogEvents, {
+  makeTestServerLayer({}, posthogEvents, {
     storage: StorageService.layerTest(recorder),
   });
 
-const createProClient = () =>
-  createAuthenticatedClient({ address: PRO_WALLET_ADDRESS });
+const createProClient = () => createAuthenticatedClient({ plan: "pro" });
 
 const makePngBuffer = (width: number, height: number) =>
   Effect.promise(() =>
@@ -1918,7 +1912,7 @@ describe("draft images", () => {
     const recorder = makeStorageTestRecorder();
 
     return Effect.gen(function* () {
-      // A random wallet outside PRO_ADDRESSES, so the user is on the free plan.
+      // New users are on the free plan.
       const { client, userId } = yield* createAuthenticatedClient();
 
       const created = yield* createTestDraft({ userId });
@@ -2045,7 +2039,7 @@ describe("draft images", () => {
         });
       }).pipe(
         Effect.provide(
-          makeTestServerLayer({ PRO_ADDRESSES: [PRO_WALLET_ADDRESS] }, [], {
+          makeTestServerLayer({}, [], {
             storage: StorageService.layerTest(recorder),
             imageProcessing,
           }),
