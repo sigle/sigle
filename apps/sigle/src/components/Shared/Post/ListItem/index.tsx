@@ -72,7 +72,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
             />
             <DropdownMenuContent>
               <DropdownMenuItem onClick={() => setShareDialogOpen(true)}>
-                Share & Earn
+                Share
               </DropdownMenuItem>
               {isCurrentUser ? (
                 <DropdownMenuItem

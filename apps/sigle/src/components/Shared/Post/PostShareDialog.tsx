@@ -1,16 +1,22 @@
 import type { paths } from "@sigle/sdk";
-import Image from "next/image";
+import {
+  IconBrandBluesky,
+  IconBrandTelegram,
+  IconBrandX,
+  IconCheck,
+  IconCopy,
+} from "@tabler/icons-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Field } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { env } from "@/env";
+import { cn } from "@/lib/cn";
 import { Routes } from "@/lib/routes";
 
 interface PostShareDialogProps {
@@ -42,75 +48,69 @@ export const PostShareDialog = ({
     });
   };
 
-  const metaTitleAttribute = post.metaTitle || post.title;
+  const title = post.metaTitle || post.title;
+  const text = `Read “${title}” on Sigle`;
+
+  const networks = [
+    {
+      name: "X",
+      icon: IconBrandX,
+      href: `https://x.com/intent/tweet?text=${encodeURIComponent(
+        `Read “${title}” on @sigleapp`,
+      )}&url=${encodeURIComponent(postLink)}`,
+    },
+    {
+      name: "Bluesky",
+      icon: IconBrandBluesky,
+      // Bluesky only reads the text, so the link goes in it.
+      href: `https://bsky.app/intent/compose?text=${encodeURIComponent(
+        `${text} ${postLink}`,
+      )}`,
+    },
+    {
+      name: "Telegram",
+      icon: IconBrandTelegram,
+      href: `https://t.me/share/url?url=${encodeURIComponent(
+        postLink,
+      )}&text=${encodeURIComponent(text)}`,
+    },
+  ];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogTitle>Share</DialogTitle>
-        <div className="sr-only">
-          <DialogDescription>Share this post.</DialogDescription>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="headline text-2xl leading-tight">
+            Share this story
+          </DialogTitle>
+          <DialogDescription className="line-clamp-2">
+            {title}
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="flex min-w-0 items-center gap-2 rounded-lg border border-border py-1 pr-1 pl-3">
+          <p className="min-w-0 flex-1 truncate font-mono text-xs text-muted-foreground">
+            {postLink}
+          </p>
+          <Button size="sm" variant="ghost" onClick={onCopy}>
+            {isCopied ? <IconCheck size={14} /> : <IconCopy size={14} />}
+            {isCopied ? "Copied" : "Copy link"}
+          </Button>
         </div>
 
-        <div className="space-y-8">
-          <div className="flex justify-center gap-5">
+        <div className="grid grid-cols-3 gap-2">
+          {networks.map((network) => (
             <a
-              href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
-                `Read ${metaTitleAttribute} on @sigleapp&url=${postLink}`,
-              )}`}
+              key={network.name}
+              href={network.href}
               target="_blank"
               rel="noreferrer noopener"
-              className="overflow-hidden rounded-md hover:grayscale-25"
+              className={cn(buttonVariants({ variant: "outline" }))}
             >
-              <Image
-                src="/images/x-logo.png"
-                alt="x logo"
-                width={48}
-                height={48}
-              />
+              <network.icon size={16} />
+              {network.name}
             </a>
-            <a
-              href={`https://bsky.app/intent/compose?text=${encodeURIComponent(
-                `Read ${metaTitleAttribute} on @sigleapp`,
-              )}&url=${postLink}`}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="overflow-hidden rounded-md hover:grayscale-25"
-            >
-              <Image
-                src="/images/bluesky-logo.png"
-                alt="bluesky logo"
-                width={48}
-                height={48}
-              />
-            </a>
-            <a
-              href={`https://t.me/share/url?text=${encodeURIComponent(
-                `Read ${metaTitleAttribute} on @sigleapp`,
-              )}&url=${postLink}`}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="overflow-hidden rounded-md hover:grayscale-25"
-            >
-              <Image
-                src="/images/telegram-logo.png"
-                alt="telegram logo"
-                width={48}
-                height={48}
-              />
-            </a>
-          </div>
-
-          <Field orientation="horizontal">
-            <Input
-              className="disabled:opacity-100"
-              disabled
-              defaultValue={postLink}
-            />
-            <Button disabled={isCopied} onClick={onCopy}>
-              {isCopied ? "Copied" : "Copy"}
-            </Button>
-          </Field>
+          ))}
         </div>
       </DialogContent>
     </Dialog>

@@ -7,3 +7,5 @@ Redesign the profile and post pages in the minimal style of the home page. The p
 Add a 404 page and redesign the error page in the same style. Unknown profiles and posts now show the 404 page instead of an error.
 
 The profile and editor loading skeletons follow the new layouts, and the footer and user menu use the same minimal style.
+
+The share dialog is redesigned and its X and Bluesky links now include the post URL. The Open Graph image of a post uses the site fonts, with the title in Newsreader and the Arweave and Bitcoin logos.
