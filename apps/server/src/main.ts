@@ -23,7 +23,10 @@ import {
 } from "@/api/middleware/auth-user";
 import { BodyLimitLayer } from "@/api/middleware/body-limit";
 import { EtagLayer } from "@/api/middleware/etag";
-import { RateLimitMiddlewareLayer } from "@/api/middleware/rate-limit";
+import {
+  GlobalRateLimitMiddlewareLayer,
+  RateLimitMiddlewareLayer,
+} from "@/api/middleware/rate-limit";
 import { SchemaErrorMiddlewareLayer } from "@/api/middleware/schema-error";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
@@ -58,6 +61,7 @@ export const ApiHandlersLayer = Layer.mergeAll(
 );
 
 export const ApiMiddlewareLayer = Layer.mergeAll(
+  GlobalRateLimitMiddlewareLayer,
   RateLimitMiddlewareLayer,
   UserAuthMiddlewareLayer,
   WhitelistedUserMiddlewareLayer,

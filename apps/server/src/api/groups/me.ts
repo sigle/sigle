@@ -1,7 +1,10 @@
 import { Schema } from "effect";
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/http-api";
 import { UserAuthMiddleware } from "@/api/middleware/auth-user";
-import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
+import {
+  GlobalRateLimitMiddleware,
+  RateLimitMiddleware,
+} from "@/api/middleware/rate-limit";
 import { DateTime, NonNegativeInt } from "@/api/schemas";
 
 export const DailyLimit = Schema.Struct({
@@ -54,4 +57,5 @@ export const MeGroup = HttpApiGroup.make("me")
   )
   .prefix("/api/me")
   .middleware(RateLimitMiddleware)
-  .middleware(UserAuthMiddleware);
+  .middleware(UserAuthMiddleware)
+  .middleware(GlobalRateLimitMiddleware);

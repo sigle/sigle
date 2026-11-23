@@ -20,6 +20,16 @@ export class RateLimitMiddleware extends HttpApiMiddleware.Service<RateLimitMidd
   { error: [TooManyRequests, InternalServerError] },
 ) {}
 
+/**
+ * The `global` limit of the client IP. Add it last on a group, so it runs
+ * first, before the session check: anonymous requests to signed-in routes then
+ * count too.
+ */
+export class GlobalRateLimitMiddleware extends HttpApiMiddleware.Service<GlobalRateLimitMiddleware>()(
+  "sigle/GlobalRateLimitMiddleware",
+  { error: [TooManyRequests, InternalServerError] },
+) {}
+
 export type RateLimitPolicyName =
   | "default"
   | "global"
@@ -175,6 +185,17 @@ export const isPrivateNetworkRequest = (
     (domain) => request.headers.host?.replace(/:\d+$/, "") === domain,
   );
 
+/**
+ * The website's server-side reads come over the private network for all its
+ * visitors at once, so they share no per-client limit. Only reads: the paid
+ * and write routes stay limited whoever calls them.
+ */
+const isPrivateNetworkRead = (
+  request: HttpServerRequest.HttpServerRequest,
+  config: AppConfigValues,
+): boolean =>
+  request.method === "GET" && isPrivateNetworkRequest(request, config);
+
 const appendResponseHeaders = (headers: Record<string, string>) =>
   HttpEffect.appendPreResponseHandler((_request, response) =>
     Effect.succeed(HttpServerResponse.setHeaders(response, headers)),
@@ -278,7 +299,8 @@ export const consumeRateLimit = (
 /**
  * Consumes a point of the client IP's `global` limit. Call it before the
  * endpoint's own limit, so the response carries the endpoint's headers unless
- * the global limit is the one exceeded.
+ * the global limit is the one exceeded. Every request consumes one point:
+ * through `GlobalRateLimitMiddleware` on the API, directly on `/api/auth/*`.
  */
 export const consumeGlobalRateLimit = (
   limiter: RateLimiter.RateLimiter,
@@ -301,13 +323,7 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
       Effect.gen(function* () {
         const request = yield* HttpServerRequest.HttpServerRequest;
 
-        // The website's server-side reads come over the private network for
-        // all its visitors at once, so they share no per-client limit. Only
-        // reads: the paid and write routes stay limited whoever calls them.
-        if (
-          request.method === "GET" &&
-          isPrivateNetworkRequest(request, config)
-        ) {
+        if (isPrivateNetworkRead(request, config)) {
           return yield* httpEffect;
         }
 
@@ -320,8 +336,6 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
             Context.getOption(endpoint.annotations, RateLimitPolicy),
           ) ?? "default";
 
-        yield* consumeGlobalRateLimit(limiter, request, config);
-
         yield* consumeRateLimit(
           limiter,
           `${endpoint.method}:${endpoint.path}:${
@@ -329,6 +343,29 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
           }`,
           policy,
         );
+
+        return yield* httpEffect;
+      });
+  }),
+);
+
+export const GlobalRateLimitMiddlewareLayer: Layer.Layer<
+  GlobalRateLimitMiddleware,
+  never,
+  RateLimiter.RateLimiter | AppConfig
+> = Layer.effect(
+  GlobalRateLimitMiddleware,
+  Effect.gen(function* () {
+    const limiter = yield* RateLimiter.RateLimiter;
+    const config = yield* AppConfig;
+
+    return (httpEffect) =>
+      Effect.gen(function* () {
+        const request = yield* HttpServerRequest.HttpServerRequest;
+
+        if (!isPrivateNetworkRead(request, config)) {
+          yield* consumeGlobalRateLimit(limiter, request, config);
+        }
 
         return yield* httpEffect;
       });

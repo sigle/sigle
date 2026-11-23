@@ -6,6 +6,7 @@ import {
   WhitelistedUserMiddleware,
 } from "@/api/middleware/auth-user";
 import {
+  GlobalRateLimitMiddleware,
   RateLimitMiddleware,
   RateLimitPolicy,
 } from "@/api/middleware/rate-limit";
@@ -85,4 +86,5 @@ export const ProfileGroup = HttpApiGroup.make("profile")
   .prefix("/api/me/profile")
   .middleware(RateLimitMiddleware)
   .middleware(WhitelistedUserMiddleware)
-  .middleware(UserAuthMiddleware);
+  .middleware(UserAuthMiddleware)
+  .middleware(GlobalRateLimitMiddleware);
