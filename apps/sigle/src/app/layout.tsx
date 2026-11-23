@@ -1,24 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter, Newsreader } from "next/font/google";
 import { env } from "@/env";
 import { cn } from "@/lib/cn";
+import { inter, newsreader } from "./fonts";
 import { Providers } from "./providers";
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
-});
-
-// The serif of the headlines, see the `headline` utility in globals.css. The
-// variable font, with optical sizing so large headlines get finer details.
-const newsreader = Newsreader({
-  subsets: ["latin"],
-  display: "swap",
-  axes: ["opsz"],
-  variable: "--font-newsreader",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
