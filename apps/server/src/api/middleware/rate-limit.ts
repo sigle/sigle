@@ -96,6 +96,21 @@ export const clientKey = (
   return `ip:${ip}`;
 };
 
+/**
+ * Whether a request came from another service of the project, over Railway's
+ * private network: it is addressed to this service's private domain. Railway's
+ * edge answers requests for that domain itself, so a public client can't send
+ * one here.
+ */
+export const isPrivateNetworkRequest = (
+  request: HttpServerRequest.HttpServerRequest,
+  config: AppConfigValues,
+): boolean =>
+  Option.exists(
+    config.RAILWAY_PRIVATE_DOMAIN,
+    (domain) => request.headers.host?.replace(/:\d+$/, "") === domain,
+  );
+
 const appendResponseHeaders = (headers: Record<string, string>) =>
   HttpEffect.appendPreResponseHandler((_request, response) =>
     Effect.succeed(HttpServerResponse.setHeaders(response, headers)),
@@ -209,6 +224,16 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
     return (httpEffect, { endpoint }) =>
       Effect.gen(function* () {
         const request = yield* HttpServerRequest.HttpServerRequest;
+
+        // The website's server-side reads come over the private network for
+        // all its visitors at once, so they share no per-client limit. Only
+        // reads: the paid and write routes stay limited whoever calls them.
+        if (
+          request.method === "GET" &&
+          isPrivateNetworkRequest(request, config)
+        ) {
+          return yield* httpEffect;
+        }
 
         const user = Option.getOrUndefined(
           yield* Effect.serviceOption(CurrentUser),

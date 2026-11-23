@@ -62,6 +62,13 @@ export default defineRailway(() => {
     // Railway adds the OTEL_* variables on the next deploy, and
     // src/instrumentation.ts exports the app's spans with them.
     tracing: { enabled: true },
+    env: {
+      // Server-side calls to the API go over the private network, where the
+      // API doesn't rate limit reads.
+      API_INTERNAL_URL:
+        // oxlint-disable-next-line no-template-curly-in-string Railway references
+        "http://${{server.RAILWAY_PRIVATE_DOMAIN}}:${{server.PORT}}",
+    },
   });
 
   const server = service("server", {
@@ -94,6 +101,9 @@ export default defineRailway(() => {
     env: {
       // Railway mounts volumes as root, the image runs as the `server` user
       RAILWAY_RUN_UID: "0",
+      // The port Railway assigns by default, set so the website can
+      // reference it in API_INTERNAL_URL.
+      PORT: "8080",
       OTEL_TRACES_EXPORTER: "otlp",
       // Secrets, set from 1Password by scripts/sync-railway-env.sh. A secret
       // added to 1Password must also be listed here or the next apply

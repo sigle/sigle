@@ -56,6 +56,12 @@ Railway does not read this file when deploying, so merging a change does nothing
 
 - **References** to other services are set in `.railway/railway.ts`.
 
+## Private network
+
+The website's server-side calls to the API (page renders, the RSS feed, Open Graph images) go to `API_INTERNAL_URL`, the server on Railway's private network, instead of the public `NEXT_PUBLIC_API_URL`. The browser keeps calling the public URL.
+
+The API rate limits clients by IP, but these calls come from the website for every visitor at once, so the API doesn't rate limit GET requests addressed to its private domain (`RAILWAY_PRIVATE_DOMAIN`, set by Railway). Railway's edge answers requests for a `*.railway.internal` host itself, so only the project's services can send one. Other methods stay limited, whoever calls them. Page floods are not limited by the API this way; limit them in front of the website instead.
+
 ## Tracing
 
 `web` and `server` send their traces to Railway, where they appear on the project's **Traces** page next to the spans of Railway's edge. One trace follows a request from the edge through the website, into the API calls it makes, and down to the server's SQL queries.

@@ -17,7 +17,10 @@ export async function register() {
           fetch: {
             // Continue the trace into the API: off Vercel, the `traceparent`
             // header is only sent to the URLs listed here.
-            propagateContextUrls: [env.NEXT_PUBLIC_API_URL],
+            propagateContextUrls: [
+              env.NEXT_PUBLIC_API_URL,
+              ...(env.API_INTERNAL_URL ? [env.API_INTERNAL_URL] : []),
+            ],
             // Sending errors to Sentry is not part of the request, but would
             // show up as a span in its trace.
             ignoreUrls: env.NEXT_PUBLIC_SENTRY_DSN

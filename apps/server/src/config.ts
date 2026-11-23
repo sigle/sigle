@@ -91,6 +91,10 @@ export const appConfig = Config.all({
   CLIENT_IP_HEADER: OptionalNonEmptyString("CLIENT_IP_HEADER").pipe(
     Config.map(Option.map((name) => name.toLowerCase())),
   ),
+  // This service's name on Railway's private network, such as
+  // `sigle.railway.internal`, set by Railway. GET requests addressed to it are
+  // not rate limited, see `RateLimitMiddlewareLayer`.
+  RAILWAY_PRIVATE_DOMAIN: OptionalNonEmptyString("RAILWAY_PRIVATE_DOMAIN"),
   SENTRY_DSN: OptionalNonEmptyString("SENTRY_DSN"),
   POSTHOG_API_KEY: OptionalNonEmptyRedacted("POSTHOG_API_KEY"),
   POSTHOG_API_HOST: OptionalNonEmptyString("POSTHOG_API_HOST"),
@@ -126,6 +130,7 @@ export const defaultTestConfig: AppConfigValues = {
   R2_PUBLIC_URL: "https://cdn.test",
   DATABASE_PATH: ":memory:",
   CLIENT_IP_HEADER: Option.none(),
+  RAILWAY_PRIVATE_DOMAIN: Option.none(),
   SENTRY_DSN: Option.none(),
   POSTHOG_API_KEY: Option.none(),
   POSTHOG_API_HOST: Option.none(),
