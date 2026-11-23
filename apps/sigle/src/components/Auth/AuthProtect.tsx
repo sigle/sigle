@@ -5,9 +5,18 @@ import { Spinner } from "../ui/spinner";
 
 interface AuthProtectProps {
   children?: React.ReactNode;
+  /** Shown while the session loads, a spinner by default. */
+  fallback?: React.ReactNode;
 }
 
-export const AuthProtect = ({ children }: AuthProtectProps) => {
+export const AuthProtect = ({
+  children,
+  fallback = (
+    <div className="flex justify-center py-14">
+      <Spinner />
+    </div>
+  ),
+}: AuthProtectProps) => {
   const { data: session, isPending } = useSession();
 
   if (session) {
@@ -15,12 +24,7 @@ export const AuthProtect = ({ children }: AuthProtectProps) => {
   }
 
   if (isPending) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-2 py-14">
-        <Spinner />
-        <p className="text-muted-foreground">loading auth</p>
-      </div>
-    );
+    return fallback;
   }
 
   return (

@@ -3,98 +3,68 @@ import {
   IconBrandGithubFilled,
   IconBrandXFilled,
 } from "@tabler/icons-react";
-import { buttonVariants } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { appConfig } from "@/config";
+
+const LINKS = [
+  { label: "Docs", href: appConfig.docsUrl },
+  { label: "Blog", href: "https://blog.sigle.io" },
+  { label: "Support", href: appConfig.discordUrl },
+  { label: "Feedback", href: "https://app.sigle.io/feedback" },
+];
+
+const SOCIALS = [
+  { label: "Sigle on X", href: appConfig.twitterUrl, icon: IconBrandXFilled },
+  {
+    label: "Sigle on Discord",
+    href: appConfig.discordUrl,
+    icon: IconBrandDiscordFilled,
+  },
+  {
+    label: "Sigle on GitHub",
+    href: appConfig.githubUrl,
+    icon: IconBrandGithubFilled,
+  },
+];
 
 export const Footer = () => {
   return (
-    <footer>
-      <div className="mx-auto max-w-6xl px-4">
-        <Separator />
-        <div className="flex flex-col items-center justify-between py-7 md:flex-row">
-          <div className="mb-4 md:mb-0">
-            <div className="flex items-center space-x-4">
-              <p className="text-sm text-muted-foreground">
-                © {new Date().getFullYear()} Sigle
-              </p>
-              <a
-                href={appConfig.twitterUrl}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Sigle on X"
-                className={buttonVariants({ variant: "ghost", size: "icon" })}
-              >
-                <IconBrandXFilled className="text-muted-foreground" size={16} />
-              </a>
-              <a
-                href={appConfig.discordUrl}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Sigle on Discord"
-                className={buttonVariants({ variant: "ghost", size: "icon" })}
-              >
-                <IconBrandDiscordFilled
-                  className="text-muted-foreground"
-                  size={16}
-                />
-              </a>
-              <a
-                href={appConfig.githubUrl}
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Sigle on GitHub"
-                className={buttonVariants({ variant: "ghost", size: "icon" })}
-              >
-                <IconBrandGithubFilled
-                  className="text-muted-foreground"
-                  size={16}
-                />
-              </a>
-            </div>
-          </div>
+    <footer className="mx-auto max-w-5xl px-4">
+      <div className="flex flex-col gap-5 border-t border-border pt-8 pb-20 md:flex-row md:items-center md:justify-between md:pb-8">
+        <p className="font-mono text-xs text-muted-foreground">
+          © {new Date().getFullYear()} Sigle
+        </p>
 
-          <ul className="grid grid-cols-2 gap-x-6 gap-y-2 md:grid-cols-4">
-            <li>
-              <a
-                className="text-sm text-muted-foreground underline-offset-2 hover:underline"
-                href={appConfig.docsUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Docs
-              </a>
-            </li>
-            <li>
-              <a
-                className="text-sm text-muted-foreground underline-offset-2 hover:underline"
-                href="https://blog.sigle.io"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Blog
-              </a>
-            </li>
-            <li>
-              <a
-                className="text-sm text-muted-foreground underline-offset-2 hover:underline"
-                href={appConfig.discordUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Support
-              </a>
-            </li>
-            <li>
-              <a
-                className="text-sm text-muted-foreground underline-offset-2 hover:underline"
-                href="https://app.sigle.io/feedback"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Feedback
-              </a>
-            </li>
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
+          <ul className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+            {LINKS.map((link) => (
+              <li key={link.label}>
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <ul className="flex items-center gap-3">
+            {SOCIALS.map((social) => (
+              <li key={social.label}>
+                <a
+                  href={social.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={social.label}
+                  title={social.label}
+                  className="block text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  <social.icon size={16} />
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
