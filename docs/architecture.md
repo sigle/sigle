@@ -5,6 +5,7 @@ The Sigle monorepo is composed of the following components:
 ## Third party dependencies
 
 - [Railway](https://railway.com/) - Hosting for all applications via Docker, see [Deployment](./deployment.md).
+- [Cloudflare](https://www.cloudflare.com/) - DNS, and R2 storage for media and database backups, managed with [Alchemy](https://alchemy.run), see [Deployment](./deployment.md#cloudflare-configuration).
 - [Plausible](https://plausible.io/) - Privacy protecting analytics.
 - [PostHog](https://posthog.com/) - Product analytics.
 - [Sentry](https://sentry.io/) - Track errors.
