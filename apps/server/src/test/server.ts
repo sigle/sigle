@@ -26,7 +26,7 @@ export interface TestServerOptions {
   readonly arweaveUploadImpl?: (
     options: ArweaveUploadOptions,
   ) => Effect.Effect<ArweaveUploadResult, ArweaveUploadError>;
-  readonly pollInterval?: "15 millis" | "50 millis" | "10 seconds";
+  readonly pollInterval?: "15 millis" | "50 millis" | "20 seconds";
   readonly rateLimiter?: Layer.Layer<RateLimiter.RateLimiter>;
 }
 

@@ -19,7 +19,7 @@ A React.js application that serves as the frontend for the Sigle service. It is 
 ## Server
 
 A Node.js application built with [Effect](https://effect.website/) that serves as the backend for the Sigle service. It serves the API, stores its data in SQLite (Node's built-in `node:sqlite`) with Drizzle, and runs the background jobs on a queue backed by the same database. Litestream backs the database up to R2.
-Rate limiting is kept in memory: every limit is a one-minute window, and the server runs as a single instance.
+Rate limiting is kept in memory: every limit is a one-minute window, and the server runs as a single instance. Each endpoint has its own limit per user, or per IP when signed out, and every request also counts against a global limit of its IP. IPv6 clients are limited by their /64.
 
 ### Authentication
 
