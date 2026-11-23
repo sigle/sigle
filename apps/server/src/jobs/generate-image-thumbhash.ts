@@ -1,6 +1,8 @@
 import { eq } from "drizzle-orm";
 import { Data, Effect, Layer, Option, Schedule, Schema } from "effect";
-import { BlockList, isIPv4, isIPv6 } from "node:net";
+import dns from "node:dns";
+import { BlockList, isIPv4, isIPv6, type LookupFunction } from "node:net";
+import { Agent } from "undici";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { mediaImage } from "@/db/schema";
@@ -96,13 +98,66 @@ const parseIpLiteral = (hostname: string): IpLiteral | null => {
   return null;
 };
 
+const isBlockedAddress = (address: string): boolean => {
+  const literal = parseIpLiteral(address);
+
+  return (
+    literal === null || blockedAddresses.check(literal.address, literal.family)
+  );
+};
+
+class BlockedAddressError extends Error {}
+
+/**
+ * Resolves a hostname like `dns.lookup`, but fails when any of its addresses
+ * is blocked. It runs when the connection is made, on the addresses the
+ * connection then uses, so a name can't resolve to a public address once and
+ * to a private one when connected.
+ */
+const lookupPublicAddress: LookupFunction = (hostname, options, callback) => {
+  dns.lookup(hostname, { ...options, all: true }, (error, addresses) => {
+    if (error !== null) {
+      callback(error, "");
+
+      return;
+    }
+
+    const blocked = addresses.find(({ address }) => isBlockedAddress(address));
+
+    if (blocked !== undefined) {
+      callback(
+        new BlockedAddressError(
+          `Image host ${hostname} resolves to a blocked address: ${blocked.address}`,
+        ),
+        "",
+      );
+
+      return;
+    }
+
+    const [first] = addresses;
+
+    if (options.all === true || first === undefined) {
+      callback(null, addresses);
+
+      return;
+    }
+
+    callback(null, first.address, first.family);
+  });
+};
+
+const imageDispatcher = new Agent({
+  connect: { lookup: lookupPublicAddress },
+});
+
 const rejectUrl = (message: string) =>
   Effect.fail(terminal(new InvalidImageError({ message })));
 
 /**
  * Restricts remote fetches to https URLs whose host is not a loopback,
- * link-local, private or reserved address. Hostnames are not DNS-resolved
- * here; pinning resolved addresses would require a custom dispatcher.
+ * link-local, private or reserved address. Hostnames are checked again once
+ * resolved, by `lookupPublicAddress` when the fetch connects.
  */
 const validateImageUrl = (
   rawUrl: string,
@@ -161,17 +216,23 @@ const fetchImageResponse = (
     for (let redirects = 0; redirects <= MAX_IMAGE_REDIRECTS; redirects++) {
       const target = yield* validateImageUrl(url);
 
+      // Node's fetch takes an undici `dispatcher`, which the DOM `RequestInit`
+      // type doesn't declare.
+      const init: RequestInit & { readonly dispatcher: Agent } = {
+        dispatcher: imageDispatcher,
+        redirect: "manual",
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MILLIS),
+      };
+
       const current = yield* Effect.tryPromise({
-        try: () =>
-          fetch(target, {
-            redirect: "manual",
-            signal: AbortSignal.timeout(FETCH_TIMEOUT_MILLIS),
-          }),
+        try: () => fetch(target, init),
         catch: (cause) =>
-          new ImageFetchError({
-            cause,
-            message: `Failed to fetch image: ${describeCause(cause)}`,
-          }),
+          cause instanceof Error && cause.cause instanceof BlockedAddressError
+            ? terminal(new InvalidImageError({ message: cause.cause.message }))
+            : new ImageFetchError({
+                cause,
+                message: `Failed to fetch image: ${describeCause(cause)}`,
+              }),
       });
 
       const location = redirectStatuses.has(current.status)

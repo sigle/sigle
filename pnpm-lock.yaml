@@ -304,6 +304,9 @@ importers:
       thumbhash:
         specifier: 0.1.1
         version: 0.1.1
+      undici:
+        specifier: 8.12.4
+        version: 8.12.4
       zod:
         specifier: 4.3.6
         version: 4.3.6

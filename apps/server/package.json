@@ -31,6 +31,7 @@
     "sharp": "0.35.5",
     "sign-in-with-stacks": "0.4.0",
     "thumbhash": "0.1.1",
+    "undici": "8.12.4",
     "zod": "4.3.6"
   },
   "devDependencies": {

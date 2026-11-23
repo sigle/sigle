@@ -1,6 +1,7 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
 import { Effect, Exit, Layer } from "effect";
+import dns from "node:dns";
 import sharp from "sharp";
 import { thumbHashToRGBA } from "thumbhash";
 import { afterEach, vi } from "vite-plus/test";
@@ -277,6 +278,74 @@ describe("generate image thumbhash job", () => {
       }
 
       expect(fetchMock).not.toHaveBeenCalled();
+    }).pipe(Effect.provide(testLayer)),
+  );
+
+  it.effect("refuses public names that resolve to private addresses", () =>
+    Effect.gen(function* () {
+      const records = new Map([
+        ["private.example.com", [{ address: "10.0.0.8", family: 4 }]],
+        // One public record does not make the other one safe
+        [
+          "mixed.example.com",
+          [
+            { address: "93.184.215.14", family: 4 },
+            { address: "127.0.0.1", family: 4 },
+          ],
+        ],
+        [
+          "metadata.example.com",
+          [{ address: "::ffff:169.254.169.254", family: 6 }],
+        ],
+        // Railway's private network
+        ["internal.example.com", [{ address: "fd12:3456::1", family: 6 }]],
+      ]);
+
+      const lookup = vi.spyOn(dns, "lookup").mockImplementation(
+        // SAFETY: the job only calls `dns.lookup` with options and a
+        // callback, and always with `all: true`, the overload implemented here.
+        ((
+          hostname: string,
+          _options: dns.LookupAllOptions,
+          callback: (
+            error: NodeJS.ErrnoException | null,
+            addresses: Array<dns.LookupAddress>,
+          ) => void,
+        ) => callback(null, records.get(hostname) ?? [])) as typeof dns.lookup,
+      );
+
+      const errors = yield* Effect.forEach(
+        Array.from(records.keys()),
+        (hostname) =>
+          Effect.gen(function* () {
+            const imageId = `https://${hostname}/image.png`;
+
+            yield* createTestMediaImage({ id: imageId });
+
+            return yield* processGenerateImageThumbhashJob({ imageId }).pipe(
+              Effect.flip,
+            );
+          }),
+        { concurrency: 1 },
+      );
+
+      const blocked = (hostname: string, address: string) => [
+        // Terminal, so the queue doesn't retry it
+        "TerminalJobError",
+        `InvalidImageError: Image host ${hostname} resolves to a blocked address: ${address}`,
+      ];
+
+      expect(
+        errors.map((error) => [error._tag, String(error.cause)]),
+      ).toStrictEqual([
+        blocked("private.example.com", "10.0.0.8"),
+        blocked("mixed.example.com", "127.0.0.1"),
+        blocked("metadata.example.com", "::ffff:169.254.169.254"),
+        blocked("internal.example.com", "fd12:3456::1"),
+      ]);
+      expect(lookup.mock.calls.map(([hostname]) => hostname)).toStrictEqual(
+        Array.from(records.keys()),
+      );
     }).pipe(Effect.provide(testLayer)),
   );
 
