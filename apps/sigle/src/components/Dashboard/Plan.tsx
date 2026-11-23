@@ -1,6 +1,6 @@
 "use client";
 
-import { IconExternalLink } from "@tabler/icons-react";
+import { IconArrowUpRight } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePostHog } from "posthog-js/react";
 import { useEffect, useRef, useState } from "react";
@@ -79,7 +79,7 @@ export const Plan = () => {
   });
 
   if (!me) {
-    return null;
+    return <h2 className="headline text-3xl">Plan</h2>;
   }
 
   const isPro = me.plan === "pro";
@@ -90,22 +90,40 @@ export const Plan = () => {
   };
 
   return (
-    <>
+    <div className="space-y-12">
       <ProWelcomeDialog open={isWelcomeOpen} onOpenChange={setIsWelcomeOpen} />
 
-      <PlanComparison
-        currentPlan={me.plan}
-        onMarketplaceClick={openMarketplace}
-        actions={{
-          pro: isPro ? (
-            <p className="text-sm text-muted-foreground">
-              Pro stays active while {formatReadableAddress(me.address)} holds
-              an Explorer Guild NFT.
-            </p>
-          ) : (
-            <div className="flex flex-col gap-2">
+      <div>
+        <h2 className="headline text-3xl">Plan</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {isPro
+            ? "You're on Pro. Thanks for supporting Sigle."
+            : "You're on the Free plan."}
+        </p>
+      </div>
+
+      {!isPro ? (
+        <section>
+          <h3 className="headline text-2xl">Unlock Pro</h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Upload images, get a verified badge and early access to new
+            features.
+          </p>
+
+          <ol className="mt-4 grid gap-8 border-t border-border pt-6 md:grid-cols-2">
+            <li className="flex flex-col">
+              <span className="font-mono text-sm text-muted-foreground">
+                01
+              </span>
+              <h4 className="mt-2 headline text-xl">
+                Get an Explorer Guild NFT
+              </h4>
+              <p className="mt-1 mb-4 text-sm text-pretty text-muted-foreground">
+                Pro is unlocked by holding one in your wallet. Pick one up on
+                the Gamma marketplace.
+              </p>
               <Button
-                size="lg"
+                className="mt-auto w-fit"
                 nativeButton={false}
                 render={
                   <a
@@ -116,28 +134,59 @@ export const Plan = () => {
                 }
                 onClick={openMarketplace}
               >
-                Get an Explorer Guild NFT
-                <IconExternalLink size={16} />
+                Browse on Gamma
+                <IconArrowUpRight size={16} />
               </Button>
+            </li>
+
+            <li className="flex flex-col">
+              <span className="font-mono text-sm text-muted-foreground">
+                02
+              </span>
+              <h4 className="mt-2 headline text-xl">Activate Pro</h4>
+              <p className="mt-1 mb-4 text-sm text-pretty text-muted-foreground">
+                Once the NFT is in{" "}
+                <span className="font-mono text-[0.9em] text-foreground">
+                  {formatReadableAddress(me.address)}
+                </span>
+                , check your wallet to switch to Pro.
+              </p>
               <Button
-                size="lg"
                 variant="outline"
+                className="mt-auto w-fit"
                 loading={refreshPlan.isPending}
                 onClick={() => checkWallet("button")}
               >
-                I have one, activate Pro
+                Check my wallet
               </Button>
               {isNftNotFound ? (
-                <p className="text-sm text-muted-foreground">
-                  No Explorer Guild NFT found in{" "}
-                  {formatReadableAddress(me.address)}. A new purchase can take a
-                  few minutes to reach your wallet.
+                <p className="mt-3 text-sm text-muted-foreground">
+                  No Explorer Guild NFT found yet. A new purchase can take a few
+                  minutes to reach your wallet.
                 </p>
               ) : null}
-            </div>
-          ),
-        }}
-      />
-    </>
+            </li>
+          </ol>
+        </section>
+      ) : null}
+
+      <section>
+        <h3 className="mb-4 headline text-2xl">
+          {isPro ? "What's included" : "Compare plans"}
+        </h3>
+        <PlanComparison
+          currentPlan={me.plan}
+          onMarketplaceClick={openMarketplace}
+          actions={{
+            pro: isPro ? (
+              <p className="text-sm text-muted-foreground">
+                Pro stays active while {formatReadableAddress(me.address)} holds
+                an Explorer Guild NFT.
+              </p>
+            ) : null,
+          }}
+        />
+      </section>
+    </div>
   );
 };
