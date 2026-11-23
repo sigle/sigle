@@ -1,7 +1,11 @@
 "use client";
 
 import { AuthQueryProvider } from "@daveyplate/better-auth-tanstack";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  isServer,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import posthog from "posthog-js";
 import { PostHogProvider } from "posthog-js/react";
@@ -9,16 +13,30 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { PostHogInit, SuspendedPostHogPageView } from "./PostHog";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: false,
+const makeQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        retry: false,
+      },
     },
-  },
-});
+  });
+
+let browserQueryClient: QueryClient | undefined = undefined;
+
+// On the server, a client shared across requests would serve every visitor the
+// first render's data forever, so each render gets its own.
+const getQueryClient = () => {
+  if (isServer) return makeQueryClient();
+  browserQueryClient ??= makeQueryClient();
+
+  return browserQueryClient;
+};
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
+  const queryClient = getQueryClient();
+
   return (
     <ThemeProvider
       attribute="class"
