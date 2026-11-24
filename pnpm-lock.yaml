@@ -290,8 +290,8 @@ importers:
         specifier: 14.0.7
         version: 14.0.7
       posthog-node:
-        specifier: 5.30.2
-        version: 5.30.2
+        specifier: 6.0.6
+        version: 6.0.6(@opentelemetry/api@1.9.1)
       sharp:
         specifier: 0.35.5
         version: 0.35.5(@types/node@26.6.6)
@@ -516,8 +516,8 @@ importers:
         specifier: 1.453.2
         version: 1.453.2(@types/react@19.3.0)(react@19.3.1)
       posthog-node:
-        specifier: 5.30.2
-        version: 5.30.2
+        specifier: 6.0.6
+        version: 6.0.6(@opentelemetry/api@1.9.1)
       query-string:
         specifier: 9.3.1
         version: 9.3.1
@@ -2461,9 +2461,6 @@ packages:
     engines: {node: '>=14.14', npm: '>=6'}
     hasBin: true
 
-  '@posthog/core@1.27.3':
-    resolution: {integrity: sha512-DFDKJ8tpuIZ3CNsoui+xCZsZqWDbaIBe1Kt0BNXQNWedkZ1AgO4shx11n9RkTmHGv1evObhhTDLmn0n4BwGzhw==}
-
   '@posthog/core@1.69.2':
     resolution: {integrity: sha512-toMfPKklwLW+a4ZY3/EzM3GNMVXmk2ylGb8NPJXRH4igXMoI8wgNL2jqXOiglWAXqFBLZGYFN1oQx6LVmUTxTg==}
 
@@ -2476,9 +2473,6 @@ packages:
 
   '@posthog/plugin-utils@2.0.1':
     resolution: {integrity: sha512-ZiQfUcgY65EjF2vkqL4Aau6sx0aqvSWoXaGSGu9Solnmv6e6VRjQbAU0SCKbxpJxcEsCJof9vmvnrFTQIEOUAQ==}
-
-  '@posthog/types@1.371.4':
-    resolution: {integrity: sha512-6jpn4ObQQVmMJTobJuWEaX1pjv0FtsAjhqzs0gFYbssGVsITl4TNjTfvdia07ILk1BsL4wELeMtd9peQyxkK7w==}
 
   '@posthog/types@1.427.0':
     resolution: {integrity: sha512-2RPVfuGIx0iys78mTOcfdzN7/w7AM1Ak3yu9++4/FonPf08mwGqDkJjThz2dA/34666ToNw5Q4fZoFdgvfNUHw==}
@@ -7229,12 +7223,18 @@ packages:
       react:
         optional: true
 
-  posthog-node@5.30.2:
-    resolution: {integrity: sha512-rgSwv1tAPz6sEycKfgGvfGeJc+xnPeYBFAX5BwePUt0Fi83V8wg1OaZ0NTP8yoxdBATO5kIbRJIL/OKp3KJeAA==}
+  posthog-node@6.0.6:
+    resolution: {integrity: sha512-7FMMQ4fk4Uqg/w2zpKVS8/Yv0doIz0HRcWML4WhxDTqqkS7eyXCvfGUuh+wLJbWYvdSm/7QNu9eeL31++G/dOw==}
     engines: {node: ^20.20.0 || >=22.22.0}
     peerDependencies:
+      '@opentelemetry/api': ^1.2.0
+      '@react-email/render': ^2.1.0
       rxjs: ^7.0.0
     peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+      '@react-email/render':
+        optional: true
       rxjs:
         optional: true
 
@@ -10331,10 +10331,6 @@ snapshots:
     dependencies:
       detect-libc: 2.1.2
 
-  '@posthog/core@1.27.3':
-    dependencies:
-      '@posthog/types': 1.371.4
-
   '@posthog/core@1.69.2':
     dependencies:
       '@posthog/types': 1.427.0
@@ -10353,8 +10349,6 @@ snapshots:
   '@posthog/plugin-utils@2.0.1':
     dependencies:
       cross-spawn: 7.0.6
-
-  '@posthog/types@1.371.4': {}
 
   '@posthog/types@1.427.0': {}
 
@@ -15820,9 +15814,11 @@ snapshots:
     transitivePeerDependencies:
       - preact-render-to-string
 
-  posthog-node@5.30.2:
+  posthog-node@6.0.6(@opentelemetry/api@1.9.1):
     dependencies:
-      '@posthog/core': 1.27.3
+      '@posthog/core': 1.69.2
+    optionalDependencies:
+      '@opentelemetry/api': 1.9.1
 
   powershell-utils@0.2.1: {}
 
