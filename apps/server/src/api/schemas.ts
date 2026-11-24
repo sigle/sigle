@@ -1,5 +1,5 @@
 import type { OpenApi } from "effect/http-api";
-import { Schema } from "effect";
+import { ErrorReporter, Schema } from "effect";
 import { allowedImageFormats } from "@/lib/images";
 
 /**
@@ -16,6 +16,10 @@ export const NonNegativeInt = Schema.Int.check(
  * status code used by `HttpApiBuilder` when rendering the response and by the
  * OpenAPI generator. The status code identifies the error, so the JSON body
  * has no `_tag`, and each body schema is named for the OpenAPI components.
+ *
+ * The 4xx errors are expected client errors: they are marked ignored so the
+ * error reporters, Sentry included, skip them, like Effect's own
+ * `HttpApiError`s.
  */
 export class BadRequest extends Schema.Error<
   BadRequest,
@@ -28,7 +32,9 @@ export class BadRequest extends Schema.Error<
     description: "Bad Request",
     httpApiStatus: 400,
   },
-) {}
+) {
+  readonly [ErrorReporter.ignore] = true;
+}
 
 export class Unauthorized extends Schema.Error<
   Unauthorized,
@@ -41,7 +47,9 @@ export class Unauthorized extends Schema.Error<
     description: "Unauthorized",
     httpApiStatus: 401,
   },
-) {}
+) {
+  readonly [ErrorReporter.ignore] = true;
+}
 
 export class Forbidden extends Schema.Error<
   Forbidden,
@@ -54,7 +62,9 @@ export class Forbidden extends Schema.Error<
     description: "Forbidden",
     httpApiStatus: 403,
   },
-) {}
+) {
+  readonly [ErrorReporter.ignore] = true;
+}
 
 export class NotFound extends Schema.Error<
   NotFound,
@@ -67,7 +77,9 @@ export class NotFound extends Schema.Error<
     description: "Not Found",
     httpApiStatus: 404,
   },
-) {}
+) {
+  readonly [ErrorReporter.ignore] = true;
+}
 
 export class Conflict extends Schema.Error<
   Conflict,
@@ -80,7 +92,9 @@ export class Conflict extends Schema.Error<
     description: "Conflict",
     httpApiStatus: 409,
   },
-) {}
+) {
+  readonly [ErrorReporter.ignore] = true;
+}
 
 export class UnsupportedMediaType extends Schema.Error<
   UnsupportedMediaType,
@@ -93,7 +107,9 @@ export class UnsupportedMediaType extends Schema.Error<
     description: "Unsupported Media Type",
     httpApiStatus: 415,
   },
-) {}
+) {
+  readonly [ErrorReporter.ignore] = true;
+}
 
 export class PayloadTooLarge extends Schema.Error<
   PayloadTooLarge,
@@ -106,7 +122,9 @@ export class PayloadTooLarge extends Schema.Error<
     description: "Payload Too Large",
     httpApiStatus: 413,
   },
-) {}
+) {
+  readonly [ErrorReporter.ignore] = true;
+}
 
 /**
  * Headers of publicly cacheable reads, set to `PUBLIC_CACHE_CONTROL`. The
@@ -135,7 +153,9 @@ export class TooManyRequests extends Schema.Error<
     description: "Too Many Requests",
     httpApiStatus: 429,
   },
-) {}
+) {
+  readonly [ErrorReporter.ignore] = true;
+}
 
 export class InternalServerError extends Schema.Error<
   InternalServerError,

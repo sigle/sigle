@@ -1483,11 +1483,8 @@ describe("drafts", () => {
         readonly attributes: object;
       }> = [];
 
-      // The 429 responses are reported too, keep the limit reports.
       const reporter = ErrorReporter.make(({ error, attributes }) => {
-        if (error.name === "GlobalPublishLimitReached") {
-          reports.push({ message: error.message, attributes });
-        }
+        reports.push({ message: error.message, attributes });
       });
 
       const freeWallet = createTestSiwsCredentials("testnet");
