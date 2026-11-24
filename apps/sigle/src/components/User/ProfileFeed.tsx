@@ -66,12 +66,15 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
 
   // The public list is cached for a minute, so a hidden post is removed from
   // the loaded pages instead of refetching them.
-  const onHiddenChange = (postId: string, hidden: boolean) => {
+  const onHiddenChange = async (postId: string, hidden: boolean) => {
     if (!hidden) {
       queryClient.invalidateQueries({ queryKey });
 
       return;
     }
+
+    // A response to a request sent before the hide would bring the post back.
+    await queryClient.cancelQueries({ queryKey });
 
     queryClient.setQueryData<InfiniteData<(typeof data.pages)[number]>>(
       queryKey,
@@ -82,7 +85,12 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
   // The server renders without the session, so the first client render must
   // not depend on it either: this component hydrates after its posts load, by
   // which time the client may already know the user.
-  if (posts.length === 0 && isClient && user.address === me?.address) {
+  if (
+    posts.length === 0 &&
+    !hasNextPage &&
+    isClient &&
+    user.address === me?.address
+  ) {
     return (
       <section className="mt-4 border-y border-border py-14 text-center">
         <h3 className="headline text-2xl">Write your first story</h3>
@@ -100,7 +108,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
     );
   }
 
-  if (posts.length === 0) {
+  if (posts.length === 0 && !hasNextPage) {
     return (
       <p className="mt-4 border-y border-border py-6 text-sm text-muted-foreground">
         Nothing published yet.
