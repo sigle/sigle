@@ -184,17 +184,10 @@ export const draft = sqliteTable(
 // --
 
 export const profile = sqliteTable("profile", {
-  // Stacks address that signed the latest profile metadata. A profile belongs
-  // to the signing address rather than to an account, so a profile published
-  // on Arweave exists even if its signer never signed in.
+  // Stacks address the profile belongs to: the primary address of the user
+  // who saved it. Profiles published on Arweave before profiles moved to the
+  // database are kept, including those of addresses that never signed in.
   address: text("address").primaryKey(),
-  arweaveTxId: text("arweave_tx_id")
-    .notNull()
-    .unique("profile_arweave_tx_id_key"),
-  // Null until the profile transaction is included in an Arweave block; set
-  // by the profile indexer.
-  arweaveBlockHeight: integer("arweave_block_height"),
-  signature: text("signature").notNull().unique("profile_signature_key"),
   displayName: text("display_name"),
   description: text("description"),
   website: text("website"),
@@ -204,28 +197,6 @@ export const profile = sqliteTable("profile", {
   createdAt: timestamp("created_at").$defaultFn(now).notNull(),
   updatedAt: timestamp("updated_at").$defaultFn(now).notNull(),
 });
-
-// Successful profile updates through the API, one row per uploaded profile
-// metadata, counted against the daily profile update limit. Profiles indexed
-// from Arweave have no row.
-export const profileUpdate = sqliteTable(
-  "profile_update",
-  {
-    arweaveTxId: text("arweave_tx_id").primaryKey(),
-    userId: text("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
-    // Signing address of the uploaded profile.
-    address: text("address").notNull(),
-    createdAt: timestamp("created_at").$defaultFn(now).notNull(),
-  },
-  (table) => [
-    index("profile_update_user_id_created_at_idx").on(
-      table.userId,
-      table.createdAt,
-    ),
-  ],
-);
 
 // --
 // Media images

@@ -1,9 +1,4 @@
-import {
-  ArweaveTags,
-  ArweaveTransactionTypes,
-  PostMetadataSchemaId,
-  ProfileMetadataSchemaId,
-} from "@sigle/sdk";
+import { PostMetadataSchemaId } from "@sigle/sdk";
 import { hashMessage } from "@stacks/encryption";
 import {
   getAddressFromPrivateKey,
@@ -26,11 +21,6 @@ import {
   user,
   walletAddress,
 } from "@/db/schema";
-import {
-  ARWEAVE_TEST_OWNER_ADDRESS,
-  type ArweaveTag,
-  type ArweaveTestTransaction,
-} from "@/services/arweave";
 import { SESSION_COOKIE_NAME } from "@/services/auth";
 
 export const createTestUser = (
@@ -114,9 +104,6 @@ export const createTestDraft = (options: {
 
 export const createTestProfile = (options: {
   readonly address: string;
-  readonly arweaveTxId?: string;
-  readonly arweaveBlockHeight?: number | null;
-  readonly signature?: string;
   readonly displayName?: string;
   readonly description?: string;
   readonly website?: string;
@@ -132,9 +119,6 @@ export const createTestProfile = (options: {
       .insert(profile)
       .values({
         address: options.address,
-        arweaveTxId: options.arweaveTxId ?? crypto.randomUUID(),
-        arweaveBlockHeight: options.arweaveBlockHeight ?? null,
-        signature: options.signature ?? crypto.randomUUID(),
         displayName: options.displayName ?? "Test Profile",
         description: options.description ?? "Test description",
         website: options.website ?? null,
@@ -301,76 +285,6 @@ export const signTestSiwsMessage = (
     messageHash: Buffer.from(hashMessage(message)).toString("hex"),
     privateKey,
   });
-
-interface TestProfileMetadataContent {
-  id: string;
-  displayName: string;
-  description?: string;
-  picture?: string;
-  coverPicture?: string;
-}
-
-export const createSignedTestProfileMetadata = (options: {
-  readonly privateKey: string;
-  readonly id?: string;
-  readonly displayName?: string;
-  readonly description?: string;
-  readonly picture?: string;
-  readonly coverPicture?: string;
-}) => {
-  const content: TestProfileMetadataContent = {
-    id: options.id ?? "profile-1",
-    displayName: options.displayName ?? "Test profile",
-  };
-
-  if (options.description !== undefined) {
-    content.description = options.description;
-  }
-
-  if (options.picture !== undefined) {
-    content.picture = options.picture;
-  }
-
-  if (options.coverPicture !== undefined) {
-    content.coverPicture = options.coverPicture;
-  }
-
-  const metadataWithoutSignature = {
-    $schema: ProfileMetadataSchemaId.LATEST,
-    content,
-  };
-
-  const signature = signTestSiwsMessage(
-    JSON.stringify(metadataWithoutSignature),
-    options.privateKey,
-  );
-
-  return {
-    ...metadataWithoutSignature,
-    signature,
-  };
-};
-
-/**
- * A mined profile transaction uploaded by this server, as served by the
- * in-memory gateway of `ArweaveService.layerTest`.
- */
-export const createTestProfileTransaction = (options: {
-  readonly id: string;
-  readonly metadata: unknown;
-  readonly blockHeight?: number | null;
-  readonly ownerAddress?: string;
-  readonly tags?: ReadonlyArray<ArweaveTag>;
-}): ArweaveTestTransaction => ({
-  id: options.id,
-  ownerAddress: options.ownerAddress ?? ARWEAVE_TEST_OWNER_ADDRESS,
-  blockHeight: options.blockHeight === undefined ? 100 : options.blockHeight,
-  tags: options.tags ?? [
-    { name: ArweaveTags.appName, value: "sigle-test" },
-    { name: ArweaveTags.type, value: ArweaveTransactionTypes.profile },
-  ],
-  data: JSON.stringify(options.metadata),
-});
 
 export const createSignedTestPostMetadata = (options: {
   readonly draftId: string;

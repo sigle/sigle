@@ -88,7 +88,6 @@ describe("users", () => {
 
         yield* createTestProfile({
           address: TEST_ADDRESS,
-          arweaveTxId: "arweave-profile-tx",
           displayName: "Alice",
         });
 
@@ -121,7 +120,6 @@ describe("users", () => {
 
         yield* createTestProfile({
           address: TEST_ADDRESS,
-          arweaveTxId: "arweave-profile-tx",
           displayName: "Alice",
           description: "Hello",
           website: "https://example.com",
@@ -154,7 +152,6 @@ describe("users", () => {
               height: null,
               thumbhash: null,
             },
-            arweaveTxId: "arweave-profile-tx",
           },
         });
         expect(response.status).toBe(200);
@@ -173,7 +170,6 @@ describe("users", () => {
 
         yield* createTestProfile({
           address: TEST_ADDRESS,
-          arweaveTxId: "arweave-profile-tx",
           picture,
           coverPicture,
         });
@@ -247,7 +243,6 @@ describe("users", () => {
 
         yield* createTestProfile({
           address: TEST_ADDRESS,
-          arweaveTxId: "arweave-profile-tx",
           displayName: "Alice",
         });
 

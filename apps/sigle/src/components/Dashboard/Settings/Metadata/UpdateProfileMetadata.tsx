@@ -1,17 +1,10 @@
+import type { paths } from "@sigle/sdk";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createId } from "@paralleldrive/cuid2";
-import {
-  createProfileMetadata,
-  type paths,
-  ProfileMetadataSchemaId,
-} from "@sigle/sdk";
-import { request } from "@stacks/connect";
 import { IconAt } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Result } from "better-result";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
-import { useMultiStepToast } from "@/components/Shared/MultiStepToast";
 import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -49,21 +42,11 @@ export const UpdateProfileMetadata = ({
 }: UpdateProfileMetadataProps) => {
   const queryClient = useQueryClient();
 
-  const {
-    start: startToast,
-    completeStep,
-    setStepError,
-  } = useMultiStepToast({
-    steps: [
-      { id: "signature", title: "Signing with Stacks wallet" },
-      { id: "upload", title: "Uploading data to Arweave" },
-    ],
-    successMessage: "Profile updated!",
-  });
+  const updateProfile = sigleApiClient.useMutation("put", "/api/me/profile");
 
-  const uploadProfileMetadata = sigleApiClient.useMutation(
-    "put",
-    "/api/me/profile",
+  const importBnsProfile = sigleApiClient.useMutation(
+    "get",
+    "/api/me/profile/bns",
   );
 
   const {
@@ -85,69 +68,35 @@ export const UpdateProfileMetadata = ({
   });
 
   const onSubmit = handleSubmit(async (formValues) => {
-    startToast();
+    const result = await updateProfile
+      .mutateAsync({
+        body: {
+          displayName: formValues.displayName || null,
+          description: formValues.description || null,
+          twitter: formValues.twitter || null,
+          website: formValues.website || null,
+          picture: formValues.picture || null,
+          coverPicture: formValues.coverPicture || null,
+        },
+      })
+      .catch((error: { message?: string }) => {
+        toast.error(error.message ?? "Failed to update your profile.");
 
-    const metadata = createProfileMetadata({
-      $schema: ProfileMetadataSchemaId.LATEST,
-      content: {
-        id: createId(),
-        displayName: formValues.displayName || undefined,
-        description: formValues.description || undefined,
-        twitter: formValues.twitter || undefined,
-        website: formValues.website || undefined,
-        picture: formValues.picture || undefined,
-        coverPicture: formValues.coverPicture || undefined,
-      },
-    });
-
-    let signature = "";
-
-    try {
-      const { signature: _, ...metadataToSign } = metadata;
-      const message = JSON.stringify(metadataToSign);
-
-      const response = await request("stx_signMessage", {
-        message,
+        return undefined;
       });
 
-      signature = response.signature;
-    } catch (error) {
-      console.error(error);
-      setStepError(
-        "signature",
-        "Wallet signature request was cancelled or failed.",
-      );
-
+    if (result === undefined) {
       return;
     }
 
-    // Add the signature to the metadata
-    metadata.signature = signature;
-    completeStep("signature");
+    toast.success("Profile updated!");
 
-    const data = await uploadProfileMetadata
-      .mutateAsync({
-        body: { metadata },
-      })
-      .then((result) => Result.ok(result))
-      .catch((error) => Result.err(error));
-
-    if (data.isErr()) {
-      setStepError(
-        "upload",
-        data.error.message ? data.error.message : data.error,
-      );
-
-      return;
-    }
-
-    // server-v2 stores the profile on upload and returns it, so the cached
-    // user is updated without fetching it again.
-    completeStep("upload");
-    const { address, profile: storedProfile } = data.value;
+    // The API returns the stored profile, so the cached user is updated
+    // without fetching it again.
+    const { address, profile: storedProfile } = result;
     const userQueries = { queryKey: ["get", "/api/users/{address}"] };
-    // A refetch started before the upload, such as on window focus after the
-    // wallet prompt, would otherwise overwrite the cache with the old profile.
+    // A refetch started before the update, such as on window focus, would
+    // otherwise overwrite the cache with the old profile.
     await queryClient.cancelQueries(userQueries);
     queryClient.setQueriesData<UserResponse>(userQueries, (cached) =>
       cached?.address === address
@@ -156,6 +105,44 @@ export const UpdateProfileMetadata = ({
     );
     setEditingProfileMetadata(false);
   });
+
+  // Fills in the form with the profile of the user's BNS name, the user
+  // reviews it and saves. Only the fields the zonefile sets are replaced.
+  const onImportBns = () => {
+    importBnsProfile.mutate(
+      {},
+      {
+        onSuccess: ({ name, profile: bnsProfile }) => {
+          if (name === null) {
+            toast.error("Your address has no primary BNS name.");
+
+            return;
+          }
+
+          if (bnsProfile === null) {
+            toast.error(`${name} has no profile to import.`);
+
+            return;
+          }
+
+          for (const [field, value] of Object.entries(bnsProfile)) {
+            if (value !== null) {
+              // SAFETY: the BNS profile fields are a subset of the form's.
+              setValue(field as keyof typeof bnsProfile, value, {
+                shouldValidate: true,
+                shouldDirty: true,
+              });
+            }
+          }
+
+          toast.success(`Imported the profile of ${name}, review and save it.`);
+        },
+        onError: (error) => {
+          toast.error(error?.message ?? "Failed to read your BNS name.");
+        },
+      },
+    );
+  };
 
   const handleXChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     let value = event.target.value;
@@ -257,6 +244,16 @@ export const UpdateProfileMetadata = ({
       </SettingsRow>
 
       <div className="flex items-center justify-end gap-2 pt-6">
+        <Button
+          variant="outline"
+          type="button"
+          className="mr-auto"
+          disabled={isSubmitting}
+          loading={importBnsProfile.isPending}
+          onClick={onImportBns}
+        >
+          Import from BNS
+        </Button>
         <Button
           variant="ghost"
           type="button"

@@ -90,7 +90,6 @@ describe("admin jobs API", () => {
         status: 200,
         results: [
           emptyQueue("generate-image-thumbhash"),
-          emptyQueue("index-profile"),
           emptyQueue("opentimestamps-stamp"),
           emptyQueue("opentimestamps-upgrade"),
           { ...emptyQueue("publish-draft"), failed: 1 },

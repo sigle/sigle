@@ -41,20 +41,15 @@ export const profileImageSettings = (
 ): ProfileImageSettings => settingsByStacksEnv[stacksEnv][kind];
 
 /**
- * Each profile image is stored under a fixed key so that re-uploading an avatar
- * or a cover replaces the previous file instead of accumulating objects.
+ * Profile images are keyed by their content hash, like draft images: a new
+ * avatar or cover never replaces the object behind a URL that a saved profile,
+ * or a cache, may still use, so objects can be cached as immutable.
  */
 export const profileImageKey = (
   userId: string,
   kind: ProfileImageKind,
-): string => `u/${userId}/${kind}.webp`;
-
-/**
- * Appends the content version to the public URL so browsers and the CDN fetch
- * the replacement image even though the object key is stable.
- */
-export const versionProfileImageUrl = (url: string, version: string): string =>
-  `${url}?v=${version}`;
+  version: string,
+): string => `u/${userId}/${kind}/${version}.webp`;
 
 export const profileImagePostHogEvent = (kind: ProfileImageKind): string =>
   kind === "avatar" ? "profile media uploaded" : "profile cover media uploaded";

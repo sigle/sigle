@@ -14,8 +14,8 @@ const pictureImage = alias(mediaImage, "picture_image");
 const coverPictureImage = alias(mediaImage, "cover_picture_image");
 
 /**
- * Reads the profiles published by addresses, with the placeholders of their
- * images. Addresses that never published a profile are missing from the
+ * Reads the profiles of addresses, with the placeholders of their
+ * images. Addresses without a profile are missing from the
  * returned map.
  */
 export const findProfiles = (addresses: ReadonlyArray<string>) =>
@@ -74,7 +74,6 @@ export const findProfiles = (addresses: ReadonlyArray<string>) =>
                       height: found.coverHeight,
                       thumbhash: found.coverThumbhash,
                     },
-              arweaveTxId: foundProfile.arweaveTxId,
               updatedAt: DateTime.fromDateUnsafe(foundProfile.updatedAt),
             },
           },
@@ -84,8 +83,8 @@ export const findProfiles = (addresses: ReadonlyArray<string>) =>
   });
 
 /**
- * Reads the profile published by an address, see {@link findProfiles}.
- * `undefined` when the address never published a profile.
+ * Reads the profile of an address, see {@link findProfiles}. `undefined`
+ * when the address has no profile.
  */
 export const findProfile = (address: string) =>
   Effect.map(findProfiles([address]), (profiles) => profiles.get(address));
@@ -96,8 +95,8 @@ export const getUserProfile = (addressParam: string) =>
     const db = yield* Database;
     const found = yield* findProfile(address);
 
-    // Profiles are keyed by the signing address, so an address is known when
-    // it either published a profile or signed in without publishing one.
+    // Profiles are keyed by address, so an address is known when it either
+    // has a profile or signed in without saving one.
     if (!found) {
       const [wallet] = yield* db
         .select({ id: walletAddress.id })

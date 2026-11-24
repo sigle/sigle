@@ -1,22 +1,15 @@
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
-import { and, eq, gt, gte, inArray, isNotNull, ne } from "drizzle-orm";
-import { Context, Data, Effect, Layer, Option, Redacted, Schema } from "effect";
+import { and, eq, gte, inArray, isNotNull, ne } from "drizzle-orm";
+import { Context, Data, Effect, Layer, Schema } from "effect";
 import {
   FetchHttpClient,
-  HttpClient,
   HttpClientRequest,
   HttpClientResponse,
 } from "effect/http";
 import { AppConfig } from "@/config";
 import { Database, type DatabaseClient } from "@/db";
-import {
-  draft,
-  post,
-  profileUpdate,
-  user,
-  type userPlans,
-  walletAddress,
-} from "@/db/schema";
+import { draft, post, user, type userPlans, walletAddress } from "@/db/schema";
+import { makeStacksApiClient, STACKS_API_TIMEOUT } from "@/services/stacks-api";
 
 export type UserPlan = (typeof userPlans)[number];
 
@@ -28,12 +21,6 @@ export const PUBLISH_LIMITS: Record<UserPlan, number> = {
   free: 3,
   pro: 20,
 };
-
-/**
- * Profile updates a user can make per {@link DAILY_LIMIT_WINDOW_MILLIS}, on
- * every plan.
- */
-export const PROFILE_UPDATE_LIMIT = 10;
 
 /**
  * Usage of a daily limit from the times of the counted actions: how many, and
@@ -106,36 +93,6 @@ export const findPublishUsage = (
     return toDailyUsage(publishes.map(({ at }) => at));
   });
 
-/**
- * Profile updates of a user counted against their daily limit, see
- * {@link toDailyUsage}: the successful updates of the last 24 hours, across all
- * their addresses.
- */
-export const findProfileUpdateUsage = (
-  db: DatabaseClient,
-  { userId, now }: { readonly userId: string; readonly now: Date },
-) =>
-  Effect.gen(function* () {
-    const updates = yield* db
-      .select({ at: profileUpdate.createdAt })
-      .from(profileUpdate)
-      .where(
-        and(
-          eq(profileUpdate.userId, userId),
-          // An update stops counting at its reset time.
-          gt(
-            profileUpdate.createdAt,
-            new Date(now.getTime() - DAILY_LIMIT_WINDOW_MILLIS),
-          ),
-        ),
-      )
-      .pipe(Effect.orDie);
-
-    return toDailyUsage(updates.map(({ at }) => at));
-  });
-
-const STACKS_API_TIMEOUT = "10 seconds";
-
 const NftBalancesResponse = Schema.Struct({ total: Schema.Int });
 
 export class NftHoldingsError extends Data.TaggedError("NftHoldingsError")<{
@@ -168,23 +125,7 @@ export const makePlanService = Effect.gen(function* () {
   const config = yield* AppConfig;
   const db = yield* Database;
 
-  const stacksApi = (yield* HttpClient.HttpClient).pipe(
-    HttpClient.mapRequest(
-      HttpClientRequest.prependUrl(config.STACKS_API_URL.replace(/\/+$/, "")),
-    ),
-    HttpClient.mapRequest((request) =>
-      Option.match(config.HIRO_API_KEY, {
-        onNone: () => request,
-        onSome: (apiKey) =>
-          HttpClientRequest.setHeader(
-            request,
-            "x-api-key",
-            Redacted.value(apiKey),
-          ),
-      }),
-    ),
-    HttpClient.filterStatusOk,
-  );
+  const stacksApi = yield* makeStacksApiClient;
 
   const hasTegNft = (address: string) =>
     Effect.gen(function* () {
