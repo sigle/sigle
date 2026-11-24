@@ -29,6 +29,9 @@ const updateProfileMetadataSchema = z.object({
 type UserResponse =
   paths["/api/users/{address}"]["get"]["responses"][200]["content"]["application/json"];
 
+type UploadResponse =
+  paths["/api/me/profile/images/{kind}"]["put"]["responses"][200]["content"]["application/json"];
+
 interface UpdateProfileMetadataProps {
   profile: UserResponse["profile"];
   setEditingProfileMetadata: (editing: boolean) => void;
@@ -64,20 +67,30 @@ export const UpdateProfileMetadata = ({
 
   // The API returns the stored profile, so the cached user is updated
   // without fetching it again.
-  const updateCachedUser = async ({
-    address,
-    profile: storedProfile,
-  }: Omit<UserResponse, "isExplorer">) => {
+  const updateCachedProfile = async (
+    address: string,
+    update: (cached: UserResponse["profile"]) => UserResponse["profile"],
+  ) => {
     const userQueries = { queryKey: ["get", "/api/users/{address}"] };
     // A refetch started before the update, such as on window focus, would
     // otherwise overwrite the cache with the old profile.
     await queryClient.cancelQueries(userQueries);
     queryClient.setQueriesData<UserResponse>(userQueries, (cached) =>
       cached?.address === address
-        ? { ...cached, profile: storedProfile }
+        ? { ...cached, profile: update(cached.profile) }
         : cached,
     );
   };
+
+  // The avatar and cover upload on their own and can overlap, so an upload
+  // only updates its own image: the other one in its response may be stale.
+  const onImageUploaded =
+    (field: "picture" | "coverPicture") =>
+    ({ address, profile: stored }: UploadResponse) =>
+      updateCachedProfile(address, (cached) => ({
+        ...(cached ?? stored),
+        [field]: stored[field],
+      }));
 
   const onSubmit = handleSubmit(async (formValues) => {
     const result = await updateProfile
@@ -101,7 +114,7 @@ export const UpdateProfileMetadata = ({
 
     toast.success("Profile updated!");
 
-    await updateCachedUser(result);
+    await updateCachedProfile(result.address, () => result.profile);
     setEditingProfileMetadata(false);
   });
 
@@ -159,7 +172,7 @@ export const UpdateProfileMetadata = ({
       <SettingsRow label="Picture" description="A square JPG or PNG.">
         <UploadProfilePicture
           picture={profile?.picture?.url}
-          onUploaded={updateCachedUser}
+          onUploaded={onImageUploaded("picture")}
         />
       </SettingsRow>
 
@@ -169,7 +182,7 @@ export const UpdateProfileMetadata = ({
       >
         <UploadProfileCoverPicture
           picture={profile?.coverPicture?.url}
-          onUploaded={updateCachedUser}
+          onUploaded={onImageUploaded("coverPicture")}
         />
       </SettingsRow>
 
@@ -237,7 +250,7 @@ export const UpdateProfileMetadata = ({
           variant="outline"
           type="button"
           className="mr-auto"
-          disabled={isSubmitting}
+          disabled={isSubmitting || importBnsProfile.isPending}
           loading={importBnsProfile.isPending}
           onClick={onImportBns}
         >

@@ -293,12 +293,16 @@ describe("profile", () => {
             name: "  Satoshi Nakamoto ",
             bio: "Bitcoin",
             // Zonefiles often leave out the protocol.
-            website: "bitcoin.org",
+            website: "bitcoin.org:8443",
             pfp: "https://bitcoin.org/satoshi.png",
             location: "",
+            // Malformed entries and invalid handles are skipped.
             social: [
+              null,
               { platform: "nostr", username: "npub1" },
+              { platform: "twitter", username: "not a handle" },
               { platform: "X", username: "@satoshi" },
+              { platform: "x", username: "nakamoto" },
             ],
             subdomains: {},
           }),
@@ -312,7 +316,7 @@ describe("profile", () => {
           profile: {
             displayName: "Satoshi Nakamoto",
             description: "Bitcoin",
-            website: "https://bitcoin.org",
+            website: "https://bitcoin.org:8443",
             twitter: "satoshi",
           },
         },
@@ -324,31 +328,38 @@ describe("profile", () => {
     "GET /api/me/profile/bns skips the fields the profile can't store",
     () =>
       Effect.gen(function* () {
-        const result = yield* getBnsProfile(
-          bnsLayer(
-            JSON.stringify({
-              owner: BNS_OWNER,
-              name: "Satoshi",
-              bio: 42,
-              website: "data:text/html,hello",
-              pfp: "ftp://bitcoin.org/satoshi.png",
-              social: [{ platform: "twitter", username: "not a handle" }],
-            }),
-          ),
+        // Websites with a scheme other than http(s) aren't given `https://`.
+        const results = yield* Effect.forEach(
+          ["data:text/html,hello", "h2://bitcoin.org", "mailto:me@bitcoin.org"],
+          (website) =>
+            getBnsProfile(
+              bnsLayer(
+                JSON.stringify({
+                  owner: BNS_OWNER,
+                  name: "Satoshi",
+                  bio: 42,
+                  website,
+                  pfp: "ftp://bitcoin.org/satoshi.png",
+                  social: [{ platform: "twitter", username: "not a handle" }],
+                }),
+              ),
+            ),
         );
 
-        expect(result).toStrictEqual({
-          status: 200,
-          body: {
-            name: "satoshi.btc",
-            profile: {
-              displayName: "Satoshi",
-              description: null,
-              website: null,
-              twitter: null,
+        expect(results).toStrictEqual(
+          Array.from({ length: 3 }, () => ({
+            status: 200,
+            body: {
+              name: "satoshi.btc",
+              profile: {
+                displayName: "Satoshi",
+                description: null,
+                website: null,
+                twitter: null,
+              },
             },
-          },
-        });
+          })),
+        );
       }),
   );
 

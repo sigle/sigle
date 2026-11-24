@@ -90,13 +90,18 @@ const BnsZonefile = Schema.fromJsonString(
   }),
 );
 
-const BnsSocial = Schema.Array(
-  Schema.Struct({ platform: Schema.Unknown, username: Schema.Unknown }),
-);
+const BnsSocial = Schema.Array(Schema.Unknown);
+
+const BnsSocialEntry = Schema.Struct({
+  platform: Schema.Unknown,
+  username: Schema.Unknown,
+});
 
 const decodeBnsZonefile = Schema.decodeUnknownOption(BnsZonefile);
 
 const decodeBnsSocial = Schema.decodeUnknownOption(BnsSocial);
+
+const decodeBnsSocialEntry = Schema.decodeUnknownOption(BnsSocialEntry);
 
 /** The trimmed value when it is valid for `schema` and not empty, else null. */
 const readField = <S extends Schema.Codec<string, string>>(
@@ -130,18 +135,31 @@ export const parseBnsProfile = (zonefile: string, owner: string) => {
   // `pfp` isn't imported: profile images are only set by uploading them.
   const { name, bio, website, social } = decoded.value;
 
-  const twitter = Option.getOrElse(decodeBnsSocial(social), () => []).find(
-    (entry) =>
-      Predicate.isString(entry.platform) &&
-      ["twitter", "x"].includes(entry.platform.toLowerCase()),
-  );
+  // The first valid X handle, skipping malformed entries.
+  const twitter =
+    Option.getOrElse(decodeBnsSocial(social), () => [])
+      .flatMap((value) => Option.toArray(decodeBnsSocialEntry(value)))
+      .filter(
+        (entry) =>
+          Predicate.isString(entry.platform) &&
+          ["twitter", "x"].includes(entry.platform.toLowerCase()),
+      )
+      .map((entry) =>
+        readField(
+          ProfileTwitter,
+          stringOrUndefined(entry.username)?.trim().replace(/^@/, ""),
+        ),
+      )
+      .find((handle) => handle !== null) ?? null;
 
   // Zonefiles often store a website without its protocol, such as
-  // `example.com`.
+  // `example.com`. A colon followed by a port, as in `example.com:8443`,
+  // isn't a scheme; any other scheme is kept and validated as is.
   const websiteText = stringOrUndefined(website)?.trim();
 
   const websiteUrl =
-    websiteText === undefined || /^[a-z]+:/i.test(websiteText)
+    websiteText === undefined ||
+    /^[a-z][a-z\d+.-]*:(?!\d+(?:[/?#]|$))/i.test(websiteText)
       ? websiteText
       : `https://${websiteText}`;
 
@@ -149,10 +167,7 @@ export const parseBnsProfile = (zonefile: string, owner: string) => {
     displayName: readField(ProfileDisplayName, stringOrUndefined(name)),
     description: readField(ProfileDescription, stringOrUndefined(bio)),
     website: readField(ProfileWebsite, websiteUrl),
-    twitter: readField(
-      ProfileTwitter,
-      stringOrUndefined(twitter?.username)?.trim().replace(/^@/, ""),
-    ),
+    twitter,
   };
 
   return Object.values(fields).every((value) => value === null) ? null : fields;
@@ -256,13 +271,22 @@ export const uploadProfileImage = (
       previousUrl.startsWith(publicUrl) &&
       previousKey?.startsWith(profileImagePrefix(user.id, kind)) === true
     ) {
+      // The profile is saved already, a failed delete only leaves an unused
+      // row or object behind, so it's logged and the upload still succeeds.
       yield* db
         .delete(mediaImage)
         .where(eq(mediaImage.id, previousUrl))
-        .pipe(Effect.orDie);
+        .pipe(
+          Effect.tapError((cause) =>
+            Effect.logError("Failed to delete a replaced profile image", {
+              cause,
+              url: previousUrl,
+            }),
+          ),
+          Effect.ignore,
+        );
 
-      // The profile is saved already, a failed delete only leaves an unused
-      // object behind. The storage service logs it.
+      // The storage service logs its failures.
       yield* storage.deleteFile(previousKey).pipe(Effect.ignore);
     }
 

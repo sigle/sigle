@@ -120,7 +120,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
       .annotate(OpenApi.Summary, "Upload a profile image")
       .annotate(
         OpenApi.Description,
-        "Upload a profile avatar or cover image as a raw binary body, set it on the profile of the user's primary address right away, and return the stored profile. The image it replaces is deleted.",
+        "Upload a profile avatar or cover image as a raw binary body, set it on the profile of the user's primary address right away, and return the stored profile. The avatar or cover it replaces is then deleted when this endpoint stored it, on a best-effort basis: a failed delete doesn't fail the upload.",
       )
       .annotate(OpenApi.Override, { requestBody: imageRequestBody })
       .annotate(RateLimitPolicy, "profileImageUpload"),
