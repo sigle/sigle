@@ -67,7 +67,7 @@ const ImageUrlForm = (props: NodeViewProps) => {
         <InputGroup>
           <InputGroupInput
             aria-invalid={!!errors.url}
-            placeholder="Paste image URL and press “enter”..."
+            placeholder="Paste an image link and press Enter"
             {...register("url")}
             onKeyDown={onKeyDown}
           />
@@ -105,10 +105,11 @@ export const ImageComponent = (props: NodeViewProps) => {
       {/* oxlint-disable-next-line no-img-element */}
       <img
         className={cn(
-          `outline outline-offset-2 outline-accent hover:outline-2`,
+          "rounded-md outline-offset-4 transition-[outline-color,opacity] hover:outline-2 hover:outline-border",
           {
-            "outline-2": props.selected,
-            "opacity-25": uploadId,
+            "outline-2 outline-foreground/60 hover:outline-foreground/60":
+              props.selected,
+            "opacity-40": uploadId,
           },
         )}
         src={src}

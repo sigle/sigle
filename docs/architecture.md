@@ -6,8 +6,7 @@ The Sigle monorepo is composed of the following components:
 
 - [Railway](https://railway.com/) - Hosting for all applications via Docker, see [Deployment](./deployment.md).
 - [Plausible](https://plausible.io/) - Privacy protecting analytics.
-- [PostHog](https://posthog.com/) - Product analytics.
-- [Sentry](https://sentry.io/) - Track errors.
+- [PostHog](https://posthog.com/) - Product analytics and error tracking.
 - [Filebase](https://filebase.com/) - IPFS file uploads (S3-compatible).
 - [Arweave](https://arweave.org/) - Arweave bundler.
 - [Hiro](https://hiro.so/) - Stacks blockchain API.

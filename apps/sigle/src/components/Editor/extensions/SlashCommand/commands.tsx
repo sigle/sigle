@@ -1,19 +1,22 @@
-import { BulletedListLight } from "@/images/BulletedListLight";
-import { CodeLight } from "@/images/CodeLight";
-import { DividerLight } from "@/images/DividerLight";
-import { Heading2Light } from "@/images/Heading2Light";
-import { Heading3Light } from "@/images/Heading3Light";
-import { ImageLight } from "@/images/ImageLight";
-import { NumberedListLight } from "@/images/NumberedListLight";
-import { PlainTextLight } from "@/images/PlainTextLight";
-import { QuoteLight } from "@/images/QuoteLight";
-import { TwitterLight } from "@/images/TwitterLight";
-import { VideoLight } from "@/images/VideoLight";
+import {
+  IconBrandX,
+  IconBrandYoutube,
+  IconCode,
+  IconH2,
+  IconH3,
+  IconLetterT,
+  IconLink,
+  IconList,
+  IconListNumbers,
+  IconPhotoUp,
+  IconQuote,
+  IconSeparatorHorizontal,
+} from "@tabler/icons-react";
 import type { SlashCommandsCommand } from "./SlashCommands";
 
 export const slashCommands: SlashCommandsCommand[] = [
   {
-    icon: PlainTextLight,
+    icon: IconLetterT,
     title: "Plain Text",
     description: "Normal paragraph style",
     section: "basic",
@@ -29,7 +32,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
-    icon: Heading2Light,
+    icon: IconH2,
     title: "Big Heading",
     description: "Big section Heading",
     section: "basic",
@@ -50,7 +53,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
-    icon: Heading3Light,
+    icon: IconH3,
     title: "Small Heading",
     description: "Small section Heading",
     section: "basic",
@@ -71,7 +74,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
-    icon: ImageLight,
+    icon: IconPhotoUp,
     title: "Image",
     description: "Upload from your computer",
     section: "basic",
@@ -116,7 +119,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
-    icon: ImageLight,
+    icon: IconLink,
     title: "Image from URL",
     description: "Embed an image from a link",
     section: "basic",
@@ -133,7 +136,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
-    icon: BulletedListLight,
+    icon: IconList,
     title: "Bulleted list",
     description: "Create a bulleted list",
     section: "basic",
@@ -154,7 +157,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
-    icon: NumberedListLight,
+    icon: IconListNumbers,
     title: "Numbered list",
     description: "Create a numbered list",
     section: "basic",
@@ -175,7 +178,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
-    icon: QuoteLight,
+    icon: IconQuote,
     title: "Quote",
     description: "Create a quote",
     section: "basic",
@@ -196,7 +199,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
-    icon: DividerLight,
+    icon: IconSeparatorHorizontal,
     title: "Divider",
     description: "Create a divider",
     section: "basic",
@@ -211,7 +214,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
-    icon: CodeLight,
+    icon: IconCode,
     title: "Code",
     description: "Create a code snippet",
     section: "basic",
@@ -226,7 +229,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
-    icon: TwitterLight,
+    icon: IconBrandX,
     title: "Twitter",
     description: "Add a Twitter embed",
     section: "embed",
@@ -247,7 +250,7 @@ export const slashCommands: SlashCommandsCommand[] = [
     },
   },
   {
-    icon: VideoLight,
+    icon: IconBrandYoutube,
     title: "Video",
     description: "Add a video embed (YouTube, etc.)",
     section: "embed",

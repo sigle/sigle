@@ -3,7 +3,9 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "!.next/cache/**", "dist/**", ".astro/**"]
+      "outputs": [".next/**", "!.next/cache/**", "dist/**", ".astro/**"],
+      "env": ["RAILWAY_GIT_COMMIT_SHA"],
+      "passThroughEnv": ["POSTHOG_PERSONAL_API_KEY"]
     },
     "test": {
       "dependsOn": ["^build"]

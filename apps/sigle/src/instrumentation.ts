@@ -1,6 +1,32 @@
-import * as Sentry from "@sentry/nextjs";
+import type { Instrumentation } from "next";
 
-export const onRequestError = Sentry.captureRequestError;
+// Reports errors of server renders, route handlers and server actions to
+// PostHog error tracking. There are no Edge routes, so only Node.js reports.
+export const onRequestError: Instrumentation.onRequestError = async (
+  error,
+  request,
+  context,
+) => {
+  if (process.env.NEXT_RUNTIME !== "nodejs") {
+    return;
+  }
+
+  const [{ getPostHogServer }, { env }] = await Promise.all([
+    import("@/lib/posthog-server"),
+    import("@/env"),
+  ]);
+
+  getPostHogServer()?.captureException(error, {
+    properties: {
+      environment: env.NEXT_PUBLIC_STACKS_ENV,
+      path: request.path,
+      method: request.method,
+      routePath: context.routePath,
+      routeType: context.routeType,
+      routerKind: context.routerKind,
+    },
+  });
+};
 
 export async function register() {
   if (process.env.NEXT_RUNTIME === "nodejs") {
@@ -21,20 +47,14 @@ export async function register() {
               env.NEXT_PUBLIC_API_URL,
               ...(env.API_INTERNAL_URL ? [env.API_INTERNAL_URL] : []),
             ],
-            // Sending errors to Sentry is not part of the request, but would
+            // Sending errors to PostHog is not part of the request, but would
             // show up as a span in its trace.
-            ignoreUrls: env.NEXT_PUBLIC_SENTRY_DSN
-              ? [new URL(env.NEXT_PUBLIC_SENTRY_DSN).origin]
+            ignoreUrls: env.NEXT_PUBLIC_POSTHOG_HOST
+              ? [new URL(env.NEXT_PUBLIC_POSTHOG_HOST).origin]
               : [],
           },
         },
       });
     }
-
-    await import("./sentry.server.config");
-  }
-
-  if (process.env.NEXT_RUNTIME === "edge") {
-    await import("./sentry.edge.config");
   }
 }

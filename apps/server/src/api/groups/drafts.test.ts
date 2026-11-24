@@ -1,6 +1,15 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq, inArray } from "drizzle-orm";
-import { Deferred, Effect, Exit, Layer, Option, Schema, Stream } from "effect";
+import {
+  Deferred,
+  Effect,
+  ErrorReporter,
+  Exit,
+  Layer,
+  Option,
+  Schema,
+  Stream,
+} from "effect";
 import {
   Headers,
   HttpClient,
@@ -46,6 +55,7 @@ import {
   createTestDraft,
   createTestPost,
   createTestSiwsCredentials,
+  createTestUser,
   createTestWalletAddress,
 } from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
@@ -231,8 +241,10 @@ describe("drafts", () => {
       const { client, userId } = yield* createAuthenticatedClient();
       const other = yield* createAuthenticatedClient();
 
-      yield* Effect.forEach(Array.from({ length: DRAFT_COUNT_LIMIT - 1 }), () =>
-        createTestDraft({ userId }),
+      yield* Effect.forEach(
+        Array.from({ length: DRAFT_COUNT_LIMIT - 1 }),
+        () => createTestDraft({ userId }),
+        { concurrency: 1 },
       );
 
       const last = yield* createDraftRequest(client);
@@ -664,6 +676,7 @@ describe("drafts", () => {
               title: stored?.title,
             };
           }),
+        { concurrency: 1 },
       );
 
       // A failed publish leaves the draft editable again.
@@ -681,13 +694,16 @@ describe("drafts", () => {
 
       const statuses = [null, "PENDING", "PROCESSING", "FAILED"] as const;
 
-      yield* Effect.forEach(statuses, (txStatus, index) =>
-        createTestDraft({
-          id: `draft-${index}`,
-          userId,
-          txStatus,
-          updatedAt: new Date(Date.UTC(2026, 0, 1, 0, 0, index)),
-        }),
+      yield* Effect.forEach(
+        statuses,
+        (txStatus, index) =>
+          createTestDraft({
+            id: `draft-${index}`,
+            userId,
+            txStatus,
+            updatedAt: new Date(Date.UTC(2026, 0, 1, 0, 0, index)),
+          }),
+        { concurrency: 1 },
       );
 
       // Reads the status as sent, the API schema would decode it to the
@@ -700,14 +716,17 @@ describe("drafts", () => {
         Schema.Struct({ results: Schema.Array(WireStatus) }),
       )(yield* client.get("/api/drafts"));
 
-      const single = yield* Effect.forEach(statuses, (_, index) =>
-        Effect.gen(function* () {
-          const response = yield* client.get(`/api/drafts/draft-${index}`);
+      const single = yield* Effect.forEach(
+        statuses,
+        (_, index) =>
+          Effect.gen(function* () {
+            const response = yield* client.get(`/api/drafts/draft-${index}`);
 
-          return (yield* HttpClientResponse.schemaBodyJson(WireStatus)(
-            response,
-          )).publishStatus;
-        }),
+            return (yield* HttpClientResponse.schemaBodyJson(WireStatus)(
+              response,
+            )).publishStatus;
+          }),
+        { concurrency: 1 },
       );
 
       expect({
@@ -782,6 +801,7 @@ describe("drafts", () => {
                 kept: stored !== undefined,
               };
             }),
+          { concurrency: 1 },
         );
 
         // A failed publish leaves the draft deletable again.
@@ -801,6 +821,45 @@ describe("drafts", () => {
 
       expect(response.status).toBe(404);
     }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
+    "POST /api/drafts/:draftId/publish rejects unsigned metadata in the schema",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const ownerWallet = createTestSiwsCredentials("testnet");
+
+        yield* createTestWalletAddress({
+          userId,
+          address: ownerWallet.address,
+        });
+        yield* createTestDraft({ id: "draft-unsigned", userId });
+
+        const { signature: _, ...unsignedMetadata } =
+          createSignedTestPostMetadata({
+            draftId: "draft-unsigned",
+            privateKey: ownerWallet.privateKey,
+          });
+
+        const response = yield* publishDraftRequest(client, "draft-unsigned", {
+          metadata: unsignedMetadata,
+        });
+
+        const body = JSON.stringify(yield* response.json);
+
+        // The schema documents the signature as required, so it rejects the
+        // payload before the handler verifies the signature.
+        expect({
+          status: response.status,
+          schemaError: body.includes("signature"),
+          handlerError: body.includes("Signature is required"),
+        }).toStrictEqual({
+          status: 400,
+          schemaError: true,
+          handlerError: false,
+        });
+      }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
   it.effect(
@@ -1321,12 +1380,15 @@ describe("drafts", () => {
 
         // Counted: two posts published from a draft in the last 24 hours, and
         // a publish in flight.
-        yield* Effect.forEach([1, 2], (hours) =>
-          createTestPost({
-            userId,
-            draftId: `published-${hours}`,
-            createdAt: hoursAgo(hours),
-          }),
+        yield* Effect.forEach(
+          [1, 2],
+          (hours) =>
+            createTestPost({
+              userId,
+              draftId: `published-${hours}`,
+              createdAt: hoursAgo(hours),
+            }),
+          { concurrency: 1 },
         );
 
         const retrySigned = createSignedTestPostMetadata({
@@ -1415,7 +1477,6 @@ describe("drafts", () => {
                   ) < 60_000,
               ),
             },
-            profileUpdate: { limit: 10, used: 0, resetsAt: null },
           },
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
@@ -1437,8 +1498,10 @@ describe("drafts", () => {
         });
 
         // Over the free limit.
-        yield* Effect.forEach([1, 2, 3], (index) =>
-          createTestPost({ userId, draftId: `published-${index}` }),
+        yield* Effect.forEach(
+          [1, 2, 3],
+          (index) => createTestPost({ userId, draftId: `published-${index}` }),
+          { concurrency: 1 },
         );
 
         yield* createTestDraft({ id: "draft-pro", userId });
@@ -1458,10 +1521,99 @@ describe("drafts", () => {
           publish: 202,
           limits: {
             publish: expect.objectContaining({ limit: 20 }),
-            profileUpdate: expect.objectContaining({ limit: 10 }),
           },
         });
       }).pipe(Effect.provide(makeTestServerLayer()));
+    },
+  );
+
+  it.effect(
+    "POST /api/drafts/:draftId/publish enforces a separate global daily publish limit per plan and reports it",
+    () => {
+      const reports: Array<{
+        readonly message: string;
+        readonly attributes: object;
+      }> = [];
+
+      const reporter = ErrorReporter.make(({ error, attributes }) => {
+        reports.push({ message: error.message, attributes });
+      });
+
+      const freeWallet = createTestSiwsCredentials("testnet");
+      const proWallet = createTestSiwsCredentials("testnet");
+
+      return Effect.gen(function* () {
+        // Free publishes of other users fill the Free global limit: a post and
+        // a publish in flight. A Pro post counts against the Pro limit only.
+        const otherFree = yield* createTestUser();
+        const otherPro = yield* createTestUser({ plan: "pro" });
+
+        yield* createTestPost({ userId: otherFree.id, draftId: "free-post" });
+        yield* createTestDraft({ userId: otherFree.id, txStatus: "PENDING" });
+        yield* createTestPost({ userId: otherPro.id, draftId: "pro-post" });
+
+        const free = yield* createAuthenticatedClient({
+          address: freeWallet.address,
+        });
+
+        const pro = yield* createAuthenticatedClient({
+          plan: "pro",
+          address: proWallet.address,
+        });
+
+        yield* createTestDraft({ id: "draft-free", userId: free.userId });
+        yield* createTestDraft({ id: "draft-pro", userId: pro.userId });
+
+        const publishFree = publishDraftRequest(free.client, "draft-free", {
+          metadata: createSignedTestPostMetadata({
+            draftId: "draft-free",
+            privateKey: freeWallet.privateKey,
+          }),
+        });
+
+        const limited = yield* publishFree;
+        const limitedBody = yield* limited.json;
+        // Reported once while the limit stays reached.
+        const limitedAgain = yield* publishFree;
+
+        const proPublish = yield* publishDraftRequest(pro.client, "draft-pro", {
+          metadata: createSignedTestPostMetadata({
+            draftId: "draft-pro",
+            privateKey: proWallet.privateKey,
+          }),
+        });
+
+        expect({
+          limited: limited.status,
+          limitedBody,
+          limitedAgain: limitedAgain.status,
+          pro: proPublish.status,
+          reports,
+        }).toStrictEqual({
+          limited: 429,
+          limitedBody: {
+            message:
+              "Sigle reached today's publishing limit for Free accounts. Try again later, or upgrade to Pro to keep publishing.",
+            retryAfterMillis: expect.any(Number),
+          },
+          limitedAgain: 429,
+          pro: 202,
+          reports: [
+            {
+              message:
+                "The free plan reached its global limit of 2 publishes per 24 hours, publishes are rejected",
+              attributes: { plan: "free", limit: 2 },
+            },
+          ],
+        });
+      }).pipe(
+        Effect.provide(
+          makeTestServerLayer({
+            PUBLISH_GLOBAL_DAILY_LIMIT_FREE: 2,
+            PUBLISH_GLOBAL_DAILY_LIMIT_PRO: 2,
+          }).pipe(Layer.provide(ErrorReporter.layer([reporter]))),
+        ),
+      );
     },
   );
 
@@ -1625,6 +1777,7 @@ describe("drafts", () => {
 
               return { status: response.status, message: body.message };
             }),
+          { concurrency: 1 },
         );
 
         expect(responses).toStrictEqual([
@@ -1638,17 +1791,20 @@ describe("drafts", () => {
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
 
-      const responses = yield* Effect.all([
-        createDraftRequest(client),
-        client.get("/api/drafts"),
-        client.get("/api/drafts/draft-1"),
-        updateDraftRequest(client, "draft-1", { title: "Title" }),
-        deleteDraftRequest(client, "draft-1"),
-        publishDraftRequest(client, "draft-1", {
-          metadata: {},
-        }),
-        getPublishStatusRequest(client, "draft-1"),
-      ]);
+      const responses = yield* Effect.all(
+        [
+          createDraftRequest(client),
+          client.get("/api/drafts"),
+          client.get("/api/drafts/draft-1"),
+          updateDraftRequest(client, "draft-1", { title: "Title" }),
+          deleteDraftRequest(client, "draft-1"),
+          publishDraftRequest(client, "draft-1", {
+            metadata: {},
+          }),
+          getPublishStatusRequest(client, "draft-1"),
+        ],
+        { concurrency: 1 },
+      );
 
       expect(responses.map((response) => response.status)).toStrictEqual([
         401, 401, 401, 401, 401, 401, 401,
@@ -1951,10 +2107,13 @@ describe("draft images", () => {
         const otherDraft = yield* createTestDraft({ userId: other.userId });
         const png = yield* makePngBuffer(16, 16);
 
-        const responses = yield* Effect.all([
-          uploadDraftImageRequest(client, otherDraft.id, new Uint8Array(png)),
-          uploadDraftImageRequest(client, "missing", new Uint8Array(png)),
-        ]);
+        const responses = yield* Effect.all(
+          [
+            uploadDraftImageRequest(client, otherDraft.id, new Uint8Array(png)),
+            uploadDraftImageRequest(client, "missing", new Uint8Array(png)),
+          ],
+          { concurrency: 1 },
+        );
 
         expect({
           statuses: responses.map((response) => response.status),

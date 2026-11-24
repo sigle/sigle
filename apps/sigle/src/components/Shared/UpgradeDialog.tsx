@@ -58,7 +58,7 @@ export const UpgradeDialog = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            {title}
+            <span className="headline text-xl">{title}</span>
             <ProBadge />
           </DialogTitle>
           <DialogDescription>{description}</DialogDescription>

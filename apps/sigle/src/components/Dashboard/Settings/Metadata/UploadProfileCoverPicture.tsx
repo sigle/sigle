@@ -1,23 +1,26 @@
-import { IconPencil } from "@tabler/icons-react";
+import type { paths } from "@sigle/sdk";
+import { IconUpload } from "@tabler/icons-react";
 import { usePostHog } from "posthog-js/react";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Field, FieldTitle } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiClient } from "@/lib/sigle";
 
+type UploadResponse =
+  paths["/api/me/profile/images/{kind}"]["put"]["responses"][200]["content"]["application/json"];
+
 interface UploadProfileCoverPictureProps {
   picture?: string;
-  setPicture: (picture: string) => void;
+  /** Stores the profile the upload saved the image on. */
+  onUploaded: (user: UploadResponse) => Promise<void>;
 }
 
 export const UploadProfileCoverPicture = ({
   picture,
-  setPicture,
+  onUploaded,
 }: UploadProfileCoverPictureProps) => {
   const posthog = usePostHog();
 
@@ -50,8 +53,9 @@ export const UploadProfileCoverPicture = ({
           bodySerializer: () => file,
         },
         {
-          onSuccess: (data) => {
-            setPicture(data.url);
+          onSuccess: async (data) => {
+            await onUploaded(data);
+            toast.success("Cover updated!");
             posthog.capture("profile_cover_image_upload_success", {});
           },
           onError: (error) => {
@@ -61,7 +65,7 @@ export const UploadProfileCoverPicture = ({
         },
       );
     },
-    [posthog, uploadImage, setPicture, loadingUploadImage],
+    [posthog, uploadImage, onUploaded, loadingUploadImage],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -75,32 +79,36 @@ export const UploadProfileCoverPicture = ({
   const resolvedPicture = picture ? resolveImageUrl(picture) : undefined;
 
   return (
-    <Field>
-      <FieldTitle>Profile Cover Picture</FieldTitle>
-
-      <div className="flex">
-        <div className="relative w-full cursor-pointer" {...getRootProps()}>
-          <input {...getInputProps()} />
-          <Avatar
-            className={cn(
-              "h-60 w-full rounded-lg border border-border after:rounded-lg",
-              {
-                "opacity-25": loadingUploadImage,
-              },
-            )}
-          >
-            <AvatarImage className="rounded-lg" src={resolvedPicture} />
-            <AvatarFallback className="rounded-lg">
-              <IconPencil size={20} />
-            </AvatarFallback>
-          </Avatar>
-          {loadingUploadImage ? (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Spinner />
-            </div>
-          ) : null}
-        </div>
-      </div>
-    </Field>
+    <div
+      {...getRootProps()}
+      className={cn(
+        "relative flex h-36 cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-dashed border-border text-sm text-muted-foreground transition-colors hover:border-foreground/40 hover:text-foreground",
+        { "border-solid": resolvedPicture },
+      )}
+    >
+      <input {...getInputProps()} />
+      {resolvedPicture ? (
+        // oxlint-disable-next-line no-img-element
+        <img
+          src={resolvedPicture}
+          alt="Profile cover"
+          className={cn("absolute inset-0 size-full object-cover", {
+            "opacity-25": loadingUploadImage,
+          })}
+        />
+      ) : null}
+      {loadingUploadImage ? <Spinner className="relative" /> : null}
+      {!loadingUploadImage && resolvedPicture ? (
+        <span className="absolute right-2 bottom-2 rounded-md bg-background/90 px-2 py-1 text-xs text-foreground">
+          Replace cover
+        </span>
+      ) : null}
+      {!loadingUploadImage && !resolvedPicture ? (
+        <span className="flex items-center gap-2">
+          <IconUpload size={16} />
+          Click or drop an image
+        </span>
+      ) : null}
+    </div>
   );
 };

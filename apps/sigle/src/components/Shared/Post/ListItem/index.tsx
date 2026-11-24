@@ -1,7 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { IconDotsVertical } from "@tabler/icons-react";
+import { IconDots } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { BlurImage } from "@/components/ui/blur-image";
@@ -16,7 +16,6 @@ import { useSession } from "@/lib/auth-hooks";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
-import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../../NextLink";
 import { PostShareDialog } from "../PostShareDialog";
 
@@ -37,88 +36,78 @@ export const PostListItem = ({ post }: PostListItemProps) => {
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
   const isCurrentUser = me?.address === post.author.address;
+  const href = Routes.post({ postId: post.id });
 
   return (
-    <div className="space-y-3 border-b border-solid border-border py-5 last:border-b-0">
-      <div>
-        <div className="flex justify-between gap-5">
-          <div className="flex h-full flex-1 flex-col justify-between">
-            <NextLink href={Routes.post({ postId: post.id })}>
-              <h4
-                className="mb-2 line-clamp-2 text-lg/tight font-medium"
-                style={{
-                  wordBreak: "break-word",
-                }}
-              >
-                {post.metaTitle || post.title}
-              </h4>
-              <p className="line-clamp-1 text-sm text-muted-foreground md:line-clamp-2">
-                {post.metaDescription || post.excerpt}
-              </p>
-            </NextLink>
-            <div className="mt-2 flex items-center gap-2">
-              <p className="text-xs text-muted-foreground">
-                By{" "}
-                <NextLink
-                  className="text-primary underline decoration-muted-foreground/50 underline-offset-2"
-                  href={Routes.userProfile({
-                    username: post.author.address,
-                  })}
+    <li className="flex gap-6 border-b border-border py-6">
+      <div className="min-w-0 flex-1">
+        <NextLink href={href} className="group block">
+          <h3 className="line-clamp-2 headline text-xl/tight break-words underline-offset-4 group-hover:underline">
+            {post.metaTitle || post.title}
+          </h3>
+          <p className="mt-2 line-clamp-2 text-sm text-pretty text-muted-foreground">
+            {post.metaDescription || post.excerpt}
+          </p>
+        </NextLink>
+
+        <div className="mt-3 flex items-center gap-1">
+          <time
+            dateTime={post.createdAt}
+            className="font-mono text-xs text-muted-foreground uppercase"
+          >
+            {format(new Date(post.createdAt), "MMM d, yyyy")}
+          </time>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  variant="ghost"
+                  size="icon-xs"
+                  aria-label="Post actions"
+                  className="text-muted-foreground"
                 >
-                  {post.author.profile?.displayName ||
-                    formatReadableAddress(post.author.address)}
-                </NextLink>{" "}
-                • {format(new Date(post.createdAt), "MMM dd, yyyy")}
-              </p>
-              <DropdownMenu>
-                <DropdownMenuTrigger
+                  <IconDots size={14} />
+                </Button>
+              }
+            />
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => setShareDialogOpen(true)}>
+                Share
+              </DropdownMenuItem>
+              {isCurrentUser ? (
+                <DropdownMenuItem
                   render={
-                    <Button variant="ghost" size="icon-sm" title="More">
-                      <IconDotsVertical size={14} />
-                    </Button>
+                    <NextLink href={Routes.editPost({ postId: post.id })}>
+                      Edit
+                    </NextLink>
                   }
                 />
-                <DropdownMenuContent>
-                  <DropdownMenuItem onClick={() => setShareDialogOpen(true)}>
-                    Share & Earn
-                  </DropdownMenuItem>
-                  {isCurrentUser ? (
-                    <DropdownMenuItem
-                      render={
-                        <NextLink href={Routes.editPost({ postId: post.id })}>
-                          Edit
-                        </NextLink>
-                      }
-                    />
-                  ) : null}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-          {post.coverImage ? (
-            <NextLink href={Routes.post({ postId: post.id })}>
-              <div className="w-[100px] max-w-full overflow-hidden md:w-[200px]">
-                <div className="aspect-16/10">
-                  <BlurImage
-                    src={resolveImageUrl(post.coverImage.url)}
-                    alt="Cover card"
-                    className="size-full rounded-md object-cover"
-                    thumbhash={post.coverImage.thumbhash}
-                    width={post.coverImage.width}
-                    height={post.coverImage.height}
-                  />
-                </div>
-              </div>
-            </NextLink>
-          ) : null}
+              ) : null}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
+
+      {post.coverImage ? (
+        <NextLink href={href} className="shrink-0">
+          <div className="aspect-16/10 w-24 overflow-hidden rounded-md bg-muted md:w-40">
+            <BlurImage
+              src={resolveImageUrl(post.coverImage.url)}
+              alt="Cover card"
+              className="size-full object-cover"
+              thumbhash={post.coverImage.thumbhash}
+              width={post.coverImage.width}
+              height={post.coverImage.height}
+            />
+          </div>
+        </NextLink>
+      ) : null}
 
       <PostShareDialog
         post={post}
         open={shareDialogOpen}
         onOpenChange={setShareDialogOpen}
       />
-    </div>
+    </li>
   );
 };

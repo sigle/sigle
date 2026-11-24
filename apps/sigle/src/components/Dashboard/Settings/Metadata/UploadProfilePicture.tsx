@@ -1,23 +1,27 @@
-import { IconPencil } from "@tabler/icons-react";
+import type { paths } from "@sigle/sdk";
+import { IconUpload } from "@tabler/icons-react";
 import { usePostHog } from "posthog-js/react";
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Field, FieldTitle } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiClient } from "@/lib/sigle";
 
+type UploadResponse =
+  paths["/api/me/profile/images/{kind}"]["put"]["responses"][200]["content"]["application/json"];
+
 interface UploadProfilePictureProps {
   picture?: string;
-  setPicture: (picture: string) => void;
+  /** Stores the profile the upload saved the image on. */
+  onUploaded: (user: UploadResponse) => Promise<void>;
 }
 
 export const UploadProfilePicture = ({
   picture,
-  setPicture,
+  onUploaded,
 }: UploadProfilePictureProps) => {
   const posthog = usePostHog();
 
@@ -50,8 +54,9 @@ export const UploadProfilePicture = ({
           bodySerializer: () => file,
         },
         {
-          onSuccess: (data) => {
-            setPicture(data.url);
+          onSuccess: async (data) => {
+            await onUploaded(data);
+            toast.success("Picture updated!");
             posthog.capture("profile_image_upload_success", {});
           },
           onError: (error) => {
@@ -61,7 +66,7 @@ export const UploadProfilePicture = ({
         },
       );
     },
-    [posthog, uploadImage, setPicture, loadingUploadImage],
+    [posthog, uploadImage, onUploaded, loadingUploadImage],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -75,29 +80,31 @@ export const UploadProfilePicture = ({
   const resolvedPicture = picture ? resolveImageUrl(picture) : undefined;
 
   return (
-    <Field>
-      <FieldTitle>Profile Picture</FieldTitle>
-
-      <div className="flex">
-        <div className="relative cursor-pointer" {...getRootProps()}>
-          <input {...getInputProps()} />
-          <Avatar
-            className={cn("size-40 border border-border", {
-              "opacity-25": loadingUploadImage,
-            })}
-          >
-            <AvatarImage src={resolvedPicture} alt="Profile image" />
-            <AvatarFallback>
-              <IconPencil size={20} />
-            </AvatarFallback>
-          </Avatar>
-          {loadingUploadImage ? (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <Spinner />
-            </div>
-          ) : null}
-        </div>
+    <div
+      {...getRootProps()}
+      className="group flex w-fit cursor-pointer items-center gap-4"
+    >
+      <input {...getInputProps()} />
+      <div className="relative">
+        <Avatar
+          className={cn("size-16 border border-border", {
+            "opacity-25": loadingUploadImage,
+          })}
+        >
+          <AvatarImage src={resolvedPicture} alt="Profile image" />
+          <AvatarFallback>
+            <IconUpload size={18} className="text-muted-foreground" />
+          </AvatarFallback>
+        </Avatar>
+        {loadingUploadImage ? (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Spinner />
+          </div>
+        ) : null}
       </div>
-    </Field>
+      <span className="text-sm text-muted-foreground underline-offset-4 group-hover:text-foreground group-hover:underline">
+        {resolvedPicture ? "Replace picture" : "Upload picture"}
+      </span>
+    </div>
   );
 };

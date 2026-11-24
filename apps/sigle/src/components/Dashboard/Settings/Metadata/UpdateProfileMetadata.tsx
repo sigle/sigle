@@ -1,25 +1,12 @@
+import type { paths } from "@sigle/sdk";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createId } from "@paralleldrive/cuid2";
-import {
-  createProfileMetadata,
-  type paths,
-  ProfileMetadataSchemaId,
-} from "@sigle/sdk";
-import { request } from "@stacks/connect";
-import { IconAt, IconBrandX } from "@tabler/icons-react";
+import { IconAt } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Result } from "better-result";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
-import { useMultiStepToast } from "@/components/Shared/MultiStepToast";
 import { Button } from "@/components/ui/button";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
+import { FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   InputGroup,
@@ -28,6 +15,7 @@ import {
 } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
 import { sigleApiClient } from "@/lib/sigle";
+import { SettingsRow } from "../SettingsRow";
 import { UploadProfileCoverPicture } from "./UploadProfileCoverPicture";
 import { UploadProfilePicture } from "./UploadProfilePicture";
 
@@ -36,12 +24,13 @@ const updateProfileMetadataSchema = z.object({
   description: z.string().optional(),
   website: z.url().optional().or(z.literal("")),
   twitter: z.string().optional(),
-  picture: z.string().optional(),
-  coverPicture: z.string().optional(),
 });
 
 type UserResponse =
   paths["/api/users/{address}"]["get"]["responses"][200]["content"]["application/json"];
+
+type UploadResponse =
+  paths["/api/me/profile/images/{kind}"]["put"]["responses"][200]["content"]["application/json"];
 
 interface UpdateProfileMetadataProps {
   profile: UserResponse["profile"];
@@ -54,113 +43,118 @@ export const UpdateProfileMetadata = ({
 }: UpdateProfileMetadataProps) => {
   const queryClient = useQueryClient();
 
-  const {
-    start: startToast,
-    completeStep,
-    setStepError,
-  } = useMultiStepToast({
-    steps: [
-      { id: "signature", title: "Signing with Stacks wallet" },
-      { id: "upload", title: "Uploading data to Arweave" },
-    ],
-    successMessage: "Profile updated!",
-  });
+  const updateProfile = sigleApiClient.useMutation("put", "/api/me/profile");
 
-  const uploadProfileMetadata = sigleApiClient.useMutation(
-    "put",
-    "/api/me/profile",
+  const importBnsProfile = sigleApiClient.useMutation(
+    "get",
+    "/api/me/profile/bns",
   );
 
   const {
     register,
     handleSubmit,
     setValue,
-    getValues,
-    formState: { errors, isSubmitting },
+    formState: { errors, isDirty, isSubmitting },
   } = useForm({
     resolver: zodResolver(updateProfileMetadataSchema),
     values: {
       displayName: profile?.displayName || undefined,
       description: profile?.description || undefined,
-      picture: profile?.picture?.url || undefined,
-      coverPicture: profile?.coverPicture?.url || undefined,
       website: profile?.website || undefined,
       twitter: profile?.twitter || undefined,
     },
   });
 
-  const onSubmit = handleSubmit(async (formValues) => {
-    startToast();
-
-    const metadata = createProfileMetadata({
-      $schema: ProfileMetadataSchemaId.LATEST,
-      content: {
-        id: createId(),
-        displayName: formValues.displayName || undefined,
-        description: formValues.description || undefined,
-        twitter: formValues.twitter || undefined,
-        website: formValues.website || undefined,
-        picture: formValues.picture || undefined,
-        coverPicture: formValues.coverPicture || undefined,
-      },
-    });
-
-    let signature = "";
-
-    try {
-      const { signature: _, ...metadataToSign } = metadata;
-      const message = JSON.stringify(metadataToSign);
-
-      const response = await request("stx_signMessage", {
-        message,
-      });
-
-      signature = response.signature;
-    } catch (error) {
-      console.error(error);
-      setStepError(
-        "signature",
-        "Wallet signature request was cancelled or failed.",
-      );
-
-      return;
-    }
-
-    // Add the signature to the metadata
-    metadata.signature = signature;
-    completeStep("signature");
-
-    const data = await uploadProfileMetadata
-      .mutateAsync({
-        body: { metadata },
-      })
-      .then((result) => Result.ok(result))
-      .catch((error) => Result.err(error));
-
-    if (data.isErr()) {
-      setStepError(
-        "upload",
-        data.error.message ? data.error.message : data.error,
-      );
-
-      return;
-    }
-
-    // server-v2 stores the profile on upload and returns it, so the cached
-    // user is updated without fetching it again.
-    completeStep("upload");
-    const { address, profile: storedProfile } = data.value;
+  // The API returns the stored profile, so the cached user is updated
+  // without fetching it again.
+  const updateCachedProfile = async (
+    address: string,
+    update: (cached: UserResponse["profile"]) => UserResponse["profile"],
+  ) => {
     const userQueries = { queryKey: ["get", "/api/users/{address}"] };
-    // A refetch started before the upload, such as on window focus after the
-    // wallet prompt, would otherwise overwrite the cache with the old profile.
+    // A refetch started before the update, such as on window focus, would
+    // otherwise overwrite the cache with the old profile.
     await queryClient.cancelQueries(userQueries);
     queryClient.setQueriesData<UserResponse>(userQueries, (cached) =>
       cached?.address === address
-        ? { address, profile: storedProfile }
+        ? { ...cached, profile: update(cached.profile) }
         : cached,
     );
+  };
+
+  // The avatar and cover upload on their own and can overlap, so an upload
+  // only updates its own image: the other one in its response may be stale.
+  const onImageUploaded =
+    (field: "picture" | "coverPicture") =>
+    ({ address, profile: stored }: UploadResponse) =>
+      updateCachedProfile(address, (cached) => ({
+        ...(cached ?? stored),
+        [field]: stored[field],
+      }));
+
+  const onSubmit = handleSubmit(async (formValues) => {
+    const result = await updateProfile
+      .mutateAsync({
+        body: {
+          displayName: formValues.displayName || null,
+          description: formValues.description || null,
+          twitter: formValues.twitter || null,
+          website: formValues.website || null,
+        },
+      })
+      .catch((error: { message?: string }) => {
+        toast.error(error.message ?? "Failed to update your profile.");
+
+        return undefined;
+      });
+
+    if (result === undefined) {
+      return;
+    }
+
+    toast.success("Profile updated!");
+
+    await updateCachedProfile(result.address, () => result.profile);
     setEditingProfileMetadata(false);
   });
+
+  // Fills in the form with the profile of the user's BNS name, the user
+  // reviews it and saves. Only the fields the zonefile sets are replaced.
+  const onImportBns = () => {
+    importBnsProfile.mutate(
+      {},
+      {
+        onSuccess: ({ name, profile: bnsProfile }) => {
+          if (name === null) {
+            toast.error("Your address has no primary BNS name.");
+
+            return;
+          }
+
+          if (bnsProfile === null) {
+            toast.error(`${name} has no profile to import.`);
+
+            return;
+          }
+
+          for (const [field, value] of Object.entries(bnsProfile)) {
+            if (value !== null) {
+              // SAFETY: the BNS profile fields are a subset of the form's.
+              setValue(field as keyof typeof bnsProfile, value, {
+                shouldValidate: true,
+                shouldDirty: true,
+              });
+            }
+          }
+
+          toast.success(`Imported the profile of ${name}, review and save it.`);
+        },
+        onError: (error) => {
+          toast.error(error?.message ?? "Failed to read your BNS name.");
+        },
+      },
+    );
+  };
 
   const handleXChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     let value = event.target.value;
@@ -170,104 +164,114 @@ export const UpdateProfileMetadata = ({
       value = value.split("/").pop() || "";
     }
 
-    setValue("twitter", value, { shouldValidate: true });
+    setValue("twitter", value, { shouldValidate: true, shouldDirty: true });
   };
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <FieldGroup>
-        <Field>
-          <FieldLabel htmlFor="displayName">Name</FieldLabel>
-          <Input
-            id="displayName"
-            aria-invalid={!!errors.displayName}
-            placeholder="Your name"
-            {...register("displayName")}
-          />
-          {errors.displayName ? (
-            <FieldError>{errors.displayName.message}</FieldError>
-          ) : null}
-        </Field>
-
-        <Field>
-          <FieldLabel htmlFor="description">Description</FieldLabel>
-          <FieldDescription>
-            Markdown supported (limited to bold, italic, links)
-          </FieldDescription>
-          <Textarea
-            id="description"
-            aria-invalid={!!errors.description}
-            placeholder="Describe yourself in a few words (supports markdown)"
-            rows={4}
-            {...register("description")}
-          />
-          {errors.description ? (
-            <FieldError>{errors.description.message}</FieldError>
-          ) : null}
-        </Field>
-
-        <Field>
-          <FieldLabel htmlFor="website">Website</FieldLabel>
-          <Input
-            id="website"
-            aria-invalid={!!errors.website}
-            placeholder="https://my-website.com"
-            {...register("website")}
-          />
-          {errors.website ? (
-            <FieldError>{errors.website.message}</FieldError>
-          ) : null}
-        </Field>
-
-        <Field>
-          <FieldLabel htmlFor="twitter">
-            <IconBrandX height="16" width="16" /> (Twitter)
-          </FieldLabel>
-          <InputGroup>
-            <InputGroupInput
-              id="twitter"
-              aria-invalid={!!errors.twitter}
-              placeholder="username"
-              {...register("twitter")}
-              onChange={handleXChange}
-            />
-            <InputGroupAddon align="inline-start">
-              <IconAt size={16} className="text-muted-foreground" />
-            </InputGroupAddon>
-          </InputGroup>
-          {errors.twitter ? (
-            <FieldError>{errors.twitter.message}</FieldError>
-          ) : null}
-        </Field>
-
+    <form onSubmit={onSubmit}>
+      <SettingsRow label="Picture" description="A square JPG or PNG.">
         <UploadProfilePicture
-          picture={getValues("picture")}
-          setPicture={(value) =>
-            setValue("picture", value, { shouldValidate: true })
-          }
+          picture={profile?.picture?.url}
+          onUploaded={onImageUploaded("picture")}
         />
+      </SettingsRow>
 
+      <SettingsRow
+        label="Cover"
+        description="A wide JPG or PNG for the top of your blog."
+      >
         <UploadProfileCoverPicture
-          picture={getValues("coverPicture")}
-          setPicture={(value) =>
-            setValue("coverPicture", value, { shouldValidate: true })
-          }
+          picture={profile?.coverPicture?.url}
+          onUploaded={onImageUploaded("coverPicture")}
         />
+      </SettingsRow>
 
-        <Field orientation="horizontal" className="justify-end">
-          <Button
-            variant="outline"
-            type="button"
-            disabled={isSubmitting}
-            onClick={() => setEditingProfileMetadata(false)}
-          >
-            Cancel
-          </Button>
-          <Button type="submit" loading={isSubmitting}>
-            Save
-          </Button>
-        </Field>
-      </FieldGroup>
+      <SettingsRow label="Name" htmlFor="displayName">
+        <Input
+          id="displayName"
+          aria-invalid={!!errors.displayName}
+          placeholder="Your name"
+          {...register("displayName")}
+        />
+        {errors.displayName ? (
+          <FieldError>{errors.displayName.message}</FieldError>
+        ) : null}
+      </SettingsRow>
+
+      <SettingsRow
+        label="Bio"
+        htmlFor="description"
+        description="Markdown for bold, italic and links."
+      >
+        <Textarea
+          id="description"
+          aria-invalid={!!errors.description}
+          placeholder="Describe yourself in a few words"
+          rows={4}
+          {...register("description")}
+        />
+        {errors.description ? (
+          <FieldError>{errors.description.message}</FieldError>
+        ) : null}
+      </SettingsRow>
+
+      <SettingsRow label="Website" htmlFor="website">
+        <Input
+          id="website"
+          aria-invalid={!!errors.website}
+          placeholder="https://my-website.com"
+          {...register("website")}
+        />
+        {errors.website ? (
+          <FieldError>{errors.website.message}</FieldError>
+        ) : null}
+      </SettingsRow>
+
+      <SettingsRow label="X (Twitter)" htmlFor="twitter">
+        <InputGroup>
+          <InputGroupInput
+            id="twitter"
+            aria-invalid={!!errors.twitter}
+            placeholder="username"
+            {...register("twitter")}
+            onChange={handleXChange}
+          />
+          <InputGroupAddon align="inline-start">
+            <IconAt size={16} className="text-muted-foreground" />
+          </InputGroupAddon>
+        </InputGroup>
+        {errors.twitter ? (
+          <FieldError>{errors.twitter.message}</FieldError>
+        ) : null}
+      </SettingsRow>
+
+      <div className="flex items-center justify-end gap-2 pt-6">
+        <Button
+          variant="outline"
+          type="button"
+          className="mr-auto"
+          disabled={isSubmitting || importBnsProfile.isPending}
+          loading={importBnsProfile.isPending}
+          onClick={onImportBns}
+        >
+          Import from BNS
+        </Button>
+        <Button
+          variant="ghost"
+          type="button"
+          disabled={isSubmitting}
+          onClick={() => setEditingProfileMetadata(false)}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          disabled={!isDirty || isSubmitting}
+          loading={isSubmitting}
+        >
+          Save changes
+        </Button>
+      </div>
     </form>
   );
 };

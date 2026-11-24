@@ -33,6 +33,7 @@ export interface StorageUploader {
     readonly key: string;
     readonly version: string;
   }) => Effect.Effect<void, unknown>;
+  readonly deleteFile: (key: string) => Effect.Effect<void, unknown>;
 }
 
 export class StorageUploadError extends Data.TaggedError("StorageUploadError")<{
@@ -44,6 +45,8 @@ export interface StorageClient {
   readonly uploadFile: (
     options: StorageUploadOptions,
   ) => Effect.Effect<StoredObject, StorageUploadError>;
+  /** Deletes an object. Deleting a missing object succeeds. */
+  readonly deleteFile: (key: string) => Effect.Effect<void, StorageUploadError>;
 }
 
 const toStorageError = (cause: unknown): StorageUploadError =>
@@ -98,6 +101,11 @@ const makeR2Uploader = Effect.gen(function* () {
         ContentType: contentType,
         Metadata: { version },
       }).pipe(Effect.asVoid, Effect.provide(r2)),
+    deleteFile: (key) =>
+      S3.deleteObject({ Bucket: config.R2_BUCKET, Key: key }).pipe(
+        Effect.asVoid,
+        Effect.provide(r2),
+      ),
   } satisfies StorageUploader;
 });
 
@@ -130,6 +138,13 @@ export const makeStorageService = (uploader: StorageUploader) =>
 
           return toStoredObject(key, version);
         }),
+      deleteFile: (key: string) =>
+        uploader
+          .deleteFile(key)
+          .pipe(
+            Effect.mapError(toStorageError),
+            Effect.tapError(logStorageError("delete", key)),
+          ),
     } satisfies StorageClient;
   });
 
@@ -137,16 +152,21 @@ export const STORAGE_TEST_PUBLIC_URL = "https://cdn.test";
 
 export interface StorageTestRecorder {
   readonly uploads: Array<StorageUploadOptions>;
+  readonly deletes: Array<string>;
 }
 
 export const makeStorageTestRecorder = (): StorageTestRecorder => ({
   uploads: [],
+  deletes: [],
 });
 
 export interface StorageTestOverrides {
   readonly uploadFile?: (
     options: StorageUploadOptions,
   ) => Effect.Effect<StoredObject, StorageUploadError>;
+  readonly deleteFile?: (
+    key: string,
+  ) => Effect.Effect<void, StorageUploadError>;
 }
 
 export class StorageService extends Context.Service<
@@ -178,6 +198,11 @@ export class StorageService extends Context.Service<
             version: options.version,
           })
         );
+      },
+      deleteFile: (key) => {
+        recorder.deletes.push(key);
+
+        return overrides.deleteFile?.(key) ?? Effect.void;
       },
     }));
 }

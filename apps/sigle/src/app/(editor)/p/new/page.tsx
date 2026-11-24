@@ -1,8 +1,8 @@
 "use client";
 
-import * as Sentry from "@sentry/nextjs";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import posthog from "posthog-js";
+import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
@@ -22,12 +22,19 @@ export default function PostCreate() {
         toast.error("Failed to create post", {
           description: error.message,
         });
-        Sentry.captureException(error);
+        posthog.captureException(error);
       },
     },
   );
 
+  // React may run this effect twice for one mount, as Strict Mode does in
+  // development, and each run would create a draft.
+  const created = useRef(false);
+
   useEffect(() => {
+    if (created.current) return;
+
+    created.current = true;
     createPost({ body: {} });
   }, [createPost]);
 

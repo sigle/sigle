@@ -78,8 +78,8 @@ const MAX_PAYLOAD_ATTRIBUTE_LENGTH = 1024;
 const REDACTED_PAYLOAD_JSON = "[redacted]";
 
 /**
- * Serializes a job payload for error reporting, truncating it to keep Sentry
- * events and logs reasonably sized.
+ * Serializes a job payload for error reporting, truncating it to keep error
+ * reports and logs reasonably sized.
  */
 export const truncatePayload = <E>(
   payload: E,
@@ -110,7 +110,7 @@ const describeCause = (cause: Cause.Cause<unknown>): string => {
 };
 
 /**
- * Error used to report a permanently failed job to `ErrorReporter` (Sentry)
+ * Error used to report a permanently failed job to `ErrorReporter` (PostHog)
  * with the queue, job id, attempts, and a truncated payload attached as
  * reporter attributes. The original error is preserved as `cause`.
  */
@@ -252,7 +252,7 @@ export interface Job<
  *
  * Each job maps to a single queue named after the job, receives a typed payload
  * verified against `payload`, and gets a worker layer, retries with backoff,
- * Sentry reporting, and metrics for free.
+ * error reporting, and metrics for free.
  */
 export const defineJob = <
   S extends Schema.Constraint,
@@ -439,10 +439,13 @@ export const defineJob = <
             Effect.suspend(() => options.process(payload, meta)).pipe(
               Effect.timed,
               Effect.tap(([duration]) =>
-                Effect.all([
-                  Metric.update(durationMetric, duration),
-                  Metric.update(completedMetric, 1),
-                ]),
+                Effect.all(
+                  [
+                    Metric.update(durationMetric, duration),
+                    Metric.update(completedMetric, 1),
+                  ],
+                  { concurrency: 1 },
+                ),
               ),
               Effect.asVoid,
               Effect.catchCause((cause) => handleFailure(cause, payload, meta)),

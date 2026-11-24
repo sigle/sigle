@@ -16,3 +16,28 @@
   @apply pointer-events-none float-left h-0 animate-in text-muted-foreground/50 fade-in;
   content: attr(data-placeholder);
 }
+
+/* Code highlighting, kept close to monochrome: keywords stand out by weight,
+   strings and numbers by the accent color, and comments fade. */
+.editor pre .hljs-keyword,
+.editor pre .hljs-built_in,
+.editor pre .hljs-literal,
+.editor pre .hljs-type,
+.editor pre .hljs-selector-tag,
+.editor pre .hljs-meta {
+  @apply font-semibold;
+}
+
+.editor pre .hljs-string,
+.editor pre .hljs-number,
+.editor pre .hljs-regexp,
+.editor pre .hljs-symbol,
+.editor pre .hljs-attr,
+.editor pre .hljs-template-variable {
+  @apply text-accent;
+}
+
+.editor pre .hljs-comment,
+.editor pre .hljs-quote {
+  @apply text-muted-foreground italic;
+}

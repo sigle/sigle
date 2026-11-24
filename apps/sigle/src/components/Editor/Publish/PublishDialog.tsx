@@ -143,15 +143,17 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           });
         } catch (error) {
           console.error(error);
-          posthog.capture("post_publish_metadata_preparation_error", {
-            postId,
-            error,
-          });
 
           const errorMessage =
             error instanceof Error
               ? error.message
               : "Failed to prepare post metadata";
+
+          // An `Error` serializes to `{}`, so PostHog gets its message.
+          posthog.capture("post_publish_metadata_preparation_error", {
+            postId,
+            error: errorMessage,
+          });
 
           setStepError("preparing", errorMessage);
 
@@ -189,7 +191,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           console.error(error);
           posthog.capture("post_publish_sign_message_error", {
             postId,
-            error,
+            error: error instanceof Error ? error.message : String(error),
           });
           setStepError(
             "signature",
@@ -199,8 +201,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           return;
         }
 
-        // Add the signature to the metadata
-        metadata.signature = signature;
         completeStep("signature");
 
         const publishResult = await publishDraft({
@@ -210,7 +210,8 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             },
           },
           body: {
-            metadata,
+            // The API only accepts signed metadata.
+            metadata: { ...metadata, signature },
           },
         })
           .then((result) => Result.ok(result))
@@ -219,7 +220,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         if (publishResult.isErr()) {
           posthog.capture("post_publish_start_error", {
             postId,
-            error: publishResult.error,
+            error: publishResult.error.message,
           });
           setStepError(
             "arweave",
@@ -291,19 +292,21 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     <Dialog open={publishOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="headline text-2xl leading-tight">
             {publishingLoading
               ? type === "draft"
-                ? "Publishing post"
-                : "Updating post"
-              : "Review & Publish"}
+                ? "Publishing your story"
+                : "Updating your story"
+              : type === "draft"
+                ? "Ready to publish?"
+                : "Publish an update?"}
           </DialogTitle>
           <DialogDescription>
             {publishingLoading
               ? hasError
-                ? "An error occurred during publishing. You can retry or return to review."
-                : "Your post is being processed and published."
-              : "Review your post details before publishing."}
+                ? "Something went wrong. You can retry or go back to the review."
+                : "Keep this window open until it's done."
+              : "Your wallet signs the story, then it's archived on Arweave and timestamped on Bitcoin."}
           </DialogDescription>
         </DialogHeader>
 
@@ -314,15 +317,12 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             <MultiStep steps={steps} />
 
             {isSignaturePending && !hasError && (
-              <div className="flex items-center gap-3 rounded-lg border border-primary/20 bg-primary/5 p-3.5 text-xs font-medium text-primary">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
-                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-primary" />
+              <div className="flex items-center gap-3 border-y border-border py-3 text-sm">
+                <span className="relative flex size-2">
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-foreground opacity-50" />
+                  <span className="relative inline-flex size-2 rounded-full bg-foreground" />
                 </span>
-                <span>
-                  Action Required: Approve the signature request in your Stacks
-                  wallet.
-                </span>
+                <span>Approve the signature request in your wallet.</span>
               </div>
             )}
 
@@ -334,11 +334,11 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
                   size="sm"
                   onClick={handleBackToReview}
                 >
-                  <IconArrowLeft size={14} className="mr-1.5" />
+                  <IconArrowLeft size={14} />
                   Back to review
                 </Button>
                 <Button type="button" size="sm" onClick={onSubmit}>
-                  <IconRefresh size={14} className="mr-1.5" />
+                  <IconRefresh size={14} />
                   Retry
                 </Button>
               </div>

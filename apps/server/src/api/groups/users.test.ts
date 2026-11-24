@@ -19,6 +19,10 @@ const ErrorResponse = Schema.Struct({ message: Schema.String });
 
 const TEST_ADDRESS = "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM";
 
+const SECONDARY_ADDRESS = "ST2CY5V39NHDPWSXMW9QDT3HC3GD6Q6XX4CFRK9AG";
+
+const FREE_ADDRESS = "ST1SJ3DTE5DN7X54YDH5D64R3BCB6A2AG2ZQ8YPD5";
+
 const getUserRequest = (client: HttpClient.HttpClient, address: string) =>
   client.execute(HttpClientRequest.get(`/api/users/${address}`));
 
@@ -75,9 +79,51 @@ describe("users", () => {
         body: {
           address: TEST_ADDRESS,
           profile: null,
+          isExplorer: false,
         },
       });
     }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
+    "GET /api/users/:address gives the Explorer Guild badge to every wallet of a Pro user",
+    () =>
+      Effect.gen(function* () {
+        const client = yield* HttpClient.HttpClient;
+        const pro = yield* createTestUser({ plan: "pro" });
+        const free = yield* createTestUser();
+
+        yield* createTestWalletAddress({
+          userId: pro.id,
+          address: TEST_ADDRESS,
+        });
+        // A secondary wallet of the Pro user, with its own profile.
+        yield* createTestWalletAddress({
+          userId: pro.id,
+          address: SECONDARY_ADDRESS,
+          isPrimary: false,
+        });
+        yield* createTestProfile({
+          address: SECONDARY_ADDRESS,
+          displayName: "Nemo",
+        });
+        yield* createTestWalletAddress({
+          userId: free.id,
+          address: FREE_ADDRESS,
+        });
+
+        const isExplorer = (address: string) =>
+          getUserRequest(client, address).pipe(
+            Effect.flatMap(HttpClientResponse.schemaBodyJson(PublicUser)),
+            Effect.map((body) => body.isExplorer),
+          );
+
+        expect({
+          primary: yield* isExplorer(TEST_ADDRESS),
+          secondary: yield* isExplorer(SECONDARY_ADDRESS),
+          free: yield* isExplorer(FREE_ADDRESS),
+        }).toStrictEqual({ primary: true, secondary: true, free: false });
+      }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
   it.effect(
@@ -88,7 +134,6 @@ describe("users", () => {
 
         yield* createTestProfile({
           address: TEST_ADDRESS,
-          arweaveTxId: "arweave-profile-tx",
           displayName: "Alice",
         });
 
@@ -121,7 +166,6 @@ describe("users", () => {
 
         yield* createTestProfile({
           address: TEST_ADDRESS,
-          arweaveTxId: "arweave-profile-tx",
           displayName: "Alice",
           description: "Hello",
           website: "https://example.com",
@@ -154,7 +198,6 @@ describe("users", () => {
               height: null,
               thumbhash: null,
             },
-            arweaveTxId: "arweave-profile-tx",
           },
         });
         expect(response.status).toBe(200);
@@ -173,7 +216,6 @@ describe("users", () => {
 
         yield* createTestProfile({
           address: TEST_ADDRESS,
-          arweaveTxId: "arweave-profile-tx",
           picture,
           coverPicture,
         });
@@ -247,7 +289,6 @@ describe("users", () => {
 
         yield* createTestProfile({
           address: TEST_ADDRESS,
-          arweaveTxId: "arweave-profile-tx",
           displayName: "Alice",
         });
 

@@ -1,7 +1,6 @@
 import TipTapImageBase, { type ImageOptions } from "@tiptap/extension-image";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
-import { nanoid } from "nanoid";
 import { ImageComponent } from "./Component";
 
 declare module "@tiptap/core" {
@@ -156,7 +155,7 @@ export const TipTapImage = TipTapImageBase.extend<
 
           if (!uploadFile) return false;
 
-          const uploadId = nanoid();
+          const uploadId = crypto.randomUUID();
           // We show a preview of  the image image as uploading can take a while.
           const preview = URL.createObjectURL(file);
 
@@ -229,7 +228,7 @@ export const TipTapImage = TipTapImageBase.extend<
         node.type.name === "image" &&
         node.attrs.src?.startsWith("https://gaia.blockstack.org/hub/")
       ) {
-        const uploadId = nanoid();
+        const uploadId = crypto.randomUUID();
 
         const attrs = {
           ...node.attrs,

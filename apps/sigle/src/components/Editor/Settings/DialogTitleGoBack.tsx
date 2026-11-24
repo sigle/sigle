@@ -1,34 +1,21 @@
-import { IconChevronLeft } from "@tabler/icons-react";
-import { Button } from "@/components/ui/button";
-import {
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-} from "@/components/ui/drawer";
+import { IconArrowLeft } from "@tabler/icons-react";
+import { DrawerHeader, DrawerTitle } from "@/components/ui/drawer";
 import { useEditorStore } from "../store";
 
-export const DialogTitleGoBack = ({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) => {
+export const DialogTitleGoBack = ({ title }: { title: string }) => {
   const setMenuOpen = useEditorStore((state) => state.setMenuOpen);
 
   return (
-    <DrawerHeader className="mb-5 flex flex-row items-center">
-      <Button
-        className="mr-2"
-        variant="ghost"
+    <DrawerHeader className="px-0 pt-6">
+      <button
+        type="button"
+        className="inline-flex w-fit items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
         onClick={() => setMenuOpen(true)}
       >
-        <IconChevronLeft size={24} />
-      </Button>
-      <div>
-        <DrawerTitle>{title}</DrawerTitle>
-        <DrawerDescription>{description}</DrawerDescription>
-      </div>
+        <IconArrowLeft size={16} />
+        Post settings
+      </button>
+      <DrawerTitle className="mt-3 headline text-2xl">{title}</DrawerTitle>
     </DrawerHeader>
   );
 };

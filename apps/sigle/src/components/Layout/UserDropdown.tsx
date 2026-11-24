@@ -6,6 +6,7 @@ import {
   IconPencil,
   IconSettings,
   IconSun,
+  IconUser,
 } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
 import { usePostHog } from "posthog-js/react";
@@ -18,7 +19,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
 import { useSession } from "@/lib/auth-hooks";
+import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
+import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../Shared/NextLink";
 import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";
 
@@ -58,7 +61,8 @@ export const UserDropdown = () => {
         render={
           <button
             type="button"
-            className="cursor-pointer transition hover:opacity-85"
+            aria-label="Account menu"
+            className="cursor-pointer rounded-md transition outline-none hover:opacity-85 focus-visible:ring-3 focus-visible:ring-ring/50"
           >
             <ProfileAvatar
               user={user ?? { address: me?.address ?? session.user.id }}
@@ -67,12 +71,34 @@ export const UserDropdown = () => {
           </button>
         }
       />
-      <DropdownMenuContent align="end" className="w-40">
-        {me?.whitelisted ? (
+      <DropdownMenuContent align="end" sideOffset={8} className="w-56">
+        {me?.address ? (
+          <>
+            <div className="px-1.5 pt-1 pb-2">
+              {user?.profile?.displayName ? (
+                <p className="mb-0.5 truncate text-sm font-medium">
+                  {user.profile.displayName}
+                </p>
+              ) : null}
+              <p className="font-mono text-xs text-muted-foreground">
+                {formatReadableAddress(me.address)}
+              </p>
+            </div>
+            <DropdownMenuSeparator />
+          </>
+        ) : null}
+        <DropdownMenuItem
+          render={
+            <NextLink href="/p/new">
+              <IconPencil className="text-muted-foreground" /> Write a post
+            </NextLink>
+          }
+        />
+        {me?.address ? (
           <DropdownMenuItem
             render={
-              <NextLink href="/p/new">
-                <IconPencil size={16} /> Write a post
+              <NextLink href={Routes.userProfile({ username: me.address })}>
+                <IconUser className="text-muted-foreground" /> View blog
               </NextLink>
             }
           />
@@ -80,7 +106,7 @@ export const UserDropdown = () => {
         <DropdownMenuItem
           render={
             <NextLink href="/dashboard/settings">
-              <IconSettings size={16} /> Settings
+              <IconSettings className="text-muted-foreground" /> Settings
             </NextLink>
           }
         />
@@ -88,16 +114,16 @@ export const UserDropdown = () => {
         <DropdownMenuItem onClick={onThemeChange}>
           {resolvedTheme === "dark" ? (
             <>
-              <IconSun size={16} /> Light
+              <IconSun className="text-muted-foreground" /> Light mode
             </>
           ) : (
             <>
-              <IconMoon size={16} /> Dark
+              <IconMoon className="text-muted-foreground" /> Dark mode
             </>
           )}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={logout}>
-          <IconLogout size={16} /> Log out
+          <IconLogout className="text-muted-foreground" /> Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

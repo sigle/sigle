@@ -1,5 +1,12 @@
 import { describe, expect, it } from "@effect/vitest";
-import { Effect, Layer, Option, Predicate, Schema } from "effect";
+import {
+  Effect,
+  ErrorReporter,
+  Layer,
+  Option,
+  Predicate,
+  Schema,
+} from "effect";
 import {
   Headers,
   HttpClient,
@@ -11,6 +18,7 @@ import { TestClock } from "effect/testing";
 import { type IncomingHttpHeaders, request as httpRequest } from "node:http";
 import type { AppConfigValues } from "@/config";
 import { RATE_LIMITS } from "@/api/middleware/rate-limit";
+import { makeErrorReporter } from "@/services/telemetry";
 import { createAuthenticatedClient } from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 import packageJson from "../../package.json" with { type: "json" };
@@ -227,7 +235,6 @@ describe("http server", () => {
         ),
         createDraft: body.components.schemas["CreateDraftPayload"],
         postMetadata: body.components.schemas["PostMetadata"],
-        profileMetadata: body.components.schemas["ProfileMetadata"],
       }).toStrictEqual({
         status: 200,
         openapi: true,
@@ -240,6 +247,7 @@ describe("http server", () => {
           "/api/drafts",
           "/api/drafts/{draftId}",
           "/api/me/profile",
+          "/api/me/profile/bns",
           "/api/me/profile/images/{kind}",
           "/api/drafts/{draftId}/images",
         ]),
@@ -277,13 +285,9 @@ describe("http server", () => {
             },
           }),
         }),
-        // Signed metadata schemas are generated from the `@sigle/sdk` zod
-        // schemas instead of being documented as opaque values.
+        // The signed post metadata schema is generated from the `@sigle/sdk`
+        // zod schema instead of being documented as opaque values.
         postMetadata: expect.objectContaining({
-          type: "object",
-          required: expect.arrayContaining(["$schema", "content"]),
-        }),
-        profileMetadata: expect.objectContaining({
           type: "object",
           required: expect.arrayContaining(["$schema", "content"]),
         }),
@@ -389,6 +393,35 @@ describe("http server", () => {
       expect(response.status).toBe(200);
     }).pipe(Effect.provide(serverLayer())),
   );
+
+  it.effect("does not report client errors", () => {
+    const captured: Array<string> = [];
+
+    const reporter = makeErrorReporter({
+      captureException: (error) => {
+        captured.push(error.name);
+      },
+    });
+
+    return Effect.gen(function* () {
+      const anonymous = yield* HttpClient.HttpClient;
+      const unauthorized = yield* anonymous.get("/api/me");
+      const { client } = yield* createAuthenticatedClient();
+      const notFound = yield* client.get("/api/drafts/missing");
+      const badRequest = yield* client.get("/api/drafts?limit=0");
+
+      expect({
+        statuses: [unauthorized.status, notFound.status, badRequest.status],
+        captured,
+      }).toStrictEqual({ statuses: [401, 404, 400], captured: [] });
+    }).pipe(
+      Effect.provide(
+        makeTestServerLayer().pipe(
+          Layer.provide(ErrorReporter.layer([reporter])),
+        ),
+      ),
+    );
+  });
 
   it.effect("adds CORS headers for the configured app origin", () =>
     Effect.gen(function* () {

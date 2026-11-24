@@ -1,15 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import { env } from "@/env";
 import { cn } from "@/lib/cn";
+import { inter, newsreader } from "./fonts";
 import { Providers } from "./providers";
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL(env.NEXT_PUBLIC_APP_URL),
@@ -46,7 +40,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         // oxlint-disable-next-line better-tailwindcss/no-unknown-classes
-        className={cn(inter.className, "root antialiased")}
+        className={cn(inter.className, newsreader.variable, "root antialiased")}
         suppressHydrationWarning
       >
         <Providers>{children}</Providers>

@@ -68,6 +68,9 @@ export default defineRailway(() => {
       API_INTERNAL_URL:
         // oxlint-disable-next-line no-template-curly-in-string Railway references
         "http://${{server.RAILWAY_PRIVATE_DOMAIN}}:${{server.PORT}}",
+      // Secret, set from 1Password by scripts/sync-railway-env.sh. Read at
+      // build time to upload the source maps to PostHog.
+      POSTHOG_PERSONAL_API_KEY: preserve(),
     },
   });
 
@@ -118,6 +121,9 @@ export default defineRailway(() => {
       LITESTREAM_ACCESS_KEY_ID: preserve(),
       LITESTREAM_BUCKET: preserve(),
       LITESTREAM_SECRET_ACCESS_KEY: preserve(),
+      // Key of the server's own PostHog project, for its events and errors.
+      // Kept secret so only the server can send to that project.
+      POSTHOG_API_KEY: preserve(),
       R2_ACCESS_KEY_ID: preserve(),
       R2_BUCKET: preserve(),
       R2_ENDPOINT: preserve(),

@@ -1,18 +1,31 @@
-import {
-  IconCircleCheck,
-  IconInfoCircle,
-  IconPencil,
-} from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
+
+const ReviewRow = ({
+  label,
+  value,
+  action,
+}: {
+  label: string;
+  value: string;
+  action?: { label: string; onClick: () => void };
+}) => (
+  <div className="flex items-center justify-between gap-4 border-b border-border py-3 text-sm">
+    <span className="text-muted-foreground">{label}</span>
+    {action ? (
+      <button
+        type="button"
+        onClick={action.onClick}
+        className="underline underline-offset-4 hover:text-muted-foreground"
+      >
+        {action.label}
+      </button>
+    ) : (
+      <span className="truncate">{value}</span>
+    )}
+  </div>
+);
 
 export const PublishReviewGeneral = () => {
   const { getValues } = useFormContext<EditorPostFormData>();
@@ -21,58 +34,37 @@ export const PublishReviewGeneral = () => {
   const data = getValues();
 
   const isMetaConfigured = data.metaTitle && data.metaDescription;
+  const tags = data.tags ?? [];
 
-  const openMetaSettings = () => {
+  const openSettings = (menu: true | "meta") => {
     setPublishOpen(false);
-    setMenuOpen("meta");
+    setMenuOpen(menu);
   };
 
   return (
-    <Card>
-      <CardHeader className="border-b">
-        <CardTitle className="text-base">General settings</CardTitle>
-      </CardHeader>
-      <CardContent className="-my-3">
-        <div className="flex justify-between py-3">
-          <p className="text-sm text-muted-foreground">Meta SEO</p>
-          {isMetaConfigured ? (
-            <Badge variant="secondary">
-              <IconCircleCheck size={12} /> Configured
-            </Badge>
-          ) : (
-            <Badge
-              className="cursor-pointer"
-              variant="outline"
-              onClick={openMetaSettings}
-            >
-              <IconPencil size={12} /> Not configured
-            </Badge>
-          )}
-        </div>
-        <div className="flex justify-between border-t border-solid border-border py-3">
-          <p className="text-sm text-muted-foreground">Cover image</p>
-          <p className="text-sm">
-            {data.coverImage ? (
-              <Badge variant="secondary">
-                <IconCircleCheck size={12} /> Configured
-              </Badge>
-            ) : (
-              <Tooltip>
-                <TooltipTrigger
-                  render={
-                    <Badge variant="outline">
-                      <IconInfoCircle size={12} /> Not configured
-                    </Badge>
-                  }
-                />
-                <TooltipContent>
-                  Publications with a cover image tend to perform better
-                </TooltipContent>
-              </Tooltip>
-            )}
-          </p>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="border-t border-border">
+      <ReviewRow
+        label="Search and social preview"
+        value="Set"
+        action={
+          isMetaConfigured
+            ? undefined
+            : { label: "Add", onClick: () => openSettings("meta") }
+        }
+      />
+      <ReviewRow
+        label="Cover image"
+        value={data.coverImage ? "Added" : "None"}
+      />
+      <ReviewRow
+        label="Tags"
+        value={tags.join(", ")}
+        action={
+          tags.length > 0
+            ? undefined
+            : { label: "Add", onClick: () => openSettings(true) }
+        }
+      />
+    </div>
   );
 };

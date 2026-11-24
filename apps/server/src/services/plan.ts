@@ -1,22 +1,15 @@
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
-import { and, eq, gt, gte, inArray, isNotNull, ne } from "drizzle-orm";
-import { Context, Data, Effect, Layer, Option, Redacted, Schema } from "effect";
+import { and, eq, gte, inArray, isNotNull, ne, type SQL } from "drizzle-orm";
+import { Context, Data, Effect, Layer, Schema } from "effect";
 import {
   FetchHttpClient,
-  HttpClient,
   HttpClientRequest,
   HttpClientResponse,
 } from "effect/http";
 import { AppConfig } from "@/config";
 import { Database, type DatabaseClient } from "@/db";
-import {
-  draft,
-  post,
-  profileUpdate,
-  user,
-  type userPlans,
-  walletAddress,
-} from "@/db/schema";
+import { draft, post, user, type userPlans, walletAddress } from "@/db/schema";
+import { makeStacksApiClient, STACKS_API_TIMEOUT } from "@/services/stacks-api";
 
 export type UserPlan = (typeof userPlans)[number];
 
@@ -28,12 +21,6 @@ export const PUBLISH_LIMITS: Record<UserPlan, number> = {
   free: 3,
   pro: 20,
 };
-
-/**
- * Profile updates a user can make per {@link DAILY_LIMIT_WINDOW_MILLIS}, on
- * every plan.
- */
-export const PROFILE_UPDATE_LIMIT = 10;
 
 /**
  * Usage of a daily limit from the times of the counted actions: how many, and
@@ -50,27 +37,29 @@ const toDailyUsage = (times: ReadonlyArray<Date>) => ({
         ),
 });
 
+interface PublishUsageOptions {
+  readonly now: Date;
+  /**
+   * The draft being published, left out: its earlier publish request is
+   * replaced by this one.
+   */
+  readonly excludeDraftId?: string;
+}
+
 /**
- * Publishes of a user counted against their daily limit, and when the oldest
- * of them leaves the window (null when none): the posts they published from a
- * draft in the last 24 hours, and their drafts being published. Posts indexed
- * from Arweave have no draft and do not count, nor do failed publishes.
+ * Publishes counted against a daily limit, and when the oldest of them leaves
+ * the window (null when none): the posts published from a draft in the last 24
+ * hours, and the drafts being published. Posts indexed from Arweave have no
+ * draft and do not count, nor do failed publishes. A single statement, so a
+ * draft turning into a post meanwhile is counted once.
  *
- * `excludeDraftId` leaves out the draft being published, whose earlier publish
- * request it replaces. A single statement, so a draft turning into a post
- * meanwhile is counted once.
+ * `isCounted` selects whose publishes count from their user ID column, so the
+ * per-user and per-plan limits count publishes the same way.
  */
-export const findPublishUsage = (
+const findPublishUsage = (
   db: DatabaseClient,
-  {
-    userId,
-    now,
-    excludeDraftId,
-  }: {
-    readonly userId: string;
-    readonly now: Date;
-    readonly excludeDraftId?: string;
-  },
+  isCounted: (userIdColumn: typeof post.userId | typeof draft.userId) => SQL,
+  { now, excludeDraftId }: PublishUsageOptions,
 ) =>
   Effect.gen(function* () {
     const windowStart = new Date(now.getTime() - DAILY_LIMIT_WINDOW_MILLIS);
@@ -80,7 +69,7 @@ export const findPublishUsage = (
       .from(post)
       .where(
         and(
-          eq(post.userId, userId),
+          isCounted(post.userId),
           isNotNull(post.draftId),
           gte(post.createdAt, windowStart),
         ),
@@ -91,7 +80,7 @@ export const findPublishUsage = (
           .from(draft)
           .where(
             and(
-              eq(draft.userId, userId),
+              isCounted(draft.userId),
               inArray(draft.txStatus, ["PENDING", "PROCESSING"]),
               // A publish stuck in flight for a day no longer counts.
               gte(draft.updatedAt, windowStart),
@@ -107,34 +96,31 @@ export const findPublishUsage = (
   });
 
 /**
- * Profile updates of a user counted against their daily limit, see
- * {@link toDailyUsage}: the successful updates of the last 24 hours, across all
- * their addresses.
+ * Publishes of a user counted against their daily limit, see
+ * {@link findPublishUsage}.
  */
-export const findProfileUpdateUsage = (
+export const findUserPublishUsage = (
   db: DatabaseClient,
-  { userId, now }: { readonly userId: string; readonly now: Date },
+  { userId, ...options }: PublishUsageOptions & { readonly userId: string },
+) => findPublishUsage(db, (userIdColumn) => eq(userIdColumn, userId), options);
+
+/**
+ * Publishes of every user currently on a plan, counted against the global
+ * daily limit of the plan, see {@link findPublishUsage}.
+ */
+export const findPlanPublishUsage = (
+  db: DatabaseClient,
+  { plan, ...options }: PublishUsageOptions & { readonly plan: UserPlan },
 ) =>
-  Effect.gen(function* () {
-    const updates = yield* db
-      .select({ at: profileUpdate.createdAt })
-      .from(profileUpdate)
-      .where(
-        and(
-          eq(profileUpdate.userId, userId),
-          // An update stops counting at its reset time.
-          gt(
-            profileUpdate.createdAt,
-            new Date(now.getTime() - DAILY_LIMIT_WINDOW_MILLIS),
-          ),
-        ),
-      )
-      .pipe(Effect.orDie);
-
-    return toDailyUsage(updates.map(({ at }) => at));
-  });
-
-const STACKS_API_TIMEOUT = "10 seconds";
+  findPublishUsage(
+    db,
+    (userIdColumn) =>
+      inArray(
+        userIdColumn,
+        db.select({ id: user.id }).from(user).where(eq(user.plan, plan)),
+      ),
+    options,
+  );
 
 const NftBalancesResponse = Schema.Struct({ total: Schema.Int });
 
@@ -168,23 +154,7 @@ export const makePlanService = Effect.gen(function* () {
   const config = yield* AppConfig;
   const db = yield* Database;
 
-  const stacksApi = (yield* HttpClient.HttpClient).pipe(
-    HttpClient.mapRequest(
-      HttpClientRequest.prependUrl(config.STACKS_API_URL.replace(/\/+$/, "")),
-    ),
-    HttpClient.mapRequest((request) =>
-      Option.match(config.HIRO_API_KEY, {
-        onNone: () => request,
-        onSome: (apiKey) =>
-          HttpClientRequest.setHeader(
-            request,
-            "x-api-key",
-            Redacted.value(apiKey),
-          ),
-      }),
-    ),
-    HttpClient.filterStatusOk,
-  );
+  const stacksApi = yield* makeStacksApiClient;
 
   const hasTegNft = (address: string) =>
     Effect.gen(function* () {

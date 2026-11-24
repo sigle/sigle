@@ -1,5 +1,5 @@
 import type { Editor } from "@tiptap/react";
-import { IconX } from "@tabler/icons-react";
+import { IconCheck, IconX } from "@tabler/icons-react";
 import { cn } from "@/lib/cn";
 import { useBubbleMenuStore } from "./store";
 
@@ -9,11 +9,15 @@ const BubbleMenuButton = ({
 }: { active: boolean } & React.ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button
     type="button"
+    aria-pressed={active}
     {...props}
-    className={cn({
-      "text-background": !active,
-      "text-accent": active,
-    })}
+    className={cn(
+      "flex size-7 items-center justify-center rounded-md transition-colors hover:bg-muted hover:text-foreground",
+      {
+        "text-muted-foreground": !active,
+        "bg-muted text-foreground": active,
+      },
+    )}
   />
 );
 
@@ -75,21 +79,26 @@ export const EditorBubbleMenuLink = ({ editor }: EditorBubbleMenuProps) => {
   };
 
   return (
-    <form className="flex" onSubmit={onSubmitLink}>
+    <form className="flex items-center gap-1" onSubmit={onSubmitLink}>
       <input
-        className="h-[16px] w-full bg-transparent pr-1 pl-2 text-sm text-white outline-none"
+        aria-label="Link URL"
+        className="h-7 w-56 bg-transparent px-2 text-sm outline-none placeholder:text-muted-foreground"
         value={linkValue}
         onKeyDown={onKeyDown}
         onChange={(e) => setLinkValue(e.target.value)}
-        placeholder="Enter link ..."
+        placeholder="Paste or type a link"
         autoFocus
       />
+      <BubbleMenuButton type="submit" aria-label="Apply link" active={false}>
+        <IconCheck size={16} />
+      </BubbleMenuButton>
       <BubbleMenuButton
         type="button"
+        aria-label="Cancel"
         onClick={() => resetLink()}
         active={false}
       >
-        <IconX size={18} />
+        <IconX size={16} />
       </BubbleMenuButton>
     </form>
   );

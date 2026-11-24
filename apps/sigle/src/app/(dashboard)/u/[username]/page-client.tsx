@@ -28,6 +28,8 @@ export function UserClientPage(props: Props) {
         },
       },
     },
+    // The page on the server hydrates this query with a fresh result.
+    { staleTime: 60_000 },
   );
 
   if (!user) {
@@ -37,10 +39,10 @@ export function UserClientPage(props: Props) {
   return (
     <FadeSlideBottom>
       <ProfileHeader user={user} />
-      <div className="mx-auto mt-4 max-w-2xl px-4 pb-20">
+      <div className="mx-auto max-w-2xl px-4 pb-20">
         <ProfileInfo user={user} />
 
-        <h3 className="mt-10 text-base font-medium">Latest posts</h3>
+        <h2 className="mt-12 headline text-2xl">Posts</h2>
 
         <Suspense fallback={<ProfileFeedSkeleton />}>
           <ProfileFeed user={user} />

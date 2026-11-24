@@ -18,6 +18,7 @@ PROJECT_ID="8d9c9801-6167-42e8-85a0-2b5d9a322649"
 # View environment > Manage environment > Copy environment ID.
 TARGETS="
 testnet server nno43tjcaj3qr4lh2xheon5xmu
+testnet web 67vnasjviroe2a6by4jdb5veaa
 "
 
 if [ $# -lt 1 ] || [ $# -gt 2 ]; then
@@ -42,9 +43,13 @@ secret_names() {
 check_service() {
   local service="$1" op_environment="$2"
 
-  NAMES="$(secret_names "$op_environment")" SERVICE="$service" CR=$'\r' LF=$'\n' \
+  # CR and LF are defined inside: `op run` empties whitespace-only variables,
+  # and an empty pattern would flag every value.
+  NAMES="$(secret_names "$op_environment")" SERVICE="$service" \
     op run --environment "$op_environment" -- bash -c '
       set -euo pipefail
+      CR=$'"'"'\r'"'"'
+      LF=$'"'"'\n'"'"'
       status=0
       for key in $NAMES; do
         case "${!key}" in

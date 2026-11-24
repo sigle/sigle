@@ -13,7 +13,6 @@ import { makeTestServerLayer } from "@/test/server";
 const CurrentUserResponse = Schema.Struct({
   id: Schema.String,
   address: Schema.String,
-  whitelisted: Schema.Boolean,
   plan: Schema.Literals(["free", "pro"]),
 });
 
@@ -34,7 +33,7 @@ describe("userAuthMiddleware", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("provides the current user for whitelisted users", () =>
+  it.effect("provides the current user", () =>
     Effect.gen(function* () {
       const { client, userId, address } = yield* createAuthenticatedClient();
 
@@ -47,7 +46,6 @@ describe("userAuthMiddleware", () => {
       expect(body).toStrictEqual({
         id: userId,
         address,
-        whitelisted: true,
         plan: "free",
       });
     }).pipe(Effect.provide(makeTestServerLayer())),
@@ -65,52 +63,17 @@ describe("userAuthMiddleware", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("reports non-whitelisted users", () =>
+  it.effect("lets every signed-in mainnet user use the drafts API", () =>
     Effect.gen(function* () {
-      const { client, userId, address } = yield* createAuthenticatedClient();
-
-      const response = yield* client.get("/api/me");
-
-      const body =
-        yield* HttpClientResponse.schemaBodyJson(CurrentUserResponse)(response);
-
-      expect(response.status).toBe(200);
-      expect(body).toStrictEqual({
-        id: userId,
-        address,
-        whitelisted: false,
-        plan: "free",
+      const { client } = yield* createAuthenticatedClient({
+        address: createTestSiwsCredentials("mainnet").address,
       });
-    }).pipe(
-      Effect.provide(
-        makeTestServerLayer({
-          STACKS_ENV: "mainnet",
-          // Keeps the mainnet NFT check offline: the failed lookup reports
-          // `free`.
-          STACKS_API_URL: "http://127.0.0.1:9",
-        }),
-      ),
-    ),
-  );
-
-  it.effect("whitelists mainnet wallets in WHITELISTED_ADDRESSES", () => {
-    const { address } = createTestSiwsCredentials();
-
-    return Effect.gen(function* () {
-      const { client } = yield* createAuthenticatedClient({ address });
 
       const response = yield* client.get("/api/drafts");
 
       expect(response.status).toBe(200);
-    }).pipe(
-      Effect.provide(
-        makeTestServerLayer({
-          STACKS_ENV: "mainnet",
-          WHITELISTED_ADDRESSES: [address],
-        }),
-      ),
-    );
-  });
+    }).pipe(Effect.provide(makeTestServerLayer({ STACKS_ENV: "mainnet" }))),
+  );
 
   it.effect("reports the stored plan, not the wallet holdings", () => {
     const { address: eligibleAddress } = createTestSiwsCredentials();
@@ -123,13 +86,16 @@ describe("userAuthMiddleware", () => {
         address: eligibleAddress,
       });
 
-      const plans = yield* Effect.forEach([pro, eligible], ({ client }) =>
-        client.get("/api/me").pipe(
-          Effect.flatMap(
-            HttpClientResponse.schemaBodyJson(CurrentUserResponse),
+      const plans = yield* Effect.forEach(
+        [pro, eligible],
+        ({ client }) =>
+          client.get("/api/me").pipe(
+            Effect.flatMap(
+              HttpClientResponse.schemaBodyJson(CurrentUserResponse),
+            ),
+            Effect.map((body) => body.plan),
           ),
-          Effect.map((body) => body.plan),
-        ),
+        { concurrency: 1 },
       );
 
       expect(plans).toStrictEqual(["pro", "free"]);
@@ -137,18 +103,4 @@ describe("userAuthMiddleware", () => {
       Effect.provide(makeTestServerLayer({ PRO_ADDRESSES: [eligibleAddress] })),
     );
   });
-
-  it.effect("returns 403 when the user is not whitelisted", () =>
-    Effect.gen(function* () {
-      const { client } = yield* createAuthenticatedClient();
-
-      const response = yield* client.get("/api/drafts");
-
-      const body =
-        yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
-
-      expect(response.status).toBe(403);
-      expect(body.message).toBe("User is not whitelisted");
-    }).pipe(Effect.provide(makeTestServerLayer({ STACKS_ENV: "mainnet" }))),
-  );
 });

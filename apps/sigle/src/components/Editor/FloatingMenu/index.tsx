@@ -46,8 +46,15 @@ export const EditorFloatingMenu = ({ editor }: EditorFloatingMenuProps) => {
         );
       }}
     >
-      <Button size="icon" variant="ghost" onClick={handleButtonClick}>
-        <IconPlus width={14} height={14} />
+      <Button
+        size="icon-xs"
+        variant="outline"
+        aria-label="Insert a block"
+        title="Insert a block"
+        className="mr-3 rounded-full text-muted-foreground hover:text-foreground"
+        onClick={handleButtonClick}
+      >
+        <IconPlus size={14} />
       </Button>
     </TipTapFloatingMenu>
   );

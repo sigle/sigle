@@ -1,7 +1,6 @@
 import { IconX } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
 import { WithContext as ReactTags, type Tag } from "react-tag-input";
-import { cn } from "@/lib/cn";
 import type { EditorPostFormData } from "../EditorFormProvider";
 
 export const GeneralSettings = () => {
@@ -44,20 +43,22 @@ export const GeneralSettings = () => {
   }));
 
   return (
-    <div className="border-b border-border p-4">
-      <p className="mb-2 font-medium">Tags (max 5)</p>
+    <div className="border-b border-border py-4">
+      <p className="text-sm font-medium">Tags</p>
+      <p className="mt-1 mb-3 text-sm text-muted-foreground">
+        Up to 5, shown above the title of your post.
+      </p>
       <ReactTags
         autoFocus={false}
         classNames={{
-          tags: "text-2",
+          tags: "text-sm",
           tagInput: "flex gap-2",
-          clearAll: "whitespace-nowrap",
+          clearAll:
+            "whitespace-nowrap text-xs text-muted-foreground hover:text-foreground",
           tagInputField:
-            "h-8 rounded-md border border-border pl-3.5 w-full focus:outline-accent",
-          selected: "mt-2 flex gap-2 flex-wrap",
-          tag: cn(
-            "inline-flex h-5 gap-1 rounded-4xl border border-transparent bg-secondary px-2 py-0.5 text-xs font-medium whitespace-nowrap text-secondary-foreground transition-colors focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-none [a]:hover:bg-secondary/80",
-          ),
+            "h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+          selected: "mt-3 flex flex-wrap gap-2",
+          tag: "inline-flex h-6 items-center gap-1 rounded-md border border-border px-2 font-mono text-xs whitespace-nowrap",
         }}
         tags={formattedTags}
         inputFieldPosition="top"
@@ -68,8 +69,13 @@ export const GeneralSettings = () => {
         onClearAll={handleClearAll}
         maxTags={5}
         removeComponent={({ onRemove }) => (
-          <button type="button" onClick={onRemove} className="text-primary">
-            <IconX size={14} />
+          <button
+            type="button"
+            onClick={onRemove}
+            aria-label="Remove tag"
+            className="text-muted-foreground hover:text-foreground"
+          >
+            <IconX size={12} />
           </button>
         )}
       />

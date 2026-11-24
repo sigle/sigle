@@ -5,7 +5,6 @@ import {
   IconItalic,
   IconLink,
   IconStrikethrough,
-  IconUnderline,
 } from "@tabler/icons-react";
 import { isTextSelection, useEditorState } from "@tiptap/react";
 import { BubbleMenu as TipTapBubbleMenu } from "@tiptap/react/menus";
@@ -20,11 +19,15 @@ const BubbleMenuButton = ({
 }: { active: boolean } & React.ButtonHTMLAttributes<HTMLButtonElement>) => (
   <button
     type="button"
+    aria-pressed={active}
     {...props}
-    className={cn({
-      "text-background": !active,
-      "text-accent": active,
-    })}
+    className={cn(
+      "flex size-7 items-center justify-center rounded-md transition-colors hover:bg-muted hover:text-foreground",
+      {
+        "text-muted-foreground": !active,
+        "bg-muted text-foreground": active,
+      },
+    )}
   />
 );
 
@@ -40,7 +43,6 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
   const {
     isActiveBold,
     isActiveItalic,
-    isActiveUnderline,
     isActiveStrike,
     isActiveCode,
     isActiveLink,
@@ -49,7 +51,6 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
     selector: (context) => ({
       isActiveBold: context.editor.isActive("bold"),
       isActiveItalic: context.editor.isActive("italic"),
-      isActiveUnderline: context.editor.isActive("underline"),
       isActiveStrike: context.editor.isActive("strike"),
       isActiveCode: context.editor.isActive("code"),
       isActiveLink: context.editor.isActive("link"),
@@ -150,44 +151,49 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
       }}
       editor={editor}
     >
-      <div className="flex gap-3 rounded-md bg-foreground px-4 py-3">
+      <div className="flex items-center gap-0.5 rounded-lg bg-popover p-1 text-popover-foreground shadow-md ring-1 ring-foreground/10">
         {!linkOpen ? (
           <>
             <BubbleMenuButton
+              aria-label="Bold"
+              title="Bold"
               onClick={() => editor.chain().focus().toggleBold().run()}
               active={isActiveBold}
             >
-              <IconBold size={18} />
+              <IconBold size={16} />
             </BubbleMenuButton>
             <BubbleMenuButton
+              aria-label="Italic"
+              title="Italic"
               onClick={() => editor.chain().focus().toggleItalic().run()}
               active={isActiveItalic}
             >
-              <IconItalic size={18} />
+              <IconItalic size={16} />
             </BubbleMenuButton>
             <BubbleMenuButton
-              onClick={() => editor.chain().focus().toggleUnderline().run()}
-              active={isActiveUnderline}
-            >
-              <IconUnderline size={18} />
-            </BubbleMenuButton>
-            <BubbleMenuButton
+              aria-label="Strikethrough"
+              title="Strikethrough"
               onClick={() => editor.chain().focus().toggleStrike().run()}
               active={isActiveStrike}
             >
-              <IconStrikethrough size={18} />
+              <IconStrikethrough size={16} />
             </BubbleMenuButton>
             <BubbleMenuButton
+              aria-label="Code"
+              title="Code"
               onClick={() => editor.chain().focus().toggleCode().run()}
               active={isActiveCode}
             >
-              <IconCode size={18} />
+              <IconCode size={16} />
             </BubbleMenuButton>
+            <span className="mx-0.5 h-4 w-px bg-foreground/15" />
             <BubbleMenuButton
+              aria-label="Link"
+              title="Link"
               onClick={() => onSelectLink()}
               active={isActiveLink}
             >
-              <IconLink size={18} />
+              <IconLink size={16} />
             </BubbleMenuButton>
           </>
         ) : (

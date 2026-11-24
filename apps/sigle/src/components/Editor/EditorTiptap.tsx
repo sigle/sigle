@@ -1,4 +1,3 @@
-import "highlight.js/styles/night-owl.css";
 import "./editor-tiptap.css";
 import TipTapBlockquote from "@tiptap/extension-blockquote";
 import TipTapBold from "@tiptap/extension-bold";
@@ -17,7 +16,6 @@ import TipTapParagraph from "@tiptap/extension-paragraph";
 import TipTapStrike from "@tiptap/extension-strike";
 import TipTapText from "@tiptap/extension-text";
 import TipTapTypography from "@tiptap/extension-typography";
-import TipTapUnderline from "@tiptap/extension-underline";
 import {
   CharacterCount as TipTapCharacterCount,
   Dropcursor as TipTapDropcursor,
@@ -154,7 +152,6 @@ export const EditorTipTap = ({
       TipTapCode,
       TipTapItalic,
       TipTapStrike,
-      TipTapUnderline,
       // Extensions
       Markdown,
       TipTapDropcursor.configure({
@@ -209,7 +206,7 @@ export const EditorTipTap = ({
   });
 
   return (
-    <div className="prose pb-5 lg:prose-lg dark:prose-invert">
+    <div className="prose pb-5 lg:prose-lg dark:prose-invert prose-h1:headline prose-h2:headline prose-h3:headline prose-h4:headline">
       {/* oxlint-disable-next-line better-tailwindcss/no-unknown-classes */}
       <EditorContent className="editor" editor={editor} />
       {editor && !isMobile && <EditorBubbleMenu editor={editor} />}

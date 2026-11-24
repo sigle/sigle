@@ -1,7 +1,7 @@
 "use client";
 
 import { IconCheck } from "@tabler/icons-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { NextLink } from "@/components/Shared/NextLink";
 import { Button } from "@/components/ui/button";
 import {
@@ -67,7 +67,7 @@ export const ProWelcomeDialog = ({
       <DialogContent className="gap-5 p-6 sm:max-w-md">
         <DialogHeader className="gap-3">
           <Compass animate={animate} />
-          <DialogTitle className="text-xl font-bold">
+          <DialogTitle className="headline text-2xl">
             Welcome aboard, Explorer
           </DialogTitle>
           <DialogDescription className="text-pretty">

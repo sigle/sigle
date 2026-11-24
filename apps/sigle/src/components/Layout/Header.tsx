@@ -10,7 +10,6 @@ import { useIsClient } from "@/hooks/useIsClient";
 import { useStacksLogin } from "@/hooks/useStacksLogin";
 import { LogoImage } from "@/images/Logo";
 import { useSession } from "@/lib/auth-hooks";
-import { Routes } from "@/lib/routes";
 import { NextLink } from "../Shared/NextLink";
 import { UserDropdown } from "./UserDropdown";
 
@@ -40,19 +39,10 @@ export const Header = () => {
         <NextLink href="/">
           <LogoImage height={28} />
         </NextLink>
-        <NextLink
-          href={Routes.explore()}
-          className={buttonVariants({ variant: "ghost" })}
-        >
-          Explore
-        </NextLink>
       </div>
       {!session ? (
         <div className="flex items-center gap-6">
-          <Button variant="ghost" onClick={login}>
-            Write on Sigle
-          </Button>
-          <Button onClick={login}>Sign In</Button>
+          <Button onClick={login}>Connect wallet</Button>
           <Button variant="ghost" size="icon" onClick={onThemeChange}>
             {/* To avoid hydratation issues we always render the sun icon on the server */}
             {!isClient || resolvedTheme === "light" ? (

@@ -1,50 +1,16 @@
 "use client";
 
-import { IconCheck, IconExternalLink } from "@tabler/icons-react";
+import { IconArrowUpRight } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePostHog } from "posthog-js/react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 import { appConfig } from "@/config";
-import { cn } from "@/lib/cn";
-import { PUBLISH_LIMITS } from "@/lib/plans";
 import { sigleApiClient } from "@/lib/sigle";
 import { formatReadableAddress } from "@/lib/stacks";
+import { PlanComparison } from "../Shared/PlanComparison";
 import { ProWelcomeDialog } from "./ProWelcomeDialog";
-
-const FREE_FEATURES = [
-  `${PUBLISH_LIMITS.free} posts per day`,
-  "Embed images from a URL",
-];
-
-const PRO_FEATURES = [
-  `${PUBLISH_LIMITS.pro} posts per day`,
-  "Upload images to your posts",
-  "Add cover images to your posts",
-  "Embed images from a URL",
-];
-
-const FeatureList = ({ features }: { features: string[] }) => (
-  <ul className="space-y-2">
-    {features.map((feature) => (
-      <li key={feature} className="flex items-center gap-2">
-        <IconCheck size={16} className="text-primary" />
-        {feature}
-      </li>
-    ))}
-  </ul>
-);
 
 export const Plan = () => {
   const posthog = usePostHog();
@@ -56,7 +22,6 @@ export const Plan = () => {
   const hasOpenedMarketplace = useRef(false);
 
   const { data: me } = sigleApiClient.useQuery("get", "/api/me");
-  const { data: limits } = sigleApiClient.useQuery("get", "/api/me/limits");
 
   const refreshPlan = sigleApiClient.useMutation(
     "post",
@@ -114,108 +79,114 @@ export const Plan = () => {
   });
 
   if (!me) {
-    return null;
+    return <h2 className="headline text-3xl">Plan</h2>;
   }
 
   const isPro = me.plan === "pro";
-  // The usage is left out when it fails to load, so the plans and the
-  // activation stay available.
-  const publish = limits?.publish;
+
+  const openMarketplace = () => {
+    hasOpenedMarketplace.current = true;
+    posthog.capture("upgrade_get_nft_clicked");
+  };
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-12">
       <ProWelcomeDialog open={isWelcomeOpen} onOpenChange={setIsWelcomeOpen} />
 
-      {publish ? (
-        <Card>
-          <CardContent className="space-y-2">
-            <p>
-              You published{" "}
-              <span className="font-bold">
-                {publish.used} of {publish.limit}
-              </span>{" "}
-              posts in the last 24 hours.
-            </p>
-            <Progress
-              value={Math.min(100, (publish.used / publish.limit) * 100)}
-            />
-          </CardContent>
-        </Card>
+      <div>
+        <h2 className="headline text-3xl">Plan</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {isPro
+            ? "You're on Pro. Thanks for supporting Sigle."
+            : "You're on the Free plan."}
+        </p>
+      </div>
+
+      {!isPro ? (
+        <section>
+          <h3 className="headline text-2xl">Unlock Pro</h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Upload images, get a verified badge and early access to new
+            features.
+          </p>
+
+          <ol className="mt-4 grid gap-8 border-t border-border pt-6 md:grid-cols-2">
+            <li className="flex flex-col">
+              <span className="font-mono text-sm text-muted-foreground">
+                01
+              </span>
+              <h4 className="mt-2 headline text-xl">
+                Get an Explorer Guild NFT
+              </h4>
+              <p className="mt-1 mb-4 text-sm text-pretty text-muted-foreground">
+                Pro is unlocked by holding one in your wallet. Pick one up on
+                the Gamma marketplace.
+              </p>
+              <Button
+                className="mt-auto w-fit"
+                nativeButton={false}
+                render={
+                  <a
+                    href={appConfig.explorerGuildMarketplaceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  />
+                }
+                onClick={openMarketplace}
+              >
+                Browse on Gamma
+                <IconArrowUpRight size={16} />
+              </Button>
+            </li>
+
+            <li className="flex flex-col">
+              <span className="font-mono text-sm text-muted-foreground">
+                02
+              </span>
+              <h4 className="mt-2 headline text-xl">Activate Pro</h4>
+              <p className="mt-1 mb-4 text-sm text-pretty text-muted-foreground">
+                Once the NFT is in{" "}
+                <span className="font-mono text-[0.9em] text-foreground">
+                  {formatReadableAddress(me.address)}
+                </span>
+                , check your wallet to switch to Pro.
+              </p>
+              <Button
+                variant="outline"
+                className="mt-auto w-fit"
+                loading={refreshPlan.isPending}
+                onClick={() => checkWallet("button")}
+              >
+                Check my wallet
+              </Button>
+              {isNftNotFound ? (
+                <p className="mt-3 text-sm text-muted-foreground">
+                  No Explorer Guild NFT found yet. A new purchase can take a few
+                  minutes to reach your wallet.
+                </p>
+              ) : null}
+            </li>
+          </ol>
+        </section>
       ) : null}
 
-      <div className="grid gap-5 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg font-bold">
-              Free
-              {!isPro ? <Badge variant="secondary">Current plan</Badge> : null}
-            </CardTitle>
-            <CardDescription>
-              Everything you need to start writing
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <FeatureList features={FREE_FEATURES} />
-          </CardContent>
-        </Card>
-
-        <Card className={cn({ "ring-2 ring-primary": !isPro })}>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg font-bold">
-              Pro
-              {isPro ? <Badge>Current plan</Badge> : null}
-            </CardTitle>
-            <CardDescription>
-              Unlocked by holding an Explorer Guild NFT
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <FeatureList features={PRO_FEATURES} />
-          </CardContent>
-          <CardFooter className="flex-col items-stretch gap-2 border-t bg-muted/50 py-4">
-            {isPro ? (
-              <p className="text-muted-foreground">
+      <section>
+        <h3 className="mb-4 headline text-2xl">
+          {isPro ? "What's included" : "Compare plans"}
+        </h3>
+        <PlanComparison
+          currentPlan={me.plan}
+          onMarketplaceClick={openMarketplace}
+          actions={{
+            pro: isPro ? (
+              <p className="text-sm text-muted-foreground">
                 Pro stays active while {formatReadableAddress(me.address)} holds
                 an Explorer Guild NFT.
               </p>
-            ) : (
-              <>
-                <Button
-                  nativeButton={false}
-                  render={
-                    <a
-                      href={appConfig.explorerGuildMarketplaceUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                    />
-                  }
-                  onClick={() => {
-                    hasOpenedMarketplace.current = true;
-                    posthog.capture("upgrade_get_nft_clicked");
-                  }}
-                >
-                  Get an Explorer Guild NFT
-                  <IconExternalLink size={16} />
-                </Button>
-                <Button
-                  variant="outline"
-                  loading={refreshPlan.isPending}
-                  onClick={() => checkWallet("button")}
-                >
-                  I have one, activate Pro
-                </Button>
-                {isNftNotFound ? (
-                  <p className="text-muted-foreground">
-                    No Explorer Guild NFT found in{" "}
-                    {formatReadableAddress(me.address)}. A new purchase can take
-                    a few minutes to reach your wallet.
-                  </p>
-                ) : null}
-              </>
-            )}
-          </CardFooter>
-        </Card>
-      </div>
+            ) : null,
+          }}
+        />
+      </section>
     </div>
   );
 };

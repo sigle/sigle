@@ -1,8 +1,10 @@
 allowBuilds:
   "@parcel/watcher": false
+  # Downloads its binary on first run instead, only when a build uploads
+  # source maps
+  "@posthog/cli": false
   "@prisma/engines": true
   "@reown/appkit": false
-  "@sentry/cli": false
   "bigint-buffer": false
   "bufferutil": false
   "core-js": false
@@ -20,9 +22,9 @@ packages:
   - apps/*
   - packages/*
 catalog:
-  vite: npm:@voidzero-dev/vite-plus-core@1.1.0
-  vitest: 5.0.3
-  vite-plus: 1.1.0
+  vite: npm:@voidzero-dev/vite-plus-core@8.3.8001
+  vitest: 5.1.1
+  vite-plus: 1.8.0
 overrides:
   vite@*: "catalog:"
   vitest@*: "catalog:"

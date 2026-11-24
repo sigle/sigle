@@ -36,6 +36,7 @@ const makeRecordingUploader = (
     Effect.sync(() => {
       uploads.push(options);
     }),
+  deleteFile: () => Effect.void,
 });
 
 describe("storage service", () => {
@@ -83,6 +84,7 @@ describe("storage service", () => {
     const uploader: StorageUploader = {
       uploadFile: () =>
         Effect.fail(new R2Unreachable({ message: "r2 unreachable" })),
+      deleteFile: () => Effect.void,
     };
 
     return Effect.gen(function* () {

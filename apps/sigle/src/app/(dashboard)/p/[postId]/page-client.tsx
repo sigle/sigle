@@ -1,21 +1,14 @@
 "use client";
 
-import { IconArrowLeft } from "@tabler/icons-react";
 import { notFound } from "next/navigation";
 import { use } from "react";
 import { PostMarkdownContent } from "@/components/Post/MarkdownContent";
 import { PostProvenanceCard } from "@/components/Post/ProvenanceCard";
 import { PostUserActions } from "@/components/Post/UserActions";
 import { PostUserInfoCard } from "@/components/Post/UserInfoCard";
-import { NextLink } from "@/components/Shared/NextLink";
 import { FadeSlideBottom } from "@/components/ui";
-import { Badge } from "@/components/ui/badge";
 import { BlurImage } from "@/components/ui/blur-image";
-import { buttonVariants } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
-import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 
 interface Props {
@@ -35,6 +28,8 @@ export function PostClientPage(props: Props) {
         },
       },
     },
+    // The page on the server hydrates this query with a fresh result.
+    { staleTime: 60_000 },
   );
 
   if (!post) {
@@ -57,38 +52,27 @@ export function PostClientPage(props: Props) {
       ) : null}
 
       <div className="mx-auto my-8 max-w-2xl px-4 md:my-10">
-        <NextLink
-          href={Routes.explore()}
-          className={cn(buttonVariants({ variant: "ghost" }), "mb-6")}
-        >
-          <IconArrowLeft size={14} /> All articles
-        </NextLink>
-
         <header className="mb-8 flex flex-col gap-4">
           {post.tags.length > 0 ? (
-            <div className="flex flex-wrap items-center gap-2">
-              {post.tags.map((tag) => (
-                <Badge key={tag} variant="secondary">
-                  {tag}
-                </Badge>
-              ))}
-            </div>
+            <p className="font-mono text-xs text-muted-foreground uppercase">
+              {post.tags.join(" · ")}
+            </p>
           ) : null}
 
-          <h1 className="text-4xl font-medium text-pretty">{post.title}</h1>
+          <h1 className="headline text-4xl text-pretty md:text-5xl">
+            {post.title}
+          </h1>
 
           <PostUserActions post={post} />
         </header>
 
-        <Separator className="mb-8" />
-
         {post.content ? <PostMarkdownContent content={post.content} /> : null}
 
-        <Separator className="mt-10 mb-8" />
+        <div className="mt-16 space-y-12 border-t border-border pt-10">
+          <PostUserInfoCard post={post} />
 
-        <PostProvenanceCard post={post} />
-
-        <PostUserInfoCard post={post} />
+          <PostProvenanceCard post={post} />
+        </div>
       </div>
     </FadeSlideBottom>
   );

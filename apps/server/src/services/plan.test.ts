@@ -318,8 +318,11 @@ describe("plan reconciliation", () => {
         yield* reconcileUserPlans;
 
         const plansAfter = Object.fromEntries(
-          yield* Effect.forEach(Object.entries(users), ([name, id]) =>
-            Effect.map(findStoredPlan(id), (row) => [name, row?.plan]),
+          yield* Effect.forEach(
+            Object.entries(users),
+            ([name, id]) =>
+              Effect.map(findStoredPlan(id), (row) => [name, row?.plan]),
+            { concurrency: 1 },
           ),
         );
 

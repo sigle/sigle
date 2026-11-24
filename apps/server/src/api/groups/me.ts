@@ -20,8 +20,6 @@ export const DailyLimit = Schema.Struct({
 export const UserLimitsResponse = Schema.Struct({
   // Posts published, and publishes in flight.
   publish: DailyLimit,
-  // Successful profile updates, across all the user's addresses.
-  profileUpdate: DailyLimit,
 }).annotate({ identifier: "UserLimitsResponse" });
 
 const UserPlan = Schema.Literals(["free", "pro"]);
@@ -31,7 +29,6 @@ export const CurrentUserResponse = Schema.Struct({
   // Primary Stacks address of the user, used to read their public profile and
   // posts.
   address: Schema.String,
-  whitelisted: Schema.Boolean,
   plan: UserPlan,
 }).annotate({ identifier: "CurrentUserResponse" });
 
@@ -42,7 +39,7 @@ export const UserPlanResponse = Schema.Struct({
 export const MeGroup = HttpApiGroup.make("me")
   .annotate(
     OpenApi.Description,
-    "The signed-in user, with their whitelist status, plan, and limits.",
+    "The signed-in user, with their plan and limits.",
   )
   .add(
     HttpApiEndpoint.get("get", "/", {
@@ -51,7 +48,7 @@ export const MeGroup = HttpApiGroup.make("me")
       .annotate(OpenApi.Summary, "Get the signed-in user")
       .annotate(
         OpenApi.Description,
-        "Return the signed-in user's id, primary Stacks address, whitelist status, and plan. Returns a 401 without a session.",
+        "Return the signed-in user's id, primary Stacks address, and plan. Returns a 401 without a session.",
       ),
     HttpApiEndpoint.get("limits", "/limits", {
       success: UserLimitsResponse,
@@ -59,7 +56,7 @@ export const MeGroup = HttpApiGroup.make("me")
       .annotate(OpenApi.Summary, "Get the signed-in user's limits")
       .annotate(
         OpenApi.Description,
-        "Return the limits of the signed-in user's plan and how much of them is used, such as the posts they can still publish and the profile updates they can still make in the last 24 hours. Returns a 401 without a session.",
+        "Return the limits of the signed-in user's plan and how much of them is used, such as the posts they can still publish in the last 24 hours. Returns a 401 without a session.",
       ),
     HttpApiEndpoint.post("refreshPlan", "/plan/refresh", {
       success: UserPlanResponse,

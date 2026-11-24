@@ -1,7 +1,6 @@
 "use client";
 
-import { IconCameraPlus, IconHandGrab, IconTrash } from "@tabler/icons-react";
-import { motion } from "framer-motion";
+import { IconPhoto, IconTrash } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import {
@@ -148,12 +147,14 @@ export const EditorCoverImage = ({
     return (
       <div className="mt-4">
         <Button
-          size="lg"
-          variant="secondary"
+          variant="ghost"
+          size="sm"
+          className="-ml-2 text-muted-foreground"
           onClick={() => setIsUpgradeOpen(true)}
         >
-          Add cover image <IconCameraPlus size={16} />
-          <ProBadge />
+          <IconPhoto size={16} />
+          Add cover image
+          <ProBadge className="ml-0.5" />
         </Button>
         <UpgradeDialog
           open={isUpgradeOpen}
@@ -166,58 +167,57 @@ export const EditorCoverImage = ({
     );
   }
 
+  const image = preview || resolvedWatchCoverImage;
+
   return (
     <div
       {...getRootProps()}
-      className={cn("mt-4 flex justify-center", {
-        "justify-start": !preview && !resolvedWatchCoverImage,
-      })}
+      className="mt-4"
       onClick={(e) => e.stopPropagation()}
     >
       <input {...getInputProps()} />
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{
-          opacity: 1,
-          scale: 1,
-        }}
-        transition={{ delay: 0.1 }}
-        key={!preview && !resolvedWatchCoverImage ? "button" : "image"}
-      >
-        {!preview && !resolvedWatchCoverImage ? (
-          !isDragActive ? (
-            <Button size="lg" variant="secondary" onClick={open}>
-              Add cover image <IconCameraPlus size={16} />
-            </Button>
+      {image ? (
+        <div className="group relative overflow-hidden rounded-lg">
+          {/* oxlint-disable-next-line no-img-element */}
+          <img
+            src={image}
+            className={cn("w-full transition-opacity", {
+              "opacity-40": loadingUploadImage,
+            })}
+            alt="Cover post"
+          />
+          {loadingUploadImage ? (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Spinner />
+            </div>
           ) : (
-            <Button size="lg" variant="outline">
-              Drop your cover image here <IconHandGrab size={16} />
+            <Button
+              size="icon-sm"
+              variant="secondary"
+              aria-label="Remove cover image"
+              title="Remove cover image"
+              className="absolute top-3 right-3 opacity-0 shadow-sm transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+              onClick={onRemove}
+            >
+              <IconTrash size={16} />
             </Button>
-          )
-        ) : (
-          <div className="relative mx-auto">
-            {/* oxlint-disable-next-line no-img-element */}
-            <img
-              src={preview || resolvedWatchCoverImage || ""}
-              className={cn("rounded-md", {
-                "opacity-25": loadingUploadImage,
-              })}
-              alt="Cover post"
-            />
-            {!loadingUploadImage ? (
-              <div className="absolute top-2 right-2">
-                <Button size="icon-lg" variant="secondary" onClick={onRemove}>
-                  <IconTrash size={16} />
-                </Button>
-              </div>
-            ) : (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Spinner />
-              </div>
-            )}
-          </div>
-        )}
-      </motion.div>
+          )}
+        </div>
+      ) : isDragActive ? (
+        <div className="flex h-40 items-center justify-center rounded-lg border border-dashed border-foreground/30 bg-muted/50 text-sm text-muted-foreground">
+          Drop the image to use it as the cover
+        </div>
+      ) : (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="-ml-2 text-muted-foreground"
+          onClick={open}
+        >
+          <IconPhoto size={16} />
+          Add cover image
+        </Button>
+      )}
     </div>
   );
 };

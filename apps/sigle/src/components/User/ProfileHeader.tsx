@@ -1,16 +1,10 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { IconDotsVertical, IconPencil } from "@tabler/icons-react";
+import { IconLink } from "@tabler/icons-react";
 import { usePostHog } from "posthog-js/react";
 import { BlurImage } from "@/components/ui/blur-image";
 import { Button, buttonVariants } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { env } from "@/env";
 import { useCopyToClipboard } from "@/hooks/useCopyToClipboard";
 import { useSession } from "@/lib/auth-hooks";
@@ -51,55 +45,52 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
 
   return (
     <>
-      <div
-        className={cn("relative w-full bg-muted", {
-          "h-64 md:h-88": coverPicture,
-          "h-32": !coverPicture,
-        })}
-      >
-        {coverPicture ? (
-          <BlurImage
-            src={resolveImageUrl(coverPicture.url)}
-            alt="Banner"
-            sizes="100vw"
-            className="size-full object-cover"
-            thumbhash={coverPicture.thumbhash}
-            width={coverPicture.width}
-            height={coverPicture.height}
-          />
-        ) : null}
-      </div>
+      {coverPicture ? (
+        <div className="mx-auto max-w-4xl px-4 pt-6">
+          <div className="h-40 overflow-hidden rounded-lg bg-muted md:h-56">
+            <BlurImage
+              src={resolveImageUrl(coverPicture.url)}
+              alt="Banner"
+              sizes="(min-width: 896px) 896px, 100vw"
+              className="size-full object-cover"
+              thumbhash={coverPicture.thumbhash}
+              width={coverPicture.width}
+              height={coverPicture.height}
+            />
+          </div>
+        </div>
+      ) : null}
 
       <div className="mx-auto max-w-2xl px-4">
-        <div className="flex justify-between">
-          <div className="z-10 mt-[-70px] rounded-lg border-[6px] border-background bg-background">
-            <ProfileAvatar user={user} size="8" />
+        <div
+          className={cn("flex items-end justify-between gap-4", {
+            "-mt-10": coverPicture,
+            "mt-12": !coverPicture,
+          })}
+        >
+          <div className="rounded-md bg-background p-1">
+            <ProfileAvatar user={user} size="6" />
           </div>
 
-          <div className="mt-4 flex items-center gap-4">
+          <div className="flex items-center gap-1">
             {isCurrentUser ? (
               <NextLink
                 href="/dashboard/settings"
-                className={buttonVariants({ variant: "secondary" })}
+                className={buttonVariants({ variant: "outline", size: "sm" })}
               >
-                Edit profile <IconPencil size={16} />
+                Edit profile
               </NextLink>
             ) : null}
-
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                render={
-                  <Button variant="ghost" size="icon" title="More">
-                    <IconDotsVertical size={16} />
-                  </Button>
-                }
-              />
-              <DropdownMenuContent align="end" className="min-w-40">
-                <DropdownMenuItem onClick={onCopyLink}>
-                  Copy link to profile
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Button
+              variant="ghost"
+              size="icon-sm"
+              title="Copy link to profile"
+              aria-label="Copy link to profile"
+              className="text-muted-foreground"
+              onClick={onCopyLink}
+            >
+              <IconLink size={16} />
+            </Button>
           </div>
         </div>
       </div>

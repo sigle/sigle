@@ -27,7 +27,7 @@ export const globalPasteRegex = new RegExp(
 
 const embedSchema = z.object({
   url: z.string().refine((val) => isValidUrl(val), {
-    message: "Invalid embed url, this service is not supported.",
+    message: "Paste a link to a post on X or a YouTube video.",
   }),
 });
 
@@ -73,8 +73,8 @@ export const EmbedComponent = (props: NodeViewProps) => {
   // Remove input if empty and user presses backspace or delete key
   const onKeyDown = (event: React.KeyboardEvent) => {
     if (
-      (!getValues().url && event.key === "Backspace") ||
-      event.key === "Delete"
+      !getValues().url &&
+      (event.key === "Backspace" || event.key === "Delete")
     ) {
       props.deleteNode();
     }
@@ -90,8 +90,8 @@ export const EmbedComponent = (props: NodeViewProps) => {
                 aria-invalid={!!errors.url}
                 placeholder={
                   props.node.attrs.embedType === "twitter"
-                    ? "Paste tweet URL and press “enter”..."
-                    : "Paste video URL and press “enter”..."
+                    ? "Paste a link to a post on X and press Enter"
+                    : "Paste a YouTube link and press Enter"
                 }
                 {...register("url")}
                 onKeyDown={onKeyDown}

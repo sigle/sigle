@@ -50,12 +50,15 @@ const createAuthorPosts = (address: string, titles: ReadonlyArray<string>) =>
     yield* createTestWalletAddress({ userId: user.id, address });
 
     // Titles are listed oldest first, a minute apart.
-    yield* Effect.forEach(titles, (title, index) =>
-      createTestPost({
-        userId: user.id,
-        title,
-        createdAt: new Date(Date.UTC(2026, 0, 1, 0, index)),
-      }),
+    yield* Effect.forEach(
+      titles,
+      (title, index) =>
+        createTestPost({
+          userId: user.id,
+          title,
+          createdAt: new Date(Date.UTC(2026, 0, 1, 0, index)),
+        }),
+      { concurrency: 1 },
     );
   });
 
@@ -114,8 +117,9 @@ describe("posts", () => {
       const coverImage = "https://cdn.test/posts/cover.webp";
 
       // The author's older wallet is not the primary one and has its own
-      // profile, so the author must be read from the primary wallet.
-      const author = yield* createTestUser();
+      // profile, so the author must be read from the primary wallet. The
+      // author is on Pro, so they get the Explorer Guild badge.
+      const author = yield* createTestUser({ plan: "pro" });
       yield* createTestWalletAddress({
         userId: author.id,
         address: OTHER_ADDRESS,
@@ -171,6 +175,7 @@ describe("posts", () => {
           author: {
             address: item.author.address,
             displayName: item.author.profile?.displayName ?? null,
+            isExplorer: item.author.isExplorer,
           },
         })),
       ).toStrictEqual([
@@ -182,12 +187,20 @@ describe("posts", () => {
             height: 630,
             thumbhash: "cover-thumbhash",
           },
-          author: { address: AUTHOR_ADDRESS, displayName: "Author" },
+          author: {
+            address: AUTHOR_ADDRESS,
+            displayName: "Author",
+            isExplorer: true,
+          },
         },
         {
           title: "without profile",
           coverImage: null,
-          author: { address: NO_PROFILE_ADDRESS, displayName: null },
+          author: {
+            address: NO_PROFILE_ADDRESS,
+            displayName: null,
+            isExplorer: false,
+          },
         },
       ]);
     }).pipe(Effect.provide(makeTestServerLayer())),
@@ -216,6 +229,7 @@ describe("posts", () => {
           client
             .get(`/api/posts?${query}`)
             .pipe(Effect.map((response) => response.status)),
+        { concurrency: 1 },
       );
 
       const invalidAddress = yield* client
@@ -300,12 +314,10 @@ describe("posts", () => {
         });
         yield* createTestProfile({
           address: AUTHOR_ADDRESS,
-          arweaveTxId: "profile-tx",
           displayName: "Author",
         });
         yield* createTestProfile({
           address: OTHER_ADDRESS,
-          arweaveTxId: "other-profile-tx",
           displayName: "Other wallet",
         });
         yield* createTestMediaImage({
@@ -360,7 +372,7 @@ describe("posts", () => {
             createdAt: "2026-01-01T00:00:00.000Z",
             author: {
               address: AUTHOR_ADDRESS,
-              profile: { displayName: "Author", arweaveTxId: "profile-tx" },
+              profile: { displayName: "Author" },
             },
             // Enums are lowercase in the API.
             opentimestamps: {
