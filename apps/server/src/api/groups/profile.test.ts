@@ -8,7 +8,6 @@ import {
   HttpClientResponse,
 } from "effect/http";
 import sharp from "sharp";
-import { afterEach, vi } from "vite-plus/test";
 import type { PostHogEvent } from "@/services/posthog";
 import { UserProfile } from "@/api/groups/users";
 import { RATE_LIMITS } from "@/api/middleware/rate-limit";
@@ -35,42 +34,9 @@ const UpdateProfileResponse = Schema.Struct({
   profile: UserProfile,
 });
 
-const UploadProfileImageResponse = Schema.Struct({
-  url: Schema.String,
-  sizeBytes: Schema.Int,
-  width: Schema.Int,
-  height: Schema.Int,
-  thumbhash: Schema.String,
-});
-
 const ErrorResponse = Schema.Struct({ message: Schema.String });
 
 const profileImagePath = (kind: string) => `/api/me/profile/images/${kind}`;
-
-/**
- * Polls the media row until the background thumbhash job reaches `status`.
- */
-const waitForMediaImageStatus = (id: string, status: string) =>
-  Effect.gen(function* () {
-    const db = yield* Database;
-
-    for (let attempt = 0; attempt < 200; attempt++) {
-      const [row] = yield* db
-        .select()
-        .from(mediaImage)
-        .where(eq(mediaImage.id, id))
-        .limit(1)
-        .pipe(Effect.orDie);
-
-      if (row?.status === status) {
-        return row;
-      }
-
-      yield* Effect.sleep("20 millis");
-    }
-
-    return undefined;
-  });
 
 const makePngBuffer = (width = 16, height = 16) =>
   sharp({
@@ -158,10 +124,6 @@ const getBnsProfile = (layer: Layer.Layer<BnsService>) =>
   }).pipe(Effect.provide(makeTestServerLayer({}, [], { bns: layer })));
 
 describe("profile", () => {
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
-
   it.effect(
     "PUT /api/me/profile stores the profile of the primary address",
     () => {
@@ -235,62 +197,6 @@ describe("profile", () => {
     },
   );
 
-  it.live(
-    "PUT /api/me/profile schedules thumbhash generation for external pictures",
-    () => {
-      const imageFetches: Array<string> = [];
-
-      return Effect.gen(function* () {
-        const { address, client } = yield* createProfileClient();
-
-        const png = yield* Effect.promise(() => makePngBuffer());
-
-        vi.stubGlobal(
-          "fetch",
-          vi.fn(async (input: RequestInfo | URL) => {
-            imageFetches.push(String(input));
-
-            return new Response(new Uint8Array(png), {
-              status: 200,
-              headers: { "content-type": "image/png" },
-            });
-          }),
-        );
-
-        const imageUrl = "https://cdn.example.com/external.png";
-
-        const response = yield* updateProfileRequest(client, {
-          picture: imageUrl,
-        });
-
-        const mediaRow = yield* waitForMediaImageStatus(imageUrl, "READY");
-
-        const db = yield* Database;
-
-        const [savedProfile] = yield* db
-          .select()
-          .from(profileTable)
-          .where(eq(profileTable.address, address))
-          .limit(1)
-          .pipe(Effect.orDie);
-
-        expect({
-          status: response.status,
-          mediaStatus: mediaRow?.status,
-          thumbhash: mediaRow?.thumbhash,
-          picture: savedProfile?.picture,
-          fetches: imageFetches,
-        }).toStrictEqual({
-          status: 200,
-          mediaStatus: "READY",
-          thumbhash: expect.any(String),
-          picture: imageUrl,
-          fetches: [imageUrl],
-        });
-      }).pipe(Effect.provide(makeTestServerLayer()));
-    },
-  );
-
   it.effect("PUT /api/me/profile rejects invalid fields", () =>
     Effect.gen(function* () {
       const { address, client } = yield* createProfileClient();
@@ -302,8 +208,6 @@ describe("profile", () => {
         { website: "data:text/html,hello" },
         { twitter: "not-a-handle" },
         { twitter: "a".repeat(16) },
-        { picture: "file:///etc/passwd" },
-        { coverPicture: "not a url" },
       ];
 
       const statuses = yield* Effect.forEach(
@@ -329,7 +233,7 @@ describe("profile", () => {
       });
 
       expect({ statuses, rows, atLimits: atLimits.status }).toStrictEqual({
-        statuses: [400, 400, 400, 400, 400, 400, 400],
+        statuses: [400, 400, 400, 400, 400],
         rows: [],
         atLimits: 200,
       });
@@ -447,7 +351,6 @@ describe("profile", () => {
             description: "Bitcoin",
             website: "https://bitcoin.org",
             twitter: "satoshi",
-            picture: "https://bitcoin.org/satoshi.png",
           },
         },
       });
@@ -480,7 +383,6 @@ describe("profile", () => {
               description: null,
               website: null,
               twitter: null,
-              picture: null,
             },
           },
         });
@@ -551,7 +453,7 @@ describe("profile", () => {
     const events: Array<PostHogEvent> = [];
 
     return Effect.gen(function* () {
-      const { client, userId } = yield* createAuthenticatedClient();
+      const { address, client, userId } = yield* createAuthenticatedClient();
       const png = yield* Effect.promise(() => makePngBuffer(1200, 600));
 
       const response = yield* uploadImageRequest(client, "avatar", {
@@ -560,7 +462,7 @@ describe("profile", () => {
       });
 
       const body = yield* HttpClientResponse.schemaBodyJson(
-        UploadProfileImageResponse,
+        UpdateProfileResponse,
       )(response);
 
       const uploaded = recorder.uploads[0];
@@ -595,16 +497,28 @@ describe("profile", () => {
         mediaWidth: savedMedia?.width,
         mediaHeight: savedMedia?.height,
         mediaSize: savedMedia?.size,
-        thumbhashMatches: body.thumbhash === savedMedia?.thumbhash,
+        thumbhashMatches:
+          body.profile.picture?.thumbhash === savedMedia?.thumbhash,
         events,
       }).toStrictEqual({
         status: 200,
+        // The first upload creates the profile.
         body: {
-          height: 300,
-          sizeBytes: uploadedBytes.length,
-          thumbhash: expect.any(String),
-          url,
-          width: 600,
+          address,
+          profile: {
+            displayName: null,
+            description: null,
+            website: null,
+            twitter: null,
+            picture: {
+              url,
+              width: 600,
+              height: 300,
+              thumbhash: expect.any(String),
+            },
+            coverPicture: null,
+            updatedAt: expect.anything(),
+          },
         },
         upload: {
           body: uploaded?.body,
@@ -652,7 +566,7 @@ describe("profile", () => {
         });
 
         const body = yield* HttpClientResponse.schemaBodyJson(
-          UploadProfileImageResponse,
+          UpdateProfileResponse,
         )(response);
 
         const uploaded = recorder.uploads[0];
@@ -672,7 +586,8 @@ describe("profile", () => {
           width: metadata.width,
           height: metadata.height,
           isWebp: uploadedBytes.subarray(8, 12).toString() === "WEBP",
-          url: body.url,
+          picture: body.profile.picture,
+          coverUrl: body.profile.coverPicture?.url,
           events,
         }).toStrictEqual({
           status: 200,
@@ -681,7 +596,8 @@ describe("profile", () => {
           width: 100,
           height: 50,
           isWebp: true,
-          url: `${STORAGE_TEST_PUBLIC_URL}/${key}`,
+          picture: null,
+          coverUrl: `${STORAGE_TEST_PUBLIC_URL}/${key}`,
           events: [
             {
               distinctId: userId,
@@ -689,7 +605,7 @@ describe("profile", () => {
               properties: {
                 key,
                 sizeBytes: uploadedBytes.length,
-                url: body.url,
+                url: `${STORAGE_TEST_PUBLIC_URL}/${key}`,
               },
             },
           ],
@@ -698,46 +614,143 @@ describe("profile", () => {
     },
   );
 
+  it.effect("PUT /images/avatar deletes the avatar it replaces", () => {
+    const recorder = makeStorageTestRecorder();
+
+    return Effect.gen(function* () {
+      const { client } = yield* createAuthenticatedClient();
+      const db = yield* Database;
+      const first = yield* Effect.promise(() => makePngBuffer(16, 16));
+      const second = yield* Effect.promise(() => makePngBuffer(32, 32));
+
+      const upload = (kind: string, png: Buffer) =>
+        uploadImageRequest(client, kind, {
+          bytes: new Uint8Array(png),
+          contentType: "image/png",
+        }).pipe(
+          Effect.flatMap(
+            HttpClientResponse.schemaBodyJson(UpdateProfileResponse),
+          ),
+        );
+
+      const firstUrl = (yield* upload("avatar", first)).profile.picture?.url;
+      const secondUrl = (yield* upload("avatar", second)).profile.picture?.url;
+      // The same image again, then a cover: neither deletes the avatar.
+      yield* upload("avatar", second);
+      yield* upload("cover", first);
+
+      // Saving the form keeps the uploaded images.
+      const saved = yield* updateProfileRequest(client, {
+        displayName: "Satoshi",
+      }).pipe(
+        Effect.flatMap(
+          HttpClientResponse.schemaBodyJson(UpdateProfileResponse),
+        ),
+      );
+
+      const mediaIds = yield* db
+        .select({ id: mediaImage.id })
+        .from(mediaImage)
+        .pipe(Effect.orDie);
+
+      const keys = recorder.uploads.map((stored) => stored.key);
+
+      expect({
+        deletes: recorder.deletes,
+        mediaIds: mediaIds.map((row) => row.id).sort(),
+        picture: saved.profile.picture?.url,
+        coverPicture: saved.profile.coverPicture?.url,
+      }).toStrictEqual({
+        deletes: [keys[0]],
+        mediaIds: [secondUrl, `${STORAGE_TEST_PUBLIC_URL}/${keys[3]}`].sort(),
+        picture: secondUrl,
+        coverPicture: `${STORAGE_TEST_PUBLIC_URL}/${keys[3]}`,
+      });
+      expect(firstUrl).toBe(`${STORAGE_TEST_PUBLIC_URL}/${keys[0]}`);
+    }).pipe(Effect.provide(imageServerLayer(recorder)));
+  });
+
+  it.effect("PUT /images only deletes images it stored for that kind", () => {
+    const recorder = makeStorageTestRecorder();
+
+    return Effect.gen(function* () {
+      const { address, client, userId } = yield* createAuthenticatedClient();
+      const db = yield* Database;
+      const png = yield* Effect.promise(() => makePngBuffer());
+      const now = new Date();
+
+      // An external avatar, and a cover that points at one of the user's
+      // avatars.
+      yield* db
+        .insert(profileTable)
+        .values({
+          address,
+          picture: "https://cdn.example.com/avatar.webp",
+          coverPicture: `${STORAGE_TEST_PUBLIC_URL}/u/${userId}/avatar/abc.webp`,
+          createdAt: now,
+          updatedAt: now,
+        })
+        .pipe(Effect.orDie);
+
+      const responses = yield* Effect.forEach(["avatar", "cover"], (kind) =>
+        uploadImageRequest(client, kind, {
+          bytes: new Uint8Array(png),
+          contentType: "image/png",
+        }).pipe(Effect.map((response) => response.status)),
+      );
+
+      expect({
+        statuses: responses,
+        deletes: recorder.deletes,
+      }).toStrictEqual({ statuses: [200, 200], deletes: [] });
+    }).pipe(Effect.provide(imageServerLayer(recorder)));
+  });
+
   it.effect(
-    "PUT /images/avatar never replaces the object behind an earlier URL",
+    "PUT /images/avatar saves the avatar when deleting the old one fails",
     () => {
       const recorder = makeStorageTestRecorder();
 
       return Effect.gen(function* () {
         const { client } = yield* createAuthenticatedClient();
         const first = yield* Effect.promise(() => makePngBuffer(16, 16));
-        const other = yield* Effect.promise(() => makePngBuffer(32, 32));
+        const second = yield* Effect.promise(() => makePngBuffer(32, 32));
 
         const upload = (png: Buffer) =>
           uploadImageRequest(client, "avatar", {
             bytes: new Uint8Array(png),
             contentType: "image/png",
-          }).pipe(
-            Effect.flatMap(
-              HttpClientResponse.schemaBodyJson(UploadProfileImageResponse),
-            ),
-            Effect.map((body) => body.url),
-          );
+          });
 
-        // An avatar picked and then abandoned, and the first one uploaded
-        // again.
-        const urls = [
-          yield* upload(first),
-          yield* upload(other),
-          yield* upload(first),
-        ];
+        yield* upload(first);
+        const response = yield* upload(second);
 
-        const keys = recorder.uploads.map((stored) => stored.key);
+        const body = yield* HttpClientResponse.schemaBodyJson(
+          UpdateProfileResponse,
+        )(response);
 
         expect({
-          urls: urls.map((url) => url.replace(STORAGE_TEST_PUBLIC_URL, "")),
-          distinctKeys: new Set(keys).size,
+          status: response.status,
+          picture: body.profile.picture?.url,
+          deletes: recorder.deletes.length,
         }).toStrictEqual({
-          urls: keys.map((key) => `/${key}`),
-          distinctKeys: 2,
+          status: 200,
+          picture: `${STORAGE_TEST_PUBLIC_URL}/${recorder.uploads[1]?.key}`,
+          deletes: 1,
         });
-        expect(keys[0]).toBe(keys[2]);
-      }).pipe(Effect.provide(imageServerLayer(recorder)));
+      }).pipe(
+        Effect.provide(
+          imageServerLayer(recorder, {
+            deleteFile: () =>
+              Effect.fail(
+                new StorageUploadError({
+                  cause: new Error("r2 unreachable"),
+                  message: "r2 unreachable",
+                }),
+              ),
+          }),
+        ),
+      );
     },
   );
 

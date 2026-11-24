@@ -190,7 +190,7 @@ export interface paths {
     get?: never;
     /**
      * Update the profile
-     * @description Replace the profile of the user's primary address with these fields, and return the stored profile. A field that is omitted or null is cleared.
+     * @description Replace the text fields of the profile of the user's primary address, and return the stored profile. A field that is omitted or null is cleared. The avatar and cover are set by uploading them.
      */
     put: operations["profile.update"];
     post?: never;
@@ -230,7 +230,7 @@ export interface paths {
     get?: never;
     /**
      * Upload a profile image
-     * @description Upload a profile avatar or cover image as a raw binary body. Re-uploading the same image is a no-op, uploading a different image replaces the previous file.
+     * @description Upload a profile avatar or cover image as a raw binary body, set it on the profile of the user's primary address right away, and return the stored profile. The image it replaces is deleted.
      */
     put: operations["profile.uploadImage"];
     post?: never;
@@ -400,12 +400,9 @@ export interface components {
     PayloadTooLargeError: {
       message: string;
     };
-    UploadedImageResponse: {
-      url: string;
-      sizeBytes: number;
-      width: number;
-      height: number;
-      thumbhash: string;
+    UpdateProfileResponse: {
+      address: string;
+      profile: components["schemas"]["UserProfile"];
     };
     /** @enum {string} */
     ProfileImageKind: "avatar" | "cover";
@@ -418,19 +415,19 @@ export interface components {
       description: string | null;
       website: string | null;
       twitter: string | null;
-      picture: string | null;
-    };
-    UpdateProfileResponse: {
-      address: string;
-      profile: components["schemas"]["UserProfile"];
     };
     UpdateProfilePayload: {
       displayName?: string | null;
       description?: string | null;
       website?: string | null;
       twitter?: string | null;
-      picture?: string | null;
-      coverPicture?: string | null;
+    };
+    UploadedImageResponse: {
+      url: string;
+      sizeBytes: number;
+      width: number;
+      height: number;
+      thumbhash: string;
     };
     PublishDraftStatusResponse: {
       status: components["schemas"]["PublishDraftStatus"];
@@ -1595,13 +1592,13 @@ export interface operations {
       };
     };
     responses: {
-      /** @description UploadedImageResponse */
+      /** @description UpdateProfileResponse */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["UploadedImageResponse"];
+          "application/json": components["schemas"]["UpdateProfileResponse"];
         };
       };
       /** @description Bad Request */

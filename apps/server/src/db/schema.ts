@@ -204,10 +204,10 @@ export const profile = sqliteTable("profile", {
 
 /**
  * Placeholder metadata for an image, keyed by its canonical URL. Post covers
- * (`post.cover_image`) and profile pictures (`profile.picture`/`cover_picture`)
- * get a PENDING row from their producers that the thumbhash job fills in.
- * Images uploaded through the API (profile and draft images) get a READY row
- * inline. External image URLs embedded in post content have no row.
+ * (`post.cover_image`) get a PENDING row from their producers that the
+ * thumbhash job fills in. Images uploaded through the API (profile and draft
+ * images) get a READY row inline. External image URLs embedded in post content
+ * have no row.
  */
 const mediaImageStatuses = ["PENDING", "READY", "FAILED"] as const;
 

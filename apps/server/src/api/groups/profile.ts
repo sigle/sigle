@@ -15,7 +15,6 @@ import {
   isUrlWithProtocol,
   PayloadTooLarge,
   UnsupportedMediaType,
-  UploadedImageResponse,
 } from "@/api/schemas";
 import { profileImageKinds } from "@/lib/profile-images";
 
@@ -24,7 +23,6 @@ export const PROFILE_LIMITS = {
   displayName: 100,
   description: 2000,
   website: 200,
-  picture: 2048,
 } as const;
 
 export const ProfileDisplayName = Schema.String.check(
@@ -48,17 +46,6 @@ export const ProfileTwitter = Schema.String.check(
   Schema.isPattern(/^\w{1,15}$/),
 );
 
-// Uploaded through `PUT /api/me/profile/images/{kind}`, or hosted elsewhere,
-// such as the picture of a BNS profile. The thumbhash job resolves Arweave and
-// IPFS URLs through the gateways.
-export const ProfilePicture = Schema.String.annotate({ format: "uri" }).check(
-  Schema.isMaxLength(PROFILE_LIMITS.picture),
-  isUrlWithProtocol(
-    ["http:", "https:", "ipfs:", "ar:"],
-    "an http(s), ipfs:// or ar:// URL",
-  ),
-);
-
 /** Omit a field, or set it to null, to clear it. */
 const ProfileField = <S extends Schema.Top>(schema: S) =>
   Schema.optionalKey(Schema.NullOr(schema));
@@ -68,8 +55,6 @@ export const UpdateProfilePayload = Schema.Struct({
   description: ProfileField(ProfileDescription),
   website: ProfileField(ProfileWebsite),
   twitter: ProfileField(ProfileTwitter),
-  picture: ProfileField(ProfilePicture),
-  coverPicture: ProfileField(ProfilePicture),
 }).annotate({ identifier: "UpdateProfilePayload" });
 
 export const UpdateProfileResponse = Schema.Struct({
@@ -88,7 +73,6 @@ export const BnsProfile = Schema.Struct({
   description: Schema.NullOr(Schema.String),
   website: Schema.NullOr(Schema.String),
   twitter: Schema.NullOr(Schema.String),
-  picture: Schema.NullOr(Schema.String),
 }).annotate({ identifier: "BnsProfile" });
 
 export const BnsProfileResponse = Schema.Struct({
@@ -115,7 +99,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
       .annotate(OpenApi.Summary, "Update the profile")
       .annotate(
         OpenApi.Description,
-        "Replace the profile of the user's primary address with these fields, and return the stored profile. A field that is omitted or null is cleared.",
+        "Replace the text fields of the profile of the user's primary address, and return the stored profile. A field that is omitted or null is cleared. The avatar and cover are set by uploading them.",
       )
       .annotate(RateLimitPolicy, "profileUpdate"),
   )
@@ -133,13 +117,13 @@ export const ProfileGroup = HttpApiGroup.make("profile")
   .add(
     HttpApiEndpoint.put("uploadImage", "/images/:kind", {
       params: { kind: ProfileImageKindSchema },
-      success: UploadedImageResponse,
+      success: UpdateProfileResponse,
       error: [BadRequest, PayloadTooLarge, UnsupportedMediaType],
     })
       .annotate(OpenApi.Summary, "Upload a profile image")
       .annotate(
         OpenApi.Description,
-        "Upload a profile avatar or cover image as a raw binary body. Re-uploading the same image is a no-op, uploading a different image replaces the previous file.",
+        "Upload a profile avatar or cover image as a raw binary body, set it on the profile of the user's primary address right away, and return the stored profile. The image it replaces is deleted.",
       )
       .annotate(OpenApi.Override, { requestBody: imageRequestBody })
       .annotate(RateLimitPolicy, "profileImageUpload"),

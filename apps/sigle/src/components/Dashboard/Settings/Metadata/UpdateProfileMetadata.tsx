@@ -24,8 +24,6 @@ const updateProfileMetadataSchema = z.object({
   description: z.string().optional(),
   website: z.url().optional().or(z.literal("")),
   twitter: z.string().optional(),
-  picture: z.string().optional(),
-  coverPicture: z.string().optional(),
 });
 
 type UserResponse =
@@ -53,19 +51,33 @@ export const UpdateProfileMetadata = ({
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors, isDirty, isSubmitting },
   } = useForm({
     resolver: zodResolver(updateProfileMetadataSchema),
     values: {
       displayName: profile?.displayName || undefined,
       description: profile?.description || undefined,
-      picture: profile?.picture?.url || undefined,
-      coverPicture: profile?.coverPicture?.url || undefined,
       website: profile?.website || undefined,
       twitter: profile?.twitter || undefined,
     },
   });
+
+  // The API returns the stored profile, so the cached user is updated
+  // without fetching it again.
+  const updateCachedUser = async ({
+    address,
+    profile: storedProfile,
+  }: UserResponse) => {
+    const userQueries = { queryKey: ["get", "/api/users/{address}"] };
+    // A refetch started before the update, such as on window focus, would
+    // otherwise overwrite the cache with the old profile.
+    await queryClient.cancelQueries(userQueries);
+    queryClient.setQueriesData<UserResponse>(userQueries, (cached) =>
+      cached?.address === address
+        ? { address, profile: storedProfile }
+        : cached,
+    );
+  };
 
   const onSubmit = handleSubmit(async (formValues) => {
     const result = await updateProfile
@@ -75,8 +87,6 @@ export const UpdateProfileMetadata = ({
           description: formValues.description || null,
           twitter: formValues.twitter || null,
           website: formValues.website || null,
-          picture: formValues.picture || null,
-          coverPicture: formValues.coverPicture || null,
         },
       })
       .catch((error: { message?: string }) => {
@@ -91,18 +101,7 @@ export const UpdateProfileMetadata = ({
 
     toast.success("Profile updated!");
 
-    // The API returns the stored profile, so the cached user is updated
-    // without fetching it again.
-    const { address, profile: storedProfile } = result;
-    const userQueries = { queryKey: ["get", "/api/users/{address}"] };
-    // A refetch started before the update, such as on window focus, would
-    // otherwise overwrite the cache with the old profile.
-    await queryClient.cancelQueries(userQueries);
-    queryClient.setQueriesData<UserResponse>(userQueries, (cached) =>
-      cached?.address === address
-        ? { address, profile: storedProfile }
-        : cached,
-    );
+    await updateCachedUser(result);
     setEditingProfileMetadata(false);
   });
 
@@ -159,13 +158,8 @@ export const UpdateProfileMetadata = ({
     <form onSubmit={onSubmit}>
       <SettingsRow label="Picture" description="A square JPG or PNG.">
         <UploadProfilePicture
-          picture={watch("picture")}
-          setPicture={(value) =>
-            setValue("picture", value, {
-              shouldValidate: true,
-              shouldDirty: true,
-            })
-          }
+          picture={profile?.picture?.url}
+          onUploaded={updateCachedUser}
         />
       </SettingsRow>
 
@@ -174,13 +168,8 @@ export const UpdateProfileMetadata = ({
         description="A wide JPG or PNG for the top of your blog."
       >
         <UploadProfileCoverPicture
-          picture={watch("coverPicture")}
-          setPicture={(value) =>
-            setValue("coverPicture", value, {
-              shouldValidate: true,
-              shouldDirty: true,
-            })
-          }
+          picture={profile?.coverPicture?.url}
+          onUploaded={updateCachedUser}
         />
       </SettingsRow>
 

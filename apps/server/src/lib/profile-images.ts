@@ -49,7 +49,13 @@ export const profileImageKey = (
   userId: string,
   kind: ProfileImageKind,
   version: string,
-): string => `u/${userId}/${kind}/${version}.webp`;
+): string => `${profileImagePrefix(userId, kind)}${version}.webp`;
+
+/** Prefix of the keys of a user's avatars or covers. */
+export const profileImagePrefix = (
+  userId: string,
+  kind: ProfileImageKind,
+): string => `u/${userId}/${kind}/`;
 
 export const profileImagePostHogEvent = (kind: ProfileImageKind): string =>
   kind === "avatar" ? "profile media uploaded" : "profile cover media uploaded";

@@ -6,7 +6,6 @@ import { SigleApi } from "@/api";
 import {
   ProfileDescription,
   ProfileDisplayName,
-  ProfilePicture,
   ProfileTwitter,
   ProfileWebsite,
   type UpdateProfilePayload,
@@ -17,46 +16,32 @@ import { CurrentUser } from "@/api/middleware/auth-user";
 import { InternalServerError } from "@/api/schemas";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { profile } from "@/db/schema";
-import { scheduleImageThumbhash } from "@/jobs/generate-image-thumbhash";
+import { mediaImage, profile } from "@/db/schema";
 import {
   profileImageKey,
   profileImageMaxMib,
   profileImagePostHogEvent,
+  profileImagePrefix,
   profileImageSettings,
   type ProfileImageKind,
 } from "@/lib/profile-images";
 import { BnsService } from "@/services/bns";
 import { PostHogService } from "@/services/posthog";
+import { StorageService } from "@/services/storage";
 
-interface ProfilePictures {
-  readonly picture: string | null;
-  readonly coverPicture: string | null;
-}
+/** The stored profile of the signed-in user, after a write. */
+const findOwnProfile = (address: string) =>
+  Effect.gen(function* () {
+    const stored = yield* findProfile(address);
 
-/**
- * Externally hosted pictures bypass the image upload endpoint, so every
- * profile write schedules the placeholder of the pictures it changes.
- */
-const scheduleChangedProfileImages = (
-  previous: ProfilePictures | undefined,
-  next: ProfilePictures,
-) => {
-  const changed = new Set<string>();
+    if (stored === undefined) {
+      return yield* Effect.die(
+        new Error(`Profile ${address} missing after upsert`),
+      );
+    }
 
-  if (next.picture !== null && next.picture !== previous?.picture) {
-    changed.add(next.picture);
-  }
-
-  if (
-    next.coverPicture !== null &&
-    next.coverPicture !== previous?.coverPicture
-  ) {
-    changed.add(next.coverPicture);
-  }
-
-  return Effect.forEach(changed, scheduleImageThumbhash, { discard: true });
-};
+    return { address, profile: stored.profile };
+  });
 
 export const updateProfile = (payload: typeof UpdateProfilePayload.Type) =>
   Effect.gen(function* () {
@@ -66,55 +51,27 @@ export const updateProfile = (payload: typeof UpdateProfilePayload.Type) =>
 
     const now = new Date();
 
+    // The avatar and cover are kept: they are set by uploading them.
     const fields = {
       displayName: payload.displayName ?? null,
       description: payload.description ?? null,
       website: payload.website ?? null,
       twitter: payload.twitter ?? null,
-      picture: payload.picture ?? null,
-      coverPicture: payload.coverPicture ?? null,
       updatedAt: now,
     };
 
-    const previous = yield* db
-      .transaction((tx) =>
-        Effect.gen(function* () {
-          const [found] = yield* tx
-            .select({
-              picture: profile.picture,
-              coverPicture: profile.coverPicture,
-            })
-            .from(profile)
-            .where(eq(profile.address, user.address))
-            .limit(1);
-
-          yield* tx
-            .insert(profile)
-            .values({ ...fields, address: user.address, createdAt: now })
-            .onConflictDoUpdate({ target: profile.address, set: fields });
-
-          return found;
-        }),
-      )
-      // Like the queries, a failed transaction is a defect.
+    yield* db
+      .insert(profile)
+      .values({ ...fields, address: user.address, createdAt: now })
+      .onConflictDoUpdate({ target: profile.address, set: fields })
       .pipe(Effect.orDie);
-
-    yield* scheduleChangedProfileImages(previous, fields);
 
     yield* posthog.capture({
       distinctId: user.id,
       event: "profile updated",
     });
 
-    const stored = yield* findProfile(user.address);
-
-    if (stored === undefined) {
-      return yield* Effect.die(
-        new Error(`Profile ${user.address} missing after upsert`),
-      );
-    }
-
-    return { address: user.address, profile: stored.profile };
+    return yield* findOwnProfile(user.address);
   });
 
 /**
@@ -129,7 +86,6 @@ const BnsZonefile = Schema.fromJsonString(
     name: Schema.optionalKey(Schema.Unknown),
     bio: Schema.optionalKey(Schema.Unknown),
     website: Schema.optionalKey(Schema.Unknown),
-    pfp: Schema.optionalKey(Schema.Unknown),
     social: Schema.optionalKey(Schema.Unknown),
   }),
 );
@@ -171,7 +127,8 @@ export const parseBnsProfile = (zonefile: string, owner: string) => {
     return null;
   }
 
-  const { name, bio, website, pfp, social } = decoded.value;
+  // `pfp` isn't imported: profile images are only set by uploading them.
+  const { name, bio, website, social } = decoded.value;
 
   const twitter = Option.getOrElse(decodeBnsSocial(social), () => []).find(
     (entry) =>
@@ -196,7 +153,6 @@ export const parseBnsProfile = (zonefile: string, owner: string) => {
       ProfileTwitter,
       stringOrUndefined(twitter?.username)?.trim().replace(/^@/, ""),
     ),
-    picture: readField(ProfilePicture, stringOrUndefined(pfp)),
   };
 
   return Object.values(fields).every((value) => value === null) ? null : fields;
@@ -231,6 +187,11 @@ export const getBnsProfile = Effect.gen(function* () {
   };
 });
 
+/**
+ * Uploads an avatar or cover and sets it on the profile right away, then
+ * deletes the image it replaces: profile images are keyed by their content
+ * hash, so the replaced object is no longer used by any profile.
+ */
 export const uploadProfileImage = (
   kind: ProfileImageKind,
   request: HttpServerRequest.HttpServerRequest,
@@ -238,6 +199,8 @@ export const uploadProfileImage = (
   Effect.gen(function* () {
     const user = yield* CurrentUser;
     const config = yield* AppConfig;
+    const db = yield* Database;
+    const storage = yield* StorageService;
     const posthog = yield* PostHogService;
 
     const uploaded = yield* uploadImageFromRequest(request, {
@@ -246,6 +209,62 @@ export const uploadProfileImage = (
       key: (version) => profileImageKey(user.id, kind, version),
       url: (stored) => stored.url,
     });
+
+    const now = new Date();
+    const column = kind === "avatar" ? profile.picture : profile.coverPicture;
+
+    const image =
+      kind === "avatar"
+        ? { picture: uploaded.url }
+        : { coverPicture: uploaded.url };
+
+    const previousUrl = yield* db
+      .transaction((tx) =>
+        Effect.gen(function* () {
+          const [previous] = yield* tx
+            .select({ url: column })
+            .from(profile)
+            .where(eq(profile.address, user.address))
+            .limit(1);
+
+          yield* tx
+            .insert(profile)
+            .values({
+              ...image,
+              address: user.address,
+              createdAt: now,
+              updatedAt: now,
+            })
+            .onConflictDoUpdate({
+              target: profile.address,
+              set: { ...image, updatedAt: now },
+            });
+
+          return previous?.url ?? null;
+        }),
+      )
+      .pipe(Effect.orDie);
+
+    // Only images this endpoint stored for this user and kind are deleted, not
+    // external pictures or the images of profiles published on Arweave.
+    const publicUrl = uploaded.url.slice(0, -uploaded.key.length);
+    const previousKey = previousUrl?.slice(publicUrl.length);
+
+    if (
+      previousUrl !== null &&
+      previousUrl !== uploaded.url &&
+      previousUrl.startsWith(publicUrl) &&
+      previousKey?.startsWith(profileImagePrefix(user.id, kind)) === true
+    ) {
+      yield* db
+        .delete(mediaImage)
+        .where(eq(mediaImage.id, previousUrl))
+        .pipe(Effect.orDie);
+
+      // The profile is saved already, a failed delete only leaves an unused
+      // object behind. The storage service logs it.
+      yield* storage.deleteFile(previousKey).pipe(Effect.ignore);
+    }
 
     yield* posthog.capture({
       distinctId: user.id,
@@ -257,13 +276,7 @@ export const uploadProfileImage = (
       },
     });
 
-    return {
-      height: uploaded.height,
-      sizeBytes: uploaded.sizeBytes,
-      thumbhash: uploaded.thumbhash,
-      url: uploaded.url,
-      width: uploaded.width,
-    };
+    return yield* findOwnProfile(user.address);
   });
 
 export const ProfileHandlersLayer = HttpApiBuilder.group(
