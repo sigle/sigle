@@ -304,13 +304,15 @@ export const processPublishDraftJob = (
 
 export const markDraftPublishFailed = (
   job: PublishDraftJob,
-): Effect.Effect<void, never, Database> =>
+): Effect.Effect<void, never, Database | PostHogService> =>
   Effect.gen(function* () {
     const db = yield* Database;
+    const posthog = yield* PostHogService;
+
     // The active upload claim is intentionally left untouched: only its owner
     // (on success or error) or lease expiry may release it, otherwise a
     // competing job could clear a live uploader's claim and double-upload.
-    yield* db
+    const marked = yield* db
       .update(draft)
       .set({
         txStatus: "FAILED",
@@ -323,6 +325,7 @@ export const markDraftPublishFailed = (
           eq(draft.publishSignature, job.signature),
         ),
       )
+      .returning({ id: draft.id })
       .pipe(
         Effect.retry({
           schedule: Schedule.exponential("100 millis"),
@@ -332,9 +335,19 @@ export const markDraftPublishFailed = (
           Effect.logError(
             `Failed to mark draft ${job.draftId} as FAILED`,
             cause,
-          ),
+          ).pipe(Effect.as([])),
         ),
       );
+
+    // Only the publish the draft still belongs to failed for the user: a newer
+    // publish of the draft took over from an older job.
+    if (marked.length > 0) {
+      yield* posthog.capture({
+        distinctId: job.userId,
+        event: "draft_publish_failed",
+        properties: { draftId: job.draftId },
+      });
+    }
   });
 
 export const publishDraftJob = defineJob({

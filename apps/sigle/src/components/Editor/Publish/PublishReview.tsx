@@ -4,6 +4,7 @@ import {
   IconExternalLink,
 } from "@tabler/icons-react";
 import { formatDistanceToNow } from "date-fns";
+import { usePostHog } from "posthog-js/react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -58,6 +59,16 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
 
   const publishLimitReached =
     publishLimit !== undefined && publishLimit.used >= publishLimit.limit;
+
+  const posthog = usePostHog();
+  const showUpgrade = publishLimitReached && me?.plan === "free";
+
+  // Reported like the `UpgradeDialog` prompts, with their trigger.
+  useEffect(() => {
+    if (showUpgrade) {
+      posthog.capture("upgrade_prompt_viewed", { trigger: "publish_limit" });
+    }
+  }, [posthog, showUpgrade]);
 
   // Validate form on mount so we can show the various error messages in the callout
   // and disable the publish button
@@ -121,7 +132,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
                   addSuffix: true,
                 })}
             .
-            {me?.plan === "free" ? (
+            {showUpgrade ? (
               <>
                 {" "}
                 Pro members can publish up to {PUBLISH_LIMITS.pro} posts per
@@ -139,6 +150,11 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
                       rel="noreferrer"
                     />
                   }
+                  onClick={() => {
+                    posthog.capture("upgrade_prompt_clicked", {
+                      trigger: "publish_limit",
+                    });
+                  }}
                 >
                   Upgrade to Pro
                   <IconExternalLink size={14} />
