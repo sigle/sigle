@@ -12,7 +12,15 @@ import {
   or,
   sql,
 } from "drizzle-orm";
-import { Cause, Data, DateTime, Duration, Effect, ErrorReporter } from "effect";
+import {
+  Cause,
+  Data,
+  DateTime,
+  Duration,
+  Effect,
+  ErrorReporter,
+  Semaphore,
+} from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
 import { SigleApi } from "@/api";
 import {
@@ -434,6 +442,18 @@ const reportGlobalPublishLimitReached = ({
     );
   });
 
+/**
+ * Serializes counting the publish limits and claiming the draft, so
+ * concurrent publishes from different wallets can't all read the same usage
+ * before any of them claims its draft and together exceed the global limit.
+ * The queries are synchronous today, so they rarely interleave, but nothing
+ * guarantees it: the scheduler can yield between them, and an async call
+ * added between them would reopen the gap. The API runs as a single process
+ * on its SQLite file, so an in-process lock is enough; it is held for a few
+ * queries.
+ */
+const publishLock = Semaphore.makeUnsafe(1);
+
 export const publishDraft = (
   draftId: string,
   payload: typeof PublishDraftPayload.Type,
@@ -494,106 +514,118 @@ export const publishDraft = (
       });
     }
 
-    const { plan } = user;
-    const limit = PUBLISH_LIMITS[plan];
-    const now = new Date();
+    // Counting the limits and claiming the draft is one step, see
+    // `publishLock`.
+    const acceptedDraft = yield* publishLock.withPermit(
+      Effect.gen(function* () {
+        const { plan } = user;
+        const limit = PUBLISH_LIMITS[plan];
+        const now = new Date();
 
-    const usage = yield* findUserPublishUsage(db, {
-      userId: user.id,
-      now,
-      excludeDraftId: draftId,
-    });
+        const usage = yield* findUserPublishUsage(db, {
+          userId: user.id,
+          now,
+          excludeDraftId: draftId,
+        });
 
-    if (usage.used >= limit) {
-      return yield* failOverDailyLimit(
-        usage,
-        now,
-        plan === "free"
-          ? `You can publish ${limit} posts per day on the Free plan. Try again later, or upgrade to Pro to publish up to ${PUBLISH_LIMITS.pro} posts per day.`
-          : `You can publish ${limit} posts per day on the Pro plan. Try again later.`,
-      );
-    }
+        if (usage.used >= limit) {
+          return yield* failOverDailyLimit(
+            usage,
+            now,
+            plan === "free"
+              ? `You can publish ${limit} posts per day on the Free plan. Try again later, or upgrade to Pro to publish up to ${PUBLISH_LIMITS.pro} posts per day.`
+              : `You can publish ${limit} posts per day on the Pro plan. Try again later.`,
+          );
+        }
 
-    const globalLimit =
-      plan === "free"
-        ? config.PUBLISH_GLOBAL_DAILY_LIMIT_FREE
-        : config.PUBLISH_GLOBAL_DAILY_LIMIT_PRO;
+        const globalLimit =
+          plan === "free"
+            ? config.PUBLISH_GLOBAL_DAILY_LIMIT_FREE
+            : config.PUBLISH_GLOBAL_DAILY_LIMIT_PRO;
 
-    const globalUsage = yield* findPlanPublishUsage(db, {
-      plan,
-      now,
-      excludeDraftId: draftId,
-    });
+        const globalUsage = yield* findPlanPublishUsage(db, {
+          plan,
+          now,
+          excludeDraftId: draftId,
+        });
 
-    if (globalUsage.used >= globalLimit) {
-      yield* reportGlobalPublishLimitReached({ plan, limit: globalLimit, now });
+        if (globalUsage.used >= globalLimit) {
+          yield* reportGlobalPublishLimitReached({
+            plan,
+            limit: globalLimit,
+            now,
+          });
 
-      return yield* failOverDailyLimit(
-        globalUsage,
-        now,
-        plan === "free"
-          ? "Sigle reached today's publishing limit for Free accounts. Try again later, or upgrade to Pro to keep publishing."
-          : "Sigle reached today's publishing limit for Pro accounts. Try again later.",
-      );
-    }
+          return yield* failOverDailyLimit(
+            globalUsage,
+            now,
+            plan === "free"
+              ? "Sigle reached today's publishing limit for Free accounts. Try again later, or upgrade to Pro to keep publishing."
+              : "Sigle reached today's publishing limit for Pro accounts. Try again later.",
+          );
+        }
 
-    // Take ownership of the draft row: `publishSignature` identifies the signed
-    // payload being published, and the Arweave checkpoint/upload claim only
-    // survive while they belong to that payload. Workers whose job signature no
-    // longer matches the draft no-op, so the newest request wins without any
-    // queue reconciliation, which also recovers a draft stuck in flight. The
-    // CASE reads the current row, so a checkpoint or in-flight upload claim
-    // from the same signature is never clobbered. Another signature cannot
-    // take over while a worker holds the upload claim, or while a checkpointed
-    // upload waits for a worker to create the post, including after a retry
-    // of the same signature reset the status to PENDING: either way an
-    // Arweave upload paid for would be discarded. A FAILED publish has no
-    // worker left, and both checks expire after the claim lease, so a worker
-    // that crashed doesn't block the draft forever. Both run in the same
-    // statement as the write.
-    const leaseCutoff = new Date(
-      now.getTime() - PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS,
-    );
+        // Take ownership of the draft row: `publishSignature` identifies the signed
+        // payload being published, and the Arweave checkpoint/upload claim only
+        // survive while they belong to that payload. Workers whose job signature no
+        // longer matches the draft no-op, so the newest request wins without any
+        // queue reconciliation, which also recovers a draft stuck in flight. The
+        // CASE reads the current row, so a checkpoint or in-flight upload claim
+        // from the same signature is never clobbered. Another signature cannot
+        // take over while a worker holds the upload claim, or while a checkpointed
+        // upload waits for a worker to create the post, including after a retry
+        // of the same signature reset the status to PENDING: either way an
+        // Arweave upload paid for would be discarded. A FAILED publish has no
+        // worker left, and both checks expire after the claim lease, so a worker
+        // that crashed doesn't block the draft forever. Both run in the same
+        // statement as the write.
+        const leaseCutoff = new Date(
+          now.getTime() - PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS,
+        );
 
-    const [acceptedDraft] = yield* db
-      .update(draft)
-      .set({
-        txStatus: "PENDING",
-        publishSignature: signature,
-        arweaveTxId: sql`CASE
-          WHEN ${draft.publishSignature} = ${signature} THEN ${draft.arweaveTxId}
-          ELSE NULL
-        END`,
-        uploadClaimedAt: sql`CASE
-          WHEN ${draft.publishSignature} = ${signature} THEN ${draft.uploadClaimedAt}
-          ELSE NULL
-        END`,
-        updatedAt: now,
-      })
-      .where(
-        and(
-          eq(draft.id, draftId),
-          eq(draft.userId, user.id),
-          or(
-            eq(draft.publishSignature, signature),
+        const [claimedDraft] = yield* db
+          .update(draft)
+          .set({
+            txStatus: "PENDING",
+            publishSignature: signature,
+            arweaveTxId: sql`CASE
+              WHEN ${draft.publishSignature} = ${signature} THEN ${draft.arweaveTxId}
+              ELSE NULL
+            END`,
+            uploadClaimedAt: sql`CASE
+              WHEN ${draft.publishSignature} = ${signature} THEN ${draft.uploadClaimedAt}
+              ELSE NULL
+            END`,
+            updatedAt: now,
+          })
+          .where(
             and(
+              eq(draft.id, draftId),
+              eq(draft.userId, user.id),
               or(
-                isNull(draft.uploadClaimedAt),
-                lt(draft.uploadClaimedAt, leaseCutoff),
-              ),
-              // The checkpoint write and every accepted publish set
-              // `updatedAt`.
-              or(
-                isNull(draft.arweaveTxId),
-                eq(draft.txStatus, "FAILED"),
-                lt(draft.updatedAt, leaseCutoff),
+                eq(draft.publishSignature, signature),
+                and(
+                  or(
+                    isNull(draft.uploadClaimedAt),
+                    lt(draft.uploadClaimedAt, leaseCutoff),
+                  ),
+                  // The checkpoint write and every accepted publish set
+                  // `updatedAt`.
+                  or(
+                    isNull(draft.arweaveTxId),
+                    eq(draft.txStatus, "FAILED"),
+                    lt(draft.updatedAt, leaseCutoff),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      )
-      .returning({ id: draft.id })
-      .pipe(Effect.orDie);
+          )
+          .returning({ id: draft.id })
+          .pipe(Effect.orDie);
+
+        return claimedDraft;
+      }),
+    );
 
     if (!acceptedDraft) {
       const [currentDraft] = yield* db
