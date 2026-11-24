@@ -16,8 +16,8 @@
     "@changesets/cli": "2.31.1",
     "@effect/tsgo": "0.56.0",
     "railway": "3.17.0",
-    "syncpack": "15.3.2",
-    "turbo": "2.11.2",
+    "syncpack": "15.3.4",
+    "turbo": "2.11.13",
     "typescript": "7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:"
