@@ -150,36 +150,38 @@ export const processPublishDraftJob = (
         });
       }
 
-      const uploaded = yield* arweave
-        .uploadFile({
-          file: Buffer.from(job.metadataJson),
-          contentType: "application/json",
-          tags: [
-            {
-              name: "Author",
-              value: job.authorAddress,
-            },
-          ],
-        })
-        // Release the claim before failing so the queue retry can reclaim it
-        // immediately instead of waiting for the lease to expire. A crashed
-        // worker leaves the claim behind; it is reclaimed after the lease.
-        .pipe(
-          Effect.tapError(() =>
-            db
-              .update(draft)
-              .set({ uploadClaimedAt: null, updatedAt: new Date() })
-              .where(
-                and(
-                  eq(draft.id, job.draftId),
-                  eq(draft.userId, job.userId),
-                  eq(draft.publishSignature, job.signature),
-                  eq(draft.uploadClaimedAt, claimedAt),
-                ),
-              )
-              .pipe(Effect.orDie),
-          ),
-        );
+      const uploaded = yield* (
+        arweave
+          .uploadFile({
+            file: Buffer.from(job.metadataJson),
+            contentType: "application/json",
+            tags: [
+              {
+                name: "Author",
+                value: job.authorAddress,
+              },
+            ],
+          })
+          // Release the claim before failing so the queue retry can reclaim it
+          // immediately instead of waiting for the lease to expire. A crashed
+          // worker leaves the claim behind; it is reclaimed after the lease.
+          .pipe(
+            Effect.tapError(() =>
+              db
+                .update(draft)
+                .set({ uploadClaimedAt: null, updatedAt: new Date() })
+                .where(
+                  and(
+                    eq(draft.id, job.draftId),
+                    eq(draft.userId, job.userId),
+                    eq(draft.publishSignature, job.signature),
+                    eq(draft.uploadClaimedAt, claimedAt),
+                  ),
+                )
+                .pipe(Effect.orDie),
+            ),
+          )
+      );
 
       const [checkpointed] = yield* db
         .update(draft)

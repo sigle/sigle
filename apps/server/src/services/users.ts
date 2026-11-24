@@ -65,11 +65,15 @@ export const findPrimaryWalletAddresses = (userIds: ReadonlyArray<string>) =>
       }
     }
 
-    return yield* Effect.forEach(userIds, (userId) => {
-      const address = primaries.get(userId);
+    return yield* Effect.forEach(
+      userIds,
+      (userId) => {
+        const address = primaries.get(userId);
 
-      return address === undefined
-        ? missingWalletAddress(userId)
-        : Effect.succeed(address);
-    });
+        return address === undefined
+          ? missingWalletAddress(userId)
+          : Effect.succeed(address);
+      },
+      { concurrency: 1 },
+    );
   });

@@ -273,10 +273,13 @@ describe("profile", () => {
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
 
-      const responses = yield* Effect.all([
-        updateProfileRequest(client, { displayName: "Satoshi" }),
-        getBnsProfileRequest(client),
-      ]);
+      const responses = yield* Effect.all(
+        [
+          updateProfileRequest(client, { displayName: "Satoshi" }),
+          getBnsProfileRequest(client),
+        ],
+        { concurrency: 1 },
+      );
 
       expect(responses.map((response) => response.status)).toStrictEqual([
         401, 401,
@@ -344,6 +347,7 @@ describe("profile", () => {
                 }),
               ),
             ),
+          { concurrency: 1 },
         );
 
         expect(results).toStrictEqual(
@@ -388,6 +392,7 @@ describe("profile", () => {
             }),
           ],
           getBnsProfile,
+          { concurrency: 1 },
         );
 
         const noName = yield* getBnsProfile(BnsService.layerTest());
@@ -666,11 +671,14 @@ describe("profile", () => {
         })
         .pipe(Effect.orDie);
 
-      const responses = yield* Effect.forEach(["avatar", "cover"], (kind) =>
-        uploadImageRequest(client, kind, {
-          bytes: new Uint8Array(png),
-          contentType: "image/png",
-        }).pipe(Effect.map((response) => response.status)),
+      const responses = yield* Effect.forEach(
+        ["avatar", "cover"],
+        (kind) =>
+          uploadImageRequest(client, kind, {
+            bytes: new Uint8Array(png),
+            contentType: "image/png",
+          }).pipe(Effect.map((response) => response.status)),
+        { concurrency: 1 },
       );
 
       expect({

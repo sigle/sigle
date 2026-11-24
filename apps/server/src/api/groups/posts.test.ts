@@ -50,12 +50,15 @@ const createAuthorPosts = (address: string, titles: ReadonlyArray<string>) =>
     yield* createTestWalletAddress({ userId: user.id, address });
 
     // Titles are listed oldest first, a minute apart.
-    yield* Effect.forEach(titles, (title, index) =>
-      createTestPost({
-        userId: user.id,
-        title,
-        createdAt: new Date(Date.UTC(2026, 0, 1, 0, index)),
-      }),
+    yield* Effect.forEach(
+      titles,
+      (title, index) =>
+        createTestPost({
+          userId: user.id,
+          title,
+          createdAt: new Date(Date.UTC(2026, 0, 1, 0, index)),
+        }),
+      { concurrency: 1 },
     );
   });
 
@@ -226,6 +229,7 @@ describe("posts", () => {
           client
             .get(`/api/posts?${query}`)
             .pipe(Effect.map((response) => response.status)),
+        { concurrency: 1 },
       );
 
       const invalidAddress = yield* client

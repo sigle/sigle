@@ -13,7 +13,7 @@
     "@astrojs/starlight": "0.43.1",
     "@fontsource-variable/inter": "5.3.0",
     "@sigle/sdk": "workspace:*",
-    "astro": "7.4.12",
+    "astro": "7.4.13",
     "astro-mermaid": "2.2.0",
     "mermaid": "12.3.0",
     "sharp": "0.35.5"

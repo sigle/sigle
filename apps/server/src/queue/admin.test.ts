@@ -198,8 +198,11 @@ describe("job admin service", () => {
         `;
       }
 
-      const pages = yield* Effect.forEach([0, 2, 4], (offset) =>
-        admin.listFailed({ queueName: "admin-order", limit: 2, offset }),
+      const pages = yield* Effect.forEach(
+        [0, 2, 4],
+        (offset) =>
+          admin.listFailed({ queueName: "admin-order", limit: 2, offset }),
+        { concurrency: 1 },
       );
 
       expect(

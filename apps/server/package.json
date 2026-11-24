@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "vp pack",
-    "dev": "tsx watch --env-file=.env.development --env-file-if-exists=.env.development.local src/main.ts",
+    "dev": "vpx --watch --env-file=.env.development --env-file-if-exists=.env.development.local src/main.ts",
     "start": "node dist/main.mjs",
     "test": "vp test"
   },
@@ -37,7 +37,6 @@
     "@tsconfig/recommended": "1.0.14",
     "@types/node": "26.6.6",
     "drizzle-kit": "1.0.0-rc.6",
-    "tsx": "4.23.15",
     "typescript": "7.0.2",
     "vite": "catalog:",
     "vite-plus": "catalog:",

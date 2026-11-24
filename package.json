@@ -9,12 +9,12 @@
     "release": "pnpm changeset publish",
     "repos:sync": "./scripts/sync-repos.sh",
     "test": "turbo test",
-    "prepare": "vp config && effect-tsgo patch --oxlint",
+    "prepare": "vp config && effect-tsgo patch --oxlint --tsrs",
     "version": "pnpm changeset version && pnpm install --lockfile-only"
   },
   "devDependencies": {
     "@changesets/cli": "2.31.1",
-    "@effect/tsgo": "0.56.0",
+    "@effect/tsgo": "0.73.4",
     "railway": "3.17.0",
     "syncpack": "15.3.4",
     "turbo": "2.11.13",
