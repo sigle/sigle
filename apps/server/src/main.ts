@@ -17,10 +17,7 @@ import { PostsHandlersLayer } from "@/api/handlers/posts";
 import { ProfileHandlersLayer } from "@/api/handlers/profile";
 import { UsersHandlersLayer } from "@/api/handlers/users";
 import { AdminMiddlewareLayer } from "@/api/middleware/admin";
-import {
-  UserAuthMiddlewareLayer,
-  WhitelistedUserMiddlewareLayer,
-} from "@/api/middleware/auth-user";
+import { UserAuthMiddlewareLayer } from "@/api/middleware/auth-user";
 import { BodyLimitLayer } from "@/api/middleware/body-limit";
 import { EtagLayer } from "@/api/middleware/etag";
 import { RateLimitMiddlewareLayer } from "@/api/middleware/rate-limit";
@@ -60,7 +57,6 @@ export const ApiHandlersLayer = Layer.mergeAll(
 export const ApiMiddlewareLayer = Layer.mergeAll(
   RateLimitMiddlewareLayer,
   UserAuthMiddlewareLayer,
-  WhitelistedUserMiddlewareLayer,
   AdminMiddlewareLayer,
   SchemaErrorMiddlewareLayer,
 );

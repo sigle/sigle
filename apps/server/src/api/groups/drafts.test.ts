@@ -1,6 +1,15 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq, inArray } from "drizzle-orm";
-import { Deferred, Effect, Exit, Layer, Option, Schema, Stream } from "effect";
+import {
+  Deferred,
+  Effect,
+  ErrorReporter,
+  Exit,
+  Layer,
+  Option,
+  Schema,
+  Stream,
+} from "effect";
 import {
   Headers,
   HttpClient,
@@ -46,6 +55,7 @@ import {
   createTestDraft,
   createTestPost,
   createTestSiwsCredentials,
+  createTestUser,
   createTestWalletAddress,
 } from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
@@ -1462,6 +1472,96 @@ describe("drafts", () => {
           },
         });
       }).pipe(Effect.provide(makeTestServerLayer()));
+    },
+  );
+
+  it.effect(
+    "POST /api/drafts/:draftId/publish enforces a separate global daily publish limit per plan and reports it",
+    () => {
+      const reports: Array<{
+        readonly message: string;
+        readonly attributes: object;
+      }> = [];
+
+      const reporter = ErrorReporter.make(({ error, attributes }) => {
+        reports.push({ message: error.message, attributes });
+      });
+
+      const freeWallet = createTestSiwsCredentials("testnet");
+      const proWallet = createTestSiwsCredentials("testnet");
+
+      return Effect.gen(function* () {
+        // Free publishes of other users fill the Free global limit: a post and
+        // a publish in flight. A Pro post counts against the Pro limit only.
+        const otherFree = yield* createTestUser();
+        const otherPro = yield* createTestUser({ plan: "pro" });
+
+        yield* createTestPost({ userId: otherFree.id, draftId: "free-post" });
+        yield* createTestDraft({ userId: otherFree.id, txStatus: "PENDING" });
+        yield* createTestPost({ userId: otherPro.id, draftId: "pro-post" });
+
+        const free = yield* createAuthenticatedClient({
+          address: freeWallet.address,
+        });
+
+        const pro = yield* createAuthenticatedClient({
+          plan: "pro",
+          address: proWallet.address,
+        });
+
+        yield* createTestDraft({ id: "draft-free", userId: free.userId });
+        yield* createTestDraft({ id: "draft-pro", userId: pro.userId });
+
+        const publishFree = publishDraftRequest(free.client, "draft-free", {
+          metadata: createSignedTestPostMetadata({
+            draftId: "draft-free",
+            privateKey: freeWallet.privateKey,
+          }),
+        });
+
+        const limited = yield* publishFree;
+        const limitedBody = yield* limited.json;
+        // Reported once while the limit stays reached.
+        const limitedAgain = yield* publishFree;
+
+        const proPublish = yield* publishDraftRequest(pro.client, "draft-pro", {
+          metadata: createSignedTestPostMetadata({
+            draftId: "draft-pro",
+            privateKey: proWallet.privateKey,
+          }),
+        });
+
+        expect({
+          limited: limited.status,
+          limitedBody,
+          limitedAgain: limitedAgain.status,
+          pro: proPublish.status,
+          reports,
+        }).toStrictEqual({
+          limited: 429,
+          limitedBody: {
+            message:
+              "Sigle reached today's publishing limit for Free accounts. Try again later, or upgrade to Pro to keep publishing.",
+            retryAfterMillis: expect.any(Number),
+          },
+          limitedAgain: 429,
+          pro: 202,
+          reports: [
+            {
+              message:
+                "The free plan reached its global limit of 2 publishes per 24 hours, publishes are rejected",
+              attributes: { plan: "free", limit: 2 },
+            },
+          ],
+        });
+      }).pipe(
+        Effect.provide(
+          makeTestServerLayer({
+            PUBLISH_GLOBAL_DAILY_LIMIT_FREE: 2,
+            PUBLISH_GLOBAL_DAILY_LIMIT_PRO: 2,
+          }).pipe(Layer.provide(ErrorReporter.layer([reporter]))),
+        ),
+      );
     },
   );
 

@@ -1,5 +1,14 @@
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
-import { and, eq, gt, gte, inArray, isNotNull, ne } from "drizzle-orm";
+import {
+  and,
+  eq,
+  gt,
+  gte,
+  inArray,
+  isNotNull,
+  ne,
+  type SQL,
+} from "drizzle-orm";
 import { Context, Data, Effect, Layer, Option, Redacted, Schema } from "effect";
 import {
   FetchHttpClient,
@@ -50,27 +59,29 @@ const toDailyUsage = (times: ReadonlyArray<Date>) => ({
         ),
 });
 
+interface PublishUsageOptions {
+  readonly now: Date;
+  /**
+   * The draft being published, left out: its earlier publish request is
+   * replaced by this one.
+   */
+  readonly excludeDraftId?: string;
+}
+
 /**
- * Publishes of a user counted against their daily limit, and when the oldest
- * of them leaves the window (null when none): the posts they published from a
- * draft in the last 24 hours, and their drafts being published. Posts indexed
- * from Arweave have no draft and do not count, nor do failed publishes.
+ * Publishes counted against a daily limit, and when the oldest of them leaves
+ * the window (null when none): the posts published from a draft in the last 24
+ * hours, and the drafts being published. Posts indexed from Arweave have no
+ * draft and do not count, nor do failed publishes. A single statement, so a
+ * draft turning into a post meanwhile is counted once.
  *
- * `excludeDraftId` leaves out the draft being published, whose earlier publish
- * request it replaces. A single statement, so a draft turning into a post
- * meanwhile is counted once.
+ * `isCounted` selects whose publishes count from their user ID column, so the
+ * per-user and per-plan limits count publishes the same way.
  */
-export const findPublishUsage = (
+const findPublishUsage = (
   db: DatabaseClient,
-  {
-    userId,
-    now,
-    excludeDraftId,
-  }: {
-    readonly userId: string;
-    readonly now: Date;
-    readonly excludeDraftId?: string;
-  },
+  isCounted: (userIdColumn: typeof post.userId | typeof draft.userId) => SQL,
+  { now, excludeDraftId }: PublishUsageOptions,
 ) =>
   Effect.gen(function* () {
     const windowStart = new Date(now.getTime() - DAILY_LIMIT_WINDOW_MILLIS);
@@ -80,7 +91,7 @@ export const findPublishUsage = (
       .from(post)
       .where(
         and(
-          eq(post.userId, userId),
+          isCounted(post.userId),
           isNotNull(post.draftId),
           gte(post.createdAt, windowStart),
         ),
@@ -91,7 +102,7 @@ export const findPublishUsage = (
           .from(draft)
           .where(
             and(
-              eq(draft.userId, userId),
+              isCounted(draft.userId),
               inArray(draft.txStatus, ["PENDING", "PROCESSING"]),
               // A publish stuck in flight for a day no longer counts.
               gte(draft.updatedAt, windowStart),
@@ -105,6 +116,33 @@ export const findPublishUsage = (
 
     return toDailyUsage(publishes.map(({ at }) => at));
   });
+
+/**
+ * Publishes of a user counted against their daily limit, see
+ * {@link findPublishUsage}.
+ */
+export const findUserPublishUsage = (
+  db: DatabaseClient,
+  { userId, ...options }: PublishUsageOptions & { readonly userId: string },
+) => findPublishUsage(db, (userIdColumn) => eq(userIdColumn, userId), options);
+
+/**
+ * Publishes of every user currently on a plan, counted against the global
+ * daily limit of the plan, see {@link findPublishUsage}.
+ */
+export const findPlanPublishUsage = (
+  db: DatabaseClient,
+  { plan, ...options }: PublishUsageOptions & { readonly plan: UserPlan },
+) =>
+  findPublishUsage(
+    db,
+    (userIdColumn) =>
+      inArray(
+        userIdColumn,
+        db.select({ id: user.id }).from(user).where(eq(user.plan, plan)),
+      ),
+    options,
+  );
 
 /**
  * Profile updates of a user counted against their daily limit, see

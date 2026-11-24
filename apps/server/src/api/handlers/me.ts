@@ -6,7 +6,7 @@ import { InternalServerError } from "@/api/schemas";
 import { Database } from "@/db";
 import {
   findProfileUpdateUsage,
-  findPublishUsage,
+  findUserPublishUsage,
   PlanService,
   PROFILE_UPDATE_LIMIT,
   PUBLISH_LIMITS,
@@ -18,7 +18,6 @@ export const getMe = Effect.gen(function* () {
   return {
     id: user.id,
     address: user.address,
-    whitelisted: user.whitelisted,
     plan: user.plan,
   };
 });
@@ -38,7 +37,7 @@ export const getLimits = Effect.gen(function* () {
   const db = yield* Database;
   const now = new Date();
 
-  const publish = yield* findPublishUsage(db, { userId: user.id, now });
+  const publish = yield* findUserPublishUsage(db, { userId: user.id, now });
 
   const profileUpdate = yield* findProfileUpdateUsage(db, {
     userId: user.id,
