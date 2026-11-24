@@ -70,4 +70,13 @@ The API rate limits clients by IP, but these calls come from the website for eve
 - The server exports its Effect spans with Effect's OTLP exporter (`apps/server/src/services/telemetry.ts`). It also needs `OTEL_TRACES_EXPORTER=otlp`, which Railway doesn't set, so it is set in `.railway/railway.ts`.
 - The website exports Next.js spans with `@vercel/otel` (`apps/sigle/src/instrumentation.ts`), and sends the trace context to the API on server-side `fetch` calls.
 - Without the `OTEL_*` variables, such as in local development, neither app exports anything.
-- Sentry keeps reporting errors. When the server also has `SENTRY_DSN`, its spans go to Railway rather than Sentry.
+- Errors are reported to PostHog error tracking, separately from the traces.
+
+## Source maps
+
+The `web` build uploads its source maps to PostHog error tracking, so the stack traces of website errors show the original code, then deletes them so they are never served. `withPostHogConfig` in `apps/sigle/next.config.ts` does this when both variables are set:
+
+- `POSTHOG_PERSONAL_API_KEY`, a secret: a PostHog personal API key with write access to error tracking. Railway passes it to the Docker build as a build argument.
+- `POSTHOG_PROJECT_ID`, in `apps/sigle/.env.testnet`.
+
+Without them, such as in local and CI builds, nothing is uploaded. A failed upload doesn't fail the deploy: the build logs the error, deletes the source maps, and the release's stack traces stay minified.

@@ -18,7 +18,7 @@ import { TestClock } from "effect/testing";
 import { type IncomingHttpHeaders, request as httpRequest } from "node:http";
 import type { AppConfigValues } from "@/config";
 import { RATE_LIMITS } from "@/api/middleware/rate-limit";
-import { makeSentryErrorReporter } from "@/services/telemetry";
+import { makeErrorReporter } from "@/services/telemetry";
 import { createAuthenticatedClient } from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 import packageJson from "../../package.json" with { type: "json" };
@@ -398,10 +398,10 @@ describe("http server", () => {
     }).pipe(Effect.provide(serverLayer())),
   );
 
-  it.effect("does not report client errors to Sentry", () => {
+  it.effect("does not report client errors", () => {
     const captured: Array<string> = [];
 
-    const reporter = makeSentryErrorReporter({
+    const reporter = makeErrorReporter({
       captureException: (error) => {
         captured.push(error.name);
       },

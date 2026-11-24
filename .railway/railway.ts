@@ -68,6 +68,9 @@ export default defineRailway(() => {
       API_INTERNAL_URL:
         // oxlint-disable-next-line no-template-curly-in-string Railway references
         "http://${{server.RAILWAY_PRIVATE_DOMAIN}}:${{server.PORT}}",
+      // Secret, set from 1Password by scripts/sync-railway-env.sh. Read at
+      // build time to upload the source maps to PostHog.
+      POSTHOG_PERSONAL_API_KEY: preserve(),
     },
   });
 

@@ -51,6 +51,11 @@ WORKDIR /app/apps/$APP_NAME
 COPY ./apps/$APP_NAME/.env.development .env.production
 COPY ./apps/$APP_NAME/.env.testnet .env.production.local
 
+# Railway passes these service variables to the build, which uploads the
+# source maps to PostHog (next.config.ts). They stay out of the final image.
+ARG POSTHOG_PERSONAL_API_KEY
+ARG RAILWAY_GIT_COMMIT_SHA
+
 # Build application
 RUN pnpm turbo run build --filter=@sigle/$APP_NAME...
 

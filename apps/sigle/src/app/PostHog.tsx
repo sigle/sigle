@@ -18,6 +18,9 @@ export function PostHogInit(): null {
         persistence: "localStorage",
         enable_heatmaps: false,
         ip: false,
+        // Report uncaught errors and unhandled promise rejections to error
+        // tracking.
+        capture_exceptions: true,
         // Disable automatic pageview capture, as we capture manually
         capture_pageview: false,
         // Enable debug mode in development

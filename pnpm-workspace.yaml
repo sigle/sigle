@@ -1,8 +1,10 @@
 allowBuilds:
   "@parcel/watcher": false
+  # Downloads its binary on first run instead, only when a build uploads
+  # source maps
+  "@posthog/cli": false
   "@prisma/engines": true
   "@reown/appkit": false
-  "@sentry/cli": false
   "bigint-buffer": false
   "bufferutil": false
   "core-js": false

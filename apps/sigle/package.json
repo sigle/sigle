@@ -25,7 +25,6 @@
     "@opentelemetry/sdk-metrics": "2.12.1",
     "@opentelemetry/sdk-trace-base": "2.12.1",
     "@paralleldrive/cuid2": "3.3.0",
-    "@sentry/nextjs": "11.15.0",
     "@sigle/sdk": "workspace:*",
     "@stacks/connect": "8.2.7",
     "@stacks/network": "7.7.0",
@@ -76,7 +75,8 @@
     "next-themes": "0.4.6",
     "openapi-fetch": "0.17.0",
     "openapi-react-query": "0.5.4",
-    "posthog-js": "1.371.4",
+    "posthog-js": "1.453.2",
+    "posthog-node": "5.30.2",
     "query-string": "9.3.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",
@@ -95,6 +95,7 @@
     "zustand": "5.0.12"
   },
   "devDependencies": {
+    "@posthog/nextjs-config": "1.12.2",
     "@tailwindcss/postcss": "4.3.3",
     "@tailwindcss/typography": "0.5.20",
     "@testing-library/jest-dom": "6.9.1",

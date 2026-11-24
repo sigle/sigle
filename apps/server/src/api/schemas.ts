@@ -18,7 +18,7 @@ export const NonNegativeInt = Schema.Int.check(
  * has no `_tag`, and each body schema is named for the OpenAPI components.
  *
  * The 4xx errors are expected client errors: they are marked ignored so the
- * error reporters, Sentry included, skip them, like Effect's own
+ * error reporters, PostHog included, skip them, like Effect's own
  * `HttpApiError`s.
  */
 export class BadRequest extends Schema.Error<
