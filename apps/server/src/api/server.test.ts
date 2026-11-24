@@ -494,7 +494,20 @@ describe("http server", () => {
 
   it.effect("keys unauthenticated clients by the configured IP header", () => {
     const remaining = Effect.forEach(
-      ["203.0.113.1", "203.0.113.2", "203.0.113.1"],
+      [
+        "203.0.113.1",
+        "203.0.113.2",
+        "203.0.113.1",
+        // The same IPv4 client, as an IPv4-mapped IPv6 address
+        "::ffff:203.0.113.2",
+        // Two addresses of one /64, then the next /64
+        "2001:db8:a:b::1",
+        "2001:db8:a:b:ffff:1:2:3",
+        "2001:db8:a:c::1",
+        // `::` shortening reaching into the /64
+        "2001:db8::1",
+        "2001:db8:0:0:1::",
+      ],
       (ip) =>
         HttpClient.get("/api/posts/missing", {
           headers: { "x-real-ip": ip },
@@ -516,11 +529,86 @@ describe("http server", () => {
         // Without a proxy setting it, clients could pick any value.
         unset: yield* remaining.pipe(Effect.provide(serverLayer())),
       }).toStrictEqual({
-        configured: ["59", "59", "58"],
-        unset: ["59", "58", "57"],
+        configured: ["59", "59", "58", "58", "59", "58", "59", "59", "58"],
+        unset: ["59", "58", "57", "56", "55", "54", "53", "52", "51"],
       });
     });
   });
+
+  it.effect("limits each client IP across endpoints and accounts", () =>
+    Effect.gen(function* () {
+      const ip = "203.0.113.7";
+      const first = yield* createAuthenticatedClient();
+      const second = yield* createAuthenticatedClient();
+
+      const get = (path: string, headers: Record<string, string> = {}) =>
+        HttpClient.get(path, { headers: { "x-real-ip": ip, ...headers } });
+
+      // 300 requests, 50 on each of six endpoints, half of them signed in, so
+      // no endpoint limit of 60 is reached. Anonymous requests to a signed-in
+      // route count too, though they fail the session check.
+      const statuses = yield* Effect.forEach(
+        [
+          ["/api/me", first.cookie],
+          ["/api/drafts", first.cookie],
+          ["/api/drafts/missing", first.cookie],
+          ["/api/posts", undefined],
+          ["/api/posts/missing", undefined],
+          ["/api/drafts", undefined],
+        ] as const,
+        ([path, cookie]) =>
+          Effect.forEach(
+            Array.from({ length: 50 }),
+            () =>
+              get(path, cookie === undefined ? {} : { cookie }).pipe(
+                Effect.map(({ status }) => status),
+              ),
+            { concurrency: 1 },
+          ),
+        { concurrency: 1 },
+      );
+
+      // Another account from the same IP shares its global limit.
+      const rejected = yield* get("/api/me", { cookie: second.cookie });
+
+      const otherIp = yield* HttpClient.get("/api/posts/missing", {
+        headers: { "x-real-ip": "203.0.113.8" },
+      });
+
+      expect({
+        // Each request counts once, so the first 300 all pass
+        limitedBefore: statuses.flat().filter((status) => status === 429)
+          .length,
+        rejected: [rejected.status, rateLimitHeaders(rejected)],
+        otherIp: [otherIp.status, rateLimitHeaders(otherIp)],
+      }).toStrictEqual({
+        limitedBefore: 0,
+        rejected: [
+          429,
+          {
+            "retry-after": "60",
+            "x-ratelimit-limit": "300",
+            "x-ratelimit-remaining": "0",
+            "x-ratelimit-reset": String(NOW_MILLIS / 1000 + 60),
+          },
+        ],
+        otherIp: [
+          404,
+          {
+            "retry-after": undefined,
+            "x-ratelimit-limit": "60",
+            "x-ratelimit-remaining": "59",
+            "x-ratelimit-reset": String(NOW_MILLIS / 1000 + 60),
+          },
+        ],
+      });
+    }).pipe(
+      Effect.provide(
+        serverLayer({ CLIENT_IP_HEADER: Option.some("x-real-ip") }),
+      ),
+      (effect) => TestClock.setTime(NOW_MILLIS).pipe(Effect.andThen(effect)),
+    ),
+  );
 
   it.effect("does not rate limit GET requests from the private network", () => {
     const privateHost = "sigle.railway.internal:8080";
@@ -595,14 +683,18 @@ describe("http server", () => {
     Effect.gen(function* () {
       const response = yield* HttpClient.get("/api/posts/missing");
 
+      // The global limit is checked first and takes 5 seconds, so the
+      // endpoint's window opens at +5 s. Reading the clock after its store
+      // returned would give +10 s.
       expect(rateLimitHeaders(response)["x-ratelimit-reset"]).toBe(
-        String(NOW_MILLIS / 1000 + 60),
+        String(NOW_MILLIS / 1000 + 5 + 60),
       );
     }).pipe(
       Effect.provide(
-        // Polls every 10 seconds so the 5 second store delay runs no queue poll
+        // Polls every 20 seconds so the two 5 second store delays run no
+        // queue poll
         makeTestServerLayer({}, [], {
-          pollInterval: "10 seconds",
+          pollInterval: "20 seconds",
           rateLimiter: SlowRateLimiter,
         }),
       ),

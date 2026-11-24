@@ -5,7 +5,10 @@ import {
   HttpApiSchema,
   OpenApi,
 } from "effect/http-api";
-import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
+import {
+  GlobalRateLimitMiddleware,
+  RateLimitMiddleware,
+} from "@/api/middleware/rate-limit";
 import {
   BadRequest,
   DateTime,
@@ -66,4 +69,5 @@ export const UsersGroup = HttpApiGroup.make("users")
       ),
   )
   .prefix("/api/users")
-  .middleware(RateLimitMiddleware);
+  .middleware(RateLimitMiddleware)
+  .middleware(GlobalRateLimitMiddleware);

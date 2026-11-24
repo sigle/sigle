@@ -7,7 +7,10 @@ import {
 } from "effect/http-api";
 import { AdminMiddleware } from "@/api/middleware/admin";
 import { UserAuthMiddleware } from "@/api/middleware/auth-user";
-import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
+import {
+  GlobalRateLimitMiddleware,
+  RateLimitMiddleware,
+} from "@/api/middleware/rate-limit";
 import {
   BadRequest,
   DateTime,
@@ -137,4 +140,5 @@ export const AdminGroup = HttpApiGroup.make("admin")
   .prefix("/api/admin")
   .middleware(RateLimitMiddleware)
   .middleware(AdminMiddleware)
-  .middleware(UserAuthMiddleware);
+  .middleware(UserAuthMiddleware)
+  .middleware(GlobalRateLimitMiddleware);

@@ -10,6 +10,7 @@ import {
 import { HttpEffect, HttpServerRequest, HttpServerResponse } from "effect/http";
 import { HttpApiMiddleware } from "effect/http-api";
 import { RateLimiter } from "effect/persistence";
+import { isIPv6 } from "node:net";
 import { CurrentUser } from "@/api/middleware/auth-user";
 import { InternalServerError, TooManyRequests } from "@/api/schemas";
 import { AppConfig, type AppConfigValues } from "@/config";
@@ -19,9 +20,20 @@ export class RateLimitMiddleware extends HttpApiMiddleware.Service<RateLimitMidd
   { error: [TooManyRequests, InternalServerError] },
 ) {}
 
+/**
+ * The `global` limit of the client IP. Add it last on a group, so it runs
+ * first, before the session check: anonymous requests to signed-in routes then
+ * count too.
+ */
+export class GlobalRateLimitMiddleware extends HttpApiMiddleware.Service<GlobalRateLimitMiddleware>()(
+  "sigle/GlobalRateLimitMiddleware",
+  { error: [TooManyRequests, InternalServerError] },
+) {}
+
 export type RateLimitPolicyName =
   | "bnsProfileImport"
   | "default"
+  | "global"
   | "draftImageUpload"
   | "draftPublish"
   | "planRefresh"
@@ -38,6 +50,12 @@ export const RATE_LIMITS: Record<RateLimitPolicyName, RateLimitLimit> = {
   // 60 requests per minute and per user (or IP when unauthenticated)
   default: {
     points: 60,
+    windowMs: 60_000,
+  },
+  // Every request of a client IP, across all endpoints and signed-in or not:
+  // the other limits are per endpoint, and accounts are free to create
+  global: {
+    points: 300,
     windowMs: 60_000,
   },
   // A profile update is a database write, this only stops scripted spam
@@ -88,9 +106,65 @@ export class RateLimitPolicy extends Context.Service<
   RateLimitPolicyName
 >()("sigle/RateLimitPolicy") {}
 
+const ipv6Groups = (address: string): ReadonlyArray<number> => {
+  const parse = (part: string) =>
+    part === ""
+      ? []
+      : part.split(":").flatMap((group) => {
+          if (!group.includes(".")) return [Number.parseInt(group, 16)];
+
+          const [a = 0, b = 0, c = 0, d = 0] = group.split(".").map(Number);
+
+          return [a * 256 + b, c * 256 + d];
+        });
+
+  const [head = "", tail] = address.split("::");
+  const start = parse(head);
+  const end = tail === undefined ? [] : parse(tail);
+
+  return [
+    ...start,
+    ...Array.from({ length: 8 - start.length - end.length }, () => 0),
+    ...end,
+  ];
+};
+
 /**
- * Rate limit key of an unauthenticated client: its IP from `CLIENT_IP_HEADER`
- * when the proxy in front of the API sets one, else the socket address.
+ * The address a client is limited by. An IPv4-mapped IPv6 address is its IPv4
+ * address. Any other IPv6 address is its /64, which an ISP hands to a single
+ * subscriber, so rotating addresses within it gives no fresh limit.
+ */
+const rateLimitAddress = (ip: string): string => {
+  const address = ip.split("%")[0] ?? ip;
+
+  if (!isIPv6(address)) return ip;
+
+  const groups = ipv6Groups(address);
+
+  if (
+    groups.slice(0, 5).every((group) => group === 0) &&
+    groups[5] === 0xffff
+  ) {
+    const [high = 0, low = 0] = groups.slice(6);
+
+    return [
+      Math.floor(high / 256),
+      high % 256,
+      Math.floor(low / 256),
+      low % 256,
+    ].join(".");
+  }
+
+  return `${groups
+    .slice(0, 4)
+    .map((group) => group.toString(16))
+    .join(":")}::/64`;
+};
+
+/**
+ * Rate limit key of a client: its IP from `CLIENT_IP_HEADER` when the proxy in
+ * front of the API sets one, else the socket address, with IPv6 addresses
+ * grouped by /64.
  */
 export const clientKey = (
   request: HttpServerRequest.HttpServerRequest,
@@ -105,7 +179,7 @@ export const clientKey = (
     () => "unknown",
   );
 
-  return `ip:${ip}`;
+  return `ip:${rateLimitAddress(ip)}`;
 };
 
 /**
@@ -122,6 +196,17 @@ export const isPrivateNetworkRequest = (
     config.RAILWAY_PRIVATE_DOMAIN,
     (domain) => request.headers.host?.replace(/:\d+$/, "") === domain,
   );
+
+/**
+ * The website's server-side reads come over the private network for all its
+ * visitors at once, so they share no per-client limit. Only reads: the paid
+ * and write routes stay limited whoever calls them.
+ */
+const isPrivateNetworkRead = (
+  request: HttpServerRequest.HttpServerRequest,
+  config: AppConfigValues,
+): boolean =>
+  request.method === "GET" && isPrivateNetworkRequest(request, config);
 
 const appendResponseHeaders = (headers: Record<string, string>) =>
   HttpEffect.appendPreResponseHandler((_request, response) =>
@@ -223,6 +308,19 @@ export const consumeRateLimit = (
     yield* setRateLimitHeaders(observedAt, result);
   });
 
+/**
+ * Consumes a point of the client IP's `global` limit. Call it before the
+ * endpoint's own limit, so the response carries the endpoint's headers unless
+ * the global limit is the one exceeded. Every request consumes one point:
+ * through `GlobalRateLimitMiddleware` on the API, directly on `/api/auth/*`.
+ */
+export const consumeGlobalRateLimit = (
+  limiter: RateLimiter.RateLimiter,
+  request: HttpServerRequest.HttpServerRequest,
+  config: AppConfigValues,
+) =>
+  consumeRateLimit(limiter, `global:${clientKey(request, config)}`, "global");
+
 export const RateLimitMiddlewareLayer: Layer.Layer<
   RateLimitMiddleware,
   never,
@@ -237,13 +335,7 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
       Effect.gen(function* () {
         const request = yield* HttpServerRequest.HttpServerRequest;
 
-        // The website's server-side reads come over the private network for
-        // all its visitors at once, so they share no per-client limit. Only
-        // reads: the paid and write routes stay limited whoever calls them.
-        if (
-          request.method === "GET" &&
-          isPrivateNetworkRequest(request, config)
-        ) {
+        if (isPrivateNetworkRead(request, config)) {
           return yield* httpEffect;
         }
 
@@ -263,6 +355,29 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
           }`,
           policy,
         );
+
+        return yield* httpEffect;
+      });
+  }),
+);
+
+export const GlobalRateLimitMiddlewareLayer: Layer.Layer<
+  GlobalRateLimitMiddleware,
+  never,
+  RateLimiter.RateLimiter | AppConfig
+> = Layer.effect(
+  GlobalRateLimitMiddleware,
+  Effect.gen(function* () {
+    const limiter = yield* RateLimiter.RateLimiter;
+    const config = yield* AppConfig;
+
+    return (httpEffect) =>
+      Effect.gen(function* () {
+        const request = yield* HttpServerRequest.HttpServerRequest;
+
+        if (!isPrivateNetworkRead(request, config)) {
+          yield* consumeGlobalRateLimit(limiter, request, config);
+        }
 
         return yield* httpEffect;
       });
