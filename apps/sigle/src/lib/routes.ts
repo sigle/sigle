@@ -5,7 +5,6 @@ import {
   useParams as useNextParams,
   useSearchParams as useNextSearchParams,
 } from "next/navigation";
-import queryString from "query-string";
 import { z } from "zod";
 
 export const Routes = {
@@ -73,7 +72,12 @@ function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
     const baseUrl = fn(params as z.input<Params>);
 
     const searchString =
-      options?.search && queryString.stringify(options.search);
+      options?.search &&
+      new URLSearchParams(
+        Object.entries(options.search)
+          .filter(([, value]) => value !== undefined && value !== null)
+          .map(([key, value]) => [key, String(value)]),
+      ).toString();
 
     return [baseUrl, searchString ? `?${searchString}` : ""].join("");
   };
