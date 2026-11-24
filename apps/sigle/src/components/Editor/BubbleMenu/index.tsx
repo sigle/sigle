@@ -5,7 +5,6 @@ import {
   IconItalic,
   IconLink,
   IconStrikethrough,
-  IconUnderline,
 } from "@tabler/icons-react";
 import { isTextSelection, useEditorState } from "@tiptap/react";
 import { BubbleMenu as TipTapBubbleMenu } from "@tiptap/react/menus";
@@ -44,7 +43,6 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
   const {
     isActiveBold,
     isActiveItalic,
-    isActiveUnderline,
     isActiveStrike,
     isActiveCode,
     isActiveLink,
@@ -53,7 +51,6 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
     selector: (context) => ({
       isActiveBold: context.editor.isActive("bold"),
       isActiveItalic: context.editor.isActive("italic"),
-      isActiveUnderline: context.editor.isActive("underline"),
       isActiveStrike: context.editor.isActive("strike"),
       isActiveCode: context.editor.isActive("code"),
       isActiveLink: context.editor.isActive("link"),
@@ -172,14 +169,6 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
               active={isActiveItalic}
             >
               <IconItalic size={16} />
-            </BubbleMenuButton>
-            <BubbleMenuButton
-              aria-label="Underline"
-              title="Underline"
-              onClick={() => editor.chain().focus().toggleUnderline().run()}
-              active={isActiveUnderline}
-            >
-              <IconUnderline size={16} />
             </BubbleMenuButton>
             <BubbleMenuButton
               aria-label="Strikethrough"
