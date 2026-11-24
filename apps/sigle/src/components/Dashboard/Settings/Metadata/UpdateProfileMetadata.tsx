@@ -1,17 +1,10 @@
+import type { paths } from "@sigle/sdk";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createId } from "@paralleldrive/cuid2";
-import {
-  createProfileMetadata,
-  type paths,
-  ProfileMetadataSchemaId,
-} from "@sigle/sdk";
-import { request } from "@stacks/connect";
 import { IconAt } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Result } from "better-result";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
-import { useMultiStepToast } from "@/components/Shared/MultiStepToast";
 import { Button } from "@/components/ui/button";
 import { FieldError } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -31,12 +24,13 @@ const updateProfileMetadataSchema = z.object({
   description: z.string().optional(),
   website: z.url().optional().or(z.literal("")),
   twitter: z.string().optional(),
-  picture: z.string().optional(),
-  coverPicture: z.string().optional(),
 });
 
 type UserResponse =
   paths["/api/users/{address}"]["get"]["responses"][200]["content"]["application/json"];
+
+type UploadResponse =
+  paths["/api/me/profile/images/{kind}"]["put"]["responses"][200]["content"]["application/json"];
 
 interface UpdateProfileMetadataProps {
   profile: UserResponse["profile"];
@@ -49,113 +43,118 @@ export const UpdateProfileMetadata = ({
 }: UpdateProfileMetadataProps) => {
   const queryClient = useQueryClient();
 
-  const {
-    start: startToast,
-    completeStep,
-    setStepError,
-  } = useMultiStepToast({
-    steps: [
-      { id: "signature", title: "Signing with Stacks wallet" },
-      { id: "upload", title: "Uploading data to Arweave" },
-    ],
-    successMessage: "Profile updated!",
-  });
+  const updateProfile = sigleApiClient.useMutation("put", "/api/me/profile");
 
-  const uploadProfileMetadata = sigleApiClient.useMutation(
-    "put",
-    "/api/me/profile",
+  const importBnsProfile = sigleApiClient.useMutation(
+    "get",
+    "/api/me/profile/bns",
   );
 
   const {
     register,
     handleSubmit,
     setValue,
-    watch,
     formState: { errors, isDirty, isSubmitting },
   } = useForm({
     resolver: zodResolver(updateProfileMetadataSchema),
     values: {
       displayName: profile?.displayName || undefined,
       description: profile?.description || undefined,
-      picture: profile?.picture?.url || undefined,
-      coverPicture: profile?.coverPicture?.url || undefined,
       website: profile?.website || undefined,
       twitter: profile?.twitter || undefined,
     },
   });
 
-  const onSubmit = handleSubmit(async (formValues) => {
-    startToast();
-
-    const metadata = createProfileMetadata({
-      $schema: ProfileMetadataSchemaId.LATEST,
-      content: {
-        id: createId(),
-        displayName: formValues.displayName || undefined,
-        description: formValues.description || undefined,
-        twitter: formValues.twitter || undefined,
-        website: formValues.website || undefined,
-        picture: formValues.picture || undefined,
-        coverPicture: formValues.coverPicture || undefined,
-      },
-    });
-
-    let signature = "";
-
-    try {
-      const { signature: _, ...metadataToSign } = metadata;
-      const message = JSON.stringify(metadataToSign);
-
-      const response = await request("stx_signMessage", {
-        message,
-      });
-
-      signature = response.signature;
-    } catch (error) {
-      console.error(error);
-      setStepError(
-        "signature",
-        "Wallet signature request was cancelled or failed.",
-      );
-
-      return;
-    }
-
-    // Add the signature to the metadata
-    metadata.signature = signature;
-    completeStep("signature");
-
-    const data = await uploadProfileMetadata
-      .mutateAsync({
-        body: { metadata },
-      })
-      .then((result) => Result.ok(result))
-      .catch((error) => Result.err(error));
-
-    if (data.isErr()) {
-      setStepError(
-        "upload",
-        data.error.message ? data.error.message : data.error,
-      );
-
-      return;
-    }
-
-    // server-v2 stores the profile on upload and returns it, so the cached
-    // user is updated without fetching it again.
-    completeStep("upload");
-    const { address, profile: storedProfile } = data.value;
+  // The API returns the stored profile, so the cached user is updated
+  // without fetching it again.
+  const updateCachedProfile = async (
+    address: string,
+    update: (cached: UserResponse["profile"]) => UserResponse["profile"],
+  ) => {
     const userQueries = { queryKey: ["get", "/api/users/{address}"] };
-    // A refetch started before the upload, such as on window focus after the
-    // wallet prompt, would otherwise overwrite the cache with the old profile.
+    // A refetch started before the update, such as on window focus, would
+    // otherwise overwrite the cache with the old profile.
     await queryClient.cancelQueries(userQueries);
     queryClient.setQueriesData<UserResponse>(userQueries, (cached) =>
       cached?.address === address
-        ? { address, profile: storedProfile }
+        ? { ...cached, profile: update(cached.profile) }
         : cached,
     );
+  };
+
+  // The avatar and cover upload on their own and can overlap, so an upload
+  // only updates its own image: the other one in its response may be stale.
+  const onImageUploaded =
+    (field: "picture" | "coverPicture") =>
+    ({ address, profile: stored }: UploadResponse) =>
+      updateCachedProfile(address, (cached) => ({
+        ...(cached ?? stored),
+        [field]: stored[field],
+      }));
+
+  const onSubmit = handleSubmit(async (formValues) => {
+    const result = await updateProfile
+      .mutateAsync({
+        body: {
+          displayName: formValues.displayName || null,
+          description: formValues.description || null,
+          twitter: formValues.twitter || null,
+          website: formValues.website || null,
+        },
+      })
+      .catch((error: { message?: string }) => {
+        toast.error(error.message ?? "Failed to update your profile.");
+
+        return undefined;
+      });
+
+    if (result === undefined) {
+      return;
+    }
+
+    toast.success("Profile updated!");
+
+    await updateCachedProfile(result.address, () => result.profile);
     setEditingProfileMetadata(false);
   });
+
+  // Fills in the form with the profile of the user's BNS name, the user
+  // reviews it and saves. Only the fields the zonefile sets are replaced.
+  const onImportBns = () => {
+    importBnsProfile.mutate(
+      {},
+      {
+        onSuccess: ({ name, profile: bnsProfile }) => {
+          if (name === null) {
+            toast.error("Your address has no primary BNS name.");
+
+            return;
+          }
+
+          if (bnsProfile === null) {
+            toast.error(`${name} has no profile to import.`);
+
+            return;
+          }
+
+          for (const [field, value] of Object.entries(bnsProfile)) {
+            if (value !== null) {
+              // SAFETY: the BNS profile fields are a subset of the form's.
+              setValue(field as keyof typeof bnsProfile, value, {
+                shouldValidate: true,
+                shouldDirty: true,
+              });
+            }
+          }
+
+          toast.success(`Imported the profile of ${name}, review and save it.`);
+        },
+        onError: (error) => {
+          toast.error(error?.message ?? "Failed to read your BNS name.");
+        },
+      },
+    );
+  };
 
   const handleXChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     let value = event.target.value;
@@ -172,13 +171,8 @@ export const UpdateProfileMetadata = ({
     <form onSubmit={onSubmit}>
       <SettingsRow label="Picture" description="A square JPG or PNG.">
         <UploadProfilePicture
-          picture={watch("picture")}
-          setPicture={(value) =>
-            setValue("picture", value, {
-              shouldValidate: true,
-              shouldDirty: true,
-            })
-          }
+          picture={profile?.picture?.url}
+          onUploaded={onImageUploaded("picture")}
         />
       </SettingsRow>
 
@@ -187,13 +181,8 @@ export const UpdateProfileMetadata = ({
         description="A wide JPG or PNG for the top of your blog."
       >
         <UploadProfileCoverPicture
-          picture={watch("coverPicture")}
-          setPicture={(value) =>
-            setValue("coverPicture", value, {
-              shouldValidate: true,
-              shouldDirty: true,
-            })
-          }
+          picture={profile?.coverPicture?.url}
+          onUploaded={onImageUploaded("coverPicture")}
         />
       </SettingsRow>
 
@@ -257,6 +246,16 @@ export const UpdateProfileMetadata = ({
       </SettingsRow>
 
       <div className="flex items-center justify-end gap-2 pt-6">
+        <Button
+          variant="outline"
+          type="button"
+          className="mr-auto"
+          disabled={isSubmitting || importBnsProfile.isPending}
+          loading={importBnsProfile.isPending}
+          onClick={onImportBns}
+        >
+          Import from BNS
+        </Button>
         <Button
           variant="ghost"
           type="button"

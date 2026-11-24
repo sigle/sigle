@@ -68,6 +68,8 @@ const sampleMetadataJson = JSON.stringify({
       },
     ],
   },
+  // Jobs carry signed metadata: the publish handler verified the signature.
+  signature: "sample-metadata-signature",
 });
 
 const waitForDraftStatus = (draftId: string, status: string) =>
@@ -419,8 +421,10 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
 
   it.effect(
     "does not release an active upload claim when marking failure",
-    () =>
-      Effect.gen(function* () {
+    () => {
+      const posthogEvents: Array<PostHogEvent> = [];
+
+      return Effect.gen(function* () {
         const db = yield* Database;
         const user = yield* createTestUser();
         const claimedAt = new Date();
@@ -441,6 +445,15 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           metadataJson: sampleMetadataJson,
         });
 
+        // A job of an older publish of the draft: no longer the user's.
+        yield* markDraftPublishFailed({
+          draftId: "draft-claim-failed",
+          userId: user.id,
+          authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+          signature: "sig-claim-older",
+          metadataJson: sampleMetadataJson,
+        });
+
         const [failedDraft] = yield* db
           .select()
           .from(draft)
@@ -449,11 +462,25 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
         expect({
           txStatus: failedDraft.txStatus,
           uploadClaimedAt: failedDraft.uploadClaimedAt,
+          posthogEvents,
         }).toStrictEqual({
           txStatus: "FAILED",
           uploadClaimedAt: claimedAt,
+          posthogEvents: [
+            {
+              distinctId: user.id,
+              event: "draft_publish_failed",
+              properties: { draftId: "draft-claim-failed" },
+            },
+          ],
         });
-      }).pipe(Effect.provide(TestDatabaseLayer)),
+      }).pipe(
+        Effect.provide([
+          TestDatabaseLayer,
+          PostHogService.layerTest(posthogEvents),
+        ]),
+      );
+    },
   );
 
   it.effect("does nothing when a newer publish owns the draft", () =>

@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/effect/server";
 import {
   type Cause,
   Effect,
@@ -14,6 +13,7 @@ import {
 import { FetchHttpClient } from "effect/http";
 import { OtlpSerialization, OtlpTracer } from "effect/observability";
 import { AppConfig } from "@/config";
+import { PostHogService } from "@/services/posthog";
 
 declare global {
   interface BigInt {
@@ -84,15 +84,8 @@ export interface ErrorCaptureTarget {
   ) => void;
 }
 
-export const makeSentryErrorReporter = (
-  target: ErrorCaptureTarget = {
-    captureException: (error, attributes) => {
-      Sentry.withScope((scope) => {
-        scope.setExtras({ ...attributes });
-        Sentry.captureException(error);
-      });
-    },
-  },
+export const makeErrorReporter = (
+  target: ErrorCaptureTarget,
 ): ErrorReporter.ErrorReporter =>
   ErrorReporter.make(({ attributes, cause, error }) => {
     if (isIgnoredHttpStatusError(error, cause)) {
@@ -102,13 +95,15 @@ export const makeSentryErrorReporter = (
     target.captureException(error, attributes);
   });
 
-export const SentryErrorReporter: ErrorReporter.ErrorReporter =
-  makeSentryErrorReporter();
-
-const SentryLifecycleLayer = Layer.effectDiscard(
-  Effect.acquireRelease(Effect.void, () =>
-    Effect.promise(() => Sentry.close(2000)),
-  ),
+// Reports errors to PostHog error tracking, with their attributes, such as
+// the queue and job of a failed job, as properties.
+const PostHogErrorReporter = Effect.map(
+  Effect.service(PostHogService),
+  (posthog) =>
+    makeErrorReporter({
+      captureException: (error, attributes) =>
+        Effect.runSync(posthog.captureException(error, attributes)),
+    }),
 );
 
 // The first statement keyword wins, so `WITH cte AS (UPDATE ...)` is an
@@ -210,67 +205,26 @@ const OtlpTracingLayer = Layer.unwrap(
   Layer.provide([OtlpSerialization.layerProtobuf, FetchHttpClient.layer]),
 );
 
-export const TelemetryLayer: Layer.Layer<never, never, AppConfig> =
-  Layer.unwrap(
-    Effect.gen(function* () {
-      const config = yield* AppConfig;
+export const TelemetryLayer: Layer.Layer<
+  never,
+  never,
+  AppConfig | PostHogService
+> = Layer.unwrap(
+  Effect.gen(function* () {
+    const config = yield* AppConfig;
 
-      const consoleLogger =
-        config.NODE_ENV === "production"
-          ? Logger.consoleJson
-          : Logger.consolePretty();
+    const consoleLogger =
+      config.NODE_ENV === "production"
+        ? Logger.consoleJson
+        : Logger.consolePretty();
 
-      const minLogLevel = config.NODE_ENV === "test" ? "Error" : "Info";
+    const minLogLevel = config.NODE_ENV === "test" ? "Error" : "Info";
 
-      if (Option.isSome(config.SENTRY_DSN)) {
-        return Layer.mergeAll(
-          Sentry.effectLayer({
-            dsn: config.SENTRY_DSN.value,
-            environment: config.STACKS_ENV,
-            // Sentry v11 collects cookies, user IPs, request/response bodies,
-            // and database queries by default. Keep the v10 defaults so session
-            // cookies and request payloads stay out of Sentry.
-            // https://github.com/getsentry/sentry-javascript/blob/develop/MIGRATION.md#if-you-want-to-keep-the-v10-default-behavior
-            dataCollection: {
-              userInfo: false,
-              cookies: false,
-              httpHeaders: {
-                request: {
-                  deny: ["forwarded", "-ip", "remote-", "via", "-user"],
-                },
-                response: {
-                  deny: ["forwarded", "-ip", "remote-", "via", "-user"],
-                },
-              },
-              httpBodies: [],
-              urlQueryParams: {
-                deny: ["forwarded", "-ip", "remote-", "via", "-user"],
-              },
-              genAI: { inputs: false, outputs: false },
-              databaseQueryData: false,
-              queues: false,
-              graphQL: { document: false, variables: false },
-            },
-          }),
-          SentryLifecycleLayer,
-          Layer.succeed(Tracer.Tracer, Sentry.SentryEffectTracer),
-          Logger.layer([
-            consoleLogger,
-            Logger.tracerLogger,
-            Sentry.SentryEffectLogger,
-          ]),
-          ErrorReporter.layer([SentryErrorReporter]),
-          Layer.succeed(References.MinimumLogLevel, minLogLevel),
-          // Last, so when OTLP export is on its tracer replaces Sentry's:
-          // Sentry still receives errors and logs.
-          OtlpTracingLayer,
-        );
-      }
-
-      return Layer.mergeAll(
-        Logger.layer([consoleLogger, Logger.tracerLogger]),
-        Layer.succeed(References.MinimumLogLevel, minLogLevel),
-        OtlpTracingLayer,
-      );
-    }),
-  );
+    return Layer.mergeAll(
+      Logger.layer([consoleLogger, Logger.tracerLogger]),
+      ErrorReporter.layer([PostHogErrorReporter]),
+      Layer.succeed(References.MinimumLogLevel, minLogLevel),
+      OtlpTracingLayer,
+    );
+  }),
+);

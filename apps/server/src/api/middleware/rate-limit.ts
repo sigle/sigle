@@ -20,12 +20,13 @@ export class RateLimitMiddleware extends HttpApiMiddleware.Service<RateLimitMidd
 ) {}
 
 export type RateLimitPolicyName =
+  | "bnsProfileImport"
   | "default"
   | "draftImageUpload"
   | "draftPublish"
   | "planRefresh"
   | "profileImageUpload"
-  | "profileMetadataUpload"
+  | "profileUpdate"
   | "signIn";
 
 export interface RateLimitLimit {
@@ -39,9 +40,9 @@ export const RATE_LIMITS: Record<RateLimitPolicyName, RateLimitLimit> = {
     points: 60,
     windowMs: 60_000,
   },
-  // Matches the legacy server limit for profile metadata uploads
-  profileMetadataUpload: {
-    points: 4,
+  // A profile update is a database write, this only stops scripted spam
+  profileUpdate: {
+    points: 10,
     windowMs: 60_000,
   },
   // Matches the legacy server limit for post metadata uploads, each publish
@@ -53,6 +54,11 @@ export const RATE_LIMITS: Record<RateLimitPolicyName, RateLimitLimit> = {
   // A post can hold several images, so uploads allow bursts of a few at once
   draftImageUpload: {
     points: 20,
+    windowMs: 60_000,
+  },
+  // Each import makes two read-only contract calls on the Stacks API
+  bnsProfileImport: {
+    points: 6,
     windowMs: 60_000,
   },
   // Each refresh checks every wallet of the user on the Stacks API

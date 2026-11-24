@@ -95,7 +95,6 @@ export const appConfig = Config.all({
   // `sigle.railway.internal`, set by Railway. GET requests addressed to it are
   // not rate limited, see `RateLimitMiddlewareLayer`.
   RAILWAY_PRIVATE_DOMAIN: OptionalNonEmptyString("RAILWAY_PRIVATE_DOMAIN"),
-  SENTRY_DSN: OptionalNonEmptyString("SENTRY_DSN"),
   POSTHOG_API_KEY: OptionalNonEmptyRedacted("POSTHOG_API_KEY"),
   POSTHOG_API_HOST: OptionalNonEmptyString("POSTHOG_API_HOST"),
   // Wallet addresses allowed to access the admin jobs API
@@ -103,9 +102,16 @@ export const appConfig = Config.all({
   // Wallet addresses on the pro plan on testnet, where the Explorer Guild NFT
   // is not deployed. Ignored on mainnet
   PRO_ADDRESSES: CommaSeparatedList("PRO_ADDRESSES"),
-  // Wallet addresses allowed to write drafts and profiles on mainnet. Every
-  // user is whitelisted on testnet
-  WHITELISTED_ADDRESSES: CommaSeparatedList("WHITELISTED_ADDRESSES"),
+  // Posts all users of a plan can publish together per 24 hours, bounding the
+  // Arweave uploads paid by the server. Each plan has its own, so Free
+  // accounts reaching theirs don't block Pro accounts. Reaching one is
+  // reported to PostHog error tracking.
+  PUBLISH_GLOBAL_DAILY_LIMIT_FREE: Config.Int(
+    "PUBLISH_GLOBAL_DAILY_LIMIT_FREE",
+  ).pipe(Config.withDefault(200)),
+  PUBLISH_GLOBAL_DAILY_LIMIT_PRO: Config.Int(
+    "PUBLISH_GLOBAL_DAILY_LIMIT_PRO",
+  ).pipe(Config.withDefault(200)),
 });
 
 export type AppConfigValues = Config.Success<typeof appConfig>;
@@ -131,12 +137,12 @@ export const defaultTestConfig: AppConfigValues = {
   DATABASE_PATH: ":memory:",
   CLIENT_IP_HEADER: Option.none(),
   RAILWAY_PRIVATE_DOMAIN: Option.none(),
-  SENTRY_DSN: Option.none(),
   POSTHOG_API_KEY: Option.none(),
   POSTHOG_API_HOST: Option.none(),
   ADMIN_ADDRESSES: [],
   PRO_ADDRESSES: [],
-  WHITELISTED_ADDRESSES: [],
+  PUBLISH_GLOBAL_DAILY_LIMIT_FREE: 200,
+  PUBLISH_GLOBAL_DAILY_LIMIT_PRO: 200,
 };
 
 export class AppConfig extends Context.Service<AppConfig, AppConfigValues>()(

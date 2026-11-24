@@ -90,7 +90,6 @@ describe("admin jobs API", () => {
         status: 200,
         results: [
           emptyQueue("generate-image-thumbhash"),
-          emptyQueue("index-profile"),
           emptyQueue("opentimestamps-stamp"),
           emptyQueue("opentimestamps-upgrade"),
           { ...emptyQueue("publish-draft"), failed: 1 },
@@ -172,19 +171,22 @@ describe("admin jobs API", () => {
       const { client, userId } = yield* createAuthenticatedClient();
       yield* createTestWalletAddress({ userId, address: ADMIN_ADDRESS });
 
-      const responses = yield* Effect.all([
-        client.get("/api/admin/queues/publish-drafts/failed"),
-        client.execute(
-          HttpClientRequest.post(
-            "/api/admin/queues/publish-drafts/failed/job-1/retry",
+      const responses = yield* Effect.all(
+        [
+          client.get("/api/admin/queues/publish-drafts/failed"),
+          client.execute(
+            HttpClientRequest.post(
+              "/api/admin/queues/publish-drafts/failed/job-1/retry",
+            ),
           ),
-        ),
-        client.execute(
-          HttpClientRequest.delete(
-            "/api/admin/queues/publish-drafts/failed/job-1",
+          client.execute(
+            HttpClientRequest.delete(
+              "/api/admin/queues/publish-drafts/failed/job-1",
+            ),
           ),
-        ),
-      ]);
+        ],
+        { concurrency: 1 },
+      );
 
       expect(responses.map((response) => response.status)).toStrictEqual([
         400, 400, 400,

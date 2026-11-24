@@ -12,7 +12,15 @@ import {
   or,
   sql,
 } from "drizzle-orm";
-import { DateTime, Duration, Effect } from "effect";
+import {
+  Cause,
+  Data,
+  DateTime,
+  Duration,
+  Effect,
+  ErrorReporter,
+  Semaphore,
+} from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
 import { SigleApi } from "@/api";
 import {
@@ -46,7 +54,12 @@ import {
   draftImageKey,
   draftImageSettings,
 } from "@/lib/draft-images";
-import { findPublishUsage, PUBLISH_LIMITS } from "@/services/plan";
+import {
+  findPlanPublishUsage,
+  findUserPublishUsage,
+  PUBLISH_LIMITS,
+  type UserPlan,
+} from "@/services/plan";
 import { PostHogService } from "@/services/posthog";
 
 const toDraft = (row: typeof draft.$inferSelect) => ({
@@ -82,8 +95,15 @@ const checkDraftContentTotal = (options: {
     // `octet_length` reads the stored size of the text, not the text.
     const [usage] = yield* db
       .select({
-        total: sql<number>`coalesce(sum(octet_length(${draft.content})), 0)`,
-        current: sql<number>`coalesce(sum(CASE WHEN ${draft.id} = ${options.draftId ?? null} THEN octet_length(${draft.content}) END), 0)`,
+        // The SQLite driver reads integers as bigint unless they're mapped.
+        total:
+          sql<number>`coalesce(sum(octet_length(${draft.content})), 0)`.mapWith(
+            Number,
+          ),
+        current:
+          sql<number>`coalesce(sum(CASE WHEN ${draft.id} = ${options.draftId ?? null} THEN octet_length(${draft.content}) END), 0)`.mapWith(
+            Number,
+          ),
       })
       .from(draft)
       .where(eq(draft.userId, options.userId))
@@ -353,6 +373,94 @@ export const deleteDraft = (draftId: string) =>
     });
   });
 
+/**
+ * Fails with a 429 for a daily limit, with a `Retry-After` of when the oldest
+ * counted publish leaves the window.
+ */
+const failOverDailyLimit = (
+  usage: { readonly resetsAt: Date | null },
+  now: Date,
+  message: string,
+) =>
+  Effect.gen(function* () {
+    const retryAfterMillis = Math.max(
+      0,
+      (usage.resetsAt?.getTime() ?? now.getTime()) - now.getTime(),
+    );
+
+    yield* setRetryAfterHeader(Duration.millis(retryAfterMillis));
+
+    return yield* new TooManyRequests({ message, retryAfterMillis });
+  });
+
+/**
+ * Reported to PostHog when the global publish limit of a plan rejects a
+ * publish, so we know users are being turned away.
+ */
+class GlobalPublishLimitReached extends Data.TaggedError(
+  "GlobalPublishLimitReached",
+)<{
+  readonly plan: UserPlan;
+  readonly limit: number;
+  readonly message: string;
+}> {
+  readonly [ErrorReporter.severity] = "Warn" as const;
+  readonly [ErrorReporter.attributes] = { plan: this.plan, limit: this.limit };
+}
+
+/**
+ * Reports once per plan and hour per server process: while a limit is
+ * reached every publish of the plan is rejected, and reporting each would
+ * spend the error tracking quota.
+ */
+const GLOBAL_PUBLISH_LIMIT_REPORT_INTERVAL_MILLIS = 60 * 60 * 1000;
+
+const globalPublishLimitReportedAt = new Map<UserPlan, number>();
+
+const reportGlobalPublishLimitReached = ({
+  plan,
+  limit,
+  now,
+}: {
+  readonly plan: UserPlan;
+  readonly limit: number;
+  readonly now: Date;
+}) =>
+  Effect.suspend(() => {
+    const reportedAt = globalPublishLimitReportedAt.get(plan);
+
+    if (
+      reportedAt !== undefined &&
+      now.getTime() - reportedAt < GLOBAL_PUBLISH_LIMIT_REPORT_INTERVAL_MILLIS
+    ) {
+      return Effect.void;
+    }
+
+    globalPublishLimitReportedAt.set(plan, now.getTime());
+
+    return ErrorReporter.report(
+      Cause.fail(
+        new GlobalPublishLimitReached({
+          plan,
+          limit,
+          message: `The ${plan} plan reached its global limit of ${limit} publishes per 24 hours, publishes are rejected`,
+        }),
+      ),
+    );
+  });
+
+/**
+ * Serializes counting the publish limits and claiming the draft, so
+ * concurrent publishes from different wallets can't all read the same usage
+ * before any of them claims its draft and together exceed the global limit.
+ * The queries are synchronous today, so they rarely interleave, but nothing
+ * guarantees it: the scheduler can yield between them, and an async call
+ * added between them would reopen the gap. The API runs as a single process
+ * on its SQLite file, so an in-process lock is enough; it is held for a few
+ * queries.
+ */
+const publishLock = Semaphore.makeUnsafe(1);
+
 export const publishDraft = (
   draftId: string,
   payload: typeof PublishDraftPayload.Type,
@@ -413,90 +521,118 @@ export const publishDraft = (
       });
     }
 
-    const { plan } = user;
-    const limit = PUBLISH_LIMITS[plan];
-    const now = new Date();
+    // Counting the limits and claiming the draft is one step, see
+    // `publishLock`.
+    const acceptedDraft = yield* publishLock.withPermit(
+      Effect.gen(function* () {
+        const { plan } = user;
+        const limit = PUBLISH_LIMITS[plan];
+        const now = new Date();
 
-    const usage = yield* findPublishUsage(db, {
-      userId: user.id,
-      now,
-      excludeDraftId: draftId,
-    });
+        const usage = yield* findUserPublishUsage(db, {
+          userId: user.id,
+          now,
+          excludeDraftId: draftId,
+        });
 
-    if (usage.used >= limit) {
-      const retryAfterMillis = Math.max(
-        0,
-        (usage.resetsAt?.getTime() ?? now.getTime()) - now.getTime(),
-      );
+        if (usage.used >= limit) {
+          return yield* failOverDailyLimit(
+            usage,
+            now,
+            plan === "free"
+              ? `You can publish ${limit} posts per day on the Free plan. Try again later, or upgrade to Pro to publish up to ${PUBLISH_LIMITS.pro} posts per day.`
+              : `You can publish ${limit} posts per day on the Pro plan. Try again later.`,
+          );
+        }
 
-      yield* setRetryAfterHeader(Duration.millis(retryAfterMillis));
-
-      return yield* new TooManyRequests({
-        message:
+        const globalLimit =
           plan === "free"
-            ? `You can publish ${limit} posts per day on the Free plan. Try again later, or upgrade to Pro to publish up to ${PUBLISH_LIMITS.pro} posts per day.`
-            : `You can publish ${limit} posts per day on the Pro plan. Try again later.`,
-        retryAfterMillis,
-      });
-    }
+            ? config.PUBLISH_GLOBAL_DAILY_LIMIT_FREE
+            : config.PUBLISH_GLOBAL_DAILY_LIMIT_PRO;
 
-    // Take ownership of the draft row: `publishSignature` identifies the signed
-    // payload being published, and the Arweave checkpoint/upload claim only
-    // survive while they belong to that payload. Workers whose job signature no
-    // longer matches the draft no-op, so the newest request wins without any
-    // queue reconciliation, which also recovers a draft stuck in flight. The
-    // CASE reads the current row, so a checkpoint or in-flight upload claim
-    // from the same signature is never clobbered. Another signature cannot
-    // take over while a worker holds the upload claim, or while a checkpointed
-    // upload waits for a worker to create the post, including after a retry
-    // of the same signature reset the status to PENDING: either way an
-    // Arweave upload paid for would be discarded. A FAILED publish has no
-    // worker left, and both checks expire after the claim lease, so a worker
-    // that crashed doesn't block the draft forever. Both run in the same
-    // statement as the write.
-    const leaseCutoff = new Date(
-      now.getTime() - PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS,
-    );
+        const globalUsage = yield* findPlanPublishUsage(db, {
+          plan,
+          now,
+          excludeDraftId: draftId,
+        });
 
-    const [acceptedDraft] = yield* db
-      .update(draft)
-      .set({
-        txStatus: "PENDING",
-        publishSignature: signature,
-        arweaveTxId: sql`CASE
-          WHEN ${draft.publishSignature} = ${signature} THEN ${draft.arweaveTxId}
-          ELSE NULL
-        END`,
-        uploadClaimedAt: sql`CASE
-          WHEN ${draft.publishSignature} = ${signature} THEN ${draft.uploadClaimedAt}
-          ELSE NULL
-        END`,
-        updatedAt: now,
-      })
-      .where(
-        and(
-          eq(draft.id, draftId),
-          eq(draft.userId, user.id),
-          or(
-            eq(draft.publishSignature, signature),
+        if (globalUsage.used >= globalLimit) {
+          yield* reportGlobalPublishLimitReached({
+            plan,
+            limit: globalLimit,
+            now,
+          });
+
+          return yield* failOverDailyLimit(
+            globalUsage,
+            now,
+            plan === "free"
+              ? "Sigle reached today's publishing limit for Free accounts. Try again later, or upgrade to Pro to keep publishing."
+              : "Sigle reached today's publishing limit for Pro accounts. Try again later.",
+          );
+        }
+
+        // Take ownership of the draft row: `publishSignature` identifies the signed
+        // payload being published, and the Arweave checkpoint/upload claim only
+        // survive while they belong to that payload. Workers whose job signature no
+        // longer matches the draft no-op, so the newest request wins without any
+        // queue reconciliation, which also recovers a draft stuck in flight. The
+        // CASE reads the current row, so a checkpoint or in-flight upload claim
+        // from the same signature is never clobbered. Another signature cannot
+        // take over while a worker holds the upload claim, or while a checkpointed
+        // upload waits for a worker to create the post, including after a retry
+        // of the same signature reset the status to PENDING: either way an
+        // Arweave upload paid for would be discarded. A FAILED publish has no
+        // worker left, and both checks expire after the claim lease, so a worker
+        // that crashed doesn't block the draft forever. Both run in the same
+        // statement as the write.
+        const leaseCutoff = new Date(
+          now.getTime() - PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS,
+        );
+
+        const [claimedDraft] = yield* db
+          .update(draft)
+          .set({
+            txStatus: "PENDING",
+            publishSignature: signature,
+            arweaveTxId: sql`CASE
+              WHEN ${draft.publishSignature} = ${signature} THEN ${draft.arweaveTxId}
+              ELSE NULL
+            END`,
+            uploadClaimedAt: sql`CASE
+              WHEN ${draft.publishSignature} = ${signature} THEN ${draft.uploadClaimedAt}
+              ELSE NULL
+            END`,
+            updatedAt: now,
+          })
+          .where(
             and(
+              eq(draft.id, draftId),
+              eq(draft.userId, user.id),
               or(
-                isNull(draft.uploadClaimedAt),
-                lt(draft.uploadClaimedAt, leaseCutoff),
-              ),
-              // The checkpoint write and every accepted publish set
-              // `updatedAt`.
-              or(
-                isNull(draft.arweaveTxId),
-                eq(draft.txStatus, "FAILED"),
-                lt(draft.updatedAt, leaseCutoff),
+                eq(draft.publishSignature, signature),
+                and(
+                  or(
+                    isNull(draft.uploadClaimedAt),
+                    lt(draft.uploadClaimedAt, leaseCutoff),
+                  ),
+                  // The checkpoint write and every accepted publish set
+                  // `updatedAt`.
+                  or(
+                    isNull(draft.arweaveTxId),
+                    eq(draft.txStatus, "FAILED"),
+                    lt(draft.updatedAt, leaseCutoff),
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      )
-      .returning({ id: draft.id })
-      .pipe(Effect.orDie);
+          )
+          .returning({ id: draft.id })
+          .pipe(Effect.orDie);
+
+        return claimedDraft;
+      }),
+    );
 
     if (!acceptedDraft) {
       const [currentDraft] = yield* db

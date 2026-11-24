@@ -1,26 +1,21 @@
 import { describe, expect, it } from "@effect/vitest";
-import * as Sentry from "@sentry/effect/server";
-import {
-  ConfigProvider,
-  Data,
-  Effect,
-  ErrorReporter,
-  Option,
-  Tracer,
-} from "effect";
+import { ConfigProvider, Data, Effect, ErrorReporter, Tracer } from "effect";
 import { AppConfig } from "@/config";
+import { type CapturedException, PostHogService } from "@/services/posthog";
 import {
   type ErrorAttributes,
   TelemetryLayer,
   conventionalSpanName,
   isIgnoredHttpStatusError,
-  makeSentryErrorReporter,
+  makeErrorReporter,
 } from "@/services/telemetry";
 
 class HttpStatusError extends Data.TaggedError("HttpStatusError")<{
   readonly status: number;
   readonly message: string;
-}> {}
+}> {
+  readonly [ErrorReporter.attributes] = { jobId: "job-1" };
+}
 
 describe("telemetry service", () => {
   it("serializes BigInt values to string in JSON", () => {
@@ -36,56 +31,85 @@ describe("telemetry service", () => {
     expect(isIgnoredHttpStatusError(new Error("unexpected"))).toBe(false);
   });
 
-  it.effect(
-    "reports 500 errors and skips 401/404/422 errors in SentryErrorReporter",
-    () =>
-      Effect.gen(function* () {
-        const captured: Array<{
-          readonly error: Error;
-          readonly attributes: ErrorAttributes;
-        }> = [];
+  it.effect("reports 500 errors and skips 401/404/422 errors", () =>
+    Effect.gen(function* () {
+      const captured: Array<{
+        readonly error: Error;
+        readonly attributes: ErrorAttributes;
+      }> = [];
 
-        const reporter = makeSentryErrorReporter({
-          captureException: (error, attributes) => {
-            captured.push({ error, attributes });
-          },
-        });
+      const reporter = makeErrorReporter({
+        captureException: (error, attributes) => {
+          captured.push({ error, attributes });
+        },
+      });
 
-        const reporterLayer = ErrorReporter.layer([reporter]);
+      const reporterLayer = ErrorReporter.layer([reporter]);
 
-        // 404 error should be ignored
-        yield* Effect.fail(
-          new HttpStatusError({ status: 404, message: "Not Found" }),
-        ).pipe(
-          Effect.withErrorReporting,
-          Effect.provide(reporterLayer),
-          Effect.exit,
-        );
+      // 404 error should be ignored
+      yield* Effect.fail(
+        new HttpStatusError({ status: 404, message: "Not Found" }),
+      ).pipe(
+        Effect.withErrorReporting,
+        Effect.provide(reporterLayer),
+        Effect.exit,
+      );
 
-        expect(captured).toHaveLength(0);
+      expect(captured).toHaveLength(0);
 
-        // 500 error should be captured
-        yield* Effect.fail(
-          new HttpStatusError({
-            status: 500,
-            message: "Internal Server Error",
-          }),
-        ).pipe(
-          Effect.withErrorReporting,
-          Effect.provide(reporterLayer),
-          Effect.exit,
-        );
+      // 500 error should be captured
+      yield* Effect.fail(
+        new HttpStatusError({
+          status: 500,
+          message: "Internal Server Error",
+        }),
+      ).pipe(
+        Effect.withErrorReporting,
+        Effect.provide(reporterLayer),
+        Effect.exit,
+      );
 
-        expect(captured).toHaveLength(1);
-      }),
+      expect(captured).toHaveLength(1);
+    }),
   );
 
   it.effect("initializes TelemetryLayer cleanly with test config", () =>
     Effect.logInfo("Test log message").pipe(
       Effect.withSpan("test-span"),
       Effect.provide(TelemetryLayer),
-      Effect.provide(AppConfig.layerTest()),
+      Effect.provide([AppConfig.layerTest(), PostHogService.layerTest()]),
     ),
+  );
+
+  it.effect("reports server errors to PostHog with their attributes", () =>
+    Effect.gen(function* () {
+      const exceptions: Array<CapturedException> = [];
+
+      const fail = (status: number) =>
+        Effect.fail(
+          new HttpStatusError({ status, message: `Status ${status}` }),
+        ).pipe(
+          Effect.withErrorReporting,
+          Effect.provide(TelemetryLayer),
+          Effect.provide([
+            AppConfig.layerTest(),
+            PostHogService.layerTest([], exceptions),
+          ]),
+          Effect.exit,
+        );
+
+      yield* fail(404);
+      yield* fail(500);
+
+      expect(
+        exceptions.map(({ error, properties }) => ({
+          message: error.message,
+          properties,
+        })),
+      ).toStrictEqual([
+        { message: "Status 500", properties: { jobId: "job-1" } },
+      ]);
+    }),
   );
 
   it.each([
@@ -147,20 +171,16 @@ describe("telemetry service", () => {
     ).toBe(expected);
   });
 
-  it.effect("traces with OTLP instead of Sentry when OTLP export is on", () =>
+  it.effect("traces with OTLP only when OTLP export is on", () =>
     Effect.gen(function* () {
       const tracerWith = (env: Record<string, string>) =>
         Effect.service(Tracer.Tracer).pipe(
           Effect.provide(TelemetryLayer),
-          Effect.provide(
-            AppConfig.layerTest({
-              SENTRY_DSN: Option.some("http://public@127.0.0.1:9/1"),
-            }),
-          ),
+          Effect.provide([AppConfig.layerTest(), PostHogService.layerTest()]),
           Effect.provide(ConfigProvider.layer(ConfigProvider.fromEnv({ env }))),
         );
 
-      expect(yield* tracerWith({})).toBe(Sentry.SentryEffectTracer);
+      expect(yield* tracerWith({})).toBe(Tracer.Tracer.defaultValue());
 
       // The variables Railway sets on a traced service, plus the exporter.
       const otlpTracer = yield* tracerWith({
@@ -169,7 +189,6 @@ describe("telemetry service", () => {
         OTEL_SERVICE_NAME: "server",
       });
 
-      expect(otlpTracer).not.toBe(Sentry.SentryEffectTracer);
       expect(otlpTracer).not.toBe(Tracer.Tracer.defaultValue());
     }),
   );

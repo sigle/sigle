@@ -31,8 +31,7 @@ export const SettingsProfileMetadata = () => {
         <div>
           <h3 className="headline text-2xl">Profile</h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            How you appear on your blog. Saving asks your wallet to sign the
-            update, which is then archived on Arweave.
+            How you appear on your blog. You can fill it in from your BNS name.
           </p>
         </div>
         {user && !editingProfileMetadata ? (

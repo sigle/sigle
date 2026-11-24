@@ -17,10 +17,7 @@ import { PostsHandlersLayer } from "@/api/handlers/posts";
 import { ProfileHandlersLayer } from "@/api/handlers/profile";
 import { UsersHandlersLayer } from "@/api/handlers/users";
 import { AdminMiddlewareLayer } from "@/api/middleware/admin";
-import {
-  UserAuthMiddlewareLayer,
-  WhitelistedUserMiddlewareLayer,
-} from "@/api/middleware/auth-user";
+import { UserAuthMiddlewareLayer } from "@/api/middleware/auth-user";
 import { BodyLimitLayer } from "@/api/middleware/body-limit";
 import { EtagLayer } from "@/api/middleware/etag";
 import { RateLimitMiddlewareLayer } from "@/api/middleware/rate-limit";
@@ -30,6 +27,7 @@ import { Database } from "@/db";
 import { JobsLive } from "@/jobs";
 import { ArweaveService } from "@/services/arweave";
 import { AuthService } from "@/services/auth";
+import { BnsService } from "@/services/bns";
 import { ImageProcessingService } from "@/services/image-processing";
 import { OpenTimestampsService } from "@/services/opentimestamps";
 import { PlanService } from "@/services/plan";
@@ -39,12 +37,12 @@ import { StorageService } from "@/services/storage";
 import { TelemetryLayer } from "@/services/telemetry";
 
 export const CoreServicesLayer = Layer.mergeAll(
-  TelemetryLayer,
-  PostHogService.layer,
+  TelemetryLayer.pipe(Layer.provideMerge(PostHogService.layer)),
   ArweaveService.layer,
   OpenTimestampsService.layer,
   ImageProcessingService.layer,
   StorageService.layer,
+  BnsService.layer,
 ).pipe(Layer.provideMerge(AppConfig.layer), Layer.provide(NodeServices.layer));
 
 export const ApiHandlersLayer = Layer.mergeAll(
@@ -60,7 +58,6 @@ export const ApiHandlersLayer = Layer.mergeAll(
 export const ApiMiddlewareLayer = Layer.mergeAll(
   RateLimitMiddlewareLayer,
   UserAuthMiddlewareLayer,
-  WhitelistedUserMiddlewareLayer,
   AdminMiddlewareLayer,
   SchemaErrorMiddlewareLayer,
 );

@@ -12,7 +12,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/cn";
-import { sigleApiClient } from "@/lib/sigle";
 
 export default function DashboardLayout({
   children,
@@ -22,29 +21,23 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
 
-  const { data: me } = sigleApiClient.useQuery("get", "/api/me");
-
   const navigationLinks = [
     {
       label: "Dashboard",
       href: "/dashboard",
     },
-    ...(me?.whitelisted
-      ? [
-          {
-            label: "Drafts",
-            href: "/dashboard/drafts",
-          },
-          {
-            label: "Published",
-            href: "/dashboard/published",
-          },
-          {
-            label: "Plan",
-            href: "/dashboard/plan",
-          },
-        ]
-      : []),
+    {
+      label: "Drafts",
+      href: "/dashboard/drafts",
+    },
+    {
+      label: "Published",
+      href: "/dashboard/published",
+    },
+    {
+      label: "Plan",
+      href: "/dashboard/plan",
+    },
     {
       label: "Settings",
       href: "/dashboard/settings",

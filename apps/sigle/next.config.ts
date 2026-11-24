@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-import { withSentryConfig } from "@sentry/nextjs/config";
+import { withPostHogConfig } from "@posthog/nextjs-config";
 
 // Public URL of the server-v2 image CDN (`R2_PUBLIC_URL` on the server), which
 // serves uploaded profile and post images.
@@ -19,7 +19,6 @@ const nextConfig: NextConfig = {
         port: "",
         search: "",
       },
-      // Profile image URLs carry a `?v=` version, so any query is allowed.
       {
         protocol: "https",
         hostname: cdnUrl.hostname,
@@ -30,19 +29,23 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ["@stacks/connect"],
 };
 
-export default withSentryConfig(nextConfig, {
-  authToken: process.env.SENTRY_AUTH_TOKEN,
-  telemetry: false,
+// Uploads the source maps of the build to PostHog error tracking, so stack
+// traces show the original code, then deletes them so they are not served.
+// Only on Railway builds, where POSTHOG_PERSONAL_API_KEY is set.
+const posthogPersonalApiKey = process.env.POSTHOG_PERSONAL_API_KEY;
+
+const posthogProjectId = process.env.POSTHOG_PROJECT_ID;
+
+export default withPostHogConfig(nextConfig, {
+  personalApiKey: posthogPersonalApiKey ?? "",
+  projectId: posthogProjectId,
+  host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
   sourcemaps: {
-    disable: true,
-  },
-  // Upload large source maps to Sentry
-  widenClientFileUpload: true,
-  bundleSizeOptimizations: {
-    excludeDebugStatements: true,
-    excludeReplayShadowDom: true,
-    excludeReplayWorker: true,
-    excludeReplayIframe: true,
-    excludeTracing: true,
+    enabled: Boolean(posthogPersonalApiKey && posthogProjectId),
+    releaseName: "sigle-web",
+    // The Docker build has no .git to read the commit from
+    releaseVersion: process.env.RAILWAY_GIT_COMMIT_SHA,
+    // A failed upload deletes the source maps and keeps the deploy going
+    failOnError: false,
   },
 });

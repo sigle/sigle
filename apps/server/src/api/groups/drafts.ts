@@ -5,10 +5,7 @@ import {
   HttpApiSchema,
   OpenApi,
 } from "effect/http-api";
-import {
-  UserAuthMiddleware,
-  WhitelistedUserMiddleware,
-} from "@/api/middleware/auth-user";
+import { UserAuthMiddleware } from "@/api/middleware/auth-user";
 import {
   RateLimitMiddleware,
   RateLimitPolicy,
@@ -20,6 +17,7 @@ import {
   documentPaginationQuery,
   Forbidden,
   imageRequestBody,
+  isUrlWithProtocol,
   NonNegativeInt,
   NotFound,
   PayloadTooLarge,
@@ -88,19 +86,6 @@ export const DRAFT_LIMITS = {
   tags: 5,
   tag: 50,
 } as const;
-
-/**
- * URL filter accepting only the given protocols, such as `"https:"`.
- */
-const isUrlWithProtocol = (
-  protocols: ReadonlyArray<string>,
-  expected: string,
-) =>
-  Schema.makeFilter((value: string) =>
-    URL.canParse(value) && protocols.includes(new URL(value).protocol)
-      ? true
-      : `Expected ${expected}`,
-  );
 
 const DraftTitle = Schema.String.check(Schema.isMaxLength(DRAFT_LIMITS.title));
 
@@ -291,7 +276,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       },
       payload: UpdateDraftPayload,
       success: Draft,
-      error: [NotFound, Conflict],
+      error: [NotFound, Conflict, Forbidden],
     })
       .annotate(OpenApi.Summary, "Update a draft")
       .annotate(
@@ -320,14 +305,14 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
         // The publish status to poll.
         { location: Schema.String },
       ),
-      // The 429 is also returned once the daily publish limit of the plan is
-      // reached.
+      // The 429 is also returned once the daily publish limit of the user or
+      // the global one of their plan is reached.
       error: [BadRequest, NotFound, Conflict, TooManyRequests],
     })
       .annotate(OpenApi.Summary, "Publish a draft")
       .annotate(
         OpenApi.Description,
-        `Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being published to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, ${PUBLISH_LIMITS.free} posts on Free and ${PUBLISH_LIMITS.pro} on Pro, counting the publishes in flight.`,
+        `Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being published to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, ${PUBLISH_LIMITS.free} posts on Free and ${PUBLISH_LIMITS.pro} on Pro, counting the publishes in flight. Also returns a 429 once all users of the plan together reached its global daily limit.`,
       )
       .annotate(RateLimitPolicy, "draftPublish"),
     HttpApiEndpoint.get("getPublishStatus", "/:draftId/publish", {
@@ -367,5 +352,4 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
   )
   .prefix("/api/drafts")
   .middleware(RateLimitMiddleware)
-  .middleware(WhitelistedUserMiddleware)
   .middleware(UserAuthMiddleware);

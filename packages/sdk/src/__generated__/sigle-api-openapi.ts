@@ -33,7 +33,7 @@ export interface paths {
     };
     /**
      * Get the signed-in user
-     * @description Return the signed-in user's id, primary Stacks address, whitelist status, and plan. Returns a 401 without a session.
+     * @description Return the signed-in user's id, primary Stacks address, and plan. Returns a 401 without a session.
      */
     get: operations["me.get"];
     put?: never;
@@ -53,7 +53,7 @@ export interface paths {
     };
     /**
      * Get the signed-in user's limits
-     * @description Return the limits of the signed-in user's plan and how much of them is used, such as the posts they can still publish and the profile updates they can still make in the last 24 hours. Returns a 401 without a session.
+     * @description Return the limits of the signed-in user's plan and how much of them is used, such as the posts they can still publish in the last 24 hours. Returns a 401 without a session.
      */
     get: operations["me.limits"];
     put?: never;
@@ -191,7 +191,7 @@ export interface paths {
     put?: never;
     /**
      * Publish a draft
-     * @description Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being published to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, 3 posts on Free and 20 on Pro, counting the publishes in flight.
+     * @description Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being published to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, 3 posts on Free and 20 on Pro, counting the publishes in flight. Also returns a 429 once all users of the plan together reached its global daily limit.
      */
     post: operations["drafts.publish"];
     delete?: never;
@@ -230,9 +230,29 @@ export interface paths {
     get?: never;
     /**
      * Update the profile
-     * @description Update the profile with signed profile metadata: upload it to Arweave, store it as the profile of the signing address, and return the transaction and the stored profile. Returns a 413 when the metadata is over 32 KiB as JSON, and a 429 once the user has updated their profile 10 times in the last 24 hours.
+     * @description Replace the text fields of the profile of the user's primary address, and return the stored profile. A field that is omitted or null is cleared. The avatar and cover are set by uploading them.
      */
     put: operations["profile.update"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/me/profile/bns": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Read the profile of the user's BNS name
+     * @description Read the primary BNS V2 name of the user's primary address and the profile fields of its zonefile, to fill in the profile form. Nothing is saved. Only JSON zonefiles are read, and a zonefile written for another owner of the name is ignored. Returns a 500 when the Stacks API cannot be reached.
+     */
+    get: operations["profile.bns"];
+    put?: never;
     post?: never;
     delete?: never;
     options?: never;
@@ -250,7 +270,7 @@ export interface paths {
     get?: never;
     /**
      * Upload a profile image
-     * @description Upload a profile avatar or cover image as a raw binary body. Re-uploading the same image is a no-op, uploading a different image replaces the previous file.
+     * @description Upload a profile avatar or cover image as a raw binary body, set it on the profile of the user's primary address right away, and return the stored profile. The avatar or cover it replaces is then deleted when this endpoint stored it, on a best-effort basis: a failed delete doesn't fail the upload.
      */
     put: operations["profile.uploadImage"];
     post?: never;
@@ -369,6 +389,8 @@ export interface components {
     PublicUser: {
       address: string;
       profile: components["schemas"]["UserProfile"] | null;
+      /** @description Whether the user is on Pro, unlocked by holding an Explorer Guild NFT, and gets the Explorer Guild badge. */
+      isExplorer: boolean;
     };
     UserProfile: {
       displayName: string | null;
@@ -377,7 +399,6 @@ export interface components {
       twitter: string | null;
       picture: components["schemas"]["MediaImage"] | null;
       coverPicture: components["schemas"]["MediaImage"] | null;
-      arweaveTxId: string;
       /** Format: date-time */
       updatedAt: string;
     };
@@ -412,13 +433,35 @@ export interface components {
     UnauthorizedError: {
       message: string;
     };
-    ForbiddenError: {
-      message: string;
-    };
     UnsupportedMediaTypeError: {
       message: string;
     };
     PayloadTooLargeError: {
+      message: string;
+    };
+    UpdateProfileResponse: {
+      address: string;
+      profile: components["schemas"]["UserProfile"];
+    };
+    /** @enum {string} */
+    ProfileImageKind: "avatar" | "cover";
+    BnsProfileResponse: {
+      name: string | null;
+      profile: components["schemas"]["BnsProfile"] | null;
+    };
+    BnsProfile: {
+      displayName: string | null;
+      description: string | null;
+      website: string | null;
+      twitter: string | null;
+    };
+    UpdateProfilePayload: {
+      displayName?: string | null;
+      description?: string | null;
+      website?: string | null;
+      twitter?: string | null;
+    };
+    ForbiddenError: {
       message: string;
     };
     UploadedImageResponse: {
@@ -428,103 +471,6 @@ export interface components {
       height: number;
       thumbhash: string;
     };
-    /** @enum {string} */
-    ProfileImageKind: "avatar" | "cover";
-    ConflictError: {
-      message: string;
-    };
-    UpdateProfileResponse: {
-      arweaveTxId: string;
-      uri: string;
-      cid: string;
-      gatewayUrl: string;
-      address: string;
-      profile: components["schemas"]["UserProfile"];
-    };
-    UpdateProfilePayload: {
-      metadata: components["schemas"]["ProfileMetadata"];
-    };
-    /** @description The signed profile metadata to upload to Arweave. */
-    ProfileMetadata: {
-      /** @constant */
-      $schema: "https://json-schemas.sigle.io/profile/1.0.0.json";
-      content: {
-        /** @description Random id also used in the url. Have to be unique on sigle. */
-        id: string;
-        /** @description The profile display name. */
-        displayName?: string;
-        /** @description The profile description as Markdown. */
-        description?: string;
-        /**
-         * Format: uri
-         * @description The website URL.
-         */
-        website?: string;
-        /** @description Twitter username. */
-        twitter?: string;
-        /**
-         * Format: uri
-         * @description The profile image URL.
-         */
-        picture?: string;
-        /**
-         * Format: uri
-         * @description The profile cover image URL.
-         */
-        coverPicture?: string;
-        /** @description List of attributes that can be used to store any additional information that is not supported by the standard */
-        attributes?: (
-          | {
-              /** @constant */
-              type: "Boolean";
-              /** @description The attribute's unique identifier. */
-              key: string;
-              /**
-               * @description A JS boolean value serialized as string. It's consumer responsibility to parse it.
-               * @enum {string}
-               */
-              value: "true" | "false";
-            }
-          | {
-              /** @constant */
-              type: "Date";
-              /** @description The attribute's unique identifier. */
-              key: string;
-              /**
-               * Format: date-time
-               * @description A valid ISO 8601 date string.  It's consumer responsibility to parse it.
-               */
-              value: string;
-            }
-          | {
-              /** @constant */
-              type: "Number";
-              /** @description The attribute's unique identifier. */
-              key: string;
-              /** @description A valid JS number serialized as string. It's consumer responsibility to parse it. */
-              value: string;
-            }
-          | {
-              /** @constant */
-              type: "String";
-              /** @description The attribute's unique identifier. */
-              key: string;
-              /** @description Any string value. */
-              value: string;
-            }
-          | {
-              /** @constant */
-              type: "JSON";
-              /** @description The attribute's unique identifier. */
-              key: string;
-              /** @description A JSON string. It's consumer responsibility to validate and parse it. */
-              value: string;
-            }
-        )[];
-      };
-      /** @description A cryptographic signature of the `content` data. */
-      signature?: string;
-    };
     PublishDraftStatusResponse: {
       status: components["schemas"]["PublishDraftStatus"];
       postId: string | null;
@@ -532,6 +478,9 @@ export interface components {
     };
     /** @enum {string} */
     PublishDraftStatus: "pending" | "processing" | "completed" | "failed";
+    ConflictError: {
+      message: string;
+    };
     PublishDraftAccepted: {
       draftId: string;
       /** @enum {string} */
@@ -627,7 +576,7 @@ export interface components {
         contentWarning?: "NSFW" | "SENSITIVE" | "SPOILER";
       };
       /** @description A cryptographic signature of the `content` data. */
-      signature?: string;
+      signature: string;
     };
     Draft: {
       id: string;
@@ -726,7 +675,6 @@ export interface components {
     };
     UserLimitsResponse: {
       publish: components["schemas"]["DailyLimit"];
-      profileUpdate: components["schemas"]["DailyLimit"];
     };
     DailyLimit: {
       limit: number;
@@ -736,7 +684,6 @@ export interface components {
     CurrentUserResponse: {
       id: string;
       address: string;
-      whitelisted: boolean;
       /** @enum {string} */
       plan: "free" | "pro";
     };
@@ -1087,15 +1034,6 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
-        };
-      };
       /** @description Too Many Requests */
       429: {
         headers: {
@@ -1225,15 +1163,6 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
-        };
-      };
       /** @description Not Found */
       404: {
         headers: {
@@ -1298,15 +1227,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */
@@ -1476,15 +1396,6 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
-        };
-      };
       /** @description Not Found */
       404: {
         headers: {
@@ -1556,15 +1467,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */
@@ -1746,31 +1648,51 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
-      403: {
+      /** @description Too Many Requests */
+      429: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["ForbiddenError"];
+          "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description Conflict */
-      409: {
+      /** @description Internal Server Error */
+      500: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["ConflictError"];
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
-      /** @description Payload Too Large */
-      413: {
+    };
+  };
+  "profile.bns": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description BnsProfileResponse */
+      200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["PayloadTooLargeError"];
+          "application/json": components["schemas"]["BnsProfileResponse"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
       /** @description Too Many Requests */
@@ -1811,13 +1733,13 @@ export interface operations {
       };
     };
     responses: {
-      /** @description UploadedImageResponse */
+      /** @description UpdateProfileResponse */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["UploadedImageResponse"];
+          "application/json": components["schemas"]["UpdateProfileResponse"];
         };
       };
       /** @description Bad Request */
@@ -1836,15 +1758,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Payload Too Large */

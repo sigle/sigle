@@ -8,6 +8,7 @@ import {
   HttpClientRequest,
   HttpClientResponse,
 } from "effect/http";
+import type { PostHogEvent } from "@/services/posthog";
 import { RATE_LIMITS } from "@/api/middleware/rate-limit";
 import { Database } from "@/db";
 import { session, user, verification, walletAddress } from "@/db/schema";
@@ -170,8 +171,10 @@ describe("auth siws", () => {
 
   it.effect(
     "POST /api/auth/siws/verify verifies the signature and creates a session",
-    () =>
-      Effect.gen(function* () {
+    () => {
+      const posthogEvents: Array<PostHogEvent> = [];
+
+      return Effect.gen(function* () {
         const client = yield* HttpClient.HttpClient;
         const db = yield* Database;
         const { address, privateKey, chainId } = createTestSiwsCredentials();
@@ -180,7 +183,12 @@ describe("auth siws", () => {
         const message = createTestSiwsMessage({ address, nonce, chainId });
         const signature = signTestSiwsMessage(message, privateKey);
 
-        const response = yield* requestVerify(client, { message, signature });
+        // The proxy forwards the client IP, which the session must not store.
+        const response = yield* client.execute(
+          postJson("/api/auth/siws/verify", { message, signature }).pipe(
+            HttpClientRequest.setHeader("x-forwarded-for", "203.0.113.7"),
+          ),
+        );
 
         const body =
           yield* HttpClientResponse.schemaBodyJson(VerifyResponse)(response);
@@ -199,6 +207,20 @@ describe("auth siws", () => {
           .select()
           .from(session)
           .where(eq(session.token, body.token));
+
+        // Signing in again is not a new sign-up.
+        const { nonce: nextNonce } = yield* requestNonce(client);
+
+        const nextMessage = createTestSiwsMessage({
+          address,
+          nonce: nextNonce,
+          chainId,
+        });
+
+        const nextSignIn = yield* requestVerify(client, {
+          message: nextMessage,
+          signature: signTestSiwsMessage(nextMessage, privateKey),
+        });
 
         const remainingNonces = yield* db
           .select()
@@ -220,7 +242,10 @@ describe("auth siws", () => {
             isPrimary: createdWallet.isPrimary,
           },
           sessionUserId: createdSession.userId,
+          sessionIpAddress: createdSession.ipAddress,
           remainingNonces,
+          nextSignIn: nextSignIn.status,
+          posthogEvents,
         }).toStrictEqual({
           success: true,
           walletAddress: address,
@@ -235,9 +260,15 @@ describe("auth siws", () => {
             isPrimary: true,
           },
           sessionUserId: body.user.id,
+          sessionIpAddress: "",
           remainingNonces: [],
+          nextSignIn: 200,
+          posthogEvents: [
+            { distinctId: body.user.id, event: "user_signed_up" },
+          ],
         });
-      }).pipe(Effect.provide(makeTestServerLayer())),
+      }).pipe(Effect.provide(makeTestServerLayer({}, posthogEvents)));
+    },
   );
 
   it.effect(

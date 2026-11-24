@@ -1,4 +1,4 @@
-import { eq, inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { alias } from "drizzle-orm/sqlite-core";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
@@ -6,7 +6,7 @@ import { SigleApi } from "@/api";
 import { PUBLIC_CACHE_CONTROL } from "@/api/middleware/etag";
 import { NotFound } from "@/api/schemas";
 import { Database } from "@/db";
-import { mediaImage, profile, walletAddress } from "@/db/schema";
+import { mediaImage, profile, user, walletAddress } from "@/db/schema";
 import { parseStacksAddress } from "@/lib/stacks-address";
 
 const pictureImage = alias(mediaImage, "picture_image");
@@ -14,8 +14,8 @@ const pictureImage = alias(mediaImage, "picture_image");
 const coverPictureImage = alias(mediaImage, "cover_picture_image");
 
 /**
- * Reads the profiles published by addresses, with the placeholders of their
- * images. Addresses that never published a profile are missing from the
+ * Reads the profiles of addresses, with the placeholders of their
+ * images. Addresses without a profile are missing from the
  * returned map.
  */
 export const findProfiles = (addresses: ReadonlyArray<string>) =>
@@ -74,7 +74,6 @@ export const findProfiles = (addresses: ReadonlyArray<string>) =>
                       height: found.coverHeight,
                       thumbhash: found.coverThumbhash,
                     },
-              arweaveTxId: foundProfile.arweaveTxId,
               updatedAt: DateTime.fromDateUnsafe(foundProfile.updatedAt),
             },
           },
@@ -84,8 +83,36 @@ export const findProfiles = (addresses: ReadonlyArray<string>) =>
   });
 
 /**
- * Reads the profile published by an address, see {@link findProfiles}.
- * `undefined` when the address never published a profile.
+ * The addresses whose user is on Pro, who get the Explorer Guild badge: Pro is
+ * only unlocked by holding an Explorer Guild NFT, and is re-checked twice a
+ * day. A badge belongs to the user, so it shows on every one of their wallets.
+ */
+export const findExplorerAddresses = (addresses: ReadonlyArray<string>) =>
+  Effect.gen(function* () {
+    if (addresses.length === 0) {
+      return new Set<string>();
+    }
+
+    const db = yield* Database;
+
+    const rows = yield* db
+      .select({ address: walletAddress.address })
+      .from(walletAddress)
+      .innerJoin(user, eq(user.id, walletAddress.userId))
+      .where(
+        and(
+          inArray(walletAddress.address, [...addresses]),
+          eq(user.plan, "pro"),
+        ),
+      )
+      .pipe(Effect.orDie);
+
+    return new Set(rows.map((row) => row.address));
+  });
+
+/**
+ * Reads the profile of an address, see {@link findProfiles}. `undefined`
+ * when the address has no profile.
  */
 export const findProfile = (address: string) =>
   Effect.map(findProfiles([address]), (profiles) => profiles.get(address));
@@ -96,8 +123,8 @@ export const getUserProfile = (addressParam: string) =>
     const db = yield* Database;
     const found = yield* findProfile(address);
 
-    // Profiles are keyed by the signing address, so an address is known when
-    // it either published a profile or signed in without publishing one.
+    // Profiles are keyed by address, so an address is known when it either
+    // has a profile or signed in without saving one.
     if (!found) {
       const [wallet] = yield* db
         .select({ id: walletAddress.id })
@@ -109,15 +136,16 @@ export const getUserProfile = (addressParam: string) =>
       if (!wallet) {
         return yield* new NotFound({ message: "User not found" });
       }
-
-      return HttpApiSchema.withHeaders({
-        body: { address, profile: null },
-        headers: { "cache-control": PUBLIC_CACHE_CONTROL },
-      });
     }
 
+    const explorers = yield* findExplorerAddresses([address]);
+
     return HttpApiSchema.withHeaders({
-      body: { address, profile: found.profile },
+      body: {
+        address,
+        profile: found?.profile ?? null,
+        isExplorer: explorers.has(address),
+      },
       headers: { "cache-control": PUBLIC_CACHE_CONTROL },
     });
   });

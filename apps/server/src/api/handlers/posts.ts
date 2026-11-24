@@ -6,7 +6,7 @@ import {
   POST_LIST_DEFAULT_LIMIT,
   type PostListQuery,
 } from "@/api/groups/posts";
-import { findProfiles } from "@/api/handlers/users";
+import { findExplorerAddresses, findProfiles } from "@/api/handlers/users";
 import { PUBLIC_CACHE_CONTROL } from "@/api/middleware/etag";
 import { NotFound } from "@/api/schemas";
 import { Database } from "@/db";
@@ -21,11 +21,14 @@ import { findPrimaryWalletAddresses } from "@/services/users";
 const findAuthors = (userIds: ReadonlyArray<string>) =>
   Effect.gen(function* () {
     const addresses = yield* findPrimaryWalletAddresses(userIds);
-    const profiles = yield* findProfiles([...new Set(addresses)]);
+    const uniqueAddresses = [...new Set(addresses)];
+    const profiles = yield* findProfiles(uniqueAddresses);
+    const explorers = yield* findExplorerAddresses(uniqueAddresses);
 
     return addresses.map((address) => ({
       address,
       profile: profiles.get(address)?.profile ?? null,
+      isExplorer: explorers.has(address),
     }));
   });
 
@@ -152,26 +155,28 @@ export const getPost = (postId: string) =>
   Effect.gen(function* () {
     const db = yield* Database;
 
-    const [found] = yield* db
-      .select({
-        post,
-        coverWidth: mediaImage.width,
-        coverHeight: mediaImage.height,
-        coverThumbhash: mediaImage.thumbhash,
-        otsStatus: postOts.status,
-        otsContentHash: postOts.contentHash,
-        otsTxId: postOts.otsTxId,
-        bitcoinBlockHeight: postOts.bitcoinBlockHeight,
-        bitcoinBlockHash: postOts.bitcoinBlockHash,
-        bitcoinTimestamp: postOts.bitcoinTimestamp,
-      })
-      .from(post)
-      .leftJoin(mediaImage, eq(mediaImage.id, post.coverImage))
-      .leftJoin(postOts, eq(postOts.postId, post.id))
-      // A hidden post is a 404 for everyone, its author included.
-      .where(and(eq(post.id, postId), isNull(post.hiddenAt)))
-      .limit(1)
-      .pipe(Effect.orDie);
+    const [found] = yield* (
+      db
+        .select({
+          post,
+          coverWidth: mediaImage.width,
+          coverHeight: mediaImage.height,
+          coverThumbhash: mediaImage.thumbhash,
+          otsStatus: postOts.status,
+          otsContentHash: postOts.contentHash,
+          otsTxId: postOts.otsTxId,
+          bitcoinBlockHeight: postOts.bitcoinBlockHeight,
+          bitcoinBlockHash: postOts.bitcoinBlockHash,
+          bitcoinTimestamp: postOts.bitcoinTimestamp,
+        })
+        .from(post)
+        .leftJoin(mediaImage, eq(mediaImage.id, post.coverImage))
+        .leftJoin(postOts, eq(postOts.postId, post.id))
+        // A hidden post is a 404 for everyone, its author included.
+        .where(and(eq(post.id, postId), isNull(post.hiddenAt)))
+        .limit(1)
+        .pipe(Effect.orDie)
+    );
 
     if (!found) {
       return yield* new NotFound({ message: "Post not found" });

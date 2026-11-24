@@ -1,48 +1,83 @@
 import { Schema } from "effect";
 import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/http-api";
 import { UserProfile } from "@/api/groups/users";
-import {
-  UserAuthMiddleware,
-  WhitelistedUserMiddleware,
-} from "@/api/middleware/auth-user";
+import { UserAuthMiddleware } from "@/api/middleware/auth-user";
 import {
   RateLimitMiddleware,
   RateLimitPolicy,
 } from "@/api/middleware/rate-limit";
 import {
   BadRequest,
-  Conflict,
   imageRequestBody,
+  isUrlWithProtocol,
   PayloadTooLarge,
-  TooManyRequests,
   UnsupportedMediaType,
-  UploadedImageResponse,
 } from "@/api/schemas";
-import { ProfileMetadata } from "@/lib/metadata";
 import { profileImageKinds } from "@/lib/profile-images";
-import { PROFILE_UPDATE_LIMIT } from "@/services/plan";
 
-/**
- * Largest signed profile metadata uploaded to Arweave, as JSON. The server's
- * Arweave key pays for each upload, and the metadata schema doesn't limit the
- * description or attributes.
- */
-export const PROFILE_METADATA_MAX_KIB = 32;
+/** Profile field limits, in characters. */
+export const PROFILE_LIMITS = {
+  displayName: 100,
+  description: 2000,
+  website: 200,
+} as const;
+
+export const ProfileDisplayName = Schema.String.check(
+  Schema.isMinLength(1),
+  Schema.isMaxLength(PROFILE_LIMITS.displayName),
+);
+
+// Markdown.
+export const ProfileDescription = Schema.String.check(
+  Schema.isMinLength(1),
+  Schema.isMaxLength(PROFILE_LIMITS.description),
+);
+
+export const ProfileWebsite = Schema.String.annotate({ format: "uri" }).check(
+  Schema.isMaxLength(PROFILE_LIMITS.website),
+  isUrlWithProtocol(["http:", "https:"], "an http(s) URL"),
+);
+
+// An X username, without the `@`.
+export const ProfileTwitter = Schema.String.check(
+  Schema.isPattern(/^\w{1,15}$/),
+);
+
+/** Omit a field, or set it to null, to clear it. */
+const ProfileField = <S extends Schema.Top>(schema: S) =>
+  Schema.optionalKey(Schema.NullOr(schema));
 
 export const UpdateProfilePayload = Schema.Struct({
-  metadata: ProfileMetadata,
+  displayName: ProfileField(ProfileDisplayName),
+  description: ProfileField(ProfileDescription),
+  website: ProfileField(ProfileWebsite),
+  twitter: ProfileField(ProfileTwitter),
 }).annotate({ identifier: "UpdateProfilePayload" });
 
 export const UpdateProfileResponse = Schema.Struct({
-  arweaveTxId: Schema.String,
-  uri: Schema.String,
-  cid: Schema.String,
-  gatewayUrl: Schema.String,
-  // The signing address the profile is stored under.
+  // The primary address of the user, the profile is stored under it.
   address: Schema.String,
   // The stored profile, so clients don't need to fetch it again.
   profile: UserProfile,
 }).annotate({ identifier: "UpdateProfileResponse" });
+
+/**
+ * Profile fields read from a BNS V2 zonefile. A field is null when the
+ * zonefile doesn't set it or sets a value the profile can't store.
+ */
+export const BnsProfile = Schema.Struct({
+  displayName: Schema.NullOr(Schema.String),
+  description: Schema.NullOr(Schema.String),
+  website: Schema.NullOr(Schema.String),
+  twitter: Schema.NullOr(Schema.String),
+}).annotate({ identifier: "BnsProfile" });
+
+export const BnsProfileResponse = Schema.Struct({
+  // Primary BNS name of the user's address, such as `satoshi.btc`.
+  name: Schema.NullOr(Schema.String),
+  // Null without a name, or when its zonefile has no profile to import.
+  profile: Schema.NullOr(BnsProfile),
+}).annotate({ identifier: "BnsProfileResponse" });
 
 export const ProfileImageKindSchema = Schema.Literals(
   profileImageKinds,
@@ -51,38 +86,45 @@ export const ProfileImageKindSchema = Schema.Literals(
 export const ProfileGroup = HttpApiGroup.make("profile")
   .annotate(
     OpenApi.Description,
-    "The signed-in user's profile: upload signed profile metadata to Arweave and the avatar and cover images.",
+    "The signed-in user's profile: its fields, the avatar and cover images, and an import from their BNS name.",
   )
   .add(
     HttpApiEndpoint.put("update", "/", {
       payload: UpdateProfilePayload,
       success: UpdateProfileResponse,
-      // The 429 is also returned once the daily profile update limit is
-      // reached.
-      error: [BadRequest, Conflict, PayloadTooLarge, TooManyRequests],
     })
       .annotate(OpenApi.Summary, "Update the profile")
       .annotate(
         OpenApi.Description,
-        `Update the profile with signed profile metadata: upload it to Arweave, store it as the profile of the signing address, and return the transaction and the stored profile. Returns a 413 when the metadata is over ${PROFILE_METADATA_MAX_KIB} KiB as JSON, and a 429 once the user has updated their profile ${PROFILE_UPDATE_LIMIT} times in the last 24 hours.`,
+        "Replace the text fields of the profile of the user's primary address, and return the stored profile. A field that is omitted or null is cleared. The avatar and cover are set by uploading them.",
       )
-      .annotate(RateLimitPolicy, "profileMetadataUpload"),
+      .annotate(RateLimitPolicy, "profileUpdate"),
+  )
+  .add(
+    HttpApiEndpoint.get("bns", "/bns", {
+      success: BnsProfileResponse,
+    })
+      .annotate(OpenApi.Summary, "Read the profile of the user's BNS name")
+      .annotate(
+        OpenApi.Description,
+        "Read the primary BNS V2 name of the user's primary address and the profile fields of its zonefile, to fill in the profile form. Nothing is saved. Only JSON zonefiles are read, and a zonefile written for another owner of the name is ignored. Returns a 500 when the Stacks API cannot be reached.",
+      )
+      .annotate(RateLimitPolicy, "bnsProfileImport"),
   )
   .add(
     HttpApiEndpoint.put("uploadImage", "/images/:kind", {
       params: { kind: ProfileImageKindSchema },
-      success: UploadedImageResponse,
+      success: UpdateProfileResponse,
       error: [BadRequest, PayloadTooLarge, UnsupportedMediaType],
     })
       .annotate(OpenApi.Summary, "Upload a profile image")
       .annotate(
         OpenApi.Description,
-        "Upload a profile avatar or cover image as a raw binary body. Re-uploading the same image is a no-op, uploading a different image replaces the previous file.",
+        "Upload a profile avatar or cover image as a raw binary body, set it on the profile of the user's primary address right away, and return the stored profile. The avatar or cover it replaces is then deleted when this endpoint stored it, on a best-effort basis: a failed delete doesn't fail the upload.",
       )
       .annotate(OpenApi.Override, { requestBody: imageRequestBody })
       .annotate(RateLimitPolicy, "profileImageUpload"),
   )
   .prefix("/api/me/profile")
   .middleware(RateLimitMiddleware)
-  .middleware(WhitelistedUserMiddleware)
   .middleware(UserAuthMiddleware);

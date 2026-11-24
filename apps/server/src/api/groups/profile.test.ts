@@ -1,7 +1,6 @@
 import { describe, expect, it } from "@effect/vitest";
-import { ProfileMetadataSchemaId } from "@sigle/sdk";
 import { eq } from "drizzle-orm";
-import { Effect, Option, Schema } from "effect";
+import { Effect, Layer, Option, Schema } from "effect";
 import {
   Headers,
   HttpClient,
@@ -9,24 +8,13 @@ import {
   HttpClientResponse,
 } from "effect/http";
 import sharp from "sharp";
-import { afterEach, vi } from "vite-plus/test";
 import type { PostHogEvent } from "@/services/posthog";
-import { PROFILE_METADATA_MAX_KIB } from "@/api/groups/profile";
-import { PublicUser, UserProfile } from "@/api/groups/users";
+import { UserProfile } from "@/api/groups/users";
+import { RATE_LIMITS } from "@/api/middleware/rate-limit";
 import { Database } from "@/db";
-import {
-  mediaImage,
-  profile as profileTable,
-  profileUpdate,
-} from "@/db/schema";
+import { mediaImage, profile as profileTable } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
-import {
-  ARWEAVE_TEST_UPLOAD,
-  ARWEAVE_TEST_UPLOAD_ID,
-  ArweaveService,
-  ArweaveUploadError,
-  type ArweaveUploadOptions,
-} from "@/services/arweave";
+import { BnsLookupError, type BnsName, BnsService } from "@/services/bns";
 import {
   makeStorageTestRecorder,
   StorageService,
@@ -37,57 +25,18 @@ import {
 } from "@/services/storage";
 import {
   createAuthenticatedClient,
-  createSignedTestProfileMetadata,
   createTestSiwsCredentials,
-  createTestWalletAddress,
 } from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 
 const UpdateProfileResponse = Schema.Struct({
-  arweaveTxId: Schema.String,
-  uri: Schema.String,
-  cid: Schema.String,
-  gatewayUrl: Schema.String,
   address: Schema.String,
   profile: UserProfile,
-});
-
-const UploadProfileImageResponse = Schema.Struct({
-  url: Schema.String,
-  sizeBytes: Schema.Int,
-  width: Schema.Int,
-  height: Schema.Int,
-  thumbhash: Schema.String,
 });
 
 const ErrorResponse = Schema.Struct({ message: Schema.String });
 
 const profileImagePath = (kind: string) => `/api/me/profile/images/${kind}`;
-
-/**
- * Polls the media row until the background thumbhash job reaches `status`.
- */
-const waitForMediaImageStatus = (id: string, status: string) =>
-  Effect.gen(function* () {
-    const db = yield* Database;
-
-    for (let attempt = 0; attempt < 200; attempt++) {
-      const [row] = yield* db
-        .select()
-        .from(mediaImage)
-        .where(eq(mediaImage.id, id))
-        .limit(1)
-        .pipe(Effect.orDie);
-
-      if (row?.status === status) {
-        return row;
-      }
-
-      yield* Effect.sleep("20 millis");
-    }
-
-    return undefined;
-  });
 
 const makePngBuffer = (width = 16, height = 16) =>
   sharp({
@@ -128,238 +77,78 @@ const imageServerLayer = (
   posthogEvents: Array<PostHogEvent> = [],
 ) =>
   makeTestServerLayer({}, posthogEvents, {
-    arweave: ArweaveService.layerTest(),
     storage: StorageService.layerTest(recorder, storageOverrides),
   });
 
-const validMetadata = {
-  $schema: ProfileMetadataSchemaId.LATEST,
-  content: {
-    id: "profile-1",
-    displayName: "Test profile",
-  },
-};
-
-interface ProfileMetadataInput {
-  readonly $schema?: string;
-  readonly content?: { readonly id?: string };
-  readonly signature?: string;
-}
+type ProfileInput = Readonly<Record<string, string | null>>;
 
 const updateProfileRequest = (
   client: HttpClient.HttpClient,
-  metadata: ProfileMetadataInput | undefined,
+  payload: ProfileInput,
 ) =>
   client.execute(
     HttpClientRequest.put("/api/me/profile").pipe(
-      HttpClientRequest.bodyJsonUnsafe({ metadata }),
+      HttpClientRequest.bodyJsonUnsafe(payload),
     ),
   );
 
-/**
- * Arweave test layer returning a unique transaction id per upload, so several
- * uploads can be persisted in the same test database.
- */
-const makeUniqueArweaveUploadLayer = (
-  uploads: Array<ArweaveUploadOptions> = [],
-) => {
-  let uploadCount = 0;
+const getBnsProfileRequest = (client: HttpClient.HttpClient) =>
+  client.get("/api/me/profile/bns");
 
-  return ArweaveService.layerTest(uploads, () => {
-    uploadCount += 1;
-    const id = `${ARWEAVE_TEST_UPLOAD_ID}-${uploadCount}`;
-
-    return Effect.succeed({
-      ...ARWEAVE_TEST_UPLOAD,
-      id,
-      uri: `ar://${id}`,
-      gatewayUrl: `https://turbo-gateway.com/${id}`,
-    });
-  });
-};
-
-/**
- * Creates an authenticated user with a linked Stacks wallet and signs the
- * profile metadata with that wallet's private key.
- */
-const createSignedProfileClient = () =>
+/** A signed-in user whose primary address is `address`. */
+const createProfileClient = () =>
   Effect.gen(function* () {
-    const credentials = createTestSiwsCredentials();
-    const { client, userId } = yield* createAuthenticatedClient();
+    const { address } = createTestSiwsCredentials();
+    const { client, userId } = yield* createAuthenticatedClient({ address });
 
-    yield* createTestWalletAddress({
-      userId,
-      address: credentials.address,
+    return { address, client, userId };
+  });
+
+/** The address that owns the BNS name served by `bnsLayer`. */
+const BNS_OWNER = createTestSiwsCredentials().address;
+
+const bnsLayer = (zonefile: string) =>
+  BnsService.layerTest({
+    [BNS_OWNER]: { fullName: "satoshi.btc", zonefile } satisfies BnsName,
+  });
+
+const getBnsProfile = (layer: Layer.Layer<BnsService>) =>
+  Effect.gen(function* () {
+    const { client } = yield* createAuthenticatedClient({
+      address: BNS_OWNER,
     });
 
-    const signMetadata = (options: {
-      readonly id: string;
-      readonly displayName?: string;
-      readonly description?: string;
-      readonly picture?: string;
-      readonly coverPicture?: string;
-    }) =>
-      createSignedTestProfileMetadata({
-        privateKey: credentials.privateKey,
-        id: options.id,
-        displayName: options.displayName,
-        description: options.description,
-        picture: options.picture,
-        coverPicture: options.coverPicture,
-      });
+    const response = yield* getBnsProfileRequest(client);
 
-    const metadata = signMetadata({ id: "profile-1" });
-
-    return {
-      address: credentials.address,
-      client,
-      metadata,
-      signMetadata,
-      userId,
-    };
-  });
+    return { status: response.status, body: yield* response.json };
+  }).pipe(Effect.provide(makeTestServerLayer({}, [], { bns: layer })));
 
 describe("profile", () => {
-  afterEach(() => {
-    vi.unstubAllGlobals();
-  });
-
-  it.effect("PUT /api/me/profile uploads metadata to Arweave", () => {
-    const uploads: Array<ArweaveUploadOptions> = [];
-    const events: Array<PostHogEvent> = [];
-
-    return Effect.gen(function* () {
-      const { address, client, metadata, userId } =
-        yield* createSignedProfileClient();
-
-      const db = yield* Database;
-
-      const response = yield* updateProfileRequest(client, metadata);
-
-      const body = yield* HttpClientResponse.schemaBodyJson(
-        UpdateProfileResponse,
-      )(response);
-
-      const user = yield* HttpClientResponse.schemaBodyJson(PublicUser)(
-        yield* client.get(`/api/users/${address}`),
-      );
-
-      const uploaded = uploads[0];
-
-      const [savedProfile] = yield* db
-        .select()
-        .from(profileTable)
-        .where(eq(profileTable.address, address))
-        .limit(1)
-        .pipe(Effect.orDie);
-
-      const updates = yield* db.select().from(profileUpdate).pipe(Effect.orDie);
-
-      expect({
-        status: response.status,
-        body,
-        user,
-        contentType: uploaded?.contentType,
-        tags: uploaded?.tags,
-        metadata: JSON.parse(
-          Buffer.from(uploaded?.file ?? new Uint8Array()).toString(),
-        ),
-        profile: savedProfile,
-        updates,
-        events,
-      }).toStrictEqual({
-        status: 200,
-        // The response holds the same profile a follow-up GET would return.
-        body: {
-          arweaveTxId: ARWEAVE_TEST_UPLOAD.id,
-          uri: ARWEAVE_TEST_UPLOAD.uri,
-          cid: ARWEAVE_TEST_UPLOAD.cid,
-          gatewayUrl: ARWEAVE_TEST_UPLOAD.gatewayUrl,
-          address,
-          profile: user.profile,
-        },
-        user: {
-          address,
-          profile: expect.objectContaining({
-            displayName: "Test profile",
-            arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
-          }),
-        },
-        contentType: "application/json",
-        tags: [
-          { name: "Author", value: address },
-          { name: "Type", value: "profile" },
-        ],
-        metadata,
-        profile: {
-          address,
-          arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
-          arweaveBlockHeight: null,
-          signature: metadata.signature,
-          displayName: "Test profile",
-          description: null,
-          website: null,
-          twitter: null,
-          picture: null,
-          coverPicture: null,
-          createdAt: expect.any(Date),
-          updatedAt: expect.any(Date),
-        },
-        // Counted against the daily profile update limit.
-        updates: [
-          {
-            arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
-            userId,
-            address,
-            createdAt: expect.any(Date),
-          },
-        ],
-        events: [
-          {
-            distinctId: userId,
-            event: "profile metadata uploaded",
-            properties: { arweaveId: ARWEAVE_TEST_UPLOAD_ID },
-          },
-        ],
-      });
-    }).pipe(
-      Effect.provide(
-        makeTestServerLayer({}, events, {
-          arweave: ArweaveService.layerTest(uploads),
-        }),
-      ),
-    );
-  });
-
   it.effect(
-    "PUT /api/me/profile updates the profile and clears its block",
+    "PUT /api/me/profile stores the profile of the primary address",
     () => {
-      const uploads: Array<ArweaveUploadOptions> = [];
+      const events: Array<PostHogEvent> = [];
 
       return Effect.gen(function* () {
-        const { address, client, metadata, signMetadata } =
-          yield* createSignedProfileClient();
-
+        const { address, client, userId } = yield* createProfileClient();
         const db = yield* Database;
 
-        const firstResponse = yield* updateProfileRequest(client, metadata);
-
-        // The first profile got mined; the new upload is not mined yet.
-        yield* db
-          .update(profileTable)
-          .set({ arweaveBlockHeight: 100 })
-          .where(eq(profileTable.address, address))
-          .pipe(Effect.orDie);
-
-        const updatedMetadata = signMetadata({
-          id: "profile-2",
-          displayName: "Updated profile",
+        const first = yield* updateProfileRequest(client, {
+          displayName: "Satoshi",
+          description: "**Hello**",
+          website: "https://bitcoin.org",
+          twitter: "satoshi",
         });
 
-        const secondResponse = yield* updateProfileRequest(
-          client,
-          updatedMetadata,
-        );
+        const firstBody = yield* HttpClientResponse.schemaBodyJson(
+          UpdateProfileResponse,
+        )(first);
+
+        // Fields that are omitted or null are cleared.
+        const second = yield* updateProfileRequest(client, {
+          displayName: "Nakamoto",
+          website: null,
+        });
 
         const rows = yield* db
           .select()
@@ -368,17 +157,28 @@ describe("profile", () => {
           .pipe(Effect.orDie);
 
         expect({
-          statuses: [firstResponse.status, secondResponse.status],
+          statuses: [first.status, second.status],
+          firstBody,
           rows,
+          events,
         }).toStrictEqual({
           statuses: [200, 200],
+          firstBody: {
+            address,
+            profile: {
+              displayName: "Satoshi",
+              description: "**Hello**",
+              website: "https://bitcoin.org",
+              twitter: "satoshi",
+              picture: null,
+              coverPicture: null,
+              updatedAt: expect.anything(),
+            },
+          },
           rows: [
             {
               address,
-              arweaveTxId: `${ARWEAVE_TEST_UPLOAD_ID}-2`,
-              arweaveBlockHeight: null,
-              signature: updatedMetadata.signature,
-              displayName: "Updated profile",
+              displayName: "Nakamoto",
               description: null,
               website: null,
               twitter: null,
@@ -388,552 +188,251 @@ describe("profile", () => {
               updatedAt: expect.any(Date),
             },
           ],
+          events: [
+            { distinctId: userId, event: "profile updated" },
+            { distinctId: userId, event: "profile updated" },
+          ],
         });
-      }).pipe(
-        Effect.provide(
-          makeTestServerLayer({}, [], {
-            arweave: makeUniqueArweaveUploadLayer(uploads),
-          }),
-        ),
-      );
+      }).pipe(Effect.provide(makeTestServerLayer({}, events)));
     },
   );
 
-  it.live(
-    "PUT /api/me/profile schedules thumbhash generation for external pictures",
-    () => {
-      const imageFetches: Array<string> = [];
-
-      return Effect.gen(function* () {
-        const { address, client, signMetadata } =
-          yield* createSignedProfileClient();
-
-        const png = yield* Effect.promise(() => makePngBuffer());
-
-        vi.stubGlobal(
-          "fetch",
-          vi.fn(async (input: RequestInfo | URL) => {
-            imageFetches.push(String(input));
-
-            return new Response(new Uint8Array(png), {
-              status: 200,
-              headers: { "content-type": "image/png" },
-            });
-          }),
-        );
-
-        const imageUrl = "https://cdn.example.com/external.png";
-
-        const metadata = signMetadata({
-          id: "profile-external",
-          picture: imageUrl,
-        });
-
-        const response = yield* updateProfileRequest(client, metadata);
-
-        const mediaRow = yield* waitForMediaImageStatus(imageUrl, "READY");
-
-        const db = yield* Database;
-
-        const [savedProfile] = yield* db
-          .select()
-          .from(profileTable)
-          .where(eq(profileTable.address, address))
-          .limit(1)
-          .pipe(Effect.orDie);
-
-        expect({
-          status: response.status,
-          mediaStatus: mediaRow?.status,
-          thumbhash: mediaRow?.thumbhash,
-          picture: savedProfile?.picture,
-          fetches: imageFetches,
-        }).toStrictEqual({
-          status: 200,
-          mediaStatus: "READY",
-          thumbhash: expect.any(String),
-          picture: imageUrl,
-          fetches: [imageUrl],
-        });
-      }).pipe(Effect.provide(makeTestServerLayer()));
-    },
-  );
-
-  it.effect("PUT /api/me/profile rejects an already published signature", () =>
+  it.effect("PUT /api/me/profile rejects invalid fields", () =>
     Effect.gen(function* () {
-      const { client, metadata } = yield* createSignedProfileClient();
+      const { address, client } = yield* createProfileClient();
+      const db = yield* Database;
 
-      const firstResponse = yield* updateProfileRequest(client, metadata);
+      const invalid: ReadonlyArray<ProfileInput> = [
+        { displayName: "a".repeat(101) },
+        { description: "a".repeat(2001) },
+        { website: "data:text/html,hello" },
+        { twitter: "not-a-handle" },
+        { twitter: "a".repeat(16) },
+      ];
 
-      const secondResponse = yield* updateProfileRequest(client, metadata);
+      const statuses = yield* Effect.forEach(
+        invalid,
+        (payload) =>
+          updateProfileRequest(client, payload).pipe(
+            Effect.map((response) => response.status),
+          ),
+        { concurrency: 1 },
+      );
 
-      expect({
-        first: firstResponse.status,
-        second: secondResponse.status,
-      }).toStrictEqual({
-        first: 200,
-        second: 409,
+      const rows = yield* db
+        .select()
+        .from(profileTable)
+        .where(eq(profileTable.address, address))
+        .pipe(Effect.orDie);
+
+      // The limits themselves are allowed.
+      const atLimits = yield* updateProfileRequest(client, {
+        displayName: "a".repeat(100),
+        description: "a".repeat(2000),
+        twitter: "a".repeat(15),
+      });
+
+      expect({ statuses, rows, atLimits: atLimits.status }).toStrictEqual({
+        statuses: [400, 400, 400, 400, 400],
+        rows: [],
+        atLimits: 200,
       });
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("PUT /api/me/profile is limited to 4 requests per minute", () =>
+  it.effect("PUT /api/me/profile is rate limited per minute", () =>
     Effect.gen(function* () {
-      const { client, signMetadata } = yield* createSignedProfileClient();
+      const { client } = yield* createProfileClient();
+      const { points } = RATE_LIMITS.profileUpdate;
 
       const responses = yield* Effect.forEach(
-        Array.from({ length: 5 }, (_, index) => index),
+        Array.from({ length: points + 1 }, (_, index) => index),
         (index) =>
-          updateProfileRequest(
-            client,
-            signMetadata({
-              id: `profile-${index}`,
-              displayName: `Profile ${index}`,
-            }),
-          ),
+          updateProfileRequest(client, { displayName: `Profile ${index}` }),
         { concurrency: 1 },
       );
 
       const first = responses[0];
 
-      const limit =
-        first === undefined
-          ? undefined
-          : Option.getOrUndefined(
-              Headers.get(first.headers, "x-ratelimit-limit"),
-            );
-
       expect({
         statuses: responses.map((response) => response.status),
-        limit,
-      }).toStrictEqual({
-        statuses: [200, 200, 200, 200, 429],
-        limit: "4",
-      });
-    }).pipe(
-      Effect.provide(
-        makeTestServerLayer({}, [], {
-          arweave: makeUniqueArweaveUploadLayer(),
-        }),
-      ),
-    ),
-  );
-
-  it.effect(
-    "PUT /api/me/profile enforces the daily profile update limit",
-    () => {
-      const uploads: Array<ArweaveUploadOptions> = [];
-      const hourMillis = 60 * 60 * 1000;
-
-      return Effect.gen(function* () {
-        const { address, client, metadata, userId } =
-          yield* createSignedProfileClient();
-
-        const db = yield* Database;
-
-        // The oldest update leaves the window in 2 hours.
-        yield* db
-          .insert(profileUpdate)
-          .values(
-            Array.from({ length: 10 }, (_, index) => ({
-              arweaveTxId: `previous-${index}`,
-              userId,
-              address,
-              createdAt: new Date(Date.now() - (22 - index) * hourMillis),
-            })),
-          )
-          .pipe(Effect.orDie);
-
-        const response = yield* updateProfileRequest(client, metadata);
-        const body = yield* response.json;
-
-        const limits = yield* client
-          .get("/api/me/limits")
-          .pipe(Effect.flatMap((limitsResponse) => limitsResponse.json));
-
-        const resetInMillis = 2 * hourMillis;
-
-        expect({
-          status: response.status,
-          body,
-          retryAfter: Number(
-            Option.getOrUndefined(Headers.get(response.headers, "retry-after")),
-          ),
-          uploads: uploads.length,
-          limits,
-        }).toStrictEqual({
-          status: 429,
-          body: {
-            message:
-              "You can update your profile 10 times per day. Try again later.",
-            retryAfterMillis: expect.toSatisfy(
-              (millis: number) =>
-                millis <= resetInMillis && millis > resetInMillis - 60_000,
-            ),
-          },
-          retryAfter: expect.toSatisfy(
-            (seconds: number) =>
-              seconds <= resetInMillis / 1000 &&
-              seconds > resetInMillis / 1000 - 60,
-          ),
-          // Rejected before paying for an upload.
-          uploads: 0,
-          limits: expect.objectContaining({
-            profileUpdate: {
-              limit: 10,
-              used: 10,
-              resetsAt: expect.toSatisfy(
-                (resetsAt: string) =>
-                  Math.abs(
-                    new Date(resetsAt).getTime() - (Date.now() + resetInMillis),
-                  ) < 60_000,
+        limit:
+          first === undefined
+            ? undefined
+            : Option.getOrUndefined(
+                Headers.get(first.headers, "x-ratelimit-limit"),
               ),
-            },
-          }),
-        });
-      }).pipe(
-        Effect.provide(
-          makeTestServerLayer({}, [], {
-            arweave: ArweaveService.layerTest(uploads),
-          }),
-        ),
-      );
-    },
-  );
-
-  it.effect(
-    "PUT /api/me/profile counts only the user's updates of the last 24 hours",
-    () => {
-      const hourMillis = 60 * 60 * 1000;
-
-      return Effect.gen(function* () {
-        const { address, client, metadata, userId } =
-          yield* createSignedProfileClient();
-
-        const other = yield* createSignedProfileClient();
-        const db = yield* Database;
-
-        yield* db
-          .insert(profileUpdate)
-          .values([
-            // 9 counted updates, one under the limit.
-            ...Array.from({ length: 9 }, (_, index) => ({
-              arweaveTxId: `recent-${index}`,
-              userId,
-              address,
-              createdAt: new Date(Date.now() - (20 - index) * hourMillis),
-            })),
-            // Out of the window.
-            ...Array.from({ length: 5 }, (_, index) => ({
-              arweaveTxId: `old-${index}`,
-              userId,
-              address,
-              createdAt: new Date(Date.now() - (25 + index) * hourMillis),
-            })),
-            // Another user's updates.
-            ...Array.from({ length: 10 }, (_, index) => ({
-              arweaveTxId: `other-${index}`,
-              userId: other.userId,
-              address: other.address,
-              createdAt: new Date(Date.now() - hourMillis),
-            })),
-          ])
-          .pipe(Effect.orDie);
-
-        const response = yield* updateProfileRequest(client, metadata);
-
-        const limits = yield* client
-          .get("/api/me/limits")
-          .pipe(Effect.flatMap((limitsResponse) => limitsResponse.json));
-
-        expect({
-          status: response.status,
-          limits,
-        }).toStrictEqual({
-          status: 200,
-          // The successful update now counts too.
-          limits: expect.objectContaining({
-            profileUpdate: {
-              limit: 10,
-              used: 10,
-              resetsAt: expect.toSatisfy(
-                (resetsAt: string) =>
-                  Math.abs(
-                    new Date(resetsAt).getTime() -
-                      (Date.now() + 4 * hourMillis),
-                  ) < 60_000,
-              ),
-            },
-          }),
-        });
-      }).pipe(Effect.provide(makeTestServerLayer()));
-    },
-  );
-
-  it.effect("PUT /api/me/profile rate limits each user independently", () =>
-    Effect.gen(function* () {
-      const first = yield* createSignedProfileClient();
-      const second = yield* createSignedProfileClient();
-
-      const firstResponses = yield* Effect.forEach(
-        Array.from({ length: 4 }, (_, index) => index),
-        (index) =>
-          updateProfileRequest(
-            first.client,
-            first.signMetadata({
-              id: `first-${index}`,
-              displayName: `First ${index}`,
-            }),
-          ),
-        { concurrency: 1 },
-      );
-
-      const secondResponse = yield* updateProfileRequest(
-        second.client,
-        second.metadata,
-      );
-
-      expect({
-        first: firstResponses.map((response) => response.status),
-        second: secondResponse.status,
       }).toStrictEqual({
-        first: [200, 200, 200, 200],
-        second: 200,
+        statuses: [...Array.from({ length: points }, () => 200), 429],
+        limit: String(points),
       });
-    }).pipe(
-      Effect.provide(
-        makeTestServerLayer({}, [], {
-          arweave: makeUniqueArweaveUploadLayer(),
-        }),
-      ),
-    ),
-  );
-
-  it.effect("PUT /api/me/profile rejects invalid metadata", () =>
-    Effect.gen(function* () {
-      const { client } = yield* createAuthenticatedClient();
-
-      const responses = yield* Effect.all([
-        updateProfileRequest(client, { content: { id: "profile-1" } }),
-        updateProfileRequest(client, {
-          $schema: "https://example.com/profile.json",
-          content: { id: "profile-1" },
-        }),
-        updateProfileRequest(client, {
-          $schema: validMetadata.$schema,
-        }),
-        updateProfileRequest(client, undefined),
-      ]);
-
-      expect(responses.map((response) => response.status)).toStrictEqual([
-        400, 400, 400, 400,
-      ]);
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
-
-  it.effect("PUT /api/me/profile rejects metadata without a signature", () =>
-    Effect.gen(function* () {
-      const { client } = yield* createAuthenticatedClient();
-
-      const response = yield* updateProfileRequest(client, validMetadata);
-
-      expect(response.status).toBe(400);
-    }).pipe(Effect.provide(makeTestServerLayer())),
-  );
-
-  it.effect("PUT /api/me/profile rejects a signature from another wallet", () =>
-    Effect.gen(function* () {
-      const { client } = yield* createAuthenticatedClient();
-      const credentials = createTestSiwsCredentials();
-
-      const metadata = createSignedTestProfileMetadata({
-        privateKey: credentials.privateKey,
-      });
-
-      const response = yield* updateProfileRequest(client, metadata);
-
-      expect(response.status).toBe(400);
-    }).pipe(Effect.provide(makeTestServerLayer())),
-  );
-
-  it.effect("PUT /api/me/profile uploads metadata up to 32 KiB as JSON", () => {
-    const uploads: Array<ArweaveUploadOptions> = [];
-
-    return Effect.gen(function* () {
-      const { client, signMetadata } = yield* createSignedProfileClient();
-      const maxBytes = PROFILE_METADATA_MAX_KIB * 1024;
-
-      // The signature has a fixed length, so the JSON grows with the
-      // description. Its 2-byte characters make the limit count UTF-8
-      // bytes, not characters.
-      const sized = (bytes: number, id: string) => {
-        const remaining =
-          bytes -
-          Buffer.byteLength(
-            JSON.stringify(signMetadata({ id, description: "" })),
-          );
-
-        return signMetadata({
-          id,
-          description:
-            "é".repeat(Math.floor(remaining / 2)) + "a".repeat(remaining % 2),
-        });
-      };
-
-      const atLimit = sized(maxBytes, "profile-1");
-      const overLimit = sized(maxBytes + 1, "profile-2");
-
-      const accepted = yield* updateProfileRequest(client, atLimit);
-      const rejected = yield* updateProfileRequest(client, overLimit);
-
-      expect({
-        sizes: [atLimit, overLimit].map((metadata) =>
-          Buffer.byteLength(JSON.stringify(metadata)),
-        ),
-        accepted: accepted.status,
-        rejected: rejected.status,
-        body: yield* rejected.json,
-        uploads: uploads.length,
-      }).toStrictEqual({
-        sizes: [maxBytes, maxBytes + 1],
-        accepted: 200,
-        rejected: 413,
-        body: {
-          message: "Profile metadata is too large, maximum size is 32 KiB.",
-        },
-        uploads: 1,
-      });
-    }).pipe(
-      Effect.provide(
-        makeTestServerLayer({}, [], {
-          arweave: makeUniqueArweaveUploadLayer(uploads),
-        }),
-      ),
-    );
-  });
-
-  it.effect("PUT /api/me/profile returns 500 when Arweave fails", () => {
-    const arweaveLayer = ArweaveService.layerTest([], () =>
-      Effect.fail(
-        new ArweaveUploadError({
-          cause: new Error("turbo unreachable"),
-          message: "turbo unreachable",
-        }),
-      ),
-    );
-
-    return Effect.gen(function* () {
-      const { client, metadata } = yield* createSignedProfileClient();
-
-      const response = yield* updateProfileRequest(client, metadata);
-
-      const body =
-        yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
-
-      expect(response.status).toBe(500);
-      expect(body.message).toBe("Failed to upload to Arweave.");
-    }).pipe(
-      Effect.provide(makeTestServerLayer({}, [], { arweave: arweaveLayer })),
-    );
-  });
 
   it.effect("PUT /api/me/profile returns 401 without a session", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
 
-      const response = yield* updateProfileRequest(client, validMetadata);
+      const responses = yield* Effect.all(
+        [
+          updateProfileRequest(client, { displayName: "Satoshi" }),
+          getBnsProfileRequest(client),
+        ],
+        { concurrency: 1 },
+      );
 
-      expect(response.status).toBe(401);
+      expect(responses.map((response) => response.status)).toStrictEqual([
+        401, 401,
+      ]);
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.live(
-    "PUT /api/me/profile uploads concurrent identical requests once",
-    () => {
-      const uploads: Array<ArweaveUploadOptions> = [];
-
-      return Effect.gen(function* () {
-        const { client, metadata } = yield* createSignedProfileClient();
-
-        const responses = yield* Effect.all(
-          [
-            updateProfileRequest(client, metadata),
-            updateProfileRequest(client, metadata),
-          ],
-          { concurrency: "unbounded" },
-        );
-
-        expect({
-          statuses: responses.map((response) => response.status).sort(),
-          uploads: uploads.length,
-        }).toStrictEqual({ statuses: [200, 409], uploads: 1 });
-      }).pipe(
-        Effect.provide(
-          makeTestServerLayer({}, [], {
-            // A slow upload, so both requests check the signature before
-            // the first one stores the profile.
-            arweave: ArweaveService.layerTest(uploads, () =>
-              Effect.succeed(ARWEAVE_TEST_UPLOAD).pipe(
-                Effect.delay("50 millis"),
-              ),
-            ),
+  it.effect("GET /api/me/profile/bns reads the profile of the BNS name", () =>
+    Effect.gen(function* () {
+      const result = yield* getBnsProfile(
+        bnsLayer(
+          JSON.stringify({
+            owner: BNS_OWNER,
+            name: "  Satoshi Nakamoto ",
+            bio: "Bitcoin",
+            // Zonefiles often leave out the protocol.
+            website: "bitcoin.org:8443",
+            pfp: "https://bitcoin.org/satoshi.png",
+            location: "",
+            // Malformed entries and invalid handles are skipped.
+            social: [
+              null,
+              { platform: "nostr", username: "npub1" },
+              { platform: "twitter", username: "not a handle" },
+              { platform: "X", username: "@satoshi" },
+              { platform: "x", username: "nakamoto" },
+            ],
+            subdomains: {},
           }),
         ),
       );
-    },
+
+      expect(result).toStrictEqual({
+        status: 200,
+        body: {
+          name: "satoshi.btc",
+          profile: {
+            displayName: "Satoshi Nakamoto",
+            description: "Bitcoin",
+            website: "https://bitcoin.org:8443",
+            twitter: "satoshi",
+          },
+        },
+      });
+    }),
   );
 
-  it.effect("profile uploads return 403 for non-whitelisted users", () => {
-    const arweaveUploads: Array<ArweaveUploadOptions> = [];
-    const recorder = makeStorageTestRecorder();
+  it.effect(
+    "GET /api/me/profile/bns skips the fields the profile can't store",
+    () =>
+      Effect.gen(function* () {
+        // Websites with a scheme other than http(s) aren't given `https://`.
+        const results = yield* Effect.forEach(
+          ["data:text/html,hello", "h2://bitcoin.org", "mailto:me@bitcoin.org"],
+          (website) =>
+            getBnsProfile(
+              bnsLayer(
+                JSON.stringify({
+                  owner: BNS_OWNER,
+                  name: "Satoshi",
+                  bio: 42,
+                  website,
+                  pfp: "ftp://bitcoin.org/satoshi.png",
+                  social: [{ platform: "twitter", username: "not a handle" }],
+                }),
+              ),
+            ),
+          { concurrency: 1 },
+        );
 
-    return Effect.gen(function* () {
-      const credentials = createTestSiwsCredentials("mainnet");
+        expect(results).toStrictEqual(
+          Array.from({ length: 3 }, () => ({
+            status: 200,
+            body: {
+              name: "satoshi.btc",
+              profile: {
+                displayName: "Satoshi",
+                description: null,
+                website: null,
+                twitter: null,
+              },
+            },
+          })),
+        );
+      }),
+  );
 
-      const { client } = yield* createAuthenticatedClient({
-        address: credentials.address,
-      });
+  it.effect(
+    "GET /api/me/profile/bns returns no profile for zonefiles it can't import",
+    () =>
+      Effect.gen(function* () {
+        const results = yield* Effect.forEach(
+          [
+            // Written by a previous owner of the name.
+            bnsLayer(
+              JSON.stringify({
+                owner: createTestSiwsCredentials().address,
+                name: "Satoshi",
+              }),
+            ),
+            // Not JSON, such as a compressed or BNS V1 zonefile.
+            bnsLayer("$ORIGIN satoshi.btc"),
+            // JSON without a profile field.
+            bnsLayer(
+              JSON.stringify({ owner: BNS_OWNER, name: "", btc: "bc1q" }),
+            ),
+            // A name without a zonefile.
+            BnsService.layerTest({
+              [BNS_OWNER]: { fullName: "satoshi.btc", zonefile: null },
+            }),
+          ],
+          getBnsProfile,
+          { concurrency: 1 },
+        );
 
-      const metadata = createSignedTestProfileMetadata({
-        privateKey: credentials.privateKey,
-        id: "profile-1",
-      });
+        const noName = yield* getBnsProfile(BnsService.layerTest());
 
-      const png = yield* Effect.promise(() => makePngBuffer());
+        expect({ results, noName }).toStrictEqual({
+          results: Array.from({ length: 4 }, () => ({
+            status: 200,
+            body: { name: "satoshi.btc", profile: null },
+          })),
+          noName: { status: 200, body: { name: null, profile: null } },
+        });
+      }),
+  );
 
-      const responses = yield* Effect.all([
-        updateProfileRequest(client, metadata),
-        uploadImageRequest(client, "avatar", {
-          bytes: new Uint8Array(png),
-          contentType: "image/png",
-        }),
-      ]);
+  it.effect(
+    "GET /api/me/profile/bns returns 500 when the Stacks API fails",
+    () =>
+      Effect.gen(function* () {
+        const result = yield* getBnsProfile(
+          Layer.succeed(BnsService, {
+            findPrimaryName: () =>
+              Effect.fail(
+                new BnsLookupError({ cause: null, message: "unreachable" }),
+              ),
+          }),
+        );
 
-      expect({
-        statuses: responses.map((response) => response.status),
-        arweaveUploads: arweaveUploads.length,
-        storageUploads: recorder.uploads.length,
-      }).toStrictEqual({
-        statuses: [403, 403],
-        arweaveUploads: 0,
-        storageUploads: 0,
-      });
-    }).pipe(
-      Effect.provide(
-        makeTestServerLayer({ STACKS_ENV: "mainnet" }, [], {
-          arweave: ArweaveService.layerTest(arweaveUploads),
-          storage: StorageService.layerTest(recorder),
-        }),
-      ),
-    );
-  });
+        expect(result).toStrictEqual({
+          status: 500,
+          body: { message: "Failed to read your BNS name, please try again." },
+        });
+      }),
+  );
 
   it.effect("PUT /images/avatar stores a resized webp with metadata", () => {
     const recorder = makeStorageTestRecorder();
     const events: Array<PostHogEvent> = [];
 
     return Effect.gen(function* () {
-      const { client, userId } = yield* createAuthenticatedClient();
+      const { address, client, userId } = yield* createAuthenticatedClient();
       const png = yield* Effect.promise(() => makePngBuffer(1200, 600));
 
       const response = yield* uploadImageRequest(client, "avatar", {
@@ -942,7 +441,7 @@ describe("profile", () => {
       });
 
       const body = yield* HttpClientResponse.schemaBodyJson(
-        UploadProfileImageResponse,
+        UpdateProfileResponse,
       )(response);
 
       const uploaded = recorder.uploads[0];
@@ -952,9 +451,9 @@ describe("profile", () => {
         sharp(uploadedBytes).metadata(),
       );
 
-      const key = `u/${userId}/avatar.webp`;
       const version = uploaded === undefined ? "" : sha256Hex(uploaded.body);
-      const url = `${STORAGE_TEST_PUBLIC_URL}/${key}?v=${version}`;
+      const key = `u/${userId}/avatar/${version}.webp`;
+      const url = `${STORAGE_TEST_PUBLIC_URL}/${key}`;
 
       const db = yield* Database;
 
@@ -977,16 +476,28 @@ describe("profile", () => {
         mediaWidth: savedMedia?.width,
         mediaHeight: savedMedia?.height,
         mediaSize: savedMedia?.size,
-        thumbhashMatches: body.thumbhash === savedMedia?.thumbhash,
+        thumbhashMatches:
+          body.profile.picture?.thumbhash === savedMedia?.thumbhash,
         events,
       }).toStrictEqual({
         status: 200,
+        // The first upload creates the profile.
         body: {
-          height: 300,
-          sizeBytes: uploadedBytes.length,
-          thumbhash: expect.any(String),
-          url,
-          width: 600,
+          address,
+          profile: {
+            displayName: null,
+            description: null,
+            website: null,
+            twitter: null,
+            picture: {
+              url,
+              width: 600,
+              height: 300,
+              thumbhash: expect.any(String),
+            },
+            coverPicture: null,
+            updatedAt: expect.anything(),
+          },
         },
         upload: {
           body: uploaded?.body,
@@ -1018,101 +529,210 @@ describe("profile", () => {
     }).pipe(Effect.provide(imageServerLayer(recorder, {}, events)));
   });
 
-  it.effect("PUT /images/cover stores a webp under the cover key", () => {
+  it.effect(
+    "PUT /images/cover stores a webp under the cover key and its hash",
+    () => {
+      const recorder = makeStorageTestRecorder();
+      const events: Array<PostHogEvent> = [];
+
+      return Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const png = yield* Effect.promise(() => makePngBuffer(100, 50));
+
+        const response = yield* uploadImageRequest(client, "cover", {
+          bytes: new Uint8Array(png),
+          contentType: "image/jpeg",
+        });
+
+        const body = yield* HttpClientResponse.schemaBodyJson(
+          UpdateProfileResponse,
+        )(response);
+
+        const uploaded = recorder.uploads[0];
+        const uploadedBytes = Buffer.from(uploaded?.body ?? new Uint8Array());
+
+        const metadata = yield* Effect.promise(() =>
+          sharp(uploadedBytes).metadata(),
+        );
+
+        const version = uploaded === undefined ? "" : sha256Hex(uploaded.body);
+        const key = `u/${userId}/cover/${version}.webp`;
+
+        expect({
+          status: response.status,
+          key: uploaded?.key,
+          contentType: uploaded?.contentType,
+          width: metadata.width,
+          height: metadata.height,
+          isWebp: uploadedBytes.subarray(8, 12).toString() === "WEBP",
+          picture: body.profile.picture,
+          coverUrl: body.profile.coverPicture?.url,
+          events,
+        }).toStrictEqual({
+          status: 200,
+          key,
+          contentType: "image/webp",
+          width: 100,
+          height: 50,
+          isWebp: true,
+          picture: null,
+          coverUrl: `${STORAGE_TEST_PUBLIC_URL}/${key}`,
+          events: [
+            {
+              distinctId: userId,
+              event: "profile cover media uploaded",
+              properties: {
+                key,
+                sizeBytes: uploadedBytes.length,
+                url: `${STORAGE_TEST_PUBLIC_URL}/${key}`,
+              },
+            },
+          ],
+        });
+      }).pipe(Effect.provide(imageServerLayer(recorder, {}, events)));
+    },
+  );
+
+  it.effect("PUT /images/avatar deletes the avatar it replaces", () => {
     const recorder = makeStorageTestRecorder();
-    const events: Array<PostHogEvent> = [];
 
     return Effect.gen(function* () {
-      const { client, userId } = yield* createAuthenticatedClient();
-      const png = yield* Effect.promise(() => makePngBuffer(100, 50));
+      const { client } = yield* createAuthenticatedClient();
+      const db = yield* Database;
+      const first = yield* Effect.promise(() => makePngBuffer(16, 16));
+      const second = yield* Effect.promise(() => makePngBuffer(32, 32));
 
-      const response = yield* uploadImageRequest(client, "cover", {
-        bytes: new Uint8Array(png),
-        contentType: "image/jpeg",
-      });
+      const upload = (kind: string, png: Buffer) =>
+        uploadImageRequest(client, kind, {
+          bytes: new Uint8Array(png),
+          contentType: "image/png",
+        }).pipe(
+          Effect.flatMap(
+            HttpClientResponse.schemaBodyJson(UpdateProfileResponse),
+          ),
+        );
 
-      const body = yield* HttpClientResponse.schemaBodyJson(
-        UploadProfileImageResponse,
-      )(response);
+      const firstUrl = (yield* upload("avatar", first)).profile.picture?.url;
+      const secondUrl = (yield* upload("avatar", second)).profile.picture?.url;
+      // The same image again, then a cover: neither deletes the avatar.
+      yield* upload("avatar", second);
+      yield* upload("cover", first);
 
-      const uploaded = recorder.uploads[0];
-      const uploadedBytes = Buffer.from(uploaded?.body ?? new Uint8Array());
-
-      const metadata = yield* Effect.promise(() =>
-        sharp(uploadedBytes).metadata(),
+      // Saving the form keeps the uploaded images.
+      const saved = yield* updateProfileRequest(client, {
+        displayName: "Satoshi",
+      }).pipe(
+        Effect.flatMap(
+          HttpClientResponse.schemaBodyJson(UpdateProfileResponse),
+        ),
       );
 
-      const key = `u/${userId}/cover.webp`;
+      const mediaIds = yield* db
+        .select({ id: mediaImage.id })
+        .from(mediaImage)
+        .pipe(Effect.orDie);
+
+      const keys = recorder.uploads.map((stored) => stored.key);
 
       expect({
-        status: response.status,
-        key: uploaded?.key,
-        contentType: uploaded?.contentType,
-        width: metadata.width,
-        height: metadata.height,
-        isWebp: uploadedBytes.subarray(8, 12).toString() === "WEBP",
-        versioned: body.url.startsWith(`${STORAGE_TEST_PUBLIC_URL}/${key}?v=`),
-        events,
+        deletes: recorder.deletes,
+        mediaIds: mediaIds.map((row) => row.id).sort(),
+        picture: saved.profile.picture?.url,
+        coverPicture: saved.profile.coverPicture?.url,
       }).toStrictEqual({
-        status: 200,
-        key,
-        contentType: "image/webp",
-        width: 100,
-        height: 50,
-        isWebp: true,
-        versioned: true,
-        events: [
-          {
-            distinctId: userId,
-            event: "profile cover media uploaded",
-            properties: {
-              key,
-              sizeBytes: uploadedBytes.length,
-              url: body.url,
-            },
-          },
-        ],
+        deletes: [keys[0]],
+        mediaIds: [secondUrl, `${STORAGE_TEST_PUBLIC_URL}/${keys[3]}`].sort(),
+        picture: secondUrl,
+        coverPicture: `${STORAGE_TEST_PUBLIC_URL}/${keys[3]}`,
       });
-    }).pipe(Effect.provide(imageServerLayer(recorder, {}, events)));
+      expect(firstUrl).toBe(`${STORAGE_TEST_PUBLIC_URL}/${keys[0]}`);
+    }).pipe(Effect.provide(imageServerLayer(recorder)));
+  });
+
+  it.effect("PUT /images only deletes images it stored for that kind", () => {
+    const recorder = makeStorageTestRecorder();
+
+    return Effect.gen(function* () {
+      const { address, client, userId } = yield* createAuthenticatedClient();
+      const db = yield* Database;
+      const png = yield* Effect.promise(() => makePngBuffer());
+      const now = new Date();
+
+      // An external avatar, and a cover that points at one of the user's
+      // avatars.
+      yield* db
+        .insert(profileTable)
+        .values({
+          address,
+          picture: "https://cdn.example.com/avatar.webp",
+          coverPicture: `${STORAGE_TEST_PUBLIC_URL}/u/${userId}/avatar/abc.webp`,
+          createdAt: now,
+          updatedAt: now,
+        })
+        .pipe(Effect.orDie);
+
+      const responses = yield* Effect.forEach(
+        ["avatar", "cover"],
+        (kind) =>
+          uploadImageRequest(client, kind, {
+            bytes: new Uint8Array(png),
+            contentType: "image/png",
+          }).pipe(Effect.map((response) => response.status)),
+        { concurrency: 1 },
+      );
+
+      expect({
+        statuses: responses,
+        deletes: recorder.deletes,
+      }).toStrictEqual({ statuses: [200, 200], deletes: [] });
+    }).pipe(Effect.provide(imageServerLayer(recorder)));
   });
 
   it.effect(
-    "PUT /images/avatar overwrites the same object key on re-upload",
+    "PUT /images/avatar saves the avatar when deleting the old one fails",
     () => {
       const recorder = makeStorageTestRecorder();
 
       return Effect.gen(function* () {
-        const { client, userId } = yield* createAuthenticatedClient();
-        const png = yield* Effect.promise(() => makePngBuffer());
+        const { client } = yield* createAuthenticatedClient();
+        const first = yield* Effect.promise(() => makePngBuffer(16, 16));
+        const second = yield* Effect.promise(() => makePngBuffer(32, 32));
 
-        const first = yield* uploadImageRequest(client, "avatar", {
-          bytes: new Uint8Array(png),
-          contentType: "image/png",
-        });
+        const upload = (png: Buffer) =>
+          uploadImageRequest(client, "avatar", {
+            bytes: new Uint8Array(png),
+            contentType: "image/png",
+          });
 
-        const second = yield* uploadImageRequest(client, "avatar", {
-          bytes: new Uint8Array(png),
-          contentType: "image/png",
-        });
+        yield* upload(first);
+        const response = yield* upload(second);
 
-        const firstBody = yield* HttpClientResponse.schemaBodyJson(
-          UploadProfileImageResponse,
-        )(first);
-
-        const secondBody = yield* HttpClientResponse.schemaBodyJson(
-          UploadProfileImageResponse,
-        )(second);
+        const body = yield* HttpClientResponse.schemaBodyJson(
+          UpdateProfileResponse,
+        )(response);
 
         expect({
-          statuses: [first.status, second.status],
-          keys: recorder.uploads.map((upload) => upload.key),
-          sameUrl: firstBody.url === secondBody.url,
+          status: response.status,
+          picture: body.profile.picture?.url,
+          deletes: recorder.deletes.length,
         }).toStrictEqual({
-          statuses: [200, 200],
-          keys: [`u/${userId}/avatar.webp`, `u/${userId}/avatar.webp`],
-          sameUrl: true,
+          status: 200,
+          picture: `${STORAGE_TEST_PUBLIC_URL}/${recorder.uploads[1]?.key}`,
+          deletes: 1,
         });
-      }).pipe(Effect.provide(imageServerLayer(recorder)));
+      }).pipe(
+        Effect.provide(
+          imageServerLayer(recorder, {
+            deleteFile: () =>
+              Effect.fail(
+                new StorageUploadError({
+                  cause: new Error("r2 unreachable"),
+                  message: "r2 unreachable",
+                }),
+              ),
+          }),
+        ),
+      );
     },
   );
 

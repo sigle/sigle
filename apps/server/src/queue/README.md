@@ -28,7 +28,7 @@ export const resizeImageJob = defineJob({
     Effect.gen(function* () {
       // mark domain state as failed
     }),
-  // Fields attached to failure reports (Sentry); redacted by default.
+  // Fields attached to failure reports (PostHog); redacted by default.
   reportPayload: (payload) => ({ imageId: payload.imageId }),
 });
 ```
@@ -58,7 +58,7 @@ the workers.
   `JobAdminService.clearJob(queue, id)` to allow re-offering the same id.
 - Schema decode failures are marked failed by the queue and never reach
   handlers; they appear in the admin failed list.
-- Failures are reported to Sentry (`ErrorReporter`) with `queue`, `jobId`,
+- Failures are reported to PostHog (`ErrorReporter`) with `queue`, `jobId`,
   `attempts`, and the `reportPayload` projection (redacted by default, so
   payload fields are only reported when explicitly projected). Metrics:
   `sigle.jobs.completed`, `.retried`, `.failed_final`, `.failed_terminal`,

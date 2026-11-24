@@ -1,7 +1,7 @@
 "use client";
 
-import * as Sentry from "@sentry/nextjs";
 import { useRouter } from "next/navigation";
+import posthog from "posthog-js";
 import { useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Routes } from "@/lib/routes";
@@ -22,7 +22,7 @@ export default function PostCreate() {
         toast.error("Failed to create post", {
           description: error.message,
         });
-        Sentry.captureException(error);
+        posthog.captureException(error);
       },
     },
   );

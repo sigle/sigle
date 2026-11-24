@@ -24,15 +24,18 @@ describe("schemaErrorMiddleware", () => {
         ),
       ];
 
-      const responses = yield* Effect.forEach(requests, (request) =>
-        Effect.gen(function* () {
-          const response = yield* request;
+      const responses = yield* Effect.forEach(
+        requests,
+        (request) =>
+          Effect.gen(function* () {
+            const response = yield* request;
 
-          const body =
-            yield* HttpClientResponse.schemaBodyJson(BadRequest)(response);
+            const body =
+              yield* HttpClientResponse.schemaBodyJson(BadRequest)(response);
 
-          return { status: response.status, message: body.message };
-        }),
+            return { status: response.status, message: body.message };
+          }),
+        { concurrency: 1 },
       );
 
       expect(responses).toStrictEqual([

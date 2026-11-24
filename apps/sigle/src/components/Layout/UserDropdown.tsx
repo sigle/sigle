@@ -87,15 +87,13 @@ export const UserDropdown = () => {
             <DropdownMenuSeparator />
           </>
         ) : null}
-        {me?.whitelisted ? (
-          <DropdownMenuItem
-            render={
-              <NextLink href="/p/new">
-                <IconPencil className="text-muted-foreground" /> Write a post
-              </NextLink>
-            }
-          />
-        ) : null}
+        <DropdownMenuItem
+          render={
+            <NextLink href="/p/new">
+              <IconPencil className="text-muted-foreground" /> Write a post
+            </NextLink>
+          }
+        />
         {me?.address ? (
           <DropdownMenuItem
             render={

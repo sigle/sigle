@@ -1,280 +1,212 @@
 import type { HttpServerRequest } from "effect/http";
-import {
-  ArweaveTags,
-  ArweaveTransactionTypes,
-  verifyMetadataSignature,
-} from "@sigle/sdk";
 import { eq } from "drizzle-orm";
-import { Duration, Effect } from "effect";
+import { Effect, Option, Predicate, Schema } from "effect";
 import { HttpApiBuilder } from "effect/http-api";
 import { SigleApi } from "@/api";
 import {
-  PROFILE_METADATA_MAX_KIB,
+  ProfileDescription,
+  ProfileDisplayName,
+  ProfileTwitter,
+  ProfileWebsite,
   type UpdateProfilePayload,
 } from "@/api/groups/profile";
 import { findProfile } from "@/api/handlers/users";
 import { uploadImageFromRequest } from "@/api/image-upload";
 import { CurrentUser } from "@/api/middleware/auth-user";
-import { setRetryAfterHeader } from "@/api/middleware/rate-limit";
-import {
-  BadRequest,
-  Conflict,
-  InternalServerError,
-  PayloadTooLarge,
-  TooManyRequests,
-} from "@/api/schemas";
+import { InternalServerError } from "@/api/schemas";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
-import { profile, profileUpdate } from "@/db/schema";
-import { scheduleChangedProfileImages } from "@/jobs/index-profile";
+import { mediaImage, profile } from "@/db/schema";
 import {
   profileImageKey,
   profileImageMaxMib,
   profileImagePostHogEvent,
+  profileImagePrefix,
   profileImageSettings,
   type ProfileImageKind,
-  versionProfileImageUrl,
 } from "@/lib/profile-images";
-import { ArweaveService } from "@/services/arweave";
-import { findProfileUpdateUsage, PROFILE_UPDATE_LIMIT } from "@/services/plan";
+import { BnsService } from "@/services/bns";
 import { PostHogService } from "@/services/posthog";
+import { StorageService } from "@/services/storage";
 
-/** Signatures of the profile metadata being uploaded by this process. */
-const uploadingSignatures = new Set<string>();
+/** The stored profile of the signed-in user, after a write. */
+const findOwnProfile = (address: string) =>
+  Effect.gen(function* () {
+    const stored = yield* findProfile(address);
 
-/**
- * Runs `effect` while holding the upload claim on `signature`, or fails with a
- * 409 when another request holds it.
- */
-const withUploadClaim = <A, E, R>(
-  signature: string,
-  effect: Effect.Effect<A, E, R>,
-): Effect.Effect<A, E | Conflict, R> =>
-  Effect.acquireUseRelease(
-    Effect.sync(() => {
-      if (uploadingSignatures.has(signature)) {
-        return false;
-      }
+    if (stored === undefined) {
+      return yield* Effect.die(
+        new Error(`Profile ${address} missing after upsert`),
+      );
+    }
 
-      uploadingSignatures.add(signature);
-
-      return true;
-    }),
-    (claimed): Effect.Effect<A, E | Conflict, R> =>
-      claimed
-        ? effect
-        : Effect.fail(
-            new Conflict({
-              message: "Metadata signature is already being published",
-            }),
-          ),
-    (claimed) =>
-      Effect.sync(() => {
-        if (claimed) {
-          uploadingSignatures.delete(signature);
-        }
-      }),
-  );
+    return { address, profile: stored.profile };
+  });
 
 export const updateProfile = (payload: typeof UpdateProfilePayload.Type) =>
   Effect.gen(function* () {
     const user = yield* CurrentUser;
-    const config = yield* AppConfig;
     const db = yield* Database;
-    const arweave = yield* ArweaveService;
     const posthog = yield* PostHogService;
 
-    const file = Buffer.from(JSON.stringify(payload.metadata));
+    const now = new Date();
 
-    if (file.length > PROFILE_METADATA_MAX_KIB * 1024) {
-      return yield* new PayloadTooLarge({
-        message: `Profile metadata is too large, maximum size is ${PROFILE_METADATA_MAX_KIB} KiB.`,
-      });
-    }
+    // The avatar and cover are kept: they are set by uploading them.
+    const fields = {
+      displayName: payload.displayName ?? null,
+      description: payload.description ?? null,
+      website: payload.website ?? null,
+      twitter: payload.twitter ?? null,
+      updatedAt: now,
+    };
 
-    // Verify that the signature is valid and belongs to a wallet owned by the logged-in user
-    const signatureResult = verifyMetadataSignature(payload.metadata, {
-      network: config.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
-    });
-
-    if (signatureResult.isErr()) {
-      return yield* new BadRequest({
-        message: signatureResult.error.error,
-      });
-    }
-
-    const { recoveredAddress, signature } = signatureResult.value;
-
-    if (!user.walletAddresses.includes(recoveredAddress)) {
-      return yield* new BadRequest({
-        message:
-          "Invalid signature: Signature verification failed or address mismatch",
-      });
-    }
-
-    // A soft limit, like the publish limit: an update only counts once it is
-    // stored, so updates whose Arweave upload is still running are not
-    // counted. The per-minute limit and the upload timeout keep the overshoot
-    // to a few updates.
-    const checkedAt = new Date();
-
-    const usage = yield* findProfileUpdateUsage(db, {
-      userId: user.id,
-      now: checkedAt,
-    });
-
-    if (usage.used >= PROFILE_UPDATE_LIMIT) {
-      const retryAfterMillis = Math.max(
-        0,
-        (usage.resetsAt?.getTime() ?? checkedAt.getTime()) -
-          checkedAt.getTime(),
-      );
-
-      yield* setRetryAfterHeader(Duration.millis(retryAfterMillis));
-
-      return yield* new TooManyRequests({
-        message: `You can update your profile ${PROFILE_UPDATE_LIMIT} times per day. Try again later.`,
-        retryAfterMillis,
-      });
-    }
-
-    // Concurrent requests with the same signed metadata would all pass the
-    // signature check and each pay for an Arweave upload. A claim on the
-    // signature is held until the profile is stored, so the other requests
-    // get a 409 instead of waiting for it. The claim lives in this process:
-    // the server runs as a single instance on its SQLite database. The upload
-    // runs outside any transaction, which would hold the database's only
-    // connection for its whole duration.
-    const { result, existingProfile, profileFields } = yield* withUploadClaim(
-      signature,
-      Effect.gen(function* () {
-        const [existingProfileWithSignature] = yield* db
-          .select({ address: profile.address })
-          .from(profile)
-          .where(eq(profile.signature, signature))
-          .limit(1)
-          .pipe(Effect.orDie);
-
-        if (existingProfileWithSignature) {
-          return yield* new Conflict({
-            message: "Metadata signature has already been published",
-          });
-        }
-
-        const uploaded = yield* arweave
-          .uploadFile({
-            file,
-            contentType: "application/json",
-            tags: [
-              { name: ArweaveTags.author, value: recoveredAddress },
-              {
-                name: ArweaveTags.type,
-                value: ArweaveTransactionTypes.profile,
-              },
-            ],
-          })
-          .pipe(
-            // ArweaveService logs the cause, the client only gets a generic
-            // message.
-            Effect.mapError(
-              () =>
-                new InternalServerError({
-                  message: "Failed to upload to Arweave.",
-                }),
-            ),
-          );
-
-        const now = new Date();
-        const { content } = payload.metadata;
-
-        // Store the signed metadata on upload so the profile is immediately
-        // readable. The profile indexer sets the block once the transaction
-        // is mined.
-        const fields = {
-          arweaveTxId: uploaded.id,
-          arweaveBlockHeight: null,
-          signature,
-          displayName: content.displayName ?? null,
-          description: content.description ?? null,
-          website: content.website ?? null,
-          twitter: content.twitter ?? null,
-          picture: content.picture ?? null,
-          coverPicture: content.coverPicture ?? null,
-          updatedAt: now,
-        };
-
-        const previousProfile = yield* db
-          .transaction((tx) =>
-            Effect.gen(function* () {
-              const [previous] = yield* tx
-                .select({
-                  coverPicture: profile.coverPicture,
-                  picture: profile.picture,
-                })
-                .from(profile)
-                .where(eq(profile.address, recoveredAddress))
-                .limit(1);
-
-              yield* tx
-                .insert(profile)
-                .values({
-                  ...fields,
-                  address: recoveredAddress,
-                  createdAt: now,
-                })
-                .onConflictDoUpdate({
-                  target: profile.address,
-                  set: fields,
-                });
-
-              yield* tx.insert(profileUpdate).values({
-                arweaveTxId: uploaded.id,
-                userId: user.id,
-                address: recoveredAddress,
-              });
-
-              return previous;
-            }),
-          )
-          // Like the queries, a failed transaction is a defect.
-          .pipe(Effect.orDie);
-
-        return {
-          result: uploaded,
-          existingProfile: previousProfile,
-          profileFields: fields,
-        };
-      }),
-    );
-
-    yield* scheduleChangedProfileImages(existingProfile, profileFields);
+    yield* db
+      .insert(profile)
+      .values({ ...fields, address: user.address, createdAt: now })
+      .onConflictDoUpdate({ target: profile.address, set: fields })
+      .pipe(Effect.orDie);
 
     yield* posthog.capture({
       distinctId: user.id,
-      event: "profile metadata uploaded",
-      properties: {
-        arweaveId: result.id,
-      },
+      event: "profile updated",
     });
 
-    const stored = yield* findProfile(recoveredAddress);
-
-    if (stored === undefined) {
-      return yield* Effect.die(
-        new Error(`Profile ${recoveredAddress} missing after upsert`),
-      );
-    }
-
-    return {
-      arweaveTxId: result.id,
-      uri: result.uri,
-      cid: result.cid,
-      gatewayUrl: result.gatewayUrl,
-      address: recoveredAddress,
-      profile: stored.profile,
-    };
+    return yield* findOwnProfile(user.address);
   });
 
+/**
+ * The profile fields of a BNS V2 zonefile, see
+ * https://github.com/Strata-Labs/bns-v2-sdk (`NewZonefileData`). Fields are
+ * read as unknown and checked one by one, so one invalid field doesn't hide
+ * the others.
+ */
+const BnsZonefile = Schema.fromJsonString(
+  Schema.Struct({
+    owner: Schema.String,
+    name: Schema.optionalKey(Schema.Unknown),
+    bio: Schema.optionalKey(Schema.Unknown),
+    website: Schema.optionalKey(Schema.Unknown),
+    social: Schema.optionalKey(Schema.Unknown),
+  }),
+);
+
+const BnsSocial = Schema.Array(Schema.Unknown);
+
+const BnsSocialEntry = Schema.Struct({
+  platform: Schema.Unknown,
+  username: Schema.Unknown,
+});
+
+const decodeBnsZonefile = Schema.decodeUnknownOption(BnsZonefile);
+
+const decodeBnsSocial = Schema.decodeUnknownOption(BnsSocial);
+
+const decodeBnsSocialEntry = Schema.decodeUnknownOption(BnsSocialEntry);
+
+/** The trimmed value when it is valid for `schema` and not empty, else null. */
+const readField = <S extends Schema.Codec<string, string>>(
+  schema: S,
+  value: string | undefined,
+): string | null => {
+  const trimmed = value?.trim() ?? "";
+
+  return trimmed === ""
+    ? null
+    : Option.getOrNull(Schema.decodeOption(schema)(trimmed));
+};
+
+const stringOrUndefined = <A>(value: A) =>
+  Predicate.isString(value) ? value : undefined;
+
+/**
+ * Reads the profile fields of a zonefile. Null when it isn't a JSON profile
+ * zonefile, when it was written for another owner of the name, or when none
+ * of its fields can be imported.
+ */
+export const parseBnsProfile = (zonefile: string, owner: string) => {
+  const decoded = decodeBnsZonefile(zonefile);
+
+  // A transferred name keeps the zonefile of its previous owner until the new
+  // owner replaces it.
+  if (Option.isNone(decoded) || decoded.value.owner !== owner) {
+    return null;
+  }
+
+  // `pfp` isn't imported: profile images are only set by uploading them.
+  const { name, bio, website, social } = decoded.value;
+
+  // The first valid X handle, skipping malformed entries.
+  const twitter =
+    Option.getOrElse(decodeBnsSocial(social), () => [])
+      .flatMap((value) => Option.toArray(decodeBnsSocialEntry(value)))
+      .filter(
+        (entry) =>
+          Predicate.isString(entry.platform) &&
+          ["twitter", "x"].includes(entry.platform.toLowerCase()),
+      )
+      .map((entry) =>
+        readField(
+          ProfileTwitter,
+          stringOrUndefined(entry.username)?.trim().replace(/^@/, ""),
+        ),
+      )
+      .find((handle) => handle !== null) ?? null;
+
+  // Zonefiles often store a website without its protocol, such as
+  // `example.com`. A colon followed by a port, as in `example.com:8443`,
+  // isn't a scheme; any other scheme is kept and validated as is.
+  const websiteText = stringOrUndefined(website)?.trim();
+
+  const websiteUrl =
+    websiteText === undefined ||
+    /^[a-z][a-z\d+.-]*:(?!\d+(?:[/?#]|$))/i.test(websiteText)
+      ? websiteText
+      : `https://${websiteText}`;
+
+  const fields = {
+    displayName: readField(ProfileDisplayName, stringOrUndefined(name)),
+    description: readField(ProfileDescription, stringOrUndefined(bio)),
+    website: readField(ProfileWebsite, websiteUrl),
+    twitter,
+  };
+
+  return Object.values(fields).every((value) => value === null) ? null : fields;
+};
+
+export const getBnsProfile = Effect.gen(function* () {
+  const user = yield* CurrentUser;
+  const bns = yield* BnsService;
+
+  const name = yield* bns.findPrimaryName(user.address).pipe(
+    Effect.tapError((error) =>
+      Effect.logWarning("Failed to read the BNS name", { cause: error }),
+    ),
+    Effect.mapError(
+      () =>
+        new InternalServerError({
+          message: "Failed to read your BNS name, please try again.",
+        }),
+    ),
+  );
+
+  if (name === null) {
+    return { name: null, profile: null };
+  }
+
+  return {
+    name: name.fullName,
+    profile:
+      name.zonefile === null
+        ? null
+        : parseBnsProfile(name.zonefile, user.address),
+  };
+});
+
+/**
+ * Uploads an avatar or cover and sets it on the profile right away, then
+ * deletes the image it replaces: profile images are keyed by their content
+ * hash, so the replaced object is no longer used by any profile.
+ */
 export const uploadProfileImage = (
   kind: ProfileImageKind,
   request: HttpServerRequest.HttpServerRequest,
@@ -282,14 +214,81 @@ export const uploadProfileImage = (
   Effect.gen(function* () {
     const user = yield* CurrentUser;
     const config = yield* AppConfig;
+    const db = yield* Database;
+    const storage = yield* StorageService;
     const posthog = yield* PostHogService;
 
     const uploaded = yield* uploadImageFromRequest(request, {
       ...profileImageSettings(config.STACKS_ENV, kind),
       maxMib: profileImageMaxMib(kind),
-      key: () => profileImageKey(user.id, kind),
-      url: (stored) => versionProfileImageUrl(stored.url, stored.version),
+      key: (version) => profileImageKey(user.id, kind, version),
+      url: (stored) => stored.url,
     });
+
+    const now = new Date();
+    const column = kind === "avatar" ? profile.picture : profile.coverPicture;
+
+    const image =
+      kind === "avatar"
+        ? { picture: uploaded.url }
+        : { coverPicture: uploaded.url };
+
+    const previousUrl = yield* db
+      .transaction((tx) =>
+        Effect.gen(function* () {
+          const [previous] = yield* tx
+            .select({ url: column })
+            .from(profile)
+            .where(eq(profile.address, user.address))
+            .limit(1);
+
+          yield* tx
+            .insert(profile)
+            .values({
+              ...image,
+              address: user.address,
+              createdAt: now,
+              updatedAt: now,
+            })
+            .onConflictDoUpdate({
+              target: profile.address,
+              set: { ...image, updatedAt: now },
+            });
+
+          return previous?.url ?? null;
+        }),
+      )
+      .pipe(Effect.orDie);
+
+    // Only images this endpoint stored for this user and kind are deleted, not
+    // external pictures or the images of profiles published on Arweave.
+    const publicUrl = uploaded.url.slice(0, -uploaded.key.length);
+    const previousKey = previousUrl?.slice(publicUrl.length);
+
+    if (
+      previousUrl !== null &&
+      previousUrl !== uploaded.url &&
+      previousUrl.startsWith(publicUrl) &&
+      previousKey?.startsWith(profileImagePrefix(user.id, kind)) === true
+    ) {
+      // The profile is saved already, a failed delete only leaves an unused
+      // row or object behind, so it's logged and the upload still succeeds.
+      yield* db
+        .delete(mediaImage)
+        .where(eq(mediaImage.id, previousUrl))
+        .pipe(
+          Effect.tapError((cause) =>
+            Effect.logError("Failed to delete a replaced profile image", {
+              cause,
+              url: previousUrl,
+            }),
+          ),
+          Effect.ignore,
+        );
+
+      // The storage service logs its failures.
+      yield* storage.deleteFile(previousKey).pipe(Effect.ignore);
+    }
 
     yield* posthog.capture({
       distinctId: user.id,
@@ -301,13 +300,7 @@ export const uploadProfileImage = (
       },
     });
 
-    return {
-      height: uploaded.height,
-      sizeBytes: uploaded.sizeBytes,
-      thumbhash: uploaded.thumbhash,
-      url: uploaded.url,
-      width: uploaded.width,
-    };
+    return yield* findOwnProfile(user.address);
   });
 
 export const ProfileHandlersLayer = HttpApiBuilder.group(
@@ -316,6 +309,7 @@ export const ProfileHandlersLayer = HttpApiBuilder.group(
   (handlers) =>
     handlers
       .handle("update", ({ payload }) => updateProfile(payload))
+      .handle("bns", () => getBnsProfile)
       .handle("uploadImage", ({ params, request }) =>
         uploadProfileImage(params.kind, request),
       ),
