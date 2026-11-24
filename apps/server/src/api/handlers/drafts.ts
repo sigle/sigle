@@ -47,7 +47,8 @@ import {
   draftImageSettings,
 } from "@/lib/draft-images";
 import {
-  findPublishUsage,
+  findPlanPublishUsage,
+  findUserPublishUsage,
   PUBLISH_LIMITS,
   type UserPlan,
 } from "@/services/plan";
@@ -497,7 +498,7 @@ export const publishDraft = (
     const limit = PUBLISH_LIMITS[plan];
     const now = new Date();
 
-    const usage = yield* findPublishUsage(db, {
+    const usage = yield* findUserPublishUsage(db, {
       userId: user.id,
       now,
       excludeDraftId: draftId,
@@ -518,7 +519,7 @@ export const publishDraft = (
         ? config.PUBLISH_GLOBAL_DAILY_LIMIT_FREE
         : config.PUBLISH_GLOBAL_DAILY_LIMIT_PRO;
 
-    const globalUsage = yield* findPublishUsage(db, {
+    const globalUsage = yield* findPlanPublishUsage(db, {
       plan,
       now,
       excludeDraftId: draftId,
