@@ -6,6 +6,7 @@ import { IconDots, IconPlus } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { toast } from "sonner";
+import { LoadMore } from "@/components/Shared/LoadMore";
 import { NextLink } from "@/components/Shared/NextLink";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -17,33 +18,42 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/cn";
+import { flattenPages, getNextOffset, PAGE_SIZE } from "@/lib/pagination";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 
 export default function DashboardDrafts() {
   const {
-    data: drafts,
+    data,
     isLoading: loadingDrafts,
     error: errorDrafts,
     refetch: refetchDrafts,
-  } = sigleApiClient.useQuery("get", "/api/drafts", {
-    params: {
-      query: {
-        limit: 50,
-      },
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = sigleApiClient.useInfiniteQuery(
+    "get",
+    "/api/drafts",
+    { params: { query: { limit: PAGE_SIZE } } },
+    {
+      pageParamName: "offset",
+      initialPageParam: 0,
+      getNextPageParam: getNextOffset,
     },
-  });
+  );
 
-  const isEmpty = drafts?.total === 0;
+  const drafts = data ? flattenPages(data.pages) : undefined;
+  const total = data?.pages.at(-1)?.total;
+  const isEmpty = total === 0;
 
   return (
     <div className="space-y-8 py-10">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h2 className="headline text-3xl">
           Drafts
-          {drafts?.total ? (
+          {total ? (
             <span className="ml-2 font-mono text-base font-normal tracking-normal text-muted-foreground">
-              {drafts.total}
+              {total}
             </span>
           ) : null}
         </h2>
@@ -71,26 +81,41 @@ export default function DashboardDrafts() {
           </NextLink>
         </section>
       ) : (
-        <ul className="border-t border-border">
-          {loadingDrafts
-            ? [0, 1, 2].map((index) => (
-                <li key={index} className="border-b border-border py-4">
-                  <Skeleton className="h-6 w-2/3" />
-                  <Skeleton className="mt-2 h-4 w-40" />
-                </li>
-              ))
-            : null}
+        <div>
+          <ul className="border-t border-border">
+            {loadingDrafts
+              ? [0, 1, 2].map((index) => (
+                  <li key={index} className="border-b border-border py-4">
+                    <Skeleton className="h-6 w-2/3" />
+                    <Skeleton className="mt-2 h-4 w-40" />
+                  </li>
+                ))
+              : null}
 
-          {errorDrafts ? (
-            <li className="border-b border-border py-4 text-sm text-destructive">
-              An error occurred, please try again later. {errorDrafts.message}
-            </li>
+            {errorDrafts ? (
+              <li className="border-b border-border py-4 text-sm text-destructive">
+                An error occurred, please try again later. {errorDrafts.message}
+              </li>
+            ) : null}
+
+            {drafts?.map((draft) => (
+              <Draft
+                key={draft.id}
+                draft={draft}
+                refetchDrafts={refetchDrafts}
+              />
+            ))}
+          </ul>
+
+          {drafts && hasNextPage ? (
+            <LoadMore
+              shown={drafts.length}
+              total={total ?? drafts.length}
+              loading={isFetchingNextPage}
+              onLoadMore={() => fetchNextPage()}
+            />
           ) : null}
-
-          {drafts?.results.map((draft) => (
-            <Draft key={draft.id} draft={draft} refetchDrafts={refetchDrafts} />
-          ))}
-        </ul>
+        </div>
       )}
     </div>
   );
