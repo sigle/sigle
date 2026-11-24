@@ -63,14 +63,22 @@ export class PostHogService extends Context.Service<
 
         const apiKey = Redacted.value(config.POSTHOG_API_KEY.value);
         const host = Option.getOrUndefined(config.POSTHOG_API_HOST);
+        const context = yield* Effect.context<never>();
 
         const client = yield* Effect.acquireRelease(
-          Effect.sync(
-            () =>
-              new PostHog(apiKey, {
-                host,
-              }),
-          ),
+          Effect.sync(() => {
+            const instance = new PostHog(apiKey, { host });
+
+            // Events the SDK couldn't deliver, after its retries, are only
+            // reported here: `flush()` and `shutdown()` don't reject.
+            instance.on("error", (error) => {
+              Effect.runForkWith(context)(
+                Effect.logWarning("Failed to deliver PostHog events", error),
+              );
+            });
+
+            return instance;
+          }),
           (instance) =>
             Effect.promise(async () => {
               await instance.shutdown();
@@ -93,9 +101,8 @@ export class PostHogService extends Context.Service<
             ),
           captureException: (error, properties) =>
             Effect.sync(() => {
-              client.captureException(error, undefined, {
-                ...properties,
-                environment: config.STACKS_ENV,
+              client.captureException(error, {
+                properties: { ...properties, environment: config.STACKS_ENV },
               });
             }).pipe(
               Effect.catchDefect((defect) =>

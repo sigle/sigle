@@ -16,13 +16,15 @@ export const onRequestError: Instrumentation.onRequestError = async (
     import("@/env"),
   ]);
 
-  getPostHogServer()?.captureException(error, undefined, {
-    environment: env.NEXT_PUBLIC_STACKS_ENV,
-    path: request.path,
-    method: request.method,
-    routePath: context.routePath,
-    routeType: context.routeType,
-    routerKind: context.routerKind,
+  getPostHogServer()?.captureException(error, {
+    properties: {
+      environment: env.NEXT_PUBLIC_STACKS_ENV,
+      path: request.path,
+      method: request.method,
+      routePath: context.routePath,
+      routeType: context.routeType,
+      routerKind: context.routerKind,
+    },
   });
 };
 
