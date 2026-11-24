@@ -1,7 +1,7 @@
 "use client";
 
 import { IconCheck } from "@tabler/icons-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 import { NextLink } from "@/components/Shared/NextLink";
 import { Button } from "@/components/ui/button";
 import {
