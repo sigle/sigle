@@ -95,8 +95,15 @@ const checkDraftContentTotal = (options: {
     // `octet_length` reads the stored size of the text, not the text.
     const [usage] = yield* db
       .select({
-        total: sql<number>`coalesce(sum(octet_length(${draft.content})), 0)`,
-        current: sql<number>`coalesce(sum(CASE WHEN ${draft.id} = ${options.draftId ?? null} THEN octet_length(${draft.content}) END), 0)`,
+        // The SQLite driver reads integers as bigint unless they're mapped.
+        total:
+          sql<number>`coalesce(sum(octet_length(${draft.content})), 0)`.mapWith(
+            Number,
+          ),
+        current:
+          sql<number>`coalesce(sum(CASE WHEN ${draft.id} = ${options.draftId ?? null} THEN octet_length(${draft.content}) END), 0)`.mapWith(
+            Number,
+          ),
       })
       .from(draft)
       .where(eq(draft.userId, options.userId))
