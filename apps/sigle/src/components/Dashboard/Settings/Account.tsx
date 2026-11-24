@@ -23,19 +23,17 @@ export const SettingsAccount = () => {
           <p className="font-mono text-sm break-all">{me.address}</p>
         </SettingsRow>
 
-        {me.whitelisted ? (
-          <SettingsRow label="Plan">
-            <p className="text-sm">
-              {me.plan === "pro" ? "Pro" : "Free"} ·{" "}
-              <NextLink
-                href="/dashboard/plan"
-                className="underline underline-offset-4"
-              >
-                {me.plan === "pro" ? "View plan" : "Upgrade to Pro"}
-              </NextLink>
-            </p>
-          </SettingsRow>
-        ) : null}
+        <SettingsRow label="Plan">
+          <p className="text-sm">
+            {me.plan === "pro" ? "Pro" : "Free"} ·{" "}
+            <NextLink
+              href="/dashboard/plan"
+              className="underline underline-offset-4"
+            >
+              {me.plan === "pro" ? "View plan" : "Upgrade to Pro"}
+            </NextLink>
+          </p>
+        </SettingsRow>
       </div>
     </section>
   );

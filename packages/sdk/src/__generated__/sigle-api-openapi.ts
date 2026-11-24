@@ -33,7 +33,7 @@ export interface paths {
     };
     /**
      * Get the signed-in user
-     * @description Return the signed-in user's id, primary Stacks address, whitelist status, and plan. Returns a 401 without a session.
+     * @description Return the signed-in user's id, primary Stacks address, and plan. Returns a 401 without a session.
      */
     get: operations["me.get"];
     put?: never;
@@ -372,9 +372,6 @@ export interface components {
     UnauthorizedError: {
       message: string;
     };
-    ForbiddenError: {
-      message: string;
-    };
     UnsupportedMediaTypeError: {
       message: string;
     };
@@ -484,6 +481,9 @@ export interface components {
       };
       /** @description A cryptographic signature of the `content` data. */
       signature?: string;
+    };
+    ForbiddenError: {
+      message: string;
     };
     PublishDraftStatusResponse: {
       status: components["schemas"]["PublishDraftStatus"];
@@ -666,7 +666,6 @@ export interface components {
     CurrentUserResponse: {
       id: string;
       address: string;
-      whitelisted: boolean;
       /** @enum {string} */
       plan: "free" | "pro";
     };
@@ -884,15 +883,6 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
-        };
-      };
       /** @description Too Many Requests */
       429: {
         headers: {
@@ -1022,15 +1012,6 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
-        };
-      };
       /** @description Not Found */
       404: {
         headers: {
@@ -1095,15 +1076,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */
@@ -1273,15 +1245,6 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
-        };
-      };
       /** @description Not Found */
       404: {
         headers: {
@@ -1353,15 +1316,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */
@@ -1543,15 +1497,6 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
-        };
-      };
       /** @description Conflict */
       409: {
         headers: {
@@ -1633,15 +1578,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Payload Too Large */

@@ -18,7 +18,6 @@ export const getMe = Effect.gen(function* () {
   return {
     id: user.id,
     address: user.address,
-    whitelisted: user.whitelisted,
     plan: user.plan,
   };
 });

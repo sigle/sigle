@@ -883,51 +883,6 @@ describe("profile", () => {
     },
   );
 
-  it.effect("profile uploads return 403 for non-whitelisted users", () => {
-    const arweaveUploads: Array<ArweaveUploadOptions> = [];
-    const recorder = makeStorageTestRecorder();
-
-    return Effect.gen(function* () {
-      const credentials = createTestSiwsCredentials("mainnet");
-
-      const { client } = yield* createAuthenticatedClient({
-        address: credentials.address,
-      });
-
-      const metadata = createSignedTestProfileMetadata({
-        privateKey: credentials.privateKey,
-        id: "profile-1",
-      });
-
-      const png = yield* Effect.promise(() => makePngBuffer());
-
-      const responses = yield* Effect.all([
-        updateProfileRequest(client, metadata),
-        uploadImageRequest(client, "avatar", {
-          bytes: new Uint8Array(png),
-          contentType: "image/png",
-        }),
-      ]);
-
-      expect({
-        statuses: responses.map((response) => response.status),
-        arweaveUploads: arweaveUploads.length,
-        storageUploads: recorder.uploads.length,
-      }).toStrictEqual({
-        statuses: [403, 403],
-        arweaveUploads: 0,
-        storageUploads: 0,
-      });
-    }).pipe(
-      Effect.provide(
-        makeTestServerLayer({ STACKS_ENV: "mainnet" }, [], {
-          arweave: ArweaveService.layerTest(arweaveUploads),
-          storage: StorageService.layerTest(recorder),
-        }),
-      ),
-    );
-  });
-
   it.effect("PUT /images/avatar stores a resized webp with metadata", () => {
     const recorder = makeStorageTestRecorder();
     const events: Array<PostHogEvent> = [];

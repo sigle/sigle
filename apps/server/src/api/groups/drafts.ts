@@ -5,10 +5,7 @@ import {
   HttpApiSchema,
   OpenApi,
 } from "effect/http-api";
-import {
-  UserAuthMiddleware,
-  WhitelistedUserMiddleware,
-} from "@/api/middleware/auth-user";
+import { UserAuthMiddleware } from "@/api/middleware/auth-user";
 import {
   RateLimitMiddleware,
   RateLimitPolicy,
@@ -291,7 +288,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       },
       payload: UpdateDraftPayload,
       success: Draft,
-      error: [NotFound, Conflict],
+      error: [NotFound, Conflict, Forbidden],
     })
       .annotate(OpenApi.Summary, "Update a draft")
       .annotate(
@@ -367,5 +364,4 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
   )
   .prefix("/api/drafts")
   .middleware(RateLimitMiddleware)
-  .middleware(WhitelistedUserMiddleware)
   .middleware(UserAuthMiddleware);
