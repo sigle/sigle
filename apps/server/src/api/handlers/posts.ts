@@ -1,4 +1,4 @@
-import { count, desc, eq, inArray } from "drizzle-orm";
+import { and, count, desc, eq, inArray, isNull, type SQL } from "drizzle-orm";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
 import { SigleApi } from "@/api";
@@ -38,29 +38,18 @@ const toMediaImage = (
   },
 ) => (url === null ? null : { url, ...image });
 
-export const listPosts = (query: typeof PostListQuery.Type) =>
+/**
+ * A page of the posts matching `where`, newest first, with the total count.
+ * Each post carries `hiddenAt`, which the public list schema leaves out.
+ */
+export const findPostList = (
+  where: SQL | undefined,
+  page: { readonly limit?: number; readonly offset?: number },
+) =>
   Effect.gen(function* () {
-    const author =
-      query.author === undefined
-        ? undefined
-        : yield* parseStacksAddress(query.author);
-
     const db = yield* Database;
-    const limit = query.limit ?? POST_LIST_DEFAULT_LIMIT;
-    const offset = query.offset ?? 0;
-
-    // Posts belong to a user, who can have several wallets, so an address
-    // matches every post of the user owning it.
-    const where =
-      author === undefined
-        ? undefined
-        : inArray(
-            post.userId,
-            db
-              .select({ userId: walletAddress.userId })
-              .from(walletAddress)
-              .where(eq(walletAddress.address, author)),
-          );
+    const limit = page.limit ?? POST_LIST_DEFAULT_LIMIT;
+    const offset = page.offset ?? 0;
 
     const [totals] = yield* db
       .select({ count: count() })
@@ -82,6 +71,7 @@ export const listPosts = (query: typeof PostListQuery.Type) =>
         tags: post.tags,
         canonicalUri: post.canonicalUri,
         arweaveTxId: post.arweaveTxId,
+        hiddenAt: post.hiddenAt,
         createdAt: post.createdAt,
         updatedAt: post.updatedAt,
         userId: post.userId,
@@ -96,7 +86,7 @@ export const listPosts = (query: typeof PostListQuery.Type) =>
 
     const authors = yield* findAuthors(posts.map((item) => item.userId));
 
-    const body = {
+    return {
       results: posts.map((item, index) => ({
         id: item.id,
         title: item.title,
@@ -111,6 +101,10 @@ export const listPosts = (query: typeof PostListQuery.Type) =>
         tags: item.tags ?? [],
         canonicalUri: item.canonicalUri,
         arweaveTxId: item.arweaveTxId,
+        hiddenAt:
+          item.hiddenAt === null
+            ? null
+            : DateTime.fromDateUnsafe(item.hiddenAt),
         createdAt: DateTime.fromDateUnsafe(item.createdAt),
         updatedAt: DateTime.fromDateUnsafe(item.updatedAt),
         author: authors[index],
@@ -119,6 +113,34 @@ export const listPosts = (query: typeof PostListQuery.Type) =>
       offset,
       total: totals.count,
     };
+  });
+
+export const listPosts = (query: typeof PostListQuery.Type) =>
+  Effect.gen(function* () {
+    const author =
+      query.author === undefined
+        ? undefined
+        : yield* parseStacksAddress(query.author);
+
+    const db = yield* Database;
+
+    // Posts belong to a user, who can have several wallets, so an address
+    // matches every post of the user owning it.
+    const byAuthor =
+      author === undefined
+        ? undefined
+        : inArray(
+            post.userId,
+            db
+              .select({ userId: walletAddress.userId })
+              .from(walletAddress)
+              .where(eq(walletAddress.address, author)),
+          );
+
+    const body = yield* findPostList(and(isNull(post.hiddenAt), byAuthor), {
+      limit: query.limit,
+      offset: query.offset,
+    });
 
     return HttpApiSchema.withHeaders({
       body,
@@ -146,7 +168,8 @@ export const getPost = (postId: string) =>
       .from(post)
       .leftJoin(mediaImage, eq(mediaImage.id, post.coverImage))
       .leftJoin(postOts, eq(postOts.postId, post.id))
-      .where(eq(post.id, postId))
+      // A hidden post is a 404 for everyone, its author included.
+      .where(and(eq(post.id, postId), isNull(post.hiddenAt)))
       .limit(1)
       .pipe(Effect.orDie);
 

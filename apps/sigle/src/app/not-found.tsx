@@ -14,7 +14,7 @@ export default function NotFound() {
     <StatusPage
       label="404"
       title="This page doesn’t exist"
-      description="The link may be wrong, or the author unpublished this story."
+      description="The link may be wrong, or the author hid this story."
       header={<Header />}
       footer={<Footer />}
     >

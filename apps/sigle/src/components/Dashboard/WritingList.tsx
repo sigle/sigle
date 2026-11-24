@@ -7,6 +7,8 @@ interface WritingListItem {
   title: string;
   href: string;
   date: string;
+  /** A short mono tag before the date, such as "Hidden". */
+  label?: string;
 }
 
 interface WritingListProps {
@@ -79,12 +81,16 @@ export const WritingList = ({
                 <span className="text-muted-foreground">Untitled</span>
               )}
             </span>
-            <time
-              dateTime={item.date}
-              className="shrink-0 font-mono text-xs text-muted-foreground uppercase"
-            >
-              {format(new Date(item.date), "MMM d")}
-            </time>
+            <span className="flex shrink-0 items-baseline gap-3 font-mono text-xs text-muted-foreground uppercase">
+              {item.label ? (
+                <span className="rounded-sm border border-border px-1.5 text-[0.65rem] tracking-wide">
+                  {item.label}
+                </span>
+              ) : null}
+              <time dateTime={item.date}>
+                {format(new Date(item.date), "MMM d")}
+              </time>
+            </span>
           </NextLink>
         </li>
       ))}
