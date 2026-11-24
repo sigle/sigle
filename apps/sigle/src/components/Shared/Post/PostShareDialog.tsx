@@ -6,6 +6,7 @@ import {
   IconCheck,
   IconCopy,
 } from "@tabler/icons-react";
+import { usePostHog } from "posthog-js/react";
 import { useState } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -32,6 +33,7 @@ export const PostShareDialog = ({
   onOpenChange,
   post,
 }: PostShareDialogProps) => {
+  const posthog = usePostHog();
   const [isCopied, setIsCopied] = useState(false);
 
   const postLink = `${env.NEXT_PUBLIC_APP_URL}${Routes.post({
@@ -39,6 +41,7 @@ export const PostShareDialog = ({
   })}`;
 
   const onCopy = () => {
+    posthog.capture("post_link_copied", { postId: post.id });
     navigator.clipboard.writeText(postLink).then(() => {
       setIsCopied(true);
       setTimeout(() => {
@@ -105,6 +108,12 @@ export const PostShareDialog = ({
               target="_blank"
               rel="noreferrer noopener"
               className={buttonVariants({ variant: "outline" })}
+              onClick={() => {
+                posthog.capture("post_shared", {
+                  postId: post.id,
+                  network: network.name.toLowerCase(),
+                });
+              }}
             >
               <network.icon size={16} />
               {network.name}
