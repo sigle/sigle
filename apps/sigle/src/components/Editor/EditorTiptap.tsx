@@ -16,7 +16,6 @@ import TipTapParagraph from "@tiptap/extension-paragraph";
 import TipTapStrike from "@tiptap/extension-strike";
 import TipTapText from "@tiptap/extension-text";
 import TipTapTypography from "@tiptap/extension-typography";
-import TipTapUnderline from "@tiptap/extension-underline";
 import {
   CharacterCount as TipTapCharacterCount,
   Dropcursor as TipTapDropcursor,
@@ -153,7 +152,6 @@ export const EditorTipTap = ({
       TipTapCode,
       TipTapItalic,
       TipTapStrike,
-      TipTapUnderline,
       // Extensions
       Markdown,
       TipTapDropcursor.configure({
