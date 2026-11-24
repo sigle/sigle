@@ -1,4 +1,4 @@
-import { PostMetadataSchema, ProfileMetadataSchema } from "@sigle/sdk";
+import { PostMetadataSchema } from "@sigle/sdk";
 import { fromZod } from "@/lib/zod-schema";
 
 /**
@@ -8,9 +8,4 @@ import { fromZod } from "@/lib/zod-schema";
 export const PostMetadata = fromZod(PostMetadataSchema, {
   identifier: "PostMetadata",
   description: "The signed post metadata to upload to Arweave.",
-});
-
-export const ProfileMetadata = fromZod(ProfileMetadataSchema, {
-  identifier: "ProfileMetadata",
-  description: "The signed profile metadata to upload to Arweave.",
 });

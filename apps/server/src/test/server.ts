@@ -11,6 +11,7 @@ import {
   type ArweaveUploadOptions,
   type ArweaveUploadResult,
 } from "@/services/arweave";
+import { BnsService } from "@/services/bns";
 import { ImageProcessingService } from "@/services/image-processing";
 import { OpenTimestampsService } from "@/services/opentimestamps";
 import { PostHogService, type PostHogEvent } from "@/services/posthog";
@@ -20,6 +21,7 @@ import { TestDatabaseLayer } from "@/test/layer";
 
 export interface TestServerOptions {
   readonly arweave?: Layer.Layer<ArweaveService>;
+  readonly bns?: Layer.Layer<BnsService>;
   readonly storage?: Layer.Layer<StorageService>;
   readonly imageProcessing?: Layer.Layer<ImageProcessingService>;
   readonly opentimestamps?: Layer.Layer<OpenTimestampsService>;
@@ -59,4 +61,5 @@ export const makeTestServerLayer = (
         ArweaveService.layerTest([], options.arweaveUploadImpl),
     ),
     Layer.provide(options.storage ?? StorageService.layerTest()),
+    Layer.provide(options.bns ?? BnsService.layerTest()),
   );

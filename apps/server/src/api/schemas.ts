@@ -127,6 +127,19 @@ export class PayloadTooLarge extends Schema.Error<
 }
 
 /**
+ * URL filter accepting only the given protocols, such as `"https:"`.
+ */
+export const isUrlWithProtocol = (
+  protocols: ReadonlyArray<string>,
+  expected: string,
+) =>
+  Schema.makeFilter((value: string) =>
+    URL.canParse(value) && protocols.includes(new URL(value).protocol)
+      ? true
+      : `Expected ${expected}`,
+  );
+
+/**
  * Headers of publicly cacheable reads, set to `PUBLIC_CACHE_CONTROL`. The
  * ETag is added by `EtagLayer` after the handler, so it is optional here: the
  * handlers don't set it, and it is listed for the OpenAPI document.

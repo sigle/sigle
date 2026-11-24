@@ -19,7 +19,6 @@ const nextConfig: NextConfig = {
         port: "",
         search: "",
       },
-      // Profile image URLs carry a `?v=` version, so any query is allowed.
       {
         protocol: "https",
         hostname: cdnUrl.hostname,

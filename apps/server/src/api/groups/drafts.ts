@@ -17,6 +17,7 @@ import {
   documentPaginationQuery,
   Forbidden,
   imageRequestBody,
+  isUrlWithProtocol,
   NonNegativeInt,
   NotFound,
   PayloadTooLarge,
@@ -85,19 +86,6 @@ export const DRAFT_LIMITS = {
   tags: 5,
   tag: 50,
 } as const;
-
-/**
- * URL filter accepting only the given protocols, such as `"https:"`.
- */
-const isUrlWithProtocol = (
-  protocols: ReadonlyArray<string>,
-  expected: string,
-) =>
-  Schema.makeFilter((value: string) =>
-    URL.canParse(value) && protocols.includes(new URL(value).protocol)
-      ? true
-      : `Expected ${expected}`,
-  );
 
 const DraftTitle = Schema.String.check(Schema.isMaxLength(DRAFT_LIMITS.title));
 

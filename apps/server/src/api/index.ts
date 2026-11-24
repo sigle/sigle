@@ -25,7 +25,7 @@ export const SigleApi = HttpApi.make("sigle")
       // Changesets bumps the package version on each release.
       version: packageJson.version,
       description:
-        "API of Sigle, a decentralized blogging platform on Stacks. Posts and profiles are signed by the author's wallet and stored on Arweave.\n\nAuthenticated routes need the session cookie set by signing in with Stacks through the Better Auth routes under `/api/auth`, which this document does not cover: `POST /api/auth/siws/nonce` returns a nonce to sign, `POST /api/auth/siws/verify` checks the signed message and sets the session cookie, `GET /api/auth/get-session` reads the session, and `POST /api/auth/sign-out` ends it.",
+        "API of Sigle, a decentralized blogging platform on Stacks. Posts are signed by the author's wallet and stored on Arweave. Profiles are stored by Sigle, and can be filled in from the user's BNS name.\n\nAuthenticated routes need the session cookie set by signing in with Stacks through the Better Auth routes under `/api/auth`, which this document does not cover: `POST /api/auth/siws/nonce` returns a nonce to sign, `POST /api/auth/siws/verify` checks the signed message and sets the session cookie, `GET /api/auth/get-session` reads the session, and `POST /api/auth/sign-out` ends it.",
       transform: (spec) =>
         omitBadRequestWithoutInputs(documentParameters(spec)),
     }),

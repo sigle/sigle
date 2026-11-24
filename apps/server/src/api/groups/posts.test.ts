@@ -310,12 +310,10 @@ describe("posts", () => {
         });
         yield* createTestProfile({
           address: AUTHOR_ADDRESS,
-          arweaveTxId: "profile-tx",
           displayName: "Author",
         });
         yield* createTestProfile({
           address: OTHER_ADDRESS,
-          arweaveTxId: "other-profile-tx",
           displayName: "Other wallet",
         });
         yield* createTestMediaImage({
@@ -370,7 +368,7 @@ describe("posts", () => {
             createdAt: "2026-01-01T00:00:00.000Z",
             author: {
               address: AUTHOR_ADDRESS,
-              profile: { displayName: "Author", arweaveTxId: "profile-tx" },
+              profile: { displayName: "Author" },
             },
             // Enums are lowercase in the API.
             opentimestamps: {

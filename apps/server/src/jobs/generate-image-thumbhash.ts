@@ -295,7 +295,7 @@ export const processGenerateImageThumbhashJob = (
     const config = yield* AppConfig;
     const images = yield* ImageProcessingService;
 
-    // Producers insert the row alongside the post/profile, but the job also
+    // Producers insert the row alongside the post, but the job also
     // accepts bare offers by creating the row itself.
     yield* db
       .insert(mediaImage)
@@ -435,37 +435,6 @@ export const generateImageThumbhashJob = defineJob({
   onFinalFailure: (job) => markImageThumbhashFailed(job),
   reportPayload: (job) => ({ imageId: job.imageId }),
 });
-
-/**
- * Makes sure an image referenced by a post or a profile gets a placeholder.
- * The PENDING row lets the reconciliation recover a lost offer, and images
- * that already have a placeholder are left untouched.
- */
-export const scheduleImageThumbhash = (imageId: string) =>
-  Effect.gen(function* () {
-    const db = yield* Database;
-
-    const [existing] = yield* db
-      .select({ status: mediaImage.status, thumbhash: mediaImage.thumbhash })
-      .from(mediaImage)
-      .where(eq(mediaImage.id, imageId))
-      .limit(1)
-      .pipe(Effect.orDie);
-
-    if (existing?.status === "READY" && existing.thumbhash !== null) {
-      return;
-    }
-
-    yield* db
-      .insert(mediaImage)
-      .values({ id: imageId })
-      .onConflictDoNothing()
-      .pipe(Effect.orDie);
-
-    yield* generateImageThumbhashJob
-      .offer({ imageId }, { id: thumbhashJobId(imageId) })
-      .pipe(Effect.orDie);
-  });
 
 export const GenerateImageThumbhashWorkerLive = generateImageThumbhashJob
   .workerLayer()

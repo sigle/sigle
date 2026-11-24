@@ -1,3 +1,4 @@
+import type { paths } from "@sigle/sdk";
 import { IconUpload } from "@tabler/icons-react";
 import { usePostHog } from "posthog-js/react";
 import { useCallback } from "react";
@@ -8,14 +9,18 @@ import { cn } from "@/lib/cn";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiClient } from "@/lib/sigle";
 
+type UploadResponse =
+  paths["/api/me/profile/images/{kind}"]["put"]["responses"][200]["content"]["application/json"];
+
 interface UploadProfileCoverPictureProps {
   picture?: string;
-  setPicture: (picture: string) => void;
+  /** Stores the profile the upload saved the image on. */
+  onUploaded: (user: UploadResponse) => Promise<void>;
 }
 
 export const UploadProfileCoverPicture = ({
   picture,
-  setPicture,
+  onUploaded,
 }: UploadProfileCoverPictureProps) => {
   const posthog = usePostHog();
 
@@ -48,8 +53,9 @@ export const UploadProfileCoverPicture = ({
           bodySerializer: () => file,
         },
         {
-          onSuccess: (data) => {
-            setPicture(data.url);
+          onSuccess: async (data) => {
+            await onUploaded(data);
+            toast.success("Cover updated!");
             posthog.capture("profile_cover_image_upload_success", {});
           },
           onError: (error) => {
@@ -59,7 +65,7 @@ export const UploadProfileCoverPicture = ({
         },
       );
     },
-    [posthog, uploadImage, setPicture, loadingUploadImage],
+    [posthog, uploadImage, onUploaded, loadingUploadImage],
   );
 
   const { getRootProps, getInputProps } = useDropzone({
