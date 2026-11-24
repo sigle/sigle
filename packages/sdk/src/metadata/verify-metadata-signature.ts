@@ -1,16 +1,19 @@
-import { bytesToHex } from "@stacks/common";
-import { hashMessage, verifyMessageSignatureRsv } from "@stacks/encryption";
-import { type StacksNetworkName } from "@stacks/network";
+import { hexToBytes } from "@stacks/common";
+import { verifyMessageSignatureRsv } from "@stacks/encryption";
 import {
-  createMessageSignature,
   publicKeyFromSignatureRsv,
   publicKeyToAddress,
 } from "@stacks/transactions";
 import { Result } from "better-result";
+import type { PostMetadata } from "./post.js";
 import { InvalidSignatureError } from "./errors.js";
+import {
+  postSignatureHash,
+  type PostSignatureNetwork,
+} from "./post-signature.js";
 
 export interface VerifyMetadataSignatureOptions {
-  network?: StacksNetworkName;
+  network?: PostSignatureNetwork;
 }
 
 export interface VerifyMetadataSignatureResult {
@@ -19,14 +22,15 @@ export interface VerifyMetadataSignatureResult {
   signature: string;
 }
 
+/**
+ * Checks the SIP-018 signature of post metadata and returns the address of
+ * the wallet that signed it. The caller checks that address is the author's.
+ */
 export function verifyMetadataSignature(
-  metadata: {
-    signature?: string;
-    content: unknown;
-  },
+  metadata: Pick<PostMetadata, "$schema" | "content" | "signature">,
   options?: VerifyMetadataSignatureOptions,
 ): Result<VerifyMetadataSignatureResult, InvalidSignatureError> {
-  const { signature, ...metadataToSign } = metadata;
+  const { signature } = metadata;
 
   if (!signature) {
     return Result.err(
@@ -37,20 +41,14 @@ export function verifyMetadataSignature(
   }
 
   try {
-    const message = JSON.stringify(metadataToSign);
-    const messageHash = bytesToHex(hashMessage(message));
-    const stacksSignature = createMessageSignature(signature);
-
-    const publicKey = publicKeyFromSignatureRsv(
-      messageHash,
-      stacksSignature.data,
-    );
-
-    const recoveredAddress = publicKeyToAddress(publicKey, options?.network);
+    const network = options?.network ?? "mainnet";
+    const messageHash = postSignatureHash(metadata, network);
+    const publicKey = publicKeyFromSignatureRsv(messageHash, signature);
+    const recoveredAddress = publicKeyToAddress(publicKey, network);
 
     const isSignatureValid = verifyMessageSignatureRsv({
       signature,
-      message,
+      message: hexToBytes(messageHash),
       publicKey,
     });
 

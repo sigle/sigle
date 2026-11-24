@@ -1,47 +1,55 @@
 import { z } from "zod";
 import { SignatureSchema, Tagchema } from "./common.js";
 import { PostMetadataSchemaId } from "./config.js";
-import {
-  type MarketplaceMetadata,
-  MarketplaceMetadataSchema,
-} from "./marketplace.js";
 import { type MediaImageMetadata, MediaImageMetadataSchema } from "./media.js";
-import {
-  type MetadataAttribute,
-  MetadataAttributeSchema,
-} from "./metadata-attribute.js";
 import { evaluate } from "./utils.js";
 
-export enum ContentWarning {
-  NSFW = "NSFW",
-  SENSITIVE = "SENSITIVE",
-  SPOILER = "SPOILER",
+export interface PostMetadataAttribute {
+  /**
+   * The attribute's unique identifier.
+   */
+  key: string;
+  /**
+   * The attribute's value.
+   */
+  value: string;
 }
 
-export const ContentWarningSchema = z.enum(ContentWarning).meta({
-  description: "Specify a content warning.",
+export const PostMetadataAttributeSchema = z.object({
+  key: z.string().min(1).meta({
+    description: "The attribute's unique identifier.",
+  }),
+  value: z.string().meta({ description: "The attribute's value." }),
 });
 
 export interface PostMetadataDetails {
   /**
-   * Random id also used in the url
-   * Have to be unique on sigle. Use a UUID if unsure.
+   * The post id, the same for every revision of the post. Sigle uses it in
+   * the post URL.
    */
   id: string;
   /**
-   * Post title
+   * Post title.
    */
   title: string;
   /**
-   * Markdown content
+   * Markdown content.
    */
   content: string;
   /**
-   * List of attributes that can be used to store any additional information that is not supported by the standard.
+   * A short plain text summary of the content, shown in post lists.
    */
-  attributes?: MetadataAttribute[];
+  excerpt: string;
   /**
-   * The cover image
+   * When the author published this revision, as an ISO 8601 date.
+   */
+  publishedAt: string;
+  /**
+   * The Arweave transaction id of the revision this one replaces.
+   */
+  previousVersion?: string;
+  /**
+   * The cover image.
    */
   coverImage?: MediaImageMetadata;
   /**
@@ -49,24 +57,47 @@ export interface PostMetadataDetails {
    */
   tags?: string[];
   /**
-   * Specify a content warning
+   * The language of the content, as a BCP 47 tag such as `en`.
    */
-  contentWarning?: ContentWarning;
+  language?: string;
+  /**
+   * The title for search engines and link previews, the title when omitted.
+   */
+  metaTitle?: string;
+  /**
+   * The description for search engines and link previews, the excerpt when
+   * omitted.
+   */
+  metaDescription?: string;
+  /**
+   * The URL of the original version of the post when it was first published
+   * elsewhere.
+   */
+  canonicalUri?: string;
+  /**
+   * Additional information that is not part of the standard.
+   */
+  attributes?: PostMetadataAttribute[];
 }
 
 export const PostMetadataDetailsSchema = z.object({
   id: z.string().min(1).meta({
-    description: "Random id also used in the url. Have to be unique on sigle.",
-  }),
-  title: z.string().min(1).meta({
-    description: "Post title.",
-  }),
-  content: z.string().min(1).meta({
-    description: "Markdown content.",
-  }),
-  attributes: MetadataAttributeSchema.array().min(1).max(20).optional().meta({
     description:
-      "List of attributes that can be used to store any additional information that is not supported by the standard",
+      "The post id, the same for every revision of the post. Sigle uses it in the post URL.",
+  }),
+  title: z.string().min(1).meta({ description: "Post title." }),
+  content: z.string().min(1).meta({ description: "Markdown content." }),
+  excerpt: z.string().meta({
+    description:
+      "A short plain text summary of the content, shown in post lists.",
+  }),
+  publishedAt: z.iso.datetime().meta({
+    description:
+      "When the author published this revision, as an ISO 8601 date.",
+  }),
+  previousVersion: z.string().min(1).optional().meta({
+    description:
+      "The Arweave transaction id of the revision this one replaces.",
   }),
   coverImage: MediaImageMetadataSchema.optional().meta({
     description: "The cover image.",
@@ -74,10 +105,31 @@ export const PostMetadataDetailsSchema = z.object({
   tags: Tagchema.array().min(1).max(5).optional().meta({
     description: "An arbitrary list of tags.",
   }),
-  contentWarning: ContentWarningSchema.optional(),
+  language: z.string().min(2).max(35).optional().meta({
+    description: "The language of the content, as a BCP 47 tag such as `en`.",
+  }),
+  metaTitle: z.string().min(1).optional().meta({
+    description:
+      "The title for search engines and link previews, the title when omitted.",
+  }),
+  metaDescription: z.string().min(1).optional().meta({
+    description:
+      "The description for search engines and link previews, the excerpt when omitted.",
+  }),
+  canonicalUri: z.url().optional().meta({
+    description:
+      "The URL of the original version of the post when it was first published elsewhere.",
+  }),
+  attributes: PostMetadataAttributeSchema.array()
+    .min(1)
+    .max(20)
+    .optional()
+    .meta({
+      description: "Additional information that is not part of the standard.",
+    }),
 });
 
-export type PostMetadata = MarketplaceMetadata & {
+export interface PostMetadata {
   /**
    * The schema id.
    */
@@ -87,12 +139,13 @@ export type PostMetadata = MarketplaceMetadata & {
    */
   content: PostMetadataDetails;
   /**
-   * A cryptographic signature of the `content` data.
+   * The author's SIP-018 signature of the metadata, see
+   * `postSignatureMessage`.
    */
   signature?: string;
-};
+}
 
-export const PostMetadataSchema = MarketplaceMetadataSchema.extend({
+export const PostMetadataSchema = z.object({
   $schema: z.literal(PostMetadataSchemaId.LATEST),
   content: PostMetadataDetailsSchema,
   signature: SignatureSchema.optional(),

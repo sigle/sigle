@@ -1,9 +1,10 @@
-import { PostMetadataSchemaId } from "@sigle/sdk";
+import { PostMetadataSchemaId, postSignatureMessage } from "@sigle/sdk";
 import { hashMessage } from "@stacks/encryption";
 import {
   getAddressFromPrivateKey,
   makeRandomPrivKey,
   signMessageHashRsv,
+  signStructuredData,
 } from "@stacks/transactions";
 import { makeSignature } from "better-auth/crypto";
 import { Duration, Effect, Redacted, Schedule } from "effect";
@@ -292,6 +293,7 @@ export const createSignedTestPostMetadata = (options: {
   readonly title?: string;
   readonly content?: string;
   readonly tags?: Array<string>;
+  readonly publishedAt?: Date;
 }) => {
   const metadataWithoutSignature = {
     $schema: PostMetadataSchemaId.LATEST,
@@ -299,14 +301,18 @@ export const createSignedTestPostMetadata = (options: {
       id: options.draftId,
       title: options.title ?? "Published Title",
       content: options.content ?? "Hello **Arweave** world!",
+      excerpt: "Hello Arweave world!",
+      publishedAt: (options.publishedAt ?? new Date()).toISOString(),
       tags: options.tags ?? ["web3", "effect"],
     },
   };
 
-  const signature = signTestSiwsMessage(
-    JSON.stringify(metadataWithoutSignature),
-    options.privateKey,
-  );
+  // Signed the way a wallet answers `stx_signStructuredMessage`, for the
+  // testnet the test server runs on.
+  const signature = signStructuredData({
+    ...postSignatureMessage(metadataWithoutSignature, "testnet"),
+    privateKey: options.privateKey,
+  });
 
   return {
     ...metadataWithoutSignature,

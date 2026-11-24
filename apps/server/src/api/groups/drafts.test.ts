@@ -949,12 +949,26 @@ describe("drafts", () => {
             duplicateSigRes,
           );
 
+        // 6. Signed publish date an hour ago -> 400 Bad Request, the date
+        // shown on the post can't be backdated.
+        yield* TestClock.adjust("1 minute");
+
+        const backdatedRes = yield* publishDraftRequest(client, "draft-val", {
+          metadata: createSignedTestPostMetadata({
+            draftId: "draft-val",
+            privateKey: ownerWallet.privateKey,
+            publishedAt: new Date(Date.now() - 60 * 60 * 1000),
+          }),
+        });
+
         expect({
-          status: duplicateSigRes.status,
-          message: duplicateSigBody.message,
+          duplicateStatus: duplicateSigRes.status,
+          duplicateMessage: duplicateSigBody.message,
+          backdatedStatus: backdatedRes.status,
         }).toStrictEqual({
-          status: 409,
-          message: "Metadata signature has already been published",
+          duplicateStatus: 409,
+          duplicateMessage: "Metadata signature has already been published",
+          backdatedStatus: 400,
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
@@ -1018,7 +1032,7 @@ describe("drafts", () => {
 
         // Publishing schedules OpenTimestamps stamping and upgrading.
         const postOtsRow = yield* waitForPostOtsStatus(
-          ARWEAVE_TEST_UPLOAD_ID,
+          "draft-pub-1",
           "UPGRADED",
         );
 
@@ -1044,18 +1058,19 @@ describe("drafts", () => {
             draftId: "draft-pub-1",
             status: "pending",
           },
+          // The post keeps its draft id.
           currentStatus: {
             status: "COMPLETED",
-            postId: ARWEAVE_TEST_UPLOAD_ID,
+            postId: "draft-pub-1",
             arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
           },
           completedJson: {
             status: "completed",
-            postId: ARWEAVE_TEST_UPLOAD_ID,
+            postId: "draft-pub-1",
             arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
           },
           deletedDraft: undefined,
-          createdPostId: ARWEAVE_TEST_UPLOAD_ID,
+          createdPostId: "draft-pub-1",
           createdPostArweaveId: ARWEAVE_TEST_UPLOAD_ID,
           otsStatus: "UPGRADED",
           otsTxId: "arweave-test-upload-id",
@@ -1066,7 +1081,7 @@ describe("drafts", () => {
           event: "draft published",
           properties: {
             draftId: "draft-pub-1",
-            postId: ARWEAVE_TEST_UPLOAD_ID,
+            postId: "draft-pub-1",
             arweaveId: ARWEAVE_TEST_UPLOAD_ID,
           },
         });
@@ -1154,7 +1169,7 @@ describe("drafts", () => {
 
           expect(finalStatus).toStrictEqual({
             status: "COMPLETED",
-            postId: "recovered-arweave-tx",
+            postId: "draft-flaky",
             arweaveTxId: "recovered-arweave-tx",
           });
         }).pipe(Effect.provide(layer));

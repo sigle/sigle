@@ -3,58 +3,12 @@ import {
   createPostMetadata,
   type MediaImageMetadata,
   MediaImageMimeType,
-  type MetadataAttribute,
-  MetadataAttributeType,
   type PostMetadata,
   PostMetadataSchemaId,
 } from "@sigle/sdk";
 import { fileTypeFromBuffer } from "file-type";
-import { env } from "@/env";
 import { resolveImageUrl } from "@/lib/images";
 import type { EditorPostFormData } from "./EditorFormProvider";
-
-const generateMetadataAttributesFromForm = ({
-  editorText,
-  post,
-}: {
-  editorText: string;
-  post: EditorPostFormData;
-}): MetadataAttribute[] => {
-  const attributes: MetadataAttribute[] = [
-    // Generate an excerpt from the content that can be used as the description in the post cards
-    {
-      type: MetadataAttributeType.STRING,
-      value: editorText.slice(0, 350),
-      key: "excerpt",
-    },
-  ];
-
-  if (post.metaTitle) {
-    attributes.push({
-      type: MetadataAttributeType.STRING,
-      value: post.metaTitle,
-      key: "meta-title",
-    });
-  }
-
-  if (post.metaDescription) {
-    attributes.push({
-      type: MetadataAttributeType.STRING,
-      value: post.metaDescription,
-      key: "meta-description",
-    });
-  }
-
-  if (post.canonicalUri) {
-    attributes.push({
-      type: MetadataAttributeType.STRING,
-      value: post.canonicalUri,
-      key: "canonical-uri",
-    });
-  }
-
-  return attributes;
-};
 
 const getImageMediaMetadata = async (
   url: string,
@@ -66,6 +20,9 @@ const getImageMediaMetadata = async (
   let type: MediaImageMimeType | null = null;
 
   switch (contentType?.mime) {
+    case "image/gif":
+      type = MediaImageMimeType.GIF;
+      break;
     case "image/jpeg":
       type = MediaImageMimeType.JPEG;
       break;
@@ -80,11 +37,16 @@ const getImageMediaMetadata = async (
     throw new Error(`Image type "${contentType?.mime}" is not supported`);
   }
 
-  return {
-    url,
-    type,
-  };
+  // The size lets readers lay the cover out before it loads.
+  const bitmap = await createImageBitmap(new Blob([arrayBuffer], { type }));
+  const { width, height } = bitmap;
+  bitmap.close();
+
+  return { url, type, width, height };
 };
+
+/** Characters of the post text kept as its excerpt. */
+const EXCERPT_LENGTH = 350;
 
 export const generateSigleMetadataFromForm = async ({
   editor,
@@ -95,38 +57,23 @@ export const generateSigleMetadataFromForm = async ({
   postId: string;
   post: EditorPostFormData;
 }): Promise<PostMetadata> => {
-  const editorText = editor?.getText() || "";
-
-  const metadataAttributes = generateMetadataAttributesFromForm({
-    editorText,
-    post,
-  });
-
   const coverImage = post.coverImage
     ? await getImageMediaMetadata(post.coverImage)
     : undefined;
 
-  let description =
-    metadataAttributes.find((attribute) => attribute.key === "excerpt")
-      ?.value || "";
-
-  description = `${description}...\n\nWritten on www.sigle.io`;
-
-  const metadata = createPostMetadata({
+  return createPostMetadata({
     $schema: PostMetadataSchemaId.LATEST,
-    name: post.title,
-    description,
-    external_url: `${env.NEXT_PUBLIC_APP_URL}/p/${postId}`,
     content: {
       id: postId,
       title: post.title,
       content: post.content,
-      attributes:
-        metadataAttributes.length > 0 ? metadataAttributes : undefined,
+      excerpt: (editor?.getText() ?? "").slice(0, EXCERPT_LENGTH).trim(),
+      publishedAt: new Date().toISOString(),
       coverImage,
-      tags: (post.tags?.length || 0) > 0 ? post.tags : undefined,
+      tags: (post.tags?.length ?? 0) > 0 ? post.tags : undefined,
+      metaTitle: post.metaTitle || undefined,
+      metaDescription: post.metaDescription || undefined,
+      canonicalUri: post.canonicalUri || undefined,
     },
   });
-
-  return metadata;
 };

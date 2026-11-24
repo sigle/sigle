@@ -4,11 +4,18 @@ import {
   privateKeyToPublic,
   publicKeyToAddress,
   signMessageHashRsv,
+  signStructuredData,
 } from "@stacks/transactions";
 import { matchError, type Result } from "better-result";
 import { describe, expect, it } from "vite-plus/test";
 import { PostMetadataSchemaId } from "./config.js";
 import { InvalidSignatureError } from "./errors.js";
+import {
+  canonicalPostMetadataJson,
+  hashPostMetadata,
+  type PostSignatureNetwork,
+  postSignatureMessage,
+} from "./post-signature.js";
 import { type PostMetadata } from "./post.js";
 import {
   type VerifyMetadataSignatureResult,
@@ -25,170 +32,163 @@ const EXPECTED_MAINNET_ADDRESS = publicKeyToAddress(TEST_PUBLIC_KEY, "mainnet");
 
 const EXPECTED_TESTNET_ADDRESS = publicKeyToAddress(TEST_PUBLIC_KEY, "testnet");
 
+const METADATA: Omit<PostMetadata, "signature"> = {
+  $schema: PostMetadataSchemaId.LATEST,
+  content: {
+    id: "post-test-123",
+    title: "Hello World",
+    content: "# Content here",
+    excerpt: "Content here",
+    publishedAt: "2026-11-24T10:00:00.000Z",
+  },
+};
+
 function unwrapErr<T, E>(result: Result<T, E>): E {
   if (result.isErr()) return result.error;
 
   throw new Error("Expected an error result");
 }
 
-function createSignedPostMetadata(
-  contentOverrides?: Partial<PostMetadata["content"]>,
+// Signs the way a wallet answers `stx_signStructuredMessage`.
+function sign(
+  metadata: Omit<PostMetadata, "signature">,
+  network: PostSignatureNetwork = "mainnet",
 ): PostMetadata {
-  const metadataWithoutSignature = {
-    $schema: PostMetadataSchemaId.LATEST,
-    content: {
-      id: "post-test-123",
-      title: "Hello World",
-      content: "# Content here",
-      ...contentOverrides,
-    },
-  };
-
-  const message = JSON.stringify(metadataWithoutSignature);
-  const messageHash = bytesToHex(hashMessage(message));
-
-  const signature = signMessageHashRsv({
-    messageHash,
-    privateKey: TEST_PRIVATE_KEY,
-  });
-
   return {
-    ...metadataWithoutSignature,
-    signature,
+    ...metadata,
+    signature: signStructuredData({
+      ...postSignatureMessage(metadata, network),
+      privateKey: TEST_PRIVATE_KEY,
+    }),
   };
 }
 
+describe(canonicalPostMetadataJson, () => {
+  it("sorts keys at every level, drops undefined and keeps array order", () => {
+    expect(
+      canonicalPostMetadataJson({
+        signature: "sig",
+        content: {
+          title: 'Quote "é"\nline',
+          id: "post",
+          tags: ["b", "a"],
+          metaTitle: undefined,
+          content: "# Hi",
+          excerpt: "",
+          publishedAt: "2026-11-24T10:00:00.000Z",
+        },
+        $schema: PostMetadataSchemaId.LATEST,
+      }),
+    ).toBe(
+      `{"$schema":"${PostMetadataSchemaId.LATEST}","content":{"content":"# Hi","excerpt":"","id":"post","publishedAt":"2026-11-24T10:00:00.000Z","tags":["b","a"],"title":"Quote \\"é\\"\\nline"},"signature":"sig"}`,
+    );
+  });
+});
+
 describe(verifyMetadataSignature, () => {
-  it("should verify valid signature and return recovered address on mainnet by default", () => {
-    const signedMetadata = createSignedPostMetadata();
+  it("recovers the author of a SIP-018 signature on mainnet by default", () => {
+    const signed = sign(METADATA);
 
-    const result = verifyMetadataSignature(signedMetadata);
-
-    expect(result.isOk()).toBe(true);
-
-    const value = result.unwrap();
-
-    expect(value).toStrictEqual<VerifyMetadataSignatureResult>({
+    expect(
+      verifyMetadataSignature(signed).unwrap(),
+    ).toStrictEqual<VerifyMetadataSignatureResult>({
       recoveredAddress: EXPECTED_MAINNET_ADDRESS,
       publicKey: TEST_PUBLIC_KEY,
-      signature: signedMetadata.signature!,
+      signature: signed.signature!,
     });
   });
 
-  it("should recover testnet address when testnet network option is passed", () => {
-    const signedMetadata = createSignedPostMetadata();
+  it("ties the signature to the chain it was made for", () => {
+    const signed = sign(METADATA, "testnet");
 
-    const result = verifyMetadataSignature(signedMetadata, {
-      network: "testnet",
+    expect({
+      testnet: verifyMetadataSignature(signed, { network: "testnet" }).unwrap()
+        .recoveredAddress,
+      mainnet: verifyMetadataSignature(signed, { network: "mainnet" }).unwrap()
+        .recoveredAddress,
+    }).toStrictEqual({
+      testnet: EXPECTED_TESTNET_ADDRESS,
+      mainnet: expect.not.stringMatching(EXPECTED_MAINNET_ADDRESS),
     });
-
-    expect(result.isOk()).toBe(true);
-
-    const value = result.unwrap();
-
-    expect(value.recoveredAddress).toBe(EXPECTED_TESTNET_ADDRESS);
   });
 
-  it("should recover testnet address when devnet network option is passed", () => {
-    const signedMetadata = createSignedPostMetadata();
+  it("verifies the same metadata with its keys in another order", () => {
+    const signed = sign(METADATA);
 
-    const result = verifyMetadataSignature(signedMetadata, {
-      network: "devnet",
-    });
-
-    expect(result.isOk()).toBe(true);
-
-    const value = result.unwrap();
-
-    expect(value.recoveredAddress).toBe(EXPECTED_TESTNET_ADDRESS);
-  });
-
-  it("should recover testnet address when mocknet network option is passed", () => {
-    const signedMetadata = createSignedPostMetadata();
-
-    const result = verifyMetadataSignature(signedMetadata, {
-      network: "mocknet",
-    });
-
-    expect(result.isOk()).toBe(true);
-
-    const value = result.unwrap();
-
-    expect(value.recoveredAddress).toBe(EXPECTED_TESTNET_ADDRESS);
-  });
-
-  it("should return InvalidSignatureError when signature is missing", () => {
-    const unsignedMetadata = {
-      $schema: PostMetadataSchemaId.LATEST,
+    const reordered = {
+      signature: signed.signature,
       content: {
-        id: "post-test-123",
-        title: "Hello World",
-        content: "# Content here",
+        publishedAt: METADATA.content.publishedAt,
+        excerpt: METADATA.content.excerpt,
+        content: METADATA.content.content,
+        title: METADATA.content.title,
+        id: METADATA.content.id,
       },
+      $schema: METADATA.$schema,
     };
 
-    const result = verifyMetadataSignature(unsignedMetadata);
-
-    expect(result.isOk()).toBe(false);
-
-    const err = unwrapErr(result);
-    expect(err).toBeInstanceOf(InvalidSignatureError);
-    expect(InvalidSignatureError.is(err)).toBe(true);
-    expect(err._tag).toBe("InvalidSignatureError");
-    expect(err.message).toBe("Invalid signature: Signature is required");
+    expect({
+      hash: hashPostMetadata(reordered),
+      address: verifyMetadataSignature(reordered).unwrap().recoveredAddress,
+    }).toStrictEqual({
+      hash: hashPostMetadata(METADATA),
+      address: EXPECTED_MAINNET_ADDRESS,
+    });
   });
 
-  it("should recover a different address when content is tampered", () => {
-    const signedMetadata = createSignedPostMetadata();
+  it("recovers a different address when the content is tampered", () => {
+    const signed = sign(METADATA);
 
-    const tamperedMetadata: PostMetadata = {
-      ...signedMetadata,
-      content: {
-        ...signedMetadata.content,
-        title: "Tampered Title",
-      },
+    const tampered = {
+      ...signed,
+      content: { ...signed.content, content: "# Tampered" },
     };
 
-    const result = verifyMetadataSignature(tamperedMetadata);
-
-    expect(result.isOk()).toBe(true);
-
-    const value = result.unwrap();
-
-    expect(value.recoveredAddress).not.toBe(EXPECTED_MAINNET_ADDRESS);
+    expect(
+      verifyMetadataSignature(tampered).unwrap().recoveredAddress,
+    ).not.toBe(EXPECTED_MAINNET_ADDRESS);
   });
 
-  it("should return InvalidSignatureError when signature is malformed and preserve cause", () => {
-    const malformedMetadata = {
-      $schema: PostMetadataSchemaId.LATEST,
-      content: {
-        id: "post-test-123",
-        title: "Hello World",
-        content: "# Content here",
-      },
-      signature: "not-a-valid-hex-signature",
-    };
+  it("rejects a plain message signature of the same JSON", () => {
+    const signature = signMessageHashRsv({
+      messageHash: bytesToHex(hashMessage(JSON.stringify(METADATA))),
+      privateKey: TEST_PRIVATE_KEY,
+    });
 
-    const result = verifyMetadataSignature(malformedMetadata);
+    // Recovery succeeds, but with another key than the author's.
+    expect(
+      verifyMetadataSignature({ ...METADATA, signature }).unwrap()
+        .recoveredAddress,
+    ).not.toBe(EXPECTED_MAINNET_ADDRESS);
+  });
 
-    expect(result.isOk()).toBe(false);
+  it("returns InvalidSignatureError when the signature is missing", () => {
+    const err = unwrapErr(verifyMetadataSignature(METADATA));
 
-    const err = unwrapErr(result);
-    expect(err).toBeInstanceOf(InvalidSignatureError);
-    expect(err.error).toContain(
-      "Invalid signature: Failed to recover signature:",
+    expect({
+      isError: InvalidSignatureError.is(err),
+      message: err.message,
+    }).toStrictEqual({
+      isError: true,
+      message: "Invalid signature: Signature is required",
+    });
+  });
+
+  it("returns InvalidSignatureError with its cause for a malformed signature", () => {
+    const err = unwrapErr(
+      verifyMetadataSignature({ ...METADATA, signature: "not-a-signature" }),
     );
-    expect(err.cause).toBeDefined();
+
+    expect({
+      error: err.error.startsWith(
+        "Invalid signature: Failed to recover signature:",
+      ),
+      hasCause: err.cause !== undefined,
+    }).toStrictEqual({ error: true, hasCause: true });
   });
 
-  it("should support exhaustive pattern matching with better-result matchError", () => {
-    const unsignedMetadata = {
-      content: { id: "test" },
-    };
-
-    const result = verifyMetadataSignature(unsignedMetadata);
-
-    const err = unwrapErr(result);
+  it("supports exhaustive pattern matching with better-result matchError", () => {
+    const err = unwrapErr(verifyMetadataSignature(METADATA));
 
     const formatted = matchError(err, {
       InvalidSignatureError: (e) => `Handled: ${e.message}`,

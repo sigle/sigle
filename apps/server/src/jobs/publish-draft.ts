@@ -209,16 +209,12 @@ export const processPublishDraftJob = (
       arweaveTxId = uploaded.id;
     }
 
-    const attributes = postData.content.attributes ?? [];
-
-    const findAttribute = (key: string): string | undefined =>
-      attributes.find((attribute) => attribute.key === key)?.value;
-
-    const metaTitle = findAttribute("meta-title") ?? null;
-    const metaDescription = findAttribute("meta-description") ?? null;
-    const excerpt = findAttribute("excerpt") ?? "";
-    const canonicalUri = findAttribute("canonical-uri") ?? null;
-    const coverImage = postData.content.coverImage?.url ?? null;
+    const { content } = postData;
+    const coverImage = content.coverImage?.url ?? null;
+    // The post keeps the id of its draft, which the publish handler checked is
+    // the `content.id` of its metadata, so its URL doesn't change when a new
+    // revision is published.
+    const postId = job.draftId;
 
     const versionSplit = postData.$schema.split("/");
     const version = (versionSplit.at(-1) ?? "1.0.0").replace(".json", "");
@@ -243,19 +239,19 @@ export const processPublishDraftJob = (
           }
 
           yield* tx.insert(post).values({
-            id: arweaveTxId,
+            id: postId,
             draftId: job.draftId,
             version,
             arweaveTxId,
             metadataUri: `ar://${arweaveTxId}`,
-            title: postData.content.title,
-            content: postData.content.content,
-            excerpt,
-            metaTitle,
-            metaDescription,
+            title: content.title,
+            content: content.content,
+            excerpt: content.excerpt,
+            metaTitle: content.metaTitle ?? null,
+            metaDescription: content.metaDescription ?? null,
             coverImage,
-            tags: postData.content.tags ?? [],
-            canonicalUri,
+            tags: content.tags ?? [],
+            canonicalUri: content.canonicalUri ?? null,
             signature: job.signature,
             userId: job.userId,
           });
@@ -264,7 +260,7 @@ export const processPublishDraftJob = (
           // anchors, so the hash is captured in the same transaction as the
           // post itself.
           yield* tx.insert(postOts).values({
-            postId: arweaveTxId,
+            postId,
             status: "PENDING",
             contentHash: sha256Hex(Buffer.from(job.metadataJson)),
           });
@@ -277,7 +273,7 @@ export const processPublishDraftJob = (
               .insert(mediaImage)
               .values({
                 id: coverImage,
-                mimeType: postData.content.coverImage?.type ?? null,
+                mimeType: content.coverImage?.type ?? null,
               })
               .onConflictDoNothing();
           }
@@ -296,12 +292,12 @@ export const processPublishDraftJob = (
       event: "draft published",
       properties: {
         draftId: job.draftId,
-        postId: arweaveTxId,
+        postId,
         arweaveId: arweaveTxId,
       },
     });
 
-    return { coverImage, postId: arweaveTxId };
+    return { coverImage, postId };
   });
 
 export const markDraftPublishFailed = (

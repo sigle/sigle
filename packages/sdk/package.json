@@ -13,6 +13,7 @@
   },
   "scripts": {
     "build": "vp pack",
+    "schemas": "vpx scripts/schemas.ts",
     "codegen": "openapi-typescript http://localhost:3001/_openapi.json --output ./src/__generated__/sigle-api-openapi.ts",
     "test": "vp test"
   },
