@@ -1,6 +1,6 @@
 "use client";
 
-import * as Sentry from "@sentry/nextjs";
+import posthog from "posthog-js";
 import { useEffect } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { StatusPage } from "./StatusPage";
@@ -13,7 +13,7 @@ interface ErrorPageProps {
 /** The page of the `error.tsx` and `global-error.tsx` boundaries. */
 export const ErrorPage = ({ error, retry }: ErrorPageProps) => {
   useEffect(() => {
-    Sentry.captureException(error);
+    posthog.captureException(error);
   }, [error]);
 
   // Errors from Server Components carry an identifier of the server logs.

@@ -37,8 +37,7 @@ import { StorageService } from "@/services/storage";
 import { TelemetryLayer } from "@/services/telemetry";
 
 export const CoreServicesLayer = Layer.mergeAll(
-  TelemetryLayer,
-  PostHogService.layer,
+  TelemetryLayer.pipe(Layer.provideMerge(PostHogService.layer)),
   ArweaveService.layer,
   OpenTimestampsService.layer,
   ImageProcessingService.layer,

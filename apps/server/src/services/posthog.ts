@@ -1,4 +1,11 @@
-import { Context, Effect, Layer, Option, Redacted } from "effect";
+import {
+  Context,
+  Effect,
+  type ErrorReporter,
+  Layer,
+  Option,
+  Redacted,
+} from "effect";
 import { PostHog } from "posthog-node";
 import { AppConfig } from "@/config";
 
@@ -18,8 +25,23 @@ export interface PostHogEvent {
   readonly properties?: PostHogProperties | undefined;
 }
 
+/** Properties of a reported error: its `ErrorReporter` attributes. */
+export type ExceptionProperties = ReturnType<
+  typeof ErrorReporter.getAttributes
+>;
+
 export interface PostHogClient {
   readonly capture: (event: PostHogEvent) => Effect.Effect<void>;
+  /** Reports an error to PostHog error tracking, not tied to a user. */
+  readonly captureException: (
+    error: Error,
+    properties: ExceptionProperties,
+  ) => Effect.Effect<void>;
+}
+
+export interface CapturedException {
+  readonly error: Error;
+  readonly properties: ExceptionProperties;
 }
 
 export class PostHogService extends Context.Service<
@@ -35,6 +57,7 @@ export class PostHogService extends Context.Service<
         if (Option.isNone(config.POSTHOG_API_KEY)) {
           return {
             capture: () => Effect.void,
+            captureException: () => Effect.void,
           };
         }
 
@@ -68,17 +91,36 @@ export class PostHogService extends Context.Service<
                 Effect.logWarning("Failed to capture PostHog event", defect),
               ),
             ),
+          captureException: (error, properties) =>
+            Effect.sync(() => {
+              client.captureException(error, undefined, {
+                ...properties,
+                environment: config.STACKS_ENV,
+              });
+            }).pipe(
+              Effect.catchDefect((defect) =>
+                Effect.logWarning(
+                  "Failed to capture PostHog exception",
+                  defect,
+                ),
+              ),
+            ),
         };
       }),
     );
 
   static readonly layerTest = (
     recordedEvents: Array<PostHogEvent> = [],
+    recordedExceptions: Array<CapturedException> = [],
   ): Layer.Layer<PostHogService> =>
     Layer.succeed(PostHogService, {
       capture: (event) =>
         Effect.sync(() => {
           recordedEvents.push(event);
+        }),
+      captureException: (error, properties) =>
+        Effect.sync(() => {
+          recordedExceptions.push({ error, properties });
         }),
     });
 }

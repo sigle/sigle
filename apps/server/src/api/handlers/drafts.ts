@@ -394,7 +394,7 @@ const failOverDailyLimit = (
   });
 
 /**
- * Reported to Sentry when the global publish limit of a plan rejects a
+ * Reported to PostHog when the global publish limit of a plan rejects a
  * publish, so we know users are being turned away.
  */
 class GlobalPublishLimitReached extends Data.TaggedError(
@@ -411,7 +411,7 @@ class GlobalPublishLimitReached extends Data.TaggedError(
 /**
  * Reports once per plan and hour per server process: while a limit is
  * reached every publish of the plan is rejected, and reporting each would
- * spend the Sentry quota.
+ * spend the error tracking quota.
  */
 const GLOBAL_PUBLISH_LIMIT_REPORT_INTERVAL_MILLIS = 60 * 60 * 1000;
 

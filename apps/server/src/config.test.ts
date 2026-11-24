@@ -34,7 +34,6 @@ describe("config service", () => {
         arweaveKey: Redacted.value(config.ARWEAVE_PRIVATE_KEY),
         redactedR2Key: String(config.R2_SECRET_ACCESS_KEY),
         r2Key: Redacted.value(config.R2_SECRET_ACCESS_KEY),
-        sentry: Option.isNone(config.SENTRY_DSN),
         posthogHost: Option.isNone(config.POSTHOG_API_HOST),
       }).toStrictEqual({
         redactedKey: "<redacted>",
@@ -43,7 +42,6 @@ describe("config service", () => {
         arweaveKey: "arweave-secret-key",
         redactedR2Key: "<redacted>",
         r2Key: "r2-secret-key",
-        sentry: true,
         posthogHost: true,
       });
     }).pipe(

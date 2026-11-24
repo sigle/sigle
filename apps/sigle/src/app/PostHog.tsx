@@ -10,22 +10,7 @@ export function PostHogInit(): null {
   const { data: session } = useSession();
   const posthog = usePostHog();
 
-  useEffect(() => {
-    if (env.NEXT_PUBLIC_POSTHOG_KEY) {
-      posthog.init(env.NEXT_PUBLIC_POSTHOG_KEY, {
-        api_host: env.NEXT_PUBLIC_POSTHOG_HOST,
-        autocapture: false,
-        persistence: "localStorage",
-        enable_heatmaps: false,
-        ip: false,
-        // Disable automatic pageview capture, as we capture manually
-        capture_pageview: false,
-        // Enable debug mode in development
-        debug: process.env.NODE_ENV === "development",
-      });
-    }
-  }, [posthog]);
-
+  // PostHog itself is initialized in src/instrumentation-client.ts
   useEffect(() => {
     if (env.NEXT_PUBLIC_POSTHOG_KEY && session) {
       posthog.identify(session.user.id);
