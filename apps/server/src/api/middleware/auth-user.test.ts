@@ -86,13 +86,16 @@ describe("userAuthMiddleware", () => {
         address: eligibleAddress,
       });
 
-      const plans = yield* Effect.forEach([pro, eligible], ({ client }) =>
-        client.get("/api/me").pipe(
-          Effect.flatMap(
-            HttpClientResponse.schemaBodyJson(CurrentUserResponse),
+      const plans = yield* Effect.forEach(
+        [pro, eligible],
+        ({ client }) =>
+          client.get("/api/me").pipe(
+            Effect.flatMap(
+              HttpClientResponse.schemaBodyJson(CurrentUserResponse),
+            ),
+            Effect.map((body) => body.plan),
           ),
-          Effect.map((body) => body.plan),
-        ),
+        { concurrency: 1 },
       );
 
       expect(plans).toStrictEqual(["pro", "free"]);

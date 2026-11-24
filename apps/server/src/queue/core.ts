@@ -439,10 +439,13 @@ export const defineJob = <
             Effect.suspend(() => options.process(payload, meta)).pipe(
               Effect.timed,
               Effect.tap(([duration]) =>
-                Effect.all([
-                  Metric.update(durationMetric, duration),
-                  Metric.update(completedMetric, 1),
-                ]),
+                Effect.all(
+                  [
+                    Metric.update(durationMetric, duration),
+                    Metric.update(completedMetric, 1),
+                  ],
+                  { concurrency: 1 },
+                ),
               ),
               Effect.asVoid,
               Effect.catchCause((cause) => handleFailure(cause, payload, meta)),

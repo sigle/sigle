@@ -475,12 +475,10 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           ],
         });
       }).pipe(
-        Effect.provide(
-          Layer.mergeAll(
-            TestDatabaseLayer,
-            PostHogService.layerTest(posthogEvents),
-          ),
-        ),
+        Effect.provide([
+          TestDatabaseLayer,
+          PostHogService.layerTest(posthogEvents),
+        ]),
       );
     },
   );
