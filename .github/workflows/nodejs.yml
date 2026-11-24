@@ -30,7 +30,7 @@ jobs:
           pnpm build
 
       - name: Check formatting, linting and type checks.
-        run: pnpm vp check
+        run: pnpm vp check --deny-warnings
 
       - name: Test
         run: pnpm test
