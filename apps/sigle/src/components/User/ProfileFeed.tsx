@@ -32,7 +32,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
   // server renders the first page, so this calls the fetch client itself.
   const query = { author: user.address, limit: PAGE_SIZE };
 
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage } =
+  const { data, hasNextPage, fetchNextPage, isFetching } =
     useSuspenseInfiniteQuery({
       queryKey: ["get", "/api/posts", { params: { query } }],
       queryFn: async ({ pageParam, signal }) => {
@@ -94,7 +94,8 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
         <LoadMore
           shown={posts.length}
           total={data.pages.at(-1)?.total ?? posts.length}
-          loading={isFetchingNextPage}
+          // A next page started during a refetch would cancel it.
+          loading={isFetching}
           onLoadMore={() => fetchNextPage()}
         />
       ) : null}

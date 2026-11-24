@@ -30,7 +30,7 @@ export default function DashboardDrafts() {
     refetch: refetchDrafts,
     hasNextPage,
     fetchNextPage,
-    isFetchingNextPage,
+    isFetching,
   } = sigleApiClient.useInfiniteQuery(
     "get",
     "/api/drafts",
@@ -111,7 +111,9 @@ export default function DashboardDrafts() {
             <LoadMore
               shown={drafts.length}
               total={total ?? drafts.length}
-              loading={isFetchingNextPage}
+              // A refetch after a delete must finish first: a next page started meanwhile
+              // cancels it and requests an offset that skips a draft.
+              loading={isFetching}
               onLoadMore={() => fetchNextPage()}
             />
           ) : null}
