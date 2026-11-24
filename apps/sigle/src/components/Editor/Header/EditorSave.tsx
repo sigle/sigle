@@ -54,6 +54,7 @@ export const EditorSave = () => {
             coverImage: values.coverImage || null,
             tags: values.tags ?? [],
             canonicalUri: values.canonicalUri || null,
+            contentWarning: values.contentWarning ?? null,
           },
         },
         {

@@ -1,5 +1,6 @@
 import type { OpenApi } from "effect/http-api";
 import { ErrorReporter, Schema } from "effect";
+import { contentWarnings } from "@/db/schema";
 import { allowedImageFormats } from "@/lib/images";
 
 /**
@@ -189,6 +190,17 @@ export class InternalServerError extends Schema.Error<
 export const DateTime = Schema.DateTimeUtcFromString.pipe(
   Schema.annotateEncoded({ format: "date-time" }),
 );
+
+/**
+ * Content warning of a draft or post. Like every enum in the API it is
+ * lowercase on the wire and decodes to the uppercase database value, which is
+ * also the `contentWarning` of the signed post metadata.
+ */
+export const ContentWarning = Schema.Literals([
+  "nsfw",
+  "sensitive",
+  "spoiler",
+]).transform(contentWarnings);
 
 /**
  * Response of the draft and profile image uploads.

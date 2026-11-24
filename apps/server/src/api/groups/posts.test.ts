@@ -336,6 +336,7 @@ describe("posts", () => {
           arweaveBlockHeight: 1500,
           coverImage,
           tags: ["web3"],
+          contentWarning: "SENSITIVE",
           createdAt: new Date("2026-01-01T00:00:00.000Z"),
         });
         yield* createTestPostOts({
@@ -366,6 +367,8 @@ describe("posts", () => {
               thumbhash: "cover-thumbhash",
             },
             tags: ["web3"],
+            // Enums are lowercase in the API.
+            contentWarning: "sensitive",
             metadataUri: "ar://post-tx",
             arweaveTxId: "post-tx",
             arweaveBlockHeight: 1500,
@@ -406,6 +409,7 @@ describe("posts", () => {
         expect(body).toMatchObject({
           coverImage: null,
           tags: [],
+          contentWarning: null,
           arweaveBlockHeight: null,
           author: { address: AUTHOR_ADDRESS, profile: null },
           opentimestamps: null,

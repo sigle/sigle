@@ -10,6 +10,7 @@ import {
 } from "@sigle/sdk";
 import { fileTypeFromBuffer } from "file-type";
 import { env } from "@/env";
+import { CONTENT_WARNINGS } from "@/lib/content-warning";
 import { resolveImageUrl } from "@/lib/images";
 import type { EditorPostFormData } from "./EditorFormProvider";
 
@@ -125,6 +126,9 @@ export const generateSigleMetadataFromForm = async ({
         metadataAttributes.length > 0 ? metadataAttributes : undefined,
       coverImage,
       tags: (post.tags?.length || 0) > 0 ? post.tags : undefined,
+      contentWarning: post.contentWarning
+        ? CONTENT_WARNINGS[post.contentWarning].metadata
+        : undefined,
     },
   });
 

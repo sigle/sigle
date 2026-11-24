@@ -7,6 +7,7 @@ import {
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import type { Routes } from "@/lib/routes";
+import { CONTENT_WARNINGS } from "@/lib/content-warning";
 import { sigleApiClient, sigleApiFetchClient } from "@/lib/sigle";
 import { PostClientPage } from "./page-client";
 
@@ -33,7 +34,11 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
 
   const title = post.metaTitle || post.title;
-  const description = post.metaDescription || post.excerpt;
+
+  // Link previews do not show what a post behind a content warning says.
+  const description = post.contentWarning
+    ? `Content warning: ${CONTENT_WARNINGS[post.contentWarning].label}`
+    : post.metaDescription || post.excerpt;
 
   return {
     title: `${title} | Sigle`,

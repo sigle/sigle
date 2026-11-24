@@ -150,6 +150,12 @@ export const walletAddress = sqliteTable(
 // Drafts
 // --
 
+/**
+ * Content warning of a draft or post, the values of `contentWarning` in the
+ * signed post metadata. Null means no warning.
+ */
+export const contentWarnings = ["NSFW", "SENSITIVE", "SPOILER"] as const;
+
 export const draft = sqliteTable(
   "draft",
   {
@@ -170,6 +176,7 @@ export const draft = sqliteTable(
     // the same signature do not upload the same metadata twice.
     uploadClaimedAt: timestamp("upload_claimed_at"),
     tags: textArray("tags"),
+    contentWarning: text("content_warning", { enum: contentWarnings }),
     createdAt: timestamp("created_at").$defaultFn(now).notNull(),
     updatedAt: timestamp("updated_at").$defaultFn(now).notNull(),
     userId: text("user_id")
@@ -260,6 +267,7 @@ export const post = sqliteTable(
     coverImage: text("cover_image"),
     tags: textArray("tags"),
     canonicalUri: text("canonical_uri"),
+    contentWarning: text("content_warning", { enum: contentWarnings }),
     signature: text("signature").unique("post_signature_key"),
     // When the author hid the post from Sigle, null while it is shown. A
     // hidden post stays on Arweave, but Sigle no longer serves it.

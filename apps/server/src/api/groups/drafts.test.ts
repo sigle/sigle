@@ -190,6 +190,7 @@ describe("drafts", () => {
         coverImage: null,
         tags: [],
         canonicalUri: null,
+        contentWarning: null,
       });
       expect(created).toMatchObject({
         id: body.id,
@@ -209,7 +210,8 @@ describe("drafts", () => {
 
   it.effect("POST /api/drafts accepts initial fields", () =>
     Effect.gen(function* () {
-      const { client } = yield* createAuthenticatedClient();
+      const { client, userId } = yield* createAuthenticatedClient();
+      const db = yield* Database;
 
       const response = yield* createDraftRequest(client, {
         title: "Hello",
@@ -219,9 +221,10 @@ describe("drafts", () => {
         coverImage: "https://cdn.test/cover.png",
         tags: ["stacks", "writing"],
         canonicalUri: "https://example.com/post",
+        contentWarning: "spoiler",
       });
 
-      const body = yield* HttpClientResponse.schemaBodyJson(Draft)(response);
+      const body = yield* response.json;
 
       expect(response.status).toBe(201);
       expect(body).toMatchObject({
@@ -232,7 +235,16 @@ describe("drafts", () => {
         coverImage: "https://cdn.test/cover.png",
         tags: ["stacks", "writing"],
         canonicalUri: "https://example.com/post",
+        // Enums are lowercase in the API and uppercase in the database.
+        contentWarning: "spoiler",
       });
+
+      const [created] = yield* db
+        .select({ contentWarning: draft.contentWarning })
+        .from(draft)
+        .where(eq(draft.userId, userId));
+
+      expect(created?.contentWarning).toBe("SPOILER");
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
@@ -531,6 +543,7 @@ describe("drafts", () => {
         metaDescription: "Meta description",
         coverImage: "https://cdn.test/cover.png",
         canonicalUri: "https://example.com/post",
+        contentWarning: "nsfw",
       });
 
       const createdBody =
@@ -541,6 +554,7 @@ describe("drafts", () => {
         metaDescription: null,
         coverImage: null,
         canonicalUri: null,
+        contentWarning: null,
       });
 
       const body = yield* HttpClientResponse.schemaBodyJson(Draft)(response);
@@ -553,6 +567,7 @@ describe("drafts", () => {
         metaDescription: null,
         coverImage: null,
         canonicalUri: null,
+        contentWarning: null,
       });
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
