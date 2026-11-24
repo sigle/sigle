@@ -241,8 +241,10 @@ describe("drafts", () => {
       const { client, userId } = yield* createAuthenticatedClient();
       const other = yield* createAuthenticatedClient();
 
-      yield* Effect.forEach(Array.from({ length: DRAFT_COUNT_LIMIT - 1 }), () =>
-        createTestDraft({ userId }),
+      yield* Effect.forEach(
+        Array.from({ length: DRAFT_COUNT_LIMIT - 1 }),
+        () => createTestDraft({ userId }),
+        { concurrency: 1 },
       );
 
       const last = yield* createDraftRequest(client);
@@ -674,6 +676,7 @@ describe("drafts", () => {
               title: stored?.title,
             };
           }),
+        { concurrency: 1 },
       );
 
       // A failed publish leaves the draft editable again.
@@ -691,13 +694,16 @@ describe("drafts", () => {
 
       const statuses = [null, "PENDING", "PROCESSING", "FAILED"] as const;
 
-      yield* Effect.forEach(statuses, (txStatus, index) =>
-        createTestDraft({
-          id: `draft-${index}`,
-          userId,
-          txStatus,
-          updatedAt: new Date(Date.UTC(2026, 0, 1, 0, 0, index)),
-        }),
+      yield* Effect.forEach(
+        statuses,
+        (txStatus, index) =>
+          createTestDraft({
+            id: `draft-${index}`,
+            userId,
+            txStatus,
+            updatedAt: new Date(Date.UTC(2026, 0, 1, 0, 0, index)),
+          }),
+        { concurrency: 1 },
       );
 
       // Reads the status as sent, the API schema would decode it to the
@@ -710,14 +716,17 @@ describe("drafts", () => {
         Schema.Struct({ results: Schema.Array(WireStatus) }),
       )(yield* client.get("/api/drafts"));
 
-      const single = yield* Effect.forEach(statuses, (_, index) =>
-        Effect.gen(function* () {
-          const response = yield* client.get(`/api/drafts/draft-${index}`);
+      const single = yield* Effect.forEach(
+        statuses,
+        (_, index) =>
+          Effect.gen(function* () {
+            const response = yield* client.get(`/api/drafts/draft-${index}`);
 
-          return (yield* HttpClientResponse.schemaBodyJson(WireStatus)(
-            response,
-          )).publishStatus;
-        }),
+            return (yield* HttpClientResponse.schemaBodyJson(WireStatus)(
+              response,
+            )).publishStatus;
+          }),
+        { concurrency: 1 },
       );
 
       expect({
@@ -792,6 +801,7 @@ describe("drafts", () => {
                 kept: stored !== undefined,
               };
             }),
+          { concurrency: 1 },
         );
 
         // A failed publish leaves the draft deletable again.
@@ -1370,12 +1380,15 @@ describe("drafts", () => {
 
         // Counted: two posts published from a draft in the last 24 hours, and
         // a publish in flight.
-        yield* Effect.forEach([1, 2], (hours) =>
-          createTestPost({
-            userId,
-            draftId: `published-${hours}`,
-            createdAt: hoursAgo(hours),
-          }),
+        yield* Effect.forEach(
+          [1, 2],
+          (hours) =>
+            createTestPost({
+              userId,
+              draftId: `published-${hours}`,
+              createdAt: hoursAgo(hours),
+            }),
+          { concurrency: 1 },
         );
 
         const retrySigned = createSignedTestPostMetadata({
@@ -1485,8 +1498,10 @@ describe("drafts", () => {
         });
 
         // Over the free limit.
-        yield* Effect.forEach([1, 2, 3], (index) =>
-          createTestPost({ userId, draftId: `published-${index}` }),
+        yield* Effect.forEach(
+          [1, 2, 3],
+          (index) => createTestPost({ userId, draftId: `published-${index}` }),
+          { concurrency: 1 },
         );
 
         yield* createTestDraft({ id: "draft-pro", userId });
@@ -1762,6 +1777,7 @@ describe("drafts", () => {
 
               return { status: response.status, message: body.message };
             }),
+          { concurrency: 1 },
         );
 
         expect(responses).toStrictEqual([
@@ -1775,17 +1791,20 @@ describe("drafts", () => {
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
 
-      const responses = yield* Effect.all([
-        createDraftRequest(client),
-        client.get("/api/drafts"),
-        client.get("/api/drafts/draft-1"),
-        updateDraftRequest(client, "draft-1", { title: "Title" }),
-        deleteDraftRequest(client, "draft-1"),
-        publishDraftRequest(client, "draft-1", {
-          metadata: {},
-        }),
-        getPublishStatusRequest(client, "draft-1"),
-      ]);
+      const responses = yield* Effect.all(
+        [
+          createDraftRequest(client),
+          client.get("/api/drafts"),
+          client.get("/api/drafts/draft-1"),
+          updateDraftRequest(client, "draft-1", { title: "Title" }),
+          deleteDraftRequest(client, "draft-1"),
+          publishDraftRequest(client, "draft-1", {
+            metadata: {},
+          }),
+          getPublishStatusRequest(client, "draft-1"),
+        ],
+        { concurrency: 1 },
+      );
 
       expect(responses.map((response) => response.status)).toStrictEqual([
         401, 401, 401, 401, 401, 401, 401,
@@ -2088,10 +2107,13 @@ describe("draft images", () => {
         const otherDraft = yield* createTestDraft({ userId: other.userId });
         const png = yield* makePngBuffer(16, 16);
 
-        const responses = yield* Effect.all([
-          uploadDraftImageRequest(client, otherDraft.id, new Uint8Array(png)),
-          uploadDraftImageRequest(client, "missing", new Uint8Array(png)),
-        ]);
+        const responses = yield* Effect.all(
+          [
+            uploadDraftImageRequest(client, otherDraft.id, new Uint8Array(png)),
+            uploadDraftImageRequest(client, "missing", new Uint8Array(png)),
+          ],
+          { concurrency: 1 },
+        );
 
         expect({
           statuses: responses.map((response) => response.status),
