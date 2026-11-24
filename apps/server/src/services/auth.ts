@@ -29,6 +29,9 @@ export const createAuth = (config: AppConfigValues, db: AuthDatabaseClient) => {
     baseURL: config.APP_URL,
     trustedOrigins: [config.APP_URL],
     advanced: {
+      // Sessions store no client IP: Sigle doesn't keep IP addresses. Our
+      // rate limits on `/api/auth/*` key by IP in memory only.
+      ipAddress: { disableIpTracking: true },
       cookiePrefix: AUTH_COOKIE_PREFIX,
       useSecureCookies,
       crossSubDomainCookies: {
