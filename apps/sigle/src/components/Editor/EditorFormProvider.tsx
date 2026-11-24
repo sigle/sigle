@@ -12,6 +12,7 @@ const editorPostSchema = z.object({
   coverImage: z.string().optional(),
   tags: z.array(z.string()).optional(),
   canonicalUri: z.string().optional(),
+  contentWarning: z.enum(["nsfw", "sensitive", "spoiler"]).optional(),
 });
 
 export type EditorPostFormData = z.infer<typeof editorPostSchema>;
@@ -37,6 +38,7 @@ export const EditorFormProvider = ({
       coverImage: post.coverImage || undefined,
       tags: post.tags || [],
       canonicalUri: post.canonicalUri || undefined,
+      contentWarning: post.contentWarning ?? undefined,
     },
   });
 

@@ -1,4 +1,5 @@
 import { useFormContext } from "react-hook-form";
+import { CONTENT_WARNINGS } from "@/lib/content-warning";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 
@@ -63,6 +64,14 @@ export const PublishReviewGeneral = () => {
           tags.length > 0
             ? undefined
             : { label: "Add", onClick: () => openSettings(true) }
+        }
+      />
+      <ReviewRow
+        label="Content warning"
+        value={
+          data.contentWarning
+            ? CONTENT_WARNINGS[data.contentWarning].label
+            : "None"
         }
       />
     </div>

@@ -73,6 +73,7 @@ export const findPostList = (
         coverThumbhash: mediaImage.thumbhash,
         tags: post.tags,
         canonicalUri: post.canonicalUri,
+        contentWarning: post.contentWarning,
         arweaveTxId: post.arweaveTxId,
         hiddenAt: post.hiddenAt,
         createdAt: post.createdAt,
@@ -103,6 +104,7 @@ export const findPostList = (
         }),
         tags: item.tags ?? [],
         canonicalUri: item.canonicalUri,
+        contentWarning: item.contentWarning,
         arweaveTxId: item.arweaveTxId,
         hiddenAt:
           item.hiddenAt === null
@@ -199,6 +201,7 @@ export const getPost = (postId: string) =>
       }),
       tags: foundPost.tags ?? [],
       canonicalUri: foundPost.canonicalUri,
+      contentWarning: foundPost.contentWarning,
       metadataUri: foundPost.metadataUri,
       arweaveTxId: foundPost.arweaveTxId,
       arweaveBlockHeight: foundPost.arweaveBlockHeight,

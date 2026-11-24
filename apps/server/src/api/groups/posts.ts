@@ -12,6 +12,7 @@ import {
 } from "@/api/middleware/rate-limit";
 import {
   BadRequest,
+  ContentWarning,
   DateTime,
   documentPaginationQuery,
   NonNegativeInt,
@@ -34,6 +35,7 @@ export const PostListItem = Schema.Struct({
   coverImage: Schema.NullOr(MediaImage),
   tags: Schema.Array(Schema.String),
   canonicalUri: Schema.NullOr(Schema.String),
+  contentWarning: Schema.NullOr(ContentWarning),
   arweaveTxId: Schema.String,
   createdAt: DateTime,
   updatedAt: DateTime,
@@ -66,6 +68,7 @@ export const Post = Schema.Struct({
   coverImage: Schema.NullOr(MediaImage),
   tags: Schema.Array(Schema.String),
   canonicalUri: Schema.NullOr(Schema.String),
+  contentWarning: Schema.NullOr(ContentWarning),
   metadataUri: Schema.String,
   arweaveTxId: Schema.String,
   // Null until the Arweave bundle is included in a block.

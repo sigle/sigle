@@ -14,6 +14,7 @@ import {
 import {
   BadRequest,
   Conflict,
+  ContentWarning,
   DateTime,
   documentPaginationQuery,
   Forbidden,
@@ -151,6 +152,7 @@ export const Draft = Schema.Struct({
   coverImage: Schema.NullOr(Schema.String),
   tags: Schema.Array(Schema.String),
   canonicalUri: Schema.NullOr(Schema.String),
+  contentWarning: Schema.NullOr(ContentWarning),
   publishStatus: DraftPublishStatus,
   createdAt: DateTime,
   updatedAt: DateTime,
@@ -164,6 +166,7 @@ export const DraftListItem = Schema.Struct({
   coverImage: Schema.NullOr(Schema.String),
   tags: Schema.Array(Schema.String),
   canonicalUri: Schema.NullOr(Schema.String),
+  contentWarning: Schema.NullOr(ContentWarning),
   publishStatus: DraftPublishStatus,
   createdAt: DateTime,
   updatedAt: DateTime,
@@ -188,6 +191,7 @@ export const CreateDraftPayload = Schema.Struct({
   coverImage: Schema.optionalKey(Schema.NullOr(DraftCoverImage)),
   tags: Schema.optionalKey(DraftTags),
   canonicalUri: Schema.optionalKey(Schema.NullOr(DraftCanonicalUri)),
+  contentWarning: Schema.optionalKey(Schema.NullOr(ContentWarning)),
 }).annotate({ identifier: "CreateDraftPayload" });
 
 export const UpdateDraftPayload = Schema.Struct({
@@ -199,6 +203,7 @@ export const UpdateDraftPayload = Schema.Struct({
   // Tags are never null in a draft, so they are cleared with `[]`.
   tags: Patch(DraftTags),
   canonicalUri: Clearable(DraftCanonicalUri),
+  contentWarning: Clearable(ContentWarning),
 }).annotate({ identifier: "UpdateDraftPayload" });
 
 export const PublishDraftPayload = Schema.Struct({

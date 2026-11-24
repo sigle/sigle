@@ -256,6 +256,7 @@ export const processPublishDraftJob = (
             coverImage,
             tags: postData.content.tags ?? [],
             canonicalUri,
+            contentWarning: postData.content.contentWarning ?? null,
             signature: job.signature,
             userId: job.userId,
           });

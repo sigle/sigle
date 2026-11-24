@@ -41,6 +41,7 @@ const sampleMetadataJson = JSON.stringify({
     title: "Post Title",
     content: "# Hello Sigle",
     tags: ["web3", "effect"],
+    contentWarning: "SENSITIVE",
     coverImage: {
       url: "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
       type: "image/png",
@@ -201,6 +202,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             coverImage: createdPost.coverImage,
             tags: createdPost.tags,
             canonicalUri: createdPost.canonicalUri,
+            contentWarning: createdPost.contentWarning,
             signature: createdPost.signature,
             userId: createdPost.userId,
             otsStatus: createdPostOts.status,
@@ -223,6 +225,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
               "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
             tags: ["web3", "effect"],
             canonicalUri: "https://sigle.io/p/1",
+            contentWarning: "SENSITIVE",
             signature: "sig-001",
             userId: user.id,
             otsStatus: "PENDING",

@@ -1,7 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { IconDots } from "@tabler/icons-react";
+import { IconAlertTriangle, IconDots } from "@tabler/icons-react";
 import { format } from "date-fns";
 import { useState } from "react";
 import { BlurImage } from "@/components/ui/blur-image";
@@ -13,6 +13,8 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "@/lib/auth-hooks";
+import { cn } from "@/lib/cn";
+import { CONTENT_WARNINGS } from "@/lib/content-warning";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
@@ -40,6 +42,11 @@ export const PostListItem = ({ post, onHiddenChange }: PostListItemProps) => {
   const [hideDialogOpen, setHideDialogOpen] = useState(false);
 
   const isCurrentUser = me?.address === post.author.address;
+
+  const warning = post.contentWarning
+    ? CONTENT_WARNINGS[post.contentWarning]
+    : null;
+
   const href = Routes.post({ postId: post.id });
 
   return (
@@ -49,9 +56,17 @@ export const PostListItem = ({ post, onHiddenChange }: PostListItemProps) => {
           <h3 className="line-clamp-2 headline text-xl/tight break-words underline-offset-4 group-hover:underline">
             {post.metaTitle || post.title}
           </h3>
-          <p className="mt-2 line-clamp-2 text-sm text-pretty text-muted-foreground">
-            {post.metaDescription || post.excerpt}
-          </p>
+          {/* A post behind a content warning does not show what it says. */}
+          {warning ? (
+            <p className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
+              <IconAlertTriangle size={14} className="shrink-0" aria-hidden />
+              Content warning: {warning.label}
+            </p>
+          ) : (
+            <p className="mt-2 line-clamp-2 text-sm text-pretty text-muted-foreground">
+              {post.metaDescription || post.excerpt}
+            </p>
+          )}
         </NextLink>
 
         <div className="mt-3 flex items-center gap-1">
@@ -103,7 +118,9 @@ export const PostListItem = ({ post, onHiddenChange }: PostListItemProps) => {
             <BlurImage
               src={resolveImageUrl(post.coverImage.url)}
               alt="Cover card"
-              className="size-full object-cover"
+              className={cn("size-full object-cover", {
+                "scale-110 blur-lg": warning,
+              })}
               thumbhash={post.coverImage.thumbhash}
               width={post.coverImage.width}
               height={post.coverImage.height}

@@ -1,6 +1,7 @@
 import { Feed } from "feed";
 import { NextResponse } from "next/server";
 import { env } from "@/env";
+import { CONTENT_WARNINGS } from "@/lib/content-warning";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiFetchClient } from "@/lib/sigle";
 
@@ -68,15 +69,25 @@ export async function GET(
 
   for (const post of posts.results) {
     const postLink = `${env.NEXT_PUBLIC_APP_URL}/p/${post.id}`;
+
+    const warning = post.contentWarning
+      ? CONTENT_WARNINGS[post.contentWarning]
+      : null;
+
     feed.addItem({
       title: post.title,
       id: postLink,
       link: postLink,
       // The list does not include the full content, the excerpt is the
-      // summary readers see in their feed reader.
-      description: post.excerpt,
+      // summary readers see in their feed reader. Feed readers cannot hide a
+      // post behind a warning, so the warning replaces the excerpt and cover.
+      description: warning ? `Content warning: ${warning.label}` : post.excerpt,
+      category: warning ? [{ name: warning.label }] : undefined,
       date: new Date(post.createdAt),
-      image: post.coverImage ? resolveImageUrl(post.coverImage.url) : undefined,
+      image:
+        post.coverImage && !warning
+          ? resolveImageUrl(post.coverImage.url)
+          : undefined,
     });
   }
 
