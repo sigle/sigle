@@ -6,7 +6,7 @@ import {
   POST_LIST_DEFAULT_LIMIT,
   type PostListQuery,
 } from "@/api/groups/posts";
-import { findProfiles } from "@/api/handlers/users";
+import { findExplorerAddresses, findProfiles } from "@/api/handlers/users";
 import { PUBLIC_CACHE_CONTROL } from "@/api/middleware/etag";
 import { NotFound } from "@/api/schemas";
 import { Database } from "@/db";
@@ -21,11 +21,14 @@ import { findPrimaryWalletAddresses } from "@/services/users";
 const findAuthors = (userIds: ReadonlyArray<string>) =>
   Effect.gen(function* () {
     const addresses = yield* findPrimaryWalletAddresses(userIds);
-    const profiles = yield* findProfiles([...new Set(addresses)]);
+    const uniqueAddresses = [...new Set(addresses)];
+    const profiles = yield* findProfiles(uniqueAddresses);
+    const explorers = yield* findExplorerAddresses(uniqueAddresses);
 
     return addresses.map((address) => ({
       address,
       profile: profiles.get(address)?.profile ?? null,
+      isExplorer: explorers.has(address),
     }));
   });
 

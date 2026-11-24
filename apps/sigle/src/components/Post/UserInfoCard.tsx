@@ -3,6 +3,7 @@ import { IconArrowRight } from "@tabler/icons-react";
 import { Routes } from "@/lib/routes";
 import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../Shared/NextLink";
+import { ExplorerBadge } from "../Shared/Profile/ExplorerBadge";
 import { ProfileMarkdownDescription } from "../Shared/Profile/MarkdownDescription";
 import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";
 
@@ -32,6 +33,9 @@ export const PostUserInfoCard = ({ post }: PostUserInfoCardProps) => {
         >
           {name}
         </NextLink>
+        {author.isExplorer ? (
+          <ExplorerBadge className="ml-1.5 align-[-0.125em]" />
+        ) : null}
         {author.profile?.description ? (
           <ProfileMarkdownDescription
             content={author.profile.description}
