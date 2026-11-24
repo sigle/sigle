@@ -51,36 +51,46 @@ const toDailyUsage = (times: ReadonlyArray<Date>) => ({
 });
 
 /**
- * Publishes of a user counted against their daily limit, and when the oldest
- * of them leaves the window (null when none): the posts they published from a
- * draft in the last 24 hours, and their drafts being published. Posts indexed
- * from Arweave have no draft and do not count, nor do failed publishes.
+ * Publishes counted against a daily limit, and when the oldest of them leaves
+ * the window (null when none): the posts published from a draft in the last 24
+ * hours, and the drafts being published. Posts indexed from Arweave have no
+ * draft and do not count, nor do failed publishes.
  *
- * `excludeDraftId` leaves out the draft being published, whose earlier publish
- * request it replaces. A single statement, so a draft turning into a post
- * meanwhile is counted once.
+ * Counts the publishes of one user (`userId`), or of every user currently on
+ * a plan (`plan`) for the global limits. `excludeDraftId` leaves out the draft
+ * being published, whose earlier publish request it replaces. A single
+ * statement, so a draft turning into a post meanwhile is counted once.
  */
 export const findPublishUsage = (
   db: DatabaseClient,
-  {
-    userId,
-    now,
-    excludeDraftId,
-  }: {
-    readonly userId: string;
+  options: ({ readonly userId: string } | { readonly plan: UserPlan }) & {
     readonly now: Date;
     readonly excludeDraftId?: string;
   },
 ) =>
   Effect.gen(function* () {
+    const { now, excludeDraftId } = options;
     const windowStart = new Date(now.getTime() - DAILY_LIMIT_WINDOW_MILLIS);
+
+    const isCounted = (
+      userIdColumn: typeof post.userId | typeof draft.userId,
+    ) =>
+      "userId" in options
+        ? eq(userIdColumn, options.userId)
+        : inArray(
+            userIdColumn,
+            db
+              .select({ id: user.id })
+              .from(user)
+              .where(eq(user.plan, options.plan)),
+          );
 
     const publishes = yield* db
       .select({ at: post.createdAt })
       .from(post)
       .where(
         and(
-          eq(post.userId, userId),
+          isCounted(post.userId),
           isNotNull(post.draftId),
           gte(post.createdAt, windowStart),
         ),
@@ -91,7 +101,7 @@ export const findPublishUsage = (
           .from(draft)
           .where(
             and(
-              eq(draft.userId, userId),
+              isCounted(draft.userId),
               inArray(draft.txStatus, ["PENDING", "PROCESSING"]),
               // A publish stuck in flight for a day no longer counts.
               gte(draft.updatedAt, windowStart),

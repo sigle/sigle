@@ -12,7 +12,7 @@ import {
   or,
   sql,
 } from "drizzle-orm";
-import { DateTime, Duration, Effect } from "effect";
+import { Cause, Data, DateTime, Duration, Effect, ErrorReporter } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
 import { SigleApi } from "@/api";
 import {
@@ -46,7 +46,11 @@ import {
   draftImageKey,
   draftImageSettings,
 } from "@/lib/draft-images";
-import { findPublishUsage, PUBLISH_LIMITS } from "@/services/plan";
+import {
+  findPublishUsage,
+  PUBLISH_LIMITS,
+  type UserPlan,
+} from "@/services/plan";
 import { PostHogService } from "@/services/posthog";
 
 const toDraft = (row: typeof draft.$inferSelect) => ({
@@ -353,6 +357,82 @@ export const deleteDraft = (draftId: string) =>
     });
   });
 
+/**
+ * Fails with a 429 for a daily limit, with a `Retry-After` of when the oldest
+ * counted publish leaves the window.
+ */
+const failOverDailyLimit = (
+  usage: { readonly resetsAt: Date | null },
+  now: Date,
+  message: string,
+) =>
+  Effect.gen(function* () {
+    const retryAfterMillis = Math.max(
+      0,
+      (usage.resetsAt?.getTime() ?? now.getTime()) - now.getTime(),
+    );
+
+    yield* setRetryAfterHeader(Duration.millis(retryAfterMillis));
+
+    return yield* new TooManyRequests({ message, retryAfterMillis });
+  });
+
+/**
+ * Reported to Sentry when the global publish limit of a plan rejects a
+ * publish, so we know users are being turned away.
+ */
+class GlobalPublishLimitReached extends Data.TaggedError(
+  "GlobalPublishLimitReached",
+)<{
+  readonly plan: UserPlan;
+  readonly limit: number;
+  readonly message: string;
+}> {
+  readonly [ErrorReporter.severity] = "Warn" as const;
+  readonly [ErrorReporter.attributes] = { plan: this.plan, limit: this.limit };
+}
+
+/**
+ * Reports once per plan and hour per server process: while a limit is
+ * reached every publish of the plan is rejected, and reporting each would
+ * spend the Sentry quota.
+ */
+const GLOBAL_PUBLISH_LIMIT_REPORT_INTERVAL_MILLIS = 60 * 60 * 1000;
+
+const globalPublishLimitReportedAt = new Map<UserPlan, number>();
+
+const reportGlobalPublishLimitReached = ({
+  plan,
+  limit,
+  now,
+}: {
+  readonly plan: UserPlan;
+  readonly limit: number;
+  readonly now: Date;
+}) =>
+  Effect.suspend(() => {
+    const reportedAt = globalPublishLimitReportedAt.get(plan);
+
+    if (
+      reportedAt !== undefined &&
+      now.getTime() - reportedAt < GLOBAL_PUBLISH_LIMIT_REPORT_INTERVAL_MILLIS
+    ) {
+      return Effect.void;
+    }
+
+    globalPublishLimitReportedAt.set(plan, now.getTime());
+
+    return ErrorReporter.report(
+      Cause.fail(
+        new GlobalPublishLimitReached({
+          plan,
+          limit,
+          message: `The ${plan} plan reached its global limit of ${limit} publishes per 24 hours, publishes are rejected`,
+        }),
+      ),
+    );
+  });
+
 export const publishDraft = (
   draftId: string,
   payload: typeof PublishDraftPayload.Type,
@@ -424,20 +504,36 @@ export const publishDraft = (
     });
 
     if (usage.used >= limit) {
-      const retryAfterMillis = Math.max(
-        0,
-        (usage.resetsAt?.getTime() ?? now.getTime()) - now.getTime(),
+      return yield* failOverDailyLimit(
+        usage,
+        now,
+        plan === "free"
+          ? `You can publish ${limit} posts per day on the Free plan. Try again later, or upgrade to Pro to publish up to ${PUBLISH_LIMITS.pro} posts per day.`
+          : `You can publish ${limit} posts per day on the Pro plan. Try again later.`,
       );
+    }
 
-      yield* setRetryAfterHeader(Duration.millis(retryAfterMillis));
+    const globalLimit =
+      plan === "free"
+        ? config.PUBLISH_GLOBAL_DAILY_LIMIT_FREE
+        : config.PUBLISH_GLOBAL_DAILY_LIMIT_PRO;
 
-      return yield* new TooManyRequests({
-        message:
-          plan === "free"
-            ? `You can publish ${limit} posts per day on the Free plan. Try again later, or upgrade to Pro to publish up to ${PUBLISH_LIMITS.pro} posts per day.`
-            : `You can publish ${limit} posts per day on the Pro plan. Try again later.`,
-        retryAfterMillis,
-      });
+    const globalUsage = yield* findPublishUsage(db, {
+      plan,
+      now,
+      excludeDraftId: draftId,
+    });
+
+    if (globalUsage.used >= globalLimit) {
+      yield* reportGlobalPublishLimitReached({ plan, limit: globalLimit, now });
+
+      return yield* failOverDailyLimit(
+        globalUsage,
+        now,
+        plan === "free"
+          ? "Sigle reached today's publishing limit for Free accounts. Try again later, or upgrade to Pro to keep publishing."
+          : "Sigle reached today's publishing limit for Pro accounts. Try again later.",
+      );
     }
 
     // Take ownership of the draft row: `publishSignature` identifies the signed

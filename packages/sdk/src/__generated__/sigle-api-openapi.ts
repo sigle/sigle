@@ -151,7 +151,7 @@ export interface paths {
     put?: never;
     /**
      * Publish a draft
-     * @description Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being published to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, 3 posts on Free and 20 on Pro, counting the publishes in flight.
+     * @description Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being published to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, 3 posts on Free and 20 on Pro, counting the publishes in flight. Also returns a 429 once all users of the plan together reached its global daily limit.
      */
     post: operations["drafts.publish"];
     delete?: never;
