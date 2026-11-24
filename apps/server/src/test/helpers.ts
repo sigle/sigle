@@ -178,6 +178,7 @@ export const createTestPost = (options: {
   readonly signature?: string | null;
   readonly coverImage?: string | null;
   readonly tags?: Array<string> | null;
+  readonly contentWarning?: typeof post.$inferInsert.contentWarning;
   readonly createdAt?: Date;
 }) =>
   Effect.gen(function* () {
@@ -200,6 +201,7 @@ export const createTestPost = (options: {
         signature: options.signature ?? null,
         coverImage: options.coverImage ?? null,
         tags: options.tags ?? null,
+        contentWarning: options.contentWarning ?? null,
         createdAt: options.createdAt,
         userId: options.userId,
       })

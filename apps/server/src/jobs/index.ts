@@ -21,6 +21,7 @@ import {
   OpenTimestampsUpgradeWorkerLive,
 } from "@/jobs/opentimestamps-upgrade";
 import { PlanReconcileLive } from "@/jobs/plan-reconcile";
+import { PostArweaveBlockLive } from "@/jobs/post-arweave-block";
 import {
   publishDraftJob,
   type PublishDraftJob,
@@ -60,6 +61,7 @@ export const JobsLive = Layer.mergeAll(
   OpenTimestampsReconcileLive,
   MediaImageReconcileLive,
   PlanReconcileLive,
+  PostArweaveBlockLive,
   JobAdminService.layer,
   QueueCleanupLive,
 ).pipe(

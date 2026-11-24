@@ -367,6 +367,7 @@ export interface components {
       coverImage: components["schemas"]["MediaImage"] | null;
       tags: string[];
       canonicalUri: string | null;
+      contentWarning: ("nsfw" | "sensitive" | "spoiler") | null;
       metadataUri: string;
       arweaveTxId: string;
       arweaveBlockHeight: number | null;
@@ -423,6 +424,7 @@ export interface components {
       coverImage: components["schemas"]["MediaImage"] | null;
       tags: string[];
       canonicalUri: string | null;
+      contentWarning: ("nsfw" | "sensitive" | "spoiler") | null;
       arweaveTxId: string;
       /** Format: date-time */
       createdAt: string;
@@ -558,6 +560,7 @@ export interface components {
       coverImage: string | null;
       tags: string[];
       canonicalUri: string | null;
+      contentWarning: ("nsfw" | "sensitive" | "spoiler") | null;
       publishStatus: components["schemas"]["DraftPublishStatus"];
       /** Format: date-time */
       createdAt: string;
@@ -580,6 +583,8 @@ export interface components {
       tags?: string[];
       /** @description Omit to keep the current value unchanged, set to null to clear it. */
       canonicalUri?: string | null;
+      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      contentWarning?: ("nsfw" | "sensitive" | "spoiler") | null;
     };
     DraftListResponse: {
       results: components["schemas"]["DraftListItem"][];
@@ -595,6 +600,7 @@ export interface components {
       coverImage: string | null;
       tags: string[];
       canonicalUri: string | null;
+      contentWarning: ("nsfw" | "sensitive" | "spoiler") | null;
       publishStatus: components["schemas"]["DraftPublishStatus"];
       /** Format: date-time */
       createdAt: string;
@@ -609,6 +615,7 @@ export interface components {
       coverImage?: string | null;
       tags?: string[];
       canonicalUri?: string | null;
+      contentWarning?: ("nsfw" | "sensitive" | "spoiler") | null;
     };
     PostVisibilityResponse: {
       id: string;
@@ -632,6 +639,7 @@ export interface components {
       coverImage: components["schemas"]["MediaImage"] | null;
       tags: string[];
       canonicalUri: string | null;
+      contentWarning: ("nsfw" | "sensitive" | "spoiler") | null;
       arweaveTxId: string;
       /** Format: date-time */
       createdAt: string;

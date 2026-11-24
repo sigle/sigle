@@ -1,168 +1,226 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { IconArrowUpRight, IconCopy } from "@tabler/icons-react";
+import type { ReactNode } from "react";
+import {
+  IconArrowUpRight,
+  IconCheck,
+  IconClockHour4,
+  IconCopy,
+} from "@tabler/icons-react";
 import { format } from "date-fns";
 import { toast } from "sonner";
 import { env } from "@/env";
+import { cn } from "@/lib/cn";
 import { formatNumber } from "@/lib/utils";
-import { Button, buttonVariants } from "../ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "../ui/accordion";
+import { Button } from "../ui/button";
 
 interface PostProvenanceCardProps {
   post: paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"];
 }
 
-type StorageType = "arweave" | "ipfs" | "external";
-
-function getStorageType(metadataUri: string): StorageType {
-  if (metadataUri.startsWith("ar://")) return "arweave";
-
-  if (metadataUri.startsWith("ipfs://")) return "ipfs";
-
-  return "external";
-}
-
-function getStorageLabel(type: StorageType): string {
-  switch (type) {
-    case "arweave":
-      return "Arweave";
-    case "ipfs":
-      return "IPFS";
-    case "external":
-      return "External URL";
-  }
-}
-
-function getMetadataLink(metadataUri: string): string {
-  if (metadataUri.startsWith("ar://")) {
-    return `${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${metadataUri.slice(5)}`;
-  }
-
-  if (metadataUri.startsWith("ipfs://")) {
-    return `${env.NEXT_PUBLIC_IPFS_GATEWAY_URL}/${metadataUri.slice(7)}`;
-  }
-
-  return metadataUri;
-}
-
-function getMetadataId(metadataUri: string): string {
-  if (metadataUri.startsWith("ar://") || metadataUri.startsWith("ipfs://")) {
-    return metadataUri.split("://")[1];
-  }
-
-  return metadataUri;
-}
-
 function truncateId(id: string, startChars = 8, endChars = 6): string {
   if (id.length <= startChars + endChars + 3) return id;
 
-  return `${id.slice(0, startChars)}...${id.slice(-endChars)}`;
+  return `${id.slice(0, startChars)}…${id.slice(-endChars)}`;
 }
 
-export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
-  const storageType = getStorageType(post.metadataUri);
-  const storageLabel = getStorageLabel(storageType);
-  const metadataLink = getMetadataLink(post.metadataUri);
-  const metadataId = getMetadataId(post.metadataUri);
+const arweaveLink = (txId: string): string =>
+  `${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${txId}`;
 
-  // A failed timestamp is retried by the server, readers only see a proof
+export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
+  // A failed timestamp is only retried by an admin, readers only see a proof
   // once it is pending or anchored in Bitcoin.
   const opentimestamps =
     post.opentimestamps?.status === "failed" ? null : post.opentimestamps;
 
-  const copyToClipboard = async (text: string) => {
-    await navigator.clipboard.writeText(text);
+  const bitcoinTimestamp = opentimestamps?.bitcoinTimestamp
+    ? new Date(opentimestamps.bitcoinTimestamp)
+    : null;
+
+  const publishedAt = new Date(post.createdAt);
+
+  return (
+    <section aria-labelledby="provenance-title">
+      <h2 id="provenance-title" className="headline text-xl">
+        {bitcoinTimestamp ? "Permanent and timestamped" : "Permanently stored"}
+      </h2>
+
+      <ol className="mt-4">
+        <ProvenanceStep
+          state="done"
+          title="Stored on Arweave"
+          isLast={!opentimestamps}
+        >
+          {format(publishedAt, "MMM d, yyyy")}
+          {post.arweaveBlockHeight === null
+            ? null
+            : ` · Block #${formatNumber(post.arweaveBlockHeight)}`}
+        </ProvenanceStep>
+
+        {opentimestamps ? (
+          bitcoinTimestamp && opentimestamps.bitcoinBlockHeight !== null ? (
+            <ProvenanceStep state="done" title="Timestamped on Bitcoin" isLast>
+              {format(bitcoinTimestamp, "MMM d, yyyy, HH:mm")} · Block #
+              {formatNumber(opentimestamps.bitcoinBlockHeight)}
+            </ProvenanceStep>
+          ) : (
+            <ProvenanceStep
+              state="pending"
+              title="Timestamping on Bitcoin"
+              isLast
+            >
+              Usually takes a few hours
+            </ProvenanceStep>
+          )
+        ) : null}
+      </ol>
+
+      <Accordion className="mt-2 border-t border-border">
+        <AccordionItem>
+          <AccordionTrigger className="text-muted-foreground hover:text-foreground hover:no-underline">
+            Verify it yourself
+          </AccordionTrigger>
+          <AccordionContent>
+            <dl className="divide-y divide-border">
+              <ProofRow
+                label="Arweave transaction"
+                value={post.arweaveTxId}
+                href={arweaveLink(post.arweaveTxId)}
+                linkLabel="View on Arweave"
+              />
+              {opentimestamps ? (
+                <ProofRow label="SHA-256" value={opentimestamps.contentHash} />
+              ) : null}
+              {opentimestamps?.otsTxId ? (
+                <ProofRow
+                  label="OpenTimestamps proof"
+                  value={opentimestamps.otsTxId}
+                  href={arweaveLink(opentimestamps.otsTxId)}
+                  linkLabel="Download .ots"
+                />
+              ) : null}
+            </dl>
+            {opentimestamps?.otsTxId ? (
+              <p className="mt-3 text-xs text-muted-foreground">
+                Check the proof on{" "}
+                <a
+                  href="https://opentimestamps.org"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  opentimestamps.org
+                </a>
+              </p>
+            ) : null}
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </section>
+  );
+};
+
+interface ProvenanceStepProps {
+  state: "done" | "pending";
+  title: string;
+  isLast?: boolean;
+  children: ReactNode;
+}
+
+const ProvenanceStep = ({
+  state,
+  title,
+  isLast = false,
+  children,
+}: ProvenanceStepProps) => (
+  <li className="relative flex gap-3 pb-4">
+    {isLast ? null : (
+      <span
+        aria-hidden
+        className={cn(
+          "absolute top-7 bottom-1 left-2.75 w-px",
+          state === "done" ? "bg-foreground/20" : "bg-border",
+        )}
+      />
+    )}
+    <span
+      aria-hidden
+      className={cn(
+        "flex size-6 shrink-0 items-center justify-center rounded-full",
+        state === "done"
+          ? "bg-foreground text-background"
+          : "border border-dashed border-accent text-accent",
+      )}
+    >
+      {state === "done" ? (
+        <IconCheck size={14} stroke={2.5} />
+      ) : (
+        <IconClockHour4 size={14} />
+      )}
+    </span>
+    <div className="min-w-0 pt-0.5">
+      <p className="text-sm font-medium">
+        {title}
+        <span className="sr-only">
+          {state === "done" ? " (done)" : " (in progress)"}
+        </span>
+      </p>
+      <p className="mt-0.5 text-sm text-pretty text-muted-foreground">
+        {children}
+      </p>
+    </div>
+  </li>
+);
+
+interface ProofRowProps {
+  label: string;
+  value: string;
+  href?: string;
+  linkLabel?: string;
+}
+
+const ProofRow = ({ label, value, href, linkLabel }: ProofRowProps) => {
+  const copyToClipboard = async () => {
+    await navigator.clipboard.writeText(value);
     toast.success("Copied to clipboard");
   };
 
   return (
-    <section>
-      <div className="flex items-baseline justify-between gap-4">
-        <h2 className="headline text-xl">Verified on-chain</h2>
-        <span className="text-xs text-muted-foreground">
-          Published {format(new Date(post.createdAt), "MMM d, yyyy")}
-        </span>
+    <div className="flex items-center justify-between gap-4 py-2.5">
+      <div className="min-w-0">
+        <dt className="text-xs text-muted-foreground">{label}</dt>
+        <dd className="truncate font-mono text-sm" title={value}>
+          {truncateId(value, 12, 8)}
+        </dd>
       </div>
-
-      <dl className="mt-3 border-t border-border text-sm">
-        <div className="flex items-center justify-between gap-4 border-b border-border py-3">
-          <div className="min-w-0">
-            <dt className="text-xs text-muted-foreground">
-              {storageLabel} ·{" "}
-              {post.arweaveBlockHeight === null
-                ? "Pending confirmation"
-                : `Block #${formatNumber(post.arweaveBlockHeight)}`}
-            </dt>
-            <dd className="truncate font-mono text-sm">
-              {truncateId(metadataId, 12, 8)}
-            </dd>
-          </div>
-          <div className="flex shrink-0 items-center">
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              aria-label="Copy the content ID"
-              className="text-muted-foreground"
-              onClick={() => copyToClipboard(metadataId)}
-            >
-              <IconCopy size={14} />
-            </Button>
-            <a
-              href={metadataLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`View on ${storageLabel}`}
-              className={buttonVariants({
-                variant: "ghost",
-                size: "icon-sm",
-                className: "text-muted-foreground",
-              })}
-            >
-              <IconArrowUpRight size={14} />
-            </a>
-          </div>
-        </div>
-
-        {opentimestamps ? (
-          <div className="flex items-center justify-between gap-4 border-b border-border py-3">
-            <div className="min-w-0">
-              <dt className="text-xs text-muted-foreground">
-                Bitcoin
-                {opentimestamps.bitcoinBlockHeight === null
-                  ? " · OpenTimestamps"
-                  : ` · Block #${formatNumber(opentimestamps.bitcoinBlockHeight)}`}
-              </dt>
-              <dd>
-                {opentimestamps.bitcoinTimestamp === null
-                  ? "Pending Bitcoin confirmation"
-                  : format(
-                      new Date(opentimestamps.bitcoinTimestamp),
-                      "MMM d, yyyy HH:mm",
-                    )}
-              </dd>
-            </div>
-            {opentimestamps.otsTxId ? (
-              <a
-                href={`${env.NEXT_PUBLIC_ARWEAVE_GATEWAY_URL}/${opentimestamps.otsTxId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex shrink-0 items-center gap-1 text-xs text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-              >
-                .ots proof
-                <IconArrowUpRight size={12} />
-              </a>
-            ) : null}
-          </div>
+      <div className="flex shrink-0 items-center gap-1">
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label={`Copy the ${label.toLowerCase()}`}
+          className="text-muted-foreground"
+          onClick={copyToClipboard}
+        >
+          <IconCopy size={14} />
+        </Button>
+        {href ? (
+          <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-xs whitespace-nowrap text-muted-foreground no-underline! hover:text-foreground"
+          >
+            {linkLabel}
+            <IconArrowUpRight size={12} />
+          </a>
         ) : null}
-      </dl>
-
-      <p className="mt-3 text-xs/relaxed text-pretty text-muted-foreground">
-        {opentimestamps?.bitcoinTimestamp
-          ? "Stored permanently on Arweave and timestamped on Bitcoin with OpenTimestamps, proving who wrote it and when."
-          : opentimestamps
-            ? "Stored permanently on Arweave. The Bitcoin timestamp is waiting for confirmation."
-            : "Stored permanently on Arweave."}
-      </p>
-    </section>
+      </div>
+    </div>
   );
 };

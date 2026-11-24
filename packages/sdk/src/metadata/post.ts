@@ -4,6 +4,16 @@ import { PostMetadataSchemaId } from "./config.js";
 import { type MediaImageMetadata, MediaImageMetadataSchema } from "./media.js";
 import { evaluate } from "./utils.js";
 
+export enum ContentWarning {
+  NSFW = "NSFW",
+  SENSITIVE = "SENSITIVE",
+  SPOILER = "SPOILER",
+}
+
+export const ContentWarningSchema = z.enum(ContentWarning).meta({
+  description: "Specify a content warning.",
+});
+
 export interface PostMetadataAttribute {
   /**
    * The attribute's unique identifier.
@@ -75,6 +85,10 @@ export interface PostMetadataDetails {
    */
   canonicalUri?: string;
   /**
+   * Specify a content warning.
+   */
+  contentWarning?: ContentWarning;
+  /**
    * Additional information that is not part of the standard.
    */
   attributes?: PostMetadataAttribute[];
@@ -120,6 +134,7 @@ export const PostMetadataDetailsSchema = z.object({
     description:
       "The URL of the original version of the post when it was first published elsewhere.",
   }),
+  contentWarning: ContentWarningSchema.optional(),
   attributes: PostMetadataAttributeSchema.array()
     .min(1)
     .max(20)

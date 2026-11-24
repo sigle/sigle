@@ -1,6 +1,7 @@
 import { describe, expect, it } from "@effect/vitest";
 import {
   canonicalPostMetadataJson,
+  ContentWarning,
   MediaImageMimeType,
   PostMetadataSchemaId,
 } from "@sigle/sdk";
@@ -46,6 +47,7 @@ const sampleMetadataJson = canonicalPostMetadataJson({
     excerpt: "Short summary",
     publishedAt: "2026-11-24T10:00:00.000Z",
     tags: ["web3", "effect"],
+    contentWarning: ContentWarning.SENSITIVE,
     coverImage: {
       url: "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
       type: MediaImageMimeType.PNG,
@@ -189,6 +191,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             coverImage: createdPost.coverImage,
             tags: createdPost.tags,
             canonicalUri: createdPost.canonicalUri,
+            contentWarning: createdPost.contentWarning,
             signature: createdPost.signature,
             userId: createdPost.userId,
             otsStatus: createdPostOts.status,
@@ -212,6 +215,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
               "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
             tags: ["web3", "effect"],
             canonicalUri: "https://example.com/original",
+            contentWarning: "SENSITIVE",
             signature: "sig-001",
             userId: user.id,
             otsStatus: "PENDING",

@@ -7,6 +7,7 @@ import {
   PostMetadataSchemaId,
 } from "@sigle/sdk";
 import { fileTypeFromBuffer } from "file-type";
+import { CONTENT_WARNINGS } from "@/lib/content-warning";
 import { resolveImageUrl } from "@/lib/images";
 import type { EditorPostFormData } from "./EditorFormProvider";
 
@@ -74,6 +75,9 @@ export const generateSigleMetadataFromForm = async ({
       metaTitle: post.metaTitle || undefined,
       metaDescription: post.metaDescription || undefined,
       canonicalUri: post.canonicalUri || undefined,
+      contentWarning: post.contentWarning
+        ? CONTENT_WARNINGS[post.contentWarning].metadata
+        : undefined,
     },
   });
 };

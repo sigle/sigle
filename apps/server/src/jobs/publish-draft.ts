@@ -252,6 +252,7 @@ export const processPublishDraftJob = (
             coverImage,
             tags: content.tags ?? [],
             canonicalUri: content.canonicalUri ?? null,
+            contentWarning: content.contentWarning ?? null,
             signature: job.signature,
             userId: job.userId,
           });

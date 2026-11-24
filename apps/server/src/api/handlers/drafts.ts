@@ -71,6 +71,7 @@ const toDraft = (row: typeof draft.$inferSelect) => ({
   coverImage: row.coverImage,
   tags: row.tags ?? [],
   canonicalUri: row.canonicalUri,
+  contentWarning: row.contentWarning,
   publishStatus: row.txStatus,
   createdAt: DateTime.fromDateUnsafe(row.createdAt),
   updatedAt: DateTime.fromDateUnsafe(row.updatedAt),
@@ -157,6 +158,7 @@ export const createDraft = (payload: typeof CreateDraftPayload.Type) =>
         coverImage: payload.coverImage ?? null,
         tags: payload.tags === undefined ? [] : [...payload.tags],
         canonicalUri: payload.canonicalUri ?? null,
+        contentWarning: payload.contentWarning ?? null,
         userId: user.id,
       })
       .returning()
@@ -200,6 +202,7 @@ export const listDrafts = (query: typeof DraftListQuery.Type) =>
         coverImage: draft.coverImage,
         tags: draft.tags,
         canonicalUri: draft.canonicalUri,
+        contentWarning: draft.contentWarning,
         publishStatus: draft.txStatus,
         createdAt: draft.createdAt,
         updatedAt: draft.updatedAt,
@@ -257,6 +260,7 @@ const toUpdateFields = (payload: typeof UpdateDraftPayload.Type) => ({
   coverImage: payload.coverImage,
   tags: payload.tags,
   canonicalUri: payload.canonicalUri,
+  contentWarning: payload.contentWarning,
 });
 
 export const updateDraft = (
