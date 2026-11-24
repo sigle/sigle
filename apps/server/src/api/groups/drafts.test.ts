@@ -814,6 +814,45 @@ describe("drafts", () => {
   );
 
   it.effect(
+    "POST /api/drafts/:draftId/publish rejects unsigned metadata in the schema",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const ownerWallet = createTestSiwsCredentials("testnet");
+
+        yield* createTestWalletAddress({
+          userId,
+          address: ownerWallet.address,
+        });
+        yield* createTestDraft({ id: "draft-unsigned", userId });
+
+        const { signature: _, ...unsignedMetadata } =
+          createSignedTestPostMetadata({
+            draftId: "draft-unsigned",
+            privateKey: ownerWallet.privateKey,
+          });
+
+        const response = yield* publishDraftRequest(client, "draft-unsigned", {
+          metadata: unsignedMetadata,
+        });
+
+        const body = JSON.stringify(yield* response.json);
+
+        // The schema documents the signature as required, so it rejects the
+        // payload before the handler verifies the signature.
+        expect({
+          status: response.status,
+          schemaError: body.includes("signature"),
+          handlerError: body.includes("Signature is required"),
+        }).toStrictEqual({
+          status: 400,
+          schemaError: true,
+          handlerError: false,
+        });
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
     "POST /api/drafts/:draftId/publish validates draft existence, metadata, signature, wallet ownership, and replay",
     () =>
       Effect.gen(function* () {
@@ -1425,7 +1464,6 @@ describe("drafts", () => {
                   ) < 60_000,
               ),
             },
-            profileUpdate: { limit: 10, used: 0, resetsAt: null },
           },
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
@@ -1468,7 +1506,6 @@ describe("drafts", () => {
           publish: 202,
           limits: {
             publish: expect.objectContaining({ limit: 20 }),
-            profileUpdate: expect.objectContaining({ limit: 10 }),
           },
         });
       }).pipe(Effect.provide(makeTestServerLayer()));

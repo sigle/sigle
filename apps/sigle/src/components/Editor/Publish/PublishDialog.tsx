@@ -143,15 +143,17 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           });
         } catch (error) {
           console.error(error);
-          posthog.capture("post_publish_metadata_preparation_error", {
-            postId,
-            error,
-          });
 
           const errorMessage =
             error instanceof Error
               ? error.message
               : "Failed to prepare post metadata";
+
+          // An `Error` serializes to `{}`, so PostHog gets its message.
+          posthog.capture("post_publish_metadata_preparation_error", {
+            postId,
+            error: errorMessage,
+          });
 
           setStepError("preparing", errorMessage);
 
@@ -189,7 +191,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           console.error(error);
           posthog.capture("post_publish_sign_message_error", {
             postId,
-            error,
+            error: error instanceof Error ? error.message : String(error),
           });
           setStepError(
             "signature",
@@ -199,8 +201,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           return;
         }
 
-        // Add the signature to the metadata
-        metadata.signature = signature;
         completeStep("signature");
 
         const publishResult = await publishDraft({
@@ -210,7 +210,8 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             },
           },
           body: {
-            metadata,
+            // The API only accepts signed metadata.
+            metadata: { ...metadata, signature },
           },
         })
           .then((result) => Result.ok(result))
@@ -219,7 +220,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         if (publishResult.isErr()) {
           posthog.capture("post_publish_start_error", {
             postId,
-            error: publishResult.error,
+            error: publishResult.error.message,
           });
           setStepError(
             "arweave",

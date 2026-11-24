@@ -235,7 +235,6 @@ describe("http server", () => {
         ),
         createDraft: body.components.schemas["CreateDraftPayload"],
         postMetadata: body.components.schemas["PostMetadata"],
-        profileMetadata: body.components.schemas["ProfileMetadata"],
       }).toStrictEqual({
         status: 200,
         openapi: true,
@@ -248,6 +247,7 @@ describe("http server", () => {
           "/api/drafts",
           "/api/drafts/{draftId}",
           "/api/me/profile",
+          "/api/me/profile/bns",
           "/api/me/profile/images/{kind}",
           "/api/drafts/{draftId}/images",
         ]),
@@ -285,13 +285,9 @@ describe("http server", () => {
             },
           }),
         }),
-        // Signed metadata schemas are generated from the `@sigle/sdk` zod
-        // schemas instead of being documented as opaque values.
+        // The signed post metadata schema is generated from the `@sigle/sdk`
+        // zod schema instead of being documented as opaque values.
         postMetadata: expect.objectContaining({
-          type: "object",
-          required: expect.arrayContaining(["$schema", "content"]),
-        }),
-        profileMetadata: expect.objectContaining({
           type: "object",
           required: expect.arrayContaining(["$schema", "content"]),
         }),

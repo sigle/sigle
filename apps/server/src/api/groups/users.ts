@@ -28,13 +28,12 @@ export const UserProfile = Schema.Struct({
   twitter: Schema.NullOr(Schema.String),
   picture: Schema.NullOr(MediaImage),
   coverPicture: Schema.NullOr(MediaImage),
-  arweaveTxId: Schema.String,
   updatedAt: DateTime,
 }).annotate({ identifier: "UserProfile" });
 
 /**
- * A user as anyone can see them: their primary Stacks address and the profile
- * it published, if any. Also the author of a post.
+ * A user as anyone can see them: their primary Stacks address and its
+ * profile, if any. Also the author of a post.
  */
 export const PublicUser = Schema.Struct({
   address: Schema.String,

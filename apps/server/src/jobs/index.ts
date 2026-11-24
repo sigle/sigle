@@ -8,11 +8,6 @@ import {
   generateImageThumbhashJob,
   GenerateImageThumbhashWorkerLive,
 } from "@/jobs/generate-image-thumbhash";
-import {
-  type IndexProfileJob,
-  indexProfileJob,
-  IndexProfileWorkerLive,
-} from "@/jobs/index-profile";
 import { MediaImageReconcileLive } from "@/jobs/media-image-reconcile";
 import { OpenTimestampsReconcileLive } from "@/jobs/opentimestamps-reconcile";
 import {
@@ -26,7 +21,6 @@ import {
   OpenTimestampsUpgradeWorkerLive,
 } from "@/jobs/opentimestamps-upgrade";
 import { PlanReconcileLive } from "@/jobs/plan-reconcile";
-import { ProfileIndexScanLive } from "@/jobs/profile-index-scan";
 import {
   publishDraftJob,
   type PublishDraftJob,
@@ -46,7 +40,6 @@ export const jobs = [
   opentimestampsStampJob,
   opentimestampsUpgradeJob,
   generateImageThumbhashJob,
-  indexProfileJob,
 ] as const;
 
 /** Names of the queues of the registered jobs. */
@@ -64,11 +57,9 @@ export const JobsLive = Layer.mergeAll(
   OpenTimestampsStampWorkerLive,
   OpenTimestampsUpgradeWorkerLive,
   GenerateImageThumbhashWorkerLive,
-  IndexProfileWorkerLive,
   OpenTimestampsReconcileLive,
   MediaImageReconcileLive,
   PlanReconcileLive,
-  ProfileIndexScanLive,
   JobAdminService.layer,
   QueueCleanupLive,
 ).pipe(
@@ -86,7 +77,6 @@ export const makeQueuesTestLayer = (options?: {
   | PersistedQueue.PersistedQueue<OpenTimestampsStampJob>
   | PersistedQueue.PersistedQueue<OpenTimestampsUpgradeJob>
   | PersistedQueue.PersistedQueue<GenerateImageThumbhashJob>
-  | PersistedQueue.PersistedQueue<IndexProfileJob>
   | JobRuntime
   | JobAdminService,
   never,
@@ -112,7 +102,6 @@ export const makeQueuesTestLayer = (options?: {
     opentimestampsStampJob.makeLayer(queueOverrides),
     opentimestampsUpgradeJob.makeLayer(queueOverrides),
     generateImageThumbhashJob.makeLayer(queueOverrides),
-    indexProfileJob.makeLayer(queueOverrides),
   );
 
   const workerLayers = Layer.mergeAll(
@@ -120,7 +109,6 @@ export const makeQueuesTestLayer = (options?: {
     opentimestampsStampJob.workerLayer({ concurrency: 1 }),
     opentimestampsUpgradeJob.workerLayer({ concurrency: 1 }),
     generateImageThumbhashJob.workerLayer({ concurrency: 1 }),
-    indexProfileJob.workerLayer({ concurrency: 1 }),
   ).pipe(Layer.provide(queueLayers));
 
   const appLayer =

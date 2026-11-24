@@ -1,16 +1,18 @@
-import { PostMetadataSchema, ProfileMetadataSchema } from "@sigle/sdk";
+import { PostMetadataSchema } from "@sigle/sdk";
 import { fromZod } from "@/lib/zod-schema";
 
 /**
  * Signed metadata formats are defined in `@sigle/sdk` (and published as JSON
  * schemas), so the zod schemas are reused instead of being mirrored in Effect.
+ *
+ * The SDK schema leaves `signature` optional, as the metadata is built before
+ * the wallet signs it. The API only accepts signed metadata, so it is required
+ * here, and the OpenAPI specification and generated SDK say so.
  */
-export const PostMetadata = fromZod(PostMetadataSchema, {
-  identifier: "PostMetadata",
-  description: "The signed post metadata to upload to Arweave.",
-});
-
-export const ProfileMetadata = fromZod(ProfileMetadataSchema, {
-  identifier: "ProfileMetadata",
-  description: "The signed profile metadata to upload to Arweave.",
-});
+export const PostMetadata = fromZod(
+  PostMetadataSchema.required({ signature: true }),
+  {
+    identifier: "PostMetadata",
+    description: "The signed post metadata to upload to Arweave.",
+  },
+);

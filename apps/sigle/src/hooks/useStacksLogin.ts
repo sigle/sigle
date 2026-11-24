@@ -146,6 +146,9 @@ export const useStacksLogin = () => {
 
   const logout = async () => {
     posthog.capture("user_logout");
+    // Forget the user, otherwise the next visitor of this browser is
+    // tracked as them.
+    posthog.reset();
     disconnect();
     await signOut();
     // Force reload to clear session

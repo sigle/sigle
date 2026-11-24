@@ -6,6 +6,7 @@ import { siws } from "sign-in-with-stacks/plugins/better-auth";
 import { AppConfig, type AppConfigValues } from "@/config";
 import { AuthDatabase, type AuthDatabaseClient } from "@/db";
 import * as schema from "@/db/schema";
+import { type PostHogClient, PostHogService } from "@/services/posthog";
 
 export const AUTH_COOKIE_PREFIX = "sigle";
 
@@ -14,7 +15,11 @@ export const SESSION_COOKIE_NAME = `${AUTH_COOKIE_PREFIX}.session_token`;
 /** Session cookie name over HTTPS, where better-auth uses secure cookies. */
 export const SECURE_SESSION_COOKIE_NAME = `__Secure-${SESSION_COOKIE_NAME}`;
 
-export const createAuth = (config: AppConfigValues, db: AuthDatabaseClient) => {
+export const createAuth = (
+  config: AppConfigValues,
+  db: AuthDatabaseClient,
+  posthog: PostHogClient,
+) => {
   const useSecureCookies = config.APP_URL.startsWith("https://");
   const hostname = new URL(config.APP_URL).hostname;
   const rootDomain = hostname.split(".").slice(-2).join(".");
@@ -29,6 +34,9 @@ export const createAuth = (config: AppConfigValues, db: AuthDatabaseClient) => {
     baseURL: config.APP_URL,
     trustedOrigins: [config.APP_URL],
     advanced: {
+      // Sessions store no client IP: Sigle doesn't keep IP addresses. Our
+      // rate limits on `/api/auth/*` key by IP in memory only.
+      ipAddress: { disableIpTracking: true },
       cookiePrefix: AUTH_COOKIE_PREFIX,
       useSecureCookies,
       crossSubDomainCookies: {
@@ -37,6 +45,19 @@ export const createAuth = (config: AppConfigValues, db: AuthDatabaseClient) => {
       },
     },
     databaseHooks: {
+      user: {
+        create: {
+          // A user is created on the first sign-in of their wallet.
+          after: async (createdUser) => {
+            await Effect.runPromise(
+              posthog.capture({
+                distinctId: createdUser.id,
+                event: "user_signed_up",
+              }),
+            );
+          },
+        },
+      },
       session: {
         create: {
           after: async (session) => {
@@ -70,7 +91,8 @@ export interface AuthApi {
 export const makeAuthService = Effect.gen(function* () {
   const config = yield* AppConfig;
   const db = yield* AuthDatabase;
-  const auth = createAuth(config, db);
+  const posthog = yield* PostHogService;
+  const auth = createAuth(config, db, posthog);
 
   return {
     handler: (request: Request) => Effect.promise(() => auth.handler(request)),
@@ -89,6 +111,6 @@ export class AuthService extends Context.Service<AuthService, AuthApi>()(
   static readonly layer: Layer.Layer<
     AuthService,
     never,
-    AuthDatabase | AppConfig
+    AuthDatabase | AppConfig | PostHogService
   > = Layer.effect(AuthService, makeAuthService);
 }
