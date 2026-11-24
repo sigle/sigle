@@ -1,8 +1,10 @@
 import { describe, expect, it } from "@effect/vitest";
-import { Effect, Fiber, Layer } from "effect";
+import { Effect, Fiber, Layer, Predicate } from "effect";
+import { HttpClient, HttpClientResponse } from "effect/http";
 import { TestClock } from "effect/testing";
 import { AppConfig } from "@/config";
 import {
+  type ArweaveBlockHeightsResponse,
   ArweaveService,
   ArweaveUploadError,
   type ArweaveTag,
@@ -11,6 +13,36 @@ import {
   UPLOAD_TIMEOUT,
 } from "@/services/arweave";
 
+const unusedUploader: ArweaveUploader = {
+  uploadFile: async () => ({ id: "unused" }),
+};
+
+interface GatewayRequest {
+  readonly url: string;
+  readonly body: unknown;
+}
+
+/** HTTP client answering every gateway request with `body`. */
+const makeGatewayLayer = (
+  body: ArweaveBlockHeightsResponse,
+  requests: Array<GatewayRequest> = [],
+) =>
+  Layer.succeed(
+    HttpClient.HttpClient,
+    HttpClient.make((request, url) =>
+      Effect.sync(() => {
+        requests.push({
+          url: url.toString(),
+          body: Predicate.isTagged(request.body, "Uint8Array")
+            ? JSON.parse(new TextDecoder().decode(request.body.body))
+            : null,
+        });
+
+        return HttpClientResponse.fromWeb(request, Response.json(body));
+      }),
+    ),
+  );
+
 const TEST_FILE = Buffer.from(JSON.stringify({ hello: "world" }));
 
 const TEST_FILE_CID =
@@ -18,8 +50,10 @@ const TEST_FILE_CID =
 
 const makeTestArweaveLayer = (
   uploader: ArweaveUploader,
+  gateway: Layer.Layer<HttpClient.HttpClient> = makeGatewayLayer({}),
 ): Layer.Layer<ArweaveService> =>
   Layer.effect(ArweaveService, makeArweaveService(uploader)).pipe(
+    Layer.provide(gateway),
     Layer.provide(
       AppConfig.layerTest({
         APP_ID: "Sigle-Test",
@@ -140,4 +174,72 @@ describe("arweave service", () => {
       expect(error.cause).toBeInstanceOf(Error);
     }).pipe(Effect.provide(makeTestArweaveLayer(uploader)));
   });
+
+  it.effect(
+    "reads the block heights of the mined transactions from the gateway",
+    () => {
+      const requests: Array<GatewayRequest> = [];
+
+      const gateway = makeGatewayLayer(
+        {
+          data: {
+            transactions: {
+              edges: [
+                { node: { id: "tx-mined", block: { height: 1_587_342 } } },
+                { node: { id: "tx-pending", block: null } },
+                // Not requested: a misbehaving gateway can't set its height.
+                { node: { id: "tx-other", block: { height: 12 } } },
+              ],
+            },
+          },
+        },
+        requests,
+      );
+
+      return Effect.gen(function* () {
+        const arweave = yield* ArweaveService;
+
+        const blockHeights = yield* arweave.getBlockHeights([
+          "tx-mined",
+          "tx-pending",
+          "tx-unknown",
+        ]);
+
+        expect({
+          blockHeights: [...blockHeights],
+          url: requests[0]?.url,
+          body: requests[0]?.body,
+        }).toStrictEqual({
+          blockHeights: [["tx-mined", 1_587_342]],
+          url: "https://turbo-gateway.test/graphql",
+          body: expect.objectContaining({
+            variables: {
+              ids: ["tx-mined", "tx-pending", "tx-unknown"],
+              first: 3,
+            },
+          }),
+        });
+      }).pipe(Effect.provide(makeTestArweaveLayer(unusedUploader, gateway)));
+    },
+  );
+
+  it.effect("fails with ArweaveGatewayError on GraphQL errors", () =>
+    Effect.gen(function* () {
+      const arweave = yield* ArweaveService;
+
+      const error = yield* arweave.getBlockHeights(["tx-1"]).pipe(Effect.flip);
+
+      expect({ tag: error._tag, message: error.message }).toStrictEqual({
+        tag: "ArweaveGatewayError",
+        message: "Arweave GraphQL query failed: rate limited",
+      });
+    }).pipe(
+      Effect.provide(
+        makeTestArweaveLayer(
+          unusedUploader,
+          makeGatewayLayer({ errors: [{ message: "rate limited" }] }),
+        ),
+      ),
+    ),
+  );
 });

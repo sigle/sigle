@@ -1,5 +1,11 @@
 import { TurboUpload } from "@ardrive/turbo-upload";
-import { Context, Data, Effect, Layer, Redacted } from "effect";
+import { Context, Data, Effect, Layer, Redacted, Schema } from "effect";
+import {
+  FetchHttpClient,
+  HttpClient,
+  HttpClientRequest,
+  HttpClientResponse,
+} from "effect/http";
 import { CID } from "multiformats/cid";
 import { code } from "multiformats/codecs/raw";
 import { sha256 } from "multiformats/hashes/sha2";
@@ -41,11 +47,71 @@ export class ArweaveUploadError extends Data.TaggedError("ArweaveUploadError")<{
   readonly message: string;
 }> {}
 
+export class ArweaveGatewayError extends Data.TaggedError(
+  "ArweaveGatewayError",
+)<{
+  readonly cause: unknown;
+  readonly message: string;
+}> {}
+
 export interface ArweaveClient {
   readonly uploadFile: (
     options: ArweaveUploadOptions,
   ) => Effect.Effect<ArweaveUploadResult, ArweaveUploadError>;
+  /**
+   * Block heights of up to `BLOCK_HEIGHTS_MAX_IDS` transactions from the
+   * gateway GraphQL index, keyed by transaction id. Transactions not mined
+   * yet or unknown to the gateway are left out.
+   */
+  readonly getBlockHeights: (
+    ids: ReadonlyArray<string>,
+  ) => Effect.Effect<ReadonlyMap<string, number>, ArweaveGatewayError>;
 }
+
+/** Page size limit of the gateway GraphQL `transactions` query. */
+export const BLOCK_HEIGHTS_MAX_IDS = 100;
+
+const GATEWAY_TIMEOUT = "30 seconds";
+
+const BLOCK_HEIGHTS_QUERY = `
+  query BlockHeights($ids: [ID!], $first: Int) {
+    transactions(ids: $ids, first: $first) {
+      edges {
+        node {
+          id
+          block {
+            height
+          }
+        }
+      }
+    }
+  }
+`;
+
+const BlockHeightsResponse = Schema.Struct({
+  data: Schema.optionalKey(
+    Schema.NullOr(
+      Schema.Struct({
+        transactions: Schema.Struct({
+          edges: Schema.Array(
+            Schema.Struct({
+              node: Schema.Struct({
+                id: Schema.String,
+                block: Schema.NullOr(Schema.Struct({ height: Schema.Int })),
+              }),
+            }),
+          ),
+        }),
+      }),
+    ),
+  ),
+  errors: Schema.optionalKey(
+    Schema.Array(Schema.Struct({ message: Schema.String })),
+  ),
+});
+
+/** Wire shape of the gateway GraphQL response to `getBlockHeights`. */
+export type ArweaveBlockHeightsResponse = typeof BlockHeightsResponse.Encoded;
 
 // Below the 2 minute upload claim lease of the publish job, so an upload is
 // given up before another worker can take over the claim and upload again.
@@ -68,6 +134,11 @@ export const makeArweaveService = (uploader: ArweaveUploader) =>
   Effect.gen(function* () {
     const config = yield* AppConfig;
     const gatewayUrl = config.ARWEAVE_GATEWAY_URL.replace(/\/+$/, "");
+
+    const gateway = (yield* HttpClient.HttpClient).pipe(
+      HttpClient.mapRequest(HttpClientRequest.prependUrl(gatewayUrl)),
+      HttpClient.filterStatusOk,
+    );
 
     return {
       uploadFile: ({ file, contentType, tags = [] }: ArweaveUploadOptions) =>
@@ -117,6 +188,49 @@ export const makeArweaveService = (uploader: ArweaveUploader) =>
             gatewayUrl: `${gatewayUrl}/${id}`,
           };
         }),
+      getBlockHeights: (ids: ReadonlyArray<string>) =>
+        Effect.gen(function* () {
+          const response = yield* HttpClientRequest.post("/graphql").pipe(
+            HttpClientRequest.bodyJsonUnsafe({
+              query: BLOCK_HEIGHTS_QUERY,
+              variables: { ids, first: ids.length },
+            }),
+            gateway.execute,
+            Effect.flatMap(
+              HttpClientResponse.schemaBodyJson(BlockHeightsResponse),
+            ),
+            Effect.timeout(GATEWAY_TIMEOUT),
+            Effect.mapError(
+              (cause) =>
+                new ArweaveGatewayError({
+                  cause,
+                  message: `Arweave GraphQL request failed: ${cause.message}`,
+                }),
+            ),
+          );
+
+          const connection = response.data?.transactions;
+
+          if (response.errors !== undefined || connection === undefined) {
+            return yield* new ArweaveGatewayError({
+              cause: response.errors,
+              message: `Arweave GraphQL query failed: ${
+                response.errors?.map((error) => error.message).join(", ") ??
+                "no data"
+              }`,
+            });
+          }
+
+          const requested = new Set(ids);
+
+          return new Map(
+            connection.edges.flatMap(({ node }) =>
+              node.block !== null && requested.has(node.id)
+                ? [[node.id, node.block.height] as const]
+                : [],
+            ),
+          );
+        }),
     } satisfies ArweaveClient;
   });
 
@@ -152,7 +266,7 @@ export class ArweaveService extends Context.Service<
 
         return yield* makeArweaveService(makeTurboUploader(turbo));
       }),
-    );
+    ).pipe(Layer.provide(FetchHttpClient.layer));
 
   static readonly layerTest = (
     uploads: Array<ArweaveUploadOptions> = [],
@@ -160,11 +274,24 @@ export class ArweaveService extends Context.Service<
       options: ArweaveUploadOptions,
     ) => Effect.Effect<ArweaveUploadResult, ArweaveUploadError> = () =>
       Effect.succeed(ARWEAVE_TEST_UPLOAD),
+    /** Block heights of the mined transactions, keyed by transaction id. */
+    blockHeights: ReadonlyMap<string, number> = new Map(),
   ): Layer.Layer<ArweaveService> =>
     Layer.succeed(ArweaveService, {
       uploadFile: (options) =>
         Effect.sync(() => {
           uploads.push(options);
         }).pipe(Effect.andThen(uploadFile(options))),
+      getBlockHeights: (ids) =>
+        Effect.sync(
+          () =>
+            new Map(
+              ids.flatMap((id) => {
+                const height = blockHeights.get(id);
+
+                return height === undefined ? [] : [[id, height] as const];
+              }),
+            ),
+        ),
     });
 }
