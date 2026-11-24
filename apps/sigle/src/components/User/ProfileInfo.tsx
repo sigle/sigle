@@ -3,6 +3,7 @@
 import type { paths } from "@sigle/sdk";
 import { formatReadableAddress } from "@/lib/stacks";
 import { prettifyUrl } from "@/lib/urls";
+import { ExplorerBadge } from "../Shared/Profile/ExplorerBadge";
 import { ProfileMarkdownDescription } from "../Shared/Profile/MarkdownDescription";
 
 interface ProfileInfoProps {
@@ -20,6 +21,9 @@ export const ProfileInfo = ({ user }: ProfileInfoProps) => {
       <h1 className="headline text-3xl break-words">
         {profile?.displayName || formatReadableAddress(user.address)}
       </h1>
+      {user.isExplorer ? (
+        <ExplorerBadge variant="label" className="mt-2" />
+      ) : null}
       <p className="mt-1 font-mono text-xs break-all text-muted-foreground">
         {user.address}
       </p>

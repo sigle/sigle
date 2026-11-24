@@ -33,7 +33,7 @@ export interface paths {
     };
     /**
      * Get the signed-in user
-     * @description Return the signed-in user's id, primary Stacks address, whitelist status, and plan. Returns a 401 without a session.
+     * @description Return the signed-in user's id, primary Stacks address, and plan. Returns a 401 without a session.
      */
     get: operations["me.get"];
     put?: never;
@@ -151,7 +151,7 @@ export interface paths {
     put?: never;
     /**
      * Publish a draft
-     * @description Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being published to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, 3 posts on Free and 20 on Pro, counting the publishes in flight.
+     * @description Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being published to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, 3 posts on Free and 20 on Pro, counting the publishes in flight. Also returns a 429 once all users of the plan together reached its global daily limit.
      */
     post: operations["drafts.publish"];
     delete?: never;
@@ -230,7 +230,7 @@ export interface paths {
     get?: never;
     /**
      * Upload a profile image
-     * @description Upload a profile avatar or cover image as a raw binary body, set it on the profile of the user's primary address right away, and return the stored profile. The image it replaces is deleted.
+     * @description Upload a profile avatar or cover image as a raw binary body, set it on the profile of the user's primary address right away, and return the stored profile. The avatar or cover it replaces is then deleted when this endpoint stored it, on a best-effort basis: a failed delete doesn't fail the upload.
      */
     put: operations["profile.uploadImage"];
     post?: never;
@@ -349,6 +349,8 @@ export interface components {
     PublicUser: {
       address: string;
       profile: components["schemas"]["UserProfile"] | null;
+      /** @description Whether the user is on Pro, unlocked by holding an Explorer Guild NFT, and gets the Explorer Guild badge. */
+      isExplorer: boolean;
     };
     UserProfile: {
       displayName: string | null;
@@ -391,9 +393,6 @@ export interface components {
     UnauthorizedError: {
       message: string;
     };
-    ForbiddenError: {
-      message: string;
-    };
     UnsupportedMediaTypeError: {
       message: string;
     };
@@ -421,6 +420,9 @@ export interface components {
       description?: string | null;
       website?: string | null;
       twitter?: string | null;
+    };
+    ForbiddenError: {
+      message: string;
     };
     UploadedImageResponse: {
       url: string;
@@ -612,7 +614,6 @@ export interface components {
     CurrentUserResponse: {
       id: string;
       address: string;
-      whitelisted: boolean;
       /** @enum {string} */
       plan: "free" | "pro";
     };
@@ -830,15 +831,6 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
-        };
-      };
       /** @description Too Many Requests */
       429: {
         headers: {
@@ -968,15 +960,6 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
-        };
-      };
       /** @description Not Found */
       404: {
         headers: {
@@ -1041,15 +1024,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */
@@ -1219,15 +1193,6 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
-        };
-      };
       /** @description Not Found */
       404: {
         headers: {
@@ -1299,15 +1264,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */
@@ -1489,15 +1445,6 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
-        };
-      };
       /** @description Too Many Requests */
       429: {
         headers: {
@@ -1543,15 +1490,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Too Many Requests */
@@ -1617,15 +1555,6 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Forbidden */
-      403: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Payload Too Large */

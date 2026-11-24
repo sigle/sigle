@@ -284,43 +284,6 @@ describe("profile", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect("profile routes return 403 for non-whitelisted users", () => {
-    const recorder = makeStorageTestRecorder();
-
-    return Effect.gen(function* () {
-      const credentials = createTestSiwsCredentials("mainnet");
-
-      const { client } = yield* createAuthenticatedClient({
-        address: credentials.address,
-      });
-
-      const png = yield* Effect.promise(() => makePngBuffer());
-
-      const responses = yield* Effect.all([
-        updateProfileRequest(client, { displayName: "Satoshi" }),
-        getBnsProfileRequest(client),
-        uploadImageRequest(client, "avatar", {
-          bytes: new Uint8Array(png),
-          contentType: "image/png",
-        }),
-      ]);
-
-      expect({
-        statuses: responses.map((response) => response.status),
-        storageUploads: recorder.uploads.length,
-      }).toStrictEqual({
-        statuses: [403, 403, 403],
-        storageUploads: 0,
-      });
-    }).pipe(
-      Effect.provide(
-        makeTestServerLayer({ STACKS_ENV: "mainnet" }, [], {
-          storage: StorageService.layerTest(recorder),
-        }),
-      ),
-    );
-  });
-
   it.effect("GET /api/me/profile/bns reads the profile of the BNS name", () =>
     Effect.gen(function* () {
       const result = yield* getBnsProfile(

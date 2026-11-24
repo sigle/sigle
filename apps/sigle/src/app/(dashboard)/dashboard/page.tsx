@@ -1,35 +1,26 @@
 "use client";
 
-import { IconInfoCircle, IconPlus } from "@tabler/icons-react";
+import { IconPlus } from "@tabler/icons-react";
 import { GetFamiliarCards } from "@/components/Dashboard/GetFamiliarCards";
 import { WritingList } from "@/components/Dashboard/WritingList";
 import { NextLink } from "@/components/Shared/NextLink";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 
 export default function Dashboard() {
-  const { data: me, isLoading: isLoadingMe } = sigleApiClient.useQuery(
-    "get",
-    "/api/me",
-  );
+  const { data: me } = sigleApiClient.useQuery("get", "/api/me");
 
-  const canWrite = me?.whitelisted === true;
-
-  const drafts = sigleApiClient.useQuery(
-    "get",
-    "/api/drafts",
-    { params: { query: { limit: 5 } } },
-    { enabled: canWrite },
-  );
+  const drafts = sigleApiClient.useQuery("get", "/api/drafts", {
+    params: { query: { limit: 5 } },
+  });
 
   const posts = sigleApiClient.useQuery(
     "get",
     "/api/posts",
     { params: { query: { author: me?.address ?? "", limit: 5 } } },
-    { enabled: canWrite },
+    { enabled: !!me },
   );
 
   const isEmpty = drafts.data?.total === 0 && posts.data?.total === 0;
@@ -39,7 +30,7 @@ export default function Dashboard() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="headline text-3xl">Dashboard</h2>
-          {canWrite ? (
+          {me ? (
             <p className="mt-2 text-sm text-muted-foreground">
               {me.plan === "pro" ? (
                 "Pro plan"
@@ -58,7 +49,7 @@ export default function Dashboard() {
           ) : null}
         </div>
 
-        {canWrite && !isEmpty ? (
+        {me && !isEmpty ? (
           <NextLink href="/p/new" className={buttonVariants()}>
             <IconPlus />
             New post
@@ -66,18 +57,7 @@ export default function Dashboard() {
         ) : null}
       </div>
 
-      {!isLoadingMe && !canWrite ? (
-        <Alert>
-          <IconInfoCircle />
-          <AlertDescription>
-            Publishing is currently restricted to whitelisted users only. If you
-            are interested in participating in the Sigle beta, please let us
-            know on Discord.
-          </AlertDescription>
-        </Alert>
-      ) : null}
-
-      {canWrite && isEmpty ? (
+      {me && isEmpty ? (
         <section className="border-y border-border py-14 text-center">
           <h3 className="headline text-2xl">Write your first story</h3>
           <p className="mx-auto mt-2 max-w-sm text-sm text-pretty text-muted-foreground">
@@ -93,7 +73,7 @@ export default function Dashboard() {
         </section>
       ) : null}
 
-      {canWrite && !isEmpty ? (
+      {me && !isEmpty ? (
         <>
           <WritingList
             title="Drafts"

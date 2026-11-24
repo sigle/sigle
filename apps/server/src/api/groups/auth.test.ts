@@ -180,7 +180,12 @@ describe("auth siws", () => {
         const message = createTestSiwsMessage({ address, nonce, chainId });
         const signature = signTestSiwsMessage(message, privateKey);
 
-        const response = yield* requestVerify(client, { message, signature });
+        // The proxy forwards the client IP, which the session must not store.
+        const response = yield* client.execute(
+          postJson("/api/auth/siws/verify", { message, signature }).pipe(
+            HttpClientRequest.setHeader("x-forwarded-for", "203.0.113.7"),
+          ),
+        );
 
         const body =
           yield* HttpClientResponse.schemaBodyJson(VerifyResponse)(response);
@@ -220,6 +225,7 @@ describe("auth siws", () => {
             isPrimary: createdWallet.isPrimary,
           },
           sessionUserId: createdSession.userId,
+          sessionIpAddress: createdSession.ipAddress,
           remainingNonces,
         }).toStrictEqual({
           success: true,
@@ -235,6 +241,7 @@ describe("auth siws", () => {
             isPrimary: true,
           },
           sessionUserId: body.user.id,
+          sessionIpAddress: "",
           remainingNonces: [],
         });
       }).pipe(Effect.provide(makeTestServerLayer())),

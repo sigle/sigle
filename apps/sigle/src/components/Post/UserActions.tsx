@@ -7,6 +7,7 @@ import { Routes } from "@/lib/routes";
 import { formatReadableAddress } from "@/lib/stacks";
 import { NextLink } from "../Shared/NextLink";
 import { PostShareDialog } from "../Shared/Post/PostShareDialog";
+import { ExplorerBadge } from "../Shared/Profile/ExplorerBadge";
 import { ProfileAvatar } from "../Shared/Profile/ProfileAvatar";
 
 interface PostUserActionsProps {
@@ -32,14 +33,18 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
             <ProfileAvatar user={author} size="3" />
           </NextLink>
           <div className="min-w-0 text-sm">
-            <NextLink
-              href={profileHref}
-              title={author.address}
-              className="block truncate font-medium underline-offset-4 hover:underline"
-            >
-              {author.profile?.displayName ||
-                formatReadableAddress(author.address)}
-            </NextLink>
+            {/* The seal sits outside the truncated link, so long names keep it. */}
+            <div className="flex min-w-0 items-center gap-1.5">
+              <NextLink
+                href={profileHref}
+                title={author.address}
+                className="truncate font-medium underline-offset-4 hover:underline"
+              >
+                {author.profile?.displayName ||
+                  formatReadableAddress(author.address)}
+              </NextLink>
+              {author.isExplorer ? <ExplorerBadge /> : null}
+            </div>
             <p className="text-muted-foreground">
               <time dateTime={post.createdAt}>
                 {format(new Date(post.createdAt), "MMM d, yyyy")}

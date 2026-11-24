@@ -67,14 +67,14 @@ export const UpdateProfileMetadata = ({
   const updateCachedUser = async ({
     address,
     profile: storedProfile,
-  }: UserResponse) => {
+  }: Omit<UserResponse, "isExplorer">) => {
     const userQueries = { queryKey: ["get", "/api/users/{address}"] };
     // A refetch started before the update, such as on window focus, would
     // otherwise overwrite the cache with the old profile.
     await queryClient.cancelQueries(userQueries);
     queryClient.setQueriesData<UserResponse>(userQueries, (cached) =>
       cached?.address === address
-        ? { address, profile: storedProfile }
+        ? { ...cached, profile: storedProfile }
         : cached,
     );
   };

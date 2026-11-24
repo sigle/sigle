@@ -38,6 +38,10 @@ export const UserProfile = Schema.Struct({
 export const PublicUser = Schema.Struct({
   address: Schema.String,
   profile: Schema.NullOr(UserProfile),
+  isExplorer: Schema.Boolean.annotate({
+    description:
+      "Whether the user is on Pro, unlocked by holding an Explorer Guild NFT, and gets the Explorer Guild badge.",
+  }),
 }).annotate({ identifier: "PublicUser" });
 
 export const PublicUserWithHeaders = HttpApiSchema.WithHeaders(

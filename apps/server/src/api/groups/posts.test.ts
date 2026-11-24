@@ -114,8 +114,9 @@ describe("posts", () => {
       const coverImage = "https://cdn.test/posts/cover.webp";
 
       // The author's older wallet is not the primary one and has its own
-      // profile, so the author must be read from the primary wallet.
-      const author = yield* createTestUser();
+      // profile, so the author must be read from the primary wallet. The
+      // author is on Pro, so they get the Explorer Guild badge.
+      const author = yield* createTestUser({ plan: "pro" });
       yield* createTestWalletAddress({
         userId: author.id,
         address: OTHER_ADDRESS,
@@ -171,6 +172,7 @@ describe("posts", () => {
           author: {
             address: item.author.address,
             displayName: item.author.profile?.displayName ?? null,
+            isExplorer: item.author.isExplorer,
           },
         })),
       ).toStrictEqual([
@@ -182,12 +184,20 @@ describe("posts", () => {
             height: 630,
             thumbhash: "cover-thumbhash",
           },
-          author: { address: AUTHOR_ADDRESS, displayName: "Author" },
+          author: {
+            address: AUTHOR_ADDRESS,
+            displayName: "Author",
+            isExplorer: true,
+          },
         },
         {
           title: "without profile",
           coverImage: null,
-          author: { address: NO_PROFILE_ADDRESS, displayName: null },
+          author: {
+            address: NO_PROFILE_ADDRESS,
+            displayName: null,
+            isExplorer: false,
+          },
         },
       ]);
     }).pipe(Effect.provide(makeTestServerLayer())),

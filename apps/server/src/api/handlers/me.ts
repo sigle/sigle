@@ -4,7 +4,11 @@ import { SigleApi } from "@/api";
 import { CurrentUser } from "@/api/middleware/auth-user";
 import { InternalServerError } from "@/api/schemas";
 import { Database } from "@/db";
-import { findPublishUsage, PlanService, PUBLISH_LIMITS } from "@/services/plan";
+import {
+  findUserPublishUsage,
+  PlanService,
+  PUBLISH_LIMITS,
+} from "@/services/plan";
 
 export const getMe = Effect.gen(function* () {
   const user = yield* CurrentUser;
@@ -12,7 +16,6 @@ export const getMe = Effect.gen(function* () {
   return {
     id: user.id,
     address: user.address,
-    whitelisted: user.whitelisted,
     plan: user.plan,
   };
 });
@@ -32,7 +35,7 @@ export const getLimits = Effect.gen(function* () {
   const db = yield* Database;
   const now = new Date();
 
-  const publish = yield* findPublishUsage(db, { userId: user.id, now });
+  const publish = yield* findUserPublishUsage(db, { userId: user.id, now });
 
   return {
     publish: toDailyLimit(PUBLISH_LIMITS[user.plan], publish),

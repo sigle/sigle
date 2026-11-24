@@ -1,4 +1,4 @@
-import { eq, inArray } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { alias } from "drizzle-orm/sqlite-core";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
@@ -6,7 +6,7 @@ import { SigleApi } from "@/api";
 import { PUBLIC_CACHE_CONTROL } from "@/api/middleware/etag";
 import { NotFound } from "@/api/schemas";
 import { Database } from "@/db";
-import { mediaImage, profile, walletAddress } from "@/db/schema";
+import { mediaImage, profile, user, walletAddress } from "@/db/schema";
 import { parseStacksAddress } from "@/lib/stacks-address";
 
 const pictureImage = alias(mediaImage, "picture_image");
@@ -83,6 +83,34 @@ export const findProfiles = (addresses: ReadonlyArray<string>) =>
   });
 
 /**
+ * The addresses whose user is on Pro, who get the Explorer Guild badge: Pro is
+ * only unlocked by holding an Explorer Guild NFT, and is re-checked twice a
+ * day. A badge belongs to the user, so it shows on every one of their wallets.
+ */
+export const findExplorerAddresses = (addresses: ReadonlyArray<string>) =>
+  Effect.gen(function* () {
+    if (addresses.length === 0) {
+      return new Set<string>();
+    }
+
+    const db = yield* Database;
+
+    const rows = yield* db
+      .select({ address: walletAddress.address })
+      .from(walletAddress)
+      .innerJoin(user, eq(user.id, walletAddress.userId))
+      .where(
+        and(
+          inArray(walletAddress.address, [...addresses]),
+          eq(user.plan, "pro"),
+        ),
+      )
+      .pipe(Effect.orDie);
+
+    return new Set(rows.map((row) => row.address));
+  });
+
+/**
  * Reads the profile of an address, see {@link findProfiles}. `undefined`
  * when the address has no profile.
  */
@@ -108,15 +136,16 @@ export const getUserProfile = (addressParam: string) =>
       if (!wallet) {
         return yield* new NotFound({ message: "User not found" });
       }
-
-      return HttpApiSchema.withHeaders({
-        body: { address, profile: null },
-        headers: { "cache-control": PUBLIC_CACHE_CONTROL },
-      });
     }
 
+    const explorers = yield* findExplorerAddresses([address]);
+
     return HttpApiSchema.withHeaders({
-      body: { address, profile: found.profile },
+      body: {
+        address,
+        profile: found?.profile ?? null,
+        isExplorer: explorers.has(address),
+      },
       headers: { "cache-control": PUBLIC_CACHE_CONTROL },
     });
   });

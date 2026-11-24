@@ -103,9 +103,16 @@ export const appConfig = Config.all({
   // Wallet addresses on the pro plan on testnet, where the Explorer Guild NFT
   // is not deployed. Ignored on mainnet
   PRO_ADDRESSES: CommaSeparatedList("PRO_ADDRESSES"),
-  // Wallet addresses allowed to write drafts and profiles on mainnet. Every
-  // user is whitelisted on testnet
-  WHITELISTED_ADDRESSES: CommaSeparatedList("WHITELISTED_ADDRESSES"),
+  // Posts all users of a plan can publish together per 24 hours, bounding the
+  // Arweave uploads paid by the server. Each plan has its own, so Free
+  // accounts reaching theirs don't block Pro accounts. Reaching one is
+  // reported to Sentry.
+  PUBLISH_GLOBAL_DAILY_LIMIT_FREE: Config.Int(
+    "PUBLISH_GLOBAL_DAILY_LIMIT_FREE",
+  ).pipe(Config.withDefault(200)),
+  PUBLISH_GLOBAL_DAILY_LIMIT_PRO: Config.Int(
+    "PUBLISH_GLOBAL_DAILY_LIMIT_PRO",
+  ).pipe(Config.withDefault(200)),
 });
 
 export type AppConfigValues = Config.Success<typeof appConfig>;
@@ -136,7 +143,8 @@ export const defaultTestConfig: AppConfigValues = {
   POSTHOG_API_HOST: Option.none(),
   ADMIN_ADDRESSES: [],
   PRO_ADDRESSES: [],
-  WHITELISTED_ADDRESSES: [],
+  PUBLISH_GLOBAL_DAILY_LIMIT_FREE: 200,
+  PUBLISH_GLOBAL_DAILY_LIMIT_PRO: 200,
 };
 
 export class AppConfig extends Context.Service<AppConfig, AppConfigValues>()(

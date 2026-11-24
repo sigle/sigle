@@ -28,7 +28,6 @@ export const CurrentUserResponse = Schema.Struct({
   // Primary Stacks address of the user, used to read their public profile and
   // posts.
   address: Schema.String,
-  whitelisted: Schema.Boolean,
   plan: UserPlan,
 }).annotate({ identifier: "CurrentUserResponse" });
 
@@ -39,7 +38,7 @@ export const UserPlanResponse = Schema.Struct({
 export const MeGroup = HttpApiGroup.make("me")
   .annotate(
     OpenApi.Description,
-    "The signed-in user, with their whitelist status, plan, and limits.",
+    "The signed-in user, with their plan and limits.",
   )
   .add(
     HttpApiEndpoint.get("get", "/", {
@@ -48,7 +47,7 @@ export const MeGroup = HttpApiGroup.make("me")
       .annotate(OpenApi.Summary, "Get the signed-in user")
       .annotate(
         OpenApi.Description,
-        "Return the signed-in user's id, primary Stacks address, whitelist status, and plan. Returns a 401 without a session.",
+        "Return the signed-in user's id, primary Stacks address, and plan. Returns a 401 without a session.",
       ),
     HttpApiEndpoint.get("limits", "/limits", {
       success: UserLimitsResponse,
