@@ -121,6 +121,9 @@ export default defineRailway(() => {
       LITESTREAM_ACCESS_KEY_ID: preserve(),
       LITESTREAM_BUCKET: preserve(),
       LITESTREAM_SECRET_ACCESS_KEY: preserve(),
+      // Key of the server's own PostHog project, for its events and errors.
+      // Kept secret so only the server can send to that project.
+      POSTHOG_API_KEY: preserve(),
       R2_ACCESS_KEY_ID: preserve(),
       R2_BUCKET: preserve(),
       R2_ENDPOINT: preserve(),
