@@ -219,7 +219,7 @@ importers:
         version: 3.7.6
       '@astrojs/starlight':
         specifier: 0.43.1
-        version: 0.43.1(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))(supports-color@10.2.2)(typescript@7.0.2)
+        version: 0.43.1(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))(supports-color@10.2.2)(typescript@7.0.2)
       '@fontsource-variable/inter':
         specifier: 5.3.0
         version: 5.3.0
@@ -228,10 +228,10 @@ importers:
         version: link:../../packages/sdk
       astro:
         specifier: 7.4.12
-        version: 7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)
+        version: 7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)
       astro-mermaid:
         specifier: 2.2.0
-        version: 2.2.0(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))(mermaid@12.3.0)
+        version: 2.2.0(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))(mermaid@12.3.0)
       mermaid:
         specifier: 12.3.0
         version: 12.3.0
@@ -282,10 +282,10 @@ importers:
         version: 7.7.0
       better-auth:
         specifier: 1.7.27
-        version: 1.7.27(51fd562b3c3062756cf68bf20e1af49f)
+        version: 1.7.27(602c3c8d62331f2c05c1ec024b79fb54)
       drizzle-orm:
-        specifier: 1.0.0-rc.5
-        version: 1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)
+        specifier: 1.0.0-rc.6
+        version: 1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)
       effect:
         specifier: 4.1.5
         version: 4.1.5
@@ -300,7 +300,7 @@ importers:
         version: 0.35.5(@types/node@26.6.6)
       sign-in-with-stacks:
         specifier: 0.4.1
-        version: 0.4.1(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.27(51fd562b3c3062756cf68bf20e1af49f))(zod@4.6.7)
+        version: 0.4.1(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.27(602c3c8d62331f2c05c1ec024b79fb54))(zod@4.6.7)
       thumbhash:
         specifier: 0.1.1
         version: 0.1.1
@@ -318,8 +318,8 @@ importers:
         specifier: 26.6.6
         version: 26.6.6
       drizzle-kit:
-        specifier: 1.0.0-rc.5
-        version: 1.0.0-rc.5(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))
+        specifier: 1.0.0-rc.6
+        version: 1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))
       tsx:
         specifier: 4.23.15
         version: 4.23.15
@@ -343,7 +343,7 @@ importers:
         version: 1.9.0(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@daveyplate/better-auth-tanstack':
         specifier: 1.3.6
-        version: 1.3.6(@tanstack/query-core@5.108.3)(@tanstack/react-query@5.108.3(@types/react@19.3.0)(react@19.3.1))(better-auth@1.7.27(51fd562b3c3062756cf68bf20e1af49f))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: 1.3.6(@tanstack/query-core@5.108.3)(@tanstack/react-query@5.108.3(@types/react@19.3.0)(react@19.3.1))(better-auth@1.7.27(602c3c8d62331f2c05c1ec024b79fb54))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@floating-ui/dom':
         specifier: 1.8.0
         version: 1.8.0
@@ -382,7 +382,7 @@ importers:
         version: link:../../packages/sdk
       '@stacks/connect':
         specifier: 8.2.7
-        version: 8.2.7(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+        version: 8.2.7(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       '@stacks/network':
         specifier: 7.7.0
         version: 7.7.0
@@ -481,7 +481,7 @@ importers:
         version: 2.3.0(@opentelemetry/api-logs@0.223.2)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.223.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.12.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.223.2(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.12.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.12.1(@opentelemetry/api@1.9.1))
       better-auth:
         specifier: 1.7.27
-        version: 1.7.27(51fd562b3c3062756cf68bf20e1af49f)
+        version: 1.7.27(602c3c8d62331f2c05c1ec024b79fb54)
       better-result:
         specifier: 3.0.1
         version: 3.0.1
@@ -562,7 +562,7 @@ importers:
         version: 4.23.0(supports-color@10.2.2)
       sign-in-with-stacks:
         specifier: 0.4.1
-        version: 0.4.1(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.27(51fd562b3c3062756cf68bf20e1af49f))(zod@4.6.7)
+        version: 0.4.1(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.27(602c3c8d62331f2c05c1ec024b79fb54))(zod@4.6.7)
       sonner:
         specifier: 2.0.8
         version: 2.0.8(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -5644,23 +5644,27 @@ packages:
     resolution: {integrity: sha512-F4wZ06PvqxYLFEZKkFxTDcns9oFNk34hvmJSEwdzsxVQ8YI5YaxtACgQatkYgv2VI2CFkUd2Y+xosPQnHv809g==}
     engines: {node: '>=0.10'}
 
-  drizzle-kit@1.0.0-rc.5:
-    resolution: {integrity: sha512-8glQN7iFK3e1aOIoRit1NtslcsqE/rnlqNw/1jUC5Ph4RFVh/E5Jricxd6Nu2ugj2HlFZlZ6O4006AwqJ9e24g==}
+  drizzle-kit@1.0.0-rc.6:
+    resolution: {integrity: sha512-UNwJcuwG8Iw/5M/aKmmzaX61OQgX+gj87MIEZE4J/2pSDCnQJHjhFhmPq8YNHAHnY81bbGsqiWxlyiybDD1E/g==}
+    engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
       drizzle-orm: '>=1.0.0-rc.5'
+      oxc-parser: ^0.157.0
     peerDependenciesMeta:
       drizzle-orm:
         optional: true
+      oxc-parser:
+        optional: true
 
-  drizzle-orm@1.0.0-rc.5:
-    resolution: {integrity: sha512-7BMYTsAZbQ9DcQCtLG4G202Hq6nc/e8o1EBKN6nBweRI8EGPFe/VdyvWQCsU9fuZSiRjNpELolUSi//JFBq+lw==}
+  drizzle-orm@1.0.0-rc.6:
+    resolution: {integrity: sha512-z/2UDIuD/IbA862MbficiLc0BZodaWoXqSrv3Opdi1k0lx5oK4iX+rayJ1RwHbwFvvDGJpVP2mTYwxefar1xEg==}
+    engines: {node: ^20.19.0 || >=22.12.0}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@aws/aurora-dsql-node-postgres-connector': '>=0.1.9'
       '@aws/aurora-dsql-postgresjs-connector': '>=0.3.0'
       '@cloudflare/workers-types': '>=4'
-      '@drizzle-team/minipg': '>=0.4.2'
       '@effect/sql-d1': '>=4.0.0'
       '@effect/sql-libsql': '>=4.0.0'
       '@effect/sql-mysql2': '>=4.0.0'
@@ -5686,10 +5690,9 @@ packages:
       '@tursodatabase/serverless': '>=1.4.0'
       '@tursodatabase/sync': '>=0.7.1'
       '@types/better-sqlite3': '*'
-      '@types/mssql': ^9.1.4
+      '@types/mssql': '>=9.1.11'
       '@types/pg': '*'
       '@types/sql.js': '*'
-      '@upstash/redis': '>=1.34.7'
       '@vercel/postgres': '>=0.8.0'
       '@xata.io/client': '*'
       arktype: '>=2.0.0'
@@ -5697,7 +5700,7 @@ packages:
       bun-types: '*'
       effect: '>=4.0.0'
       expo-sqlite: '>=14.0.0'
-      mssql: ^11.0.1
+      mssql: '>=11.0.1'
       mysql2: '>=2'
       pg: '>=8'
       postgres: '>=3'
@@ -5714,8 +5717,6 @@ packages:
       '@aws/aurora-dsql-postgresjs-connector':
         optional: true
       '@cloudflare/workers-types':
-        optional: true
-      '@drizzle-team/minipg':
         optional: true
       '@effect/sql-d1':
         optional: true
@@ -5772,8 +5773,6 @@ packages:
       '@types/pg':
         optional: true
       '@types/sql.js':
-        optional: true
-      '@upstash/redis':
         optional: true
       '@vercel/postgres':
         optional: true
@@ -9434,11 +9433,11 @@ snapshots:
       github-slugger: 2.0.0
       satteri: 0.11.7
 
-  '@astrojs/mdx@8.1.6(@astrojs/markdown-satteri@0.4.10)(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))':
+  '@astrojs/mdx@8.1.6(@astrojs/markdown-satteri@0.4.10)(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))':
     dependencies:
       '@astrojs/internal-helpers': 0.13.2
       '@astrojs/markdown-satteri': 0.4.10
-      astro: 7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)
+      astro: 7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)
       es-module-lexer: 3.0.5
 
   '@astrojs/prism@4.1.2':
@@ -9455,16 +9454,16 @@ snapshots:
       sitemap: 10.0.0
       zod: 4.6.7
 
-  '@astrojs/starlight@0.43.1(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))(supports-color@10.2.2)(typescript@7.0.2)':
+  '@astrojs/starlight@0.43.1(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))(supports-color@10.2.2)(typescript@7.0.2)':
     dependencies:
       '@astrojs/markdown-satteri': 0.4.10
-      '@astrojs/mdx': 8.1.6(@astrojs/markdown-satteri@0.4.10)(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))
+      '@astrojs/mdx': 8.1.6(@astrojs/markdown-satteri@0.4.10)(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))
       '@astrojs/sitemap': 3.7.6
       '@pagefind/default-ui': 1.5.2
       '@types/hast': 3.0.5
       '@types/mdast': 4.0.4
-      astro: 7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)
-      astro-expressive-code: 0.44.2(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))
+      astro: 7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)
+      astro-expressive-code: 0.44.2(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))
       bcp-47: 2.1.1
       hast-util-format: 1.1.0
       hast-util-select: 6.0.4
@@ -9734,12 +9733,12 @@ snapshots:
     optionalDependencies:
       '@opentelemetry/api': 1.9.1
 
-  '@better-auth/drizzle-adapter@1.7.27(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.5.1)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))':
+  '@better-auth/drizzle-adapter@1.7.27(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.5.1)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))':
     dependencies:
       '@better-auth/core': 1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4)
       '@better-auth/utils': 0.5.1
     optionalDependencies:
-      drizzle-orm: 1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)
+      drizzle-orm: 1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)
 
   '@better-auth/kysely-adapter@1.7.27(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.5.1)(kysely@0.29.6)':
     dependencies:
@@ -10056,11 +10055,11 @@ snapshots:
 
   '@ctrl/tinycolor@4.2.1': {}
 
-  '@daveyplate/better-auth-tanstack@1.3.6(@tanstack/query-core@5.108.3)(@tanstack/react-query@5.108.3(@types/react@19.3.0)(react@19.3.1))(better-auth@1.7.27(51fd562b3c3062756cf68bf20e1af49f))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@daveyplate/better-auth-tanstack@1.3.6(@tanstack/query-core@5.108.3)(@tanstack/react-query@5.108.3(@types/react@19.3.0)(react@19.3.1))(better-auth@1.7.27(602c3c8d62331f2c05c1ec024b79fb54))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@tanstack/query-core': 5.108.3
       '@tanstack/react-query': 5.108.3(@types/react@19.3.0)(react@19.3.1)
-      better-auth: 1.7.27(51fd562b3c3062756cf68bf20e1af49f)
+      better-auth: 1.7.27(602c3c8d62331f2c05c1ec024b79fb54)
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
 
@@ -11316,11 +11315,11 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-controllers@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
+  '@reown/appkit-controllers@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
     dependencies:
       '@reown/appkit-common': 1.7.17(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       '@reown/appkit-wallet': 1.7.17(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)
-      '@walletconnect/universal-provider': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@walletconnect/universal-provider': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       valtio: 2.1.5(@types/react@19.3.0)(react@19.3.1)
       viem: 2.47.4(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
     transitivePeerDependencies:
@@ -11351,12 +11350,12 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-pay@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
+  '@reown/appkit-pay@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
     dependencies:
       '@reown/appkit-common': 1.7.17(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-controllers': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-ui': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-utils': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)
+      '@reown/appkit-controllers': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@reown/appkit-ui': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@reown/appkit-utils': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)
       lit: 3.3.0
       valtio: 2.1.5(@types/react@19.3.0)(react@19.3.1)
     transitivePeerDependencies:
@@ -11391,12 +11390,12 @@ snapshots:
     dependencies:
       buffer: 6.0.3
 
-  '@reown/appkit-scaffold-ui@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)':
+  '@reown/appkit-scaffold-ui@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)':
     dependencies:
       '@reown/appkit-common': 1.7.17(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-controllers': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-ui': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-utils': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)
+      '@reown/appkit-controllers': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@reown/appkit-ui': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@reown/appkit-utils': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)
       '@reown/appkit-wallet': 1.7.17(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)
       lit: 3.3.0
     transitivePeerDependencies:
@@ -11428,13 +11427,13 @@ snapshots:
       - valtio
       - zod
 
-  '@reown/appkit-siwx@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)':
+  '@reown/appkit-siwx@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)':
     dependencies:
       '@reown/appkit-common': 1.7.17(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-controllers': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-scaffold-ui': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)
-      '@reown/appkit-ui': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-utils': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)
+      '@reown/appkit-controllers': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@reown/appkit-scaffold-ui': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)
+      '@reown/appkit-ui': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@reown/appkit-utils': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)
       bip322-js: 2.0.0
       bs58: 6.0.0
       lit: 3.3.0
@@ -11470,10 +11469,10 @@ snapshots:
       - zod
     optional: true
 
-  '@reown/appkit-ui@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
+  '@reown/appkit-ui@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
     dependencies:
       '@reown/appkit-common': 1.7.17(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-controllers': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@reown/appkit-controllers': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       '@reown/appkit-wallet': 1.7.17(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)
       lit: 3.3.0
       qrcode: 1.5.3
@@ -11505,12 +11504,12 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-universal-connector@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
+  '@reown/appkit-universal-connector@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
     dependencies:
-      '@reown/appkit': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@reown/appkit': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       '@reown/appkit-common': 1.7.17(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@walletconnect/types': 2.21.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
-      '@walletconnect/universal-provider': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@walletconnect/types': 2.21.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
+      '@walletconnect/universal-provider': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       bs58: 6.0.0
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -11541,15 +11540,15 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@reown/appkit-utils@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)':
+  '@reown/appkit-utils@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)':
     dependencies:
       '@reown/appkit-common': 1.7.17(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-controllers': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@reown/appkit-controllers': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       '@reown/appkit-polyfills': 1.7.17
       '@reown/appkit-wallet': 1.7.17(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)
       '@wallet-standard/wallet': 1.1.0
       '@walletconnect/logger': 2.1.2
-      '@walletconnect/universal-provider': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@walletconnect/universal-provider': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       valtio: 2.1.5(@types/react@19.3.0)(react@19.3.1)
       viem: 2.47.4(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
     transitivePeerDependencies:
@@ -11591,24 +11590,24 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@reown/appkit@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
+  '@reown/appkit@1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
     dependencies:
       '@reown/appkit-common': 1.7.17(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-controllers': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-pay': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@reown/appkit-controllers': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@reown/appkit-pay': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       '@reown/appkit-polyfills': 1.7.17
-      '@reown/appkit-scaffold-ui': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)
-      '@reown/appkit-ui': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-utils': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)
+      '@reown/appkit-scaffold-ui': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)
+      '@reown/appkit-ui': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@reown/appkit-utils': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)
       '@reown/appkit-wallet': 1.7.17(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)
-      '@walletconnect/universal-provider': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@walletconnect/universal-provider': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       bs58: 6.0.0
       semver: 7.7.2
       valtio: 2.1.5(@types/react@19.3.0)(react@19.3.1)
       viem: 2.47.4(bufferutil@4.1.0)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
     optionalDependencies:
       '@lit/react': 1.0.8(@types/react@19.3.0)
-      '@reown/appkit-siwx': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)
+      '@reown/appkit-siwx': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(valtio@2.1.5(@types/react@19.3.0)(react@19.3.1))(zod@4.6.7)
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -12012,7 +12011,7 @@ snapshots:
       fuzzysort: 3.1.0
       kleur: 4.1.5
       ora: 8.2.0
-      postcss: 8.5.26
+      postcss: 8.5.33
       prompts: 2.4.2
       recast: 0.23.11
       socks: 2.8.11
@@ -12117,10 +12116,10 @@ snapshots:
     dependencies:
       '@stencil/core': 4.43.2
 
-  '@stacks/connect@8.2.7(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
+  '@stacks/connect@8.2.7(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
     dependencies:
-      '@reown/appkit': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@reown/appkit-universal-connector': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@reown/appkit': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@reown/appkit-universal-connector': 1.7.17(@types/react@19.3.0)(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(lit@3.3.0)(react@19.3.1)(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       '@scure/base': 1.2.6
       '@stacks/common': 7.7.0
       '@stacks/connect-ui': 8.1.2
@@ -12584,7 +12583,7 @@ snapshots:
 
   '@types/bn.js@5.2.0':
     dependencies:
-      '@types/node': 18.19.130
+      '@types/node': 26.6.6
 
   '@types/chai@5.2.3':
     dependencies:
@@ -12781,7 +12780,7 @@ snapshots:
 
   '@types/pg@8.23.1':
     dependencies:
-      '@types/node': 26.6.2
+      '@types/node': 26.6.6
       pg-protocol: 1.16.0
       pg-types: 2.2.0
     optional: true
@@ -12800,7 +12799,7 @@ snapshots:
 
   '@types/set-cookie-parser@2.4.10':
     dependencies:
-      '@types/node': 26.6.2
+      '@types/node': 26.6.6
     optional: true
 
   '@types/statuses@2.0.6':
@@ -13141,7 +13140,7 @@ snapshots:
       '@oxc-project/runtime': 0.153.0
       '@oxc-project/types': 0.153.0
       lightningcss: 1.33.0
-      postcss: 8.5.26
+      postcss: 8.5.33
       yuku-codegen: 0.9.5
       yuku-parser: 0.9.5
     optionalDependencies:
@@ -13167,7 +13166,7 @@ snapshots:
       '@oxc-project/runtime': 0.153.0
       '@oxc-project/types': 0.153.0
       lightningcss: 1.33.0
-      postcss: 8.5.26
+      postcss: 8.5.33
       yuku-codegen: 0.9.5
       yuku-parser: 0.9.5
     optionalDependencies:
@@ -13218,21 +13217,21 @@ snapshots:
     dependencies:
       '@wallet-standard/base': 1.1.0
 
-  '@walletconnect/core@2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
+  '@walletconnect/core@2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
     dependencies:
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-provider': 1.0.14
       '@walletconnect/jsonrpc-types': 1.0.4
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/jsonrpc-ws-connection': 1.0.16(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@walletconnect/keyvaluestorage': 1.1.1(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
+      '@walletconnect/keyvaluestorage': 1.1.1(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
       '@walletconnect/logger': 2.1.2
       '@walletconnect/relay-api': 1.0.11
       '@walletconnect/relay-auth': 1.1.0
       '@walletconnect/safe-json': 1.0.2
       '@walletconnect/time': 1.0.2
-      '@walletconnect/types': 2.21.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
-      '@walletconnect/utils': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@walletconnect/types': 2.21.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
+      '@walletconnect/utils': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       '@walletconnect/window-getters': 1.0.1
       es-toolkit: 1.39.3
       events: 3.3.0
@@ -13313,11 +13312,11 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@walletconnect/keyvaluestorage@1.1.1(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))':
+  '@walletconnect/keyvaluestorage@1.1.1(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))':
     dependencies:
       '@walletconnect/safe-json': 1.0.2
       idb-keyval: 6.2.2
-      unstorage: 1.17.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))
+      unstorage: 1.17.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -13359,16 +13358,16 @@ snapshots:
     dependencies:
       tslib: 1.14.1
 
-  '@walletconnect/sign-client@2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
+  '@walletconnect/sign-client@2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
     dependencies:
-      '@walletconnect/core': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@walletconnect/core': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       '@walletconnect/events': 1.0.1
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/logger': 2.1.2
       '@walletconnect/time': 1.0.2
-      '@walletconnect/types': 2.21.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
-      '@walletconnect/utils': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@walletconnect/types': 2.21.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
+      '@walletconnect/utils': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       events: 3.3.0
     transitivePeerDependencies:
       - '@azure/app-configuration'
@@ -13399,12 +13398,12 @@ snapshots:
     dependencies:
       tslib: 1.14.1
 
-  '@walletconnect/types@2.21.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))':
+  '@walletconnect/types@2.21.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))':
     dependencies:
       '@walletconnect/events': 1.0.1
       '@walletconnect/heartbeat': 1.2.2
       '@walletconnect/jsonrpc-types': 1.0.4
-      '@walletconnect/keyvaluestorage': 1.1.1(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
+      '@walletconnect/keyvaluestorage': 1.1.1(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
       '@walletconnect/logger': 2.1.2
       events: 3.3.0
     transitivePeerDependencies:
@@ -13428,18 +13427,18 @@ snapshots:
       - ioredis
       - uploadthing
 
-  '@walletconnect/universal-provider@2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
+  '@walletconnect/universal-provider@2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(encoding@0.1.13)(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
     dependencies:
       '@walletconnect/events': 1.0.1
       '@walletconnect/jsonrpc-http-connection': 1.0.8(encoding@0.1.13)
       '@walletconnect/jsonrpc-provider': 1.0.14
       '@walletconnect/jsonrpc-types': 1.0.4
       '@walletconnect/jsonrpc-utils': 1.0.8
-      '@walletconnect/keyvaluestorage': 1.1.1(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
+      '@walletconnect/keyvaluestorage': 1.1.1(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
       '@walletconnect/logger': 2.1.2
-      '@walletconnect/sign-client': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
-      '@walletconnect/types': 2.21.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
-      '@walletconnect/utils': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@walletconnect/sign-client': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
+      '@walletconnect/types': 2.21.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
+      '@walletconnect/utils': 2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)
       es-toolkit: 1.39.3
       events: 3.3.0
     transitivePeerDependencies:
@@ -13468,7 +13467,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@walletconnect/utils@2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
+  '@walletconnect/utils@2.21.5(bufferutil@4.1.0)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))(typescript@7.0.2)(utf-8-validate@5.0.10)(zod@4.6.7)':
     dependencies:
       '@msgpack/msgpack': 3.1.2
       '@noble/ciphers': 1.3.0
@@ -13476,12 +13475,12 @@ snapshots:
       '@noble/hashes': 1.8.0
       '@scure/base': 1.2.6
       '@walletconnect/jsonrpc-utils': 1.0.8
-      '@walletconnect/keyvaluestorage': 1.1.1(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
+      '@walletconnect/keyvaluestorage': 1.1.1(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
       '@walletconnect/relay-api': 1.0.11
       '@walletconnect/relay-auth': 1.1.0
       '@walletconnect/safe-json': 1.0.2
       '@walletconnect/time': 1.0.2
-      '@walletconnect/types': 2.21.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
+      '@walletconnect/types': 2.21.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(ioredis@5.10.0(supports-color@10.2.2))
       '@walletconnect/window-getters': 1.0.1
       '@walletconnect/window-metadata': 1.0.1
       blakejs: 1.2.1
@@ -13780,21 +13779,21 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  astro-expressive-code@0.44.2(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)):
+  astro-expressive-code@0.44.2(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)):
     dependencies:
-      astro: 7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)
+      astro: 7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)
       rehype-expressive-code: 0.44.2
       url-extras: 0.1.0
 
-  astro-mermaid@2.2.0(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))(mermaid@12.3.0):
+  astro-mermaid@2.2.0(astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))(mermaid@12.3.0):
     dependencies:
-      astro: 7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)
+      astro: 7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)
       import-meta-resolve: 4.2.0
       mdast-util-to-string: 4.0.0
       mermaid: 12.3.0
       unist-util-visit: 5.1.0
 
-  astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1):
+  astro@7.4.12(@types/node@26.6.2)(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(esbuild@0.28.2)(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1):
     dependencies:
       '@astrojs/compiler-rs': 0.5.3
       '@astrojs/internal-helpers': 0.13.2
@@ -13842,7 +13841,7 @@ snapshots:
       tinyps: 0.5.2
       ultrahtml: 1.7.0
       unifont: 1.0.3
-      unstorage: 1.17.6(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))
+      unstorage: 1.17.6(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2))
       verkit: 0.5.0
       vite: '@voidzero-dev/vite-plus-core@1.1.0(@types/node@26.6.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)'
       vitefu: 1.1.3(@types/node@26.6.2)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)
@@ -13945,10 +13944,10 @@ snapshots:
   bech32@2.0.0:
     optional: true
 
-  better-auth@1.7.27(51fd562b3c3062756cf68bf20e1af49f):
+  better-auth@1.7.27(602c3c8d62331f2c05c1ec024b79fb54):
     dependencies:
       '@better-auth/core': 1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4)
-      '@better-auth/drizzle-adapter': 1.7.27(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.5.1)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))
+      '@better-auth/drizzle-adapter': 1.7.27(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.5.1)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))
       '@better-auth/kysely-adapter': 1.7.27(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.5.1)(kysely@0.29.6)
       '@better-auth/memory-adapter': 1.7.27(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.5.1)
       '@better-auth/mongo-adapter': 1.7.27(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.5.1)(mongodb@7.1.0(socks@2.8.11))
@@ -13966,8 +13965,8 @@ snapshots:
       zod: 4.6.7
     optionalDependencies:
       '@prisma/client': 7.9.1(prisma@7.9.1(@types/react-dom@19.3.0(@types/react@19.3.0))(@types/react@19.3.0)(magicast@0.5.5)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@7.0.2))(typescript@7.0.2)
-      drizzle-kit: 1.0.0-rc.5(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))
-      drizzle-orm: 1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)
+      drizzle-kit: 1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))
+      drizzle-orm: 1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)
       mongodb: 7.1.0(socks@2.8.11)
       mysql2: 3.15.3
       next: 16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -14604,10 +14603,10 @@ snapshots:
 
   dayjs@1.11.23: {}
 
-  db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3):
+  db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3):
     optionalDependencies:
       '@electric-sql/pglite': 0.5.16
-      drizzle-orm: 1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)
+      drizzle-orm: 1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)
       mysql2: 3.15.3
     optional: true
 
@@ -14728,11 +14727,11 @@ snapshots:
       create-hmac: 1.1.7
     optional: true
 
-  drizzle-kit@1.0.0-rc.5(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)):
+  drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)):
     optionalDependencies:
-      drizzle-orm: 1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)
+      drizzle-orm: 1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)
 
-  drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7):
+  drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7):
     optionalDependencies:
       '@effect/sql-pg': 4.1.4(effect@4.1.5)
       '@effect/sql-pglite': 4.1.4(effect@4.1.5)
@@ -15652,7 +15651,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 26.6.2
+      '@types/node': 26.6.6
       merge-stream: 2.0.0
       supports-color: 8.1.1
     optional: true
@@ -17748,7 +17747,7 @@ snapshots:
       kleur: 4.1.5
       open: 11.0.4
       ora: 8.2.0
-      postcss: 8.5.26
+      postcss: 8.5.33
       postcss-selector-parser: 7.2.1
       prompts: 2.4.2
       recast: 0.23.11
@@ -17857,7 +17856,7 @@ snapshots:
       '@shikijs/vscode-textmate': 10.1.0
       '@types/hast': 3.0.5
 
-  sign-in-with-stacks@0.4.1(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.27(51fd562b3c3062756cf68bf20e1af49f))(zod@4.6.7):
+  sign-in-with-stacks@0.4.1(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.27(602c3c8d62331f2c05c1ec024b79fb54))(zod@4.6.7):
     dependencies:
       '@stacks/common': 7.7.0
       '@stacks/encryption': 7.7.0
@@ -17865,7 +17864,7 @@ snapshots:
       '@stacks/transactions': 7.7.0
     optionalDependencies:
       '@better-auth/core': 1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4)
-      better-auth: 1.7.27(51fd562b3c3062756cf68bf20e1af49f)
+      better-auth: 1.7.27(602c3c8d62331f2c05c1ec024b79fb54)
       zod: 4.6.7
 
   signal-exit@3.0.7: {}
@@ -18389,7 +18388,7 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  unstorage@1.17.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2)):
+  unstorage@1.17.5(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2)):
     dependencies:
       anymatch: 3.1.3
       chokidar: 5.0.0
@@ -18400,11 +18399,11 @@ snapshots:
       ofetch: 1.5.1
       ufo: 1.6.3
     optionalDependencies:
-      db0: 0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3)
+      db0: 0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3)
       idb-keyval: 6.2.2
       ioredis: 5.10.0(supports-color@10.2.2)
 
-  unstorage@1.17.6(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2)):
+  unstorage@1.17.6(db0@0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3))(idb-keyval@6.2.2)(ioredis@5.10.0(supports-color@10.2.2)):
     dependencies:
       anymatch: 3.1.3
       chokidar: 5.0.0
@@ -18415,7 +18414,7 @@ snapshots:
       ofetch: 1.5.1
       ufo: 1.6.4
     optionalDependencies:
-      db0: 0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.5(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3)
+      db0: 0.3.4(@electric-sql/pglite@0.5.16)(drizzle-orm@1.0.0-rc.6(@effect/sql-pg@4.1.4(effect@4.1.5))(@effect/sql-pglite@4.1.4(effect@4.1.5))(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@electric-sql/pglite@0.5.16)(@opentelemetry/api@1.9.1)(@types/pg@8.23.1)(effect@4.1.5)(mysql2@3.15.3)(pg@8.23.0)(postgres@3.4.7)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(mysql2@3.15.3)
       idb-keyval: 6.2.2
       ioredis: 5.10.0(supports-color@10.2.2)
 
@@ -18867,7 +18866,7 @@ snapshots:
       '@webassemblyjs/wasm-parser': 1.14.1
       acorn: 8.16.0
       acorn-import-phases: 1.0.4(acorn@8.16.0)
-      browserslist: 4.28.2
+      browserslist: 4.29.6
       chrome-trace-event: 1.0.4
       enhanced-resolve: 5.24.5
       es-module-lexer: 2.3.2
@@ -18909,7 +18908,7 @@ snapshots:
       '@webassemblyjs/wasm-parser': 1.14.1
       acorn: 8.16.0
       acorn-import-phases: 1.0.4(acorn@8.16.0)
-      browserslist: 4.28.2
+      browserslist: 4.29.6
       chrome-trace-event: 1.0.4
       enhanced-resolve: 5.24.5
       es-module-lexer: 2.3.2
