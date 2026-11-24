@@ -1,4 +1,3 @@
-import "highlight.js/styles/night-owl.css";
 import "./editor-tiptap.css";
 import TipTapBlockquote from "@tiptap/extension-blockquote";
 import TipTapBold from "@tiptap/extension-bold";

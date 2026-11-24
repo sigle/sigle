@@ -1,5 +1,3 @@
-export { MultiStepToast } from "./MultiStepToast";
-
 export { useMultiStep } from "./useMultiStep";
 
 export { useMultiStepToast } from "./useMultiStepToast";

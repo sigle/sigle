@@ -148,3 +148,27 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* Posts from X embedded with react-tweet use the colors and font of the site.
+   `.root` outweighs the theme's `.dark` and `prefers-color-scheme` rules. */
+.root .react-tweet-theme {
+  --tweet-container-margin: 2rem auto;
+  --tweet-font-family: inherit;
+  --tweet-body-font-size: 1.0625rem;
+  --tweet-body-line-height: 1.6;
+  --tweet-border: 1px solid var(--border);
+  --tweet-font-color: var(--foreground);
+  --tweet-font-color-secondary: var(--muted-foreground);
+  --tweet-bg-color: var(--background);
+  --tweet-bg-color-hover: var(--muted);
+  --tweet-quoted-bg-color-hover: var(--muted);
+  --tweet-color-blue-secondary: var(--foreground);
+  --tweet-color-blue-secondary-hover: var(--muted);
+  --tweet-twitter-icon-color: var(--foreground);
+  --tweet-skeleton-gradient: linear-gradient(
+    270deg,
+    var(--muted),
+    var(--background),
+    var(--muted)
+  );
+}

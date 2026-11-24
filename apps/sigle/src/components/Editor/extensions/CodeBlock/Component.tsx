@@ -18,23 +18,27 @@ import {
  * Allow a user to select the language for the current code block.
  */
 export const CodeBlockComponent = (props: NodeViewProps) => {
-  const handleCHangeLanguage = (value: string) => {
+  const handleChangeLanguage = (value: string) => {
     props.updateAttributes({
       language: value === "auto" ? null : value,
     });
   };
 
   return (
-    <NodeViewWrapper style={{ position: "relative" }}>
-      <div className="absolute top-1 right-1">
+    <NodeViewWrapper className="relative">
+      <div className="absolute top-2 right-2">
         <Select
           value={props.node.attrs.language || "auto"}
-          onValueChange={handleCHangeLanguage}
+          onValueChange={handleChangeLanguage}
         >
-          <SelectTrigger className="bg-muted">
+          <SelectTrigger
+            size="sm"
+            aria-label="Code language"
+            className="h-6 border-none bg-transparent px-1.5 font-mono text-xs text-muted-foreground shadow-none hover:text-foreground dark:bg-transparent"
+          >
             <SelectValue />
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="font-mono">
             <SelectGroup>
               <SelectItem value="auto">auto</SelectItem>
               <SelectSeparator />

@@ -506,9 +506,6 @@ importers:
       framer-motion:
         specifier: 12.38.0
         version: 12.38.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
-      highlight.js:
-        specifier: 11.11.1
-        version: 11.11.1
       lowlight:
         specifier: 3.3.0
         version: 3.3.0
@@ -555,8 +552,8 @@ importers:
         specifier: 6.10.6
         version: 6.10.6(react-dnd-html5-backend@16.0.1)(react-dnd@16.0.1(@types/node@26.6.2)(@types/react@19.3.0)(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react-tweet:
-        specifier: 3.3.0
-        version: 3.3.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        specifier: 3.3.1
+        version: 3.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       remark-gfm:
         specifier: 4.0.1
         version: 4.0.1(supports-color@10.2.2)
@@ -3426,9 +3423,6 @@ packages:
     resolution: {integrity: sha512-hOprMw/n1fyu5OOtZG7N8sqiKxPshR1oss/y1qr6r98cVV9NcVoCMz2x2TT2enkHan6pCMpiQgUU7vmN90lIVw==}
     engines: {node: '>=16.0.0', npm: '>=7.10.0'}
     hasBin: true
-
-  '@swc/helpers@0.5.19':
-    resolution: {integrity: sha512-QamiFeIK3txNjgUTNppE6MiG3p7TdninpZu0E0PbqVh1a9FNLT2FRhisaa4NcaX52XVhA5l7Pk58Ft7Sqi/2sA==}
 
   '@swc/helpers@0.5.23':
     resolution: {integrity: sha512-5lSsMOTXURePglDfvuAQUqkGek9Hg2kksOYay2m0+XR++b2NWYL/4sWyuvVBIs8oKnJaxkdi9whaL/sqN13afw==}
@@ -8189,8 +8183,8 @@ packages:
       react-dnd-html5-backend: ^14.0.0 || ^16.0.0
       react-dom: ^18.2.0 || ^19.0.0
 
-  react-tweet@3.3.0:
-    resolution: {integrity: sha512-gSIG2169ZK7UH6rBzuU+j1xnQbH3IlOTLEkuGrRiJJTMgETik+h+26yHyyVKrLkzwrOaYPk4K3OtEKycqKgNLw==}
+  react-tweet@3.3.1:
+    resolution: {integrity: sha512-0Gj1YgBTe1K85NBMoWBlUc17Rdc67gIJLlacrVgj+3jWIoXpFfxPdZ1U5OnWkkF9zxhphqs2pY1i//JBfP3Qog==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
@@ -12520,10 +12514,6 @@ snapshots:
       '@rollup/rollup-linux-x64-musl': 4.44.0
       '@rollup/rollup-win32-arm64-msvc': 4.44.0
       '@rollup/rollup-win32-x64-msvc': 4.44.0
-
-  '@swc/helpers@0.5.19':
-    dependencies:
-      tslib: 2.8.1
 
   '@swc/helpers@0.5.23':
     dependencies:
@@ -17754,9 +17744,9 @@ snapshots:
       react-dnd-html5-backend: 16.0.1
       react-dom: 19.3.1(react@19.3.1)
 
-  react-tweet@3.3.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
+  react-tweet@3.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
-      '@swc/helpers': 0.5.19
+      '@swc/helpers': 0.5.23
       clsx: 2.1.1
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
@@ -18499,7 +18489,7 @@ snapshots:
     dependencies:
       dequal: 2.0.3
       react: 19.3.1
-      use-sync-external-store: 1.6.0(react@19.3.1)
+      use-sync-external-store: 1.7.0(react@19.3.1)
 
   synckit@0.11.13:
     dependencies:

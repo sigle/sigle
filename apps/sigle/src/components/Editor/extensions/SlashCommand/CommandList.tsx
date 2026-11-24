@@ -1,4 +1,3 @@
-import type { Icon } from "@tabler/icons-react";
 import {
   forwardRef,
   useEffect,
@@ -78,13 +77,13 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
 
     return (
       <ScrollArea
-        className="flex max-h-[332px] flex-col py-2"
+        className="flex max-h-[332px] flex-col p-1"
         ref={containerRef}
       >
         {basicItems.length > 0 && (
-          <div className="px-4 py-2">
-            <p className="text-sm text-muted-foreground">Basics</p>
-          </div>
+          <p className="px-2 pt-2 pb-1 font-mono text-xs text-muted-foreground uppercase">
+            Basics
+          </p>
         )}
         {basicItems.map(({ title, description, icon: Icon, locked }, index) => (
           <CommandListItem
@@ -99,9 +98,9 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
           />
         ))}
         {embedItems.length > 0 && (
-          <div className="px-4 py-2">
-            <p className="text-sm text-muted-foreground">Embeds</p>
-          </div>
+          <p className="px-2 pt-2 pb-1 font-mono text-xs text-muted-foreground uppercase">
+            Embeds
+          </p>
         )}
         {embedItems.map(({ title, description, icon: Icon, locked }, index) => (
           <CommandListItem
@@ -135,7 +134,7 @@ const CommandListItem = ({
   selectedIndex: number;
   title: string;
   description: string;
-  icon: Icon;
+  icon: SlashCommandsCommand["icon"];
   isLocked?: boolean;
   selectItem: (index: number) => void;
 }) => {
@@ -143,23 +142,25 @@ const CommandListItem = ({
     <div
       data-index={index}
       className={cn(
-        `flex w-full cursor-pointer items-center justify-between px-4 py-2 hover:bg-muted`,
+        "flex w-full cursor-pointer items-center gap-3 rounded-md px-2 py-1.5 hover:bg-muted",
         {
           "bg-muted": selectedIndex === index,
         },
       )}
       onClick={() => selectItem(index)}
     >
-      <div className="flex items-center">
-        <Icon width={30} height={30} />
-        <div className="ml-2 flex flex-col">
-          <p className="flex items-center gap-2 text-sm font-medium text-foreground">
-            {title}
-            {isLocked ? <ProBadge /> : null}
-          </p>
-          <p className="text-xs text-muted-foreground">{description}</p>
-        </div>
-      </div>
+      <span className="flex size-8 shrink-0 items-center justify-center rounded-md border border-border bg-background text-muted-foreground">
+        <Icon size={16} />
+      </span>
+      <span className="min-w-0">
+        <span className="flex items-center gap-2 text-sm text-foreground">
+          {title}
+          {isLocked ? <ProBadge /> : null}
+        </span>
+        <span className="block truncate text-xs text-muted-foreground">
+          {description}
+        </span>
+      </span>
     </div>
   );
 };

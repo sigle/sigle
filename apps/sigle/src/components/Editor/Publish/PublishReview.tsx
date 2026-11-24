@@ -149,9 +149,13 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
         </Alert>
       ) : null}
 
-      <div className="grid gap-4">
-        <PublishReviewGeneral />
-      </div>
+      <PublishReviewGeneral />
+
+      <p className="text-xs/relaxed text-pretty text-muted-foreground">
+        {type === "draft"
+          ? "Published stories are permanent on Arweave. You can update or hide this one later, but this version stays in the archive."
+          : "The previous version stays in the Arweave archive."}
+      </p>
 
       <DialogFooter>
         <DialogClose

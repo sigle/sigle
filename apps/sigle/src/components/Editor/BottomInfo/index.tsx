@@ -25,11 +25,14 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
     <div className="not-prose">
       <div className="fixed inset-x-0 bottom-0 mx-auto mb-8 max-w-3xl px-4">
         <div className="pointer-events-none flex items-center justify-end gap-3">
-          <p className="text-xs">{wordsCount} words</p>
+          <p className="font-mono text-xs text-muted-foreground">
+            {wordsCount} words
+          </p>
           <Button
             variant="ghost"
             size="icon-sm"
-            className="pointer-events-auto"
+            aria-label="Toggle theme"
+            className="pointer-events-auto text-muted-foreground"
             onClick={() =>
               setTheme(resolvedTheme === "dark" ? "light" : "dark")
             }
@@ -44,7 +47,8 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
           <Button
             variant="ghost"
             size="icon-sm"
-            className="pointer-events-auto"
+            aria-label="Keyboard shortcuts"
+            className="pointer-events-auto text-muted-foreground"
             onClick={() => setShowShortcutsDialog(true)}
           >
             <IconKeyboard size={16} />

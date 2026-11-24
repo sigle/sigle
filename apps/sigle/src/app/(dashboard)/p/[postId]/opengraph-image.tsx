@@ -1,15 +1,38 @@
+import { format } from "date-fns";
 import { ImageResponse } from "next/og";
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
+import { ArweaveLogo } from "@/images/ArweaveLogo";
+import { BitcoinLogo } from "@/images/BitcoinLogo";
+import { LogoImage } from "@/images/Logo";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiFetchClient } from "@/lib/sigle";
+import { formatReadableAddress } from "@/lib/stacks";
+
+export const alt = "A story published on Sigle";
 
 export const size = {
-  width: 800,
-  height: 418,
+  width: 1200,
+  height: 630,
 };
 
 export const contentType = "image/png";
 
-// Image generation
+// The fonts of the site: Newsreader for the title, Inter for the rest.
+const fontsDirectory = join(process.cwd(), "assets/fonts");
+
+const [newsreaderMedium, interRegular, interMedium] = await Promise.all([
+  readFile(join(fontsDirectory, "Newsreader-Medium.ttf")),
+  readFile(join(fontsDirectory, "Inter-Regular.ttf")),
+  readFile(join(fontsDirectory, "Inter-Medium.ttf")),
+]);
+
+const COLORS = {
+  foreground: "#0a0a0a",
+  muted: "#737373",
+  border: "#e5e5e5",
+};
+
 export default async function Image({
   params,
 }: {
@@ -29,111 +52,78 @@ export default async function Image({
     return Response.json({ error: "Not found" }, { status: 404 });
   }
 
-  // Disable font loading for now as it's throwing an error when loading the local font
-  // const interRegularPromise = fetch(
-  //   new URL("@/assets/fonts/Inter-Regular.ttf", import.meta.url),
-  // ).then((res) => res.arrayBuffer());
-  // const interMediumPromise = fetch(
-  //   new URL("@/assets/fonts/Inter-Medium.ttf", import.meta.url),
-  // ).then((res) => res.arrayBuffer());
+  const { author } = post;
+  const picture = author.profile?.picture;
 
-  // const [interRegular, interMedium] = await Promise.all([
-  //   interRegularPromise,
-  //   interMediumPromise,
-  // ]);
-
-  const title = post.title;
-
-  const picture = post.author.profile?.picture;
-  const avatar = picture ? resolveImageUrl(picture.url) : undefined;
-
-  const username = post.author.profile?.displayName;
-  const handle = post.author.address;
+  // The PNG version of the default avatar, the image renderer cannot load SVGs.
+  const avatar = picture
+    ? resolveImageUrl(picture.url)
+    : `https://api.dicebear.com/9.x/glass/png?seed=${author.address}`;
 
   return new ImageResponse(
     <div
-      tw="flex h-full w-full flex-col items-start px-15 py-15 justify-between"
-      style={{
-        color: "#202020",
-        backgroundColor: "#ffffff",
-        fontFamily: '"Inter"',
-      }}
+      tw="flex h-full w-full flex-col justify-between bg-white px-20 py-18"
+      style={{ color: COLORS.foreground, fontFamily: "Inter" }}
     >
-      <div
-        tw="text-5xl leading-snug overflow-hidden"
-        style={{
-          display: "block",
-          lineClamp: 3,
-          fontWeight: 500,
-        }}
-      >
-        {title}
-      </div>
-      <div tw="flex w-full items-center justify-between">
-        <div tw="flex items-center">
-          {avatar ? (
-            // oxlint-disable-next-line no-img-element
-            <img
-              tw="rounded-full"
-              src={avatar}
-              alt="avatar"
-              height={50}
-              width={50}
-              style={{
-                objectFit: "cover",
-              }}
-            />
-          ) : null}
-          <div tw="flex flex-col ml-3">
-            {username ? <div tw="text-xl">{username}</div> : null}
-            <div
-              tw="text-base"
-              style={{
-                color: "#646464",
-              }}
-            >
-              {`@${handle}`}
-            </div>
-          </div>
+      <LogoImage width={93} height={35} />
+
+      <div tw="flex flex-col">
+        <div
+          style={{
+            display: "block",
+            fontFamily: "Newsreader",
+            fontSize: 76,
+            fontWeight: 500,
+            letterSpacing: "-0.02em",
+            lineHeight: 1.1,
+            lineClamp: 3,
+            // Balance titles of up to two lines, longer ones fill the lines
+            // before they are clamped.
+            textWrap: post.title.length <= 50 ? "balance" : "wrap",
+          }}
+        >
+          {post.title}
         </div>
-        <div tw="flex flex-col items-center">
+        <div tw="mt-6 text-3xl" style={{ color: COLORS.muted }}>
+          {format(new Date(post.createdAt), "MMM d, yyyy")}
+        </div>
+      </div>
+
+      <div
+        tw="flex items-center justify-between pt-8"
+        style={{ borderTop: `1px solid ${COLORS.border}` }}
+      >
+        <div tw="flex items-center">
           {/* oxlint-disable-next-line no-img-element */}
           <img
-            src="https://app.sigle.io/icon-192x192.png"
-            alt="Sigle logo"
-            height={30}
-            width={30}
-            style={{
-              objectFit: "cover",
-            }}
+            tw="rounded-md"
+            src={avatar}
+            alt=""
+            width={56}
+            height={56}
+            style={{ objectFit: "cover" }}
           />
-          <div
-            tw="text-base"
-            style={{
-              color: "#646464",
-            }}
-          >
-            sigle.io
+          <div tw="ml-4 text-3xl" style={{ fontWeight: 500 }}>
+            {author.profile?.displayName ||
+              formatReadableAddress(author.address)}
+          </div>
+        </div>
+        {/* Every post is archived on Arweave and timestamped on Bitcoin. */}
+        <div tw="flex items-center">
+          <ArweaveLogo width={44} height={44} color={COLORS.muted} />
+          <div tw="flex ml-4">
+            <BitcoinLogo width={44} height={44} color={COLORS.muted} />
           </div>
         </div>
       </div>
     </div>,
     {
       ...size,
-      // fonts: [
-      //   {
-      //     name: "Inter",
-      //     data: interRegular,
-      //     style: "normal",
-      //     weight: 400,
-      //   },
-      //   {
-      //     name: "Inter",
-      //     data: interMedium,
-      //     style: "normal",
-      //     weight: 500,
-      //   },
-      // ],
+      fonts: [
+        { name: "Newsreader", data: newsreaderMedium, weight: 500 },
+        { name: "Inter", data: interRegular, weight: 400 },
+        { name: "Inter", data: interMedium, weight: 500 },
+      ],
     },
   );
 }

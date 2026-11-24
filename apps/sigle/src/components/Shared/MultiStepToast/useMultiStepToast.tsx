@@ -1,5 +1,5 @@
 import { toast } from "sonner";
-import { MultiStepToast } from "./MultiStepToast";
+import { MultiStep } from "../MultiStep";
 import { useMultiStepToastStore } from "./store";
 import { useMultiStep } from "./useMultiStep";
 
@@ -26,7 +26,7 @@ export function useMultiStepToast<T extends string>(
     steps: stepDefinitions,
     onStepChange: () => {
       const { steps } = useMultiStepToastStore.getState();
-      toast(() => <MultiStepToast steps={steps} />, {
+      toast(() => <MultiStep steps={steps} />, {
         id: toastId,
       });
     },
@@ -36,7 +36,7 @@ export function useMultiStepToast<T extends string>(
     multiStep.start();
     const { steps } = useMultiStepToastStore.getState();
 
-    toast(() => <MultiStepToast steps={steps} />, {
+    toast(() => <MultiStep steps={steps} />, {
       id: toastId,
       duration: Infinity,
       closeButton: false,
@@ -60,7 +60,7 @@ export function useMultiStepToast<T extends string>(
     }
 
     const { steps: updatedSteps } = useMultiStepToastStore.getState();
-    toast(() => <MultiStepToast steps={updatedSteps} />, {
+    toast(() => <MultiStep steps={updatedSteps} />, {
       id: toastId,
     });
   };
@@ -69,7 +69,7 @@ export function useMultiStepToast<T extends string>(
     multiStep.setStepError(id, errorMessage);
     const { steps } = useMultiStepToastStore.getState();
 
-    toast(() => <MultiStepToast steps={steps} />, {
+    toast(() => <MultiStep steps={steps} />, {
       id: toastId,
       duration: Infinity,
       closeButton: true,

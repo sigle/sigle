@@ -1,26 +1,22 @@
 "use client";
 
-import * as Sentry from "@sentry/nextjs";
-import NextError from "next/error";
-import { useEffect } from "react";
+import "./globals.css";
+import { ErrorPage } from "@/components/Shared/ErrorPage";
+import { cn } from "@/lib/cn";
+import { inter, newsreader } from "./fonts";
 
+// Replaces the root layout when it fails, so it renders its own document.
 export default function GlobalError({
   error,
+  retry,
 }: {
-  error: Error & { digest?: string };
+  error: unknown;
+  retry: () => void;
 }) {
-  useEffect(() => {
-    Sentry.captureException(error);
-  }, [error]);
-
   return (
     <html lang="en">
-      <body>
-        {/* `NextError` is the default Next.js error page component. Its type
-        definition requires a `statusCode` prop. However, since the App Router
-        does not expose status codes for errors, we simply pass 0 to render a
-        generic error message. */}
-        <NextError statusCode={0} />
+      <body className={cn(inter.className, newsreader.variable, "antialiased")}>
+        <ErrorPage error={error} retry={retry} />
       </body>
     </html>
   );

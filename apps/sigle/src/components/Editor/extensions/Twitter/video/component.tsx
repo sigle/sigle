@@ -8,7 +8,7 @@ export const VideoComponent = (props: NodeViewProps) => {
   return (
     <iframe
       title="YouTube video player"
-      className="aspect-video w-full"
+      className="aspect-video w-full rounded-lg"
       src={url}
       width="100%"
       height="100%"

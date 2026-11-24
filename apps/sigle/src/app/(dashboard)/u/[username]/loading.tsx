@@ -1,65 +1,26 @@
-import { ProfileAvatar } from "@/components/Shared/Profile/ProfileAvatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ProfileFeedSkeleton } from "@/components/User/ProfileFeed";
 
+// Follows the layout of a profile without a cover, see ProfileHeader and
+// ProfileInfo.
 export const PageProfileSkeleton = () => {
   return (
-    <>
-      {/* Banner */}
-      <Skeleton>
-        <div className="h-64 md:h-88" />
-      </Skeleton>
-
-      <div className="mx-auto max-w-2xl px-4">
-        {/* Profile image */}
-        <div className="flex">
-          <div className="z-10 mt-[-70px] rounded-sm border-[6px] border-background bg-background">
-            <Skeleton>
-              <ProfileAvatar
-                user={{
-                  address: "L",
-                }}
-                size="8"
-              />
-            </Skeleton>
-          </div>
-        </div>
-
-        {/* Profile name */}
-        <div className="mt-4 space-y-1">
-          <p className="text-lg font-medium">
-            <Skeleton>username username</Skeleton>
-          </p>
-          <p className="text-sm text-muted-foreground">
-            <Skeleton>loremipsum</Skeleton>
-          </p>
-        </div>
-
-        {/* Followers info */}
-        <div className="mt-4 flex gap-2">
-          <p className="text-sm">
-            <Skeleton>x Following</Skeleton>
-          </p>
-          <p className="text-sm">
-            <Skeleton>x followers</Skeleton>
-          </p>
-        </div>
-
-        {/* Bio */}
-        <p className="mt-3 text-sm text-muted-foreground">
-          <Skeleton>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat.
-          </Skeleton>
-        </p>
-
-        <div className="pt-10 pb-20">
-          <ProfileFeedSkeleton />
-        </div>
+    <div className="mx-auto max-w-2xl px-4 pb-20">
+      <div className="mt-12 p-1">
+        <Skeleton className="size-20" />
       </div>
-    </>
+
+      <div className="mt-4">
+        <Skeleton className="h-9 w-56" />
+        <Skeleton className="mt-2 h-3 w-80 max-w-full" />
+        <Skeleton className="mt-5 h-4 w-full" />
+        <Skeleton className="mt-2 h-4 w-3/4" />
+        <Skeleton className="mt-5 h-4 w-40" />
+      </div>
+
+      <h2 className="mt-12 headline text-2xl">Posts</h2>
+      <ProfileFeedSkeleton />
+    </div>
   );
 };
 

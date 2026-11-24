@@ -21,7 +21,7 @@ export interface SlashCommandsCommand {
   proOnly?: boolean;
   /** Shown with a Pro badge, such as a Pro command offered to a free user. */
   locked?: boolean;
-  icon: (props: IconProps) => React.ReactElement;
+  icon: React.ComponentType<IconProps>;
   command: ({ editor, range }: { editor: Editor; range?: Range }) => void;
 }
 

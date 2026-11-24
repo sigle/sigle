@@ -17,7 +17,7 @@ export const ProfileAvatar = ({
       picture: NonNullable<UserProfileResponse["profile"]>["picture"];
     } | null;
   };
-  size: "2" | "3" | "8";
+  size: "2" | "3" | "6" | "8";
 }) => {
   const picture = user.profile?.picture;
 
@@ -26,6 +26,7 @@ export const ProfileAvatar = ({
       className={cn("overflow-hidden rounded-sm bg-muted", {
         "size-8": size === "2",
         "size-10": size === "3",
+        "size-20": size === "6",
         "size-32": size === "8",
       })}
     >
