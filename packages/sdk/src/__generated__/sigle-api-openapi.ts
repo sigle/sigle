@@ -508,6 +508,8 @@ export interface components {
         title: string;
         /** @description Markdown content. */
         content: string;
+        /** @description A short plain text summary of the content, shown in post lists. */
+        excerpt: string;
         /** @description List of attributes that can be used to store any additional information that is not supported by the standard */
         attributes?: (
           | {

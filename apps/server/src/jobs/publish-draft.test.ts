@@ -40,6 +40,7 @@ const sampleMetadataJson = JSON.stringify({
     id: "draft-1",
     title: "Post Title",
     content: "# Hello Sigle",
+    excerpt: "Short summary",
     tags: ["web3", "effect"],
     contentWarning: "SENSITIVE",
     coverImage: {
@@ -47,11 +48,6 @@ const sampleMetadataJson = JSON.stringify({
       type: "image/png",
     },
     attributes: [
-      {
-        key: "excerpt",
-        value: "Short summary",
-        type: MetadataAttributeType.STRING,
-      },
       {
         key: "meta-title",
         value: "SEO Title",

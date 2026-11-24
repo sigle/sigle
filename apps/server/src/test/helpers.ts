@@ -301,6 +301,7 @@ export const createSignedTestPostMetadata = (options: {
       id: options.draftId,
       title: options.title ?? "Published Title",
       content: options.content ?? "Hello **Arweave** world!",
+      excerpt: "Hello Arweave world!",
       tags: options.tags ?? ["web3", "effect"],
     },
   };

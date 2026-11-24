@@ -37,6 +37,10 @@ export interface PostMetadataDetails {
    */
   content: string;
   /**
+   * A short plain text summary of the content, shown in post lists.
+   */
+  excerpt: string;
+  /**
    * List of attributes that can be used to store any additional information that is not supported by the standard.
    */
   attributes?: MetadataAttribute[];
@@ -63,6 +67,10 @@ export const PostMetadataDetailsSchema = z.object({
   }),
   content: z.string().min(1).meta({
     description: "Markdown content.",
+  }),
+  excerpt: z.string().meta({
+    description:
+      "A short plain text summary of the content, shown in post lists.",
   }),
   attributes: MetadataAttributeSchema.array().min(1).max(20).optional().meta({
     description:

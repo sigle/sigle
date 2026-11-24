@@ -15,20 +15,11 @@ import { resolveImageUrl } from "@/lib/images";
 import type { EditorPostFormData } from "./EditorFormProvider";
 
 const generateMetadataAttributesFromForm = ({
-  editorText,
   post,
 }: {
-  editorText: string;
   post: EditorPostFormData;
 }): MetadataAttribute[] => {
-  const attributes: MetadataAttribute[] = [
-    // Generate an excerpt from the content that can be used as the description in the post cards
-    {
-      type: MetadataAttributeType.STRING,
-      value: editorText.slice(0, 350),
-      key: "excerpt",
-    },
-  ];
+  const attributes: MetadataAttribute[] = [];
 
   if (post.metaTitle) {
     attributes.push({
@@ -96,22 +87,16 @@ export const generateSigleMetadataFromForm = async ({
   postId: string;
   post: EditorPostFormData;
 }): Promise<PostMetadata> => {
-  const editorText = editor?.getText() || "";
+  // The start of the post text, used as the description in the post cards.
+  const excerpt = (editor?.getText() || "").slice(0, 350);
 
-  const metadataAttributes = generateMetadataAttributesFromForm({
-    editorText,
-    post,
-  });
+  const metadataAttributes = generateMetadataAttributesFromForm({ post });
 
   const coverImage = post.coverImage
     ? await getImageMediaMetadata(post.coverImage)
     : undefined;
 
-  let description =
-    metadataAttributes.find((attribute) => attribute.key === "excerpt")
-      ?.value || "";
-
-  description = `${description}...\n\nWritten on www.sigle.io`;
+  const description = `${excerpt}...\n\nWritten on www.sigle.io`;
 
   const metadata = createPostMetadata({
     $schema: PostMetadataSchemaId.LATEST,
@@ -122,6 +107,7 @@ export const generateSigleMetadataFromForm = async ({
       id: postId,
       title: post.title,
       content: post.content,
+      excerpt,
       attributes:
         metadataAttributes.length > 0 ? metadataAttributes : undefined,
       coverImage,
