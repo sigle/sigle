@@ -43,9 +43,13 @@ secret_names() {
 check_service() {
   local service="$1" op_environment="$2"
 
-  NAMES="$(secret_names "$op_environment")" SERVICE="$service" CR=$'\r' LF=$'\n' \
+  # CR and LF are defined inside: `op run` empties whitespace-only variables,
+  # and an empty pattern would flag every value.
+  NAMES="$(secret_names "$op_environment")" SERVICE="$service" \
     op run --environment "$op_environment" -- bash -c '
       set -euo pipefail
+      CR=$'"'"'\r'"'"'
+      LF=$'"'"'\n'"'"'
       status=0
       for key in $NAMES; do
         case "${!key}" in
