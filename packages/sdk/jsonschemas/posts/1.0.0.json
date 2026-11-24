@@ -38,6 +38,10 @@
           "minLength": 1,
           "description": "Markdown content."
         },
+        "excerpt": {
+          "type": "string",
+          "description": "A short plain text summary of the content, shown in post lists."
+        },
         "attributes": {
           "description": "List of attributes that can be used to store any additional information that is not supported by the standard",
           "minItems": 1,
@@ -185,7 +189,7 @@
           "description": "Specify a content warning."
         }
       },
-      "required": ["id", "title", "content"],
+      "required": ["id", "title", "content", "excerpt"],
       "additionalProperties": false
     },
     "signature": {

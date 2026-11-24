@@ -40,6 +40,7 @@ function createSignedPostMetadata(
       id: "post-test-123",
       title: "Hello World",
       content: "# Content here",
+      excerpt: "Content here",
       ...contentOverrides,
     },
   };

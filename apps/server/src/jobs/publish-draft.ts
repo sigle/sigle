@@ -216,7 +216,6 @@ export const processPublishDraftJob = (
 
     const metaTitle = findAttribute("meta-title") ?? null;
     const metaDescription = findAttribute("meta-description") ?? null;
-    const excerpt = findAttribute("excerpt") ?? "";
     const canonicalUri = findAttribute("canonical-uri") ?? null;
     const coverImage = postData.content.coverImage?.url ?? null;
 
@@ -250,7 +249,7 @@ export const processPublishDraftJob = (
             metadataUri: `ar://${arweaveTxId}`,
             title: postData.content.title,
             content: postData.content.content,
-            excerpt,
+            excerpt: postData.content.excerpt,
             metaTitle,
             metaDescription,
             coverImage,
