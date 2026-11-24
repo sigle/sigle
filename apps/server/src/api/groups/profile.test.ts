@@ -280,6 +280,7 @@ describe("profile", () => {
         },
         user: {
           address,
+          isExplorer: false,
           profile: expect.objectContaining({
             displayName: "Test profile",
             arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,

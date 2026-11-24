@@ -329,6 +329,8 @@ export interface components {
     PublicUser: {
       address: string;
       profile: components["schemas"]["UserProfile"] | null;
+      /** @description Whether the user is on Pro, unlocked by holding an Explorer Guild NFT, and gets the Explorer Guild badge. */
+      isExplorer: boolean;
     };
     UserProfile: {
       displayName: string | null;

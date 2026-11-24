@@ -151,7 +151,7 @@ export const UpdateProfileMetadata = ({
     await queryClient.cancelQueries(userQueries);
     queryClient.setQueriesData<UserResponse>(userQueries, (cached) =>
       cached?.address === address
-        ? { address, profile: storedProfile }
+        ? { ...cached, profile: storedProfile }
         : cached,
     );
     setEditingProfileMetadata(false);
