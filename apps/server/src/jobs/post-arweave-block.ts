@@ -6,7 +6,7 @@ import { ArweaveService, BLOCK_HEIGHTS_MAX_IDS } from "@/services/arweave";
 
 // Turbo bundles posts into an Arweave transaction that is usually mined
 // within an hour of the upload.
-const POST_ARWEAVE_BLOCK_INTERVAL = "10 minutes";
+const POST_ARWEAVE_BLOCK_INTERVAL = "1 hour";
 
 interface PendingPost {
   readonly id: string;
