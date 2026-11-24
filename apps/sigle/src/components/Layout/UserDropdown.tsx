@@ -55,8 +55,6 @@ export const UserDropdown = () => {
     return null;
   }
 
-  const address = me?.address ?? session.user.id;
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -66,22 +64,29 @@ export const UserDropdown = () => {
             aria-label="Account menu"
             className="cursor-pointer rounded-md transition outline-none hover:opacity-85 focus-visible:ring-3 focus-visible:ring-ring/50"
           >
-            <ProfileAvatar user={user ?? { address }} size="2" />
+            <ProfileAvatar
+              user={user ?? { address: me?.address ?? session.user.id }}
+              size="2"
+            />
           </button>
         }
       />
       <DropdownMenuContent align="end" sideOffset={8} className="w-56">
-        <div className="px-1.5 pt-1 pb-2">
-          {user?.profile?.displayName ? (
-            <p className="mb-0.5 truncate text-sm font-medium">
-              {user.profile.displayName}
-            </p>
-          ) : null}
-          <p className="font-mono text-xs text-muted-foreground">
-            {formatReadableAddress(address)}
-          </p>
-        </div>
-        <DropdownMenuSeparator />
+        {me?.address ? (
+          <>
+            <div className="px-1.5 pt-1 pb-2">
+              {user?.profile?.displayName ? (
+                <p className="mb-0.5 truncate text-sm font-medium">
+                  {user.profile.displayName}
+                </p>
+              ) : null}
+              <p className="font-mono text-xs text-muted-foreground">
+                {formatReadableAddress(me.address)}
+              </p>
+            </div>
+            <DropdownMenuSeparator />
+          </>
+        ) : null}
         {me?.whitelisted ? (
           <DropdownMenuItem
             render={
@@ -91,13 +96,15 @@ export const UserDropdown = () => {
             }
           />
         ) : null}
-        <DropdownMenuItem
-          render={
-            <NextLink href={Routes.userProfile({ username: address })}>
-              <IconUser className="text-muted-foreground" /> View blog
-            </NextLink>
-          }
-        />
+        {me?.address ? (
+          <DropdownMenuItem
+            render={
+              <NextLink href={Routes.userProfile({ username: me.address })}>
+                <IconUser className="text-muted-foreground" /> View blog
+              </NextLink>
+            }
+          />
+        ) : null}
         <DropdownMenuItem
           render={
             <NextLink href="/dashboard/settings">

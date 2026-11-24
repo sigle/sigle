@@ -97,7 +97,10 @@ export const EditorSave = () => {
 
   if (saveState === "error") {
     return (
-      <p className="flex min-w-0 items-center gap-1.5 text-sm text-destructive">
+      <p
+        role="alert"
+        className="flex min-w-0 items-center gap-1.5 text-sm text-destructive"
+      >
         <IconAlertCircle size={14} className="shrink-0" />
         <span className="truncate">
           {saveError ?? "Error saving, please try again"}

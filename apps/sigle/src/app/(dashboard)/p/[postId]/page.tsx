@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import type { Routes } from "@/lib/routes";
-import { sigleApiFetchClient } from "@/lib/sigle";
+import { sigleApiClient, sigleApiFetchClient } from "@/lib/sigle";
 import { PostClientPage } from "./page-client";
 
 export const dynamic = "force-dynamic";
@@ -45,11 +50,25 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
 export default async function Post(props: Props) {
   // The client query throws on a missing post, so check it here to show the 404 page.
-  const { response } = await getPost((await props.params).postId);
+  const { postId } = await props.params;
+  const { data, response } = await getPost(postId);
 
   if (response.status === 404) {
     notFound();
   }
 
-  return <PostClientPage params={props.params} />;
+  // Hand the result to the client query, so the browser doesn't fetch it again.
+  const queryClient = new QueryClient();
+  queryClient.setQueryData(
+    sigleApiClient.queryOptions("get", "/api/posts/{postId}", {
+      params: { path: { postId } },
+    }).queryKey,
+    data,
+  );
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <PostClientPage params={props.params} />
+    </HydrationBoundary>
+  );
 }

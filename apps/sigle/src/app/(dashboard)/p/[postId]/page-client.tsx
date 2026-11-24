@@ -28,6 +28,8 @@ export function PostClientPage(props: Props) {
         },
       },
     },
+    // The page on the server hydrates this query with a fresh result.
+    { staleTime: 60_000 },
   );
 
   if (!post) {
