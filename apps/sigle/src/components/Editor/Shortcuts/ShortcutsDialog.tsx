@@ -41,7 +41,6 @@ const sections: { title: string; items: Shortcut[] }[] = [
     items: [
       { action: "Bold", keys: ["Mod", "B"] },
       { action: "Italic", keys: ["Mod", "I"] },
-      { action: "Underline", keys: ["Mod", "U"] },
       { action: "Strikethrough", keys: ["Mod", "Shift", "S"] },
       { action: "Inline code", keys: ["Mod", "E"] },
       { action: "Link", keys: ["Mod", "K"] },
