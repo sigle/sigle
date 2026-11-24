@@ -18,6 +18,42 @@ body {
   isolation: isolate;
 }
 
+/* The ProWelcomeDialog compass needle: a spring with stiffness 60 and damping 9,
+   sampled into linear() so it overshoots and settles like the spring. */
+@theme {
+  --animate-compass-spin: compass-spin 1.5s
+    linear(
+      0,
+      0.13,
+      0.41,
+      0.69,
+      0.91,
+      1.04,
+      1.1,
+      1.1,
+      1.08,
+      1.05,
+      1.02,
+      1,
+      0.99,
+      0.99,
+      0.99,
+      0.99,
+      1,
+      1,
+      1,
+      1,
+      1
+    )
+    0.1s both;
+
+  @keyframes compass-spin {
+    from {
+      transform: rotate(-300deg);
+    }
+  }
+}
+
 /* shadcn theme */
 
 @custom-variant dark (&:is(.dark *));

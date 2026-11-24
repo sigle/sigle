@@ -1,7 +1,6 @@
 "use client";
 
 import { IconCheck } from "@tabler/icons-react";
-import { motion, useReducedMotion } from "framer-motion";
 import { NextLink } from "@/components/Shared/NextLink";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,7 +21,7 @@ const UNLOCKED_FEATURES = [
 ];
 
 /** A compass, after the Jules Verne theme of the Explorer Guild. */
-const Compass = ({ animate }: { animate: boolean }) => (
+const Compass = () => (
   <svg
     viewBox="0 0 44 44"
     fill="none"
@@ -35,18 +34,14 @@ const Compass = ({ animate }: { animate: boolean }) => (
   >
     <circle cx="22" cy="22" r="19" />
     <path d="M22 6v3M22 35v3M6 22h3M35 22h3" opacity={0.6} />
-    <motion.g
-      initial={animate ? { rotate: -300 } : false}
-      animate={{ rotate: 0 }}
-      transition={{ type: "spring", stiffness: 60, damping: 9, delay: 0.1 }}
-    >
+    <g className="origin-[22px_22px] motion-safe:animate-compass-spin">
       <path
         d="M22 11l4.5 11L22 33l-4.5-11z"
         fill="currentColor"
         fillOpacity={0.25}
       />
       <path d="M22 11l4.5 11h-9z" fill="currentColor" />
-    </motion.g>
+    </g>
   </svg>
 );
 
@@ -60,13 +55,11 @@ export const ProWelcomeDialog = ({
   open,
   onOpenChange,
 }: ProWelcomeDialogProps) => {
-  const animate = !useReducedMotion();
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="gap-5 p-6 sm:max-w-md">
         <DialogHeader className="gap-3">
-          <Compass animate={animate} />
+          <Compass />
           <DialogTitle className="headline text-2xl">
             Welcome aboard, Explorer
           </DialogTitle>
@@ -79,16 +72,14 @@ export const ProWelcomeDialog = ({
 
         <ul className="space-y-2">
           {UNLOCKED_FEATURES.map((feature, index) => (
-            <motion.li
+            <li
               key={feature}
-              className="flex items-center gap-2"
-              initial={animate ? { opacity: 0, x: -6 } : false}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.3, delay: 0.5 + index * 0.15 }}
+              className="flex items-center gap-2 animation-duration-300 fade-in slide-in-from-left-[6px] motion-safe:animate-in motion-safe:fill-mode-both"
+              style={{ animationDelay: `${500 + index * 150}ms` }}
             >
               <IconCheck size={16} className="text-accent" />
               {feature}
-            </motion.li>
+            </li>
           ))}
         </ul>
 
