@@ -18,8 +18,8 @@ export default function Dashboard() {
 
   const posts = sigleApiClient.useQuery(
     "get",
-    "/api/posts",
-    { params: { query: { author: me?.address ?? "", limit: 5 } } },
+    "/api/me/posts",
+    { params: { query: { limit: 5 } } },
     { enabled: !!me },
   );
 
@@ -93,15 +93,17 @@ export default function Dashboard() {
           <WritingList
             title="Published"
             total={posts.data?.total}
-            action={{
-              label: "View blog",
-              href: Routes.userProfile({ username: me.address }),
-            }}
+            action={{ label: "View all", href: "/dashboard/published" }}
             items={posts.data?.results.map((post) => ({
               id: post.id,
               title: post.metaTitle || post.title,
-              href: Routes.post({ postId: post.id }),
+              // A hidden story has no page, its row is on the Published list.
+              href:
+                post.hiddenAt === null
+                  ? Routes.post({ postId: post.id })
+                  : "/dashboard/published",
               date: post.createdAt,
+              label: post.hiddenAt === null ? undefined : "Hidden",
             }))}
             isLoading={posts.isLoading}
             error={posts.error}

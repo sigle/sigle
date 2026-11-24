@@ -1,12 +1,21 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
-import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import {
+  type InfiniteData,
+  useQueryClient,
+  useSuspenseInfiniteQuery,
+} from "@tanstack/react-query";
 import { buttonVariants } from "@/components/ui/button";
 import { useIsClient } from "@/hooks/useIsClient";
 import { useSession } from "@/lib/auth-hooks";
 import { cn } from "@/lib/cn";
-import { flattenPages, getNextOffset, PAGE_SIZE } from "@/lib/pagination";
+import {
+  flattenPages,
+  getNextOffset,
+  PAGE_SIZE,
+  removeFromPages,
+} from "@/lib/pagination";
 import { sigleApiClient, sigleApiFetchClient } from "@/lib/sigle";
 import { LoadMore } from "../Shared/LoadMore";
 import { NextLink } from "../Shared/NextLink";
@@ -31,10 +40,12 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
   // openapi-react-query has no suspense variant of infinite queries, and the
   // server renders the first page, so this calls the fetch client itself.
   const query = { author: user.address, limit: PAGE_SIZE };
+  const queryKey = ["get", "/api/posts", { params: { query } }];
+  const queryClient = useQueryClient();
 
   const { data, hasNextPage, fetchNextPage, isFetching } =
     useSuspenseInfiniteQuery({
-      queryKey: ["get", "/api/posts", { params: { query } }],
+      queryKey,
       queryFn: async ({ pageParam, signal }) => {
         const { data: page, error } = await sigleApiFetchClient.GET(
           "/api/posts",
@@ -53,10 +64,33 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
 
   const posts = flattenPages(data.pages);
 
+  // The public list is cached for a minute, so a hidden post is removed from
+  // the loaded pages instead of refetching them.
+  const onHiddenChange = async (postId: string, hidden: boolean) => {
+    if (!hidden) {
+      queryClient.invalidateQueries({ queryKey });
+
+      return;
+    }
+
+    // A response to a request sent before the hide would bring the post back.
+    await queryClient.cancelQueries({ queryKey });
+
+    queryClient.setQueryData<InfiniteData<(typeof data.pages)[number]>>(
+      queryKey,
+      (old) => old && { ...old, pages: removeFromPages(old.pages, postId) },
+    );
+  };
+
   // The server renders without the session, so the first client render must
   // not depend on it either: this component hydrates after its posts load, by
   // which time the client may already know the user.
-  if (posts.length === 0 && isClient && user.address === me?.address) {
+  if (
+    posts.length === 0 &&
+    !hasNextPage &&
+    isClient &&
+    user.address === me?.address
+  ) {
     return (
       <section className="mt-4 border-y border-border py-14 text-center">
         <h3 className="headline text-2xl">Write your first story</h3>
@@ -74,7 +108,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
     );
   }
 
-  if (posts.length === 0) {
+  if (posts.length === 0 && !hasNextPage) {
     return (
       <p className="mt-4 border-y border-border py-6 text-sm text-muted-foreground">
         Nothing published yet.
@@ -86,7 +120,11 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
     <>
       <ul className="mt-4 border-t border-border">
         {posts.map((post) => (
-          <PostListItem key={post.id} post={post} />
+          <PostListItem
+            key={post.id}
+            post={post}
+            onHiddenChange={onHiddenChange}
+          />
         ))}
       </ul>
 

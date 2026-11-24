@@ -1,0 +1,1 @@
+ALTER TABLE `post` ADD `hidden_at` integer;

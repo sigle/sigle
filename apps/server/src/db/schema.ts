@@ -261,6 +261,9 @@ export const post = sqliteTable(
     tags: textArray("tags"),
     canonicalUri: text("canonical_uri"),
     signature: text("signature").unique("post_signature_key"),
+    // When the author hid the post from Sigle, null while it is shown. A
+    // hidden post stays on Arweave, but Sigle no longer serves it.
+    hiddenAt: timestamp("hidden_at"),
     createdAt: timestamp("created_at").$defaultFn(now).notNull(),
     updatedAt: timestamp("updated_at").$defaultFn(now).notNull(),
     userId: text("user_id")

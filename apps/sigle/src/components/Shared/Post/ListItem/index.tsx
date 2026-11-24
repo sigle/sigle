@@ -17,13 +17,16 @@ import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { NextLink } from "../../NextLink";
+import { HidePostDialog } from "../HidePostDialog";
 import { PostShareDialog } from "../PostShareDialog";
 
 interface PostListItemProps {
   post: paths["/api/posts"]["get"]["responses"][200]["content"]["application/json"]["results"][number];
+  /** Called once the author hides the post, or shows it again. */
+  onHiddenChange?: (postId: string, hidden: boolean) => void;
 }
 
-export const PostListItem = ({ post }: PostListItemProps) => {
+export const PostListItem = ({ post, onHiddenChange }: PostListItemProps) => {
   const { data: session } = useSession();
 
   const { data: me } = sigleApiClient.useQuery(
@@ -34,6 +37,7 @@ export const PostListItem = ({ post }: PostListItemProps) => {
   );
 
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [hideDialogOpen, setHideDialogOpen] = useState(false);
 
   const isCurrentUser = me?.address === post.author.address;
   const href = Routes.post({ postId: post.id });
@@ -83,6 +87,11 @@ export const PostListItem = ({ post }: PostListItemProps) => {
                   }
                 />
               ) : null}
+              {isCurrentUser ? (
+                <DropdownMenuItem onClick={() => setHideDialogOpen(true)}>
+                  Hide story
+                </DropdownMenuItem>
+              ) : null}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -108,6 +117,15 @@ export const PostListItem = ({ post }: PostListItemProps) => {
         open={shareDialogOpen}
         onOpenChange={setShareDialogOpen}
       />
+
+      {isCurrentUser ? (
+        <HidePostDialog
+          post={post}
+          open={hideDialogOpen}
+          onOpenChange={setHideDialogOpen}
+          onChange={onHiddenChange}
+        />
+      ) : null}
     </li>
   );
 };

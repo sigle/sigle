@@ -84,6 +84,46 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  "/api/me/posts": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * List the signed-in user's posts
+     * @description List the posts the signed-in user published, newest first, including the ones they hid. Returns a 401 without a session.
+     */
+    get: operations["me.listPosts"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/me/posts/{postId}/visibility": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    /**
+     * Hide or show a post
+     * @description Hide a post of the signed-in user from Sigle, or show it again. A hidden post is left out of the post list, its profile and RSS feed, and its page returns a 404, but it stays on Arweave. Returns a 404 for a post of another user, and a 401 without a session.
+     */
+    put: operations["me.updatePostVisibility"];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   "/api/drafts": {
     parameters: {
       query?: never;
@@ -599,6 +639,36 @@ export interface components {
       tags?: string[];
       canonicalUri?: string | null;
     };
+    PostVisibilityResponse: {
+      id: string;
+      hiddenAt: string | null;
+    };
+    PostVisibilityPayload: {
+      hidden: boolean;
+    };
+    MyPostListResponse: {
+      results: components["schemas"]["MyPostListItem"][];
+      limit: number;
+      offset: number;
+      total: number;
+    };
+    MyPostListItem: {
+      id: string;
+      title: string;
+      excerpt: string;
+      metaTitle: string | null;
+      metaDescription: string | null;
+      coverImage: components["schemas"]["MediaImage"] | null;
+      tags: string[];
+      canonicalUri: string | null;
+      arweaveTxId: string;
+      /** Format: date-time */
+      createdAt: string;
+      /** Format: date-time */
+      updatedAt: string;
+      author: components["schemas"]["PublicUser"];
+      hiddenAt: string | null;
+    };
     UserPlanResponse: {
       /** @enum {string} */
       plan: "free" | "pro";
@@ -768,6 +838,139 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TooManyRequestsError"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["InternalServerError"];
+        };
+      };
+    };
+  };
+  "me.listPosts": {
+    parameters: {
+      query?: {
+        /** @description Number of results to return. */
+        limit?: number;
+        /** @description Number of results to skip. */
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description MyPostListResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["MyPostListResponse"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BadRequestError"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Too Many Requests */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TooManyRequestsError"];
+        };
+      };
+      /** @description Internal Server Error */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["InternalServerError"];
+        };
+      };
+    };
+  };
+  "me.updatePostVisibility": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description ID of the post, its Arweave transaction ID. */
+        postId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["PostVisibilityPayload"];
+      };
+    };
+    responses: {
+      /** @description PostVisibilityResponse */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PostVisibilityResponse"];
+        };
+      };
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BadRequestError"];
+        };
+      };
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Not Found */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
         };
       };
       /** @description Too Many Requests */
