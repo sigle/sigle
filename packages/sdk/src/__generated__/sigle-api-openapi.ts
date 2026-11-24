@@ -536,7 +536,7 @@ export interface components {
         contentWarning?: "NSFW" | "SENSITIVE" | "SPOILER";
       };
       /** @description A cryptographic signature of the `content` data. */
-      signature?: string;
+      signature: string;
     };
     Draft: {
       id: string;

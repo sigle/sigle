@@ -68,6 +68,8 @@ const sampleMetadataJson = JSON.stringify({
       },
     ],
   },
+  // Jobs carry signed metadata: the publish handler verified the signature.
+  signature: "sample-metadata-signature",
 });
 
 const waitForDraftStatus = (draftId: string, status: string) =>

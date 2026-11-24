@@ -201,8 +201,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           return;
         }
 
-        // Add the signature to the metadata
-        metadata.signature = signature;
         completeStep("signature");
 
         const publishResult = await publishDraft({
@@ -212,7 +210,8 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             },
           },
           body: {
-            metadata,
+            // The API only accepts signed metadata.
+            metadata: { ...metadata, signature },
           },
         })
           .then((result) => Result.ok(result))
