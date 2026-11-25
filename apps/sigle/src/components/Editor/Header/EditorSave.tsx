@@ -96,6 +96,28 @@ export const EditorSave = () => {
     return () => subscription.unsubscribe();
   }, [watch, type, editor, onAutoSave]);
 
+  // Without this, the last 2 seconds of edits would be lost when the tab closes.
+  useEffect(() => {
+    if (saveState !== "saving") return;
+
+    const onBeforeUnload = (event: BeforeUnloadEvent) => {
+      onAutoSave.flush();
+      event.preventDefault();
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") onAutoSave.flush();
+    };
+
+    window.addEventListener("beforeunload", onBeforeUnload);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      window.removeEventListener("beforeunload", onBeforeUnload);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [saveState, onAutoSave]);
+
   if (saveState === "error") {
     return (
       <p
