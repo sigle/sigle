@@ -10,7 +10,12 @@ export const resolveImageUrl = (
 
     // We convert the CID to a v1 CID if it's a v0 CID so that images can be served by subdomain gateways
     if (cid.startsWith("Qm")) {
-      cid = parse(cid).toV1().toString();
+      try {
+        cid = parse(cid).toV1().toString();
+      } catch {
+        // Not a valid CID: keep it as written, so the image fails to load
+        // instead of the whole page failing to render.
+      }
     }
 
     image =
