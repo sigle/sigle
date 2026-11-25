@@ -11,27 +11,22 @@ export async function GET(
 ) {
   const { username } = await params;
 
-  const { data: user, error: userError } = await sigleApiFetchClient.GET(
-    "/api/users/{address}",
-    {
-      params: {
-        path: {
-          address: username,
-        },
-      },
-    },
-  );
+  const {
+    data: user,
+    error: userError,
+    response: userResponse,
+  } = await sigleApiFetchClient.GET("/api/users/{address}", {
+    params: { path: { address: username } },
+  });
 
-  if (!user) {
-    return new NextResponse("User not found", {
-      status: 404,
-    });
+  // The API answers 400 for an invalid address and 404 for an unknown one,
+  // anything else is a failure to report as one, not as a missing feed.
+  if (userResponse.status === 400 || userResponse.status === 404) {
+    return new NextResponse("User not found", { status: 404 });
   }
 
-  if (userError) {
-    return new NextResponse("Error fetching user", {
-      status: 500,
-    });
+  if (userError || !user) {
+    return new NextResponse("Error fetching user", { status: 500 });
   }
 
   const { data: posts, error: postsError } = await sigleApiFetchClient.GET(
