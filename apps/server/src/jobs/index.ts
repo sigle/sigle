@@ -1,8 +1,13 @@
+import type { SqlClient } from "effect/sql";
 import { type Duration, Layer, type Schedule } from "effect";
 import { PersistedQueue } from "effect/persistence";
-import { type SqlClient } from "effect/sql";
-import { type AppConfig } from "@/config";
-import { type Database } from "@/db";
+import type { AppConfig } from "@/config";
+import type { Database } from "@/db";
+import type { JobRuntime } from "@/queue/core";
+import type { ArweaveService } from "@/services/arweave";
+import type { ImageProcessingService } from "@/services/image-processing";
+import type { OpenTimestampsService } from "@/services/opentimestamps";
+import type { PostHogService } from "@/services/posthog";
 import {
   type GenerateImageThumbhashJob,
   generateImageThumbhashJob,
@@ -28,12 +33,7 @@ import {
   PublishDraftWorkerLive,
 } from "@/jobs/publish-draft";
 import { JobAdminService } from "@/queue/admin";
-import { type JobRuntime } from "@/queue/core";
 import { QueueStoreLive } from "@/queue/store";
-import { type ArweaveService } from "@/services/arweave";
-import { type ImageProcessingService } from "@/services/image-processing";
-import { type OpenTimestampsService } from "@/services/opentimestamps";
-import { type PostHogService } from "@/services/posthog";
 
 /** All registered jobs. Workers and queue services are wired from this list. */
 export const jobs = [

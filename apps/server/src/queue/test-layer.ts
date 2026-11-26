@@ -1,7 +1,7 @@
 import { Layer, Schedule, type Schema } from "effect";
 import { PersistedQueue } from "effect/persistence";
+import type { Job } from "@/queue/core";
 import { JobAdminService } from "@/queue/admin";
-import { type Job } from "@/queue/core";
 import { TestDatabaseLayer } from "@/test/layer";
 
 /**
