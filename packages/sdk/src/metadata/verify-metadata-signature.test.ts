@@ -7,9 +7,9 @@ import {
 } from "@stacks/transactions";
 import { matchError, type Result } from "better-result";
 import { describe, expect, it } from "vite-plus/test";
+import type { PostMetadata } from "./post.js";
 import { PostMetadataSchemaId } from "./config.js";
 import { InvalidSignatureError } from "./errors.js";
-import { type PostMetadata } from "./post.js";
 import {
   type VerifyMetadataSignatureResult,
   verifyMetadataSignature,
