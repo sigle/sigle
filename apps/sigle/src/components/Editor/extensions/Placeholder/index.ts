@@ -6,7 +6,7 @@ const Placeholder = (isMobile: boolean) => {
     includeChildren: true,
     placeholder: ({ editor, node, pos }) => {
       if (node.type.name === "heading") {
-        const level = node.attrs.level;
+        const level: unknown = node.attrs.level;
 
         if (level === 2) {
           return "Big Heading";

@@ -2,7 +2,7 @@
 export const PAGE_SIZE = 20;
 
 interface OffsetPage<Item> {
-  readonly results: readonly Item[];
+  readonly results: ReadonlyArray<Item>;
   readonly offset: number;
   readonly total: number;
 }
@@ -27,9 +27,9 @@ export const getNextOffset = (page: OffsetPage<unknown>) => {
 export const removeFromPages = <
   Page extends OffsetPage<{ readonly id: string }>,
 >(
-  pages: readonly Page[],
+  pages: ReadonlyArray<Page>,
   id: string,
-): Page[] => {
+): Array<Page> => {
   const index = pages.findIndex((page) =>
     page.results.some((item) => item.id === id),
   );
@@ -49,7 +49,7 @@ export const removeFromPages = <
  * added meanwhile, the next page repeats the last item of the previous one.
  */
 export const flattenPages = <Item extends { readonly id: string }>(
-  pages: readonly OffsetPage<Item>[],
+  pages: ReadonlyArray<OffsetPage<Item>>,
 ) => [
   ...new Map(
     pages.flatMap((page) => page.results).map((item) => [item.id, item]),

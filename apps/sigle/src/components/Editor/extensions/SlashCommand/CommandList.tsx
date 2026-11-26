@@ -15,7 +15,7 @@ export interface CommandListRef {
 }
 
 interface CommandListProps {
-  items: SlashCommandsCommand[];
+  items: Array<SlashCommandsCommand>;
   command: (item: SlashCommandsCommand) => void;
   currentNodeName?: string;
 }
@@ -25,8 +25,21 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
     const containerRef = useRef<HTMLDivElement>(null);
     const [selectedIndex, setSelectedIndex] = useState(0);
 
+    const [selectedItems, setSelectedItems] = useState(items);
+
     // When filter is happening reset to index 0
-    useEffect(() => setSelectedIndex(0), [items]);
+    if (items !== selectedItems) {
+      setSelectedItems(items);
+      setSelectedIndex(0);
+    }
+
+    const selectItem = (index: number) => {
+      const item = items[index];
+
+      if (item) {
+        command(item);
+      }
+    };
 
     useImperativeHandle(ref, () => ({
       onKeyDown: ({ event }) => {
@@ -63,14 +76,6 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
 
       $ele?.scrollIntoView({ block: "nearest" });
     }, [selectedIndex]);
-
-    const selectItem = (index: number) => {
-      const item = items[index];
-
-      if (item) {
-        command(item);
-      }
-    };
 
     const basicItems = items.filter((item) => item.section === "basic");
     const embedItems = items.filter((item) => item.section === "embed");

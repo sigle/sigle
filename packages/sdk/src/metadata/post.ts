@@ -1,15 +1,12 @@
 import { z } from "zod";
+import type { MarketplaceMetadata } from "./marketplace.js";
+import type { MediaImageMetadata } from "./media.js";
+import type { MetadataAttribute } from "./metadata-attribute.js";
 import { SignatureSchema, Tagchema } from "./common.js";
 import { PostMetadataSchemaId } from "./config.js";
-import {
-  type MarketplaceMetadata,
-  MarketplaceMetadataSchema,
-} from "./marketplace.js";
-import { type MediaImageMetadata, MediaImageMetadataSchema } from "./media.js";
-import {
-  type MetadataAttribute,
-  MetadataAttributeSchema,
-} from "./metadata-attribute.js";
+import { MarketplaceMetadataSchema } from "./marketplace.js";
+import { MediaImageMetadataSchema } from "./media.js";
+import { MetadataAttributeSchema } from "./metadata-attribute.js";
 import { evaluate } from "./utils.js";
 
 export enum ContentWarning {
@@ -43,7 +40,7 @@ export interface PostMetadataDetails {
   /**
    * List of attributes that can be used to store any additional information that is not supported by the standard.
    */
-  attributes?: MetadataAttribute[];
+  attributes?: Array<MetadataAttribute>;
   /**
    * The cover image
    */
@@ -51,7 +48,7 @@ export interface PostMetadataDetails {
   /**
    * An arbitrary list of tags.
    */
-  tags?: string[];
+  tags?: Array<string>;
   /**
    * Specify a content warning
    */
@@ -95,7 +92,9 @@ export type PostMetadata = MarketplaceMetadata & {
    */
   content: PostMetadataDetails;
   /**
-   * A cryptographic signature of the `content` data.
+   * The author's Stacks wallet signature of `JSON.stringify` of this metadata
+   * without `signature`, as returned by `createPostMetadata` (keys in schema
+   * order, unknown keys removed).
    */
   signature?: string;
 };

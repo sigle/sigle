@@ -1,3 +1,4 @@
+import type { Result } from "better-result";
 import { bytesToHex } from "@stacks/common";
 import { hashMessage } from "@stacks/encryption";
 import {
@@ -5,15 +6,13 @@ import {
   publicKeyToAddress,
   signMessageHashRsv,
 } from "@stacks/transactions";
-import { matchError, type Result } from "better-result";
+import { matchError } from "better-result";
 import { describe, expect, it } from "vite-plus/test";
+import type { PostMetadata } from "./post.js";
+import type { VerifyMetadataSignatureResult } from "./verify-metadata-signature.js";
 import { PostMetadataSchemaId } from "./config.js";
 import { InvalidSignatureError } from "./errors.js";
-import { type PostMetadata } from "./post.js";
-import {
-  type VerifyMetadataSignatureResult,
-  verifyMetadataSignature,
-} from "./verify-metadata-signature.js";
+import { verifyMetadataSignature } from "./verify-metadata-signature.js";
 
 // Consistent test private key (valid 32-byte hex + compressed byte)
 const TEST_PRIVATE_KEY =
@@ -26,7 +25,9 @@ const EXPECTED_MAINNET_ADDRESS = publicKeyToAddress(TEST_PUBLIC_KEY, "mainnet");
 const EXPECTED_TESTNET_ADDRESS = publicKeyToAddress(TEST_PUBLIC_KEY, "testnet");
 
 function unwrapErr<T, E>(result: Result<T, E>): E {
-  if (result.isErr()) return result.error;
+  if (result.isErr()) {
+    return result.error;
+  }
 
   throw new Error("Expected an error result");
 }

@@ -58,10 +58,12 @@ const getMarkdownOutput = (): string => {
 };
 
 const getImageSources = () => {
-  const sources: unknown[] = [];
+  const sources: Array<unknown> = [];
 
   useEditorStore.getState().editor?.state.doc.descendants((node) => {
-    if (node.type.name === "image") sources.push(node.attrs.src);
+    if (node.type.name === "image") {
+      sources.push(node.attrs.src);
+    }
   });
 
   return sources;
@@ -1193,7 +1195,7 @@ describe("editor tiptap - image from url", () => {
     editor?.commands.setContent(markdown, { contentType: "markdown" });
 
     expect({ markdown, sources: getImageSources() }).toStrictEqual({
-      markdown: "![](https://example.com/photo\\).png)",
+      markdown: String.raw`![](https://example.com/photo\).png)`,
       sources: [src],
     });
   });

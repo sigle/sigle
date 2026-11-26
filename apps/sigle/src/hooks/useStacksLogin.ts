@@ -41,7 +41,9 @@ export const useStacksLogin = () => {
       const data = getLocalStorage();
       const stxAddress = data?.addresses.stx[0];
 
-      if (!stxAddress) return;
+      if (!stxAddress) {
+        return;
+      }
 
       const user = {
         stxAddress: stxAddress.address,
@@ -80,9 +82,8 @@ export const useStacksLogin = () => {
         stxAddress: user.stxAddress,
       });
       setUser(user);
-      signMessage(user);
-    } catch (error) {
-      console.error(error);
+      void signMessage(user);
+    } catch {
       posthog.capture("user_login_cancel");
     }
   };
@@ -108,7 +109,7 @@ export const useStacksLogin = () => {
       version: "1",
     });
 
-    let signature = "";
+    let signature: string;
 
     try {
       const response = await request("stx_signMessage", {
@@ -116,8 +117,7 @@ export const useStacksLogin = () => {
       });
 
       signature = response.signature;
-    } catch (error) {
-      console.error(error);
+    } catch {
       posthog.capture("user_login_sign_message_error");
       toast.error("Failed to login");
 
@@ -139,7 +139,7 @@ export const useStacksLogin = () => {
       return;
     }
 
-    refetchSession();
+    void refetchSession();
     posthog.capture("user_login_sign_message_success");
     toast.success("You are now logged in");
   };

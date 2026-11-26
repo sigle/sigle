@@ -21,6 +21,7 @@ export const StatusPage = ({
   header = (
     <header className="flex h-(--header-height) items-center border-b border-border px-4 md:px-[60px]">
       {/* A plain link reloads the app, so it starts again from a clean state. */}
+      {/* oxlint-disable-next-line nextjs/no-html-link-for-pages -- a full reload starts the app again from a clean state */}
       <a href="/" aria-label="Sigle home">
         <LogoImage height={28} />
       </a>

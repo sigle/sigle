@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vite-plus/test";
 import { readLegacyJson } from "../../(dashboard)/dashboard/migration/read-legacy-json";
 
 const stubFetch = (respond: () => Response | Promise<Response>) => {
-  const urls: string[] = [];
+  const urls: Array<string> = [];
   vi.stubGlobal("fetch", async (input: string) => {
     urls.push(input);
 

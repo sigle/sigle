@@ -1,4 +1,3 @@
-// oxlint-disable typescript/prefer-literal-enum-member
 export const SchemasRoot = "https://json-schemas.sigle.io";
 
 export enum PostMetadataSchemaId {

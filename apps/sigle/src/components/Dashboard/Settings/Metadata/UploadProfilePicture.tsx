@@ -29,12 +29,16 @@ export const UploadProfilePicture = ({
     sigleApiClient.useMutation("put", "/api/me/profile/images/{kind}");
 
   const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
+    (acceptedFiles: Array<File>) => {
       const file = acceptedFiles[0];
 
-      if (!file) return;
+      if (!file) {
+        return;
+      }
 
-      if (loadingUploadImage) return;
+      if (loadingUploadImage) {
+        return;
+      }
       posthog.capture("profile_image_upload_start", {});
 
       // SAFETY: the endpoint reads a raw binary body, but openapi-typescript
@@ -50,14 +54,16 @@ export const UploadProfilePicture = ({
           headers: {
             "Content-Type": file.type,
           },
+          // oxlint-disable-next-line typescript/no-unsafe-type-assertion
           body: file as never,
           bodySerializer: () => file,
         },
         {
-          onSuccess: async (data) => {
-            await onUploaded(data);
-            toast.success("Picture updated!");
-            posthog.capture("profile_image_upload_success", {});
+          onSuccess: (data) => {
+            void onUploaded(data).then(() => {
+              toast.success("Picture updated!");
+              posthog.capture("profile_image_upload_success", {});
+            });
           },
           onError: (error) => {
             posthog.capture("profile_image_upload_error", {});

@@ -1,15 +1,10 @@
 "use client";
 
+import type { MouseEventHandler } from "react";
 import { IconPhoto, IconTrash } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
-import {
-  type MouseEventHandler,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
@@ -38,7 +33,7 @@ export const EditorCoverImage = ({
   const { setValue, watch } = useFormContext<EditorPostFormData>();
   const watchCoverImage = watch("coverImage");
 
-  const { mutateAsync: uploadImage, isPending: loadingUploadImage } =
+  const { mutate: uploadImage, isPending: loadingUploadImage } =
     sigleApiClient.useMutation("post", "/api/drafts/{draftId}/images");
 
   const setIsCoverUploading = useEditorStore(
@@ -50,12 +45,16 @@ export const EditorCoverImage = ({
   }, [loadingUploadImage, setIsCoverUploading]);
 
   const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
+    (acceptedFiles: Array<File>) => {
       const file = acceptedFiles[0];
 
-      if (!file) return;
+      if (!file) {
+        return;
+      }
 
-      if (loadingUploadImage) return;
+      if (loadingUploadImage) {
+        return;
+      }
 
       const previewBlobUrl = URL.createObjectURL(file);
       setPreview(previewBlobUrl);
@@ -76,6 +75,7 @@ export const EditorCoverImage = ({
           headers: {
             "Content-Type": file.type,
           },
+          // oxlint-disable-next-line typescript/no-unsafe-type-assertion
           body: file as never,
           bodySerializer: () => file,
         },
@@ -124,7 +124,7 @@ export const EditorCoverImage = ({
       }
     };
 
-    autoUploadImage();
+    void autoUploadImage();
   }, [canUploadImages, postId, watchCoverImage, onDrop]);
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
@@ -187,7 +187,7 @@ export const EditorCoverImage = ({
       <input {...getInputProps()} />
       {image ? (
         <div className="group relative overflow-hidden rounded-lg">
-          {/* oxlint-disable-next-line no-img-element */}
+          {/* oxlint-disable-next-line nextjs/no-img-element -- shows the local preview while uploading */}
           <img
             src={image}
             className={cn("w-full transition-opacity", {

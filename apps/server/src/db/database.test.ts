@@ -46,10 +46,10 @@ describe("database", () => {
 
         expect({
           flag: updated.flag,
-          hasLastLoginAt: updated.lastLoginAt instanceof Date,
+          lastLoginAt: updated.lastLoginAt,
         }).toStrictEqual({
           flag: "VERIFIED",
-          hasLastLoginAt: true,
+          lastLoginAt: expect.any(Date),
         });
 
         yield* db.delete(user).where(eq(user.id, created.id));

@@ -2,11 +2,10 @@
 import React from "react";
 
 // debounce function (defaults wait to .2 seconds)
-const debounce = <Args extends unknown[]>(
+const debounce = <Args extends Array<unknown>>(
   func: (...args: Args) => void,
   wait = 200,
 ) => {
-  // oxlint-disable-next-line init-declarations timeout will be initialized later
   let timeout: NodeJS.Timeout;
   // The arguments of the call waiting for the timeout, null when none is.
   let pendingArgs: Args | null = null;
@@ -21,7 +20,9 @@ const debounce = <Args extends unknown[]>(
   executedFunction.flush = () => {
     clearTimeout(timeout);
 
-    if (pendingArgs === null) return;
+    if (pendingArgs === null) {
+      return;
+    }
     const args = pendingArgs;
     pendingArgs = null;
     func(...args);
@@ -36,21 +37,20 @@ const debounce = <Args extends unknown[]>(
 };
 
 // hook for using the debounce function
-export function useDebouncedCallback<Args extends unknown[]>(
+export function useDebouncedCallback<Args extends Array<unknown>>(
   callback: (...args: Args) => void,
   delay = 1000,
   deps: React.DependencyList = [],
 ) {
   // debounce the callback
-  // oxlint-disable-next-line exhaustive-deps
+  // The caller lists the dependencies of its callback in `deps`.
+  // oxlint-disable-next-line exhaustive-deps, react/use-memo
   const debouncedCallback = React.useCallback(debounce(callback, delay), [
     delay,
     ...deps,
-    // oxlint-disable-next-line exhaustive-deps
   ]); // with the delay
 
   // run any pending call on unmount or dependency change, so it isn't lost
-  // oxlint-disable-next-line exhaustive-deps
   React.useEffect(() => {
     return () => {
       debouncedCallback.flush();

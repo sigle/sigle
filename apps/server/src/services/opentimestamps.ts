@@ -1,10 +1,9 @@
+import type { VerificationResult, VerificationSuccess } from "@otskit/client";
 import {
   OpenTimestampsClient as OtsClient,
   StampError,
   UpgradeError,
   ValidationError,
-  type VerificationResult,
-  type VerificationSuccess,
 } from "@otskit/client";
 import { Context, Data, Effect, Layer } from "effect";
 
@@ -115,10 +114,10 @@ export const makeOpenTimestampsService = (
     Effect.promise(async () => {
       try {
         return await client.verify(Buffer.from(proof), contentHash);
-      } catch (cause) {
+      } catch (error) {
         return {
           status: "network_error" as const,
-          reason: cause instanceof Error ? cause.message : String(cause),
+          reason: error instanceof Error ? error.message : String(error),
         };
       }
     }),

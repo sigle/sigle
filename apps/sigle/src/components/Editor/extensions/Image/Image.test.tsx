@@ -48,7 +48,7 @@ vi.mock(import("@/hooks/useWindowSize"), () => ({
 }));
 
 vi.mock(import("@/lib/images"), () => ({
-  resolveImageUrl: vi.fn((url) => url),
+  resolveImageUrl: vi.fn((url: string) => url),
 }));
 
 const defaultPost = {
@@ -101,10 +101,12 @@ describe("image extension - uploads by plan", () => {
   });
 
   const getImageSources = () => {
-    const sources: unknown[] = [];
+    const sources: Array<unknown> = [];
 
     useEditorStore.getState().editor?.state.doc.descendants((node) => {
-      if (node.type.name === "image") sources.push(node.attrs.src);
+      if (node.type.name === "image") {
+        sources.push(node.attrs.src);
+      }
     });
 
     return sources;
@@ -166,9 +168,13 @@ describe("image extension - uploads by plan", () => {
   const paste = (data: { file?: File; html?: string }) => {
     const clipboardData = new DataTransfer();
 
-    if (data.file) clipboardData.items.add(data.file);
+    if (data.file) {
+      clipboardData.items.add(data.file);
+    }
 
-    if (data.html) clipboardData.setData("text/html", data.html);
+    if (data.html) {
+      clipboardData.setData("text/html", data.html);
+    }
 
     useEditorStore.getState().editor?.view.dom.dispatchEvent(
       new ClipboardEvent("paste", {
@@ -334,7 +340,7 @@ describe("image extension - pending uploads", () => {
     vi.mocked(sigleApiClient.useMutation).mockReturnValue(
       // SAFETY: the upload only calls `mutateAsync`, which never resolves so
       // the image stays uploading.
-      { mutateAsync: () => Promise.withResolvers<never>().promise } as never,
+      { mutateAsync: () => Promise.withResolvers<never>().promise },
     );
 
     const editor = await renderEditor();
@@ -354,7 +360,7 @@ describe("image extension - pending uploads", () => {
         mutateAsync: vi.fn().mockResolvedValue({
           url: "https://example.com/uploaded-image.png",
         }),
-      } as never,
+      },
     );
 
     const editor = await renderEditor();
@@ -365,7 +371,7 @@ describe("image extension - pending uploads", () => {
 
     await waitFor(() => {
       expect(
-        editor.$nodes("image")?.map((node) => node.attributes.src),
+        editor.$nodes("image")?.map((node) => String(node.attributes.src)),
       ).toStrictEqual(["https://example.com/uploaded-image.png"]);
     });
 

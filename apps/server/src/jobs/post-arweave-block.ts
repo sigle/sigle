@@ -24,7 +24,7 @@ export const recordPostArweaveBlocks = Effect.gen(function* () {
   const arweave = yield* ArweaveService;
 
   let after: PendingPost | undefined = undefined;
-  let pageSize = 0;
+  let pageSize: number;
   let recorded = 0;
 
   do {

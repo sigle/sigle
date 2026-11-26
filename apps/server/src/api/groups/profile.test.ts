@@ -8,19 +8,22 @@ import {
   HttpClientResponse,
 } from "effect/http";
 import sharp from "sharp";
+import type { BnsName } from "@/services/bns";
 import type { PostHogEvent } from "@/services/posthog";
+import type {
+  StorageTestOverrides,
+  StorageTestRecorder,
+} from "@/services/storage";
 import { UserProfile } from "@/api/groups/users";
 import { RATE_LIMITS } from "@/api/middleware/rate-limit";
 import { Database } from "@/db";
 import { mediaImage, profile as profileTable } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
-import { BnsLookupError, type BnsName, BnsService } from "@/services/bns";
+import { BnsLookupError, BnsService } from "@/services/bns";
 import {
   makeStorageTestRecorder,
   StorageService,
   StorageUploadError,
-  type StorageTestOverrides,
-  type StorageTestRecorder,
   STORAGE_TEST_PUBLIC_URL,
 } from "@/services/storage";
 import {
@@ -636,12 +639,12 @@ describe("profile", () => {
 
       expect({
         deletes: recorder.deletes,
-        mediaIds: mediaIds.map((row) => row.id).sort(),
+        mediaIds: new Set(mediaIds.map((row) => row.id)),
         picture: saved.profile.picture?.url,
         coverPicture: saved.profile.coverPicture?.url,
       }).toStrictEqual({
         deletes: [keys[0]],
-        mediaIds: [secondUrl, `${STORAGE_TEST_PUBLIC_URL}/${keys[3]}`].sort(),
+        mediaIds: new Set([secondUrl, `${STORAGE_TEST_PUBLIC_URL}/${keys[3]}`]),
         picture: secondUrl,
         coverPicture: `${STORAGE_TEST_PUBLIC_URL}/${keys[3]}`,
       });

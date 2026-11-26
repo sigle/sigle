@@ -1,11 +1,13 @@
+import type {
+  MediaImageMetadata,
+  MetadataAttribute,
+  PostMetadata,
+} from "@sigle/sdk";
 import type { Editor } from "@tiptap/core";
 import {
   createPostMetadata,
-  type MediaImageMetadata,
   MediaImageMimeType,
-  type MetadataAttribute,
   MetadataAttributeType,
-  type PostMetadata,
   PostMetadataSchemaId,
 } from "@sigle/sdk";
 import { fileTypeFromBuffer } from "file-type";
@@ -18,8 +20,8 @@ const generateMetadataAttributesFromForm = ({
   post,
 }: {
   post: EditorPostFormData;
-}): MetadataAttribute[] => {
-  const attributes: MetadataAttribute[] = [];
+}): Array<MetadataAttribute> => {
+  const attributes: Array<MetadataAttribute> = [];
 
   if (post.metaTitle) {
     attributes.push({
@@ -55,7 +57,7 @@ const getImageMediaMetadata = async (
   const arrayBuffer = await response.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const contentType = await fileTypeFromBuffer(buffer);
-  let type: MediaImageMimeType | null = null;
+  let type: MediaImageMimeType;
 
   switch (contentType?.mime) {
     case "image/jpeg":
@@ -66,10 +68,9 @@ const getImageMediaMetadata = async (
       break;
     case "image/webp":
       type = MediaImageMimeType.WEBP;
-  }
-
-  if (!type) {
-    throw new Error(`Image type "${contentType?.mime}" is not supported`);
+      break;
+    default:
+      throw new Error(`Image type "${contentType?.mime}" is not supported`);
   }
 
   return {

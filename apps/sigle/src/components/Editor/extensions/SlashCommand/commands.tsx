@@ -14,7 +14,7 @@ import {
 } from "@tabler/icons-react";
 import type { SlashCommandsCommand } from "./SlashCommands";
 
-export const slashCommands: SlashCommandsCommand[] = [
+export const slashCommands: Array<SlashCommandsCommand> = [
   {
     icon: IconLetterT,
     title: "Plain Text",
@@ -87,10 +87,14 @@ export const slashCommands: SlashCommandsCommand[] = [
       input.onchange = async () => {
         const file = input.files?.[0];
 
-        if (!file) return;
+        if (!file) {
+          return;
+        }
         const [mime] = file.type.split("/");
 
-        if (mime !== "image") return;
+        if (mime !== "image") {
+          return;
+        }
 
         if (!range) {
           editor

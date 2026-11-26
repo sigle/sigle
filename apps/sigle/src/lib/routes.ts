@@ -1,7 +1,7 @@
 "use client";
 
+import type { ReadonlyURLSearchParams } from "next/navigation";
 import {
-  type ReadonlyURLSearchParams,
   useParams as useNextParams,
   useSearchParams as useNextSearchParams,
 } from "next/navigation";
@@ -61,14 +61,17 @@ function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
   fn: (p: z.input<Params>) => string,
   // SAFETY: routes without params default to a type-only placeholder schema;
   // parse/useParams are only invoked on routes that declare a real schema.
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   paramsSchema: Params = {} as Params,
   // SAFETY: routes without search params default to a type-only placeholder
   // schema; parse/useSearchParams are only invoked on routes that declare one.
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   search: Search = {} as Search,
 ): RouteBuilder<Params, Search> {
   const routeBuilder: RouteBuilder<Params, Search> = (params, options) => {
     // SAFETY: `params` is optional so parameterless routes can call the
     // builder; only routes whose `fn` reads params are called with one.
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     const baseUrl = fn(params as z.input<Params>);
 
     const searchString =
@@ -128,6 +131,7 @@ function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
 
   // SAFETY: `params` is a type-level placeholder; the runtime getter installed
   // immediately below throws for every access, so this value is never read.
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   routeBuilder.params = undefined as z.output<Params>;
   // set the runtime getter
   Object.defineProperty(routeBuilder, "params", {
@@ -143,12 +147,12 @@ function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
 
 export function convertURLSearchParamsToObject(
   params: ReadonlyURLSearchParams | null,
-): Record<string, string | string[]> {
+): Record<string, string | Array<string>> {
   if (!params) {
     return {};
   }
 
-  const entries: [string, string | string[]][] = [];
+  const entries: Array<[string, string | Array<string>]> = [];
 
   for (const key of params.keys()) {
     const values = params.getAll(key);

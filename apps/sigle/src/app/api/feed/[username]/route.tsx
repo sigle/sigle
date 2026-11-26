@@ -11,13 +11,17 @@ export async function GET(
 ) {
   const { username } = await params;
 
-  const {
-    data: user,
-    error: userError,
-    response: userResponse,
-  } = await sigleApiFetchClient.GET("/api/users/{address}", {
-    params: { path: { address: username } },
-  });
+  const [
+    { data: user, error: userError, response: userResponse },
+    { data: posts, error: postsError },
+  ] = await Promise.all([
+    sigleApiFetchClient.GET("/api/users/{address}", {
+      params: { path: { address: username } },
+    }),
+    sigleApiFetchClient.GET("/api/posts", {
+      params: { query: { author: username, limit: 100 } },
+    }),
+  ]);
 
   // The API answers 400 for an invalid address and 404 for an unknown one,
   // anything else is a failure to report as one, not as a missing feed.
@@ -28,18 +32,6 @@ export async function GET(
   if (userError || !user) {
     return new NextResponse("Error fetching user", { status: 500 });
   }
-
-  const { data: posts, error: postsError } = await sigleApiFetchClient.GET(
-    "/api/posts",
-    {
-      params: {
-        query: {
-          author: username,
-          limit: 100,
-        },
-      },
-    },
-  );
 
   if (postsError) {
     return new NextResponse("Error fetching posts", {
@@ -89,6 +81,8 @@ export async function GET(
   return new NextResponse(feed.rss2(), {
     headers: {
       "Content-Type": "application/rss+xml",
+      // Feed readers poll often without a session; five minutes matches the scale of the API's own one-minute public cache.
+      "Cache-Control": "public, max-age=300",
     },
   });
 }

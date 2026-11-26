@@ -1,6 +1,7 @@
 "use client";
 
-import { cva, type VariantProps } from "class-variance-authority";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -54,6 +55,7 @@ function InputGroupAddon({
       data-align={align}
       className={cn(inputGroupAddonVariants({ align }), className)}
       onClick={(e) => {
+        // oxlint-disable-next-line @nkzw/no-instanceof -- narrows the DOM event target
         if (e.target instanceof Element && e.target.closest("button")) {
           return;
         }

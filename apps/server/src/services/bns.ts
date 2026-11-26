@@ -1,4 +1,5 @@
-import { Cl, type ClarityValue, cvToHex, hexToCV } from "@stacks/transactions";
+import type { ClarityValue } from "@stacks/transactions";
+import { Cl, cvToHex, hexToCV } from "@stacks/transactions";
 import { Context, Data, Effect, Layer, Option, Schema } from "effect";
 import {
   FetchHttpClient,

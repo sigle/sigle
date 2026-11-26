@@ -47,7 +47,9 @@ export const EditorSave = () => {
 
   const onAutoSave = useDebouncedCallback(
     () => {
-      if (!editor) return;
+      if (!editor) {
+        return;
+      }
       const saveCount = changeCountRef.current;
       const values = getValues();
 
@@ -80,11 +82,15 @@ export const EditorSave = () => {
           // A newer change has a save queued or in flight, and that save
           // reports the outcome, so this one must not leave the saving state.
           onSuccess: () => {
-            if (saveCount !== changeCountRef.current) return;
+            if (saveCount !== changeCountRef.current) {
+              return;
+            }
             setSaveState("saved");
           },
           onError: (error) => {
-            if (saveCount !== changeCountRef.current) return;
+            if (saveCount !== changeCountRef.current) {
+              return;
+            }
             // A 409 explains why the draft cannot be saved right now, such as
             // a publish in progress.
             setSaveError(error.message);
@@ -101,6 +107,8 @@ export const EditorSave = () => {
   useEffect(() => {
     if (forceSave && editor) {
       changeCountRef.current += 1;
+      // The effect starts a save, which the state shows.
+      // oxlint-disable-next-line react/set-state-in-effect
       setSaveState("saving");
       onAutoSave();
     }
@@ -109,10 +117,14 @@ export const EditorSave = () => {
   // When the form is changing, we start a timer to save the post
   // We wait for the editor to be ready before listening to changes
   useEffect(() => {
-    if (!editor) return;
+    if (!editor) {
+      return;
+    }
 
     const subscription = watch(() => {
-      if (type === "published") return;
+      if (type === "published") {
+        return;
+      }
       changeCountRef.current += 1;
       setSaveState("saving");
       onAutoSave();
@@ -125,7 +137,9 @@ export const EditorSave = () => {
   // The guard covers both a pending save and a failed one, whose changes the
   // server doesn't have.
   useEffect(() => {
-    if (saveState !== "saving" && saveState !== "error") return;
+    if (saveState !== "saving" && saveState !== "error") {
+      return;
+    }
 
     // `flush()` runs the save synchronously, so the flag covers exactly that
     // dispatch.
@@ -135,7 +149,9 @@ export const EditorSave = () => {
       try {
         // A failed save has nothing scheduled, so schedule a retry with the
         // current values for `flush()` to dispatch.
-        if (saveState === "error") onAutoSave();
+        if (saveState === "error") {
+          onAutoSave();
+        }
         onAutoSave.flush();
       } finally {
         leavingRef.current = false;
@@ -148,7 +164,9 @@ export const EditorSave = () => {
     };
 
     const onVisibilityChange = () => {
-      if (document.visibilityState === "hidden") flushOnLeave();
+      if (document.visibilityState === "hidden") {
+        flushOnLeave();
+      }
     };
 
     window.addEventListener("beforeunload", onBeforeUnload);

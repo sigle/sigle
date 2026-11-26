@@ -94,7 +94,7 @@ export default async function Image({
         style={{ borderTop: `1px solid ${COLORS.border}` }}
       >
         <div tw="flex items-center">
-          {/* oxlint-disable-next-line no-img-element */}
+          {/* oxlint-disable-next-line nextjs/no-img-element -- Satori renders plain img elements */}
           <img
             tw="rounded-md"
             src={avatar}

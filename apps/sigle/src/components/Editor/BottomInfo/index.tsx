@@ -1,5 +1,6 @@
+import type { Editor } from "@tiptap/react";
 import { IconKeyboard, IconMoon, IconSun } from "@tabler/icons-react";
-import { type Editor, useEditorState } from "@tiptap/react";
+import { useEditorState } from "@tiptap/react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";

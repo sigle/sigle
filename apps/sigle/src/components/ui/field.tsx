@@ -1,4 +1,5 @@
-import { cva, type VariantProps } from "class-variance-authority";
+import type { VariantProps } from "class-variance-authority";
+import { cva } from "class-variance-authority";
 import { useMemo } from "react";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -176,7 +177,7 @@ function FieldError({
   errors,
   ...props
 }: React.ComponentProps<"div"> & {
-  errors?: ({ message?: string } | undefined)[];
+  errors?: Array<{ message?: string } | undefined>;
 }) {
   const content = useMemo(() => {
     if (children) {
@@ -199,7 +200,6 @@ function FieldError({
       <ul className="ml-4 flex list-disc flex-col gap-1">
         {uniqueErrors.map(
           (error, index) =>
-            // oxlint-disable-next-line react/no-array-index-key
             error?.message && <li key={index}>{error.message}</li>,
         )}
       </ul>

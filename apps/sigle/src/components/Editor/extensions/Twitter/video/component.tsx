@@ -2,14 +2,15 @@ import type { NodeViewProps } from "@tiptap/core";
 import { getEmbedUrlFromYoutubeUrl } from "./youtube";
 
 export const VideoComponent = (props: NodeViewProps) => {
-  let url = props.node.attrs.url;
-  url = getEmbedUrlFromYoutubeUrl({ url });
+  const url = getEmbedUrlFromYoutubeUrl({
+    url: String(props.node.attrs.url ?? ""),
+  });
 
   return (
     <iframe
       title="YouTube video player"
       className="aspect-video w-full rounded-lg"
-      src={url}
+      src={url ?? undefined}
       width="100%"
       height="100%"
       frameBorder="0"

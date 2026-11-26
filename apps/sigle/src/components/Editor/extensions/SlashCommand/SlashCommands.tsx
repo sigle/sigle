@@ -1,20 +1,19 @@
 import "./style.css";
+import type { VirtualElement } from "@floating-ui/dom";
 import type { IconProps } from "@tabler/icons-react";
-import {
-  autoUpdate,
-  computePosition,
-  flip,
-  offset,
-  type VirtualElement,
-} from "@floating-ui/dom";
-import { type Editor, Extension } from "@tiptap/core";
-import { type Range, ReactRenderer } from "@tiptap/react";
-import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion";
-import { CommandList, type CommandListRef } from "./CommandList";
+import type { Editor } from "@tiptap/core";
+import type { Range } from "@tiptap/react";
+import type { SuggestionOptions } from "@tiptap/suggestion";
+import { autoUpdate, computePosition, flip, offset } from "@floating-ui/dom";
+import { Extension } from "@tiptap/core";
+import { ReactRenderer } from "@tiptap/react";
+import Suggestion from "@tiptap/suggestion";
+import type { CommandListRef } from "./CommandList";
+import { CommandList } from "./CommandList";
 
 export interface SlashCommandsCommand {
   title: string;
-  keywords?: string[];
+  keywords?: Array<string>;
   description: string;
   section: "basic" | "embed";
   /** Only usable on the Pro plan. */
@@ -25,13 +24,36 @@ export interface SlashCommandsCommand {
   command: ({ editor, range }: { editor: Editor; range?: Range }) => void;
 }
 
+const getVirtualElement = (
+  clientRect: (() => DOMRect | null) | null | undefined,
+): VirtualElement => ({
+  getBoundingClientRect: () => {
+    const rect = clientRect?.();
+
+    return (
+      rect ?? {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      }
+    );
+  },
+});
+
 export const SlashCommands = Extension.create<{
-  commands: SlashCommandsCommand[];
+  commands: Array<SlashCommandsCommand>;
   filterCommands: (
-    commands: SlashCommandsCommand[],
+    commands: Array<SlashCommandsCommand>,
     query: string,
-  ) => SlashCommandsCommand[];
-  suggestion: Partial<SuggestionOptions>;
+  ) => Array<SlashCommandsCommand>;
+  suggestion: Partial<
+    SuggestionOptions<SlashCommandsCommand, SlashCommandsCommand>
+  >;
 }>({
   name: "slash-command",
 
@@ -61,7 +83,7 @@ export const SlashCommands = Extension.create<{
 
   addProseMirrorPlugins() {
     return [
-      Suggestion({
+      Suggestion<SlashCommandsCommand, SlashCommandsCommand>({
         editor: this.editor,
         ...this.options.suggestion,
         items: (query) =>
@@ -74,37 +96,20 @@ export const SlashCommands = Extension.create<{
           let container: HTMLDivElement | null = null;
           let cleanup: (() => void) | null = null;
 
-          const getVirtualElement = (
-            clientRect: (() => DOMRect | null) | null | undefined,
-          ): VirtualElement => ({
-            getBoundingClientRect: () => {
-              const rect = clientRect?.();
-
-              return (
-                rect ?? {
-                  x: 0,
-                  y: 0,
-                  width: 0,
-                  height: 0,
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  left: 0,
-                }
-              );
-            },
-          });
-
           const updatePosition = (
             clientRect: (() => DOMRect | null) | null | undefined,
           ) => {
-            if (!container) return;
+            if (!container) {
+              return;
+            }
             const virtualEl = getVirtualElement(clientRect);
-            computePosition(virtualEl, container, {
+            void computePosition(virtualEl, container, {
               placement: "bottom-start",
               middleware: [offset(4), flip()],
             }).then(({ x, y }) => {
-              if (!container) return;
+              if (!container) {
+                return;
+              }
               Object.assign(container.style, {
                 left: `${x}px`,
                 top: `${y}px`,
@@ -123,12 +128,12 @@ export const SlashCommands = Extension.create<{
               container.classList.add("slash-command-popup");
               container.style.position = "absolute";
               container.style.zIndex = "50";
-              container.appendChild(reactRenderer.element);
+              container.append(reactRenderer.element);
 
               const appendTo =
                 document.getElementsByClassName("root")[0] ?? document.body;
 
-              appendTo.appendChild(container);
+              appendTo.append(container);
 
               updatePosition(props.clientRect);
               const virtualEl = getVirtualElement(props.clientRect);

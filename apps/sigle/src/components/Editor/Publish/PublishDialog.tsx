@@ -19,77 +19,14 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Routes } from "@/lib/routes";
-import { sigleApiClient, sigleApiFetchClient } from "@/lib/sigle";
+import { sigleApiClient } from "@/lib/sigle";
+import { getErrorMessage } from "@/lib/utils";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { hasPendingImageUploads } from "../extensions/Image";
 import { useEditorStore } from "../store";
 import { generateSigleMetadataFromForm } from "../utils";
 import { PublishReview } from "./PublishReview";
-
-const PUBLISH_POLLING_INTERVAL_MILLIS = 2_000;
-
-const PUBLISH_TIMEOUT_MILLIS = 180_000;
-
-const waitForPublishCompletion = async (draftId: string) => {
-  const deadline = Date.now() + PUBLISH_TIMEOUT_MILLIS;
-
-  const timedOut = Result.err({
-    message: "Publishing timed out, please try again",
-  });
-
-  while (Date.now() < deadline) {
-    // A status request that never answers must not outlive the deadline.
-    const signal = AbortSignal.timeout(deadline - Date.now());
-
-    const response = await sigleApiFetchClient
-      .GET("/api/drafts/{draftId}/publish", {
-        params: {
-          path: {
-            draftId,
-          },
-        },
-        signal,
-      })
-      // openapi-fetch throws on network errors and aborts instead of returning
-      // `response.error`.
-      .catch(() =>
-        signal.aborted ? ("timeout" as const) : ("failed" as const),
-      );
-
-    if (response === "timeout") {
-      return timedOut;
-    }
-
-    if (response === "failed") {
-      return Result.err({
-        message: "Failed to check the publishing status, please try again",
-      });
-    }
-
-    if (response.error) {
-      return Result.err({ message: response.error.message });
-    }
-
-    const { data } = response;
-
-    if (data.status === "failed") {
-      return Result.err({ message: "Failed to publish post" });
-    }
-
-    if (data.status === "completed" && data.postId) {
-      return Result.ok({
-        postId: data.postId,
-        arweaveTxId: data.arweaveTxId,
-      });
-    }
-
-    await new Promise((resolve) => {
-      setTimeout(resolve, PUBLISH_POLLING_INTERVAL_MILLIS);
-    });
-  }
-
-  return timedOut;
-};
+import { waitForPublishCompletion } from "./wait-for-publish-completion";
 
 interface PublishDialogProps {
   postId: string;
@@ -124,7 +61,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     steps.find((s) => s.id === "signature")?.status === "pending";
 
   const onSubmit = () => {
-    handleSubmit(
+    void handleSubmit(
       async (data) => {
         // Wait for uploads instead of publishing without them: an image still
         // uploading is left out of the content, and a new cover isn't set yet.
@@ -148,7 +85,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           postId,
         });
 
-        // oxlint-disable-next-line init-declarations
         let metadata;
 
         try {
@@ -158,7 +94,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             post: data,
           });
         } catch (error) {
-          console.error(error);
+          posthog.captureException(error, { postId });
 
           const errorMessage =
             error instanceof Error
@@ -178,7 +114,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
         completeStep("preparing");
 
-        let signature = "";
+        let signature: string;
 
         try {
           const { signature: _, ...metadataToSign } = metadata;
@@ -190,7 +126,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
           signature = response.signature;
         } catch (error) {
-          console.error(error);
           posthog.capture("post_publish_sign_message_error", {
             postId,
             error: error instanceof Error ? error.message : String(error),
@@ -217,18 +152,16 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           },
         })
           .then((result) => Result.ok(result))
-          .catch((error) => Result.err(error));
+          .catch((error: unknown) => Result.err(getErrorMessage(error)));
 
         if (publishResult.isErr()) {
           posthog.capture("post_publish_start_error", {
             postId,
-            error: publishResult.error.message,
+            error: publishResult.error,
           });
           setStepError(
             "arweave",
-            publishResult.error.message
-              ? publishResult.error.message
-              : "Failed to start publishing",
+            publishResult.error || "Failed to start publishing",
           );
 
           return;
@@ -272,7 +205,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         );
       },
       (errors) => {
-        console.error("Publishing form errors", { errors });
         toast.error("Error publishing", {
           description: "Please check the form for errors",
         });
@@ -295,7 +227,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     <Dialog open={publishOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="headline text-2xl leading-tight">
+          <DialogTitle className="headline text-2xl/tight">
             {publishingLoading
               ? type === "draft"
                 ? "Publishing your story"

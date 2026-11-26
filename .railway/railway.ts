@@ -35,7 +35,7 @@ export default defineRailway(() => {
     },
     replicas: { [REGION]: 1 },
     deploy: {
-      limitOverride: { containers: { cpu: 0.5, memoryBytes: 500000000 } },
+      limitOverride: { containers: { cpu: 0.5, memoryBytes: 500_000_000 } },
       sleepApplication: true,
     },
     networking: { privateNetworkEndpoint: "sigle-75430ad9" },
@@ -53,7 +53,7 @@ export default defineRailway(() => {
     healthcheckTimeout: 300,
     replicas: { [REGION]: 1 },
     deploy: {
-      limitOverride: { containers: { cpu: 1, memoryBytes: 1000000000 } },
+      limitOverride: { containers: { cpu: 1, memoryBytes: 1_000_000_000 } },
       sleepApplication: true,
       restartPolicyMaxRetries: 5,
     },
@@ -66,7 +66,6 @@ export default defineRailway(() => {
       // Server-side calls to the API go over the private network, where the
       // API doesn't rate limit reads.
       API_INTERNAL_URL:
-        // oxlint-disable-next-line no-template-curly-in-string Railway references
         "http://${{server.RAILWAY_PRIVATE_DOMAIN}}:${{server.PORT}}",
       // Secret, set from 1Password by scripts/sync-railway-env.sh. Read at
       // build time to upload the source maps to PostHog.
@@ -88,7 +87,7 @@ export default defineRailway(() => {
     healthcheckTimeout: 300,
     replicas: { [REGION]: 1 },
     deploy: {
-      limitOverride: { containers: { cpu: 1, memoryBytes: 1000000000 } },
+      limitOverride: { containers: { cpu: 1, memoryBytes: 1_000_000_000 } },
       sleepApplication: true,
       restartPolicyMaxRetries: 5,
       // Time between SIGTERM and SIGKILL, 0 by default. Litestream uploads

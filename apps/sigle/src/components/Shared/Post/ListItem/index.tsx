@@ -53,7 +53,7 @@ export const PostListItem = ({ post, onHiddenChange }: PostListItemProps) => {
     <li className="flex gap-6 border-b border-border py-6">
       <div className="min-w-0 flex-1">
         <NextLink href={href} className="group block">
-          <h3 className="line-clamp-2 headline text-xl/tight break-words underline-offset-4 group-hover:underline">
+          <h3 className="line-clamp-2 headline text-xl/tight wrap-break-word underline-offset-4 group-hover:underline">
             {post.metaTitle || post.title}
           </h3>
           {/* A post behind a content warning does not show what it says. */}
@@ -118,6 +118,7 @@ export const PostListItem = ({ post, onHiddenChange }: PostListItemProps) => {
             <BlurImage
               src={resolveImageUrl(post.coverImage.url)}
               alt="Cover card"
+              sizes="(min-width: 768px) 160px, 96px"
               className={cn("size-full object-cover", {
                 "scale-110 blur-lg": warning,
               })}

@@ -1,3 +1,4 @@
+import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 import {
   blob,
@@ -7,7 +8,6 @@ import {
   sqliteTable,
   text,
   uniqueIndex,
-  type SQLiteColumn,
 } from "drizzle-orm/sqlite-core";
 
 /** Millisecond timestamp, read back as a `Date`. */
@@ -18,7 +18,7 @@ const boolean = (name: string) => integer(name, { mode: "boolean" });
 
 /** A string array stored as JSON text. */
 const textArray = (name: string) =>
-  text(name, { mode: "json" }).$type<string[]>();
+  text(name, { mode: "json" }).$type<Array<string>>();
 
 const now = () => new Date();
 

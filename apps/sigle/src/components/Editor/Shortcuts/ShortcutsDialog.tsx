@@ -20,10 +20,10 @@ type Key = "Mod" | "Shift" | "Alt" | (string & {});
 
 interface Shortcut {
   action: string;
-  keys: Key[];
+  keys: Array<Key>;
 }
 
-const sections: { title: string; items: Shortcut[] }[] = [
+const sections: Array<{ title: string; items: Array<Shortcut> }> = [
   {
     title: "Essentials",
     items: [
@@ -72,11 +72,17 @@ const sections: { title: string; items: Shortcut[] }[] = [
 
 /** The label of `key` on the user's keyboard. */
 const keyLabel = (key: Key, isMac: boolean) => {
-  if (key === "Mod") return isMac ? "⌘" : "Ctrl";
+  if (key === "Mod") {
+    return isMac ? "⌘" : "Ctrl";
+  }
 
-  if (isMac && key === "Shift") return "⇧";
+  if (isMac && key === "Shift") {
+    return "⇧";
+  }
 
-  if (isMac && key === "Alt") return "⌥";
+  if (isMac && key === "Alt") {
+    return "⌥";
+  }
 
   return key;
 };
@@ -92,7 +98,7 @@ export const ShortcutsDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="gap-0 p-0 sm:max-w-md">
         <DialogHeader className="p-4 pb-3">
-          <DialogTitle className="headline text-2xl leading-tight">
+          <DialogTitle className="headline text-2xl/tight">
             Keyboard shortcuts
           </DialogTitle>
           <DialogDescription>
