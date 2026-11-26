@@ -1,4 +1,5 @@
 import { describe, expect, it } from "@effect/vitest";
+import { PostMetadataSchemaId } from "@sigle/sdk";
 import { eq, inArray } from "drizzle-orm";
 import {
   Deferred,
@@ -57,6 +58,7 @@ import {
   createTestSiwsCredentials,
   createTestUser,
   createTestWalletAddress,
+  signTestSiwsMessage,
 } from "@/test/helpers";
 import { makeTestServerLayer } from "@/test/server";
 
@@ -971,6 +973,52 @@ describe("drafts", () => {
           status: 409,
           message: "Metadata signature has already been published",
         });
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
+    "POST /api/drafts/:draftId/publish verifies the signature over the schema-ordered metadata",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const ownerWallet = createTestSiwsCredentials("testnet");
+
+        yield* createTestWalletAddress({
+          userId,
+          address: ownerWallet.address,
+        });
+        yield* createTestDraft({ id: "draft-order", userId });
+
+        // Clients must sign the metadata as `createPostMetadata` returns it
+        // (keys in schema order): the server verifies the zod-parsed object,
+        // not the raw bytes. This test pins that contract, and changing it
+        // changes what every client has to sign.
+        const metadataWithoutSignature = {
+          $schema: PostMetadataSchemaId.LATEST,
+          content: {
+            title: "Published Title",
+            id: "draft-order",
+            content: "Hello **Arweave** world!",
+            excerpt: "Hello Arweave world!",
+            tags: ["web3"],
+          },
+        };
+
+        const response = yield* publishDraftRequest(client, "draft-order", {
+          metadata: {
+            ...metadataWithoutSignature,
+            signature: signTestSiwsMessage(
+              JSON.stringify(metadataWithoutSignature),
+              ownerWallet.privateKey,
+            ),
+          },
+        });
+
+        const body =
+          yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
+
+        expect(response.status).toBe(400);
+        expect(body.message).toContain("address mismatch");
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
 

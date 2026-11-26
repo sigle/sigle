@@ -92,7 +92,9 @@ export type PostMetadata = MarketplaceMetadata & {
    */
   content: PostMetadataDetails;
   /**
-   * A cryptographic signature of the `content` data.
+   * The author's Stacks wallet signature of `JSON.stringify` of this metadata
+   * without `signature`, as returned by `createPostMetadata` (keys in schema
+   * order, unknown keys removed).
    */
   signature?: string;
 };
