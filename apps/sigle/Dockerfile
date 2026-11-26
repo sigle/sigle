@@ -49,7 +49,13 @@ WORKDIR /app/apps/$APP_NAME
 
 # Add fake environment file for build to succeed
 COPY ./apps/$APP_NAME/.env.development .env.production
-COPY ./apps/$APP_NAME/.env.testnet .env.production.local
+# NEXT_PUBLIC_* values are inlined at build time, so the image is built with
+# the committed file of the Railway environment it deploys to (Railway passes
+# RAILWAY_ENVIRONMENT_NAME to this ARG). A missing file stops the build rather
+# than shipping another environment's URLs.
+ARG RAILWAY_ENVIRONMENT_NAME
+RUN test -n "$RAILWAY_ENVIRONMENT_NAME" || (echo "RAILWAY_ENVIRONMENT_NAME is required" && exit 1)
+COPY ./apps/$APP_NAME/.env.${RAILWAY_ENVIRONMENT_NAME} .env.production.local
 
 # Railway passes these service variables to the build, which uploads the
 # source maps to PostHog (next.config.ts). They stay out of the final image.
@@ -61,14 +67,16 @@ RUN pnpm turbo run build --filter=@sigle/$APP_NAME...
 
 # --- Runner stage ---
 
-FROM base AS runner
+# The standalone server only needs Node: not git, pnpm or turbo from `base`.
+FROM node:${NODE_VERSION}-alpine AS runner
 WORKDIR /app
+ENV NODE_ENV="production"
 
-# Copy built application
-COPY --from=installer /app/apps/$APP_NAME/.next/standalone ./
-COPY --from=installer /app/apps/$APP_NAME/.next/static ./apps/$APP_NAME/.next/static
-COPY --from=installer /app/apps/$APP_NAME/public ./apps/$APP_NAME/public
+COPY --from=installer --chown=node:node /app/apps/sigle/.next/standalone ./
+COPY --from=installer --chown=node:node /app/apps/sigle/.next/static ./apps/sigle/.next/static
+COPY --from=installer --chown=node:node /app/apps/sigle/public ./apps/sigle/public
 
-# Start the server by default, this can be overwritten at runtime
+USER node
+
 EXPOSE 3000
-CMD node apps/$APP_NAME/server.js
+CMD ["node", "apps/sigle/server.js"]
