@@ -55,6 +55,7 @@ function InputGroupAddon({
       data-align={align}
       className={cn(inputGroupAddonVariants({ align }), className)}
       onClick={(e) => {
+        // oxlint-disable-next-line @nkzw/no-instanceof -- narrows the DOM event target
         if (e.target instanceof Element && e.target.closest("button")) {
           return;
         }

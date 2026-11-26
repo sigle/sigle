@@ -28,7 +28,7 @@ export const SeoPreview = () => {
       </p>
       <div className="overflow-hidden rounded-lg border border-border">
         {metaImage ? (
-          // oxlint-disable-next-line no-img-element
+          // oxlint-disable-next-line nextjs/no-img-element -- an editor preview of the social card
           <img
             src={resolveImageUrl(metaImage)}
             alt="Cover social media preview"

@@ -12,4 +12,4 @@ export const getExplorerTransactionUrl = (txId: string) =>
   `https://explorer.hiro.so/txid/${txId}?chain=${env.NEXT_PUBLIC_STACKS_ENV}`;
 
 export const formatReadableAddress = (address: string) =>
-  `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+  `${address.slice(0, 6)}...${address.slice(-4)}`;

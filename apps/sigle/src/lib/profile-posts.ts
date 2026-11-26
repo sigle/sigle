@@ -24,7 +24,7 @@ export const profilePostsQueryOptions = (address: string) => {
       );
 
       if (error) {
-        throw error;
+        throw new Error(error.message, { cause: error });
       }
 
       return page;

@@ -33,7 +33,7 @@ export const EditorCoverImage = ({
   const { setValue, watch } = useFormContext<EditorPostFormData>();
   const watchCoverImage = watch("coverImage");
 
-  const { mutateAsync: uploadImage, isPending: loadingUploadImage } =
+  const { mutate: uploadImage, isPending: loadingUploadImage } =
     sigleApiClient.useMutation("post", "/api/drafts/{draftId}/images");
 
   const setIsCoverUploading = useEditorStore(
@@ -45,7 +45,7 @@ export const EditorCoverImage = ({
   }, [loadingUploadImage, setIsCoverUploading]);
 
   const onDrop = useCallback(
-    async (acceptedFiles: Array<File>) => {
+    (acceptedFiles: Array<File>) => {
       const file = acceptedFiles[0];
 
       if (!file) {
@@ -75,6 +75,7 @@ export const EditorCoverImage = ({
           headers: {
             "Content-Type": file.type,
           },
+          // oxlint-disable-next-line typescript/no-unsafe-type-assertion
           body: file as never,
           bodySerializer: () => file,
         },
@@ -123,7 +124,7 @@ export const EditorCoverImage = ({
       }
     };
 
-    autoUploadImage();
+    void autoUploadImage();
   }, [canUploadImages, postId, watchCoverImage, onDrop]);
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
@@ -186,7 +187,7 @@ export const EditorCoverImage = ({
       <input {...getInputProps()} />
       {image ? (
         <div className="group relative overflow-hidden rounded-lg">
-          {/* oxlint-disable-next-line no-img-element */}
+          {/* oxlint-disable-next-line nextjs/no-img-element -- shows the local preview while uploading */}
           <img
             src={image}
             className={cn("w-full transition-opacity", {

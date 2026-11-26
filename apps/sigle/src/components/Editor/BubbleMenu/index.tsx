@@ -8,7 +8,7 @@ import {
 } from "@tabler/icons-react";
 import { isTextSelection, useEditorState } from "@tiptap/react";
 import { BubbleMenu as TipTapBubbleMenu } from "@tiptap/react/menus";
-import { useEffect } from "react";
+import { useEffect, useEffectEvent } from "react";
 import { cn } from "@/lib/cn";
 import { EditorBubbleMenuLink } from "./BubbleMenuLink";
 import { useBubbleMenuStore } from "./store";
@@ -57,31 +57,33 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
     }),
   });
 
-  // Listen to any key press to detect cmd + k and activate the link edition
-  // oxlint-disable-next-line exhaustive-deps
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      // We want all our commands to start with the user pressing ctrl or cmd for mac users
-      if ((event.ctrlKey || event.metaKey) && event.key === "k") {
-        onSelectLink();
-      }
-    }
-
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => window.removeEventListener("keydown", onKeyDown);
-    // oxlint-disable-next-line exhaustive-deps
-  }, []);
-
   const onSelectLink = () => {
     // Get href of selected link to pre fill the input
     const existingHref = editor.isActive("link")
-      ? editor.getAttributes("link").href
+      ? String(editor.getAttributes("link").href ?? "")
       : "";
 
     setLinkOpen(true);
     setLinkValue(existingHref);
   };
+
+  // An Effect Event reads the latest `onSelectLink`, so the listener is added
+  // once.
+  const onKeyDown = useEffectEvent((event: KeyboardEvent) => {
+    // We want all our commands to start with the user pressing ctrl or cmd for mac users
+    if ((event.ctrlKey || event.metaKey) && event.key === "k") {
+      onSelectLink();
+    }
+  });
+
+  // Listen to any key press to detect cmd + k and activate the link edition
+  useEffect(() => {
+    const listener = (event: KeyboardEvent) => onKeyDown(event);
+
+    window.addEventListener("keydown", listener);
+
+    return () => window.removeEventListener("keydown", listener);
+  }, []);
 
   const resetLink = () => {
     setLinkOpen(false);

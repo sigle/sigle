@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
+import { getErrorMessage } from "@/lib/utils";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { hasPendingImageUploads } from "../extensions/Image";
 import { useEditorStore } from "../store";
@@ -60,7 +61,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     steps.find((s) => s.id === "signature")?.status === "pending";
 
   const onSubmit = () => {
-    handleSubmit(
+    void handleSubmit(
       async (data) => {
         // Wait for uploads instead of publishing without them: an image still
         // uploading is left out of the content, and a new cover isn't set yet.
@@ -84,7 +85,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           postId,
         });
 
-        // oxlint-disable-next-line init-declarations
         let metadata;
 
         try {
@@ -94,7 +94,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             post: data,
           });
         } catch (error) {
-          console.error(error);
+          posthog.captureException(error, { postId });
 
           const errorMessage =
             error instanceof Error
@@ -114,7 +114,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
         completeStep("preparing");
 
-        let signature = "";
+        let signature: string;
 
         try {
           const { signature: _, ...metadataToSign } = metadata;
@@ -126,7 +126,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
           signature = response.signature;
         } catch (error) {
-          console.error(error);
           posthog.capture("post_publish_sign_message_error", {
             postId,
             error: error instanceof Error ? error.message : String(error),
@@ -153,18 +152,16 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           },
         })
           .then((result) => Result.ok(result))
-          .catch((error) => Result.err(error));
+          .catch((error: unknown) => Result.err(getErrorMessage(error)));
 
         if (publishResult.isErr()) {
           posthog.capture("post_publish_start_error", {
             postId,
-            error: publishResult.error.message,
+            error: publishResult.error,
           });
           setStepError(
             "arweave",
-            publishResult.error.message
-              ? publishResult.error.message
-              : "Failed to start publishing",
+            publishResult.error || "Failed to start publishing",
           );
 
           return;
@@ -208,7 +205,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         );
       },
       (errors) => {
-        console.error("Publishing form errors", { errors });
         toast.error("Error publishing", {
           description: "Please check the form for errors",
         });
@@ -231,7 +227,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     <Dialog open={publishOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="headline text-2xl leading-tight">
+          <DialogTitle className="headline text-2xl/tight">
             {publishingLoading
               ? type === "draft"
                 ? "Publishing your story"

@@ -98,7 +98,7 @@ export const ShortcutsDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="gap-0 p-0 sm:max-w-md">
         <DialogHeader className="p-4 pb-3">
-          <DialogTitle className="headline text-2xl leading-tight">
+          <DialogTitle className="headline text-2xl/tight">
             Keyboard shortcuts
           </DialogTitle>
           <DialogDescription>

@@ -1,9 +1,9 @@
 "use client";
 
-// eslint-disable-next-line no-restricted-imports
+// oxlint-disable-next-line no-restricted-imports -- the wrapper itself
 import type { LinkProps } from "next/link";
 import type { ComponentProps } from "react";
-// eslint-disable-next-line no-restricted-imports
+// oxlint-disable-next-line no-restricted-imports -- the wrapper itself
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 

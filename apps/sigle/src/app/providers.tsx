@@ -31,7 +31,6 @@ const getQueryClient = () => {
   if (isServer) {
     return makeQueryClient();
   }
-
   browserQueryClient ??= makeQueryClient();
 
   return browserQueryClient;

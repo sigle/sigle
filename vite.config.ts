@@ -1,5 +1,12 @@
+import cloudflare from "@cloudflare/oxlint-config/vite-plus";
 import { recommended } from "@effect/tsgo/oxlint-presets";
+import { createRequire } from "node:module";
 import { defineConfig } from "vite-plus";
+
+// The Tailwind plugin is a dependency of the web app, not of the root.
+const sigleRequire = createRequire(
+  new URL("apps/sigle/package.json", import.meta.url),
+);
 
 export default defineConfig({
   staged: {
@@ -9,12 +16,7 @@ export default defineConfig({
     cache: true,
   },
   fmt: {
-    ignorePatterns: [
-      "repos/**",
-      "**/drizzle/**",
-      ".agents/**",
-      "tools/oxlint/anti-slop/**",
-    ],
+    ignorePatterns: ["repos/**", "**/drizzle/**", ".agents/**"],
     printWidth: 80,
     experimentalSortImports: {
       newlinesBetween: false,
@@ -41,139 +43,39 @@ export default defineConfig({
     ],
   },
   lint: {
+    extends: [cloudflare],
+    // Oxlint reads `env` and `ignorePatterns` from the root lint config only.
+    env: cloudflare.env,
+    ignorePatterns: [
+      ...cloudflare.ignorePatterns,
+      "__generated__",
+      "repos/**",
+      ".agents/**",
+    ],
     options: {
       typeAware: true,
       typeCheck: true,
     },
-    plugins: ["vitest"],
-    ignorePatterns: [
-      "__generated__",
-      "repos/**",
-      ".agents/**",
-      "tools/oxlint/anti-slop/**",
-    ],
-    jsPlugins: [
-      { name: "anti-slop", specifier: "./tools/oxlint/anti-slop/index.ts" },
-      {
-        name: "anti-slop-effect",
-        specifier: "./tools/oxlint/anti-slop/effect/index.ts",
+    settings: {
+      // Tailwind v4 reads the theme from the web app's stylesheet.
+      "better-tailwindcss": {
+        cwd: "./apps/sigle",
+        entryPoint: "./src/app/globals.css",
       },
-    ],
-    categories: {
-      correctness: "error",
-      nursery: "error",
-      perf: "error",
-      restriction: "error",
-      suspicious: "error",
-      style: "error",
-      pedantic: "error",
     },
     rules: {
-      // Type-only imports are written as their own \`import type\` statement.
-      "no-duplicate-imports": ["error", { allowSeparateTypeImports: true }],
-      "oxc/no-accumulating-spread": "error",
-      "anti-slop/no-array-filter-map": "error",
-      "anti-slop/no-reduce-accumulator-copy": "error",
-      "anti-slop/no-chained-type-assertions": "error",
-      "anti-slop/no-conditional-empty-object-spread": "error",
-      "anti-slop/no-known-value-widening": "error",
-      "anti-slop/no-module-mocking": "error",
-      "anti-slop/no-object-parameters": "error",
-      "anti-slop/no-reflect-apply": "error",
-      "anti-slop/no-reflect-get": "error",
-      "anti-slop/no-runtime-typeof": "error",
-      "anti-slop/no-shape-in-symbol-names": "error",
-      "anti-slop/no-unknown-parameters": "error",
-      "anti-slop/no-unknown-returns": "error",
-      "anti-slop/no-unknown-type-aliases": "error",
-      "anti-slop/no-unsafe-dictionary-type": "error",
-      "anti-slop/no-widen-then-assert": "error",
-      "anti-slop/require-readable-spacing": "error",
-      "anti-slop/require-safety-comment-for-type-assertion": "error",
-      "anti-slop-effect/no-manual-effect-error-tag": "error",
-      "anti-slop-effect/no-manual-tag-comparison": "error",
-      "anti-slop-effect/no-manual-tagged-construction": "error",
-      "anti-slop-effect/no-service-constructor-imports": "error",
-      "anti-slop-effect/prefer-effect-match": "error",
-
-      "arrow-body-style": "off",
-      complexity: "off",
-      "explicit-function-return-type": "off",
-      "explicit-module-boundary-types": "off",
-      "id-length": "off",
-      "max-classes-per-file": "off",
-      "max-depth": "off",
-      "max-lines": "off",
-      "max-lines-per-function": "off",
-      "max-statements": "off",
-      "no-await-in-loop": "off",
-      "no-console": "off",
-      "no-implicit-coercion": "off",
-      "no-undef": "off",
-      "no-undefined": "off",
-      "no-magic-numbers": "off",
-      "no-negated-condition": "off",
-      "no-nested-ternary": "off",
-      "no-plusplus": "off",
-      "no-ternary": "off",
-      "no-useless-return": "off",
-      "prefer-destructuring": "off",
-      "prefer-promise-reject-errors": "off",
-      "sort-imports": "off",
-      "sort-keys": "off",
-      "react/no-multi-comp": "off",
-      "vitest/no-importing-vitest-globals": "off",
-      "vitest/prefer-called-once": "off",
-      "vitest/prefer-to-be-truthy": "off",
-      "vitest/prefer-to-be-falsy": "off",
-      "vitest/require-test-timeout": "off",
-      "vitest/no-hooks": "off",
-      "vitest/require-hook": "off",
-      "vitest/valid-title": "off",
-      "vitest/prefer-expect-assertions": "off",
-      "jest/prefer-ending-with-an-expect": "off",
-      "typescript/explicit-member-accessibility": "off",
-      "one-var": "off",
-
-      "no-hooks": "off",
-      "require-hook": "off",
-      "valid-title": "off",
-
-      "iframe-missing-sandbox": "off",
-      "jsx-filename-extension": "off",
-      "jsx-max-depth": "off",
-      "jsx-props-no-spreading": "off",
-      "react-in-jsx-scope": "off",
-
-      "require-await": "off",
-      "func-style": "off",
-      "capitalized-comments": "off",
-      "no-inline-comments": "off",
-      "no-warning-comments": "off",
-      "no-param-reassign": "off",
-      "default-case": "off",
-      "new-cap": "off",
-      "no-use-before-define": "off",
-      "no-shadow": "off",
-      "vitest/require-mock-type-parameters": "off",
-      "no-useless-assignment": "off",
-      "require-unicode-regexp": "off",
-      "prefer-named-capture-group": "off",
-      "no-underscore-dangle": "off",
-      // TODO: remove when vite-plus/test imports are supported by this rule
-      "vitest/prefer-importing-vitest-globals": "off",
-      "func-names": "off",
-      "vitest/no-standalone-expect": [
+      // Namespace imports are the documented form for zod (`* as z`), the
+      // Drizzle schema passed whole to `drizzle()` and Better Auth, and the
+      // `* as React` the shadcn CLI generates in components/ui.
+      "import/no-namespace": "off",
+      // React ignores what event handlers return, so async handlers passed to
+      // JSX attributes such as `onClick` are allowed.
+      "typescript/no-misused-promises": [
         "error",
-        {
-          additionalTestBlockFunctions: [
-            "it.effect",
-            "it.live",
-            "it.scoped",
-            "it.scopedLive",
-          ],
-        },
+        { checksVoidReturn: { attributes: false } },
       ],
+      // `next/og` renders Open Graph images with Satori, which reads `tw`.
+      "react/no-unknown-property": ["error", { ignore: ["tw"] }],
     },
     overrides: [
       {
@@ -181,53 +83,67 @@ export default defineConfig({
         plugins: ["effecttsgo"],
         rules: {
           ...recommended.rules,
-          // The root `categories` setting switches on every effecttsgo rule,
-          // including the ones the recommended preset intentionally leaves off.
-          "effecttsgo/any-unknown-in-error-context": "off",
-          "effecttsgo/api-stability-leak": "off",
-          "effecttsgo/async-function": "off",
-          "effecttsgo/crypto-random-uuid": "off",
-          "effecttsgo/crypto-random-uuid-in-effect": "off",
-          "effecttsgo/deterministic-keys": "off",
-          "effecttsgo/effect-do-notation": "off",
-          "effecttsgo/extends-native-error": "off",
-          "effecttsgo/global-console": "off",
-          "effecttsgo/global-console-in-effect": "off",
-          "effecttsgo/global-date": "off",
-          "effecttsgo/global-date-in-effect": "off",
-          "effecttsgo/global-fetch": "off",
-          "effecttsgo/global-fetch-in-effect": "off",
-          "effecttsgo/global-json": "off",
-          "effecttsgo/global-json-in-effect": "off",
-          "effecttsgo/global-random": "off",
-          "effecttsgo/global-random-in-effect": "off",
-          "effecttsgo/global-timers": "off",
-          "effecttsgo/global-timers-in-effect": "off",
-          "effecttsgo/instance-of-schema": "off",
-          "effecttsgo/missed-pipeable-opportunity": "off",
-          "effecttsgo/missing-effect-service-dependency": "off",
-          "effecttsgo/missing-pipeable-signature": "off",
+          // Flags Layer.provide chains in tests, where readability wins.
           "effecttsgo/multiple-effect-provide": "off",
-          "effecttsgo/nested-effect-gen-yield": "off",
-          "effecttsgo/new-promise": "off",
-          "effecttsgo/new-schema-class": "off",
-          "effecttsgo/node-builtin-import": "off",
-          "effecttsgo/prefer-effect-array": "off",
-          "effecttsgo/prefer-effect-record": "off",
-          "effecttsgo/prefer-effect-string": "off",
-          "effecttsgo/prefer-schema-tagged-error": "off",
-          "effecttsgo/prefer-schema-over-json": "off",
-          "effecttsgo/prefer-schema-type-property": "off",
-          "effecttsgo/process-env": "off",
-          "effecttsgo/process-env-in-effect": "off",
-          "effecttsgo/schema-sync": "off",
-          "effecttsgo/schema-union-of-literals": "off",
-          "effecttsgo/service-not-as-class": "off",
-          "effecttsgo/strict-boolean-expressions": "off",
-          "effecttsgo/strict-effect-provide": "off",
-          "effecttsgo/unnecessary-arrow-block": "off",
-          "effecttsgo/unsafe-effect-type-assertion": "off",
-          "effecttsgo/yield-in-call-argument": "off",
+        },
+      },
+      {
+        files: ["apps/sigle/**"],
+        plugins: ["nextjs"],
+        jsPlugins: [
+          {
+            name: "better-tailwindcss",
+            specifier: sigleRequire.resolve("eslint-plugin-better-tailwindcss"),
+          },
+        ],
+        rules: {
+          // Every rule of Oxlint's nextjs plugin, which the preset doesn't enable.
+          "nextjs/google-font-display": "error",
+          "nextjs/google-font-preconnect": "error",
+          "nextjs/inline-script-id": "error",
+          "nextjs/next-script-for-ga": "error",
+          "nextjs/no-assign-module-variable": "error",
+          "nextjs/no-async-client-component": "error",
+          "nextjs/no-before-interactive-script-outside-document": "error",
+          "nextjs/no-css-tags": "error",
+          "nextjs/no-document-import-in-page": "error",
+          "nextjs/no-duplicate-head": "error",
+          "nextjs/no-head-element": "error",
+          "nextjs/no-head-import-in-document": "error",
+          "nextjs/no-html-link-for-pages": "error",
+          "nextjs/no-img-element": "error",
+          "nextjs/no-page-custom-font": "error",
+          "nextjs/no-script-component-in-head": "error",
+          "nextjs/no-styled-jsx-in-document": "error",
+          "nextjs/no-sync-scripts": "error",
+          "nextjs/no-title-in-document-head": "error",
+          "nextjs/no-typos": "error",
+          "nextjs/no-unwanted-polyfillio": "error",
+          // Class order is sorted by oxfmt's `sortTailwindcss`.
+          "better-tailwindcss/enforce-canonical-classes": "error",
+          "better-tailwindcss/no-conflicting-classes": "error",
+          "better-tailwindcss/no-deprecated-classes": "error",
+          "better-tailwindcss/no-duplicate-classes": "error",
+          "better-tailwindcss/no-unknown-classes": "error",
+          "better-tailwindcss/no-unnecessary-whitespace": "error",
+          "no-restricted-imports": [
+            "error",
+            {
+              paths: [
+                {
+                  name: "next/link",
+                  message: "Use components/Shared/NextLink instead",
+                },
+              ],
+            },
+          ],
+        },
+      },
+      {
+        // Test helpers stay next to the one test that uses them.
+        files: ["**/*.test.ts", "**/*.test.tsx"],
+        rules: {
+          "unicorn/consistent-function-scoping": "off",
         },
       },
     ],

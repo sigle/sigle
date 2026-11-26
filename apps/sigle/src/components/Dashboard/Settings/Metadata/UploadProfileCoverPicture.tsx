@@ -28,7 +28,7 @@ export const UploadProfileCoverPicture = ({
     sigleApiClient.useMutation("put", "/api/me/profile/images/{kind}");
 
   const onDrop = useCallback(
-    async (acceptedFiles: Array<File>) => {
+    (acceptedFiles: Array<File>) => {
       const file = acceptedFiles[0];
 
       if (!file) {
@@ -38,7 +38,6 @@ export const UploadProfileCoverPicture = ({
       if (loadingUploadImage) {
         return;
       }
-
       posthog.capture("profile_cover_image_upload_start", {});
 
       // SAFETY: the endpoint reads a raw binary body, but openapi-typescript
@@ -54,14 +53,16 @@ export const UploadProfileCoverPicture = ({
           headers: {
             "Content-Type": file.type,
           },
+          // oxlint-disable-next-line typescript/no-unsafe-type-assertion
           body: file as never,
           bodySerializer: () => file,
         },
         {
-          onSuccess: async (data) => {
-            await onUploaded(data);
-            toast.success("Cover updated!");
-            posthog.capture("profile_cover_image_upload_success", {});
+          onSuccess: (data) => {
+            void onUploaded(data).then(() => {
+              toast.success("Cover updated!");
+              posthog.capture("profile_cover_image_upload_success", {});
+            });
           },
           onError: (error) => {
             posthog.capture("profile_cover_image_upload_error", {});
@@ -93,7 +94,7 @@ export const UploadProfileCoverPicture = ({
     >
       <input {...getInputProps()} />
       {resolvedPicture ? (
-        // oxlint-disable-next-line no-img-element
+        // oxlint-disable-next-line nextjs/no-img-element -- a dashboard preview of the cover being edited
         <img
           src={resolvedPicture}
           alt="Profile cover"

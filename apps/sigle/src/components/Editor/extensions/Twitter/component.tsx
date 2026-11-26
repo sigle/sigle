@@ -42,7 +42,7 @@ export const EmbedComponent = (props: NodeViewProps) => {
     resolver: zodResolver(embedSchema),
   });
 
-  const url: string | undefined = props.node.attrs.url;
+  const url = props.node.attrs.url ? String(props.node.attrs.url) : undefined;
 
   const embedType = useMemo(() => {
     if (!url) {

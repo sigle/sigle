@@ -57,7 +57,7 @@ const getImageMediaMetadata = async (
   const arrayBuffer = await response.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const contentType = await fileTypeFromBuffer(buffer);
-  let type: MediaImageMimeType | null = null;
+  let type: MediaImageMimeType;
 
   switch (contentType?.mime) {
     case "image/jpeg":
@@ -68,10 +68,9 @@ const getImageMediaMetadata = async (
       break;
     case "image/webp":
       type = MediaImageMimeType.WEBP;
-  }
-
-  if (!type) {
-    throw new Error(`Image type "${contentType?.mime}" is not supported`);
+      break;
+    default:
+      throw new Error(`Image type "${contentType?.mime}" is not supported`);
   }
 
   return {

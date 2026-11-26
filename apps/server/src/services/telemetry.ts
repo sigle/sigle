@@ -22,7 +22,6 @@ declare global {
 }
 
 // Ensure BigInt values serialize cleanly in JSON responses and logs
-// oxlint-disable-next-line no-extend-native
 BigInt.prototype.toJSON = function toJSON() {
   return this.toString();
 };

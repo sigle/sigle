@@ -50,18 +50,20 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
         remarkPlugins={[remarkGfm]}
         urlTransform={customUrlTransform}
         components={{
-          // oxlint-disable-next-line no-unused-vars
-          img: ({ node: _node, src, ...props }) => {
-            if (!src || src instanceof Blob) {
+          img: ({ node: _node, src, alt, ...props }) => {
+            if (!src || typeof src !== "string") {
               return null;
             }
 
             return (
-              // oxlint-disable-next-line no-img-element
-              <img {...props} src={resolveImageUrl(src, { gateway: true })} />
+              // oxlint-disable-next-line nextjs/no-img-element -- post images can come from any host
+              <img
+                {...props}
+                alt={alt ?? ""}
+                src={resolveImageUrl(src, { gateway: true })}
+              />
             );
           },
-          // oxlint-disable-next-line no-unused-vars
           a: ({ node, href, ...props }) => {
             if (href && isValidTwitterUrl(href)) {
               const tweetId = getTweetIdFromUrl(href);

@@ -3,6 +3,7 @@ import { describe, expect, it } from "vite-plus/test";
 import { generateSigleMetadataFromForm } from "./utils";
 
 // SAFETY: only getText is read
+// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 const editor = { getText: () => "word ".repeat(200) } as never;
 
 const post = {
@@ -57,6 +58,7 @@ describe(generateSigleMetadataFromForm, () => {
     // signs must survive a re-parse unchanged.
     expect(
       JSON.stringify(
+        // oxlint-disable-next-line unicorn/prefer-structured-clone -- tests the JSON round trip
         PostMetadataSchema.parse(JSON.parse(JSON.stringify(unsigned))),
       ),
     ).toBe(JSON.stringify(unsigned));
@@ -71,6 +73,7 @@ describe(generateSigleMetadataFromForm, () => {
     });
 
     // zod keeps the keys with `undefined` values; the signed JSON drops them.
+    // oxlint-disable-next-line unicorn/prefer-structured-clone -- tests the JSON round trip
     const signedContent = JSON.parse(JSON.stringify(result.content));
 
     expect(result.content.attributes).toBeUndefined();

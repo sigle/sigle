@@ -145,7 +145,6 @@ const Draft = ({
   );
 
   const onDelete = async () => {
-    // oxlint-disable-next-line no-alert
     const ok = confirm("Are you sure you want to delete this draft?");
 
     if (!ok) {

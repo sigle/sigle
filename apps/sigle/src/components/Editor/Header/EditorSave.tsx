@@ -50,7 +50,6 @@ export const EditorSave = () => {
       if (!editor) {
         return;
       }
-
       const saveCount = changeCountRef.current;
       const values = getValues();
 
@@ -86,14 +85,12 @@ export const EditorSave = () => {
             if (saveCount !== changeCountRef.current) {
               return;
             }
-
             setSaveState("saved");
           },
           onError: (error) => {
             if (saveCount !== changeCountRef.current) {
               return;
             }
-
             // A 409 explains why the draft cannot be saved right now, such as
             // a publish in progress.
             setSaveError(error.message);
@@ -110,6 +107,8 @@ export const EditorSave = () => {
   useEffect(() => {
     if (forceSave && editor) {
       changeCountRef.current += 1;
+      // The effect starts a save, which the state shows.
+      // oxlint-disable-next-line react/set-state-in-effect
       setSaveState("saving");
       onAutoSave();
     }
@@ -126,7 +125,6 @@ export const EditorSave = () => {
       if (type === "published") {
         return;
       }
-
       changeCountRef.current += 1;
       setSaveState("saving");
       onAutoSave();
@@ -154,7 +152,6 @@ export const EditorSave = () => {
         if (saveState === "error") {
           onAutoSave();
         }
-
         onAutoSave.flush();
       } finally {
         leavingRef.current = false;

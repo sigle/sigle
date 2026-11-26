@@ -31,6 +31,7 @@ export const Footer = () => {
     <footer className="mx-auto max-w-5xl px-4">
       <div className="flex flex-col gap-5 border-t border-border pt-8 pb-20 md:flex-row md:items-center md:justify-between md:pb-8">
         <p className="font-mono text-xs text-muted-foreground">
+          {/* oxlint-disable-next-line react/purity -- rendered by server components only */}
           © {new Date().getFullYear()} Sigle
         </p>
 

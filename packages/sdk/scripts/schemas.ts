@@ -18,5 +18,5 @@ for (const [path, Schema] of schemas) {
     target: "draft-2020-12",
   });
 
-  fs.writeFileSync(outputFile, JSON.stringify(jsonSchema, null, 2), "utf-8");
+  fs.writeFileSync(outputFile, JSON.stringify(jsonSchema, null, 2), "utf8");
 }

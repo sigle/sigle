@@ -42,7 +42,7 @@ export const PostShareDialog = ({
 
   const onCopy = () => {
     posthog.capture("post_link_copied", { postId: post.id });
-    navigator.clipboard.writeText(postLink).then(() => {
+    void navigator.clipboard.writeText(postLink).then(() => {
       setIsCopied(true);
       setTimeout(() => {
         setIsCopied(false);
@@ -82,7 +82,7 @@ export const PostShareDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="headline text-2xl leading-tight">
+          <DialogTitle className="headline text-2xl/tight">
             Share this story
           </DialogTitle>
           <DialogDescription className="line-clamp-2">

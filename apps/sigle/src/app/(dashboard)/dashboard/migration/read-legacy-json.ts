@@ -20,5 +20,6 @@ export const readLegacyJson = async <T>(
   }
 
   // SAFETY: the proxy forwards the legacy API's JSON, whose shape the caller declares.
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   return data as T;
 };

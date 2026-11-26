@@ -1195,7 +1195,7 @@ describe("editor tiptap - image from url", () => {
     editor?.commands.setContent(markdown, { contentType: "markdown" });
 
     expect({ markdown, sources: getImageSources() }).toStrictEqual({
-      markdown: "![](https://example.com/photo\\).png)",
+      markdown: String.raw`![](https://example.com/photo\).png)`,
       sources: [src],
     });
   });

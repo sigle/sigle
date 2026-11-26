@@ -83,10 +83,10 @@ const ImageUrlForm = (props: NodeViewProps) => {
 };
 
 export const ImageComponent = (props: NodeViewProps) => {
-  const alt = props.node.attrs.alt || "";
-  const uploadId = props.node.attrs.uploadId;
+  const alt = String(props.node.attrs.alt || "");
+  const uploading = Boolean(props.node.attrs.uploadId);
 
-  if (!props.node.attrs.src && !uploadId) {
+  if (!props.node.attrs.src && !uploading) {
     return (
       <NodeViewWrapper>
         <ImageUrlForm {...props} />
@@ -94,23 +94,25 @@ export const ImageComponent = (props: NodeViewProps) => {
     );
   }
 
-  const src = resolveImageUrl(props.node.attrs.src || "", { gateway: true });
+  const src = resolveImageUrl(String(props.node.attrs.src || ""), {
+    gateway: true,
+  });
 
   return (
     <NodeViewWrapper data-drag-handle className="relative">
-      {uploadId && (
+      {uploading && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Spinner />
         </div>
       )}
-      {/* oxlint-disable-next-line no-img-element */}
+      {/* oxlint-disable-next-line nextjs/no-img-element -- editor images can come from any host */}
       <img
         className={cn(
           "rounded-md outline-offset-4 transition-[outline-color,opacity] hover:outline-2 hover:outline-border",
           {
             "outline-2 outline-foreground/60 hover:outline-foreground/60":
               props.selected,
-            "opacity-40": uploadId,
+            "opacity-40": uploading,
           },
         )}
         src={src}

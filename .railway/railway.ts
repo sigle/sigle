@@ -66,7 +66,6 @@ export default defineRailway(() => {
       // Server-side calls to the API go over the private network, where the
       // API doesn't rate limit reads.
       API_INTERNAL_URL:
-        // oxlint-disable-next-line no-template-curly-in-string Railway references
         "http://${{server.RAILWAY_PRIVATE_DOMAIN}}:${{server.PORT}}",
       // Secret, set from 1Password by scripts/sync-railway-env.sh. Read at
       // build time to upload the source maps to PostHog.

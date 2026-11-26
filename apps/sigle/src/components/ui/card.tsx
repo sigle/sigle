@@ -37,6 +37,8 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="card-title"
       className={cn(
+        // `leading-snug` also sets the line height of the `text-sm` variant.
+        // oxlint-disable-next-line better-tailwindcss/enforce-canonical-classes
         `text-base leading-snug font-medium group-data-[size=sm]/card:text-sm`,
         className,
       )}

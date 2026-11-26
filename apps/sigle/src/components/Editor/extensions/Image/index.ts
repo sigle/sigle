@@ -3,6 +3,7 @@ import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import TipTapImageBase from "@tiptap/extension-image";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
+import posthog from "posthog-js";
 import { ImageComponent } from "./Component";
 
 declare module "@tiptap/core" {
@@ -63,7 +64,7 @@ export const TipTapImage = TipTapImageBase.extend<
   // Same as the base extension, except an image still waiting for its URL, or
   // still uploading with a local preview, is not part of the post content.
   renderMarkdown(node) {
-    const src = node.attrs?.src ?? "";
+    const src = String(node.attrs?.src ?? "");
 
     // An image still uploading shows a local `blob:` preview, which is not
     // part of the post: it only exists in this tab.
@@ -71,15 +72,15 @@ export const TipTapImage = TipTapImageBase.extend<
       return "";
     }
 
-    const alt = node.attrs?.alt ?? "";
-    const title = node.attrs?.title ?? "";
+    const alt = String(node.attrs?.alt ?? "");
+    const title = String(node.attrs?.title ?? "");
 
     // Backslashes and parentheses are backslash-escaped so an unbalanced `)`
     // does not end the destination, and whitespace, which is never valid in a
     // URL, is encoded.
     const destination = src
-      .replace(/[\\()]/g, "\\$&")
-      .replace(/\s/g, encodeURIComponent);
+      .replaceAll(/[\\()]/g, String.raw`\$&`)
+      .replaceAll(/\s/g, encodeURIComponent);
 
     return title
       ? `![${alt}](${destination} "${title}")`
@@ -207,9 +208,9 @@ export const TipTapImage = TipTapImageBase.extend<
               editor.view.dispatch(transaction);
               URL.revokeObjectURL(preview);
             })
-            .catch((error) => {
+            .catch((error: unknown) => {
               // If the upload fails, we remove the image node from the document
-              console.error("Failed to upload image", error);
+              posthog.captureException(error);
               const transaction = editor.state.tr;
               editor.state.doc.descendants((node, pos) => {
                 if (
@@ -237,12 +238,15 @@ export const TipTapImage = TipTapImageBase.extend<
     const transaction = editor.state.tr;
 
     editor.state.doc.descendants((node, pos) => {
+      const src: unknown = node.attrs.src;
+
       // Without an uploader the Gaia images are kept as they are, instead of
       // being removed from the document when their upload fails.
       if (
         uploadFile &&
         node.type.name === "image" &&
-        node.attrs.src?.startsWith("https://gaia.blockstack.org/hub/")
+        typeof src === "string" &&
+        src.startsWith("https://gaia.blockstack.org/hub/")
       ) {
         const uploadId = crypto.randomUUID();
 
@@ -254,7 +258,7 @@ export const TipTapImage = TipTapImageBase.extend<
         const newNode = node.type.create(attrs, node.content, node.marks);
         transaction.replaceWith(pos, pos + node.nodeSize, newNode);
 
-        fetch(node.attrs.src)
+        fetch(src)
           .then((response) => response.blob())
           .then((blob) => {
             const file = new File([blob], "image", { type: blob.type });
@@ -289,8 +293,8 @@ export const TipTapImage = TipTapImageBase.extend<
             });
             editor.view.dispatch(updateTransaction);
           })
-          .catch((error) => {
-            console.error("Failed to upload image", error);
+          .catch((error: unknown) => {
+            posthog.captureException(error);
             const deleteTransaction = editor.state.tr;
             editor.state.doc.descendants((innerNode, innerPos) => {
               if (

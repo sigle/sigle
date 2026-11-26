@@ -90,7 +90,6 @@ export const slashCommands: Array<SlashCommandsCommand> = [
         if (!file) {
           return;
         }
-
         const [mime] = file.type.split("/");
 
         if (mime !== "image") {
