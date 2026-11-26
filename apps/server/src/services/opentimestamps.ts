@@ -114,10 +114,10 @@ export const makeOpenTimestampsService = (
     Effect.promise(async () => {
       try {
         return await client.verify(Buffer.from(proof), contentHash);
-      } catch (cause) {
+      } catch (error) {
         return {
           status: "network_error" as const,
-          reason: cause instanceof Error ? cause.message : String(cause),
+          reason: error instanceof Error ? error.message : String(error),
         };
       }
     }),

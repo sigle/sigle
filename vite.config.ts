@@ -95,7 +95,6 @@ export default defineConfig({
           "typescript/require-array-sort-compare": "off",
           "typescript/switch-exhaustiveness-check": "off",
           "typescript/use-unknown-in-catch-callback-variable": "off",
-          "unicorn/catch-error-name": "off",
           "unicorn/consistent-function-scoping": "off",
           "unicorn/no-invalid-fetch-options": "off",
           "unicorn/prefer-dom-node-append": "off",
