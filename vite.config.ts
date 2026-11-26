@@ -61,6 +61,8 @@ export default defineConfig({
         "error",
         { checksVoidReturn: { attributes: false } },
       ],
+      // `next/og` renders Open Graph images with Satori, which reads `tw`.
+      "react/no-unknown-property": ["error", { ignore: ["tw"] }],
     },
     overrides: [
       {
@@ -77,15 +79,6 @@ export default defineConfig({
         files: ["**/*.test.ts", "**/*.test.tsx"],
         rules: {
           "unicorn/consistent-function-scoping": "off",
-        },
-      },
-      {
-        // Rules of @cloudflare/oxlint-config that the code doesn't pass yet,
-        // off until each is fixed or kept off with a reason. Last, so the
-        // preset's file overrides don't turn them back on.
-        files: ["**"],
-        rules: {
-          "react/no-unknown-property": "off",
         },
       },
     ],
