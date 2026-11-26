@@ -28,6 +28,14 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
     // When filter is happening reset to index 0
     useEffect(() => setSelectedIndex(0), [items]);
 
+    const selectItem = (index: number) => {
+      const item = items[index];
+
+      if (item) {
+        command(item);
+      }
+    };
+
     useImperativeHandle(ref, () => ({
       onKeyDown: ({ event }) => {
         if (event.key === "ArrowUp") {
@@ -63,14 +71,6 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
 
       $ele?.scrollIntoView({ block: "nearest" });
     }, [selectedIndex]);
-
-    const selectItem = (index: number) => {
-      const item = items[index];
-
-      if (item) {
-        command(item);
-      }
-    };
 
     const basicItems = items.filter((item) => item.section === "basic");
     const embedItems = items.filter((item) => item.section === "embed");

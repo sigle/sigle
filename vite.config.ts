@@ -85,7 +85,6 @@ export default defineConfig({
         // preset's file overrides don't turn them back on.
         files: ["**"],
         rules: {
-          "react/immutability": "off",
           "react/no-unknown-property": "off",
           "react/set-state-in-effect": "off",
         },
