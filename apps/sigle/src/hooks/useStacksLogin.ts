@@ -41,7 +41,9 @@ export const useStacksLogin = () => {
       const data = getLocalStorage();
       const stxAddress = data?.addresses.stx[0];
 
-      if (!stxAddress) return;
+      if (!stxAddress) {
+        return;
+      }
 
       const user = {
         stxAddress: stxAddress.address,

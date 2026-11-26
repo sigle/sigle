@@ -112,7 +112,9 @@ const ipv6Groups = (address: string): ReadonlyArray<number> => {
     part === ""
       ? []
       : part.split(":").flatMap((group) => {
-          if (!group.includes(".")) return [Number.parseInt(group, 16)];
+          if (!group.includes(".")) {
+            return [Number.parseInt(group, 16)];
+          }
 
           const [a = 0, b = 0, c = 0, d = 0] = group.split(".").map(Number);
 
@@ -138,7 +140,9 @@ const ipv6Groups = (address: string): ReadonlyArray<number> => {
 const rateLimitAddress = (ip: string): string => {
   const address = ip.split("%")[0] ?? ip;
 
-  if (!isIPv6(address)) return ip;
+  if (!isIPv6(address)) {
+    return ip;
+  }
 
   const groups = ipv6Groups(address);
 

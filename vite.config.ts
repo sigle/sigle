@@ -68,7 +68,6 @@ export default defineConfig({
         rules: {
           "@nkzw/no-instanceof": "off",
           "@nkzw/require-use-effect-arguments": "off",
-          curly: "off",
           "no-console": "off",
           "no-useless-assignment": "off",
           "prefer-promise-reject-errors": "off",

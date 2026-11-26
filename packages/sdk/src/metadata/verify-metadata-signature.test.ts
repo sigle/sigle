@@ -25,7 +25,9 @@ const EXPECTED_MAINNET_ADDRESS = publicKeyToAddress(TEST_PUBLIC_KEY, "mainnet");
 const EXPECTED_TESTNET_ADDRESS = publicKeyToAddress(TEST_PUBLIC_KEY, "testnet");
 
 function unwrapErr<T, E>(result: Result<T, E>): E {
-  if (result.isErr()) return result.error;
+  if (result.isErr()) {
+    return result.error;
+  }
 
   throw new Error("Expected an error result");
 }

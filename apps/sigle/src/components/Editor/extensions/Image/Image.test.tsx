@@ -102,7 +102,9 @@ describe("image extension - uploads by plan", () => {
     const sources: unknown[] = [];
 
     useEditorStore.getState().editor?.state.doc.descendants((node) => {
-      if (node.type.name === "image") sources.push(node.attrs.src);
+      if (node.type.name === "image") {
+        sources.push(node.attrs.src);
+      }
     });
 
     return sources;
@@ -164,9 +166,13 @@ describe("image extension - uploads by plan", () => {
   const paste = (data: { file?: File; html?: string }) => {
     const clipboardData = new DataTransfer();
 
-    if (data.file) clipboardData.items.add(data.file);
+    if (data.file) {
+      clipboardData.items.add(data.file);
+    }
 
-    if (data.html) clipboardData.setData("text/html", data.html);
+    if (data.html) {
+      clipboardData.setData("text/html", data.html);
+    }
 
     useEditorStore.getState().editor?.view.dom.dispatchEvent(
       new ClipboardEvent("paste", {

@@ -39,9 +39,13 @@ export const EditorCoverImage = ({
     async (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
 
-      if (!file) return;
+      if (!file) {
+        return;
+      }
 
-      if (loadingUploadImage) return;
+      if (loadingUploadImage) {
+        return;
+      }
 
       const previewBlobUrl = URL.createObjectURL(file);
       setPreview(previewBlobUrl);

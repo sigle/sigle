@@ -61,7 +61,9 @@ const getImageSources = () => {
   const sources: unknown[] = [];
 
   useEditorStore.getState().editor?.state.doc.descendants((node) => {
-    if (node.type.name === "image") sources.push(node.attrs.src);
+    if (node.type.name === "image") {
+      sources.push(node.attrs.src);
+    }
   });
 
   return sources;

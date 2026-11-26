@@ -51,7 +51,9 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
         urlTransform={customUrlTransform}
         components={{
           img: ({ node: _node, src, ...props }) => {
-            if (!src || src instanceof Blob) return null;
+            if (!src || src instanceof Blob) {
+              return null;
+            }
 
             return (
               <img {...props} src={resolveImageUrl(src, { gateway: true })} />

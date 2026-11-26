@@ -97,13 +97,17 @@ export const SlashCommands = Extension.create<{
           const updatePosition = (
             clientRect: (() => DOMRect | null) | null | undefined,
           ) => {
-            if (!container) return;
+            if (!container) {
+              return;
+            }
             const virtualEl = getVirtualElement(clientRect);
             computePosition(virtualEl, container, {
               placement: "bottom-start",
               middleware: [offset(4), flip()],
             }).then(({ x, y }) => {
-              if (!container) return;
+              if (!container) {
+                return;
+              }
               Object.assign(container.style, {
                 left: `${x}px`,
                 top: `${y}px`,

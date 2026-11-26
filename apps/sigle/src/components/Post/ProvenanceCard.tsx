@@ -26,7 +26,9 @@ interface PostProvenanceCardProps {
 }
 
 function truncateId(id: string, startChars = 8, endChars = 6): string {
-  if (id.length <= startChars + endChars + 3) return id;
+  if (id.length <= startChars + endChars + 3) {
+    return id;
+  }
 
   return `${id.slice(0, startChars)}…${id.slice(-endChars)}`;
 }

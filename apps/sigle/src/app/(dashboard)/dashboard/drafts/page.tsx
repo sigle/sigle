@@ -147,7 +147,9 @@ const Draft = ({
   const onDelete = async () => {
     const ok = confirm("Are you sure you want to delete this draft?");
 
-    if (!ok) return;
+    if (!ok) {
+      return;
+    }
 
     setIsDeleting(true);
     await deletePost({

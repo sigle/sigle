@@ -45,11 +45,17 @@ export const EmbedComponent = (props: NodeViewProps) => {
   const url: string | undefined = props.node.attrs.url;
 
   const embedType = useMemo(() => {
-    if (!url) return undefined;
+    if (!url) {
+      return undefined;
+    }
 
-    if (isValidTwitterUrl(url)) return "twitter";
+    if (isValidTwitterUrl(url)) {
+      return "twitter";
+    }
 
-    if (isValidYoutubeUrl(url)) return "video";
+    if (isValidYoutubeUrl(url)) {
+      return "video";
+    }
   }, [url]);
 
   // Override tiptap focus and focus on input instead

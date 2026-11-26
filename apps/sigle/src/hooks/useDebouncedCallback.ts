@@ -20,7 +20,9 @@ const debounce = <Args extends unknown[]>(
   executedFunction.flush = () => {
     clearTimeout(timeout);
 
-    if (pendingArgs === null) return;
+    if (pendingArgs === null) {
+      return;
+    }
     const args = pendingArgs;
     pendingArgs = null;
     func(...args);
