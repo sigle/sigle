@@ -68,7 +68,10 @@ the workers.
 
 `JobAdminService` (`@/queue/admin`) exposes the queue state: `getSummary`,
 `getQueueStats`, `listFailed` (paginated), `retryFailedJob`, `deleteFailedJob`,
-and `clearJob`.
+and `clearJob`. Admins (wallets in `ADMIN_ADDRESSES`) can use the same
+operations over HTTP under `/api/admin/queues` (see `src/api/groups/admin.ts`):
+list queues, list failed jobs, retry and delete them. The admin group is not in
+the public OpenAPI document.
 
 ## Testing
 
@@ -78,6 +81,7 @@ by calling the `process` function directly.
 
 ## Deferred
 
-Cron/scheduled jobs, delayed starts, priorities, batching, the HTTP admin
-surface, metric scraping, separate worker processes, and porting the v1
-(pg-boss) post `indexer` jobs.
+Cron/scheduled jobs, delayed starts, priorities, batching, metric scraping,
+separate worker processes, and porting the v1 (pg-boss) post `indexer` jobs.
+Periodic work runs as interval loops next to the workers (`*-reconcile.ts`,
+`post-arweave-block.ts`), not as scheduled queue jobs.

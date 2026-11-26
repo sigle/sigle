@@ -4,9 +4,8 @@ We're open to all community contributions! This includes bug reports, feature re
 
 ## Requirements
 
-- [Node](https://nodejs.org/en/) 24+
-- [pnpm](https://pnpm.io/) 10+
-- [Docker](https://www.docker.com/) (Docker Compose 2.22.0+)
+- [Node](https://nodejs.org/en/) 26+
+- [pnpm](https://pnpm.io/) 12+
 
 ## Pull Requests
 
@@ -16,8 +15,7 @@ For non-bug-fixes, please open an issue first and discuss your idea to make sure
 
 - Fork the repository and create a new branch from `main`.
 - Must not break the test suite. If you're fixing a bug, include a test that would fail without your fix (`pnpm test`).
-- Must be formatted with oxfmt (`pnpm format:fix`).
-- Must be linted with oxlint (`pnpm lint:fix`).
+- Must pass the format, lint and type checks (`pnpm vp check`; `pnpm vp check --fix` fixes format and lint).
 - Must be **isolated**. Avoid grouping many, unrelated changes in a single PR.
 - Must contain a changeset file describing the changes and affected packages. Run `pnpm changeset` to generate one.
 
@@ -66,13 +64,4 @@ After changing `apps/server/src/db/schema.ts`, generate a Drizzle migration:
 
 ```sh
 cd apps/server && pnpm drizzle-kit generate --name <migration-name>
-```
-
-### Update the e2e tests snapshots
-
-To update the e2e tests snapshots, run the following command from the root directory:
-
-```sh
-docker build -t local-playwright-docker --file apps/sigle/Dockerfile.dev .
-docker run -v "./apps/sigle/e2e:/app/apps/sigle/e2e" -it local-playwright-docker:latest
 ```
