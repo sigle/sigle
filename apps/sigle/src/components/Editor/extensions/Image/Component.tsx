@@ -94,7 +94,9 @@ export const ImageComponent = (props: NodeViewProps) => {
     );
   }
 
-  const src = resolveImageUrl(props.node.attrs.src || "", { gateway: true });
+  const src = resolveImageUrl(String(props.node.attrs.src || ""), {
+    gateway: true,
+  });
 
   return (
     <NodeViewWrapper data-drag-handle className="relative">

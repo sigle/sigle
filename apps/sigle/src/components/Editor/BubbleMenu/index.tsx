@@ -75,7 +75,7 @@ export const EditorBubbleMenu = ({ editor }: EditorBubbleMenuProps) => {
   const onSelectLink = () => {
     // Get href of selected link to pre fill the input
     const existingHref = editor.isActive("link")
-      ? editor.getAttributes("link").href
+      ? String(editor.getAttributes("link").href ?? "")
       : "";
 
     setLinkOpen(true);
