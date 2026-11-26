@@ -2,7 +2,6 @@
 
 import type { paths } from "@sigle/sdk";
 import { IconAlertTriangle, IconDots } from "@tabler/icons-react";
-import { format } from "date-fns";
 import { useState } from "react";
 import { BlurImage } from "@/components/ui/blur-image";
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,7 @@ import {
 import { useSession } from "@/lib/auth-hooks";
 import { cn } from "@/lib/cn";
 import { CONTENT_WARNINGS } from "@/lib/content-warning";
+import { formatUtcDate } from "@/lib/dates";
 import { resolveImageUrl } from "@/lib/images";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
@@ -74,7 +74,7 @@ export const PostListItem = ({ post, onHiddenChange }: PostListItemProps) => {
             dateTime={post.createdAt}
             className="font-mono text-xs text-muted-foreground uppercase"
           >
-            {format(new Date(post.createdAt), "MMM d, yyyy")}
+            {formatUtcDate(post.createdAt)}
           </time>
           <DropdownMenu>
             <DropdownMenuTrigger

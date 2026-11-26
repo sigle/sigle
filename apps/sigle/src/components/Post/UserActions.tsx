@@ -1,7 +1,6 @@
 import type { paths } from "@sigle/sdk";
 import { IconDots, IconShare } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -12,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "@/lib/auth-hooks";
+import { formatUtcDate } from "@/lib/dates";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { formatReadableAddress } from "@/lib/stacks";
@@ -87,7 +87,7 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
             </div>
             <p className="text-muted-foreground">
               <time dateTime={post.createdAt}>
-                {format(new Date(post.createdAt), "MMM d, yyyy")}
+                {formatUtcDate(post.createdAt)}
               </time>{" "}
               · {readingMinutes} min read
             </p>

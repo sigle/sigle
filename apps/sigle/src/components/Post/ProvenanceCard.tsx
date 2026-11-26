@@ -8,10 +8,10 @@ import {
   IconClockHour4,
   IconCopy,
 } from "@tabler/icons-react";
-import { format } from "date-fns";
 import { toast } from "sonner";
 import { env } from "@/env";
 import { cn } from "@/lib/cn";
+import { formatUtcDate, formatUtcDateTime } from "@/lib/dates";
 import { formatNumber } from "@/lib/utils";
 import {
   Accordion,
@@ -58,7 +58,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
           title="Stored on Arweave"
           isLast={!opentimestamps}
         >
-          {format(publishedAt, "MMM d, yyyy")}
+          {formatUtcDate(publishedAt)}
           {post.arweaveBlockHeight === null
             ? null
             : ` · Block #${formatNumber(post.arweaveBlockHeight)}`}
@@ -67,7 +67,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
         {opentimestamps ? (
           bitcoinTimestamp && opentimestamps.bitcoinBlockHeight !== null ? (
             <ProvenanceStep state="done" title="Timestamped on Bitcoin" isLast>
-              {format(bitcoinTimestamp, "MMM d, yyyy, HH:mm")} · Block #
+              {formatUtcDateTime(bitcoinTimestamp)} · Block #
               {formatNumber(opentimestamps.bitcoinBlockHeight)}
             </ProvenanceStep>
           ) : (
