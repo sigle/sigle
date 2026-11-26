@@ -82,7 +82,6 @@ export default defineConfig({
           "typescript/no-floating-promises": "off",
           "typescript/no-misused-promises": "off",
           "typescript/only-throw-error": "off",
-          "typescript/require-array-sort-compare": "off",
           "typescript/switch-exhaustiveness-check": "off",
           "typescript/use-unknown-in-catch-callback-variable": "off",
           "unicorn/consistent-function-scoping": "off",

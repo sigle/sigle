@@ -639,12 +639,12 @@ describe("profile", () => {
 
       expect({
         deletes: recorder.deletes,
-        mediaIds: mediaIds.map((row) => row.id).sort(),
+        mediaIds: new Set(mediaIds.map((row) => row.id)),
         picture: saved.profile.picture?.url,
         coverPicture: saved.profile.coverPicture?.url,
       }).toStrictEqual({
         deletes: [keys[0]],
-        mediaIds: [secondUrl, `${STORAGE_TEST_PUBLIC_URL}/${keys[3]}`].sort(),
+        mediaIds: new Set([secondUrl, `${STORAGE_TEST_PUBLIC_URL}/${keys[3]}`]),
         picture: secondUrl,
         coverPicture: `${STORAGE_TEST_PUBLIC_URL}/${keys[3]}`,
       });
