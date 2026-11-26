@@ -62,8 +62,8 @@ export default defineConfig({
         // Server-side reads reach the API on its private domain, as on
         // Railway, see the e2e server.
         API_INTERNAL_URL: `http://127.0.0.1:${API_PORT}`,
-        // Public URL of the test storage of the API, which keeps no file.
-        CDN_URL: "https://cdn.test",
+        // The API serves the files uploaded to its test storage.
+        CDN_URL: `${API_URL}/e2e/storage`,
         // No analytics, whatever a local env file sets.
         NEXT_PUBLIC_POSTHOG_KEY: "",
       },

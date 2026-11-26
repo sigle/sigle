@@ -1,10 +1,11 @@
 import { NodeHttpServer, NodeRuntime } from "@effect/platform-node";
 import { Config, Effect, Layer, Option } from "effect";
-import { HttpRouter } from "effect/http";
+import { HttpRouter, HttpServerResponse } from "effect/http";
 import { randomBytes } from "node:crypto";
 import { createServer } from "node:http";
 import type { ArweaveUploadResult } from "@/services/arweave";
 import { ApiRoutesLayer } from "@/main";
+import { makeStorageTestRecorder, StorageService } from "@/services/storage";
 import { provideTestServices } from "@/test/server";
 
 /**
@@ -14,7 +15,8 @@ import { provideTestServices } from "@/test/server";
  * Arweave, R2, BNS, OpenTimestamps and PostHog are their test layers, and on
  * testnet the plan check never calls the Stacks API, so nothing leaves the
  * machine. Sessions, signatures, limits and jobs are the real ones. The
- * database is in memory: every start is a fresh one.
+ * database is in memory, and so are the uploaded files, which this server
+ * serves itself: every start is a fresh one.
  */
 const e2eConfig = Config.all({
   PORT: Config.Port("PORT").pipe(Config.withDefault(3101)),
@@ -58,16 +60,50 @@ const uploadWithUniqueId = Effect.sync((): ArweaveUploadResult => {
   };
 });
 
+/** Path the uploaded files are served under, as the R2 public URL serves them. */
+const STORAGE_PATH = "/e2e/storage";
+
+const uploadedFiles = makeStorageTestRecorder();
+
+/** Serves the last file uploaded under a key, as the CDN does in production. */
+const StorageRoutesLayer = HttpRouter.add(
+  "GET",
+  `${STORAGE_PATH}/*`,
+  (request) =>
+    Effect.sync(() => {
+      const key = decodeURIComponent(
+        new URL(request.url, "http://localhost").pathname.slice(
+          STORAGE_PATH.length + 1,
+        ),
+      );
+
+      const file = uploadedFiles.uploads.findLast(
+        (upload) => upload.key === key,
+      );
+
+      return file === undefined || uploadedFiles.deletes.includes(key)
+        ? HttpServerResponse.empty({ status: 404 })
+        : HttpServerResponse.uint8Array(file.body, {
+            contentType: file.contentType,
+          });
+    }),
+);
+
 const E2eServerLayer = Layer.unwrap(
   Effect.gen(function* () {
     const config = yield* e2eConfig;
 
-    return HttpRouter.serve(ApiRoutesLayer).pipe(
+    const storageUrl = `${config.API_URL}${STORAGE_PATH}`;
+
+    return HttpRouter.serve(
+      Layer.mergeAll(ApiRoutesLayer, StorageRoutesLayer),
+    ).pipe(
       Layer.provide(NodeHttpServer.layer(createServer, { port: config.PORT })),
       provideTestServices(
         {
           ...config,
           ARWEAVE_GATEWAY_URL,
+          R2_PUBLIC_URL: storageUrl,
           CLIENT_IP_HEADER: Option.some(E2E_CLIENT_IP_HEADER),
           RAILWAY_PRIVATE_DOMAIN: Option.some(E2E_PRIVATE_DOMAIN),
         },
@@ -75,6 +111,10 @@ const E2eServerLayer = Layer.unwrap(
         {
           arweaveUploadImpl: () => uploadWithUniqueId,
           pollInterval: "50 millis",
+          storage: StorageService.layerTest(uploadedFiles, {
+            uploadFile: ({ key, version }) =>
+              Effect.succeed({ key, url: `${storageUrl}/${key}`, version }),
+          }),
         },
       ),
     );
