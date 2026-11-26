@@ -39,20 +39,20 @@ export const Plan = () => {
     refreshPlan.mutate(
       {},
       {
-        onSuccess: async ({ plan }) => {
-          await Promise.all([
+        onSuccess: ({ plan }) => {
+          void Promise.all([
             queryClient.invalidateQueries({ queryKey: ["get", "/api/me"] }),
             queryClient.invalidateQueries({
               queryKey: ["get", "/api/me/limits"],
             }),
-          ]);
-
-          if (plan === "pro") {
-            posthog.capture("upgrade_activated", { source });
-            setIsWelcomeOpen(true);
-          } else {
-            setIsNftNotFound(true);
-          }
+          ]).then(() => {
+            if (plan === "pro") {
+              posthog.capture("upgrade_activated", { source });
+              setIsWelcomeOpen(true);
+            } else {
+              setIsNftNotFound(true);
+            }
+          });
         },
         onError: (error) => {
           toast.error(error?.message ?? "Failed to check your wallet.");

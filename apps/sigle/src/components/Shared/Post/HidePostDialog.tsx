@@ -59,7 +59,7 @@ export const usePostVisibility = ({ onChange }: PostVisibilityOptions = {}) => {
             duration: 10_000,
             action: {
               label: "Undo",
-              onClick: () => setHidden(postId, false),
+              onClick: () => void setHidden(postId, false),
             },
           });
         } else {

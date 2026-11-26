@@ -55,6 +55,12 @@ export default defineConfig({
       // Drizzle schema passed whole to `drizzle()` and Better Auth, and the
       // `* as React` the shadcn CLI generates in components/ui.
       "import/no-namespace": "off",
+      // React ignores what event handlers return, so async handlers passed to
+      // JSX attributes such as `onClick` are allowed.
+      "typescript/no-misused-promises": [
+        "error",
+        { checksVoidReturn: { attributes: false } },
+      ],
     },
     overrides: [
       {
@@ -79,7 +85,6 @@ export default defineConfig({
           "react/purity": "off",
           "react/set-state-in-effect": "off",
           "react/use-memo": "off",
-          "typescript/no-misused-promises": "off",
           "unicorn/consistent-function-scoping": "off",
         },
       },

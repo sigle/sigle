@@ -29,7 +29,7 @@ export const UploadProfilePicture = ({
     sigleApiClient.useMutation("put", "/api/me/profile/images/{kind}");
 
   const onDrop = useCallback(
-    async (acceptedFiles: Array<File>) => {
+    (acceptedFiles: Array<File>) => {
       const file = acceptedFiles[0];
 
       if (!file) {
@@ -59,10 +59,11 @@ export const UploadProfilePicture = ({
           bodySerializer: () => file,
         },
         {
-          onSuccess: async (data) => {
-            await onUploaded(data);
-            toast.success("Picture updated!");
-            posthog.capture("profile_image_upload_success", {});
+          onSuccess: (data) => {
+            void onUploaded(data).then(() => {
+              toast.success("Picture updated!");
+              posthog.capture("profile_image_upload_success", {});
+            });
           },
           onError: (error) => {
             posthog.capture("profile_image_upload_error", {});
