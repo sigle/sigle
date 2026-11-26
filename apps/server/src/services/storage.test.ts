@@ -1,11 +1,11 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Data, Effect, Layer } from "effect";
+import type { StorageUploader } from "@/services/storage";
 import { AppConfig } from "@/config";
 import {
   makeStorageService,
   StorageService,
   StorageUploadError,
-  type StorageUploader,
 } from "@/services/storage";
 
 const TEST_BODY = new Uint8Array([1, 2, 3, 4]);

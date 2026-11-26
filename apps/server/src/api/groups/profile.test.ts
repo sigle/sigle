@@ -8,19 +8,22 @@ import {
   HttpClientResponse,
 } from "effect/http";
 import sharp from "sharp";
+import type { BnsName } from "@/services/bns";
 import type { PostHogEvent } from "@/services/posthog";
+import type {
+  StorageTestOverrides,
+  StorageTestRecorder,
+} from "@/services/storage";
 import { UserProfile } from "@/api/groups/users";
 import { RATE_LIMITS } from "@/api/middleware/rate-limit";
 import { Database } from "@/db";
 import { mediaImage, profile as profileTable } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
-import { BnsLookupError, type BnsName, BnsService } from "@/services/bns";
+import { BnsLookupError, BnsService } from "@/services/bns";
 import {
   makeStorageTestRecorder,
   StorageService,
   StorageUploadError,
-  type StorageTestOverrides,
-  type StorageTestRecorder,
   STORAGE_TEST_PUBLIC_URL,
 } from "@/services/storage";
 import {

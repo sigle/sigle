@@ -1,15 +1,10 @@
 "use client";
 
+import type { MouseEventHandler } from "react";
 import { IconPhoto, IconTrash } from "@tabler/icons-react";
 import { useParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
-import {
-  type MouseEventHandler,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";

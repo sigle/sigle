@@ -1,8 +1,9 @@
+import type { HttpClient } from "effect/http";
 import * as S3 from "@distilled.cloud/s3";
 import { Credentials } from "@distilled.cloud/s3/Credentials";
 import { Endpoint } from "@distilled.cloud/s3/Endpoint";
 import { Context, Data, Effect, Layer, Redacted } from "effect";
-import { FetchHttpClient, type HttpClient } from "effect/http";
+import { FetchHttpClient } from "effect/http";
 import { AppConfig } from "@/config";
 
 export interface StorageUploadOptions {

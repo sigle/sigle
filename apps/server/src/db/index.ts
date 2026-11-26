@@ -1,13 +1,14 @@
+import type {
+  SqliteProxyExecutors,
+  SqliteRemoteDatabase,
+} from "drizzle-orm/sqlite-proxy";
+import type { SqlError } from "effect/sql";
 import { SqliteClient } from "@effect/sql-sqlite-node";
 import * as SqliteDrizzle from "drizzle-orm/effect-sqlite-node";
 import { migrate } from "drizzle-orm/effect-sqlite-node/migrator";
-import {
-  drizzle as drizzleProxy,
-  type SqliteProxyExecutors,
-  type SqliteRemoteDatabase,
-} from "drizzle-orm/sqlite-proxy";
+import { drizzle as drizzleProxy } from "drizzle-orm/sqlite-proxy";
 import { Context, Effect, Layer } from "effect";
-import { SqlClient, type SqlError } from "effect/sql";
+import { SqlClient } from "effect/sql";
 import { mkdirSync } from "node:fs";
 import { findPackageJSON } from "node:module";
 import { dirname, join } from "node:path";

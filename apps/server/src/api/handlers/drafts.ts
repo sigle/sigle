@@ -28,6 +28,7 @@ import type {
   PublishDraftPayload,
   UpdateDraftPayload,
 } from "@/api/groups/drafts";
+import type { UserPlan } from "@/services/plan";
 import { SigleApi } from "@/api";
 import {
   DRAFT_CONTENT_TOTAL_MAX_MIB,
@@ -60,7 +61,6 @@ import {
   findPlanPublishUsage,
   findUserPublishUsage,
   PUBLISH_LIMITS,
-  type UserPlan,
 } from "@/services/plan";
 import { PostHogService } from "@/services/posthog";
 

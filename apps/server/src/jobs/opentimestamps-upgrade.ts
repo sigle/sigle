@@ -1,13 +1,13 @@
 import { eq } from "drizzle-orm";
 import { Data, Effect, Layer, Schedule, Schema } from "effect";
+import type { TerminalJobError } from "@/queue/core";
+import type { ArweaveUploadError } from "@/services/arweave";
+import type { OtsUpgradeFailure } from "@/services/opentimestamps";
 import { Database } from "@/db";
 import { post, postOts } from "@/db/schema";
-import { defineJob, terminal, type TerminalJobError } from "@/queue/core";
-import { ArweaveService, type ArweaveUploadError } from "@/services/arweave";
-import {
-  OpenTimestampsService,
-  type OtsUpgradeFailure,
-} from "@/services/opentimestamps";
+import { defineJob, terminal } from "@/queue/core";
+import { ArweaveService } from "@/services/arweave";
+import { OpenTimestampsService } from "@/services/opentimestamps";
 
 export const OPENTIMESTAMPS_UPGRADE_QUEUE_NAME = "opentimestamps-upgrade";
 

@@ -1,8 +1,8 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
+import type { InfiniteData } from "@tanstack/react-query";
 import {
-  type InfiniteData,
   useQueryClient,
   useSuspenseInfiniteQuery,
 } from "@tanstack/react-query";

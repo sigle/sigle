@@ -1,9 +1,10 @@
 import { describe, expect, it } from "@effect/vitest";
 import { ConfigProvider, Data, Effect, ErrorReporter, Tracer } from "effect";
+import type { CapturedException } from "@/services/posthog";
+import type { ErrorAttributes } from "@/services/telemetry";
 import { AppConfig } from "@/config";
-import { type CapturedException, PostHogService } from "@/services/posthog";
+import { PostHogService } from "@/services/posthog";
 import {
-  type ErrorAttributes,
   TelemetryLayer,
   conventionalSpanName,
   isIgnoredHttpStatusError,

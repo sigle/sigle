@@ -1,3 +1,4 @@
+import type { ToasterProps } from "sonner";
 import {
   IconCircleCheck,
   IconInfoCircle,
@@ -6,7 +7,7 @@ import {
   IconLoader,
 } from "@tabler/icons-react";
 import { useTheme } from "next-themes";
-import { Toaster as Sonner, type ToasterProps } from "sonner";
+import { Toaster as Sonner } from "sonner";
 
 const toasterStyle: React.CSSProperties & Record<`--${string}`, string> = {
   "--normal-bg": "var(--popover)",

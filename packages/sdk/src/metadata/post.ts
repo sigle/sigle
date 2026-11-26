@@ -1,15 +1,12 @@
 import { z } from "zod";
+import type { MarketplaceMetadata } from "./marketplace.js";
+import type { MediaImageMetadata } from "./media.js";
+import type { MetadataAttribute } from "./metadata-attribute.js";
 import { SignatureSchema, Tagchema } from "./common.js";
 import { PostMetadataSchemaId } from "./config.js";
-import {
-  type MarketplaceMetadata,
-  MarketplaceMetadataSchema,
-} from "./marketplace.js";
-import { type MediaImageMetadata, MediaImageMetadataSchema } from "./media.js";
-import {
-  type MetadataAttribute,
-  MetadataAttributeSchema,
-} from "./metadata-attribute.js";
+import { MarketplaceMetadataSchema } from "./marketplace.js";
+import { MediaImageMetadataSchema } from "./media.js";
+import { MetadataAttributeSchema } from "./metadata-attribute.js";
 import { evaluate } from "./utils.js";
 
 export enum ContentWarning {

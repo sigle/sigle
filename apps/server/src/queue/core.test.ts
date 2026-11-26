@@ -8,7 +8,8 @@ import {
   Option,
   Schema,
 } from "effect";
-import { JobAdminService, type QueueStats } from "@/queue/admin";
+import type { QueueStats } from "@/queue/admin";
+import { JobAdminService } from "@/queue/admin";
 import { defineJob, terminal } from "@/queue/core";
 import { makeJobTestLayer } from "@/queue/test-layer";
 

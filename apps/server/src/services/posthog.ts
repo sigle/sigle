@@ -1,11 +1,5 @@
-import {
-  Context,
-  Effect,
-  type ErrorReporter,
-  Layer,
-  Option,
-  Redacted,
-} from "effect";
+import type { ErrorReporter } from "effect";
+import { Context, Effect, Layer, Option, Redacted } from "effect";
 import { PostHog } from "posthog-node";
 import { AppConfig } from "@/config";
 

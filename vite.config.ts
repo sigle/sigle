@@ -72,7 +72,6 @@ export default defineConfig({
           "no-console": "off",
           "no-useless-assignment": "off",
           "prefer-promise-reject-errors": "off",
-          "import/consistent-type-specifier-style": "off",
           "import/no-namespace": "off",
           "jsx-a11y/alt-text": "off",
           "react/immutability": "off",

@@ -1,6 +1,7 @@
+import type { NodeViewProps } from "@tiptap/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { IconPhoto } from "@tabler/icons-react";
-import { type NodeViewProps, NodeViewWrapper } from "@tiptap/react";
+import { NodeViewWrapper } from "@tiptap/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";

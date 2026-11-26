@@ -1,5 +1,6 @@
+import type { ClarityValue } from "@stacks/transactions";
 import { describe, expect, it } from "@effect/vitest";
-import { Cl, type ClarityValue, cvToHex } from "@stacks/transactions";
+import { Cl, cvToHex } from "@stacks/transactions";
 import { Effect, Layer } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
 import { AppConfig } from "@/config";

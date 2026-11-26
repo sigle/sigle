@@ -1,4 +1,5 @@
-import { type MultiStepToastStep, useMultiStepToastStore } from "./store";
+import type { MultiStepToastStep } from "./store";
+import { useMultiStepToastStore } from "./store";
 
 interface UseMultiStepOptions<T extends string> {
   steps: readonly { id: T; title: string; description?: string }[];

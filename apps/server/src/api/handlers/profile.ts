@@ -2,13 +2,14 @@ import type { HttpServerRequest } from "effect/http";
 import { eq } from "drizzle-orm";
 import { Effect, Option, Predicate, Schema } from "effect";
 import { HttpApiBuilder } from "effect/http-api";
+import type { UpdateProfilePayload } from "@/api/groups/profile";
+import type { ProfileImageKind } from "@/lib/profile-images";
 import { SigleApi } from "@/api";
 import {
   ProfileDescription,
   ProfileDisplayName,
   ProfileTwitter,
   ProfileWebsite,
-  type UpdateProfilePayload,
 } from "@/api/groups/profile";
 import { findProfile } from "@/api/handlers/users";
 import { uploadImageFromRequest } from "@/api/image-upload";
@@ -23,7 +24,6 @@ import {
   profileImagePostHogEvent,
   profileImagePrefix,
   profileImageSettings,
-  type ProfileImageKind,
 } from "@/lib/profile-images";
 import { BnsService } from "@/services/bns";
 import { PostHogService } from "@/services/posthog";

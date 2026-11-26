@@ -1,12 +1,11 @@
 import { eq } from "drizzle-orm";
 import { Effect, Layer, Schedule, Schema } from "effect";
+import type { JobQueue } from "@/queue/core";
+import type { OtsStampError } from "@/services/opentimestamps";
 import { Database } from "@/db";
 import { postOts } from "@/db/schema";
-import { defineJob, type JobQueue } from "@/queue/core";
-import {
-  OpenTimestampsService,
-  type OtsStampError,
-} from "@/services/opentimestamps";
+import { defineJob } from "@/queue/core";
+import { OpenTimestampsService } from "@/services/opentimestamps";
 import type { OpenTimestampsUpgradeJobSchema } from "./opentimestamps-upgrade";
 import { opentimestampsUpgradeJob } from "./opentimestamps-upgrade";
 

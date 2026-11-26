@@ -1,5 +1,7 @@
+import type { HttpServerError } from "effect/http";
 import { ByteSize, Effect, Option, Predicate } from "effect";
-import { type HttpServerError, HttpServerRequest } from "effect/http";
+import { HttpServerRequest } from "effect/http";
+import type { StoredObject } from "@/services/storage";
 import {
   BadRequest,
   InternalServerError,
@@ -16,7 +18,7 @@ import {
   WEBP,
 } from "@/lib/images";
 import { ImageProcessingService } from "@/services/image-processing";
-import { type StoredObject, StorageService } from "@/services/storage";
+import { StorageService } from "@/services/storage";
 
 const normalizeContentType = (contentType: string): string =>
   contentType.split(";")[0]?.trim().toLowerCase() ?? "";
