@@ -21,6 +21,7 @@ import {
 import { Routes } from "@/lib/routes";
 import { sigleApiClient, sigleApiFetchClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "../EditorFormProvider";
+import { hasPendingImageUploads } from "../extensions/Image";
 import { useEditorStore } from "../store";
 import { generateSigleMetadataFromForm } from "../utils";
 import { PublishReview } from "./PublishReview";
@@ -125,6 +126,21 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   const onSubmit = () => {
     handleSubmit(
       async (data) => {
+        // Wait for uploads instead of publishing without them: an image still
+        // uploading is left out of the content, and a new cover isn't set yet.
+        if (
+          (editor && hasPendingImageUploads(editor.state.doc)) ||
+          useEditorStore.getState().isCoverUploading
+        ) {
+          posthog.capture("post_publish_images_uploading_error", { postId });
+          toast.error("Images still uploading", {
+            description:
+              "Please wait for all images to finish uploading before publishing",
+          });
+
+          return;
+        }
+
         setPublishingLoading(true);
         start();
 
@@ -156,20 +172,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           });
 
           setStepError("preparing", errorMessage);
-
-          return;
-        }
-
-        if (metadata.content.content.includes("blob:")) {
-          posthog.capture("post_publish_images_uploading_error", {
-            postId,
-          });
-          toast.error("Images still uploading", {
-            description:
-              "Please wait for all images to finish uploading before publishing",
-          });
-          setPublishingLoading(false);
-          reset();
 
           return;
         }

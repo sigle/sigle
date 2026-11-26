@@ -7,6 +7,8 @@ import {
   vi,
   afterEach,
 } from "vite-plus/test";
+import { sigleApiClient } from "@/lib/sigle";
+import { hasPendingImageUploads } from ".";
 import { EditorFormProvider } from "../../EditorFormProvider";
 import { EditorTipTap } from "../../EditorTiptap";
 import { useEditorStore } from "../../store";
@@ -303,5 +305,70 @@ describe("image extension - uploads by plan", () => {
       sources: getImageSources(),
       fetches: fetchMock.mock.calls.length,
     }).toStrictEqual({ sources: [gaiaImage], fetches: 0 });
+  });
+});
+
+describe("image extension - pending uploads", () => {
+  beforeEach(() => {
+    useEditorStore.setState({ editor: undefined });
+  });
+
+  const renderEditor = async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap canUploadImages />
+      </EditorFormProvider>,
+    );
+
+    await waitFor(() => {
+      expect(useEditorStore.getState().editor).toBeDefined();
+    });
+
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+
+    return editor!;
+  };
+
+  it("leaves an uploading image out of the markdown", async () => {
+    vi.mocked(sigleApiClient.useMutation).mockReturnValue(
+      // SAFETY: the upload only calls `mutateAsync`, which never resolves so
+      // the image stays uploading.
+      { mutateAsync: () => Promise.withResolvers<never>().promise } as never,
+    );
+
+    const editor = await renderEditor();
+
+    editor.commands.setImageFromFile({
+      file: new File(["x"], "a.png", { type: "image/png" }),
+    });
+
+    expect(editor.getMarkdown()).not.toContain("blob:");
+    expect(hasPendingImageUploads(editor.state.doc)).toBe(true);
+  });
+
+  it("has no pending upload once the upload resolves", async () => {
+    vi.mocked(sigleApiClient.useMutation).mockReturnValue(
+      // SAFETY: the upload only calls `mutateAsync`.
+      {
+        mutateAsync: vi.fn().mockResolvedValue({
+          url: "https://example.com/uploaded-image.png",
+        }),
+      } as never,
+    );
+
+    const editor = await renderEditor();
+
+    editor.commands.setImageFromFile({
+      file: new File(["x"], "a.png", { type: "image/png" }),
+    });
+
+    await waitFor(() => {
+      expect(
+        editor.$nodes("image")?.map((node) => node.attributes.src),
+      ).toStrictEqual(["https://example.com/uploaded-image.png"]);
+    });
+
+    expect(hasPendingImageUploads(editor.state.doc)).toBe(false);
   });
 });

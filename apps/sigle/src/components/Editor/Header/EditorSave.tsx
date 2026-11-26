@@ -122,8 +122,10 @@ export const EditorSave = () => {
   }, [watch, type, editor, onAutoSave]);
 
   // Without this, the last 2 seconds of edits would be lost when the tab closes.
+  // The guard covers both a pending save and a failed one, whose changes the
+  // server doesn't have.
   useEffect(() => {
-    if (saveState !== "saving") return;
+    if (saveState !== "saving" && saveState !== "error") return;
 
     // `flush()` runs the save synchronously, so the flag covers exactly that
     // dispatch.
@@ -131,6 +133,9 @@ export const EditorSave = () => {
       leavingRef.current = true;
 
       try {
+        // A failed save has nothing scheduled, so schedule a retry with the
+        // current values for `flush()` to dispatch.
+        if (saveState === "error") onAutoSave();
         onAutoSave.flush();
       } finally {
         leavingRef.current = false;
