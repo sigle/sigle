@@ -11,10 +11,9 @@ sigle/
 ├── apps/
 │   ├── sigle/          - Next.js frontend (port 3000)
 │   ├── server/         - Effect API backend (port 3001)
-│   └── docs/           - Nextra documentation
-├── packages/
-│   └── sdk/            - Shared TypeScript SDK
-└── docker-compose.yaml - Local dev services
+│   └── docs/           - Astro Starlight documentation
+└── packages/
+    └── sdk/            - Shared TypeScript SDK
 ```
 
 ## Key Commands
@@ -42,7 +41,7 @@ pnpm repos:sync
 
 ```bash
 # Run single test file
-cd packages/sdk && pnpm test -- test-file.spec.ts
+cd apps/server && pnpm vp test run src/jobs/publish-draft.test.ts
 ```
 
 ### Server Development
@@ -78,8 +77,7 @@ This project vendors external repositories under `repos/` (gitignored):
 
 ### Naming Conventions
 
-- **Files**: kebab-case for components (`my-component.tsx`), camelCase for utilities (`myUtility.ts`)
-- **Components**: PascalCase (`UserProfile.tsx`)
+- **Files**: PascalCase for React components (`PublishDialog.tsx`), kebab-case for Next.js route files and other modules (`page-client.tsx`, `read-legacy-json.ts`); shadcn primitives in `components/ui/` keep their kebab-case names.
 - **Variables/Functions**: camelCase (`userName`, `getPosts`)
 - **Constants**: UPPER_SNAKE_CASE for config values, camelCase for others
 - **Classes/Interfaces**: PascalCase
@@ -89,10 +87,9 @@ This project vendors external repositories under `repos/` (gitignored):
 
 1. Fork repository and branch from `main`
 2. Include changeset: run `pnpm changeset` to generate
-3. Pass format: `pnpm format:fix`
-4. Pass lint: `pnpm lint`
-5. Don't break tests - include tests for bug fixes
-6. Keep PRs isolated and focused
+3. Pass checks: `pnpm vp check` (use `pnpm vp check --fix` to fix format and lint)
+4. Don't break tests - include tests for bug fixes
+5. Keep PRs isolated and focused
 
 <!--VITE PLUS START-->
 

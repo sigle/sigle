@@ -30,7 +30,7 @@ litestream restore -config apps/server/litestream.yml -timestamp 2026-11-02T10:0
 
 Set `DATABASE_PATH` to any path, it only picks the database entry in the config. Restore points begin at the oldest daily snapshot still kept.
 
-`server` sleeps after 5 to 10 minutes without outbound traffic. Its background jobs (profile indexing, OpenTimestamps upgrades, retries) wait until the next request wakes it.
+`server` sleeps after 5 to 10 minutes without outbound traffic. Its background jobs (publishing, OpenTimestamps upgrades, thumbhashes, retries) and periodic reconciliations wait until the next request wakes it.
 
 ## Railway configuration
 
