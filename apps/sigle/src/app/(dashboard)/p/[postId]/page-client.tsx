@@ -63,6 +63,9 @@ export function PostClientPage(props: Props) {
             <BlurImage
               src={resolveImageUrl(post.coverImage.url)}
               alt="Cover post"
+              sizes="(min-width: 896px) 864px, 100vw"
+              // The cover is the largest element above the fold, so it is fetched first.
+              preload
               className={cn("size-full object-cover", {
                 "scale-110 blur-2xl": isCoverHidden,
               })}
