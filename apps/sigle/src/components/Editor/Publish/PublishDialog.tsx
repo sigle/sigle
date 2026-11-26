@@ -259,6 +259,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           setTimeout(resolve, 1000);
         });
 
+        setPublishOpen(false);
         router.push(
           Routes.post(
             { postId: targetPostId },
