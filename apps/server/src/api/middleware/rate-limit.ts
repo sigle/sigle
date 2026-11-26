@@ -11,9 +11,10 @@ import { HttpEffect, HttpServerRequest, HttpServerResponse } from "effect/http";
 import { HttpApiMiddleware } from "effect/http-api";
 import { RateLimiter } from "effect/persistence";
 import { isIPv6 } from "node:net";
+import type { AppConfigValues } from "@/config";
 import { CurrentUser } from "@/api/middleware/auth-user";
 import { InternalServerError, TooManyRequests } from "@/api/schemas";
-import { AppConfig, type AppConfigValues } from "@/config";
+import { AppConfig } from "@/config";
 
 export class RateLimitMiddleware extends HttpApiMiddleware.Service<RateLimitMiddleware>()(
   "sigle/RateLimitMiddleware",

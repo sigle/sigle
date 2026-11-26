@@ -1,6 +1,6 @@
+import type { StacksNetworkName } from "@stacks/network";
 import { bytesToHex } from "@stacks/common";
 import { hashMessage, verifyMessageSignatureRsv } from "@stacks/encryption";
-import { type StacksNetworkName } from "@stacks/network";
 import {
   createMessageSignature,
   publicKeyFromSignatureRsv,

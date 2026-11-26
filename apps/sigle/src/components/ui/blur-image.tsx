@@ -1,6 +1,7 @@
 "use client";
 
-import Image, { type ImageProps } from "next/image";
+import type { ImageProps } from "next/image";
+import Image from "next/image";
 import { useMemo } from "react";
 import { thumbHashToDataURL } from "thumbhash";
 

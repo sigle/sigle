@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { IconArrowUpRight, IconCheck } from "@tabler/icons-react";
+import type { PlanFeature } from "@/lib/plans";
 import { Badge } from "@/components/ui/badge";
 import { appConfig } from "@/config";
-import { PLAN_FEATURES, type PlanFeature } from "@/lib/plans";
+import { PLAN_FEATURES } from "@/lib/plans";
 
 const FeatureList = ({ features }: { features: PlanFeature[] }) => (
   <ul className="mt-6 mb-8 space-y-2 text-sm">

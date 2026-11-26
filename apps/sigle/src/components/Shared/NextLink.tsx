@@ -1,8 +1,10 @@
 "use client";
 
+// eslint-disable-next-line no-restricted-imports
+import type { LinkProps } from "next/link";
 import type { ComponentProps } from "react";
 // eslint-disable-next-line no-restricted-imports
-import Link, { type LinkProps } from "next/link";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export type NextLinkProps = Omit<ComponentProps<typeof Link>, "href"> & {

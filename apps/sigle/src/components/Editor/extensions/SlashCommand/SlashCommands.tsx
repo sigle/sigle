@@ -1,16 +1,15 @@
 import "./style.css";
+import type { VirtualElement } from "@floating-ui/dom";
 import type { IconProps } from "@tabler/icons-react";
-import {
-  autoUpdate,
-  computePosition,
-  flip,
-  offset,
-  type VirtualElement,
-} from "@floating-ui/dom";
-import { type Editor, Extension } from "@tiptap/core";
-import { type Range, ReactRenderer } from "@tiptap/react";
-import Suggestion, { type SuggestionOptions } from "@tiptap/suggestion";
-import { CommandList, type CommandListRef } from "./CommandList";
+import type { Editor } from "@tiptap/core";
+import type { Range } from "@tiptap/react";
+import type { SuggestionOptions } from "@tiptap/suggestion";
+import { autoUpdate, computePosition, flip, offset } from "@floating-ui/dom";
+import { Extension } from "@tiptap/core";
+import { ReactRenderer } from "@tiptap/react";
+import Suggestion from "@tiptap/suggestion";
+import type { CommandListRef } from "./CommandList";
+import { CommandList } from "./CommandList";
 
 export interface SlashCommandsCommand {
   title: string;

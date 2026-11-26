@@ -1,12 +1,14 @@
 import { Context, Data, Duration, Effect, Layer, Semaphore } from "effect";
+import type {
+  ImageOptimizationError,
+  OptimizeImageOptions,
+  OptimizedImage,
+  ThumbhashResult,
+} from "@/lib/images";
 import {
   generateThumbhash,
   IMAGE_PROCESSING_TIMEOUT_SECONDS,
-  ImageOptimizationError,
   optimizeImage,
-  type OptimizeImageOptions,
-  type OptimizedImage,
-  type ThumbhashResult,
 } from "@/lib/images";
 
 const MAX_CONCURRENT_OPTIMIZATIONS = 2;

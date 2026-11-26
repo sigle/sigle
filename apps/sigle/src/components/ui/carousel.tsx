@@ -1,9 +1,8 @@
 "use client";
 
+import type { UseEmblaCarouselType } from "embla-carousel-react";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import useEmblaCarousel, {
-  type UseEmblaCarouselType,
-} from "embla-carousel-react";
+import useEmblaCarousel from "embla-carousel-react";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";

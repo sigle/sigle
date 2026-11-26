@@ -1,3 +1,4 @@
+import type { IncomingHttpHeaders } from "node:http";
 import { describe, expect, it } from "@effect/vitest";
 import {
   Effect,
@@ -15,7 +16,7 @@ import {
 } from "effect/http";
 import { RateLimiter } from "effect/persistence";
 import { TestClock } from "effect/testing";
-import { type IncomingHttpHeaders, request as httpRequest } from "node:http";
+import { request as httpRequest } from "node:http";
 import type { AppConfigValues } from "@/config";
 import { RATE_LIMITS } from "@/api/middleware/rate-limit";
 import { makeErrorReporter } from "@/services/telemetry";

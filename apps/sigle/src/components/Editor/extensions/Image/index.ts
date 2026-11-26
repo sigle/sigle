@@ -1,5 +1,6 @@
+import type { ImageOptions } from "@tiptap/extension-image";
 import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
-import TipTapImageBase, { type ImageOptions } from "@tiptap/extension-image";
+import TipTapImageBase from "@tiptap/extension-image";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import { ImageComponent } from "./Component";

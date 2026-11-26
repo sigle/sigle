@@ -1,10 +1,9 @@
+import type { VerificationResult, VerificationSuccess } from "@otskit/client";
 import {
   OpenTimestampsClient as OtsClient,
   StampError,
   UpgradeError,
   ValidationError,
-  type VerificationResult,
-  type VerificationSuccess,
 } from "@otskit/client";
 import { Context, Data, Effect, Layer } from "effect";
 

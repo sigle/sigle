@@ -1,17 +1,18 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
 import { Duration, Effect, Layer, Schedule } from "effect";
+import type { QueueStats } from "@/queue/admin";
+import type { OpenTimestampsOperations } from "@/services/opentimestamps";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { postOts } from "@/db/schema";
 import { makeQueuesTestLayer } from "@/jobs";
-import { JobAdminService, type QueueStats } from "@/queue/admin";
+import { JobAdminService } from "@/queue/admin";
 import { ArweaveService } from "@/services/arweave";
 import { ImageProcessingService } from "@/services/image-processing";
 import {
   OTS_TEST_PENDING_PROOF,
   OpenTimestampsService,
-  type OpenTimestampsOperations,
 } from "@/services/opentimestamps";
 import { PostHogService } from "@/services/posthog";
 import {

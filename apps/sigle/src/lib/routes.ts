@@ -1,7 +1,7 @@
 "use client";
 
+import type { ReadonlyURLSearchParams } from "next/navigation";
 import {
-  type ReadonlyURLSearchParams,
   useParams as useNextParams,
   useSearchParams as useNextSearchParams,
 } from "next/navigation";

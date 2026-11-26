@@ -1,10 +1,6 @@
+import type { VerificationResult } from "@otskit/client";
 import { describe, expect, it } from "@effect/vitest";
-import {
-  StampError,
-  UpgradeError,
-  ValidationError,
-  type VerificationResult,
-} from "@otskit/client";
+import { StampError, UpgradeError, ValidationError } from "@otskit/client";
 import { Effect } from "effect";
 import {
   makeOpenTimestampsService,

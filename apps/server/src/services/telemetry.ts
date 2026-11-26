@@ -1,5 +1,5 @@
+import type { Cause } from "effect";
 import {
-  type Cause,
   Effect,
   ErrorReporter,
   Layer,

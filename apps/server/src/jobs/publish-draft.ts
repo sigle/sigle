@@ -1,11 +1,13 @@
 import { and, eq, isNull, lt, or } from "drizzle-orm";
 import { Data, Effect, Layer, Schedule, Schema } from "effect";
+import type { TerminalJobError } from "@/queue/core";
+import type { ArweaveUploadError } from "@/services/arweave";
 import { Database } from "@/db";
 import { draft, mediaImage, post, postOts } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
 import { PostMetadata } from "@/lib/metadata";
-import { defineJob, terminal, type TerminalJobError } from "@/queue/core";
-import { ArweaveService, type ArweaveUploadError } from "@/services/arweave";
+import { defineJob, terminal } from "@/queue/core";
+import { ArweaveService } from "@/services/arweave";
 import { PostHogService } from "@/services/posthog";
 import {
   generateImageThumbhashJob,
