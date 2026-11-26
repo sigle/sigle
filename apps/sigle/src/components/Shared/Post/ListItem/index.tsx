@@ -2,8 +2,8 @@
 
 import type { paths } from "@sigle/sdk";
 import { IconAlertTriangle, IconDots } from "@tabler/icons-react";
-import { format } from "date-fns";
 import { useState } from "react";
+import { LocalDate } from "@/components/Shared/LocalDate";
 import { BlurImage } from "@/components/ui/blur-image";
 import { Button } from "@/components/ui/button";
 import {
@@ -70,12 +70,10 @@ export const PostListItem = ({ post, onHiddenChange }: PostListItemProps) => {
         </NextLink>
 
         <div className="mt-3 flex items-center gap-1">
-          <time
-            dateTime={post.createdAt}
+          <LocalDate
+            date={post.createdAt}
             className="font-mono text-xs text-muted-foreground uppercase"
-          >
-            {format(new Date(post.createdAt), "MMM d, yyyy")}
-          </time>
+          />
           <DropdownMenu>
             <DropdownMenuTrigger
               render={

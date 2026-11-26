@@ -1,9 +1,9 @@
 import type { paths } from "@sigle/sdk";
 import { IconDots, IconShare } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { LocalDate } from "@/components/Shared/LocalDate";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -86,10 +86,7 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
               {author.isExplorer ? <ExplorerBadge /> : null}
             </div>
             <p className="text-muted-foreground">
-              <time dateTime={post.createdAt}>
-                {format(new Date(post.createdAt), "MMM d, yyyy")}
-              </time>{" "}
-              · {readingMinutes} min read
+              <LocalDate date={post.createdAt} /> · {readingMinutes} min read
             </p>
           </div>
         </div>
