@@ -7,10 +7,8 @@ import {
   OpenTimestampsService,
   type OtsStampError,
 } from "@/services/opentimestamps";
-import {
-  opentimestampsUpgradeJob,
-  OpenTimestampsUpgradeJobSchema,
-} from "./opentimestamps-upgrade";
+import type { OpenTimestampsUpgradeJobSchema } from "./opentimestamps-upgrade";
+import { opentimestampsUpgradeJob } from "./opentimestamps-upgrade";
 
 export const OPENTIMESTAMPS_STAMP_QUEUE_NAME = "opentimestamps-stamp";
 

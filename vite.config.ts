@@ -69,6 +69,8 @@ export default defineConfig({
       pedantic: "error",
     },
     rules: {
+      // Type-only imports are written as their own \`import type\` statement.
+      "no-duplicate-imports": ["error", { allowSeparateTypeImports: true }],
       "oxc/no-accumulating-spread": "error",
       "anti-slop/no-array-filter-map": "error",
       "anti-slop/no-reduce-accumulator-copy": "error",
