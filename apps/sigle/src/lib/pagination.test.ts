@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vite-plus/test";
 import { flattenPages, getNextOffset, removeFromPages } from "./pagination";
 
-const page = (offset: number, ids: string[], total: number) => ({
+const page = (offset: number, ids: Array<string>, total: number) => ({
   offset,
   total,
   results: ids.map((id) => ({ id })),

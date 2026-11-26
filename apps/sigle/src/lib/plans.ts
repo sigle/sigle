@@ -16,7 +16,7 @@ export interface PlanFeature {
 }
 
 /** What each plan includes, shown on the home page and the Plan page. */
-export const PLAN_FEATURES: Record<"free" | "pro", PlanFeature[]> = {
+export const PLAN_FEATURES: Record<"free" | "pro", Array<PlanFeature>> = {
   free: [
     { label: "Unlimited writing on", code: "sigle.io/name.btc" },
     { label: "Permanent Arweave text archive" },

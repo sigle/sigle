@@ -13,7 +13,7 @@ import { CommandList } from "./CommandList";
 
 export interface SlashCommandsCommand {
   title: string;
-  keywords?: string[];
+  keywords?: Array<string>;
   description: string;
   section: "basic" | "embed";
   /** Only usable on the Pro plan. */
@@ -25,11 +25,11 @@ export interface SlashCommandsCommand {
 }
 
 export const SlashCommands = Extension.create<{
-  commands: SlashCommandsCommand[];
+  commands: Array<SlashCommandsCommand>;
   filterCommands: (
-    commands: SlashCommandsCommand[],
+    commands: Array<SlashCommandsCommand>,
     query: string,
-  ) => SlashCommandsCommand[];
+  ) => Array<SlashCommandsCommand>;
   suggestion: Partial<SuggestionOptions>;
 }>({
   name: "slash-command",

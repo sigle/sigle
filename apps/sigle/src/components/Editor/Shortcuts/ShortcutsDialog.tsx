@@ -20,10 +20,10 @@ type Key = "Mod" | "Shift" | "Alt" | (string & {});
 
 interface Shortcut {
   action: string;
-  keys: Key[];
+  keys: Array<Key>;
 }
 
-const sections: { title: string; items: Shortcut[] }[] = [
+const sections: Array<{ title: string; items: Array<Shortcut> }> = [
   {
     title: "Essentials",
     items: [

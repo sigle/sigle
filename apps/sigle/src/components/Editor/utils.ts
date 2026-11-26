@@ -20,8 +20,8 @@ const generateMetadataAttributesFromForm = ({
   post,
 }: {
   post: EditorPostFormData;
-}): MetadataAttribute[] => {
-  const attributes: MetadataAttribute[] = [];
+}): Array<MetadataAttribute> => {
+  const attributes: Array<MetadataAttribute> = [];
 
   if (post.metaTitle) {
     attributes.push({

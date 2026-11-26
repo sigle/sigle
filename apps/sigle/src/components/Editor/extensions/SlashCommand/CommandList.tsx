@@ -15,7 +15,7 @@ export interface CommandListRef {
 }
 
 interface CommandListProps {
-  items: SlashCommandsCommand[];
+  items: Array<SlashCommandsCommand>;
   command: (item: SlashCommandsCommand) => void;
   currentNodeName?: string;
 }

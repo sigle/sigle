@@ -45,7 +45,7 @@ export const EditorCoverImage = ({
   }, [loadingUploadImage, setIsCoverUploading]);
 
   const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
+    async (acceptedFiles: Array<File>) => {
       const file = acceptedFiles[0];
 
       if (!file) {

@@ -14,7 +14,7 @@ import {
 } from "@tabler/icons-react";
 import type { SlashCommandsCommand } from "./SlashCommands";
 
-export const slashCommands: SlashCommandsCommand[] = [
+export const slashCommands: Array<SlashCommandsCommand> = [
   {
     icon: IconLetterT,
     title: "Plain Text",
