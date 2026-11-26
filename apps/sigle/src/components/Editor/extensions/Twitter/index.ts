@@ -140,8 +140,8 @@ const Embed = Node.create({
     return {
       type: "embed",
       attrs: {
-        url: token.url,
-        embedType: token.embedType ?? "twitter",
+        url: String(token.url),
+        embedType: String(token.embedType ?? "twitter"),
       },
     };
   },

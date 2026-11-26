@@ -83,10 +83,10 @@ const ImageUrlForm = (props: NodeViewProps) => {
 };
 
 export const ImageComponent = (props: NodeViewProps) => {
-  const alt = props.node.attrs.alt || "";
-  const uploadId = props.node.attrs.uploadId;
+  const alt = String(props.node.attrs.alt || "");
+  const uploading = Boolean(props.node.attrs.uploadId);
 
-  if (!props.node.attrs.src && !uploadId) {
+  if (!props.node.attrs.src && !uploading) {
     return (
       <NodeViewWrapper>
         <ImageUrlForm {...props} />
@@ -100,7 +100,7 @@ export const ImageComponent = (props: NodeViewProps) => {
 
   return (
     <NodeViewWrapper data-drag-handle className="relative">
-      {uploadId && (
+      {uploading && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Spinner />
         </div>
@@ -111,7 +111,7 @@ export const ImageComponent = (props: NodeViewProps) => {
           {
             "outline-2 outline-foreground/60 hover:outline-foreground/60":
               props.selected,
-            "opacity-40": uploadId,
+            "opacity-40": uploading,
           },
         )}
         src={src}

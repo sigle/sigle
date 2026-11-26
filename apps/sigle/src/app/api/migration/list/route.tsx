@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   }
 
   const res = await fetch(`https://api.sigle.io/api/gaia/${username}/stories`);
-  const data = await res.json();
+  const data: unknown = await res.json();
 
   return NextResponse.json(data);
 }

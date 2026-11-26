@@ -81,7 +81,6 @@ export default defineConfig({
           "react/use-memo": "off",
           "typescript/no-floating-promises": "off",
           "typescript/no-misused-promises": "off",
-          "typescript/no-unsafe-assignment": "off",
           "typescript/no-unsafe-return": "off",
           "typescript/only-throw-error": "off",
           "typescript/require-array-sort-compare": "off",

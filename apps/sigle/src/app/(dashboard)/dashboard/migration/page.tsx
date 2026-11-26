@@ -25,8 +25,7 @@ interface Story {
   /**
    * JSON representing the slate.js structure of the story
    */
-  // oxlint-disable-next-line typescript/no-explicit-any -- content is not typed
-  content: any;
+  content: unknown;
   /**
    * Version representing the format of the content
    * When the value is not set, we consider it as v1
@@ -112,6 +111,13 @@ export default function MigrationPage() {
 
       const data = await readLegacyJson<Story>(res, "Failed to load the post");
       console.log("handleMigrate", data);
+
+      // Drafts hold their content as a string, which v1 (Slate JSON) is not.
+      if (typeof data.content !== "string") {
+        toast.error("This post uses a format that can't be migrated.");
+
+        return;
+      }
 
       // 2. Create a new draft
       const { data: newPost, error: newPostError } =

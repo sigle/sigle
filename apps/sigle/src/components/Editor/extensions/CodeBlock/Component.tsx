@@ -19,7 +19,7 @@ export const lowlight = createLowlight(common);
  * Allow a user to select the language for the current code block.
  */
 export const CodeBlockComponent = (props: NodeViewProps) => {
-  const handleChangeLanguage = (value: string) => {
+  const handleChangeLanguage = (value: string | null) => {
     props.updateAttributes({
       language: value === "auto" ? null : value,
     });
@@ -29,7 +29,7 @@ export const CodeBlockComponent = (props: NodeViewProps) => {
     <NodeViewWrapper className="relative">
       <div className="absolute top-2 right-2">
         <Select
-          value={props.node.attrs.language || "auto"}
+          value={String(props.node.attrs.language || "auto")}
           onValueChange={handleChangeLanguage}
         >
           <SelectTrigger
