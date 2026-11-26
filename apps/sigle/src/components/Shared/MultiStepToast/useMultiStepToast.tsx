@@ -4,7 +4,7 @@ import { useMultiStepToastStore } from "./store";
 import { useMultiStep } from "./useMultiStep";
 
 interface UseMultiStepToastOptions<T extends string> {
-  steps: readonly { id: T; title: string; description?: string }[];
+  steps: ReadonlyArray<{ id: T; title: string; description?: string }>;
   successMessage: string;
   onError?: (error: Error, stepId: T) => void;
 }

@@ -29,7 +29,7 @@ export const UploadProfilePicture = ({
     sigleApiClient.useMutation("put", "/api/me/profile/images/{kind}");
 
   const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
+    async (acceptedFiles: Array<File>) => {
       const file = acceptedFiles[0];
 
       if (!file) {

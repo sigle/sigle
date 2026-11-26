@@ -40,7 +40,7 @@ export interface PostMetadataDetails {
   /**
    * List of attributes that can be used to store any additional information that is not supported by the standard.
    */
-  attributes?: MetadataAttribute[];
+  attributes?: Array<MetadataAttribute>;
   /**
    * The cover image
    */
@@ -48,7 +48,7 @@ export interface PostMetadataDetails {
   /**
    * An arbitrary list of tags.
    */
-  tags?: string[];
+  tags?: Array<string>;
   /**
    * Specify a content warning
    */

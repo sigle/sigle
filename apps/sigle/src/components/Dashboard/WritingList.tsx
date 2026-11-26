@@ -15,7 +15,7 @@ interface WritingListProps {
   title: string;
   total: number | undefined;
   action: { label: string; href: string };
-  items: WritingListItem[] | undefined;
+  items: Array<WritingListItem> | undefined;
   isLoading: boolean;
   error: { message: string } | null;
   emptyLabel: string;

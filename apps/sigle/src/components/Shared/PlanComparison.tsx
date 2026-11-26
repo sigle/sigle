@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { appConfig } from "@/config";
 import { PLAN_FEATURES } from "@/lib/plans";
 
-const FeatureList = ({ features }: { features: PlanFeature[] }) => (
+const FeatureList = ({ features }: { features: Array<PlanFeature> }) => (
   <ul className="mt-6 mb-8 space-y-2 text-sm">
     {features.map((feature) => (
       <li key={feature.label} className="flex items-center gap-2">

@@ -28,7 +28,7 @@ export const legacyError = (message: string, status: number) =>
  * one. An unreachable API or a body that isn't JSON answers 502.
  */
 export const proxyLegacyJson = async (
-  segments: readonly string[],
+  segments: ReadonlyArray<string>,
 ): Promise<NextResponse> => {
   const url = `${LEGACY_GAIA_API_URL}/${segments.map(encodeURIComponent).join("/")}`;
 

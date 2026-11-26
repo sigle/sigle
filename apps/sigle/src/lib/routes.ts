@@ -143,12 +143,12 @@ function makeRoute<Params extends z.ZodSchema, Search extends z.ZodSchema>(
 
 export function convertURLSearchParamsToObject(
   params: ReadonlyURLSearchParams | null,
-): Record<string, string | string[]> {
+): Record<string, string | Array<string>> {
   if (!params) {
     return {};
   }
 
-  const entries: [string, string | string[]][] = [];
+  const entries: Array<[string, string | Array<string>]> = [];
 
   for (const key of params.keys()) {
     const values = params.getAll(key);

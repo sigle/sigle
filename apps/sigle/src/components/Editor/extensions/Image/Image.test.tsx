@@ -101,7 +101,7 @@ describe("image extension - uploads by plan", () => {
   });
 
   const getImageSources = () => {
-    const sources: unknown[] = [];
+    const sources: Array<unknown> = [];
 
     useEditorStore.getState().editor?.state.doc.descendants((node) => {
       if (node.type.name === "image") {

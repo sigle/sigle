@@ -93,12 +93,12 @@ export default function MigrationPage() {
 
   const [loadingPostId, setLoadingPostId] = useState<string | null>(null);
 
-  const fetchPosts = async (): Promise<SubsetStory[]> => {
+  const fetchPosts = async (): Promise<Array<SubsetStory>> => {
     const res = await fetch(
       `/api/migration/list?username=${encodeURIComponent(username.value)}`,
     );
 
-    return readLegacyJson<SubsetStory[]>(res, "Failed to load your posts");
+    return readLegacyJson<Array<SubsetStory>>(res, "Failed to load your posts");
   };
 
   const handleMigrate = async (id: string) => {
