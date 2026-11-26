@@ -35,7 +35,7 @@ export default defineRailway(() => {
     },
     replicas: { [REGION]: 1 },
     deploy: {
-      limitOverride: { containers: { cpu: 0.5, memoryBytes: 500000000 } },
+      limitOverride: { containers: { cpu: 0.5, memoryBytes: 500_000_000 } },
       sleepApplication: true,
     },
     networking: { privateNetworkEndpoint: "sigle-75430ad9" },
@@ -53,7 +53,7 @@ export default defineRailway(() => {
     healthcheckTimeout: 300,
     replicas: { [REGION]: 1 },
     deploy: {
-      limitOverride: { containers: { cpu: 1, memoryBytes: 1000000000 } },
+      limitOverride: { containers: { cpu: 1, memoryBytes: 1_000_000_000 } },
       sleepApplication: true,
       restartPolicyMaxRetries: 5,
     },
@@ -87,7 +87,7 @@ export default defineRailway(() => {
     healthcheckTimeout: 300,
     replicas: { [REGION]: 1 },
     deploy: {
-      limitOverride: { containers: { cpu: 1, memoryBytes: 1000000000 } },
+      limitOverride: { containers: { cpu: 1, memoryBytes: 1_000_000_000 } },
       sleepApplication: true,
       restartPolicyMaxRetries: 5,
       // Time between SIGTERM and SIGKILL, 0 by default. Litestream uploads

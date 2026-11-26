@@ -148,7 +148,7 @@ const rateLimitAddress = (ip: string): string => {
 
   if (
     groups.slice(0, 5).every((group) => group === 0) &&
-    groups[5] === 0xffff
+    groups[5] === 0xff_ff
   ) {
     const [high = 0, low = 0] = groups.slice(6);
 

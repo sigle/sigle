@@ -98,7 +98,6 @@ export default defineConfig({
           "unicorn/catch-error-name": "off",
           "unicorn/consistent-function-scoping": "off",
           "unicorn/no-invalid-fetch-options": "off",
-          "unicorn/numeric-separators-style": "off",
           "unicorn/prefer-at": "off",
           "unicorn/prefer-dom-node-append": "off",
           "unicorn/prefer-string-raw": "off",
