@@ -73,7 +73,7 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
   // Validate form on mount so we can show the various error messages in the callout
   // and disable the publish button
   useEffect(() => {
-    handleSubmit(
+    void handleSubmit(
       async () => {
         setIsFormValid({ valid: true });
       },

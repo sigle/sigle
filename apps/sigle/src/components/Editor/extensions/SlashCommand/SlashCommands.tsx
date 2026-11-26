@@ -103,7 +103,7 @@ export const SlashCommands = Extension.create<{
               return;
             }
             const virtualEl = getVirtualElement(clientRect);
-            computePosition(virtualEl, container, {
+            void computePosition(virtualEl, container, {
               placement: "bottom-start",
               middleware: [offset(4), flip()],
             }).then(({ x, y }) => {

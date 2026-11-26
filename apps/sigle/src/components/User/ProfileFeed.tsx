@@ -68,7 +68,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
   // the loaded pages instead of refetching them.
   const onHiddenChange = async (postId: string, hidden: boolean) => {
     if (!hidden) {
-      queryClient.invalidateQueries({ queryKey });
+      void queryClient.invalidateQueries({ queryKey });
 
       return;
     }

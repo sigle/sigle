@@ -124,7 +124,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     steps.find((s) => s.id === "signature")?.status === "pending";
 
   const onSubmit = () => {
-    handleSubmit(
+    void handleSubmit(
       async (data) => {
         setPublishingLoading(true);
         start();

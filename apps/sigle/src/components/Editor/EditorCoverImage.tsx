@@ -32,11 +32,11 @@ export const EditorCoverImage = ({
   const { setValue, watch } = useFormContext<EditorPostFormData>();
   const watchCoverImage = watch("coverImage");
 
-  const { mutateAsync: uploadImage, isPending: loadingUploadImage } =
+  const { mutate: uploadImage, isPending: loadingUploadImage } =
     sigleApiClient.useMutation("post", "/api/drafts/{draftId}/images");
 
   const onDrop = useCallback(
-    async (acceptedFiles: Array<File>) => {
+    (acceptedFiles: Array<File>) => {
       const file = acceptedFiles[0];
 
       if (!file) {
@@ -115,7 +115,7 @@ export const EditorCoverImage = ({
       }
     };
 
-    autoUploadImage();
+    void autoUploadImage();
   }, [canUploadImages, postId, watchCoverImage, onDrop]);
 
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({

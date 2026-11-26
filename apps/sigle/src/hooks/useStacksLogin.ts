@@ -82,7 +82,7 @@ export const useStacksLogin = () => {
         stxAddress: user.stxAddress,
       });
       setUser(user);
-      signMessage(user);
+      void signMessage(user);
     } catch (error) {
       console.error(error);
       posthog.capture("user_login_cancel");
@@ -141,7 +141,7 @@ export const useStacksLogin = () => {
       return;
     }
 
-    refetchSession();
+    void refetchSession();
     posthog.capture("user_login_sign_message_success");
     toast.success("You are now logged in");
   };

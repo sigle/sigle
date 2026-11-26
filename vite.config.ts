@@ -79,7 +79,6 @@ export default defineConfig({
           "react/purity": "off",
           "react/set-state-in-effect": "off",
           "react/use-memo": "off",
-          "typescript/no-floating-promises": "off",
           "typescript/no-misused-promises": "off",
           "unicorn/consistent-function-scoping": "off",
         },

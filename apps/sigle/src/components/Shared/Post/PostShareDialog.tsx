@@ -42,7 +42,7 @@ export const PostShareDialog = ({
 
   const onCopy = () => {
     posthog.capture("post_link_copied", { postId: post.id });
-    navigator.clipboard.writeText(postLink).then(() => {
+    void navigator.clipboard.writeText(postLink).then(() => {
       setIsCopied(true);
       setTimeout(() => {
         setIsCopied(false);

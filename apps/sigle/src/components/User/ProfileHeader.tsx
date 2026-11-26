@@ -32,7 +32,7 @@ export const ProfileHeader = ({ user }: ProfileHeaderProps) => {
   );
 
   const onCopyLink = () => {
-    copyToClipboard(
+    void copyToClipboard(
       `${env.NEXT_PUBLIC_APP_URL}${Routes.userProfile({ username: user.address })}`,
     );
     posthog.capture("profile_link_copied", {
