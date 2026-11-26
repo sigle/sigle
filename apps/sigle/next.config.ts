@@ -9,6 +9,17 @@ if (!process.env.CDN_URL) {
 
 const cdnUrl = new URL(process.env.CDN_URL);
 
+// Sent on every route. `frame-ancestors` (and `X-Frame-Options` for older
+// browsers) stop other sites from framing Sigle, such as the editor whose
+// publish dialog asks the wallet to sign. The referrer policy keeps the origin
+// on cross-origin requests, which YouTube embeds require.
+const securityHeaders = [
+  { key: "Content-Security-Policy", value: "frame-ancestors 'none'" },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+];
+
 const nextConfig: NextConfig = {
   output: "standalone",
   images: {
@@ -27,6 +38,7 @@ const nextConfig: NextConfig = {
     ],
   },
   serverExternalPackages: ["@stacks/connect"],
+  headers: async () => [{ source: "/:path*", headers: securityHeaders }],
 };
 
 // Uploads the source maps of the build to PostHog error tracking, so stack
