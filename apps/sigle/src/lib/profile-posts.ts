@@ -31,5 +31,7 @@ export const profilePostsQueryOptions = (address: string) => {
     },
     initialPageParam: 0,
     getNextPageParam: getNextOffset,
+    // The profile page hydrates the first page fresh from the server, and the API caches public reads for a minute.
+    staleTime: 60_000,
   });
 };
