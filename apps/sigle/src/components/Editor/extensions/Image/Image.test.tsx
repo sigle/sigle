@@ -46,7 +46,7 @@ vi.mock(import("@/hooks/useWindowSize"), () => ({
 }));
 
 vi.mock(import("@/lib/images"), () => ({
-  resolveImageUrl: vi.fn((url) => url),
+  resolveImageUrl: vi.fn((url: string) => url),
 }));
 
 const defaultPost = {
