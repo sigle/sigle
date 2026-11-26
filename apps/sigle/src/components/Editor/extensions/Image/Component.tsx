@@ -105,6 +105,7 @@ export const ImageComponent = (props: NodeViewProps) => {
           <Spinner />
         </div>
       )}
+      {/* oxlint-disable-next-line nextjs/no-img-element -- editor images can come from any host */}
       <img
         className={cn(
           "rounded-md outline-offset-4 transition-[outline-color,opacity] hover:outline-2 hover:outline-border",

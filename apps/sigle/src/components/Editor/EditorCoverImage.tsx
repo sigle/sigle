@@ -187,6 +187,7 @@ export const EditorCoverImage = ({
       <input {...getInputProps()} />
       {image ? (
         <div className="group relative overflow-hidden rounded-lg">
+          {/* oxlint-disable-next-line nextjs/no-img-element -- shows the local preview while uploading */}
           <img
             src={image}
             className={cn("w-full transition-opacity", {

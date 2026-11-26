@@ -94,6 +94,7 @@ export const UploadProfileCoverPicture = ({
     >
       <input {...getInputProps()} />
       {resolvedPicture ? (
+        // oxlint-disable-next-line nextjs/no-img-element -- a dashboard preview of the cover being edited
         <img
           src={resolvedPicture}
           alt="Profile cover"

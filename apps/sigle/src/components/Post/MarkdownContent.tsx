@@ -56,6 +56,7 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
             }
 
             return (
+              // oxlint-disable-next-line nextjs/no-img-element -- post images can come from any host
               <img
                 {...props}
                 alt={alt ?? ""}

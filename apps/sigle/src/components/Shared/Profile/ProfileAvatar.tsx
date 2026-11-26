@@ -45,6 +45,7 @@ export const ProfileAvatar = ({
           height={picture.height}
         />
       ) : (
+        // oxlint-disable-next-line nextjs/no-img-element -- next/image doesn't optimize the SVG default avatar
         <img src={getDefaultAvatarUrl(user.address)} alt={user.address} />
       )}
     </div>
