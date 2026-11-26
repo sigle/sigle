@@ -16,7 +16,7 @@ export const loadTwitterWidget = async (): Promise<void> => {
     const script = document.createElement("script");
     script.src = WIDGET_SCRIPT_URL;
     script.async = true;
-    document.body?.appendChild(script);
+    document.body?.append(script);
     script.onload = () => {
       resolve();
     };

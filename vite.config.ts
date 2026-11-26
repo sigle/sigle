@@ -97,7 +97,6 @@ export default defineConfig({
           "typescript/use-unknown-in-catch-callback-variable": "off",
           "unicorn/consistent-function-scoping": "off",
           "unicorn/no-invalid-fetch-options": "off",
-          "unicorn/prefer-dom-node-append": "off",
         },
       },
     ],

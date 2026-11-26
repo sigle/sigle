@@ -126,12 +126,12 @@ export const SlashCommands = Extension.create<{
               container.classList.add("slash-command-popup");
               container.style.position = "absolute";
               container.style.zIndex = "50";
-              container.appendChild(reactRenderer.element);
+              container.append(reactRenderer.element);
 
               const appendTo =
                 document.getElementsByClassName("root")[0] ?? document.body;
 
-              appendTo.appendChild(container);
+              appendTo.append(container);
 
               updatePosition(props.clientRect);
               const virtualEl = getVirtualElement(props.clientRect);
