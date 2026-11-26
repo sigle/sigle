@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/input-group";
 import { Textarea } from "@/components/ui/textarea";
 import { sigleApiClient } from "@/lib/sigle";
+import { getErrorMessage } from "@/lib/utils";
 import { SettingsRow } from "../SettingsRow";
 import { UploadProfileCoverPicture } from "./UploadProfileCoverPicture";
 import { UploadProfilePicture } from "./UploadProfilePicture";
@@ -102,8 +103,8 @@ export const UpdateProfileMetadata = ({
           website: formValues.website || null,
         },
       })
-      .catch((error: { message?: string }) => {
-        toast.error(error.message ?? "Failed to update your profile.");
+      .catch((error: unknown) => {
+        toast.error(getErrorMessage(error) ?? "Failed to update your profile.");
 
         return undefined;
       });

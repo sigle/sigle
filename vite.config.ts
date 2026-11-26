@@ -81,7 +81,6 @@ export default defineConfig({
           "react/use-memo": "off",
           "typescript/no-floating-promises": "off",
           "typescript/no-misused-promises": "off",
-          "typescript/use-unknown-in-catch-callback-variable": "off",
           "unicorn/consistent-function-scoping": "off",
         },
       },

@@ -204,7 +204,7 @@ export const TipTapImage = TipTapImageBase.extend<
               });
               editor.view.dispatch(transaction);
             })
-            .catch((error) => {
+            .catch((error: unknown) => {
               // If the upload fails, we remove the image node from the document
               console.error("Failed to upload image", error);
               const transaction = editor.state.tr;
@@ -288,7 +288,7 @@ export const TipTapImage = TipTapImageBase.extend<
             });
             editor.view.dispatch(updateTransaction);
           })
-          .catch((error) => {
+          .catch((error: unknown) => {
             console.error("Failed to upload image", error);
             const deleteTransaction = editor.state.tr;
             editor.state.doc.descendants((innerNode, innerPos) => {
