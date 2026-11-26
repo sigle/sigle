@@ -102,7 +102,6 @@ export const ImageComponent = (props: NodeViewProps) => {
           <Spinner />
         </div>
       )}
-      {/* oxlint-disable-next-line no-img-element */}
       <img
         className={cn(
           "rounded-md outline-offset-4 transition-[outline-color,opacity] hover:outline-2 hover:outline-border",

@@ -88,7 +88,6 @@ export const UploadProfileCoverPicture = ({
     >
       <input {...getInputProps()} />
       {resolvedPicture ? (
-        // oxlint-disable-next-line no-img-element
         <img
           src={resolvedPicture}
           alt="Profile cover"

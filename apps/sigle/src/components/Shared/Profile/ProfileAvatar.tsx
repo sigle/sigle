@@ -40,7 +40,6 @@ export const ProfileAvatar = ({
           height={picture.height}
         />
       ) : (
-        // oxlint-disable-next-line no-img-element
         <img src={getDefaultAvatarUrl(user.address)} alt={user.address} />
       )}
     </div>

@@ -178,7 +178,6 @@ export const EditorCoverImage = ({
       <input {...getInputProps()} />
       {image ? (
         <div className="group relative overflow-hidden rounded-lg">
-          {/* oxlint-disable-next-line no-img-element */}
           <img
             src={image}
             className={cn("w-full transition-opacity", {

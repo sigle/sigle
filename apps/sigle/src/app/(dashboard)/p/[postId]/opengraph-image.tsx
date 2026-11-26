@@ -94,7 +94,6 @@ export default async function Image({
         style={{ borderTop: `1px solid ${COLORS.border}` }}
       >
         <div tw="flex items-center">
-          {/* oxlint-disable-next-line no-img-element */}
           <img
             tw="rounded-md"
             src={avatar}

@@ -72,7 +72,6 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
 
   // Validate form on mount so we can show the various error messages in the callout
   // and disable the publish button
-  // oxlint-disable-next-line exhaustive-deps
   useEffect(() => {
     handleSubmit(
       async () => {

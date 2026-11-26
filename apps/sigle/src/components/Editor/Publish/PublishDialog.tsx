@@ -132,7 +132,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           postId,
         });
 
-        // oxlint-disable-next-line init-declarations
         let metadata;
 
         try {

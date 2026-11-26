@@ -6,7 +6,6 @@ const debounce = <Args extends unknown[]>(
   func: (...args: Args) => void,
   wait = 200,
 ) => {
-  // oxlint-disable-next-line init-declarations timeout will be initialized later
   let timeout: NodeJS.Timeout;
   // The arguments of the call waiting for the timeout, null when none is.
   let pendingArgs: Args | null = null;
@@ -46,11 +45,9 @@ export function useDebouncedCallback<Args extends unknown[]>(
   const debouncedCallback = React.useCallback(debounce(callback, delay), [
     delay,
     ...deps,
-    // oxlint-disable-next-line exhaustive-deps
   ]); // with the delay
 
   // run any pending call on unmount or dependency change, so it isn't lost
-  // oxlint-disable-next-line exhaustive-deps
   React.useEffect(() => {
     return () => {
       debouncedCallback.flush();

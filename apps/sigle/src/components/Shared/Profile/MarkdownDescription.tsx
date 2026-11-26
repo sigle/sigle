@@ -14,7 +14,6 @@ export const ProfileMarkdownDescription = ({
       <ReactMarkdown
         allowedElements={["p", "a", "strong", "em"]}
         components={{
-          // oxlint-disable-next-line no-unused-vars
           a: ({ node: _node, href, ...props }) => {
             return (
               <a
