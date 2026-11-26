@@ -8,6 +8,7 @@ import {
   Layer,
   Metric,
   Option,
+  Predicate,
   Schedule,
 } from "effect";
 import { PersistedQueue } from "effect/persistence";
@@ -146,7 +147,7 @@ const isStoreError = (cause: Cause.Cause<unknown>): boolean => {
 
   return (
     Option.isSome(failure) &&
-    failure.value instanceof PersistedQueue.PersistedQueueError
+    Predicate.isTagged(failure.value, "PersistedQueueError")
   );
 };
 

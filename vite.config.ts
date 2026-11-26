@@ -78,7 +78,6 @@ export default defineConfig({
         // preset's file overrides don't turn them back on.
         files: ["**"],
         rules: {
-          "@nkzw/no-instanceof": "off",
           "react/immutability": "off",
           "react/no-unknown-property": "off",
           "react/purity": "off",

@@ -1,4 +1,4 @@
-import { ByteSize, Effect, Layer, Predicate } from "effect";
+import { ByteSize, Effect, Layer, Predicate, Schema } from "effect";
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/http";
 import { RateLimiter } from "effect/persistence";
 import {
@@ -87,7 +87,7 @@ export const AuthRoutesLayer = Layer.unwrap(
         return yield* webResponseToHttpResponse(webResponse);
       }).pipe(
         Effect.catch((error) =>
-          error instanceof TooManyRequests
+          Schema.is(TooManyRequests)(error)
             ? HttpServerResponse.json(
                 {
                   message: error.message,
@@ -98,12 +98,11 @@ export const AuthRoutesLayer = Layer.unwrap(
             : HttpServerResponse.json(
                 { message: error.message },
                 {
-                  status:
-                    error instanceof PayloadTooLarge
-                      ? 413
-                      : error instanceof BadRequest
-                        ? 400
-                        : 500,
+                  status: Schema.is(PayloadTooLarge)(error)
+                    ? 413
+                    : Schema.is(BadRequest)(error)
+                      ? 400
+                      : 500,
                 },
               ),
         ),

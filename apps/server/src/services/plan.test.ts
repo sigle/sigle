@@ -273,11 +273,11 @@ describe("plan service", () => {
 
       expect({
         plan: afterCheck?.plan,
-        checked: afterCheck?.planCheckedAt instanceof Date,
+        planCheckedAt: afterCheck?.planCheckedAt,
         afterFailure: yield* findStoredPlan(userId),
       }).toStrictEqual({
         plan: "pro",
-        checked: true,
+        planCheckedAt: expect.any(Date),
         afterFailure: afterCheck,
       });
     }).pipe(

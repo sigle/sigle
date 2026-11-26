@@ -51,7 +51,7 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
         urlTransform={customUrlTransform}
         components={{
           img: ({ node: _node, src, alt, ...props }) => {
-            if (!src || src instanceof Blob) {
+            if (!src || typeof src !== "string") {
               return null;
             }
 
