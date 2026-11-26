@@ -1,6 +1,12 @@
 import cloudflare from "@cloudflare/oxlint-config/vite-plus";
 import { recommended } from "@effect/tsgo/oxlint-presets";
+import { createRequire } from "node:module";
 import { defineConfig } from "vite-plus";
+
+// The Tailwind plugin is a dependency of the web app, not of the root.
+const sigleRequire = createRequire(
+  new URL("apps/sigle/package.json", import.meta.url),
+);
 
 export default defineConfig({
   staged: {
@@ -84,7 +90,12 @@ export default defineConfig({
       {
         files: ["apps/sigle/**"],
         plugins: ["nextjs"],
-        jsPlugins: ["eslint-plugin-better-tailwindcss"],
+        jsPlugins: [
+          {
+            name: "better-tailwindcss",
+            specifier: sigleRequire.resolve("eslint-plugin-better-tailwindcss"),
+          },
+        ],
         rules: {
           // Every rule of Oxlint's nextjs plugin, which the preset doesn't enable.
           "nextjs/google-font-display": "error",
