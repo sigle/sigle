@@ -1,5 +1,6 @@
 import type { NodeViewProps } from "@tiptap/react";
 import { NodeViewContent, NodeViewWrapper } from "@tiptap/react";
+import { common, createLowlight } from "lowlight";
 import {
   Select,
   SelectContent,
@@ -9,6 +10,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
+/** The highlighter of the code blocks, which lists the languages to select. */
+export const lowlight = createLowlight(common);
 
 /**
  * Custom component for the code block extension.
@@ -39,10 +43,10 @@ export const CodeBlockComponent = (props: NodeViewProps) => {
             <SelectGroup>
               <SelectItem value="auto">auto</SelectItem>
               <SelectSeparator />
-              {props.extension.options.lowlight
+              {lowlight
                 .listLanguages()
                 .sort()
-                .map((o: string) => (
+                .map((o) => (
                   <SelectItem value={o} key={o}>
                     {o}
                   </SelectItem>

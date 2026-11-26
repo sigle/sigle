@@ -23,7 +23,6 @@ import {
 } from "@tiptap/extensions";
 import { Markdown } from "@tiptap/markdown";
 import { EditorContent, ReactNodeViewRenderer, useEditor } from "@tiptap/react";
-import { common, createLowlight } from "lowlight";
 import { useParams } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
 import { useState } from "react";
@@ -33,10 +32,11 @@ import { UpgradeDialog } from "@/components/Shared/UpgradeDialog";
 import { Button } from "@/components/ui/button";
 import { useWindowSize } from "@/hooks/useWindowSize";
 import { sigleApiClient } from "@/lib/sigle";
+import { getErrorMessage } from "@/lib/utils";
 import type { EditorPostFormData } from "./EditorFormProvider";
 import { EditorBottomInfo } from "./BottomInfo";
 import { EditorBubbleMenu } from "./BubbleMenu";
-import { CodeBlockComponent } from "./extensions/CodeBlock";
+import { CodeBlockComponent, lowlight } from "./extensions/CodeBlock";
 import { TipTapImage } from "./extensions/Image";
 import { TipTapMobileScroll } from "./extensions/MobileScroll";
 import { TipTapPlaceholder } from "./extensions/Placeholder";
@@ -45,8 +45,6 @@ import { SlashCommands } from "./extensions/SlashCommand/SlashCommands";
 import { TipTapEmbed } from "./extensions/Twitter";
 import { EditorFloatingMenu } from "./FloatingMenu";
 import { useEditorStore } from "./store";
-
-const lowlight = createLowlight(common);
 
 interface EditorTipTapProps {
   /** Whether the user can upload images, which is only on the Pro plan. */
@@ -135,14 +133,13 @@ export const EditorTipTap = ({
                 });
 
                 return data.url;
-                // oxlint-disable-next-line typescript/no-explicit-any
-              } catch (error: any) {
+              } catch (error) {
                 toast.error("Failed to upload image", {
-                  description: error.message,
+                  description: getErrorMessage(error),
                 });
                 posthog.capture("editor_image_upload_error", {
                   postId,
-                  error: error.message,
+                  error: getErrorMessage(error),
                 });
                 throw error;
               }

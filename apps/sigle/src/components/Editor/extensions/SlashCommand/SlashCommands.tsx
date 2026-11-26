@@ -30,7 +30,9 @@ export const SlashCommands = Extension.create<{
     commands: Array<SlashCommandsCommand>,
     query: string,
   ) => Array<SlashCommandsCommand>;
-  suggestion: Partial<SuggestionOptions>;
+  suggestion: Partial<
+    SuggestionOptions<SlashCommandsCommand, SlashCommandsCommand>
+  >;
 }>({
   name: "slash-command",
 
@@ -60,7 +62,7 @@ export const SlashCommands = Extension.create<{
 
   addProseMirrorPlugins() {
     return [
-      Suggestion({
+      Suggestion<SlashCommandsCommand, SlashCommandsCommand>({
         editor: this.editor,
         ...this.options.suggestion,
         items: (query) =>

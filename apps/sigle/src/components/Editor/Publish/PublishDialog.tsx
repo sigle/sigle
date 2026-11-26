@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/dialog";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient, sigleApiFetchClient } from "@/lib/sigle";
+import { getErrorMessage } from "@/lib/utils";
 import type { EditorPostFormData } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
 import { generateSigleMetadataFromForm } from "../utils";
@@ -214,18 +215,16 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           },
         })
           .then((result) => Result.ok(result))
-          .catch((error) => Result.err(error));
+          .catch((error: unknown) => Result.err(getErrorMessage(error)));
 
         if (publishResult.isErr()) {
           posthog.capture("post_publish_start_error", {
             postId,
-            error: publishResult.error.message,
+            error: publishResult.error,
           });
           setStepError(
             "arweave",
-            publishResult.error.message
-              ? publishResult.error.message
-              : "Failed to start publishing",
+            publishResult.error || "Failed to start publishing",
           );
 
           return;

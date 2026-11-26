@@ -62,14 +62,14 @@ export const TipTapImage = TipTapImageBase.extend<
   // Same as the base extension, except an image still waiting for its URL is
   // not part of the post content.
   renderMarkdown(node) {
-    const src = node.attrs?.src ?? "";
+    const src = String(node.attrs?.src ?? "");
 
     if (!src) {
       return "";
     }
 
-    const alt = node.attrs?.alt ?? "";
-    const title = node.attrs?.title ?? "";
+    const alt = String(node.attrs?.alt ?? "");
+    const title = String(node.attrs?.title ?? "");
 
     // Backslashes and parentheses are backslash-escaped so an unbalanced `)`
     // does not end the destination, and whitespace, which is never valid in a
@@ -233,12 +233,15 @@ export const TipTapImage = TipTapImageBase.extend<
     const transaction = editor.state.tr;
 
     editor.state.doc.descendants((node, pos) => {
+      const src: unknown = node.attrs.src;
+
       // Without an uploader the Gaia images are kept as they are, instead of
       // being removed from the document when their upload fails.
       if (
         uploadFile &&
         node.type.name === "image" &&
-        node.attrs.src?.startsWith("https://gaia.blockstack.org/hub/")
+        typeof src === "string" &&
+        src.startsWith("https://gaia.blockstack.org/hub/")
       ) {
         const uploadId = crypto.randomUUID();
 
@@ -250,7 +253,7 @@ export const TipTapImage = TipTapImageBase.extend<
         const newNode = node.type.create(attrs, node.content, node.marks);
         transaction.replaceWith(pos, pos + node.nodeSize, newNode);
 
-        fetch(node.attrs.src)
+        fetch(src)
           .then((response) => response.blob())
           .then((blob) => {
             const file = new File([blob], "image", { type: blob.type });
