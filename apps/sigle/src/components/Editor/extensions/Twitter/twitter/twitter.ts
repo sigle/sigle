@@ -22,7 +22,7 @@ export const loadTwitterWidget = async (): Promise<void> => {
     };
 
     script.onerror = () => {
-      reject();
+      reject(new Error(`Failed to load ${WIDGET_SCRIPT_URL}`));
     };
   });
 };
