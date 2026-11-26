@@ -10,6 +10,10 @@ interface EditorState {
 
   editor?: Editor;
   setEditor: (editor: Editor) => void;
+
+  /** Whether a new cover image is uploading, publishing waits for it. */
+  isCoverUploading: boolean;
+  setIsCoverUploading: (isCoverUploading: boolean) => void;
 }
 
 export const useEditorStore = create<EditorState>()((set) => ({
@@ -21,4 +25,7 @@ export const useEditorStore = create<EditorState>()((set) => ({
 
   editor: undefined,
   setEditor: (editor) => set(() => ({ editor })),
+
+  isCoverUploading: false,
+  setIsCoverUploading: (isCoverUploading) => set(() => ({ isCoverUploading })),
 }));

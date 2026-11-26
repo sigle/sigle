@@ -1,3 +1,4 @@
+import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import TipTapImageBase, { type ImageOptions } from "@tiptap/extension-image";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
@@ -58,12 +59,14 @@ export const TipTapImage = TipTapImageBase.extend<
     return ReactNodeViewRenderer(ImageComponent);
   },
 
-  // Same as the base extension, except an image still waiting for its URL is
-  // not part of the post content.
+  // Same as the base extension, except an image still waiting for its URL, or
+  // still uploading with a local preview, is not part of the post content.
   renderMarkdown(node) {
     const src = node.attrs?.src ?? "";
 
-    if (!src) return "";
+    // An image still uploading shows a local `blob:` preview, which is not
+    // part of the post: it only exists in this tab.
+    if (!src || src.startsWith("blob:")) return "";
 
     const alt = node.attrs?.alt ?? "";
     const title = node.attrs?.title ?? "";
@@ -168,7 +171,6 @@ export const TipTapImage = TipTapImageBase.extend<
 
           uploadFile(file)
             .then((imageUrl) => {
-              // The file can take some time to propagate to IPFS. So we keep the local preview of the file
               const transaction = editor.state.tr;
               editor.state.doc.descendants((node, pos) => {
                 if (
@@ -191,6 +193,7 @@ export const TipTapImage = TipTapImageBase.extend<
                 }
               });
               editor.view.dispatch(transaction);
+              URL.revokeObjectURL(preview);
             })
             .catch((error) => {
               // If the upload fails, we remove the image node from the document
@@ -205,6 +208,7 @@ export const TipTapImage = TipTapImageBase.extend<
                 }
               });
               editor.view.dispatch(transaction);
+              URL.revokeObjectURL(preview);
             });
 
           return true;
@@ -319,3 +323,19 @@ const getImageFiles = (data: DataTransfer | null) =>
   Array.from(data?.files ?? []).filter((file) =>
     file.type.startsWith("image/"),
   );
+
+/**
+ * Whether an image of the document is still uploading: it has an
+ * `uploadId` until its uploaded URL replaces the preview.
+ */
+export const hasPendingImageUploads = (doc: ProseMirrorNode): boolean => {
+  let pending = false;
+
+  doc.descendants((node) => {
+    if (node.type.name === "image" && node.attrs.uploadId) pending = true;
+
+    return !pending;
+  });
+
+  return pending;
+};
