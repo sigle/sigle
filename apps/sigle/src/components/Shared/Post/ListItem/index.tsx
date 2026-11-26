@@ -118,6 +118,7 @@ export const PostListItem = ({ post, onHiddenChange }: PostListItemProps) => {
             <BlurImage
               src={resolveImageUrl(post.coverImage.url)}
               alt="Cover card"
+              sizes="(min-width: 768px) 160px, 96px"
               className={cn("size-full object-cover", {
                 "scale-110 blur-lg": warning,
               })}

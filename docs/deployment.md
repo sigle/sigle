@@ -45,7 +45,7 @@ Railway does not read this file when deploying, so merging a change does nothing
 
 ## Environment variables
 
-- **Non-secret values** are committed in each app's `.env.testnet`. The website builds it into the image; the server loads it on startup, and variables set on Railway take precedence.
+- **Non-secret values** are committed in each app's `.env.testnet`. The website builds it into the image; the server loads it on startup, and variables set on Railway take precedence. The website's Docker build uses the `.env.<environment>` file named by Railway's `RAILWAY_ENVIRONMENT_NAME`, and fails if it doesn't exist.
 - **Secrets** are stored in 1Password Environments and copied to Railway with [`scripts/sync-railway-env.sh`](../scripts/sync-railway-env.sh), which redeploys the service:
 
   ```sh
