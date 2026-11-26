@@ -18,7 +18,7 @@ const boolean = (name: string) => integer(name, { mode: "boolean" });
 
 /** A string array stored as JSON text. */
 const textArray = (name: string) =>
-  text(name, { mode: "json" }).$type<string[]>();
+  text(name, { mode: "json" }).$type<Array<string>>();
 
 const now = () => new Date();
 

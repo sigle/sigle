@@ -36,7 +36,7 @@ export const EditorCoverImage = ({
     sigleApiClient.useMutation("post", "/api/drafts/{draftId}/images");
 
   const onDrop = useCallback(
-    async (acceptedFiles: File[]) => {
+    async (acceptedFiles: Array<File>) => {
       const file = acceptedFiles[0];
 
       if (!file) {

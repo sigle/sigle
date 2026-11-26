@@ -12,9 +12,9 @@ export interface MultiStepToastStep {
 
 interface MultiStepToastState {
   toastId: string | number | null;
-  steps: MultiStepToastStep[];
+  steps: Array<MultiStepToastStep>;
   setToastId: (toastId: string | number | null) => void;
-  setSteps: (steps: MultiStepToastStep[]) => void;
+  setSteps: (steps: Array<MultiStepToastStep>) => void;
   updateStep: (id: string, updates: Partial<MultiStepToastStep>) => void;
   reset: () => void;
 }

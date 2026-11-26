@@ -78,7 +78,6 @@ export default defineConfig({
           "react/purity": "off",
           "react/set-state-in-effect": "off",
           "react/use-memo": "off",
-          "typescript/array-type": "off",
           "typescript/no-floating-promises": "off",
           "typescript/no-misused-promises": "off",
           "typescript/no-unsafe-argument": "off",

@@ -58,7 +58,7 @@ const getMarkdownOutput = (): string => {
 };
 
 const getImageSources = () => {
-  const sources: unknown[] = [];
+  const sources: Array<unknown> = [];
 
   useEditorStore.getState().editor?.state.doc.descendants((node) => {
     if (node.type.name === "image") {

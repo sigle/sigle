@@ -2,9 +2,9 @@ import { describe, expect, it, vi, expectTypeOf } from "vite-plus/test";
 import type { SlashCommandsCommand } from "./SlashCommands";
 
 const filterCommands = (
-  commands: SlashCommandsCommand[],
+  commands: Array<SlashCommandsCommand>,
   query: string,
-): SlashCommandsCommand[] => {
+): Array<SlashCommandsCommand> => {
   return commands
     .filter(
       (item) =>
@@ -16,7 +16,7 @@ const filterCommands = (
     .slice(0, query.length > 0 ? 10 : 20);
 };
 
-const mockCommands: SlashCommandsCommand[] = [
+const mockCommands: Array<SlashCommandsCommand> = [
   {
     title: "Plain Text",
     description: "Normal paragraph style",

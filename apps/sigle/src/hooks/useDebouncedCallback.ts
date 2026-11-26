@@ -2,7 +2,7 @@
 import React from "react";
 
 // debounce function (defaults wait to .2 seconds)
-const debounce = <Args extends unknown[]>(
+const debounce = <Args extends Array<unknown>>(
   func: (...args: Args) => void,
   wait = 200,
 ) => {
@@ -37,7 +37,7 @@ const debounce = <Args extends unknown[]>(
 };
 
 // hook for using the debounce function
-export function useDebouncedCallback<Args extends unknown[]>(
+export function useDebouncedCallback<Args extends Array<unknown>>(
   callback: (...args: Args) => void,
   delay = 1000,
   deps: React.DependencyList = [],

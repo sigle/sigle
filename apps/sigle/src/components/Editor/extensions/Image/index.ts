@@ -85,7 +85,7 @@ export const TipTapImage = TipTapImageBase.extend<
 
   // Uploads the image files dropped or pasted in the editor.
   addProseMirrorPlugins() {
-    const insertFiles = (files: File[], position?: number) => {
+    const insertFiles = (files: Array<File>, position?: number) => {
       const { uploadFile, onUploadUnavailable } = this.options;
 
       if (!uploadFile) {
