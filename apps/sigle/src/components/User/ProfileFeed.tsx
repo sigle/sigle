@@ -53,7 +53,7 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
         );
 
         if (error) {
-          throw error;
+          throw new Error(error.message, { cause: error });
         }
 
         return page;
