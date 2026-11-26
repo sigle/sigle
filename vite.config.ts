@@ -88,7 +88,6 @@ export default defineConfig({
           "react/immutability": "off",
           "react/no-unknown-property": "off",
           "react/set-state-in-effect": "off",
-          "react/use-memo": "off",
         },
       },
     ],

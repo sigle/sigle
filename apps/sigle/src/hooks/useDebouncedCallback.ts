@@ -43,7 +43,8 @@ export function useDebouncedCallback<Args extends Array<unknown>>(
   deps: React.DependencyList = [],
 ) {
   // debounce the callback
-  // oxlint-disable-next-line exhaustive-deps
+  // The caller lists the dependencies of its callback in `deps`.
+  // oxlint-disable-next-line exhaustive-deps, react/use-memo
   const debouncedCallback = React.useCallback(debounce(callback, delay), [
     delay,
     ...deps,
