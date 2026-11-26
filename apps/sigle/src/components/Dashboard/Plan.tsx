@@ -3,7 +3,7 @@
 import { IconArrowUpRight } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePostHog } from "posthog-js/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { appConfig } from "@/config";
@@ -61,22 +61,25 @@ export const Plan = () => {
     );
   };
 
-  useEffect(() => {
-    const onVisibilityChange = () => {
-      if (
-        document.visibilityState === "visible" &&
-        hasOpenedMarketplace.current
-      ) {
-        hasOpenedMarketplace.current = false;
-        checkWallet("marketplace_return");
-      }
-    };
-
-    document.addEventListener("visibilitychange", onVisibilityChange);
-
-    return () =>
-      document.removeEventListener("visibilitychange", onVisibilityChange);
+  // An Effect Event reads the latest `checkWallet`, so the listener is added
+  // once.
+  const onVisibilityChange = useEffectEvent(() => {
+    if (
+      document.visibilityState === "visible" &&
+      hasOpenedMarketplace.current
+    ) {
+      hasOpenedMarketplace.current = false;
+      checkWallet("marketplace_return");
+    }
   });
+
+  useEffect(() => {
+    const listener = () => onVisibilityChange();
+
+    document.addEventListener("visibilitychange", listener);
+
+    return () => document.removeEventListener("visibilitychange", listener);
+  }, []);
 
   if (!me) {
     return <h2 className="headline text-3xl">Plan</h2>;
