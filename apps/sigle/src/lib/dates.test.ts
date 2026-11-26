@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vite-plus/test";
-import { formatUtcDate, formatUtcDateTime } from "./dates";
+import {
+  formatLocalDate,
+  formatLocalDateTime,
+  formatUtcDate,
+  formatUtcDateTime,
+} from "./dates";
 
 const restoreTz = (previous: string | undefined) => {
   if (previous === undefined) {
@@ -37,5 +42,28 @@ describe(formatUtcDateTime, () => {
     expect(formatUtcDateTime("2026-11-26T04:05:00.000Z")).toBe(
       "Nov 26, 2026, 04:05 UTC",
     );
+  });
+});
+
+describe(formatLocalDate, () => {
+  it("formats the day in the given timezone", () => {
+    expect(
+      formatLocalDate("2026-11-26T23:30:00.000Z", {
+        locale: "en-US",
+        timeZone: "Asia/Tokyo",
+      }),
+    ).toBe("Nov 27, 2026");
+  });
+});
+
+describe(formatLocalDateTime, () => {
+  it("includes the day and the timezone name", () => {
+    const text = formatLocalDateTime("2026-11-26T14:05:00.000Z", {
+      locale: "en-US",
+      timeZone: "UTC",
+    });
+
+    expect(text).toContain("Nov 26, 2026");
+    expect(text).toContain("UTC");
   });
 });

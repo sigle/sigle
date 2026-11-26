@@ -3,6 +3,7 @@ import { IconDots, IconShare } from "@tabler/icons-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { LocalDate } from "@/components/Shared/LocalDate";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useSession } from "@/lib/auth-hooks";
-import { formatUtcDate } from "@/lib/dates";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { formatReadableAddress } from "@/lib/stacks";
@@ -86,10 +86,7 @@ export const PostUserActions = ({ post }: PostUserActionsProps) => {
               {author.isExplorer ? <ExplorerBadge /> : null}
             </div>
             <p className="text-muted-foreground">
-              <time dateTime={post.createdAt}>
-                {formatUtcDate(post.createdAt)}
-              </time>{" "}
-              · {readingMinutes} min read
+              <LocalDate date={post.createdAt} /> · {readingMinutes} min read
             </p>
           </div>
         </div>

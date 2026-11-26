@@ -9,9 +9,9 @@ import {
   IconCopy,
 } from "@tabler/icons-react";
 import { toast } from "sonner";
+import { LocalDate } from "@/components/Shared/LocalDate";
 import { env } from "@/env";
 import { cn } from "@/lib/cn";
-import { formatUtcDate, formatUtcDateTime } from "@/lib/dates";
 import { formatNumber } from "@/lib/utils";
 import {
   Accordion,
@@ -60,7 +60,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
           title="Stored on Arweave"
           isLast={!opentimestamps}
         >
-          {formatUtcDate(publishedAt)}
+          <LocalDate date={publishedAt} />
           {post.arweaveBlockHeight === null
             ? null
             : ` · Block #${formatNumber(post.arweaveBlockHeight)}`}
@@ -69,7 +69,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
         {opentimestamps ? (
           bitcoinTimestamp && opentimestamps.bitcoinBlockHeight !== null ? (
             <ProvenanceStep state="done" title="Timestamped on Bitcoin" isLast>
-              {formatUtcDateTime(bitcoinTimestamp)} · Block #
+              <LocalDate date={bitcoinTimestamp} withTime /> · Block #
               {formatNumber(opentimestamps.bitcoinBlockHeight)}
             </ProvenanceStep>
           ) : (
