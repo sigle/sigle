@@ -2,16 +2,16 @@
 import React from "react";
 
 // debounce function (defaults wait to .2 seconds)
-// oxlint-disable-next-line typescript/no-explicit-any any is fine
-const debounce = (func: any, wait = 200) => {
+const debounce = <Args extends unknown[]>(
+  func: (...args: Args) => void,
+  wait = 200,
+) => {
   // oxlint-disable-next-line init-declarations timeout will be initialized later
   let timeout: NodeJS.Timeout;
   // The arguments of the call waiting for the timeout, null when none is.
-  // oxlint-disable-next-line typescript/no-explicit-any any is fine
-  let pendingArgs: any[] | null = null;
+  let pendingArgs: Args | null = null;
 
-  // oxlint-disable-next-line typescript/no-explicit-any any is fine
-  function executedFunction(...args: any) {
+  function executedFunction(...args: Args) {
     pendingArgs = args;
     clearTimeout(timeout);
     timeout = setTimeout(() => executedFunction.flush(), wait);
@@ -36,12 +36,10 @@ const debounce = (func: any, wait = 200) => {
 };
 
 // hook for using the debounce function
-export function useDebouncedCallback(
-  // oxlint-disable-next-line typescript/no-explicit-any any is fine
-  callback: any,
+export function useDebouncedCallback<Args extends unknown[]>(
+  callback: (...args: Args) => void,
   delay = 1000,
-  // oxlint-disable-next-line typescript/no-explicit-any any is fine
-  deps: any[] = [],
+  deps: React.DependencyList = [],
 ) {
   // debounce the callback
   // oxlint-disable-next-line exhaustive-deps
