@@ -3,6 +3,7 @@ import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
 import TipTapImageBase from "@tiptap/extension-image";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
+import posthog from "posthog-js";
 import { ImageComponent } from "./Component";
 
 declare module "@tiptap/core" {
@@ -209,7 +210,7 @@ export const TipTapImage = TipTapImageBase.extend<
             })
             .catch((error: unknown) => {
               // If the upload fails, we remove the image node from the document
-              console.error("Failed to upload image", error);
+              posthog.captureException(error);
               const transaction = editor.state.tr;
               editor.state.doc.descendants((node, pos) => {
                 if (
@@ -293,7 +294,7 @@ export const TipTapImage = TipTapImageBase.extend<
             editor.view.dispatch(updateTransaction);
           })
           .catch((error: unknown) => {
-            console.error("Failed to upload image", error);
+            posthog.captureException(error);
             const deleteTransaction = editor.state.tr;
             editor.state.doc.descendants((innerNode, innerPos) => {
               if (

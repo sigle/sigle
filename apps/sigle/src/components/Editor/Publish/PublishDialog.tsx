@@ -158,7 +158,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
             post: data,
           });
         } catch (error) {
-          console.error(error);
+          posthog.captureException(error, { postId });
 
           const errorMessage =
             error instanceof Error
@@ -190,7 +190,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
           signature = response.signature;
         } catch (error) {
-          console.error(error);
           posthog.capture("post_publish_sign_message_error", {
             postId,
             error: error instanceof Error ? error.message : String(error),
@@ -269,7 +268,6 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
         );
       },
       (errors) => {
-        console.error("Publishing form errors", { errors });
         toast.error("Error publishing", {
           description: "Please check the form for errors",
         });

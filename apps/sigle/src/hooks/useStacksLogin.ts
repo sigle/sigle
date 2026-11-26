@@ -83,8 +83,7 @@ export const useStacksLogin = () => {
       });
       setUser(user);
       void signMessage(user);
-    } catch (error) {
-      console.error(error);
+    } catch {
       posthog.capture("user_login_cancel");
     }
   };
@@ -118,8 +117,7 @@ export const useStacksLogin = () => {
       });
 
       signature = response.signature;
-    } catch (error) {
-      console.error(error);
+    } catch {
       posthog.capture("user_login_sign_message_error");
       toast.error("Failed to login");
 

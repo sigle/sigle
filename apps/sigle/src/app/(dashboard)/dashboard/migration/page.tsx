@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import posthog from "posthog-js";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -110,7 +111,6 @@ export default function MigrationPage() {
       );
 
       const data = await readLegacyJson<Story>(res, "Failed to load the post");
-      console.log("handleMigrate", data);
 
       // Drafts hold their content as a string, which v1 (Slate JSON) is not.
       if (typeof data.content !== "string") {
@@ -131,8 +131,6 @@ export default function MigrationPage() {
         return;
       }
 
-      console.log("newPost", newPost);
-
       // 3. Update the draft with the content from the old post
       const { data: updatePost, error: updatePostError } =
         await sigleApiFetchClient.PATCH("/api/drafts/{draftId}", {
@@ -152,8 +150,6 @@ export default function MigrationPage() {
           },
         });
 
-      console.log("updatePost", updatePost);
-
       if (updatePostError) {
         toast.error(updatePostError.message);
 
@@ -172,7 +168,7 @@ export default function MigrationPage() {
         "_blank",
       );
     } catch (error) {
-      console.error(error);
+      posthog.captureException(error);
       toast.error(error instanceof Error ? error.message : String(error));
     } finally {
       setLoadingPostId(null);

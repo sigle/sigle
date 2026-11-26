@@ -79,7 +79,6 @@ export default defineConfig({
         files: ["**"],
         rules: {
           "@nkzw/no-instanceof": "off",
-          "no-console": "off",
           "react/immutability": "off",
           "react/no-unknown-property": "off",
           "react/purity": "off",

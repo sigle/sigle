@@ -78,7 +78,6 @@ export const PublishReview = ({ onPublish }: PublishReviewProps) => {
         setIsFormValid({ valid: true });
       },
       (errors) => {
-        console.log("errors", errors);
         setIsFormValid({
           valid: false,
           title: errors.title?.message,
