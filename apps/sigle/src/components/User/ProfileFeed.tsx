@@ -10,13 +10,9 @@ import { buttonVariants } from "@/components/ui/button";
 import { useIsClient } from "@/hooks/useIsClient";
 import { useSession } from "@/lib/auth-hooks";
 import { cn } from "@/lib/cn";
-import {
-  flattenPages,
-  getNextOffset,
-  PAGE_SIZE,
-  removeFromPages,
-} from "@/lib/pagination";
-import { sigleApiClient, sigleApiFetchClient } from "@/lib/sigle";
+import { flattenPages, removeFromPages } from "@/lib/pagination";
+import { profilePostsQueryOptions } from "@/lib/profile-posts";
+import { sigleApiClient } from "@/lib/sigle";
 import { LoadMore } from "../Shared/LoadMore";
 import { NextLink } from "../Shared/NextLink";
 import { PostListItem } from "../Shared/Post/ListItem";
@@ -37,30 +33,11 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
     { enabled: !!session },
   );
 
-  // openapi-react-query has no suspense variant of infinite queries, and the
-  // server renders the first page, so this calls the fetch client itself.
-  const query = { author: user.address, limit: PAGE_SIZE };
-  const queryKey = ["get", "/api/posts", { params: { query } }];
+  const options = profilePostsQueryOptions(user.address);
   const queryClient = useQueryClient();
 
   const { data, hasNextPage, fetchNextPage, isFetching } =
-    useSuspenseInfiniteQuery({
-      queryKey,
-      queryFn: async ({ pageParam, signal }) => {
-        const { data: page, error } = await sigleApiFetchClient.GET(
-          "/api/posts",
-          { params: { query: { ...query, offset: pageParam } }, signal },
-        );
-
-        if (error) {
-          throw error;
-        }
-
-        return page;
-      },
-      initialPageParam: 0,
-      getNextPageParam: getNextOffset,
-    });
+    useSuspenseInfiniteQuery(options);
 
   const posts = flattenPages(data.pages);
 
@@ -68,16 +45,16 @@ export const ProfileFeed = ({ user }: ProfileFeedProps) => {
   // the loaded pages instead of refetching them.
   const onHiddenChange = async (postId: string, hidden: boolean) => {
     if (!hidden) {
-      queryClient.invalidateQueries({ queryKey });
+      queryClient.invalidateQueries({ queryKey: options.queryKey });
 
       return;
     }
 
     // A response to a request sent before the hide would bring the post back.
-    await queryClient.cancelQueries({ queryKey });
+    await queryClient.cancelQueries({ queryKey: options.queryKey });
 
     queryClient.setQueryData<InfiniteData<(typeof data.pages)[number]>>(
-      queryKey,
+      options.queryKey,
       (old) => old && { ...old, pages: removeFromPages(old.pages, postId) },
     );
   };
