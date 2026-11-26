@@ -34,3 +34,27 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+  e2e:
+    name: End-to-end tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-monorepo
+
+      - name: Install the Playwright browser
+        run: pnpm --filter @sigle/sigle exec playwright install --with-deps chromium
+
+      - name: Run the end-to-end tests
+        run: pnpm e2e
+
+      - name: Upload the Playwright report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            apps/sigle/e2e/playwright-report/
+            apps/sigle/e2e/test-results/
+          retention-days: 7

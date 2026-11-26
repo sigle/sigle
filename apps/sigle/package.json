@@ -9,6 +9,7 @@
   "scripts": {
     "build": "next build --webpack",
     "dev": "next dev",
+    "e2e": "playwright test --config e2e/playwright.config.ts",
     "start": "next start",
     "test": "vp test"
   },
@@ -90,7 +91,10 @@
     "zustand": "5.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.65.1",
     "@posthog/nextjs-config": "1.12.2",
+    "@stacks/encryption": "7.7.0",
+    "@stacks/transactions": "7.7.0",
     "@tailwindcss/postcss": "4.3.5",
     "@tailwindcss/typography": "0.5.20",
     "@testing-library/jest-dom": "8.0.0",

@@ -33,6 +33,9 @@ pnpm vp check
 # Run all tests
 pnpm test
 
+# Run the website end-to-end tests (Playwright, see CONTRIBUTING.md)
+pnpm e2e
+
 # Sync vendored reference repositories (e.g., Effect)
 pnpm repos:sync
 ```
