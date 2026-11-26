@@ -75,7 +75,6 @@ export default defineConfig({
           "@nkzw/no-instanceof": "off",
           "@nkzw/require-use-effect-arguments": "off",
           "no-console": "off",
-          "jsx-a11y/alt-text": "off",
           "react/immutability": "off",
           "react/no-unknown-property": "off",
           "react/purity": "off",

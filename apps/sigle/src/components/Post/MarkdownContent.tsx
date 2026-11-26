@@ -50,13 +50,17 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
         remarkPlugins={[remarkGfm]}
         urlTransform={customUrlTransform}
         components={{
-          img: ({ node: _node, src, ...props }) => {
+          img: ({ node: _node, src, alt, ...props }) => {
             if (!src || src instanceof Blob) {
               return null;
             }
 
             return (
-              <img {...props} src={resolveImageUrl(src, { gateway: true })} />
+              <img
+                {...props}
+                alt={alt ?? ""}
+                src={resolveImageUrl(src, { gateway: true })}
+              />
             );
           },
           a: ({ node, href, ...props }) => {
