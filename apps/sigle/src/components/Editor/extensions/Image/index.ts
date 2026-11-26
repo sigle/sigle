@@ -75,8 +75,8 @@ export const TipTapImage = TipTapImageBase.extend<
     // does not end the destination, and whitespace, which is never valid in a
     // URL, is encoded.
     const destination = src
-      .replace(/[\\()]/g, String.raw`\$&`)
-      .replace(/\s/g, encodeURIComponent);
+      .replaceAll(/[\\()]/g, String.raw`\$&`)
+      .replaceAll(/\s/g, encodeURIComponent);
 
     return title
       ? `![${alt}](${destination} "${title}")`

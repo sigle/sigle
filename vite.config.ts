@@ -100,7 +100,6 @@ export default defineConfig({
           "unicorn/no-invalid-fetch-options": "off",
           "unicorn/prefer-at": "off",
           "unicorn/prefer-dom-node-append": "off",
-          "unicorn/prefer-string-replace-all": "off",
           "unicorn/prefer-string-slice": "off",
           "unicorn/text-encoding-identifier-case": "off",
         },
