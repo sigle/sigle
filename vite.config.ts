@@ -83,7 +83,6 @@ export default defineConfig({
           "typescript/no-misused-promises": "off",
           "typescript/no-unsafe-argument": "off",
           "typescript/no-unsafe-assignment": "off",
-          "typescript/no-unsafe-call": "off",
           "typescript/no-unsafe-return": "off",
           "typescript/only-throw-error": "off",
           "typescript/require-array-sort-compare": "off",
