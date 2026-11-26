@@ -1,3 +1,4 @@
+import type { Schema } from "effect";
 import {
   Cause,
   Context,
@@ -8,7 +9,6 @@ import {
   Metric,
   Option,
   Schedule,
-  Schema,
 } from "effect";
 import { PersistedQueue } from "effect/persistence";
 

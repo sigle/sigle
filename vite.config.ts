@@ -81,7 +81,6 @@ export default defineConfig({
           "react/set-state-in-effect": "off",
           "react/use-memo": "off",
           "typescript/array-type": "off",
-          "typescript/consistent-type-imports": "off",
           "typescript/no-floating-promises": "off",
           "typescript/no-import-type-side-effects": "off",
           "typescript/no-misused-promises": "off",
