@@ -1,7 +1,7 @@
 import { Result } from "better-result";
 import { sigleApiFetchClient } from "@/lib/sigle";
 
-const PUBLISH_POLLING_INTERVAL_MILLIS = 2_000;
+const PUBLISH_POLLING_INTERVAL_MILLIS = 2000;
 
 const PUBLISH_TIMEOUT_MILLIS = 180_000;
 

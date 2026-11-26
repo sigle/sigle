@@ -20,7 +20,7 @@ class HttpStatusError extends Data.TaggedError("HttpStatusError")<{
 
 describe("telemetry service", () => {
   it("serializes BigInt values to string in JSON", () => {
-    const payload = { height: 12345678901234567890n };
+    const payload = { height: 12_345_678_901_234_567_890n };
     expect(JSON.stringify(payload)).toBe('{"height":"12345678901234567890"}');
   });
 
