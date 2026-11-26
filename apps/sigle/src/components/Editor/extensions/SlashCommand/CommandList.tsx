@@ -25,8 +25,13 @@ export const CommandList = forwardRef<CommandListRef, CommandListProps>(
     const containerRef = useRef<HTMLDivElement>(null);
     const [selectedIndex, setSelectedIndex] = useState(0);
 
+    const [selectedItems, setSelectedItems] = useState(items);
+
     // When filter is happening reset to index 0
-    useEffect(() => setSelectedIndex(0), [items]);
+    if (items !== selectedItems) {
+      setSelectedItems(items);
+      setSelectedIndex(0);
+    }
 
     const selectItem = (index: number) => {
       const item = items[index];

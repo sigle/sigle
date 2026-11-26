@@ -107,6 +107,8 @@ export const EditorSave = () => {
   useEffect(() => {
     if (forceSave && editor) {
       changeCountRef.current += 1;
+      // The effect starts a save, which the state shows.
+      // oxlint-disable-next-line react/set-state-in-effect
       setSaveState("saving");
       onAutoSave();
     }

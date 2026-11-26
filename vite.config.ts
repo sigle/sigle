@@ -86,7 +86,6 @@ export default defineConfig({
         files: ["**"],
         rules: {
           "react/no-unknown-property": "off",
-          "react/set-state-in-effect": "off",
         },
       },
     ],
