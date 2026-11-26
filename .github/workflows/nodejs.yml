@@ -55,6 +55,6 @@ jobs:
         with:
           name: playwright-report
           path: |
-            apps/sigle/e2e/playwright-report/
-            apps/sigle/e2e/test-results/
+            apps/sigle/playwright-report/
+            apps/sigle/test-results/
           retention-days: 7

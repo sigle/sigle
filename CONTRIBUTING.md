@@ -90,4 +90,4 @@ pnpm e2e auth.test.ts
 E2E_SKIP_BUILD=1 pnpm e2e
 ```
 
-A failed test leaves a trace in `apps/sigle/e2e/test-results`, open it with `pnpm exec playwright show-trace <trace.zip>`.
+A failed test leaves a trace in `apps/sigle/test-results`, open it with `pnpm exec playwright show-trace <trace.zip>`.
