@@ -78,7 +78,10 @@ export const AuthRoutesLayer = Layer.unwrap(
         const webResponse = yield* auth.handler(
           request.method === "GET" || request.method === "HEAD"
             ? webRequest
-            : new Request(webRequest, { body: yield* readAuthBody(request) }),
+            : new Request(webRequest, {
+                method: request.method,
+                body: yield* readAuthBody(request),
+              }),
         );
 
         return yield* webResponseToHttpResponse(webResponse);

@@ -92,7 +92,6 @@ export default defineConfig({
           "typescript/switch-exhaustiveness-check": "off",
           "typescript/use-unknown-in-catch-callback-variable": "off",
           "unicorn/consistent-function-scoping": "off",
-          "unicorn/no-invalid-fetch-options": "off",
         },
       },
     ],
