@@ -3,7 +3,9 @@ import { afterEach, describe, expect, it, vi } from "vite-plus/test";
 
 // openapi-fetch captures `fetch` when the client is created, so stub it
 // before importing the route module graph afresh.
-const callRoute = async (respond: (path: string) => Response) => {
+const callRoute = async (
+  respond: (path: string) => Response | Promise<Response>,
+) => {
   vi.stubGlobal("fetch", async (input: Request) =>
     respond(new URL(input.url).pathname),
   );
@@ -58,5 +60,43 @@ describe("rss feed route", () => {
     expect(response.headers.get("content-type")).toContain(
       "application/rss+xml",
     );
+    expect(response.headers.get("cache-control")).toBe("public, max-age=300");
+  });
+
+  it("requests the user and the posts in parallel", async () => {
+    let userResolved = false;
+    let postsRequestedBeforeUser = false;
+
+    const handlers = new Map<string, () => Promise<Response>>([
+      [
+        "/api/users/SP1",
+        async () => {
+          await new Promise((resolve) => {
+            setTimeout(resolve, 50);
+          });
+          userResolved = true;
+
+          return Response.json({ address: "SP1", profile: null });
+        },
+      ],
+      [
+        "/api/posts",
+        async () => {
+          postsRequestedBeforeUser = !userResolved;
+
+          return Response.json({
+            results: [],
+            limit: 100,
+            offset: 0,
+            total: 0,
+          });
+        },
+      ],
+    ]);
+
+    const response = await callRoute((path) => handlers.get(path)!());
+
+    expect(response.status).toBe(200);
+    expect(postsRequestedBeforeUser).toBe(true);
   });
 });
