@@ -16,6 +16,7 @@ import { resolveImageUrl } from "@/lib/images";
 import { PUBLISH_LIMITS } from "@/lib/plans";
 import { sigleApiClient } from "@/lib/sigle";
 import type { EditorPostFormData } from "./EditorFormProvider";
+import { useEditorStore } from "./store";
 
 interface EditorCoverImageProps {
   /** Whether the user can upload images, which is only on the Pro plan. */
@@ -34,6 +35,14 @@ export const EditorCoverImage = ({
 
   const { mutate: uploadImage, isPending: loadingUploadImage } =
     sigleApiClient.useMutation("post", "/api/drafts/{draftId}/images");
+
+  const setIsCoverUploading = useEditorStore(
+    (state) => state.setIsCoverUploading,
+  );
+
+  useEffect(() => {
+    setIsCoverUploading(loadingUploadImage);
+  }, [loadingUploadImage, setIsCoverUploading]);
 
   const onDrop = useCallback(
     (acceptedFiles: Array<File>) => {
