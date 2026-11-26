@@ -94,7 +94,7 @@ const waitForDraftStatus = (draftId: string, status: string) =>
     );
   });
 
-const waitForCompletedJobs = (expected: number) =>
+const waitForFailedJobs = (expected: number) =>
   Effect.gen(function* () {
     const admin = yield* JobAdminService;
 
@@ -105,7 +105,7 @@ const waitForCompletedJobs = (expected: number) =>
         (item) => item.queueName === publishDraftJob.name,
       );
 
-      if ((queue?.completed ?? 0) >= expected) {
+      if ((queue?.failed ?? 0) >= expected) {
         return stats;
       }
 
@@ -113,7 +113,7 @@ const waitForCompletedJobs = (expected: number) =>
     }
 
     return yield* Effect.die(
-      new Error(`timed out waiting for ${expected} completed jobs`),
+      new Error(`timed out waiting for ${expected} failed jobs`),
     );
   });
 
@@ -666,7 +666,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           .from(draft)
           .where(eq(draft.id, "draft-invalid"));
 
-        const stats = yield* waitForCompletedJobs(1);
+        const stats = yield* waitForFailedJobs(1);
 
         expect({
           reported: reportedMessages.length,
@@ -678,8 +678,8 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           reported: 1,
           uploads: 0,
           txStatus: "FAILED",
-          completed: 1,
-          failed: 0,
+          completed: 0,
+          failed: 1,
         });
       }).pipe(Effect.provide(fullLayer));
     }),

@@ -257,7 +257,7 @@ describe(defineJob, () => {
   );
 
   it.live(
-    "completes non-retryable failures without consuming remaining attempts",
+    "records non-retryable failures as failed at once and lets admins retry them",
     () =>
       Effect.gen(function* () {
         const attemptsSeen: Array<number> = [];
@@ -266,6 +266,7 @@ describe(defineJob, () => {
           [];
 
         const done = yield* Deferred.make<void>();
+        const retried = yield* Deferred.make<void>();
 
         const reporter = ErrorReporter.make(({ attributes, error }) => {
           reports.push({
@@ -274,7 +275,7 @@ describe(defineJob, () => {
               decodeJobFailureAttributes(attributes),
             )?.payload,
           });
-          Deferred.doneUnsafe(done, Exit.void);
+          Deferred.doneUnsafe(reports.length >= 2 ? retried : done, Exit.void);
         });
 
         const job = defineJob({
@@ -303,7 +304,7 @@ describe(defineJob, () => {
 
           const stats = yield* waitForQueueStats(
             "core-test-terminal",
-            (queue) => queue.completed === 1,
+            (queue) => queue.failed === 1,
           );
 
           expect({
@@ -317,11 +318,18 @@ describe(defineJob, () => {
               queueName: "core-test-terminal",
               pending: 0,
               active: 0,
-              completed: 1,
-              failed: 0,
+              completed: 0,
+              failed: 1,
               oldestPendingAgeMillis: null,
             },
           });
+
+          const admin = yield* JobAdminService;
+          expect(
+            yield* admin.retryFailedJob("core-test-terminal", "terminal-1"),
+          ).toBe(true);
+          yield* Deferred.await(retried);
+          expect(attemptsSeen).toHaveLength(2);
         }).pipe(Effect.provide(layer));
       }),
   );
