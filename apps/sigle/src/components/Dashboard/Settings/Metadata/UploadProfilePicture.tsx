@@ -32,9 +32,14 @@ export const UploadProfilePicture = ({
     async (acceptedFiles: File[]) => {
       const file = acceptedFiles[0];
 
-      if (!file) return;
+      if (!file) {
+        return;
+      }
 
-      if (loadingUploadImage) return;
+      if (loadingUploadImage) {
+        return;
+      }
+
       posthog.capture("profile_image_upload_start", {});
 
       // SAFETY: the endpoint reads a raw binary body, but openapi-typescript

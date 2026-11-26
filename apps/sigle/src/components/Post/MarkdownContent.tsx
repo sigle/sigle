@@ -52,7 +52,9 @@ export const PostMarkdownContent = ({ content }: PostMarkdownContentProps) => {
         components={{
           // oxlint-disable-next-line no-unused-vars
           img: ({ node: _node, src, ...props }) => {
-            if (!src || src instanceof Blob) return null;
+            if (!src || src instanceof Blob) {
+              return null;
+            }
 
             return (
               // oxlint-disable-next-line no-img-element

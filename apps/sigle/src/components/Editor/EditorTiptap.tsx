@@ -215,7 +215,9 @@ export const EditorTipTap = ({
       <UpgradeDialog
         open={imageUpgradeTrigger !== null}
         onOpenChange={(open) => {
-          if (!open) setImageUpgradeTrigger(null);
+          if (!open) {
+            setImageUpgradeTrigger(null);
+          }
         }}
         trigger={imageUpgradeTrigger ?? "slash_image"}
         title="Upload images with Pro"

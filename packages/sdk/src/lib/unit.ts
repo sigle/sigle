@@ -10,22 +10,27 @@ const BTC_DECIMALS = 8;
  * Multiplies a string representation of a number by a given exponent of base 10 (10exponent).
  */
 export function parseUnits(value: string, decimals: number): bigint {
-  if (!/^(-?)([0-9]*)\.?([0-9]*)$/.test(value))
+  if (!/^(-?)([0-9]*)\.?([0-9]*)$/.test(value)) {
     throw new InvalidDecimalNumberError({ value });
+  }
 
   let [integer, fraction = "0"] = value.split(".");
 
   const negative = integer.startsWith("-");
 
-  if (negative) integer = integer.slice(1);
+  if (negative) {
+    integer = integer.slice(1);
+  }
 
   // trim trailing zeros.
   fraction = fraction.replace(/(0+)$/, "");
 
   // round off if the fraction is larger than the number of decimals.
   if (decimals === 0) {
-    if (Math.round(Number(`.${fraction}`)) === 1)
+    if (Math.round(Number(`.${fraction}`)) === 1) {
       integer = `${BigInt(integer) + 1n}`;
+    }
+
     fraction = "";
   } else if (fraction.length > decimals) {
     const [left, unit, right] = [
@@ -36,9 +41,11 @@ export function parseUnits(value: string, decimals: number): bigint {
 
     const rounded = Math.round(Number(`${unit}.${right}`));
 
-    if (rounded > 9)
+    if (rounded > 9) {
       fraction = `${BigInt(left) + BigInt(1)}0`.padStart(left.length + 1, "0");
-    else fraction = `${left}${rounded}`;
+    } else {
+      fraction = `${left}${rounded}`;
+    }
 
     if (fraction.length > decimals) {
       fraction = fraction.slice(1);
@@ -63,7 +70,9 @@ export function formatUnits(value: bigint, decimals: number) {
 
   const negative = display.startsWith("-");
 
-  if (negative) display = display.slice(1);
+  if (negative) {
+    display = display.slice(1);
+  }
 
   display = display.padStart(decimals, "0");
 

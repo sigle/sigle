@@ -340,9 +340,13 @@ export const createAuthenticatedClient = (
 
     const overrides: Parameters<typeof createTestUser>[0] = {};
 
-    if (options.userId !== undefined) overrides.id = options.userId;
+    if (options.userId !== undefined) {
+      overrides.id = options.userId;
+    }
 
-    if (options.plan !== undefined) overrides.plan = options.plan;
+    if (options.plan !== undefined) {
+      overrides.plan = options.plan;
+    }
 
     const user = yield* createTestUser(overrides);
 

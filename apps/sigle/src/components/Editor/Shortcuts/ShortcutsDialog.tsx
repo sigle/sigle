@@ -72,11 +72,17 @@ const sections: { title: string; items: Shortcut[] }[] = [
 
 /** The label of `key` on the user's keyboard. */
 const keyLabel = (key: Key, isMac: boolean) => {
-  if (key === "Mod") return isMac ? "⌘" : "Ctrl";
+  if (key === "Mod") {
+    return isMac ? "⌘" : "Ctrl";
+  }
 
-  if (isMac && key === "Shift") return "⇧";
+  if (isMac && key === "Shift") {
+    return "⇧";
+  }
 
-  if (isMac && key === "Alt") return "⌥";
+  if (isMac && key === "Alt") {
+    return "⌥";
+  }
 
   return key;
 };

@@ -95,7 +95,6 @@ export default defineConfig({
       "anti-slop-effect/prefer-effect-match": "error",
 
       "arrow-body-style": "off",
-      curly: "off",
       complexity: "off",
       "explicit-function-return-type": "off",
       "explicit-module-boundary-types": "off",

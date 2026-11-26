@@ -66,7 +66,9 @@ export const TipTapImage = TipTapImageBase.extend<
 
     // An image still uploading shows a local `blob:` preview, which is not
     // part of the post: it only exists in this tab.
-    if (!src || src.startsWith("blob:")) return "";
+    if (!src || src.startsWith("blob:")) {
+      return "";
+    }
 
     const alt = node.attrs?.alt ?? "";
     const title = node.attrs?.title ?? "";
@@ -96,8 +98,9 @@ export const TipTapImage = TipTapImageBase.extend<
 
       // Each insertion moves the selection after its image, so the files keep
       // their order.
-      if (position !== undefined)
+      if (position !== undefined) {
         this.editor.commands.setTextSelection(position);
+      }
 
       for (const file of files) {
         this.editor.chain().focus().setImageFromFile({ file }).run();
@@ -114,7 +117,9 @@ export const TipTapImage = TipTapImageBase.extend<
 
             // Moving an image already in the post carries no file, and is
             // left to ProseMirror.
-            if (files.length === 0) return false;
+            if (files.length === 0) {
+              return false;
+            }
 
             event.preventDefault();
             insertFiles(
@@ -129,11 +134,15 @@ export const TipTapImage = TipTapImageBase.extend<
             // An image copied from a web page also comes with HTML linking to
             // it, which ProseMirror pastes as an image from that URL, and text
             // copied from a document can come with an image of itself.
-            if (hasPastableHtml(event.clipboardData)) return false;
+            if (hasPastableHtml(event.clipboardData)) {
+              return false;
+            }
 
             const files = getImageFiles(event.clipboardData);
 
-            if (files.length === 0) return false;
+            if (files.length === 0) {
+              return false;
+            }
 
             insertFiles(files);
 
@@ -156,7 +165,9 @@ export const TipTapImage = TipTapImageBase.extend<
         ({ chain, editor }) => {
           const { uploadFile } = this.options;
 
-          if (!uploadFile) return false;
+          if (!uploadFile) {
+            return false;
+          }
 
           const uploadId = crypto.randomUUID();
           // We show a preview of  the image image as uploading can take a while.
@@ -307,7 +318,9 @@ export const TipTapImage = TipTapImageBase.extend<
 const hasPastableHtml = (data: DataTransfer | null) => {
   const html = data?.getData("text/html");
 
-  if (!html) return false;
+  if (!html) {
+    return false;
+  }
 
   const document = new DOMParser().parseFromString(html, "text/html");
   const images = Array.from(document.querySelectorAll("img"));
@@ -332,7 +345,9 @@ export const hasPendingImageUploads = (doc: ProseMirrorNode): boolean => {
   let pending = false;
 
   doc.descendants((node) => {
-    if (node.type.name === "image" && node.attrs.uploadId) pending = true;
+    if (node.type.name === "image" && node.attrs.uploadId) {
+      pending = true;
+    }
 
     return !pending;
   });

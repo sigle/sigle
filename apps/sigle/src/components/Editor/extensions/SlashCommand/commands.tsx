@@ -87,10 +87,15 @@ export const slashCommands: SlashCommandsCommand[] = [
       input.onchange = async () => {
         const file = input.files?.[0];
 
-        if (!file) return;
+        if (!file) {
+          return;
+        }
+
         const [mime] = file.type.split("/");
 
-        if (mime !== "image") return;
+        if (mime !== "image") {
+          return;
+        }
 
         if (!range) {
           editor
