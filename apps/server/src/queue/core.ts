@@ -85,7 +85,7 @@ export const truncatePayload = <E>(
   payload: E,
   maxLength = MAX_PAYLOAD_ATTRIBUTE_LENGTH,
 ): string => {
-  let encoded = "";
+  let encoded: string;
 
   try {
     encoded = JSON.stringify(payload) ?? String(payload);

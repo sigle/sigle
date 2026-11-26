@@ -110,7 +110,7 @@ export const useStacksLogin = () => {
       version: "1",
     });
 
-    let signature = "";
+    let signature: string;
 
     try {
       const response = await request("stx_signMessage", {

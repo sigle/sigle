@@ -175,7 +175,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
 
         completeStep("preparing");
 
-        let signature = "";
+        let signature: string;
 
         try {
           const { signature: _, ...metadataToSign } = metadata;
