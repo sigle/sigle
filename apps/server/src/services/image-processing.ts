@@ -1,6 +1,6 @@
 import { Context, Data, Duration, Effect, Layer, Semaphore } from "effect";
-import type { ImageOptimizationError } from "@/lib/images";
 import type {
+  ImageOptimizationError,
   OptimizeImageOptions,
   OptimizedImage,
   ThumbhashResult,
