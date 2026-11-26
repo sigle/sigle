@@ -1,11 +1,12 @@
 "use client";
 
+import type { paths } from "@sigle/sdk";
 import { request } from "@stacks/connect";
 import { IconArrowLeft, IconRefresh } from "@tabler/icons-react";
 import { Result } from "better-result";
 import { useRouter } from "next/navigation";
 import { usePostHog } from "posthog-js/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { toast } from "sonner";
 import { MultiStep } from "@/components/Shared/MultiStep";
@@ -30,9 +31,14 @@ import { waitForPublishCompletion } from "./wait-for-publish-completion";
 
 interface PublishDialogProps {
   postId: string;
+  /** The draft's publish status when the editor loaded it. */
+  publishStatus?: paths["/api/drafts/{draftId}"]["get"]["responses"][200]["content"]["application/json"]["publishStatus"];
 }
 
-export const PublishDialog = ({ postId }: PublishDialogProps) => {
+export const PublishDialog = ({
+  postId,
+  publishStatus,
+}: PublishDialogProps) => {
   const posthog = usePostHog();
   const router = useRouter();
   const { handleSubmit, watch } = useFormContext<EditorPostFormData>();
@@ -40,29 +46,109 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
   const editor = useEditorStore((state) => state.editor);
   const publishOpen = useEditorStore((state) => state.publishOpen);
   const setPublishOpen = useEditorStore((state) => state.setPublishOpen);
-  const [publishingLoading, setPublishingLoading] = useState(false);
+  // A draft reopened while its publish runs on the server: show its progress
+  // instead of an editor whose saves are refused until it finishes.
+  const isPublishInProgress =
+    publishStatus === "pending" || publishStatus === "processing";
+  const [publishingLoading, setPublishingLoading] =
+    useState(isPublishInProgress);
 
   const { mutateAsync: publishDraft } = sigleApiClient.useMutation(
     "post",
     "/api/drafts/{draftId}/publish",
   );
 
-  const { steps, start, completeStep, setStepError, reset } = useMultiStep({
-    steps: [
-      { id: "preparing", title: "Preparing metadata & cover image" },
-      { id: "signature", title: "Signing with Stacks wallet" },
-      { id: "arweave", title: "Uploading data to Arweave" },
-    ] as const,
-  });
+  const { steps, start, completeStep, setStepLoading, setStepError, reset } =
+    useMultiStep({
+      steps: [
+        { id: "preparing", title: "Preparing metadata & cover image" },
+        { id: "signature", title: "Signing with Stacks wallet" },
+        { id: "arweave", title: "Uploading data to Arweave" },
+      ] as const,
+    });
+
+  // Set once the server accepted the signed metadata (202): from then on the
+  // publish runs on the server, and the dialog only follows its status.
+  const acceptedRef = useRef(false);
+  const pollingRef = useRef<AbortController | null>(null);
+  const resumedRef = useRef(false);
+
+  useEffect(
+    () => () => {
+      pollingRef.current?.abort();
+      // A remount (React strict mode) must resume the publish again.
+      resumedRef.current = false;
+    },
+    [],
+  );
 
   const hasError = steps.some((step) => step.status === "error");
 
   const isSignaturePending =
     steps.find((s) => s.id === "signature")?.status === "pending";
 
+  const followPublish = async () => {
+    pollingRef.current?.abort();
+    const controller = new AbortController();
+    pollingRef.current = controller;
+
+    const completion = await waitForPublishCompletion(postId, {
+      signal: controller.signal,
+    });
+
+    // Cancelled because the dialog is gone or a newer poll took over.
+    if (
+      controller.signal.aborted ||
+      (completion.isErr() && "cancelled" in completion.error)
+    ) {
+      return;
+    }
+
+    if (completion.isErr()) {
+      posthog.capture("post_publish_error", {
+        postId,
+        error: completion.error,
+      });
+      setStepError("arweave", completion.error.message);
+
+      return;
+    }
+
+    completeStep("arweave");
+
+    const { postId: targetPostId, arweaveTxId } = completion.value;
+    posthog.capture("post_publish_success", {
+      postId: targetPostId,
+      arweaveId: arweaveTxId,
+    });
+
+    // wait 1s for a better UX
+    await new Promise((resolve) => {
+      setTimeout(resolve, 1000);
+    });
+
+    if (controller.signal.aborted) {
+      return;
+    }
+
+    setPublishOpen(false);
+    router.push(
+      Routes.post(
+        { postId: targetPostId },
+        {
+          search: {
+            published: true,
+          },
+        },
+      ),
+    );
+  };
+
   const onSubmit = () => {
     void handleSubmit(
       async (data) => {
+        acceptedRef.current = false;
+
         // Wait for uploads instead of publishing without them: an image still
         // uploading is left out of the content, and a new cover isn't set yet.
         if (
@@ -167,42 +253,8 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
           return;
         }
 
-        const publishStatus = await waitForPublishCompletion(postId);
-
-        if (publishStatus.isErr()) {
-          posthog.capture("post_publish_error", {
-            postId,
-            error: publishStatus.error,
-          });
-          setStepError("arweave", publishStatus.error.message);
-
-          return;
-        }
-
-        completeStep("arweave");
-
-        const { postId: targetPostId, arweaveTxId } = publishStatus.value;
-        posthog.capture("post_publish_success", {
-          postId: targetPostId,
-          arweaveId: arweaveTxId,
-        });
-
-        // wait 1s for a better UX
-        await new Promise((resolve) => {
-          setTimeout(resolve, 1000);
-        });
-
-        setPublishOpen(false);
-        router.push(
-          Routes.post(
-            { postId: targetPostId },
-            {
-              search: {
-                published: true,
-              },
-            },
-          ),
-        );
+        acceptedRef.current = true;
+        await followPublish();
       },
       (errors) => {
         toast.error("Error publishing", {
@@ -211,6 +263,32 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
       },
     )();
   };
+
+  const onRetry = () => {
+    if (acceptedRef.current) {
+      setStepLoading("arweave");
+      void followPublish();
+      return;
+    }
+
+    onSubmit();
+  };
+
+  // Follow a publish already running on the server, see `isPublishInProgress`.
+  useEffect(() => {
+    if (resumedRef.current || !isPublishInProgress) {
+      return;
+    }
+
+    resumedRef.current = true;
+    acceptedRef.current = true;
+    setPublishOpen(true);
+    start();
+    completeStep("preparing");
+    completeStep("signature");
+    void followPublish();
+    // oxlint-disable-next-line exhaustive-deps
+  }, [isPublishInProgress]);
 
   const handleBackToReview = () => {
     setPublishingLoading(false);
@@ -272,7 +350,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
                   <IconArrowLeft size={14} />
                   Back to review
                 </Button>
-                <Button type="button" size="sm" onClick={onSubmit}>
+                <Button type="button" size="sm" onClick={onRetry}>
                   <IconRefresh size={14} />
                   Retry
                 </Button>

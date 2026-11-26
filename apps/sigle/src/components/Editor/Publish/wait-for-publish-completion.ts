@@ -10,7 +10,13 @@ export const waitForPublishCompletion = async (
   {
     timeoutMillis = PUBLISH_TIMEOUT_MILLIS,
     pollIntervalMillis = PUBLISH_POLLING_INTERVAL_MILLIS,
-  }: { timeoutMillis?: number; pollIntervalMillis?: number } = {},
+    signal,
+  }: {
+    timeoutMillis?: number;
+    pollIntervalMillis?: number;
+    /** Stops polling, for example when the dialog following it unmounts. */
+    signal?: AbortSignal;
+  } = {},
 ) => {
   const deadline = Date.now() + timeoutMillis;
 
@@ -18,9 +24,21 @@ export const waitForPublishCompletion = async (
     message: "Publishing timed out, please try again",
   });
 
+  const cancelled = Result.err({
+    message: "Publishing status check was cancelled",
+    cancelled: true as const,
+  });
+
   while (Date.now() < deadline) {
+    if (signal?.aborted) {
+      return cancelled;
+    }
+
     // A status request that never answers must not outlive the deadline.
-    const signal = AbortSignal.timeout(deadline - Date.now());
+    const timeoutSignal = AbortSignal.timeout(deadline - Date.now());
+    const requestSignal = signal
+      ? AbortSignal.any([timeoutSignal, signal])
+      : timeoutSignal;
 
     const response = await sigleApiFetchClient
       .GET("/api/drafts/{draftId}/publish", {
@@ -29,13 +47,23 @@ export const waitForPublishCompletion = async (
             draftId,
           },
         },
-        signal,
+        signal: requestSignal,
       })
       // openapi-fetch throws on network errors and aborts instead of returning
       // `response.error`.
-      .catch(() =>
-        signal.aborted ? ("timeout" as const) : ("failed" as const),
-      );
+      .catch(() => {
+        if (signal?.aborted) {
+          return "cancelled" as const;
+        }
+
+        return timeoutSignal.aborted
+          ? ("timeout" as const)
+          : ("failed" as const);
+      });
+
+    if (response === "cancelled") {
+      return cancelled;
+    }
 
     if (response === "timeout") {
       return timedOut;
@@ -67,6 +95,10 @@ export const waitForPublishCompletion = async (
     await new Promise((resolve) => {
       setTimeout(resolve, pollIntervalMillis);
     });
+
+    if (signal?.aborted) {
+      return cancelled;
+    }
   }
 
   return timedOut;

@@ -43,7 +43,10 @@ export default function PostEditPage(props: PostEditPageProps) {
         <EditorTipTap canUploadImages={canUploadImages} />
       </div>
       <EditorSettings />
-      <PublishDialog postId={params.postId} />
+      <PublishDialog
+        postId={params.postId}
+        publishStatus={post.publishStatus}
+      />
     </EditorFormProvider>
   );
 }
