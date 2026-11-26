@@ -50,6 +50,12 @@ export default defineConfig({
       typeAware: true,
       typeCheck: true,
     },
+    rules: {
+      // Namespace imports are the documented form for zod (`* as z`), the
+      // Drizzle schema passed whole to `drizzle()` and Better Auth, and the
+      // `* as React` the shadcn CLI generates in components/ui.
+      "import/no-namespace": "off",
+    },
     overrides: [
       {
         files: ["apps/server/**"],
@@ -71,7 +77,6 @@ export default defineConfig({
           "no-console": "off",
           "no-useless-assignment": "off",
           "prefer-promise-reject-errors": "off",
-          "import/no-namespace": "off",
           "jsx-a11y/alt-text": "off",
           "react/immutability": "off",
           "react/no-unknown-property": "off",
