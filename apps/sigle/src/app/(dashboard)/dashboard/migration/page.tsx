@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiFetchClient } from "@/lib/sigle";
+import { readLegacyJson } from "./read-legacy-json";
 
 interface Story {
   /**
@@ -93,14 +94,11 @@ export default function MigrationPage() {
   const [loadingPostId, setLoadingPostId] = useState<string | null>(null);
 
   const fetchPosts = async (): Promise<SubsetStory[]> => {
-    const res = await fetch(`/api/migration/list?username=${username.value}`);
-    const data = await res.json();
+    const res = await fetch(
+      `/api/migration/list?username=${encodeURIComponent(username.value)}`,
+    );
 
-    if (!res.ok) {
-      throw new Error(data.message);
-    }
-
-    return data;
+    return readLegacyJson<SubsetStory[]>(res, "Failed to load your posts");
   };
 
   const handleMigrate = async (id: string) => {
@@ -109,10 +107,10 @@ export default function MigrationPage() {
     try {
       // 1. Fetch the post from old API
       const res = await fetch(
-        `/api/migration/${id}?username=${username.value}`,
+        `/api/migration/${encodeURIComponent(id)}?username=${encodeURIComponent(username.value)}`,
       );
 
-      const data: Story = await res.json();
+      const data = await readLegacyJson<Story>(res, "Failed to load the post");
       console.log("handleMigrate", data);
 
       // 2. Create a new draft
