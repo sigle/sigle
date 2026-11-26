@@ -24,6 +24,27 @@ export interface SlashCommandsCommand {
   command: ({ editor, range }: { editor: Editor; range?: Range }) => void;
 }
 
+const getVirtualElement = (
+  clientRect: (() => DOMRect | null) | null | undefined,
+): VirtualElement => ({
+  getBoundingClientRect: () => {
+    const rect = clientRect?.();
+
+    return (
+      rect ?? {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+      }
+    );
+  },
+});
+
 export const SlashCommands = Extension.create<{
   commands: Array<SlashCommandsCommand>;
   filterCommands: (
@@ -74,27 +95,6 @@ export const SlashCommands = Extension.create<{
           let reactRenderer: ReactRenderer<CommandListRef> | null = null;
           let container: HTMLDivElement | null = null;
           let cleanup: (() => void) | null = null;
-
-          const getVirtualElement = (
-            clientRect: (() => DOMRect | null) | null | undefined,
-          ): VirtualElement => ({
-            getBoundingClientRect: () => {
-              const rect = clientRect?.();
-
-              return (
-                rect ?? {
-                  x: 0,
-                  y: 0,
-                  width: 0,
-                  height: 0,
-                  top: 0,
-                  right: 0,
-                  bottom: 0,
-                  left: 0,
-                }
-              );
-            },
-          });
 
           const updatePosition = (
             clientRect: (() => DOMRect | null) | null | undefined,

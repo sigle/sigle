@@ -73,6 +73,13 @@ export default defineConfig({
         },
       },
       {
+        // Test helpers stay next to the one test that uses them.
+        files: ["**/*.test.ts", "**/*.test.tsx"],
+        rules: {
+          "unicorn/consistent-function-scoping": "off",
+        },
+      },
+      {
         // Rules of @cloudflare/oxlint-config that the code doesn't pass yet,
         // off until each is fixed or kept off with a reason. Last, so the
         // preset's file overrides don't turn them back on.
@@ -83,7 +90,6 @@ export default defineConfig({
           "react/purity": "off",
           "react/set-state-in-effect": "off",
           "react/use-memo": "off",
-          "unicorn/consistent-function-scoping": "off",
         },
       },
     ],

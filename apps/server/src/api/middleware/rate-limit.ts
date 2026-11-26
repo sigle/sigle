@@ -107,23 +107,27 @@ export class RateLimitPolicy extends Context.Service<
   RateLimitPolicyName
 >()("sigle/RateLimitPolicy") {}
 
+/**
+ * The 16-bit groups of one side of an IPv6 `::`, with an embedded IPv4 address
+ * as its two groups.
+ */
+const parseIpv6Part = (part: string) =>
+  part === ""
+    ? []
+    : part.split(":").flatMap((group) => {
+        if (!group.includes(".")) {
+          return [Number.parseInt(group, 16)];
+        }
+
+        const [a = 0, b = 0, c = 0, d = 0] = group.split(".").map(Number);
+
+        return [a * 256 + b, c * 256 + d];
+      });
+
 const ipv6Groups = (address: string): ReadonlyArray<number> => {
-  const parse = (part: string) =>
-    part === ""
-      ? []
-      : part.split(":").flatMap((group) => {
-          if (!group.includes(".")) {
-            return [Number.parseInt(group, 16)];
-          }
-
-          const [a = 0, b = 0, c = 0, d = 0] = group.split(".").map(Number);
-
-          return [a * 256 + b, c * 256 + d];
-        });
-
   const [head = "", tail] = address.split("::");
-  const start = parse(head);
-  const end = tail === undefined ? [] : parse(tail);
+  const start = parseIpv6Part(head);
+  const end = tail === undefined ? [] : parseIpv6Part(tail);
 
   return [
     ...start,

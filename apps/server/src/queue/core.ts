@@ -269,6 +269,18 @@ export const defineJob = <
   const onFinalFailure = options.onFinalFailure;
   const reportPayload = options.reportPayload;
 
+  const describePayload = (payload: S["Type"]): string => {
+    if (reportPayload === undefined) {
+      return REDACTED_PAYLOAD_JSON;
+    }
+
+    try {
+      return truncatePayload(reportPayload(payload));
+    } catch {
+      return REDACTED_PAYLOAD_JSON;
+    }
+  };
+
   /**
    * `PersistedQueue` methods require the payload schema's encoding/decoding
    * services; they are passed through to callers on purpose.
@@ -336,18 +348,6 @@ export const defineJob = <
         const durationMetric = jobDurationTimer.pipe(
           Metric.withAttributes({ queue: options.name }),
         );
-
-        const describePayload = (payload: S["Type"]): string => {
-          if (reportPayload === undefined) {
-            return REDACTED_PAYLOAD_JSON;
-          }
-
-          try {
-            return truncatePayload(reportPayload(payload));
-          } catch {
-            return REDACTED_PAYLOAD_JSON;
-          }
-        };
 
         const reportFailure = (
           cause: Cause.Cause<unknown>,
