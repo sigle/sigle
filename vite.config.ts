@@ -98,7 +98,6 @@ export default defineConfig({
           "unicorn/consistent-function-scoping": "off",
           "unicorn/no-invalid-fetch-options": "off",
           "unicorn/prefer-dom-node-append": "off",
-          "unicorn/text-encoding-identifier-case": "off",
         },
       },
     ],
