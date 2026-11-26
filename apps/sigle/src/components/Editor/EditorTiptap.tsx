@@ -125,6 +125,7 @@ export const EditorTipTap = ({
                   headers: {
                     "Content-Type": file.type,
                   },
+                  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
                   body: file as never,
                   bodySerializer: () => file,
                 });

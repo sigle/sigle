@@ -86,7 +86,6 @@ export default defineConfig({
           "typescript/no-unsafe-call": "off",
           "typescript/no-unsafe-member-access": "off",
           "typescript/no-unsafe-return": "off",
-          "typescript/no-unsafe-type-assertion": "off",
           "typescript/only-throw-error": "off",
           "typescript/require-array-sort-compare": "off",
           "typescript/switch-exhaustiveness-check": "off",

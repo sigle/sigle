@@ -140,6 +140,7 @@ export const UpdateProfileMetadata = ({
           for (const [field, value] of Object.entries(bnsProfile)) {
             if (value !== null) {
               // SAFETY: the BNS profile fields are a subset of the form's.
+              // oxlint-disable-next-line typescript/no-unsafe-type-assertion
               setValue(field as keyof typeof bnsProfile, value, {
                 shouldValidate: true,
                 shouldDirty: true,

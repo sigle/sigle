@@ -72,6 +72,7 @@ const makeAuthDatabase = Effect.gen(function* () {
 
   // SAFETY: `rows` returns objects when drizzle asks for `object` rows and
   // value arrays otherwise, the shapes the overloads of each executor return.
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const executors = {
     get: (query, params, rowMode) =>
       rows(query, params, rowMode).then((found) => found[0]),
