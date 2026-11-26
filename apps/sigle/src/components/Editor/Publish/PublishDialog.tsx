@@ -227,7 +227,7 @@ export const PublishDialog = ({ postId }: PublishDialogProps) => {
     <Dialog open={publishOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="headline text-2xl leading-tight">
+          <DialogTitle className="headline text-2xl/tight">
             {publishingLoading
               ? type === "draft"
                 ? "Publishing your story"

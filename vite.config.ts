@@ -50,6 +50,13 @@ export default defineConfig({
       typeAware: true,
       typeCheck: true,
     },
+    settings: {
+      // Tailwind v4 reads the theme from the web app's stylesheet.
+      "better-tailwindcss": {
+        cwd: "./apps/sigle",
+        entryPoint: "./src/app/globals.css",
+      },
+    },
     rules: {
       // Namespace imports are the documented form for zod (`* as z`), the
       // Drizzle schema passed whole to `drizzle()` and Better Auth, and the
@@ -72,6 +79,30 @@ export default defineConfig({
           ...recommended.rules,
           // Flags Layer.provide chains in tests, where readability wins.
           "effecttsgo/multiple-effect-provide": "off",
+        },
+      },
+      {
+        files: ["apps/sigle/**"],
+        jsPlugins: ["eslint-plugin-better-tailwindcss"],
+        rules: {
+          // Class order is sorted by oxfmt's `sortTailwindcss`.
+          "better-tailwindcss/enforce-canonical-classes": "error",
+          "better-tailwindcss/no-conflicting-classes": "error",
+          "better-tailwindcss/no-deprecated-classes": "error",
+          "better-tailwindcss/no-duplicate-classes": "error",
+          "better-tailwindcss/no-unknown-classes": "error",
+          "better-tailwindcss/no-unnecessary-whitespace": "error",
+          "no-restricted-imports": [
+            "error",
+            {
+              paths: [
+                {
+                  name: "next/link",
+                  message: "Use components/Shared/NextLink instead",
+                },
+              ],
+            },
+          ],
         },
       },
       {

@@ -82,7 +82,7 @@ export const PostShareDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="headline text-2xl leading-tight">
+          <DialogTitle className="headline text-2xl/tight">
             Share this story
           </DialogTitle>
           <DialogDescription className="line-clamp-2">

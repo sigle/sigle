@@ -22,6 +22,7 @@ export const EditorBottomInfo = ({ editor }: EditorBottomInfoProps) => {
   });
 
   return (
+    // oxlint-disable-next-line better-tailwindcss/no-unknown-classes
     <div className="not-prose">
       <div className="fixed inset-x-0 bottom-0 mx-auto mb-8 max-w-3xl px-4">
         <div className="pointer-events-none flex items-center justify-end gap-3">

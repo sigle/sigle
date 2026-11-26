@@ -25,6 +25,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
   return (
     <Sonner
       theme={sonnerTheme}
+      // oxlint-disable-next-line better-tailwindcss/no-unknown-classes
       className="toaster group"
       icons={{
         success: <IconCircleCheck className="size-4" />,
