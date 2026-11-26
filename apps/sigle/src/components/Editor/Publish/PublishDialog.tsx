@@ -105,6 +105,13 @@ export const PublishDialog = ({
     }
 
     if (completion.isErr()) {
+      // The server gave up on this publish, so Retry has to sign and submit
+      // again. Network errors and timeouts keep following it: the publish may
+      // still be running.
+      if ("failed" in completion.error) {
+        acceptedRef.current = false;
+      }
+
       posthog.capture("post_publish_error", {
         postId,
         error: completion.error,

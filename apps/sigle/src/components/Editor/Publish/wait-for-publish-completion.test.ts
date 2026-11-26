@@ -71,6 +71,7 @@ describe("waitForPublishCompletion", () => {
 
     expect(result.isErr()).toBe(true);
     expect(errorMessage(result)).toBe("Failed to publish post");
+    expect(result.isErr() && "failed" in result.error).toBe(true);
   });
 
   it("returns the API error message", async () => {

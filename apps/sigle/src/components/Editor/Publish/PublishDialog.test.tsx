@@ -133,6 +133,27 @@ describe("PublishDialog", () => {
     expect(waitForCompletion).toHaveBeenCalledTimes(2);
   });
 
+  it("Retry after the server reports a failed publish signs again", async () => {
+    const user = userEvent.setup();
+    waitForCompletion
+      .mockResolvedValueOnce(
+        Result.err({ message: "Failed to publish post", failed: true }),
+      )
+      .mockResolvedValueOnce(Result.ok({ postId: "tx1", arweaveTxId: "tx1" }));
+
+    renderDialog();
+
+    await user.click(screen.getByRole("button", { name: "Publish now" }));
+    await user.click(await screen.findByRole("button", { name: "Retry" }));
+
+    await waitFor(() => {
+      expect(push).toHaveBeenCalledWith(expect.stringContaining("/p/tx1"));
+    }, NAVIGATION_TIMEOUT);
+    expect(push).toHaveBeenCalledTimes(1);
+    expect(request).toHaveBeenCalledTimes(2);
+    expect(mutateAsync).toHaveBeenCalledTimes(2);
+  });
+
   it("Retry before the publish was accepted starts over", async () => {
     const user = userEvent.setup();
     mutateAsync.mockRejectedValueOnce(new Error("Server error"));

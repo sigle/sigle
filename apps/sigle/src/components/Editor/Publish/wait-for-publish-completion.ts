@@ -82,7 +82,10 @@ export const waitForPublishCompletion = async (
     const { data } = response;
 
     if (data.status === "failed") {
-      return Result.err({ message: "Failed to publish post" });
+      return Result.err({
+        message: "Failed to publish post",
+        failed: true as const,
+      });
     }
 
     if (data.status === "completed" && data.postId) {
