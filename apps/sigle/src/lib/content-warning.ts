@@ -1,7 +1,5 @@
-import {
-  ContentWarning as MetadataContentWarning,
-  type paths,
-} from "@sigle/sdk";
+import type { paths } from "@sigle/sdk";
+import { ContentWarning as MetadataContentWarning } from "@sigle/sdk";
 
 export type ContentWarning = NonNullable<
   paths["/api/posts/{postId}"]["get"]["responses"]["200"]["content"]["application/json"]["contentWarning"]

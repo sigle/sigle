@@ -1,11 +1,13 @@
+import type {
+  MediaImageMetadata,
+  MetadataAttribute,
+  PostMetadata,
+} from "@sigle/sdk";
 import type { Editor } from "@tiptap/core";
 import {
   createPostMetadata,
-  type MediaImageMetadata,
   MediaImageMimeType,
-  type MetadataAttribute,
   MetadataAttributeType,
-  type PostMetadata,
   PostMetadataSchemaId,
 } from "@sigle/sdk";
 import { fileTypeFromBuffer } from "file-type";

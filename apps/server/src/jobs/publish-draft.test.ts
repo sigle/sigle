@@ -10,6 +10,8 @@ import {
   Layer,
   Schedule,
 } from "effect";
+import type { ArweaveUploadOptions } from "@/services/arweave";
+import type { PostHogEvent } from "@/services/posthog";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { draft, mediaImage, post, postOts } from "@/db/schema";
@@ -25,11 +27,10 @@ import {
   ArweaveService,
   ArweaveUploadError,
   ARWEAVE_TEST_UPLOAD,
-  type ArweaveUploadOptions,
 } from "@/services/arweave";
 import { ImageProcessingService } from "@/services/image-processing";
 import { OpenTimestampsService } from "@/services/opentimestamps";
-import { PostHogService, type PostHogEvent } from "@/services/posthog";
+import { PostHogService } from "@/services/posthog";
 import { createTestDraft, createTestUser } from "@/test/helpers";
 import { TestDatabaseLayer } from "@/test/layer";
 

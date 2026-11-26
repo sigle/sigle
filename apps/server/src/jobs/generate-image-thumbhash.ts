@@ -1,20 +1,19 @@
 import { eq } from "drizzle-orm";
 import { Data, Effect, Layer, Option, Schedule, Schema } from "effect";
 import { BlockList, isIPv4, isIPv6 } from "node:net";
+import type { ImageOptimizationError } from "@/lib/images";
+import type { TerminalJobError } from "@/queue/core";
+import type { ImageProcessingTimeoutError } from "@/services/image-processing";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { mediaImage } from "@/db/schema";
 import {
   detectImageFormat,
-  type ImageOptimizationError,
   mimeTypeForSharpFormat,
   resolveImageUrl,
 } from "@/lib/images";
-import { defineJob, terminal, type TerminalJobError } from "@/queue/core";
-import {
-  ImageProcessingService,
-  type ImageProcessingTimeoutError,
-} from "@/services/image-processing";
+import { defineJob, terminal } from "@/queue/core";
+import { ImageProcessingService } from "@/services/image-processing";
 
 export const GENERATE_IMAGE_THUMBHASH_QUEUE_NAME = "generate-image-thumbhash";
 

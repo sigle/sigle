@@ -1,4 +1,5 @@
-import { type JSONContent, Node, nodePasteRule } from "@tiptap/core";
+import type { JSONContent } from "@tiptap/core";
+import { Node, nodePasteRule } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import { EmbedComponent, globalPasteRegex, isValidUrl } from "./component";
 import { TWITTER_REGEX } from "./twitter";

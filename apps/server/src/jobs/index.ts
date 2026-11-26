@@ -1,37 +1,35 @@
+import type { Duration, Schedule } from "effect";
 import type { SqlClient } from "effect/sql";
-import { type Duration, Layer, type Schedule } from "effect";
+import { Layer } from "effect";
 import { PersistedQueue } from "effect/persistence";
 import type { AppConfig } from "@/config";
 import type { Database } from "@/db";
+import type { GenerateImageThumbhashJob } from "@/jobs/generate-image-thumbhash";
+import type { OpenTimestampsStampJob } from "@/jobs/opentimestamps-stamp";
+import type { OpenTimestampsUpgradeJob } from "@/jobs/opentimestamps-upgrade";
+import type { PublishDraftJob } from "@/jobs/publish-draft";
 import type { JobRuntime } from "@/queue/core";
 import type { ArweaveService } from "@/services/arweave";
 import type { ImageProcessingService } from "@/services/image-processing";
 import type { OpenTimestampsService } from "@/services/opentimestamps";
 import type { PostHogService } from "@/services/posthog";
 import {
-  type GenerateImageThumbhashJob,
   generateImageThumbhashJob,
   GenerateImageThumbhashWorkerLive,
 } from "@/jobs/generate-image-thumbhash";
 import { MediaImageReconcileLive } from "@/jobs/media-image-reconcile";
 import { OpenTimestampsReconcileLive } from "@/jobs/opentimestamps-reconcile";
 import {
-  type OpenTimestampsStampJob,
   opentimestampsStampJob,
   OpenTimestampsStampWorkerLive,
 } from "@/jobs/opentimestamps-stamp";
 import {
-  type OpenTimestampsUpgradeJob,
   opentimestampsUpgradeJob,
   OpenTimestampsUpgradeWorkerLive,
 } from "@/jobs/opentimestamps-upgrade";
 import { PlanReconcileLive } from "@/jobs/plan-reconcile";
 import { PostArweaveBlockLive } from "@/jobs/post-arweave-block";
-import {
-  publishDraftJob,
-  type PublishDraftJob,
-  PublishDraftWorkerLive,
-} from "@/jobs/publish-draft";
+import { publishDraftJob, PublishDraftWorkerLive } from "@/jobs/publish-draft";
 import { JobAdminService } from "@/queue/admin";
 import { QueueStoreLive } from "@/queue/store";
 

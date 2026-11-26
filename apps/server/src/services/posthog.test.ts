@@ -1,7 +1,8 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Effect } from "effect";
+import type { PostHogEvent } from "@/services/posthog";
 import { AppConfig } from "@/config";
-import { type PostHogEvent, PostHogService } from "@/services/posthog";
+import { PostHogService } from "@/services/posthog";
 
 describe("posthog service", () => {
   it.effect("records events in layerTest", () => {

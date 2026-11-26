@@ -1,20 +1,23 @@
+import type { Effect } from "effect";
 import type { RateLimiter } from "effect/persistence";
 import { NodeHttpServer } from "@effect/platform-node";
-import { type Effect, Layer, Schedule } from "effect";
+import { Layer, Schedule } from "effect";
 import { HttpRouter } from "effect/http";
-import { AppConfig, type AppConfigValues } from "@/config";
+import type { AppConfigValues } from "@/config";
+import type {
+  ArweaveUploadError,
+  ArweaveUploadOptions,
+  ArweaveUploadResult,
+} from "@/services/arweave";
+import type { PostHogEvent } from "@/services/posthog";
+import { AppConfig } from "@/config";
 import { makeQueuesTestLayer } from "@/jobs";
 import { ApiRoutesLayer, AuthLayer } from "@/main";
-import {
-  ArweaveService,
-  type ArweaveUploadError,
-  type ArweaveUploadOptions,
-  type ArweaveUploadResult,
-} from "@/services/arweave";
+import { ArweaveService } from "@/services/arweave";
 import { BnsService } from "@/services/bns";
 import { ImageProcessingService } from "@/services/image-processing";
 import { OpenTimestampsService } from "@/services/opentimestamps";
-import { PostHogService, type PostHogEvent } from "@/services/posthog";
+import { PostHogService } from "@/services/posthog";
 import { RateLimiterLive } from "@/services/rate-limiter";
 import { StorageService } from "@/services/storage";
 import { TestDatabaseLayer } from "@/test/layer";
