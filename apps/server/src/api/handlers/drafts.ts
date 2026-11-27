@@ -19,6 +19,7 @@ import {
   Duration,
   Effect,
   ErrorReporter,
+  Schema,
   Semaphore,
 } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
@@ -34,6 +35,7 @@ import {
   DRAFT_CONTENT_TOTAL_MAX_MIB,
   DRAFT_COUNT_LIMIT,
   DRAFT_LIST_DEFAULT_LIMIT,
+  PublishedPostFields,
 } from "@/api/groups/drafts";
 import { uploadImageFromRequest } from "@/api/image-upload";
 import { CurrentUser } from "@/api/middleware/auth-user";
@@ -57,6 +59,7 @@ import {
   draftImageKey,
   draftImageSettings,
 } from "@/lib/draft-images";
+import { postFieldsFromMetadata } from "@/lib/metadata";
 import {
   findPlanPublishUsage,
   findUserPublishUsage,
@@ -494,6 +497,17 @@ export const publishDraft = (
         message: "Post metadata content id does not match the draft",
       });
     }
+
+    yield* Schema.decodeEffect(PublishedPostFields)(
+      postFieldsFromMetadata(metadata),
+    ).pipe(
+      Effect.mapError(
+        (error) =>
+          new BadRequest({
+            message: `Invalid post metadata: ${error.message}`,
+          }),
+      ),
+    );
 
     const signatureResult = verifyMetadataSignature(metadata, {
       network: config.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",

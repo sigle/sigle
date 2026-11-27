@@ -73,13 +73,13 @@ const Clearable = <S extends Schema.Top>(schema: S) =>
   );
 
 /**
- * Draft field limits. The website editor and the signed post metadata already
- * enforce the same limits for meta fields and tags, so a draft that saves can
- * also be published.
+ * Draft field limits. The publish endpoint holds the signed post metadata to
+ * the same limits (`PublishedPostFields`), so a post never stores what a draft
+ * would refuse.
  */
 export const DRAFT_LIMITS = {
   title: 300,
-  // The editor stores HTML; images are embedded by URL, not inline.
+  // The editor stores Markdown; images are embedded by URL, not inline.
   content: 1_000_000,
   metaTitle: 100,
   metaDescription: 250,
@@ -127,6 +127,23 @@ const DraftTags = Schema.mutable(
     ),
   ).check(Schema.isMaxLength(DRAFT_LIMITS.tags)),
 );
+
+/**
+ * The fields a published post takes from its signed metadata, held to the
+ * draft limits: the SDK schema has none, and a post must not store what a
+ * draft would refuse.
+ */
+export const PublishedPostFields = Schema.Struct({
+  title: DraftTitle,
+  content: DraftContent,
+  // The editor sends the first 350 characters of the text.
+  excerpt: Schema.String.check(Schema.isMaxLength(1000)),
+  metaTitle: Schema.NullOr(DraftMetaTitle),
+  metaDescription: Schema.NullOr(DraftMetaDescription),
+  canonicalUri: Schema.NullOr(DraftCanonicalUri),
+  coverImage: Schema.NullOr(DraftCoverImage),
+  tags: DraftTags,
+});
 
 /**
  * Publish state of a draft: null until it is first published, `failed` once a
