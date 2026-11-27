@@ -99,4 +99,43 @@ describe("rss feed route", () => {
     expect(response.status).toBe(200);
     expect(postsRequestedBeforeUser).toBe(true);
   });
+
+  it("keeps every ]]> of a title or excerpt inside its CDATA section", async () => {
+    // The first `]]>` is escaped by the XML writer, the next ones are not.
+    const text = 'A]]>B]]>]]><injected attr="x"/><![CDATA[C';
+
+    const bodies = new Map([
+      ["/api/users/SP1", { address: "SP1", profile: null }],
+      [
+        "/api/posts",
+        {
+          results: [
+            {
+              id: "post-1",
+              title: text,
+              excerpt: text,
+              coverImage: null,
+              contentWarning: null,
+              createdAt: "2026-01-01T00:00:00.000Z",
+            },
+          ],
+          limit: 100,
+          offset: 0,
+          total: 1,
+        },
+      ],
+    ]);
+
+    const response = await callRoute((path) =>
+      Response.json(bodies.get(path), { status: 200 }),
+    );
+
+    const xml = await response.text();
+
+    // A CDATA section ends at the first `]]>`, so what is left once every
+    // section is removed is what an XML parser reads as markup.
+    const markup = xml.replaceAll(/<!\[CDATA\[[\s\S]*?\]\]>/g, "");
+
+    expect(markup).not.toContain("<injected");
+  });
 });
