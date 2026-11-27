@@ -2,6 +2,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { betterAuth } from "better-auth/minimal";
 import { eq } from "drizzle-orm";
 import { Context, Effect, Layer, Redacted } from "effect";
+import { randomBytes } from "node:crypto";
 import { siws } from "sign-in-with-stacks/plugins/better-auth";
 import type { AppConfigValues } from "@/config";
 import type { AuthDatabaseClient } from "@/db";
@@ -75,6 +76,10 @@ export const createAuth = (
     plugins: [
       siws({
         domain: new URL(config.APP_URL).host,
+        // The plugin's default nonces come from `Math.random`, and each one
+        // overlaps the previous one, so they can be predicted. The plugin
+        // accepts 8 to 250 alphanumeric characters, hence hex.
+        getNonce: async () => randomBytes(32).toString("hex"),
       }),
     ],
   });
