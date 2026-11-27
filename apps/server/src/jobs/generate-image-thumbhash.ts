@@ -1,3 +1,4 @@
+import type { Scope } from "effect";
 import type { HttpClientResponse } from "effect/http";
 import { eq } from "drizzle-orm";
 import {
@@ -11,6 +12,7 @@ import {
   Schema,
   Stream,
 } from "effect";
+import { HttpClient } from "effect/http";
 import type { ImageOptimizationError } from "@/lib/images";
 import type { TerminalJobError } from "@/queue/core";
 import type {
@@ -109,12 +111,14 @@ const fetchImageResponse = (
 ): Effect.Effect<
   HttpClientResponse.HttpClientResponse,
   ImageFetchError | TerminalJobError,
-  ImageFetchClient
+  ImageFetchClient | Scope.Scope
 > =>
   Effect.gen(function* () {
     let url = initialUrl;
     let response: HttpClientResponse.HttpClientResponse | null = null;
-    const client = yield* ImageFetchClient;
+    // Every response belongs to the caller's scope, which aborts the ones the
+    // job discards (redirects, errors) without reading their bodies.
+    const client = HttpClient.withScope(yield* ImageFetchClient);
 
     for (let redirects = 0; redirects <= MAX_IMAGE_REDIRECTS; redirects++) {
       const target = yield* validateImageUrl(url);
@@ -258,6 +262,59 @@ class InvalidImageError extends Data.TaggedError("InvalidImageError")<{
 const describeCause = (cause: unknown): string =>
   cause instanceof Error ? cause.message : String(cause);
 
+/**
+ * Downloads the image at `url` within the limits of the job. Its scope closes
+ * when it returns or fails, releasing every response it opened.
+ */
+const downloadImage = (url: string) =>
+  Effect.scoped(
+    Effect.gen(function* () {
+      const response = yield* fetchImageResponse(url);
+
+      // A missing image will never appear, so stop retrying it.
+      if (response.status === 404 || response.status === 410) {
+        return yield* terminal(
+          new InvalidImageError({
+            message: `Image not found: HTTP ${response.status}`,
+          }),
+        );
+      }
+
+      if (response.status < 200 || response.status >= 300) {
+        return yield* new ImageFetchError({
+          cause: response,
+          message: `Failed to fetch image: HTTP ${response.status}`,
+        });
+      }
+
+      const declaredSize = Number(response.headers["content-length"] ?? "");
+
+      if (
+        Number.isFinite(declaredSize) &&
+        declaredSize > GENERATE_IMAGE_THUMBHASH_MAX_BYTES
+      ) {
+        return yield* terminal(
+          new InvalidImageError({
+            message: `Image is too large: ${declaredSize} bytes`,
+          }),
+        );
+      }
+
+      const body = yield* readBodyWithLimit(
+        response,
+        GENERATE_IMAGE_THUMBHASH_MAX_BYTES,
+      );
+
+      if (body.tooLarge) {
+        return yield* rejectUrl(
+          `Image is too large: more than ${GENERATE_IMAGE_THUMBHASH_MAX_BYTES} bytes`,
+        );
+      }
+
+      return body.bytes;
+    }),
+  );
+
 export const processGenerateImageThumbhashJob = (
   job: GenerateImageThumbhashJob,
 ): Effect.Effect<
@@ -306,49 +363,7 @@ export const processGenerateImageThumbhashJob = (
       ipfs: config.IPFS_GATEWAY_URL,
     });
 
-    const response = yield* fetchImageResponse(url);
-
-    // A missing image will never appear, so stop retrying it.
-    if (response.status === 404 || response.status === 410) {
-      return yield* terminal(
-        new InvalidImageError({
-          message: `Image not found: HTTP ${response.status}`,
-        }),
-      );
-    }
-
-    if (response.status < 200 || response.status >= 300) {
-      return yield* new ImageFetchError({
-        cause: response,
-        message: `Failed to fetch image: HTTP ${response.status}`,
-      });
-    }
-
-    const declaredSize = Number(response.headers["content-length"] ?? "");
-
-    if (
-      Number.isFinite(declaredSize) &&
-      declaredSize > GENERATE_IMAGE_THUMBHASH_MAX_BYTES
-    ) {
-      return yield* terminal(
-        new InvalidImageError({
-          message: `Image is too large: ${declaredSize} bytes`,
-        }),
-      );
-    }
-
-    const body = yield* readBodyWithLimit(
-      response,
-      GENERATE_IMAGE_THUMBHASH_MAX_BYTES,
-    );
-
-    if (body.tooLarge) {
-      return yield* rejectUrl(
-        `Image is too large: more than ${GENERATE_IMAGE_THUMBHASH_MAX_BYTES} bytes`,
-      );
-    }
-
-    const buffer = body.bytes;
+    const buffer = yield* downloadImage(url);
 
     const detected = yield* detectImageFormat(buffer).pipe(
       Effect.orElseSucceed(() => Option.none()),

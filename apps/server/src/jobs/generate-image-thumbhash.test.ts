@@ -471,4 +471,61 @@ describe("generate image thumbhash job", () => {
       });
     }).pipe(Effect.provide(testLayer)),
   );
+
+  it.effect("aborts the responses it does not read", () =>
+    Effect.gen(function* () {
+      const signals: Array<AbortSignal | null | undefined> = [];
+
+      // Bodies that never end, as a hostile server could send.
+      const endless = () =>
+        new ReadableStream<Uint8Array>({
+          pull: (controller) => {
+            controller.enqueue(new Uint8Array(1024));
+          },
+        });
+
+      vi.stubGlobal(
+        "fetch",
+        vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+          signals.push(init?.signal);
+
+          return String(input) === "https://cdn.test/first.png"
+            ? new Response(endless(), {
+                status: 302,
+                headers: { location: "/second.png" },
+              })
+            : new Response(endless(), { status: 404 });
+        }),
+      );
+
+      const error = yield* processGenerateImageThumbhashJob({
+        imageId: "https://cdn.test/first.png",
+      }).pipe(Effect.flip);
+
+      expect({
+        tag: error._tag,
+        aborted: signals.map((signal) => signal?.aborted),
+      }).toStrictEqual({
+        tag: "TerminalJobError",
+        aborted: [true, true],
+      });
+    }).pipe(Effect.provide(testLayer)),
+  );
+
+  it.effect("asks for an uncompressed image", () =>
+    Effect.gen(function* () {
+      const png = yield* Effect.promise(() => makePngBuffer());
+      const fetchMock = stubFetchResponse(new Uint8Array(png));
+
+      yield* processGenerateImageThumbhashJob({
+        imageId: "https://cdn.test/plain.png",
+      });
+
+      expect(
+        new Headers(fetchMock.mock.calls[0]?.[1]?.headers).get(
+          "accept-encoding",
+        ),
+      ).toBe("identity");
+    }).pipe(Effect.provide(testLayer)),
+  );
 });

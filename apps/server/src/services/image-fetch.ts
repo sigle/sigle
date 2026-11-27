@@ -1,9 +1,19 @@
 import { NodeHttpClient } from "@effect/platform-node";
 import { Context, Effect, Layer } from "effect";
-import { FetchHttpClient, HttpClient } from "effect/http";
+import { FetchHttpClient, HttpClient, HttpClientRequest } from "effect/http";
 import { lookupPublicAddress } from "@/lib/public-https";
 
-const currentHttpClient = Effect.service(HttpClient.HttpClient);
+/**
+ * The current client, asking for uncompressed bodies: Undici does not decode
+ * `Content-Encoding`, and the job reads the image bytes as sent. Decoding
+ * instead would need its own limit on the decoded size.
+ */
+const currentHttpClient = Effect.map(
+  Effect.service(HttpClient.HttpClient),
+  HttpClient.mapRequest(
+    HttpClientRequest.setHeader("accept-encoding", "identity"),
+  ),
+);
 
 /**
  * The HTTP client of the thumbhash job, which downloads images from URLs that
