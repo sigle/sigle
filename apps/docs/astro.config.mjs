@@ -36,6 +36,7 @@ export default defineConfig({
       sidebar: [
         { slug: "index", label: "Overview" },
         { slug: "platform" },
+        { slug: "getting-started/how-to-get-explorer" },
         {
           label: "Build on Sigle",
           items: [
