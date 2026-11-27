@@ -10,7 +10,7 @@ const LINKS = [
   {
     title: "Request a feature",
     description: "Share your ideas to help shape what comes next.",
-    href: "https://app.sigle.io/feedback",
+    href: appConfig.feedbackUrl,
   },
   {
     title: "Join us on Discord",
@@ -20,7 +20,7 @@ const LINKS = [
   {
     title: "Read the blog",
     description: "News, announcements and product updates.",
-    href: "https://blog.sigle.io",
+    href: appConfig.blogUrl,
   },
 ];
 

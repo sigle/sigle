@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import { withPostHogConfig } from "@posthog/nextjs-config";
+import { appConfig } from "./src/config";
 
 // Public URL of the server-v2 image CDN (`R2_PUBLIC_URL` on the server), which
 // serves uploaded profile and post images.
@@ -84,6 +85,18 @@ const nextConfig: NextConfig = {
       headers: [
         { key: "Content-Security-Policy", value: apiContentSecurityPolicy },
       ],
+    },
+  ],
+  // Short links to share, such as www.sigle.io/discord. Temporary, so browsers
+  // do not cache them and a changed destination reaches everyone.
+  redirects: async () => [
+    { source: "/discord", destination: appConfig.discordUrl, permanent: false },
+    { source: "/twitter", destination: appConfig.twitterUrl, permanent: false },
+    { source: "/github", destination: appConfig.githubUrl, permanent: false },
+    {
+      source: "/feedback",
+      destination: appConfig.feedbackUrl,
+      permanent: false,
     },
   ],
 };

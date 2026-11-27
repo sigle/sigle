@@ -7,9 +7,9 @@ import { appConfig } from "@/config";
 
 const LINKS = [
   { label: "Docs", href: appConfig.docsUrl },
-  { label: "Blog", href: "https://blog.sigle.io" },
+  { label: "Blog", href: appConfig.blogUrl },
   { label: "Support", href: appConfig.discordUrl },
-  { label: "Feedback", href: "https://app.sigle.io/feedback" },
+  { label: "Feedback", href: appConfig.feedbackUrl },
 ];
 
 const SOCIALS = [
