@@ -618,10 +618,9 @@ export const publishDraft = (
             txStatus: "PENDING",
             publishSignature: signature,
             publishGeneration: nextGeneration,
-            arweaveTxId:
-              current.publishSignature === signature
-                ? current.arweaveTxId
-                : null,
+            // Read at write time, so a checkpoint saved since `current` was read is kept:
+            // the same signed payload reuses its paid upload, another one starts over.
+            arweaveTxId: sql`CASE WHEN ${draft.publishSignature} = ${signature} THEN ${draft.arweaveTxId} ELSE NULL END`,
             updatedAt: now,
           })
           .where(
