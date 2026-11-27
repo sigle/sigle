@@ -156,6 +156,25 @@ describe("auth siws", () => {
     }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
+  it.effect("POST /api/auth/siws/nonce issues unrelated nonces", () =>
+    Effect.gen(function* () {
+      const client = yield* HttpClient.HttpClient;
+
+      const nonces = yield* Effect.forEach(
+        [0, 1, 2],
+        () => requestNonce(client).pipe(Effect.map((body) => body.nonce)),
+        { concurrency: 1 },
+      );
+
+      const [before = "", middle = "", after = ""] = nonces;
+
+      // The nonces issued just before and after another one must not give
+      // it away, as overlapping nonces would.
+      expect(middle.includes(before.slice(1, 33))).toBe(false);
+      expect(after.includes(middle.slice(1, 33))).toBe(false);
+    }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
   it.effect("rejects nonce requests with wallet inputs", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
