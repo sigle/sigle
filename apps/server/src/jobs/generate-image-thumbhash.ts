@@ -378,23 +378,38 @@ export const processGenerateImageThumbhashJob = (
       Effect.orElseSucceed(() => Option.none()),
     );
 
-    if (Option.isNone(detected)) {
+    // The formats the upload endpoints accept, and GIF, which a cover may be.
+    // Nothing else is rendered: an SVG would escape the pixel limit and the
+    // processing timeout.
+    const mimeType = Option.match(detected, {
+      onNone: () => undefined,
+      onSome: (format) =>
+        format === "gif" ? "image/gif" : mimeTypeForSharpFormat(format),
+    });
+
+    if (mimeType === undefined) {
       return yield* terminal(
         new InvalidImageError({ message: "Image format not supported" }),
       );
     }
 
-    const mimeType =
-      mimeTypeForSharpFormat(detected.value) ??
-      (detected.value === "gif" ? "image/gif" : null);
-
-    const thumbhash = yield* images.generateThumbhash(buffer);
+    const thumbhash = yield* images.generateThumbhash(buffer).pipe(
+      Effect.catchTag("ImageTooLargeError", (error) =>
+        Effect.fail(
+          terminal(
+            new InvalidImageError({
+              message: `Image is too large to decode: ${error.decodedBytes} bytes`,
+            }),
+          ),
+        ),
+      ),
+    );
 
     yield* db
       .update(mediaImage)
       .set({
         height: thumbhash.height,
-        mimeType: mimeType ?? row.mimeType,
+        mimeType,
         size: buffer.byteLength,
         status: "READY",
         thumbhash: thumbhash.thumbhash,

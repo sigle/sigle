@@ -95,6 +95,12 @@ const bytesPerSample: Record<Metadata["depth"], number> = {
   dpcomplex: 16,
 };
 
+const decodedBytes = (metadata: Metadata): number =>
+  metadata.width *
+  metadata.height *
+  metadata.channels *
+  bytesPerSample[metadata.depth];
+
 /**
  * Time budget for a single sharp pipeline, applied natively by libvips so
  * long-running work is stopped instead of only being abandoned by the caller.
@@ -111,12 +117,43 @@ export const mimeTypeForSharpFormat = (
   format: string,
 ): AllowedImageFormat | undefined => mimeTypeBySharpFormat.get(format);
 
+const PNG_SIGNATURE = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+
+const JPEG_SIGNATURE = [0xff, 0xd8, 0xff];
+
+// "GIF8", then "7a" or "9a".
+const GIF_SIGNATURE = [0x47, 0x49, 0x46, 0x38];
+
+// "RIFF", the chunk size, then "WEBP".
+const RIFF_SIGNATURE = [0x52, 0x49, 0x46, 0x46];
+
+const WEBP_SIGNATURE = [0x57, 0x45, 0x42, 0x50];
+
+const hasBytesAt = (
+  buffer: Uint8Array,
+  offset: number,
+  bytes: ReadonlyArray<number>,
+): boolean => bytes.every((byte, index) => buffer[offset + index] === byte);
+
+/**
+ * Whether the buffer starts like a PNG, JPEG, GIF or WebP. Nothing else is
+ * handed to sharp: libvips also reads SVG, TIFF, HEIF and more, and parses a
+ * whole SVG with librsvg just to read its header, which for a 10 MiB SVG takes
+ * about a second and hundreds of MiB.
+ */
+const hasRasterSignature = (buffer: Uint8Array): boolean =>
+  hasBytesAt(buffer, 0, PNG_SIGNATURE) ||
+  hasBytesAt(buffer, 0, JPEG_SIGNATURE) ||
+  hasBytesAt(buffer, 0, GIF_SIGNATURE) ||
+  (hasBytesAt(buffer, 0, RIFF_SIGNATURE) &&
+    hasBytesAt(buffer, 8, WEBP_SIGNATURE));
+
 /**
  * Reads the image header to detect the actual format, ignoring what the client
  * declared in the request `Content-Type`.
  *
- * Returns `None` when the bytes are not a readable image, and the sharp format
- * name (e.g. `png`, `gif`) otherwise.
+ * Returns `None` when the bytes are not a PNG, JPEG, GIF or WebP image, and
+ * the sharp format name (e.g. `png`, `gif`) otherwise.
  */
 export const detectImageFormat = (
   buffer: Uint8Array,
@@ -124,17 +161,15 @@ export const detectImageFormat = (
     limitInputPixels = MAX_INPUT_PIXELS,
   }: { readonly limitInputPixels?: number | undefined } = {},
 ): Effect.Effect<Option.Option<string>, ImageOptimizationError> =>
-  Effect.tryPromise({
-    try: async () =>
-      Option.fromNullishOr(
-        (await sharp(buffer, { limitInputPixels }).metadata()).format,
-      ),
-    catch: (cause) =>
-      new ImageOptimizationError({
-        cause,
-        message: cause instanceof Error ? cause.message : String(cause),
-      }),
-  });
+  hasRasterSignature(buffer)
+    ? Effect.tryPromise({
+        try: async () =>
+          Option.fromNullishOr(
+            (await sharp(buffer, { limitInputPixels }).metadata()).format,
+          ),
+        catch: toImageOptimizationError,
+      })
+    : Effect.succeedNone;
 
 export interface OptimizedImage {
   readonly buffer: Uint8Array;
@@ -157,6 +192,9 @@ export const THUMBHASH_MAX_INPUT_SIZE = 100;
  * Encodes a compact ThumbHash placeholder for an image, along with the
  * EXIF-orientation-aware dimensions of the original image so readers can lay
  * the image out before it loads.
+ *
+ * Inputs over `MAX_DECODED_INPUT_BYTES` are rejected with
+ * `ImageTooLargeError` before anything is decoded.
  */
 export const generateThumbhash = ({
   buffer,
@@ -164,40 +202,45 @@ export const generateThumbhash = ({
 }: {
   readonly buffer: Uint8Array;
   readonly limitInputPixels?: number | undefined;
-}): Effect.Effect<ThumbhashResult, ImageOptimizationError> =>
-  Effect.tryPromise({
-    try: async () => {
-      const metadata = await sharp(buffer, {
-        limitInputPixels,
-        sequentialRead: true,
-      }).metadata();
+}): Effect.Effect<
+  ThumbhashResult,
+  ImageOptimizationError | ImageTooLargeError
+> =>
+  Effect.gen(function* () {
+    const image = sharp(buffer, { limitInputPixels, sequentialRead: true });
 
-      const { data, info } = await sharp(buffer, {
-        limitInputPixels,
-        sequentialRead: true,
-      })
-        .timeout({ seconds: IMAGE_PROCESSING_TIMEOUT_SECONDS })
-        .rotate()
-        .resize(THUMBHASH_MAX_INPUT_SIZE, THUMBHASH_MAX_INPUT_SIZE, {
-          fit: "inside",
-        })
-        .ensureAlpha()
-        .raw()
-        .toBuffer({ resolveWithObject: true });
+    const metadata = yield* Effect.tryPromise({
+      try: () => image.metadata(),
+      catch: toImageOptimizationError,
+    });
 
-      return {
-        thumbhash: Buffer.from(
-          rgbaToThumbHash(info.width, info.height, data),
-        ).toString("base64"),
-        height: metadata.autoOrient.height,
-        width: metadata.autoOrient.width,
-      };
-    },
-    catch: (cause) =>
-      new ImageOptimizationError({
-        cause,
-        message: cause instanceof Error ? cause.message : String(cause),
-      }),
+    const inputBytes = decodedBytes(metadata);
+
+    if (inputBytes > MAX_DECODED_INPUT_BYTES) {
+      return yield* new ImageTooLargeError({ decodedBytes: inputBytes });
+    }
+
+    const { data, info } = yield* Effect.tryPromise({
+      try: () =>
+        image
+          .timeout({ seconds: IMAGE_PROCESSING_TIMEOUT_SECONDS })
+          .rotate()
+          .resize(THUMBHASH_MAX_INPUT_SIZE, THUMBHASH_MAX_INPUT_SIZE, {
+            fit: "inside",
+          })
+          .ensureAlpha()
+          .raw()
+          .toBuffer({ resolveWithObject: true }),
+      catch: toImageOptimizationError,
+    });
+
+    return {
+      thumbhash: Buffer.from(
+        rgbaToThumbHash(info.width, info.height, data),
+      ).toString("base64"),
+      height: metadata.autoOrient.height,
+      width: metadata.autoOrient.width,
+    };
   });
 
 export interface OptimizeImageOptions {
@@ -235,14 +278,10 @@ export const optimizeImage = ({
       catch: toImageOptimizationError,
     });
 
-    const decodedBytes =
-      metadata.width *
-      metadata.height *
-      metadata.channels *
-      bytesPerSample[metadata.depth];
+    const inputBytes = decodedBytes(metadata);
 
-    if (decodedBytes > MAX_DECODED_INPUT_BYTES) {
-      return yield* new ImageTooLargeError({ decodedBytes });
+    if (inputBytes > MAX_DECODED_INPUT_BYTES) {
+      return yield* new ImageTooLargeError({ decodedBytes: inputBytes });
     }
 
     const { data, info } = yield* Effect.tryPromise({
