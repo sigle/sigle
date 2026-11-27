@@ -23,6 +23,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   output: "standalone",
   images: {
+    // The optimizer refuses images from this machine unless allowed to. Only
+    // the end-to-end tests have their CDN there, served by the test API.
+    dangerouslyAllowLocalIP: cdnUrl.hostname === "localhost",
     remotePatterns: [
       {
         protocol: "https",
@@ -31,7 +34,7 @@ const nextConfig: NextConfig = {
         search: "",
       },
       {
-        protocol: "https",
+        protocol: cdnUrl.protocol === "http:" ? "http" : "https",
         hostname: cdnUrl.hostname,
         port: cdnUrl.port,
       },
