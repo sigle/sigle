@@ -12,6 +12,7 @@ import {
   imageRequestBody,
   isUrlWithProtocol,
   PayloadTooLarge,
+  ServiceUnavailable,
   UnsupportedMediaType,
 } from "@/api/schemas";
 import { profileImageKinds } from "@/lib/profile-images";
@@ -116,7 +117,12 @@ export const ProfileGroup = HttpApiGroup.make("profile")
     HttpApiEndpoint.put("uploadImage", "/images/:kind", {
       params: { kind: ProfileImageKindSchema },
       success: UpdateProfileResponse,
-      error: [BadRequest, PayloadTooLarge, UnsupportedMediaType],
+      error: [
+        BadRequest,
+        PayloadTooLarge,
+        ServiceUnavailable,
+        UnsupportedMediaType,
+      ],
     })
       .annotate(OpenApi.Summary, "Upload a profile image")
       .annotate(

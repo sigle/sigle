@@ -3,7 +3,10 @@ import { Data, Effect, Layer, Option, Schedule, Schema } from "effect";
 import { BlockList, isIPv4, isIPv6 } from "node:net";
 import type { ImageOptimizationError } from "@/lib/images";
 import type { TerminalJobError } from "@/queue/core";
-import type { ImageProcessingTimeoutError } from "@/services/image-processing";
+import type {
+  ImageProcessingBusyError,
+  ImageProcessingTimeoutError,
+} from "@/services/image-processing";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { mediaImage } from "@/db/schema";
@@ -285,6 +288,7 @@ export const processGenerateImageThumbhashJob = (
   void,
   | ImageFetchError
   | ImageOptimizationError
+  | ImageProcessingBusyError
   | ImageProcessingTimeoutError
   | TerminalJobError,
   Database | AppConfig | ImageProcessingService

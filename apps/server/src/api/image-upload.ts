@@ -1,11 +1,14 @@
 import type { HttpServerError } from "effect/http";
-import { ByteSize, Effect, Option, Predicate } from "effect";
+import { ByteSize, Duration, Effect, Option, Predicate } from "effect";
 import { HttpServerRequest } from "effect/http";
+import type { ImageProcessingBusyError } from "@/services/image-processing";
 import type { StoredObject } from "@/services/storage";
+import { setRetryAfterHeader } from "@/api/middleware/rate-limit";
 import {
   BadRequest,
   InternalServerError,
   PayloadTooLarge,
+  ServiceUnavailable,
   UnsupportedMediaType,
 } from "@/api/schemas";
 import { Database } from "@/db";
@@ -33,6 +36,18 @@ const isBodyTooLargeError = (error: HttpServerError.HttpServerError): boolean =>
   Predicate.isTagged(error.reason, "RequestParseError") &&
   error.reason.cause instanceof Error &&
   error.reason.cause.message === MAX_BODY_SIZE_CAUSE_MESSAGE;
+
+const busy = (error: ImageProcessingBusyError) =>
+  setRetryAfterHeader(Duration.millis(error.retryAfterMillis)).pipe(
+    Effect.andThen(
+      Effect.fail(
+        new ServiceUnavailable({
+          message: "Image processing is busy, try again in a few seconds.",
+          retryAfterMillis: error.retryAfterMillis,
+        }),
+      ),
+    ),
+  );
 
 const tooLarge = (maxMib: number) =>
   new PayloadTooLarge({
@@ -153,6 +168,7 @@ export const uploadImageFromRequest = (
             Effect.fail(
               new BadRequest({ message: "Failed to optimize image." }),
             ),
+          ImageProcessingBusyError: busy,
           ImageProcessingTimeoutError: () =>
             Effect.fail(
               new InternalServerError({
@@ -181,11 +197,12 @@ export const uploadImageFromRequest = (
           key,
         }),
       ),
-      Effect.mapError(
-        () =>
+      Effect.catchTags({ ImageProcessingBusyError: busy }, () =>
+        Effect.fail(
           new InternalServerError({
             message: "Failed to generate image placeholder.",
           }),
+        ),
       ),
     );
 
