@@ -9,6 +9,7 @@ import { postOts } from "@/db/schema";
 import { makeQueuesTestLayer } from "@/jobs";
 import { JobAdminService } from "@/queue/admin";
 import { ArweaveService } from "@/services/arweave";
+import { ImageFetchClient } from "@/services/image-fetch";
 import { ImageProcessingService } from "@/services/image-processing";
 import {
   OTS_TEST_PENDING_PROOF,
@@ -41,6 +42,7 @@ const makeStampTestLayer = (
     Layer.provideMerge(PostHogService.layerTest()),
     Layer.provideMerge(AppConfig.layerTest()),
     Layer.provideMerge(ImageProcessingService.layer),
+    Layer.provideMerge(ImageFetchClient.layerTest),
     Layer.provideMerge(TestDatabaseLayer),
   );
 

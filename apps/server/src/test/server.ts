@@ -15,6 +15,7 @@ import { makeQueuesTestLayer } from "@/jobs";
 import { ApiRoutesLayer, AuthLayer } from "@/main";
 import { ArweaveService } from "@/services/arweave";
 import { BnsService } from "@/services/bns";
+import { ImageFetchClient } from "@/services/image-fetch";
 import { ImageProcessingService } from "@/services/image-processing";
 import { OpenTimestampsService } from "@/services/opentimestamps";
 import { PostHogService } from "@/services/posthog";
@@ -64,6 +65,7 @@ export const provideTestServices =
         options.opentimestamps ?? OpenTimestampsService.layerTest(),
       ),
       Layer.provide(options.imageProcessing ?? ImageProcessingService.layer),
+      Layer.provide(ImageFetchClient.layerTest),
       Layer.provide(
         options.arweave ??
           ArweaveService.layerTest([], options.arweaveUploadImpl),

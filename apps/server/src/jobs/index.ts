@@ -10,6 +10,7 @@ import type { OpenTimestampsUpgradeJob } from "@/jobs/opentimestamps-upgrade";
 import type { PublishDraftJob } from "@/jobs/publish-draft";
 import type { JobRuntime } from "@/queue/core";
 import type { ArweaveService } from "@/services/arweave";
+import type { ImageFetchClient } from "@/services/image-fetch";
 import type { ImageProcessingService } from "@/services/image-processing";
 import type { OpenTimestampsService } from "@/services/opentimestamps";
 import type { PostHogService } from "@/services/posthog";
@@ -84,6 +85,7 @@ export const makeQueuesTestLayer = (options?: {
   | Database
   | AppConfig
   | ArweaveService
+  | ImageFetchClient
   | ImageProcessingService
   | OpenTimestampsService
   | PostHogService

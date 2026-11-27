@@ -1,12 +1,15 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
 import { Effect, Exit, Layer } from "effect";
+import { HttpClient, HttpClientError } from "effect/http";
 import sharp from "sharp";
 import { thumbHashToRGBA } from "thumbhash";
 import { afterEach, vi } from "vite-plus/test";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { mediaImage } from "@/db/schema";
+import { BlockedAddressError } from "@/lib/public-https";
+import { ImageFetchClient } from "@/services/image-fetch";
 import { ImageProcessingService } from "@/services/image-processing";
 import { createTestMediaImage } from "@/test/helpers";
 import { TestDatabaseLayer } from "@/test/layer";
@@ -15,10 +18,13 @@ import {
   processGenerateImageThumbhashJob,
 } from "./generate-image-thumbhash";
 
+// The stubbed global `fetch` stands in for the network, so the job's
+// downloads go through it instead of resolving real hostnames.
 const testLayer = Layer.mergeAll(
   TestDatabaseLayer,
   AppConfig.layerTest(),
   ImageProcessingService.layer,
+  ImageFetchClient.layerTest,
 );
 
 const makePngBuffer = (width = 40, height = 20) =>
@@ -200,6 +206,45 @@ describe("generate image thumbhash job", () => {
       // Terminal failures are marked FAILED by the queue's onFinalFailure.
       expect(row.status).toBe("PENDING");
     }).pipe(Effect.provide(testLayer)),
+  );
+
+  it.effect(
+    "fails permanently when the host resolves to a blocked address",
+    () =>
+      Effect.gen(function* () {
+        const error = yield* processGenerateImageThumbhashJob({
+          imageId: "https://rebind.example.com/cover.png",
+        }).pipe(
+          Effect.flip,
+          // How `ImageFetchClient.layer` fails once its lookup refuses an
+          // address.
+          Effect.provideService(
+            ImageFetchClient,
+            HttpClient.make((request) =>
+              Effect.fail(
+                new HttpClientError.HttpClientError({
+                  reason: new HttpClientError.TransportError({
+                    request,
+                    cause: new BlockedAddressError({
+                      hostname: new URL(request.url).hostname,
+                      address: "10.0.0.1",
+                      message: `${new URL(request.url).hostname} resolves to a blocked address: 10.0.0.1`,
+                    }),
+                  }),
+                }),
+              ),
+            ),
+          ),
+        );
+
+        expect(error).toMatchObject({
+          _tag: "TerminalJobError",
+          cause: {
+            message:
+              "Image host address is not allowed: rebind.example.com resolves to a blocked address: 10.0.0.1",
+          },
+        });
+      }).pipe(Effect.provide(testLayer)),
   );
 
   it.effect("fails permanently on an SVG cover without rendering it", () =>
@@ -424,6 +469,63 @@ describe("generate image thumbhash job", () => {
         status: "READY",
         urls: ["https://cdn.test/first.png", "https://cdn.test/second.png"],
       });
+    }).pipe(Effect.provide(testLayer)),
+  );
+
+  it.effect("aborts the responses it does not read", () =>
+    Effect.gen(function* () {
+      const signals: Array<AbortSignal | null | undefined> = [];
+
+      // Bodies that never end, as a hostile server could send.
+      const endless = () =>
+        new ReadableStream<Uint8Array>({
+          pull: (controller) => {
+            controller.enqueue(new Uint8Array(1024));
+          },
+        });
+
+      vi.stubGlobal(
+        "fetch",
+        vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+          signals.push(init?.signal);
+
+          return String(input) === "https://cdn.test/first.png"
+            ? new Response(endless(), {
+                status: 302,
+                headers: { location: "/second.png" },
+              })
+            : new Response(endless(), { status: 404 });
+        }),
+      );
+
+      const error = yield* processGenerateImageThumbhashJob({
+        imageId: "https://cdn.test/first.png",
+      }).pipe(Effect.flip);
+
+      expect({
+        tag: error._tag,
+        aborted: signals.map((signal) => signal?.aborted),
+      }).toStrictEqual({
+        tag: "TerminalJobError",
+        aborted: [true, true],
+      });
+    }).pipe(Effect.provide(testLayer)),
+  );
+
+  it.effect("asks for an uncompressed image", () =>
+    Effect.gen(function* () {
+      const png = yield* Effect.promise(() => makePngBuffer());
+      const fetchMock = stubFetchResponse(new Uint8Array(png));
+
+      yield* processGenerateImageThumbhashJob({
+        imageId: "https://cdn.test/plain.png",
+      });
+
+      expect(
+        new Headers(fetchMock.mock.calls[0]?.[1]?.headers).get(
+          "accept-encoding",
+        ),
+      ).toBe("identity");
     }).pipe(Effect.provide(testLayer)),
   );
 });
