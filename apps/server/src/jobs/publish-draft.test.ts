@@ -149,6 +149,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
             signature: "sig-001",
             metadataJson: sampleMetadataJson,
+            generation: 0,
           });
 
           expect(published).toStrictEqual({
@@ -289,6 +290,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
             signature: "sig-checkpointed",
             metadataJson: sampleMetadataJson,
+            generation: 0,
           });
 
           expect(uploads).toStrictEqual([]);
@@ -304,186 +306,72 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
       }),
   );
 
-  it.effect(
-    "elects one uploader when concurrent same-signature workers race",
-    () =>
-      Effect.gen(function* () {
-        const uploads: Array<ArweaveUploadOptions> = [];
-        const uploadStarted = yield* Deferred.make<void>();
-        const releaseUpload = yield* Deferred.make<void>();
+  it.effect("marks only the current publish generation as failed", () => {
+    const posthogEvents: Array<PostHogEvent> = [];
 
-        const layer = Layer.mergeAll(
-          TestDatabaseLayer,
-          ArweaveService.layerTest(uploads, () =>
-            Effect.gen(function* () {
-              yield* Deferred.succeed(uploadStarted, undefined);
-              yield* Deferred.await(releaseUpload);
+    return Effect.gen(function* () {
+      const db = yield* Database;
+      const user = yield* createTestUser();
 
-              return { ...ARWEAVE_TEST_UPLOAD, id: "concurrent-arweave-tx" };
-            }),
-          ),
-          PostHogService.layerTest(),
-        );
+      yield* createTestDraft({
+        id: "draft-generation-failed",
+        userId: user.id,
+        txStatus: "PROCESSING",
+        publishSignature: "sig-generation-failed",
+        publishGeneration: 2,
+      });
 
-        yield* Effect.gen(function* () {
-          const db = yield* Database;
-          const user = yield* createTestUser();
-          yield* createTestDraft({
-            id: "draft-concurrent",
-            userId: user.id,
-            publishSignature: "sig-concurrent",
-          });
+      const job = {
+        draftId: "draft-generation-failed",
+        userId: user.id,
+        authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+        signature: "sig-generation-failed",
+        metadataJson: sampleMetadataJson,
+      };
 
-          const job = {
-            draftId: "draft-concurrent",
-            userId: user.id,
-            authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
-            signature: "sig-concurrent",
-            metadataJson: sampleMetadataJson,
-          };
+      // The job of an older publish generation: no longer the user's.
+      yield* markDraftPublishFailed({ ...job, generation: 1 });
 
-          const first = yield* Effect.forkChild(processPublishDraftJob(job));
-          yield* Deferred.await(uploadStarted);
+      const [afterOlder] = yield* db
+        .select()
+        .from(draft)
+        .where(eq(draft.id, "draft-generation-failed"));
 
-          // The second worker cannot claim the in-flight upload.
-          const second = yield* Effect.exit(processPublishDraftJob(job));
+      const eventsAfterOlder = posthogEvents.length;
 
-          expect(Exit.isFailure(second)).toBe(true);
-          expect(uploads).toHaveLength(1);
+      yield* markDraftPublishFailed({ ...job, generation: 2 });
 
-          yield* Deferred.succeed(releaseUpload, undefined);
-          yield* Fiber.join(first);
+      const [afterCurrent] = yield* db
+        .select()
+        .from(draft)
+        .where(eq(draft.id, "draft-generation-failed"));
 
-          const posts = yield* db
-            .select()
-            .from(post)
-            .where(eq(post.draftId, "draft-concurrent"));
-
-          expect({
-            uploads: uploads.length,
-            postIds: posts.map((item) => item.id),
-          }).toStrictEqual({
-            uploads: 1,
-            postIds: ["concurrent-arweave-tx"],
-          });
-        }).pipe(Effect.provide(layer));
-      }),
-  );
-
-  it.effect("reclaims an upload claim whose lease expired", () =>
-    Effect.gen(function* () {
-      const uploads: Array<ArweaveUploadOptions> = [];
-
-      const layer = Layer.mergeAll(
+      expect({
+        olderTxStatus: afterOlder.txStatus,
+        eventsAfterOlder,
+        currentTxStatus: afterCurrent.txStatus,
+        posthogEvents,
+      }).toStrictEqual({
+        olderTxStatus: "PROCESSING",
+        eventsAfterOlder: 0,
+        currentTxStatus: "FAILED",
+        posthogEvents: [
+          {
+            distinctId: user.id,
+            event: "draft_publish_failed",
+            properties: { draftId: "draft-generation-failed" },
+          },
+        ],
+      });
+    }).pipe(
+      Effect.provide([
         TestDatabaseLayer,
-        ArweaveService.layerTest(uploads, () =>
-          Effect.succeed({
-            ...ARWEAVE_TEST_UPLOAD,
-            id: "reclaimed-arweave-tx",
-          }),
-        ),
-        PostHogService.layerTest(),
-      );
+        PostHogService.layerTest(posthogEvents),
+      ]),
+    );
+  });
 
-      yield* Effect.gen(function* () {
-        const db = yield* Database;
-        const user = yield* createTestUser();
-        yield* createTestDraft({
-          id: "draft-reclaim",
-          userId: user.id,
-          publishSignature: "sig-reclaim",
-          uploadClaimedAt: new Date(Date.now() - 10 * 60 * 1000),
-        });
-
-        yield* processPublishDraftJob({
-          draftId: "draft-reclaim",
-          userId: user.id,
-          authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
-          signature: "sig-reclaim",
-          metadataJson: sampleMetadataJson,
-        });
-
-        const [createdPost] = yield* db
-          .select()
-          .from(post)
-          .where(eq(post.draftId, "draft-reclaim"));
-
-        expect({
-          uploads: uploads.length,
-          postId: createdPost.id,
-        }).toStrictEqual({
-          uploads: 1,
-          postId: "reclaimed-arweave-tx",
-        });
-      }).pipe(Effect.provide(layer));
-    }),
-  );
-
-  it.effect(
-    "does not release an active upload claim when marking failure",
-    () => {
-      const posthogEvents: Array<PostHogEvent> = [];
-
-      return Effect.gen(function* () {
-        const db = yield* Database;
-        const user = yield* createTestUser();
-        const claimedAt = new Date();
-
-        yield* createTestDraft({
-          id: "draft-claim-failed",
-          userId: user.id,
-          txStatus: "PROCESSING",
-          publishSignature: "sig-claim-failed",
-          uploadClaimedAt: claimedAt,
-        });
-
-        yield* markDraftPublishFailed({
-          draftId: "draft-claim-failed",
-          userId: user.id,
-          authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
-          signature: "sig-claim-failed",
-          metadataJson: sampleMetadataJson,
-        });
-
-        // A job of an older publish of the draft: no longer the user's.
-        yield* markDraftPublishFailed({
-          draftId: "draft-claim-failed",
-          userId: user.id,
-          authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
-          signature: "sig-claim-older",
-          metadataJson: sampleMetadataJson,
-        });
-
-        const [failedDraft] = yield* db
-          .select()
-          .from(draft)
-          .where(eq(draft.id, "draft-claim-failed"));
-
-        expect({
-          txStatus: failedDraft.txStatus,
-          uploadClaimedAt: failedDraft.uploadClaimedAt,
-          posthogEvents,
-        }).toStrictEqual({
-          txStatus: "FAILED",
-          uploadClaimedAt: claimedAt,
-          posthogEvents: [
-            {
-              distinctId: user.id,
-              event: "draft_publish_failed",
-              properties: { draftId: "draft-claim-failed" },
-            },
-          ],
-        });
-      }).pipe(
-        Effect.provide([
-          TestDatabaseLayer,
-          PostHogService.layerTest(posthogEvents),
-        ]),
-      );
-    },
-  );
-
-  it.effect("does nothing when a newer publish owns the draft", () =>
+  it.effect("does nothing when a newer publish generation owns the draft", () =>
     Effect.gen(function* () {
       const uploads: Array<ArweaveUploadOptions> = [];
       const posthogEvents: Array<PostHogEvent> = [];
@@ -501,15 +389,17 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           id: "draft-superseded",
           userId: user.id,
           txStatus: "PENDING",
-          publishSignature: "newer-signature",
+          publishSignature: "sig-superseded",
+          publishGeneration: 3,
         });
 
         yield* processPublishDraftJob({
           draftId: "draft-superseded",
           userId: user.id,
           authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
-          signature: "older-signature",
+          signature: "sig-superseded",
           metadataJson: sampleMetadataJson,
+          generation: 2,
         });
 
         const [preservedDraft] = yield* db
@@ -527,16 +417,96 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           posthogEvents: posthogEvents.length,
           txStatus: preservedDraft.txStatus,
           publishSignature: preservedDraft.publishSignature,
+          publishGeneration: preservedDraft.publishGeneration,
+          arweaveTxId: preservedDraft.arweaveTxId,
           posts: posts.length,
         }).toStrictEqual({
           uploads: 0,
           posthogEvents: 0,
           txStatus: "PENDING",
-          publishSignature: "newer-signature",
+          publishSignature: "sig-superseded",
+          publishGeneration: 3,
+          arweaveTxId: null,
           posts: 0,
         });
       }).pipe(Effect.provide(layer));
     }),
+  );
+
+  it.effect(
+    "runs the upload again when a job is retaken after an interruption",
+    () =>
+      Effect.gen(function* () {
+        const uploads: Array<ArweaveUploadOptions> = [];
+        const started = yield* Deferred.make<void>();
+        let calls = 0;
+
+        const layer = Layer.mergeAll(
+          TestDatabaseLayer,
+          ArweaveService.layerTest(uploads, () =>
+            Effect.suspend(() => {
+              calls++;
+
+              // The first upload hangs until the job is interrupted, like a
+              // deploy stopping the worker mid-upload.
+              return calls === 1
+                ? Deferred.succeed(started, undefined).pipe(
+                    Effect.andThen(Effect.never),
+                  )
+                : Effect.succeed({
+                    ...ARWEAVE_TEST_UPLOAD,
+                    id: "retaken-arweave-tx",
+                  });
+            }),
+          ),
+          PostHogService.layerTest(),
+        );
+
+        yield* Effect.gen(function* () {
+          const db = yield* Database;
+          const user = yield* createTestUser();
+          yield* createTestDraft({
+            id: "draft-retaken",
+            userId: user.id,
+            txStatus: "PENDING",
+            publishSignature: "sig-retaken",
+          });
+
+          const job = {
+            draftId: "draft-retaken",
+            userId: user.id,
+            authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
+            signature: "sig-retaken",
+            metadataJson: sampleMetadataJson,
+            generation: 0,
+          };
+
+          const interrupted = yield* Effect.forkChild(
+            processPublishDraftJob(job),
+          );
+          yield* Deferred.await(started);
+          yield* Fiber.interrupt(interrupted);
+
+          // The queue retakes the interrupted element: nothing on the draft
+          // blocks the new attempt.
+          const published = yield* processPublishDraftJob(job);
+
+          const posts = yield* db
+            .select({ id: post.id })
+            .from(post)
+            .where(eq(post.draftId, "draft-retaken"));
+
+          expect({
+            published: published?.postId,
+            posts,
+            uploadCalls: calls,
+          }).toStrictEqual({
+            published: "retaken-arweave-tx",
+            posts: [{ id: "retaken-arweave-tx" }],
+            uploadCalls: 2,
+          });
+        }).pipe(Effect.provide(layer));
+      }),
   );
 
   it.live(
@@ -594,6 +564,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
             signature: "sig-fail",
             metadataJson: sampleMetadataJson,
+            generation: 0,
           });
 
           yield* Deferred.await(done);
@@ -656,6 +627,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           authorAddress: "ST1PQHQKV0RJXZFY1DGX8MNSNYVE3VGZJSRTPGZGM",
           signature: "sig-invalid",
           metadataJson: "{ not json",
+          generation: 0,
         });
 
         yield* Deferred.await(done);

@@ -4,7 +4,7 @@ import {
   MetadataAttributeType,
   PostMetadataSchemaId,
 } from "@sigle/sdk";
-import { eq, inArray } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import {
   Deferred,
   Effect,
@@ -21,6 +21,7 @@ import {
   HttpClientRequest,
   HttpClientResponse,
 } from "effect/http";
+import { SqlClient } from "effect/sql";
 import { TestClock } from "effect/testing";
 import sharp from "sharp";
 import type { ArweaveUploadOptions } from "@/services/arweave";
@@ -40,8 +41,10 @@ import {
 import { UploadedImageResponse } from "@/api/schemas";
 import { Database } from "@/db";
 import { draft, mediaImage, post, postOts } from "@/db/schema";
+import { publishDraftJobId } from "@/jobs/publish-draft";
 import { sha256Hex } from "@/lib/hash";
 import { ImageOptimizationError, optimizeImage } from "@/lib/images";
+import { JobAdminService } from "@/queue/admin";
 import {
   ARWEAVE_TEST_UPLOAD,
   ARWEAVE_TEST_UPLOAD_ID,
@@ -1356,14 +1359,14 @@ describe("drafts", () => {
           address: ownerWallet.address,
         });
         // A checkpoint without a live queue job (e.g. the FAILED write failed)
-        // which used to block re-publishing forever. It is older than the
-        // claim lease, a fresh one is protected.
+        // which used to block re-publishing forever. It is older than
+        // `PUBLISH_DRAFT_STALE_MILLIS`, a fresh one is protected.
         yield* createTestDraft({
           id: "draft-stuck",
           userId,
           txStatus: "PENDING",
           arweaveTxId: "stale-arweave-tx",
-          updatedAt: new Date(Date.now() - 3 * 60 * 1000),
+          updatedAt: new Date(Date.now() - 11 * 60 * 1000),
         });
 
         const publishRes = yield* publishDraftRequest(client, "draft-stuck", {
@@ -1396,8 +1399,8 @@ describe("drafts", () => {
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect(
-    "POST /api/drafts/:draftId/publish returns 409 while another signature is uploading",
+  it.live(
+    "POST /api/drafts/:draftId/publish returns 409 while another signature's publish is in flight, and accepts it once stale",
     () =>
       Effect.gen(function* () {
         const { client, userId } = yield* createAuthenticatedClient();
@@ -1409,22 +1412,23 @@ describe("drafts", () => {
           address: ownerWallet.address,
         });
 
-        // A worker is uploading the metadata of another signature.
+        // The publish of another signature is in flight.
         yield* createTestDraft({
-          id: "draft-uploading",
+          id: "draft-in-flight",
           userId,
-          txStatus: "PROCESSING",
+          txStatus: "PENDING",
           publishSignature: "other-signature",
-          uploadClaimedAt: new Date(),
+          updatedAt: new Date(),
         });
 
-        // Its worker crashed, the claim lease expired.
+        // Its job is gone: in flight for longer than
+        // `PUBLISH_DRAFT_STALE_MILLIS`.
         yield* createTestDraft({
-          id: "draft-abandoned",
+          id: "draft-stale",
           userId,
-          txStatus: "PROCESSING",
+          txStatus: "PENDING",
           publishSignature: "other-signature",
-          uploadClaimedAt: new Date(Date.now() - 3 * 60 * 1000),
+          updatedAt: new Date(Date.now() - 11 * 60 * 1000),
         });
 
         const publish = (draftId: string) =>
@@ -1435,32 +1439,116 @@ describe("drafts", () => {
             }),
           }).pipe(Effect.map((response) => response.status));
 
-        const uploading = yield* publish("draft-uploading");
-        const abandoned = yield* publish("draft-abandoned");
+        const inFlight = yield* publish("draft-in-flight");
+        const stale = yield* publish("draft-stale");
 
-        const [uploadingDraft] = yield* db
+        const [inFlightDraft] = yield* db
           .select({ publishSignature: draft.publishSignature })
           .from(draft)
-          .where(eq(draft.id, "draft-uploading"));
+          .where(eq(draft.id, "draft-in-flight"));
+
+        const staleStatus = yield* waitForPublishStatus(
+          client,
+          "draft-stale",
+          (current) => current.status === "COMPLETED",
+        );
 
         expect({
-          uploading,
-          abandoned,
-          signature: uploadingDraft?.publishSignature,
+          inFlight,
+          signature: inFlightDraft?.publishSignature,
+          stale,
+          staleStatus: staleStatus.status,
         }).toStrictEqual({
-          uploading: 409,
-          abandoned: 202,
+          inFlight: 409,
           signature: "other-signature",
+          stale: 202,
+          staleStatus: "COMPLETED",
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
-  it.effect(
-    "POST /api/drafts/:draftId/publish returns 409 once another signature has checkpointed its upload",
+  it.live(
+    "POST /api/drafts/:draftId/publish twice with the same signature enqueues one job",
+    () =>
+      Effect.gen(function* () {
+        const events: Array<PostHogEvent> = [];
+        const releaseUpload = yield* Deferred.make<void>();
+
+        // The upload waits for both requests, so the second one finds the
+        // publish in flight rather than finished.
+        const layer = makeTestServerLayer({}, events, {
+          arweaveUploadImpl: () =>
+            Deferred.await(releaseUpload).pipe(Effect.as(ARWEAVE_TEST_UPLOAD)),
+        });
+
+        yield* Effect.gen(function* () {
+          const { client, userId } = yield* createAuthenticatedClient();
+          const admin = yield* JobAdminService;
+          const ownerWallet = createTestSiwsCredentials("testnet");
+
+          yield* createTestWalletAddress({
+            userId,
+            address: ownerWallet.address,
+          });
+          yield* createTestDraft({ id: "draft-twice", userId });
+
+          const signedMetadata = createSignedTestPostMetadata({
+            draftId: "draft-twice",
+            privateKey: ownerWallet.privateKey,
+          });
+
+          const first = yield* publishDraftRequest(client, "draft-twice", {
+            metadata: signedMetadata,
+          });
+
+          const second = yield* publishDraftRequest(client, "draft-twice", {
+            metadata: signedMetadata,
+          });
+
+          yield* Deferred.succeed(releaseUpload, undefined);
+
+          const status = yield* waitForPublishStatus(
+            client,
+            "draft-twice",
+            (current) => current.status === "COMPLETED",
+          );
+
+          const stats = yield* admin.getQueueStats;
+
+          const queue = stats.find(
+            (item) => item.queueName === "publish-draft",
+          );
+
+          expect({
+            first: first.status,
+            second: second.status,
+            status: status.status,
+            jobs:
+              (queue?.pending ?? 0) +
+              (queue?.active ?? 0) +
+              (queue?.completed ?? 0) +
+              (queue?.failed ?? 0),
+            failedEvents: events.filter(
+              (event) => event.event === "draft_publish_failed",
+            ),
+          }).toStrictEqual({
+            first: 202,
+            second: 202,
+            status: "COMPLETED",
+            jobs: 1,
+            failedEvents: [],
+          });
+        }).pipe(Effect.provide(layer));
+      }),
+  );
+
+  it.live(
+    "POST /api/drafts/:draftId/publish a retry after FAILED runs even while the failed job is still settling",
     () =>
       Effect.gen(function* () {
         const { client, userId } = yield* createAuthenticatedClient();
         const db = yield* Database;
+        const sql = (yield* SqlClient.SqlClient).withoutTransforms();
         const ownerWallet = createTestSiwsCredentials("testnet");
 
         yield* createTestWalletAddress({
@@ -1468,79 +1556,58 @@ describe("drafts", () => {
           address: ownerWallet.address,
         });
 
-        // A worker has uploaded the metadata of another signature and is
-        // creating the post: the upload claim is released.
-        yield* createTestDraft({
-          id: "draft-checkpointed",
-          userId,
-          txStatus: "PROCESSING",
-          publishSignature: "other-signature",
-          arweaveTxId: "checkpointed-arweave-tx",
+        const signedMetadata = createSignedTestPostMetadata({
+          draftId: "draft-settling",
+          privateKey: ownerWallet.privateKey,
         });
 
-        // A retry of that signature reset the status, its new job will
-        // create the post from the checkpoint.
         yield* createTestDraft({
-          id: "draft-checkpoint-retried",
+          id: "draft-settling",
           userId,
-          txStatus: "PENDING",
-          publishSignature: "other-signature",
-          arweaveTxId: "retried-arweave-tx",
+          txStatus: "FAILED",
+          publishSignature: signedMetadata.signature,
+          publishGeneration: 1,
         });
 
-        // Its worker crashed after the checkpoint, the lease expired.
-        yield* createTestDraft({
-          id: "draft-checkpoint-abandoned",
-          userId,
-          txStatus: "PROCESSING",
-          publishSignature: "other-signature",
-          arweaveTxId: "abandoned-arweave-tx",
-          updatedAt: new Date(Date.now() - 3 * 60 * 1000),
+        // The failed job's queue element has not settled yet: still pending,
+        // and not visible to workers for a long time.
+        yield* sql`
+          INSERT INTO effect_queue
+            (id, queue_name, element, state, attempts, created_at, updated_at, visible_at)
+          VALUES
+            (${publishDraftJobId("draft-settling", 1)}, 'publish-draft', '{}', 'pending', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, datetime(CURRENT_TIMESTAMP, '+1 day'))
+        `;
+
+        const retry = yield* publishDraftRequest(client, "draft-settling", {
+          metadata: signedMetadata,
         });
 
-        const publish = (draftId: string) =>
-          publishDraftRequest(client, draftId, {
-            metadata: createSignedTestPostMetadata({
-              draftId,
-              privateKey: ownerWallet.privateKey,
-            }),
-          }).pipe(Effect.map((response) => response.status));
+        expect(retry.status).toBe(202);
 
-        const checkpointed = yield* publish("draft-checkpointed");
-        const retried = yield* publish("draft-checkpoint-retried");
-        const abandoned = yield* publish("draft-checkpoint-abandoned");
+        const status = yield* waitForPublishStatus(
+          client,
+          "draft-settling",
+          (current) => current.status === "COMPLETED",
+        );
 
-        const kept = yield* db
-          .select({
-            id: draft.id,
-            publishSignature: draft.publishSignature,
-            arweaveTxId: draft.arweaveTxId,
-          })
+        const remainingDrafts = yield* db
+          .select({ id: draft.id })
           .from(draft)
-          .where(
-            inArray(draft.id, [
-              "draft-checkpointed",
-              "draft-checkpoint-retried",
-            ]),
-          )
-          .orderBy(draft.id);
+          .where(eq(draft.id, "draft-settling"));
 
-        expect({ checkpointed, retried, abandoned, kept }).toStrictEqual({
-          checkpointed: 409,
-          retried: 409,
-          abandoned: 202,
-          kept: [
-            {
-              id: "draft-checkpoint-retried",
-              publishSignature: "other-signature",
-              arweaveTxId: "retried-arweave-tx",
-            },
-            {
-              id: "draft-checkpointed",
-              publishSignature: "other-signature",
-              arweaveTxId: "checkpointed-arweave-tx",
-            },
-          ],
+        const posts = yield* db
+          .select({ id: post.id })
+          .from(post)
+          .where(eq(post.draftId, "draft-settling"));
+
+        expect({
+          status: status.status,
+          remainingDrafts,
+          posts,
+        }).toStrictEqual({
+          status: "COMPLETED",
+          remainingDrafts: [],
+          posts: [{ id: ARWEAVE_TEST_UPLOAD_ID }],
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
