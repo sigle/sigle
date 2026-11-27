@@ -1,3 +1,4 @@
+import { POST_METADATA_LIMITS } from "@sigle/sdk";
 import { Schema } from "effect";
 import {
   HttpApiEndpoint,
@@ -73,20 +74,19 @@ const Clearable = <S extends Schema.Top>(schema: S) =>
   );
 
 /**
- * Draft field limits. The website editor and the signed post metadata already
- * enforce the same limits for meta fields and tags, so a draft that saves can
- * also be published.
+ * Draft field limits, the ones of the signed post metadata (`@sigle/sdk`), so
+ * a draft that saves can be published.
  */
 export const DRAFT_LIMITS = {
-  title: 300,
-  // The editor stores HTML; images are embedded by URL, not inline.
-  content: 1_000_000,
-  metaTitle: 100,
-  metaDescription: 250,
-  canonicalUri: 200,
-  coverImage: 2048,
-  tags: 5,
-  tag: 50,
+  title: POST_METADATA_LIMITS.title,
+  // The editor stores Markdown; images are embedded by URL, not inline.
+  content: POST_METADATA_LIMITS.content,
+  metaTitle: POST_METADATA_LIMITS.metaTitle,
+  metaDescription: POST_METADATA_LIMITS.metaDescription,
+  canonicalUri: POST_METADATA_LIMITS.canonicalUri,
+  coverImage: POST_METADATA_LIMITS.coverImage,
+  tags: POST_METADATA_LIMITS.tags,
+  tag: POST_METADATA_LIMITS.tag,
 } as const;
 
 const DraftTitle = Schema.String.check(Schema.isMaxLength(DRAFT_LIMITS.title));

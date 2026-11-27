@@ -5,7 +5,7 @@ import type { ArweaveUploadError } from "@/services/arweave";
 import { Database } from "@/db";
 import { draft, mediaImage, post, postOts } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
-import { PostMetadata } from "@/lib/metadata";
+import { PostMetadata, postFieldsFromMetadata } from "@/lib/metadata";
 import { defineJob, terminal } from "@/queue/core";
 import { ArweaveService } from "@/services/arweave";
 import { PostHogService } from "@/services/posthog";
@@ -211,18 +211,7 @@ export const processPublishDraftJob = (
       arweaveTxId = uploaded.id;
     }
 
-    const attributes = postData.content.attributes ?? [];
-
-    const findAttribute = (key: string): string | undefined =>
-      attributes.find((attribute) => attribute.key === key)?.value;
-
-    const metaTitle = findAttribute("meta-title") ?? null;
-    const metaDescription = findAttribute("meta-description") ?? null;
-    const canonicalUri = findAttribute("canonical-uri") ?? null;
-    const coverImage = postData.content.coverImage?.url ?? null;
-
-    const versionSplit = postData.$schema.split("/");
-    const version = (versionSplit.at(-1) ?? "1.0.0").replace(".json", "");
+    const fields = postFieldsFromMetadata(postData);
 
     // Step 2: Atomically delete the draft and insert the published post.
     const finalized = yield* db
@@ -246,17 +235,17 @@ export const processPublishDraftJob = (
           yield* tx.insert(post).values({
             id: arweaveTxId,
             draftId: job.draftId,
-            version,
+            version: fields.version,
             arweaveTxId,
             metadataUri: `ar://${arweaveTxId}`,
-            title: postData.content.title,
-            content: postData.content.content,
-            excerpt: postData.content.excerpt,
-            metaTitle,
-            metaDescription,
-            coverImage,
-            tags: postData.content.tags ?? [],
-            canonicalUri,
+            title: fields.title,
+            content: fields.content,
+            excerpt: fields.excerpt,
+            metaTitle: fields.metaTitle,
+            metaDescription: fields.metaDescription,
+            coverImage: fields.coverImage,
+            tags: fields.tags,
+            canonicalUri: fields.canonicalUri,
             contentWarning: postData.content.contentWarning ?? null,
             signature: job.signature,
             userId: job.userId,
@@ -274,11 +263,11 @@ export const processPublishDraftJob = (
           // Cover image metadata is created alongside the post so readers can
           // see a placeholder as soon as the post exists. The thumbhash job
           // fills it in; an existing READY row for a reused cover is kept.
-          if (coverImage !== null) {
+          if (fields.coverImage !== null) {
             yield* tx
               .insert(mediaImage)
               .values({
-                id: coverImage,
+                id: fields.coverImage,
                 mimeType: postData.content.coverImage?.type ?? null,
               })
               .onConflictDoNothing();
@@ -303,7 +292,7 @@ export const processPublishDraftJob = (
       },
     });
 
-    return { coverImage, postId: arweaveTxId };
+    return { coverImage: fields.coverImage, postId: arweaveTxId };
   });
 
 export const markDraftPublishFailed = (
