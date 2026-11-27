@@ -1,6 +1,11 @@
 import * as z from "zod";
 import { POST_METADATA_LIMITS } from "./limits.js";
 
+const AttributeKeySchema = z
+  .string()
+  .max(POST_METADATA_LIMITS.attributeKey)
+  .meta({ description: "The attribute's unique identifier." });
+
 /**
  * The type of a metadata attribute.
  */
@@ -29,7 +34,7 @@ export interface BooleanAttribute {
 
 export const BooleanAttributeSchema = z.object({
   type: z.literal(MetadataAttributeType.BOOLEAN),
-  key: z.string().meta({ description: "The attribute's unique identifier." }),
+  key: AttributeKeySchema,
   value: z.enum(["true", "false"]).meta({
     description:
       "A JS boolean value serialized as string. It's consumer responsibility to parse it.",
@@ -53,7 +58,7 @@ export interface DateAttribute {
 
 export const DateAttributeSchema = z.object({
   type: z.literal(MetadataAttributeType.DATE),
-  key: z.string().meta({ description: "The attribute's unique identifier." }),
+  key: AttributeKeySchema,
   value: z.iso.datetime().max(POST_METADATA_LIMITS.attributeValue).meta({
     description:
       "A valid ISO 8601 date string.  It's consumer responsibility to parse it.",
@@ -86,7 +91,7 @@ export interface NumberAttribute {
 
 export const NumberAttributeSchema = z.object({
   type: z.literal(MetadataAttributeType.NUMBER),
-  key: z.string().meta({ description: "The attribute's unique identifier." }),
+  key: AttributeKeySchema,
   value: z.string().max(POST_METADATA_LIMITS.attributeValue).meta({
     description:
       "A valid JS number serialized as string. It's consumer responsibility to parse it.",
@@ -110,7 +115,7 @@ export interface StringAttribute {
 
 export const StringAttributeSchema = z.object({
   type: z.literal(MetadataAttributeType.STRING),
-  key: z.string().meta({ description: "The attribute's unique identifier." }),
+  key: AttributeKeySchema,
   value: z.string().max(POST_METADATA_LIMITS.attributeValue).meta({
     description: "Any string value.",
   }),
@@ -136,7 +141,7 @@ export interface JSONAttribute {
 
 export const JSONAttributeSchema = z.object({
   type: z.literal(MetadataAttributeType.JSON),
-  key: z.string().meta({ description: "The attribute's unique identifier." }),
+  key: AttributeKeySchema,
   value: z.string().max(POST_METADATA_LIMITS.attributeValue).meta({
     description:
       "A JSON string. It's consumer responsibility to validate and parse it.",

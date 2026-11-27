@@ -52,11 +52,12 @@ describe("PostMetadataSchema limits", () => {
                 PostAttributeKey.CANONICAL_URI,
                 `https://example.com/${"a".repeat(180)}`,
               ),
-              stringAttribute("other", "a".repeat(1000)),
+              stringAttribute("a".repeat(100), "a".repeat(1000)),
             ],
             coverImage: {
               url: "ar://cover-transaction-id",
               type: MediaImageMimeType.PNG,
+              alt: "a".repeat(1000),
             },
           },
         ),
@@ -170,6 +171,28 @@ describe("PostMetadataSchema limits", () => {
         },
       ),
       path: "content.attributes.1.key",
+    },
+    {
+      name: "a cover image alt over 1000 characters",
+      metadata: createMetadata(
+        {},
+        {
+          coverImage: {
+            url: "ar://cover",
+            type: MediaImageMimeType.PNG,
+            alt: "a".repeat(1001),
+          },
+        },
+      ),
+      path: "content.coverImage.alt",
+    },
+    {
+      name: "an attribute key over 100 characters",
+      metadata: createMetadata(
+        {},
+        { attributes: [stringAttribute("a".repeat(101), "value")] },
+      ),
+      path: "content.attributes.0.key",
     },
     {
       name: "a cover image URL with another scheme",

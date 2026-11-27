@@ -47,6 +47,7 @@
                   },
                   "key": {
                     "type": "string",
+                    "maxLength": 100,
                     "description": "The attribute's unique identifier."
                   },
                   "value": {
@@ -67,6 +68,7 @@
                   },
                   "key": {
                     "type": "string",
+                    "maxLength": 100,
                     "description": "The attribute's unique identifier."
                   },
                   "value": {
@@ -89,6 +91,7 @@
                   },
                   "key": {
                     "type": "string",
+                    "maxLength": 100,
                     "description": "The attribute's unique identifier."
                   },
                   "value": {
@@ -109,6 +112,7 @@
                   },
                   "key": {
                     "type": "string",
+                    "maxLength": 100,
                     "description": "The attribute's unique identifier."
                   },
                   "value": {
@@ -129,6 +133,7 @@
                   },
                   "key": {
                     "type": "string",
+                    "maxLength": 100,
                     "description": "The attribute's unique identifier."
                   },
                   "value": {
@@ -161,7 +166,8 @@
             },
             "alt": {
               "description": "The alt tag of the image for accessibility.",
-              "type": "string"
+              "type": "string",
+              "maxLength": 1000
             }
           },
           "required": ["url", "type"],
