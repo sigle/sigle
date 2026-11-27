@@ -202,6 +202,86 @@ describe("generate image thumbhash job", () => {
     }).pipe(Effect.provide(testLayer)),
   );
 
+  it.effect("fails permanently on an SVG cover without rendering it", () =>
+    Effect.gen(function* () {
+      stubFetchResponse(
+        new TextEncoder().encode(
+          '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="red"/></svg>',
+        ),
+      );
+
+      yield* createTestMediaImage({ id: "https://cdn.test/cover.svg" });
+
+      const error = yield* processGenerateImageThumbhashJob({
+        imageId: "https://cdn.test/cover.svg",
+      }).pipe(Effect.flip);
+
+      const row = yield* findMediaImage("https://cdn.test/cover.svg");
+
+      expect(error).toMatchObject({
+        _tag: "TerminalJobError",
+        cause: { message: "Image format not supported" },
+      });
+
+      expect(row.status).toBe("PENDING");
+    }).pipe(Effect.provide(testLayer)),
+  );
+
+  it.effect("computes the thumbhash of a GIF cover", () =>
+    Effect.gen(function* () {
+      stubFetchResponse(
+        new Uint8Array(
+          Buffer.from(
+            "R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+            "base64",
+          ),
+        ),
+      );
+
+      yield* processGenerateImageThumbhashJob({
+        imageId: "https://cdn.test/cover.gif",
+      });
+
+      const row = yield* findMediaImage("https://cdn.test/cover.gif");
+
+      expect({ status: row.status, mimeType: row.mimeType }).toStrictEqual({
+        status: "READY",
+        mimeType: "image/gif",
+      });
+    }).pipe(Effect.provide(testLayer)),
+  );
+
+  it.effect("fails permanently on a cover too large to decode", () =>
+    Effect.gen(function* () {
+      // A few hundred KB that decode to 87 MB: 16-bit RGBA, interlaced so it
+      // cannot be streamed.
+      const png = yield* Effect.promise(() =>
+        sharp({
+          create: {
+            width: 3300,
+            height: 3300,
+            channels: 4,
+            background: { r: 255, g: 0, b: 0, alpha: 0.5 },
+          },
+        })
+          .toColourspace("rgb16")
+          .png({ progressive: true })
+          .toBuffer(),
+      );
+
+      stubFetchResponse(new Uint8Array(png));
+
+      const error = yield* processGenerateImageThumbhashJob({
+        imageId: "https://cdn.test/huge-decode.png",
+      }).pipe(Effect.flip);
+
+      expect(error).toMatchObject({
+        _tag: "TerminalJobError",
+        cause: { message: "Image is too large to decode: 87120000 bytes" },
+      });
+    }).pipe(Effect.provide(testLayer)),
+  );
+
   it.effect("cancels the reader once the body exceeds the limit", () => {
     const stream = new ReadableStream<Uint8Array<ArrayBuffer>>({
       start(controller) {

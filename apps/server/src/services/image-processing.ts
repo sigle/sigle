@@ -54,6 +54,7 @@ export interface ImageProcessor {
     | ImageOptimizationError
     | ImageProcessingBusyError
     | ImageProcessingTimeoutError
+    | ImageTooLargeError
   >;
 }
 
