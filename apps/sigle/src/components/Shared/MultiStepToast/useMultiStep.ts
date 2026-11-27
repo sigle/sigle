@@ -1,12 +1,13 @@
-import { type MultiStepToastStep, useMultiStepToastStore } from "./store";
+import type { MultiStepToastStep } from "./store";
+import { useMultiStepToastStore } from "./store";
 
 interface UseMultiStepOptions<T extends string> {
-  steps: readonly { id: T; title: string; description?: string }[];
+  steps: ReadonlyArray<{ id: T; title: string; description?: string }>;
   onStepChange?: (stepId: T, status: MultiStepToastStep["status"]) => void;
 }
 
 interface UseMultiStepReturn<T extends string> {
-  steps: MultiStepToastStep[];
+  steps: Array<MultiStepToastStep>;
   start: () => void;
   completeStep: (id: T) => void;
   setStepLoading: (id: T) => void;
@@ -21,7 +22,7 @@ export function useMultiStep<T extends string>(
   const { steps: stepDefinitions, onStepChange } = options;
   const { setSteps, updateStep, reset } = useMultiStepToastStore();
 
-  const initializeSteps = (): MultiStepToastStep[] => {
+  const initializeSteps = (): Array<MultiStepToastStep> => {
     return stepDefinitions.map((step, index) => ({
       ...step,
       status: index === 0 ? ("pending" as const) : ("idle" as const),

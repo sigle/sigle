@@ -42,6 +42,7 @@ export const ErrorPage = ({ error, retry }: ErrorPageProps) => {
       <Button size="lg" onClick={() => retry()}>
         Try again
       </Button>
+      {/* oxlint-disable-next-line nextjs/no-html-link-for-pages -- a full reload starts the app again from a clean state */}
       <a
         href="/"
         className={buttonVariants({ size: "lg", variant: "outline" })}

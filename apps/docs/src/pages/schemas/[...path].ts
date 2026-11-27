@@ -14,4 +14,5 @@ export const getStaticPaths = (() =>
     props: { schema },
   }))) satisfies GetStaticPaths;
 
-export const GET: APIRoute = ({ props }) => new Response(props.schema);
+export const GET: APIRoute<{ schema: string }> = ({ props }) =>
+  new Response(props.schema);

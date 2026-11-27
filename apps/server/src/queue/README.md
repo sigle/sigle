@@ -52,7 +52,8 @@ the workers.
 - Attempts are 1-based and consumed when the element is claimed; interruptions
   (deploys, shutdown) do not consume an attempt and the job is picked up again.
 - `terminal(error)` marks a failure as non-retryable: the job is reported,
-  `onFinalFailure` runs, and the element completes immediately.
+  `onFinalFailure` runs, and the element is marked failed at once, so it shows
+  in the admin failed list and can be retried from there.
 - Exhausted jobs stay in `effect_queue` as dead letters until deleted;
   completed rows are kept for 7 days (duplicate-id window). Use
   `JobAdminService.clearJob(queue, id)` to allow re-offering the same id.
@@ -68,7 +69,10 @@ the workers.
 
 `JobAdminService` (`@/queue/admin`) exposes the queue state: `getSummary`,
 `getQueueStats`, `listFailed` (paginated), `retryFailedJob`, `deleteFailedJob`,
-and `clearJob`.
+and `clearJob`. Admins (wallets in `ADMIN_ADDRESSES`) can use the same
+operations over HTTP under `/api/admin/queues` (see `src/api/groups/admin.ts`):
+list queues, list failed jobs, retry and delete them. The admin group is not in
+the public OpenAPI document.
 
 ## Testing
 
@@ -78,6 +82,7 @@ by calling the `process` function directly.
 
 ## Deferred
 
-Cron/scheduled jobs, delayed starts, priorities, batching, the HTTP admin
-surface, metric scraping, separate worker processes, and porting the v1
-(pg-boss) post `indexer` jobs.
+Cron/scheduled jobs, delayed starts, priorities, batching, metric scraping,
+separate worker processes, and porting the v1 (pg-boss) post `indexer` jobs.
+Periodic work runs as interval loops next to the workers (`*-reconcile.ts`,
+`post-arweave-block.ts`), not as scheduled queue jobs.

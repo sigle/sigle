@@ -5,11 +5,12 @@ The Sigle monorepo is composed of the following components:
 ## Third party dependencies
 
 - [Railway](https://railway.com/) - Hosting for all applications via Docker, see [Deployment](./deployment.md).
-- [Plausible](https://plausible.io/) - Privacy protecting analytics.
 - [PostHog](https://posthog.com/) - Product analytics and error tracking.
-- [Filebase](https://filebase.com/) - IPFS file uploads (S3-compatible).
+- [Cloudflare R2](https://developers.cloudflare.com/r2/) - Uploaded images, served from the CDN.
+- [Filebase](https://filebase.com/) - Default IPFS gateway, to read legacy `ipfs://` images.
 - [Arweave](https://arweave.org/) - Arweave bundler.
 - [Hiro](https://hiro.so/) - Stacks blockchain API.
+- [OpenTimestamps](https://opentimestamps.org/) - Bitcoin timestamps of published posts.
 
 ## Client
 
@@ -22,7 +23,7 @@ Rate limiting is kept in memory: every limit is a one-minute window, and the ser
 
 ### Authentication
 
-To verify the user's identity, we use better-auth. We ask the user to sign a message following the [Sign in with Stack SIP](https://github.com/stacksgov/sips/pull/70). The user unique identifier (stacks address) is stored in the session as an encrypted JSON Web Tokens (JWE). The server can then extract the address from the JWT and use it to verify the user's identity.
+To verify the user's identity, we use better-auth. We ask the user to sign a message following the [Sign in with Stack SIP](https://github.com/stacksgov/sips/pull/70). better-auth stores the sessions in the database (the `session` table), and the browser holds a signed session-token cookie, `sigle.session_token` (`__Secure-sigle.session_token` over HTTPS). The server resolves the cookie to the user and loads their wallet addresses. Signing out deletes the session.
 
 ### Arweave key
 
@@ -45,7 +46,7 @@ curl "https://payment.ardrive.io/v1/account/balance/solana?address=<address>"
 The content lifecycle from editor to reader:
 
 1. **Draft creation** — Content is written in the editor and saved as drafts in the database.
-2. **Metadata upload** — Post metadata (JSON) is signed with the user's Stacks wallet and uploaded to Arweave, tagged with the IPFS CID.
-3. **Notarization** — Published posts are notarized with OpenTimestamps.
-4. **Indexing** — Indexer jobs fetch metadata and resolve the Arweave L1 transaction to populate the database.
+2. **Signing** — The editor builds the post metadata and the writer's Stacks wallet signs it.
+3. **Publishing** — The server verifies the signature, then a background job uploads the metadata to Arweave and creates the post from it.
+4. **Notarization** — OpenTimestamps anchors the metadata in Bitcoin, and the upgraded proof is stored on Arweave.
 5. **Content rendering** — The web client fetches post metadata from the API and renders the formatted content.

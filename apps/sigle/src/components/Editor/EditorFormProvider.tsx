@@ -1,7 +1,10 @@
 import type { paths } from "@sigle/sdk";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
+import { useMultiStepToastStore } from "@/components/Shared/MultiStepToast";
+import { useEditorStore } from "./store";
 
 const editorPostSchema = z.object({
   type: z.enum(["draft", "published"] as const),
@@ -41,6 +44,16 @@ export const EditorFormProvider = ({
       contentWarning: post.contentWarning ?? undefined,
     },
   });
+
+  // The editor stores are global and outlive this draft: without a reset the
+  // next draft opens with this one's dialogs and publish steps.
+  useEffect(
+    () => () => {
+      useEditorStore.getState().reset();
+      useMultiStepToastStore.getState().reset();
+    },
+    [post.id],
+  );
 
   return <FormProvider {...methods}>{children}</FormProvider>;
 };

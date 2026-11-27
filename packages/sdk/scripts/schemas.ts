@@ -23,6 +23,6 @@ for (const [path, Schema] of schemas) {
   fs.writeFileSync(
     outputFile,
     `${JSON.stringify({ $schema, $id: `${SchemasRoot}/${path}`, ...jsonSchema }, null, 2)}\n`,
-    "utf-8",
+    "utf8",
   );
 }

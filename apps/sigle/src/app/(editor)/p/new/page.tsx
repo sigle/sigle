@@ -32,7 +32,9 @@ export default function PostCreate() {
   const created = useRef(false);
 
   useEffect(() => {
-    if (created.current) return;
+    if (created.current) {
+      return;
+    }
 
     created.current = true;
     createPost({ body: {} });

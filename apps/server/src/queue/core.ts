@@ -1,3 +1,4 @@
+import type { Schema } from "effect";
 import {
   Cause,
   Context,
@@ -7,8 +8,8 @@ import {
   Layer,
   Metric,
   Option,
+  Predicate,
   Schedule,
-  Schema,
 } from "effect";
 import { PersistedQueue } from "effect/persistence";
 
@@ -63,8 +64,9 @@ export interface JobMeta {
 
 /**
  * Wraps an error to mark it as non-retryable. The worker reports it, runs
- * `onFinalFailure`, and completes the element immediately instead of consuming
- * the remaining attempts.
+ * `onFinalFailure`, and the element is marked failed immediately (a dead
+ * letter) instead of consuming the remaining attempts, so admins can list and
+ * retry it.
  */
 export class TerminalJobError extends Data.TaggedError("TerminalJobError")<{
   readonly cause: unknown;
@@ -72,6 +74,16 @@ export class TerminalJobError extends Data.TaggedError("TerminalJobError")<{
 
 export const terminal = <E>(error: E): TerminalJobError =>
   new TerminalJobError({ cause: error });
+
+/**
+ * Fails a take so the queue store marks the element failed at once, without
+ * retrying. `PersistedQueue` keeps its dead-letter class internal, and
+ * stores detect it by tag (`PersistedQueue.isDeadLetterCause`).
+ */
+const deadLetter = (cause: Cause.Cause<unknown>) => ({
+  _tag: "~effect/persistence/PersistedQueue/DeadLetter" as const,
+  cause,
+});
 
 const MAX_PAYLOAD_ATTRIBUTE_LENGTH = 1024;
 
@@ -85,7 +97,7 @@ export const truncatePayload = <E>(
   payload: E,
   maxLength = MAX_PAYLOAD_ATTRIBUTE_LENGTH,
 ): string => {
-  let encoded = "";
+  let encoded: string;
 
   try {
     encoded = JSON.stringify(payload) ?? String(payload);
@@ -146,7 +158,7 @@ const isStoreError = (cause: Cause.Cause<unknown>): boolean => {
 
   return (
     Option.isSome(failure) &&
-    failure.value instanceof PersistedQueue.PersistedQueueError
+    Predicate.isTagged(failure.value, "PersistedQueueError")
   );
 };
 
@@ -268,6 +280,18 @@ export const defineJob = <
   const onFinalFailure = options.onFinalFailure;
   const reportPayload = options.reportPayload;
 
+  const describePayload = (payload: S["Type"]): string => {
+    if (reportPayload === undefined) {
+      return REDACTED_PAYLOAD_JSON;
+    }
+
+    try {
+      return truncatePayload(reportPayload(payload));
+    } catch {
+      return REDACTED_PAYLOAD_JSON;
+    }
+  };
+
   /**
    * `PersistedQueue` methods require the payload schema's encoding/decoding
    * services; they are passed through to callers on purpose.
@@ -336,18 +360,6 @@ export const defineJob = <
           Metric.withAttributes({ queue: options.name }),
         );
 
-        const describePayload = (payload: S["Type"]): string => {
-          if (reportPayload === undefined) {
-            return REDACTED_PAYLOAD_JSON;
-          }
-
-          try {
-            return truncatePayload(reportPayload(payload));
-          } catch {
-            return REDACTED_PAYLOAD_JSON;
-          }
-        };
-
         const reportFailure = (
           cause: Cause.Cause<unknown>,
           payloadJson: string,
@@ -415,7 +427,9 @@ export const defineJob = <
                 meta,
               );
 
-              return;
+              return yield* Effect.fail(
+                deadLetter(Cause.fail(terminalError.cause)),
+              );
             }
 
             if (meta.attempts >= workerMaxAttempts) {

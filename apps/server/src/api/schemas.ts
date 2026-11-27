@@ -243,6 +243,7 @@ export const documentPaginationQuery =
   (spec) => {
     // SAFETY: an endpoint `OpenApi.Transform` is applied to the operation
     // object generated for that endpoint.
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     const operation = spec as OpenApi.OpenAPISpecOperation;
 
     return {
@@ -323,6 +324,7 @@ export const documentParameters: Parameters<typeof OpenApi.Transform.of>[0] = (
   spec,
 ) => {
   // SAFETY: an API `OpenApi.Transform` is applied to the whole document.
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const document = spec as OpenApi.OpenAPISpec;
 
   for (const pathItem of Object.values(document.paths)) {
@@ -347,6 +349,7 @@ export const omitBadRequestWithoutInputs: Parameters<
   typeof OpenApi.Transform.of
 >[0] = (spec) => {
   // SAFETY: an API `OpenApi.Transform` is applied to the whole document.
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const document = spec as OpenApi.OpenAPISpec;
 
   for (const pathItem of Object.values(document.paths)) {

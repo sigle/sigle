@@ -513,7 +513,10 @@ export interface components {
         previousVersion?: string;
         /** @description The cover image. */
         coverImage?: {
-          /** Format: uri */
+          /**
+           * Format: uri
+           * @description An http(s), ipfs:// or ar:// URL of the image.
+           */
           url: string;
           /**
            * @description The MIME type of the image.
@@ -537,9 +540,14 @@ export interface components {
         metaDescription?: string;
         /**
          * Format: uri
-         * @description The URL of the original version of the post when it was first published elsewhere.
+         * @description The http(s) URL of the original version of the post when it was first published elsewhere.
          */
         canonicalUri?: string;
+        /**
+         * @description Specify a content warning.
+         * @enum {string}
+         */
+        contentWarning?: "NSFW" | "SENSITIVE" | "SPOILER";
         /** @description Additional information that is not part of the standard. */
         attributes?: {
           /** @description The attribute's unique identifier. */

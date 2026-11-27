@@ -1,5 +1,7 @@
+import type { HttpServerError } from "effect/http";
 import { ByteSize, Effect, Option, Predicate } from "effect";
-import { type HttpServerError, HttpServerRequest } from "effect/http";
+import { HttpServerRequest } from "effect/http";
+import type { StoredObject } from "@/services/storage";
 import {
   BadRequest,
   InternalServerError,
@@ -16,7 +18,7 @@ import {
   WEBP,
 } from "@/lib/images";
 import { ImageProcessingService } from "@/services/image-processing";
-import { type StoredObject, StorageService } from "@/services/storage";
+import { StorageService } from "@/services/storage";
 
 const normalizeContentType = (contentType: string): string =>
   contentType.split(";")[0]?.trim().toLowerCase() ?? "";
@@ -58,6 +60,7 @@ const readImageBody = (
   );
 
 export interface ImageUploadOptions {
+  readonly height: number;
   readonly maxMib: number;
   readonly quality: number;
   readonly width: number;
@@ -132,7 +135,12 @@ export const uploadImageFromRequest = (
     }
 
     const optimized = yield* images
-      .optimize({ buffer, quality: options.quality, width: options.width })
+      .optimize({
+        buffer,
+        height: options.height,
+        quality: options.quality,
+        width: options.width,
+      })
       .pipe(
         Effect.tapError((error) =>
           Effect.logWarning("Failed to optimize image", {
@@ -140,13 +148,24 @@ export const uploadImageFromRequest = (
             contentType,
           }),
         ),
-        Effect.mapError((error) =>
-          Predicate.isTagged(error, "ImageProcessingTimeoutError")
-            ? new InternalServerError({
+        Effect.catchTags({
+          ImageOptimizationError: () =>
+            Effect.fail(
+              new BadRequest({ message: "Failed to optimize image." }),
+            ),
+          ImageProcessingTimeoutError: () =>
+            Effect.fail(
+              new InternalServerError({
                 message: "Image processing timed out.",
-              })
-            : new BadRequest({ message: "Failed to optimize image." }),
-        ),
+              }),
+            ),
+          ImageTooLargeError: () =>
+            Effect.fail(
+              new PayloadTooLarge({
+                message: "Image dimensions are too large to process.",
+              }),
+            ),
+        }),
       );
 
     const version = sha256Hex(optimized.buffer);

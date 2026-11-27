@@ -9,9 +9,58 @@ if (!process.env.CDN_URL) {
 
 const cdnUrl = new URL(process.env.CDN_URL);
 
+// The only frames a page embeds are the YouTube videos of posts, in the reader
+// and in the editor. Their URL is built from a link the author wrote, on any
+// of these hosts.
+const frameSources = [
+  "https://www.youtube.com",
+  "https://www.youtube-nocookie.com",
+  "https://youtube.com",
+  "https://music.youtube.com",
+  "https://youtu.be",
+];
+
+// The policy of pages. `frame-ancestors` (and `X-Frame-Options` for older
+// browsers) stop other sites from framing Sigle, such as the editor whose
+// publish dialog asks the wallet to sign. The other directives close what no
+// page uses: a `<base>` pointing links elsewhere, forms posting to another
+// site, plugins, and frames of other sites.
+//
+// Scripts, styles, images and connections are not restricted. Next.js renders
+// inline scripts, which a static policy can only allow as a whole, wallet
+// extensions add their own script to the page, and posts show images of any
+// host.
+const pageContentSecurityPolicy = [
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+  `frame-src ${frameSources.join(" ")}`,
+  "object-src 'none'",
+].join("; ");
+
+// The policy of route handlers, which answer JSON and RSS for other programs
+// to read. A browser opening one of them as a page loads and runs nothing.
+const apiContentSecurityPolicy = [
+  "default-src 'none'",
+  "frame-ancestors 'none'",
+  "sandbox",
+].join("; ");
+
+// Sent on every route. The referrer policy keeps the origin on cross-origin
+// requests, which YouTube embeds require.
+const securityHeaders = [
+  { key: "Content-Security-Policy", value: pageContentSecurityPolicy },
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+];
+
 const nextConfig: NextConfig = {
   output: "standalone",
   images: {
+    // The optimizer refuses images from this machine unless allowed to. Only
+    // the end-to-end tests have their CDN there, served by the test API.
+    dangerouslyAllowLocalIP: cdnUrl.hostname === "localhost",
     remotePatterns: [
       {
         protocol: "https",
@@ -20,13 +69,23 @@ const nextConfig: NextConfig = {
         search: "",
       },
       {
-        protocol: "https",
+        protocol: cdnUrl.protocol === "http:" ? "http" : "https",
         hostname: cdnUrl.hostname,
         port: cdnUrl.port,
       },
     ],
   },
   serverExternalPackages: ["@stacks/connect"],
+  // When two entries set the same header for a path, the last one wins.
+  headers: async () => [
+    { source: "/:path*", headers: securityHeaders },
+    {
+      source: "/api/:path*",
+      headers: [
+        { key: "Content-Security-Policy", value: apiContentSecurityPolicy },
+      ],
+    },
+  ],
 };
 
 // Uploads the source maps of the build to PostHog error tracking, so stack

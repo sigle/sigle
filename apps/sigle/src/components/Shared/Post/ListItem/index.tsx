@@ -2,8 +2,8 @@
 
 import type { paths } from "@sigle/sdk";
 import { IconAlertTriangle, IconDots } from "@tabler/icons-react";
-import { format } from "date-fns";
 import { useState } from "react";
+import { LocalDate } from "@/components/Shared/LocalDate";
 import { BlurImage } from "@/components/ui/blur-image";
 import { Button } from "@/components/ui/button";
 import {
@@ -53,7 +53,7 @@ export const PostListItem = ({ post, onHiddenChange }: PostListItemProps) => {
     <li className="flex gap-6 border-b border-border py-6">
       <div className="min-w-0 flex-1">
         <NextLink href={href} className="group block">
-          <h3 className="line-clamp-2 headline text-xl/tight break-words underline-offset-4 group-hover:underline">
+          <h3 className="line-clamp-2 headline text-xl/tight wrap-break-word underline-offset-4 group-hover:underline">
             {post.metaTitle || post.title}
           </h3>
           {/* A post behind a content warning does not show what it says. */}
@@ -70,12 +70,10 @@ export const PostListItem = ({ post, onHiddenChange }: PostListItemProps) => {
         </NextLink>
 
         <div className="mt-3 flex items-center gap-1">
-          <time
-            dateTime={post.createdAt}
+          <LocalDate
+            date={post.createdAt}
             className="font-mono text-xs text-muted-foreground uppercase"
-          >
-            {format(new Date(post.createdAt), "MMM d, yyyy")}
-          </time>
+          />
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
@@ -118,6 +116,7 @@ export const PostListItem = ({ post, onHiddenChange }: PostListItemProps) => {
             <BlurImage
               src={resolveImageUrl(post.coverImage.url)}
               alt="Cover card"
+              sizes="(min-width: 768px) 160px, 96px"
               className={cn("size-full object-cover", {
                 "scale-110 blur-lg": warning,
               })}

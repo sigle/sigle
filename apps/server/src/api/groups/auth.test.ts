@@ -234,7 +234,7 @@ describe("auth siws", () => {
           chainId: body.user.chainId,
           userName: createdUser.name,
           userEmail: createdUser.email,
-          hasLastLoginAt: createdUser.lastLoginAt instanceof Date,
+          lastLoginAt: createdUser.lastLoginAt,
           wallet: {
             userId: createdWallet.userId,
             address: createdWallet.address,
@@ -252,7 +252,7 @@ describe("auth siws", () => {
           chainId,
           userName: address,
           userEmail: `${address.toLowerCase()}@siws.placeholder.invalid`,
-          hasLastLoginAt: true,
+          lastLoginAt: expect.any(Date),
           wallet: {
             userId: body.user.id,
             address,

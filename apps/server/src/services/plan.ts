@@ -1,14 +1,17 @@
+import type { SQL } from "drizzle-orm";
 import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
-import { and, eq, gte, inArray, isNotNull, ne, type SQL } from "drizzle-orm";
+import { and, eq, gte, inArray, isNotNull, ne } from "drizzle-orm";
 import { Context, Data, Effect, Layer, Schema } from "effect";
 import {
   FetchHttpClient,
   HttpClientRequest,
   HttpClientResponse,
 } from "effect/http";
+import type { DatabaseClient } from "@/db";
+import type { userPlans } from "@/db/schema";
 import { AppConfig } from "@/config";
-import { Database, type DatabaseClient } from "@/db";
-import { draft, post, user, type userPlans, walletAddress } from "@/db/schema";
+import { Database } from "@/db";
+import { draft, post, user, walletAddress } from "@/db/schema";
 import { makeStacksApiClient, STACKS_API_TIMEOUT } from "@/services/stacks-api";
 
 export type UserPlan = (typeof userPlans)[number];

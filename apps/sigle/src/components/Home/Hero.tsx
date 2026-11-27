@@ -43,7 +43,7 @@ export const HomeHero = () => {
   const { data: session } = useSession();
 
   return (
-    <section className="mx-auto grid max-w-5xl items-center gap-12 px-4 pt-16 pb-16 md:grid-cols-2 md:pt-24 md:pb-24">
+    <section className="mx-auto grid max-w-5xl items-center gap-12 px-4 py-16 md:grid-cols-2 md:py-24">
       <div>
         <h1 className="headline text-4xl text-balance md:text-5xl">
           Write once. Own it forever.

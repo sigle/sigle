@@ -7,6 +7,10 @@ import { getDefaultAvatarUrl } from "@/lib/users";
 type UserProfileResponse =
   paths["/api/users/{address}"]["get"]["responses"][200]["content"]["application/json"];
 
+// Rendered size of each avatar size, so `next/image` picks a matching file
+// instead of one as wide as the stored picture.
+const AVATAR_PIXELS = { "2": 32, "3": 40, "6": 80, "8": 128 } as const;
+
 export const ProfileAvatar = ({
   user,
   size,
@@ -34,13 +38,14 @@ export const ProfileAvatar = ({
         <BlurImage
           src={resolveImageUrl(picture.url)}
           alt={user.address}
+          sizes={`${AVATAR_PIXELS[size]}px`}
           className="size-full object-cover"
           thumbhash={picture.thumbhash}
           width={picture.width}
           height={picture.height}
         />
       ) : (
-        // oxlint-disable-next-line no-img-element
+        // oxlint-disable-next-line nextjs/no-img-element -- next/image doesn't optimize the SVG default avatar
         <img src={getDefaultAvatarUrl(user.address)} alt={user.address} />
       )}
     </div>

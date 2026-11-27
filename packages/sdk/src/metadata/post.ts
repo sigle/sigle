@@ -1,7 +1,9 @@
 import { z } from "zod";
-import { SignatureSchema, Tagchema } from "./common.js";
+import type { MediaImageMetadata } from "./media.js";
+import { SignatureSchema, TagSchema } from "./common.js";
 import { PostMetadataSchemaId } from "./config.js";
-import { type MediaImageMetadata, MediaImageMetadataSchema } from "./media.js";
+import { POST_METADATA_LIMITS, urlWithSchemes } from "./limits.js";
+import { MediaImageMetadataSchema } from "./media.js";
 import { evaluate } from "./utils.js";
 
 export enum ContentWarning {
@@ -26,10 +28,13 @@ export interface PostMetadataAttribute {
 }
 
 export const PostMetadataAttributeSchema = z.object({
-  key: z.string().min(1).meta({
+  key: z.string().min(1).max(POST_METADATA_LIMITS.attributeKey).meta({
     description: "The attribute's unique identifier.",
   }),
-  value: z.string().meta({ description: "The attribute's value." }),
+  value: z
+    .string()
+    .max(POST_METADATA_LIMITS.attributeValue)
+    .meta({ description: "The attribute's value." }),
 });
 
 export interface PostMetadataDetails {
@@ -65,7 +70,7 @@ export interface PostMetadataDetails {
   /**
    * An arbitrary list of tags.
    */
-  tags?: string[];
+  tags?: Array<string>;
   /**
    * The language of the content, as a BCP 47 tag such as `en`.
    */
@@ -91,7 +96,7 @@ export interface PostMetadataDetails {
   /**
    * Additional information that is not part of the standard.
    */
-  attributes?: PostMetadataAttribute[];
+  attributes?: Array<PostMetadataAttribute>;
 }
 
 export const PostMetadataDetailsSchema = z.object({
@@ -99,9 +104,17 @@ export const PostMetadataDetailsSchema = z.object({
     description:
       "The post id, the same for every revision of the post. Sigle uses it in the post URL.",
   }),
-  title: z.string().min(1).meta({ description: "Post title." }),
-  content: z.string().min(1).meta({ description: "Markdown content." }),
-  excerpt: z.string().meta({
+  title: z
+    .string()
+    .min(1)
+    .max(POST_METADATA_LIMITS.title)
+    .meta({ description: "Post title." }),
+  content: z
+    .string()
+    .min(1)
+    .max(POST_METADATA_LIMITS.content)
+    .meta({ description: "Markdown content." }),
+  excerpt: z.string().max(POST_METADATA_LIMITS.excerpt).meta({
     description:
       "A short plain text summary of the content, shown in post lists.",
   }),
@@ -109,35 +122,60 @@ export const PostMetadataDetailsSchema = z.object({
     description:
       "When the author published this revision, as an ISO 8601 date.",
   }),
-  previousVersion: z.string().min(1).optional().meta({
-    description:
-      "The Arweave transaction id of the revision this one replaces.",
-  }),
+  previousVersion: z
+    .string()
+    .min(1)
+    .max(POST_METADATA_LIMITS.previousVersion)
+    .optional()
+    .meta({
+      description:
+        "The Arweave transaction id of the revision this one replaces.",
+    }),
   coverImage: MediaImageMetadataSchema.optional().meta({
     description: "The cover image.",
   }),
-  tags: Tagchema.array().min(1).max(5).optional().meta({
-    description: "An arbitrary list of tags.",
-  }),
+  tags: TagSchema.array()
+    .min(1)
+    .max(POST_METADATA_LIMITS.tags)
+    .optional()
+    .meta({
+      description: "An arbitrary list of tags.",
+    }),
   language: z.string().min(2).max(35).optional().meta({
     description: "The language of the content, as a BCP 47 tag such as `en`.",
   }),
-  metaTitle: z.string().min(1).optional().meta({
-    description:
-      "The title for search engines and link previews, the title when omitted.",
-  }),
-  metaDescription: z.string().min(1).optional().meta({
-    description:
-      "The description for search engines and link previews, the excerpt when omitted.",
-  }),
-  canonicalUri: z.url().optional().meta({
-    description:
-      "The URL of the original version of the post when it was first published elsewhere.",
-  }),
+  metaTitle: z
+    .string()
+    .min(1)
+    .max(POST_METADATA_LIMITS.metaTitle)
+    .optional()
+    .meta({
+      description:
+        "The title for search engines and link previews, the title when omitted.",
+    }),
+  metaDescription: z
+    .string()
+    .min(1)
+    .max(POST_METADATA_LIMITS.metaDescription)
+    .optional()
+    .meta({
+      description:
+        "The description for search engines and link previews, the excerpt when omitted.",
+    }),
+  // The canonical URI points readers to the original web page of the post.
+  canonicalUri: urlWithSchemes(
+    ["http", "https"],
+    POST_METADATA_LIMITS.canonicalUri,
+  )
+    .optional()
+    .meta({
+      description:
+        "The http(s) URL of the original version of the post when it was first published elsewhere.",
+    }),
   contentWarning: ContentWarningSchema.optional(),
   attributes: PostMetadataAttributeSchema.array()
     .min(1)
-    .max(20)
+    .max(POST_METADATA_LIMITS.attributes)
     .optional()
     .meta({
       description: "Additional information that is not part of the standard.",

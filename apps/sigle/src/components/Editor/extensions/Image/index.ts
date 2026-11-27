@@ -1,6 +1,9 @@
-import TipTapImageBase, { type ImageOptions } from "@tiptap/extension-image";
+import type { ImageOptions } from "@tiptap/extension-image";
+import type { Node as ProseMirrorNode } from "@tiptap/pm/model";
+import TipTapImageBase from "@tiptap/extension-image";
 import { Plugin, PluginKey } from "@tiptap/pm/state";
 import { ReactNodeViewRenderer } from "@tiptap/react";
+import posthog from "posthog-js";
 import { ImageComponent } from "./Component";
 
 declare module "@tiptap/core" {
@@ -58,22 +61,26 @@ export const TipTapImage = TipTapImageBase.extend<
     return ReactNodeViewRenderer(ImageComponent);
   },
 
-  // Same as the base extension, except an image still waiting for its URL is
-  // not part of the post content.
+  // Same as the base extension, except an image still waiting for its URL, or
+  // still uploading with a local preview, is not part of the post content.
   renderMarkdown(node) {
-    const src = node.attrs?.src ?? "";
+    const src = String(node.attrs?.src ?? "");
 
-    if (!src) return "";
+    // An image still uploading shows a local `blob:` preview, which is not
+    // part of the post: it only exists in this tab.
+    if (!src || src.startsWith("blob:")) {
+      return "";
+    }
 
-    const alt = node.attrs?.alt ?? "";
-    const title = node.attrs?.title ?? "";
+    const alt = String(node.attrs?.alt ?? "");
+    const title = String(node.attrs?.title ?? "");
 
     // Backslashes and parentheses are backslash-escaped so an unbalanced `)`
     // does not end the destination, and whitespace, which is never valid in a
     // URL, is encoded.
     const destination = src
-      .replace(/[\\()]/g, "\\$&")
-      .replace(/\s/g, encodeURIComponent);
+      .replaceAll(/[\\()]/g, String.raw`\$&`)
+      .replaceAll(/\s/g, encodeURIComponent);
 
     return title
       ? `![${alt}](${destination} "${title}")`
@@ -82,7 +89,7 @@ export const TipTapImage = TipTapImageBase.extend<
 
   // Uploads the image files dropped or pasted in the editor.
   addProseMirrorPlugins() {
-    const insertFiles = (files: File[], position?: number) => {
+    const insertFiles = (files: Array<File>, position?: number) => {
       const { uploadFile, onUploadUnavailable } = this.options;
 
       if (!uploadFile) {
@@ -93,8 +100,9 @@ export const TipTapImage = TipTapImageBase.extend<
 
       // Each insertion moves the selection after its image, so the files keep
       // their order.
-      if (position !== undefined)
+      if (position !== undefined) {
         this.editor.commands.setTextSelection(position);
+      }
 
       for (const file of files) {
         this.editor.chain().focus().setImageFromFile({ file }).run();
@@ -111,7 +119,9 @@ export const TipTapImage = TipTapImageBase.extend<
 
             // Moving an image already in the post carries no file, and is
             // left to ProseMirror.
-            if (files.length === 0) return false;
+            if (files.length === 0) {
+              return false;
+            }
 
             event.preventDefault();
             insertFiles(
@@ -126,11 +136,15 @@ export const TipTapImage = TipTapImageBase.extend<
             // An image copied from a web page also comes with HTML linking to
             // it, which ProseMirror pastes as an image from that URL, and text
             // copied from a document can come with an image of itself.
-            if (hasPastableHtml(event.clipboardData)) return false;
+            if (hasPastableHtml(event.clipboardData)) {
+              return false;
+            }
 
             const files = getImageFiles(event.clipboardData);
 
-            if (files.length === 0) return false;
+            if (files.length === 0) {
+              return false;
+            }
 
             insertFiles(files);
 
@@ -153,7 +167,9 @@ export const TipTapImage = TipTapImageBase.extend<
         ({ chain, editor }) => {
           const { uploadFile } = this.options;
 
-          if (!uploadFile) return false;
+          if (!uploadFile) {
+            return false;
+          }
 
           const uploadId = crypto.randomUUID();
           // We show a preview of  the image image as uploading can take a while.
@@ -168,7 +184,6 @@ export const TipTapImage = TipTapImageBase.extend<
 
           uploadFile(file)
             .then((imageUrl) => {
-              // The file can take some time to propagate to IPFS. So we keep the local preview of the file
               const transaction = editor.state.tr;
               editor.state.doc.descendants((node, pos) => {
                 if (
@@ -191,10 +206,11 @@ export const TipTapImage = TipTapImageBase.extend<
                 }
               });
               editor.view.dispatch(transaction);
+              URL.revokeObjectURL(preview);
             })
-            .catch((error) => {
+            .catch((error: unknown) => {
               // If the upload fails, we remove the image node from the document
-              console.error("Failed to upload image", error);
+              posthog.captureException(error);
               const transaction = editor.state.tr;
               editor.state.doc.descendants((node, pos) => {
                 if (
@@ -205,6 +221,7 @@ export const TipTapImage = TipTapImageBase.extend<
                 }
               });
               editor.view.dispatch(transaction);
+              URL.revokeObjectURL(preview);
             });
 
           return true;
@@ -221,12 +238,15 @@ export const TipTapImage = TipTapImageBase.extend<
     const transaction = editor.state.tr;
 
     editor.state.doc.descendants((node, pos) => {
+      const src: unknown = node.attrs.src;
+
       // Without an uploader the Gaia images are kept as they are, instead of
       // being removed from the document when their upload fails.
       if (
         uploadFile &&
         node.type.name === "image" &&
-        node.attrs.src?.startsWith("https://gaia.blockstack.org/hub/")
+        typeof src === "string" &&
+        src.startsWith("https://gaia.blockstack.org/hub/")
       ) {
         const uploadId = crypto.randomUUID();
 
@@ -238,7 +258,7 @@ export const TipTapImage = TipTapImageBase.extend<
         const newNode = node.type.create(attrs, node.content, node.marks);
         transaction.replaceWith(pos, pos + node.nodeSize, newNode);
 
-        fetch(node.attrs.src)
+        fetch(src)
           .then((response) => response.blob())
           .then((blob) => {
             const file = new File([blob], "image", { type: blob.type });
@@ -273,8 +293,8 @@ export const TipTapImage = TipTapImageBase.extend<
             });
             editor.view.dispatch(updateTransaction);
           })
-          .catch((error) => {
-            console.error("Failed to upload image", error);
+          .catch((error: unknown) => {
+            posthog.captureException(error);
             const deleteTransaction = editor.state.tr;
             editor.state.doc.descendants((innerNode, innerPos) => {
               if (
@@ -303,7 +323,9 @@ export const TipTapImage = TipTapImageBase.extend<
 const hasPastableHtml = (data: DataTransfer | null) => {
   const html = data?.getData("text/html");
 
-  if (!html) return false;
+  if (!html) {
+    return false;
+  }
 
   const document = new DOMParser().parseFromString(html, "text/html");
   const images = Array.from(document.querySelectorAll("img"));
@@ -319,3 +341,21 @@ const getImageFiles = (data: DataTransfer | null) =>
   Array.from(data?.files ?? []).filter((file) =>
     file.type.startsWith("image/"),
   );
+
+/**
+ * Whether an image of the document is still uploading: it has an
+ * `uploadId` until its uploaded URL replaces the preview.
+ */
+export const hasPendingImageUploads = (doc: ProseMirrorNode): boolean => {
+  let pending = false;
+
+  doc.descendants((node) => {
+    if (node.type.name === "image" && node.attrs.uploadId) {
+      pending = true;
+    }
+
+    return !pending;
+  });
+
+  return pending;
+};

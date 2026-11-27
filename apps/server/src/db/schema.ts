@@ -1,3 +1,4 @@
+import type { SQLiteColumn } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 import {
   blob,
@@ -7,7 +8,6 @@ import {
   sqliteTable,
   text,
   uniqueIndex,
-  type SQLiteColumn,
 } from "drizzle-orm/sqlite-core";
 
 /** Millisecond timestamp, read back as a `Date`. */
@@ -18,7 +18,7 @@ const boolean = (name: string) => integer(name, { mode: "boolean" });
 
 /** A string array stored as JSON text. */
 const textArray = (name: string) =>
-  text(name, { mode: "json" }).$type<string[]>();
+  text(name, { mode: "json" }).$type<Array<string>>();
 
 const now = () => new Date();
 
@@ -169,12 +169,12 @@ export const draft = sqliteTable(
     arweaveTxId: text("arweave_tx_id"),
     // Publish state, null until the draft is first published.
     txStatus: text("tx_status").$type<"PENDING" | "PROCESSING" | "FAILED">(),
-    // Signature of the signed post metadata the draft is publishing (or last
-    // attempted). `arweaveTxId` is a valid checkpoint only while it matches.
+    // Signature of the signed post metadata of the current publish generation
+    // (or the last attempted one). `arweaveTxId` is its upload checkpoint.
     publishSignature: text("publish_signature"),
-    // Lease held by the worker uploading to Arweave, so concurrent workers for
-    // the same signature do not upload the same metadata twice.
-    uploadClaimedAt: timestamp("upload_claimed_at"),
+    // Bumped by every accepted new publish. Each generation runs as exactly one
+    // queue job, and the job fences every draft write on it.
+    publishGeneration: integer("publish_generation").notNull().default(0),
     tags: textArray("tags"),
     contentWarning: text("content_warning", { enum: contentWarnings }),
     createdAt: timestamp("created_at").$defaultFn(now).notNull(),

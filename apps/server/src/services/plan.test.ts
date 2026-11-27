@@ -3,7 +3,8 @@ import { TEG_NFT_ASSET_IDENTIFIER } from "@sigle/sdk";
 import { eq } from "drizzle-orm";
 import { Effect, Layer, Option, Redacted } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
-import { AppConfig, type AppConfigValues } from "@/config";
+import type { AppConfigValues } from "@/config";
+import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { user } from "@/db/schema";
 import { reconcileUserPlans } from "@/jobs/plan-reconcile";
@@ -272,11 +273,11 @@ describe("plan service", () => {
 
       expect({
         plan: afterCheck?.plan,
-        checked: afterCheck?.planCheckedAt instanceof Date,
+        planCheckedAt: afterCheck?.planCheckedAt,
         afterFailure: yield* findStoredPlan(userId),
       }).toStrictEqual({
         plan: "pro",
-        checked: true,
+        planCheckedAt: expect.any(Date),
         afterFailure: afterCheck,
       });
     }).pipe(

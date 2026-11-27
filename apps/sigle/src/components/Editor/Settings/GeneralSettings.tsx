@@ -1,6 +1,7 @@
+import type { Tag } from "react-tag-input";
 import { IconX } from "@tabler/icons-react";
 import { useFormContext } from "react-hook-form";
-import { WithContext as ReactTags, type Tag } from "react-tag-input";
+import { WithContext as ReactTags } from "react-tag-input";
 import {
   Select,
   SelectContent,
@@ -122,7 +123,11 @@ export const GeneralSettings = () => {
           onTagUpdate={handleTagUpdate}
           onClearAll={handleClearAll}
           maxTags={5}
-          removeComponent={({ onRemove }) => (
+          removeComponent={({
+            onRemove,
+          }: {
+            onRemove: React.MouseEventHandler<HTMLButtonElement>;
+          }) => (
             <button
               type="button"
               onClick={onRemove}

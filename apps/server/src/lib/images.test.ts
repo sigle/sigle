@@ -63,6 +63,7 @@ describe("images", () => {
 
       const optimized = yield* optimizeImage({
         buffer: new Uint8Array(png),
+        height: 32,
         quality: 75,
         width: 32,
       });
@@ -89,6 +90,7 @@ describe("images", () => {
 
       const optimized = yield* optimizeImage({
         buffer: new Uint8Array(png),
+        height: 1000,
         quality: 75,
         width: 1000,
       });
@@ -107,6 +109,7 @@ describe("images", () => {
     Effect.gen(function* () {
       const error = yield* optimizeImage({
         buffer: new Uint8Array([1, 2, 3]),
+        height: 100,
         quality: 75,
         width: 100,
       }).pipe(Effect.flip);
@@ -122,6 +125,7 @@ describe("images", () => {
 
       const error = yield* optimizeImage({
         buffer: new Uint8Array(png),
+        height: 32,
         limitInputPixels: 100,
         quality: 75,
         width: 32,

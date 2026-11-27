@@ -1,9 +1,8 @@
+import type { MediaImageMetadata, PostMetadata } from "@sigle/sdk";
 import type { Editor } from "@tiptap/core";
 import {
   createPostMetadata,
-  type MediaImageMetadata,
   MediaImageMimeType,
-  type PostMetadata,
   PostMetadataSchemaId,
 } from "@sigle/sdk";
 import { fileTypeFromBuffer } from "file-type";
@@ -18,7 +17,7 @@ const getImageMediaMetadata = async (
   const arrayBuffer = await response.arrayBuffer();
   const buffer = Buffer.from(arrayBuffer);
   const contentType = await fileTypeFromBuffer(buffer);
-  let type: MediaImageMimeType | null = null;
+  let type: MediaImageMimeType;
 
   switch (contentType?.mime) {
     case "image/gif":
@@ -32,10 +31,9 @@ const getImageMediaMetadata = async (
       break;
     case "image/webp":
       type = MediaImageMimeType.WEBP;
-  }
-
-  if (!type) {
-    throw new Error(`Image type "${contentType?.mime}" is not supported`);
+      break;
+    default:
+      throw new Error(`Image type "${contentType?.mime}" is not supported`);
   }
 
   // The size lets readers lay the cover out before it loads.

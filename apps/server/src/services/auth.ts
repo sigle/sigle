@@ -3,10 +3,13 @@ import { betterAuth } from "better-auth/minimal";
 import { eq } from "drizzle-orm";
 import { Context, Effect, Layer, Redacted } from "effect";
 import { siws } from "sign-in-with-stacks/plugins/better-auth";
-import { AppConfig, type AppConfigValues } from "@/config";
-import { AuthDatabase, type AuthDatabaseClient } from "@/db";
+import type { AppConfigValues } from "@/config";
+import type { AuthDatabaseClient } from "@/db";
+import type { PostHogClient } from "@/services/posthog";
+import { AppConfig } from "@/config";
+import { AuthDatabase } from "@/db";
 import * as schema from "@/db/schema";
-import { type PostHogClient, PostHogService } from "@/services/posthog";
+import { PostHogService } from "@/services/posthog";
 
 export const AUTH_COOKIE_PREFIX = "sigle";
 

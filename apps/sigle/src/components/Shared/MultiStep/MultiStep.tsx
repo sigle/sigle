@@ -4,7 +4,7 @@ import type { MultiStepToastStep } from "../MultiStepToast/store";
 import { Spinner } from "../../ui/spinner";
 
 interface MultiStepProps {
-  steps: MultiStepToastStep[];
+  steps: Array<MultiStepToastStep>;
   className?: string;
 }
 

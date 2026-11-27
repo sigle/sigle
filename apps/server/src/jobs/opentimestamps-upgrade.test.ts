@@ -1,18 +1,20 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
 import { Duration, Effect, Exit, Layer, Option, Schedule } from "effect";
+import type { QueueStats } from "@/queue/admin";
+import type { ArweaveUploadOptions } from "@/services/arweave";
+import type { OpenTimestampsOperations } from "@/services/opentimestamps";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { postOts } from "@/db/schema";
 import { makeQueuesTestLayer } from "@/jobs";
-import { JobAdminService, type QueueStats } from "@/queue/admin";
-import { ArweaveService, type ArweaveUploadOptions } from "@/services/arweave";
+import { JobAdminService } from "@/queue/admin";
+import { ArweaveService } from "@/services/arweave";
 import { ImageProcessingService } from "@/services/image-processing";
 import {
   OTS_TEST_UPGRADED_PROOF,
   OTS_TEST_VERIFICATION,
   OpenTimestampsService,
-  type OpenTimestampsOperations,
   OtsInvalidProofError,
   OtsNotAnchoredError,
 } from "@/services/opentimestamps";
@@ -305,7 +307,7 @@ describe("opentimestamps upgrade job", () => {
           completed: upgradeStats?.completed,
           failed: upgradeStats?.failed,
           uploads: uploads.length,
-        }).toStrictEqual({ completed: 1, failed: 0, uploads: 0 });
+        }).toStrictEqual({ completed: 0, failed: 1, uploads: 0 });
       }).pipe(
         Effect.provide(
           makeUpgradeTestLayer({
@@ -379,7 +381,7 @@ describe("opentimestamps upgrade job", () => {
         completed: upgradeStats?.completed,
         failed: upgradeStats?.failed,
         uploads: uploads.length,
-      }).toStrictEqual({ completed: 1, failed: 0, uploads: 0 });
+      }).toStrictEqual({ completed: 0, failed: 1, uploads: 0 });
     }).pipe(
       Effect.provide(
         makeUpgradeTestLayer({

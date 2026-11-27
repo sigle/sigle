@@ -5,27 +5,47 @@ const STACKS_DECIMALS = 6;
 const BTC_DECIMALS = 8;
 
 /**
+ * `value` without its trailing zeros. A loop rather than `/0+$/`, which takes
+ * quadratic time on a long run of zeros that doesn't end the string.
+ */
+const trimTrailingZeros = (value: string) => {
+  let end = value.length;
+
+  while (end > 0 && value[end - 1] === "0") {
+    end--;
+  }
+
+  return value.slice(0, end);
+};
+
+/**
  * https://github.com/wevm/viem/blob/d0275721a89d0d803e907041d4d16e7f9818bfba/src/utils/unit/parseUnits.ts
  *
  * Multiplies a string representation of a number by a given exponent of base 10 (10exponent).
  */
 export function parseUnits(value: string, decimals: number): bigint {
-  if (!/^(-?)([0-9]*)\.?([0-9]*)$/.test(value))
+  // Digits only after the dot: `[0-9]*\.?[0-9]*` could split a run of digits
+  // many ways and backtrack in quadratic time on long invalid input.
+  if (!/^-?\d*(?:\.\d*)?$/.test(value)) {
     throw new InvalidDecimalNumberError({ value });
+  }
 
   let [integer, fraction = "0"] = value.split(".");
 
   const negative = integer.startsWith("-");
 
-  if (negative) integer = integer.slice(1);
+  if (negative) {
+    integer = integer.slice(1);
+  }
 
   // trim trailing zeros.
-  fraction = fraction.replace(/(0+)$/, "");
+  fraction = trimTrailingZeros(fraction);
 
   // round off if the fraction is larger than the number of decimals.
   if (decimals === 0) {
-    if (Math.round(Number(`.${fraction}`)) === 1)
+    if (Math.round(Number(`.${fraction}`)) === 1) {
       integer = `${BigInt(integer) + 1n}`;
+    }
     fraction = "";
   } else if (fraction.length > decimals) {
     const [left, unit, right] = [
@@ -36,9 +56,11 @@ export function parseUnits(value: string, decimals: number): bigint {
 
     const rounded = Math.round(Number(`${unit}.${right}`));
 
-    if (rounded > 9)
+    if (rounded > 9) {
       fraction = `${BigInt(left) + BigInt(1)}0`.padStart(left.length + 1, "0");
-    else fraction = `${left}${rounded}`;
+    } else {
+      fraction = `${left}${rounded}`;
+    }
 
     if (fraction.length > decimals) {
       fraction = fraction.slice(1);
@@ -63,13 +85,14 @@ export function formatUnits(value: bigint, decimals: number) {
 
   const negative = display.startsWith("-");
 
-  if (negative) display = display.slice(1);
+  if (negative) {
+    display = display.slice(1);
+  }
 
   display = display.padStart(decimals, "0");
 
   const integer = display.slice(0, display.length - decimals);
-  let fraction = display.slice(display.length - decimals);
-  fraction = fraction.replace(/(0+)$/, "");
+  const fraction = trimTrailingZeros(display.slice(display.length - decimals));
 
   return `${negative ? "-" : ""}${integer || "0"}${fraction ? `.${fraction}` : ""}`;
 }

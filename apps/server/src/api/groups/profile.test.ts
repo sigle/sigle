@@ -8,19 +8,22 @@ import {
   HttpClientResponse,
 } from "effect/http";
 import sharp from "sharp";
+import type { BnsName } from "@/services/bns";
 import type { PostHogEvent } from "@/services/posthog";
+import type {
+  StorageTestOverrides,
+  StorageTestRecorder,
+} from "@/services/storage";
 import { UserProfile } from "@/api/groups/users";
 import { RATE_LIMITS } from "@/api/middleware/rate-limit";
 import { Database } from "@/db";
 import { mediaImage, profile as profileTable } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
-import { BnsLookupError, type BnsName, BnsService } from "@/services/bns";
+import { BnsLookupError, BnsService } from "@/services/bns";
 import {
   makeStorageTestRecorder,
   StorageService,
   StorageUploadError,
-  type StorageTestOverrides,
-  type StorageTestRecorder,
   STORAGE_TEST_PUBLIC_URL,
 } from "@/services/storage";
 import {
@@ -529,6 +532,75 @@ describe("profile", () => {
     }).pipe(Effect.provide(imageServerLayer(recorder, {}, events)));
   });
 
+  it.effect("PUT /images/cover fits a tall image inside the cover box", () => {
+    const recorder = makeStorageTestRecorder();
+
+    return Effect.gen(function* () {
+      const { client } = yield* createAuthenticatedClient();
+      const png = yield* Effect.promise(() => makePngBuffer(300, 6000));
+
+      const response = yield* uploadImageRequest(client, "cover", {
+        bytes: new Uint8Array(png),
+        contentType: "image/png",
+      });
+
+      const uploaded = recorder.uploads[0];
+
+      const metadata = yield* Effect.promise(() =>
+        sharp(Buffer.from(uploaded?.body ?? new Uint8Array())).metadata(),
+      );
+
+      // The testnet cover box is 2000 x 1000.
+      expect({
+        status: response.status,
+        width: metadata.width,
+        height: metadata.height,
+      }).toStrictEqual({ status: 200, width: 50, height: 1000 });
+    }).pipe(Effect.provide(imageServerLayer(recorder)));
+  });
+
+  it.effect("PUT /images/cover rejects an image too large to decode", () => {
+    const recorder = makeStorageTestRecorder();
+
+    return Effect.gen(function* () {
+      const { client } = yield* createAuthenticatedClient();
+
+      // A few hundred KB that decode to 87 MB: 16-bit RGBA, interlaced so it
+      // cannot be streamed.
+      const png = yield* Effect.promise(() =>
+        sharp({
+          create: {
+            width: 3300,
+            height: 3300,
+            channels: 4,
+            background: { r: 255, g: 0, b: 0, alpha: 0.5 },
+          },
+        })
+          .toColourspace("rgb16")
+          .png({ progressive: true })
+          .toBuffer(),
+      );
+
+      const response = yield* uploadImageRequest(client, "cover", {
+        bytes: new Uint8Array(png),
+        contentType: "image/png",
+      });
+
+      const body =
+        yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
+
+      expect({
+        status: response.status,
+        message: body.message,
+        uploads: recorder.uploads.length,
+      }).toStrictEqual({
+        status: 413,
+        message: "Image dimensions are too large to process.",
+        uploads: 0,
+      });
+    }).pipe(Effect.provide(imageServerLayer(recorder)));
+  });
+
   it.effect(
     "PUT /images/cover stores a webp under the cover key and its hash",
     () => {
@@ -636,12 +708,12 @@ describe("profile", () => {
 
       expect({
         deletes: recorder.deletes,
-        mediaIds: mediaIds.map((row) => row.id).sort(),
+        mediaIds: new Set(mediaIds.map((row) => row.id)),
         picture: saved.profile.picture?.url,
         coverPicture: saved.profile.coverPicture?.url,
       }).toStrictEqual({
         deletes: [keys[0]],
-        mediaIds: [secondUrl, `${STORAGE_TEST_PUBLIC_URL}/${keys[3]}`].sort(),
+        mediaIds: new Set([secondUrl, `${STORAGE_TEST_PUBLIC_URL}/${keys[3]}`]),
         picture: secondUrl,
         coverPicture: `${STORAGE_TEST_PUBLIC_URL}/${keys[3]}`,
       });

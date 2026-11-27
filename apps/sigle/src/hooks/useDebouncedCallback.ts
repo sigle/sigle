@@ -2,53 +2,58 @@
 import React from "react";
 
 // debounce function (defaults wait to .2 seconds)
-// oxlint-disable-next-line typescript/no-explicit-any any is fine
-const debounce = (func: any, wait = 200) => {
-  // oxlint-disable-next-line init-declarations timeout will be initialized later
-  let timeout: NodeJS.Timeout; // for the setTimeout function and so it can be cleared
+const debounce = <Args extends Array<unknown>>(
+  func: (...args: Args) => void,
+  wait = 200,
+) => {
+  let timeout: NodeJS.Timeout;
+  // The arguments of the call waiting for the timeout, null when none is.
+  let pendingArgs: Args | null = null;
 
-  // oxlint-disable-next-line typescript/no-explicit-any any is fine
-  function executedFunction(...args: any) {
-    // the function returned from debounce
-    const later = () => {
-      // this is the delayed function
-      clearTimeout(timeout); // clears the timeout when the function is called
-      func(...args); // calls the function
-    };
-
-    clearTimeout(timeout); // this clears the timeout each time the function is run again preventing later from running until we stop calling the function
-    timeout = setTimeout(later, wait); // this sets the time out to run after the wait period
+  function executedFunction(...args: Args) {
+    pendingArgs = args;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => executedFunction.flush(), wait);
   }
 
+  // Runs the pending call now, if there is one.
+  executedFunction.flush = () => {
+    clearTimeout(timeout);
+
+    if (pendingArgs === null) {
+      return;
+    }
+    const args = pendingArgs;
+    pendingArgs = null;
+    func(...args);
+  };
+
   executedFunction.cancel = () => {
-    // so can be cancelled
-    clearTimeout(timeout); // clears the timeout
+    clearTimeout(timeout);
+    pendingArgs = null;
   };
 
   return executedFunction;
 };
 
 // hook for using the debounce function
-export function useDebouncedCallback(
-  // oxlint-disable-next-line typescript/no-explicit-any any is fine
-  callback: any,
+export function useDebouncedCallback<Args extends Array<unknown>>(
+  callback: (...args: Args) => void,
   delay = 1000,
-  // oxlint-disable-next-line typescript/no-explicit-any any is fine
-  deps: any[] = [],
+  deps: React.DependencyList = [],
 ) {
   // debounce the callback
-  // oxlint-disable-next-line exhaustive-deps
+  // The caller lists the dependencies of its callback in `deps`.
+  // oxlint-disable-next-line exhaustive-deps, react/use-memo
   const debouncedCallback = React.useCallback(debounce(callback, delay), [
     delay,
     ...deps,
-    // oxlint-disable-next-line exhaustive-deps
   ]); // with the delay
 
-  // clean up on unmount or dependency change
-  // oxlint-disable-next-line exhaustive-deps
+  // run any pending call on unmount or dependency change, so it isn't lost
   React.useEffect(() => {
     return () => {
-      debouncedCallback.cancel(); // cancel any pending calls
+      debouncedCallback.flush();
     };
     // oxlint-disable-next-line exhaustive-deps
   }, [delay, ...deps]);

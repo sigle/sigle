@@ -2,13 +2,15 @@ import { describe, expect, it } from "@effect/vitest";
 import { Effect, Fiber, Layer, Predicate } from "effect";
 import { HttpClient, HttpClientResponse } from "effect/http";
 import { TestClock } from "effect/testing";
+import type {
+  ArweaveBlockHeightsResponse,
+  ArweaveTag,
+  ArweaveUploader,
+} from "@/services/arweave";
 import { AppConfig } from "@/config";
 import {
-  type ArweaveBlockHeightsResponse,
   ArweaveService,
   ArweaveUploadError,
-  type ArweaveTag,
-  type ArweaveUploader,
   makeArweaveService,
   UPLOAD_TIMEOUT,
 } from "@/services/arweave";

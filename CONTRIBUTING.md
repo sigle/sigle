@@ -4,9 +4,8 @@ We're open to all community contributions! This includes bug reports, feature re
 
 ## Requirements
 
-- [Node](https://nodejs.org/en/) 24+
-- [pnpm](https://pnpm.io/) 10+
-- [Docker](https://www.docker.com/) (Docker Compose 2.22.0+)
+- [Node](https://nodejs.org/en/) 26+
+- [pnpm](https://pnpm.io/) 12+
 
 ## Pull Requests
 
@@ -16,8 +15,7 @@ For non-bug-fixes, please open an issue first and discuss your idea to make sure
 
 - Fork the repository and create a new branch from `main`.
 - Must not break the test suite. If you're fixing a bug, include a test that would fail without your fix (`pnpm test`).
-- Must be formatted with oxfmt (`pnpm format:fix`).
-- Must be linted with oxlint (`pnpm lint:fix`).
+- Must pass the format, lint and type checks (`pnpm vp check`; `pnpm vp check --fix` fixes format and lint).
 - Must be **isolated**. Avoid grouping many, unrelated changes in a single PR.
 - Must contain a changeset file describing the changes and affected packages. Run `pnpm changeset` to generate one.
 
@@ -68,11 +66,28 @@ After changing `apps/server/src/db/schema.ts`, generate a Drizzle migration:
 cd apps/server && pnpm drizzle-kit generate --name <migration-name>
 ```
 
-### Update the e2e tests snapshots
+### Run the end-to-end tests
 
-To update the e2e tests snapshots, run the following command from the root directory:
+The website has a [Playwright](https://playwright.dev/) suite in `apps/sigle/e2e`. It drives a browser against a production build of the website and the real API, and calls no outside service: the API runs with an in-memory database and test doubles for Arweave, R2, BNS, OpenTimestamps and PostHog (`apps/server/src/test/e2e-server.ts`), and the browser gets a wallet that signs with a throwaway testnet key (`apps/sigle/e2e/wallet.ts`).
+
+Install the browser once:
 
 ```sh
-docker build -t local-playwright-docker --file apps/sigle/Dockerfile.dev .
-docker run -v "./apps/sigle/e2e:/app/apps/sigle/e2e" -it local-playwright-docker:latest
+pnpm --filter @sigle/sigle exec playwright install chromium
 ```
+
+Then run the suite from the root directory:
+
+```sh
+pnpm e2e
+```
+
+It builds the website, then starts it on http://localhost:3100 and the API on http://localhost:3101, so it runs next to the development servers. To run one file, or to reuse the build of the previous run:
+
+```sh
+cd apps/sigle
+pnpm e2e auth.test.ts
+E2E_SKIP_BUILD=1 pnpm e2e
+```
+
+A failed test leaves a trace in `apps/sigle/test-results`, open it with `pnpm exec playwright show-trace <trace.zip>`.

@@ -5,12 +5,10 @@ import {
   publicKeyToAddress,
 } from "@stacks/transactions";
 import { Result } from "better-result";
+import type { PostSignatureNetwork } from "./post-signature.js";
 import type { PostMetadata } from "./post.js";
 import { InvalidSignatureError } from "./errors.js";
-import {
-  postSignatureHash,
-  type PostSignatureNetwork,
-} from "./post-signature.js";
+import { postSignatureHash } from "./post-signature.js";
 
 export interface VerifyMetadataSignatureOptions {
   network?: PostSignatureNetwork;

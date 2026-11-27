@@ -18,15 +18,18 @@
         "title": {
           "type": "string",
           "minLength": 1,
+          "maxLength": 300,
           "description": "Post title."
         },
         "content": {
           "type": "string",
           "minLength": 1,
+          "maxLength": 1000000,
           "description": "Markdown content."
         },
         "excerpt": {
           "type": "string",
+          "maxLength": 1000,
           "description": "A short plain text summary of the content, shown in post lists."
         },
         "publishedAt": {
@@ -38,7 +41,8 @@
         "previousVersion": {
           "description": "The Arweave transaction id of the revision this one replaces.",
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 100
         },
         "coverImage": {
           "description": "The cover image.",
@@ -46,7 +50,10 @@
           "properties": {
             "url": {
               "type": "string",
-              "format": "uri"
+              "maxLength": 2048,
+              "pattern": "^([hH][tT][tT][pP]|[hH][tT][tT][pP][sS]|[iI][pP][fF][sS]|[aA][rR]):",
+              "format": "uri",
+              "description": "An http(s), ipfs:// or ar:// URL of the image."
             },
             "type": {
               "type": "string",
@@ -67,7 +74,8 @@
             },
             "alt": {
               "description": "The alt tag of the image for accessibility.",
-              "type": "string"
+              "type": "string",
+              "maxLength": 1000
             }
           },
           "required": ["url", "type", "width", "height"],
@@ -94,16 +102,20 @@
         "metaTitle": {
           "description": "The title for search engines and link previews, the title when omitted.",
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 100
         },
         "metaDescription": {
           "description": "The description for search engines and link previews, the excerpt when omitted.",
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 250
         },
         "canonicalUri": {
-          "description": "The URL of the original version of the post when it was first published elsewhere.",
+          "description": "The http(s) URL of the original version of the post when it was first published elsewhere.",
           "type": "string",
+          "maxLength": 200,
+          "pattern": "^([hH][tT][tT][pP]|[hH][tT][tT][pP][sS]):",
           "format": "uri"
         },
         "contentWarning": {
@@ -122,10 +134,12 @@
               "key": {
                 "type": "string",
                 "minLength": 1,
+                "maxLength": 100,
                 "description": "The attribute's unique identifier."
               },
               "value": {
                 "type": "string",
+                "maxLength": 1000,
                 "description": "The attribute's value."
               }
             },

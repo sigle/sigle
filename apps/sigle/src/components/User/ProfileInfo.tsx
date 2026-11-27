@@ -18,7 +18,7 @@ export const ProfileInfo = ({ user }: ProfileInfoProps) => {
 
   return (
     <div className="mt-4">
-      <h1 className="headline text-3xl break-words">
+      <h1 className="headline text-3xl wrap-break-word">
         {profile?.displayName || formatReadableAddress(user.address)}
       </h1>
       {user.isExplorer ? (

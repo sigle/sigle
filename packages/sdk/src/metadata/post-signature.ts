@@ -16,8 +16,8 @@ type UnsignedPostMetadata = Pick<PostMetadata, "$schema" | "content">;
 export const canonicalPostMetadataJson = (
   metadata: UnsignedPostMetadata & Pick<PostMetadata, "signature">,
 ): string =>
-  JSON.stringify(metadata, (_key, value) =>
-    value instanceof Object && !Array.isArray(value)
+  JSON.stringify(metadata, (_key, value: unknown) =>
+    typeof value === "object" && value !== null && !Array.isArray(value)
       ? Object.fromEntries(
           Object.entries(value).toSorted(([a], [b]) =>
             a < b ? -1 : a > b ? 1 : 0,

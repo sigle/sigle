@@ -30,7 +30,7 @@ litestream restore -config apps/server/litestream.yml -timestamp 2026-11-02T10:0
 
 Set `DATABASE_PATH` to any path, it only picks the database entry in the config. Restore points begin at the oldest daily snapshot still kept.
 
-`server` sleeps after 5 to 10 minutes without outbound traffic. Its background jobs (profile indexing, OpenTimestamps upgrades, retries) wait until the next request wakes it.
+`server` sleeps after 5 to 10 minutes without outbound traffic. Its background jobs (publishing, OpenTimestamps upgrades, thumbhashes, retries) and periodic reconciliations wait until the next request wakes it.
 
 ## Railway configuration
 
@@ -45,7 +45,7 @@ Railway does not read this file when deploying, so merging a change does nothing
 
 ## Environment variables
 
-- **Non-secret values** are committed in each app's `.env.testnet`. The website builds it into the image; the server loads it on startup, and variables set on Railway take precedence.
+- **Non-secret values** are committed in each app's `.env.testnet`. The website builds it into the image; the server loads it on startup, and variables set on Railway take precedence. The website's Docker build uses the `.env.<environment>` file named by Railway's `RAILWAY_ENVIRONMENT_NAME`, and fails if it doesn't exist.
 - **Secrets** are stored in 1Password Environments and copied to Railway with [`scripts/sync-railway-env.sh`](../scripts/sync-railway-env.sh), which redeploys the service:
 
   ```sh

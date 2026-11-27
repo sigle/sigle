@@ -7,6 +7,8 @@ import {
   vi,
   afterEach,
 } from "vite-plus/test";
+import { sigleApiClient } from "@/lib/sigle";
+import { hasPendingImageUploads } from ".";
 import { EditorFormProvider } from "../../EditorFormProvider";
 import { EditorTipTap } from "../../EditorTiptap";
 import { useEditorStore } from "../../store";
@@ -46,7 +48,7 @@ vi.mock(import("@/hooks/useWindowSize"), () => ({
 }));
 
 vi.mock(import("@/lib/images"), () => ({
-  resolveImageUrl: vi.fn((url) => url),
+  resolveImageUrl: vi.fn((url: string) => url),
 }));
 
 const defaultPost = {
@@ -99,10 +101,12 @@ describe("image extension - uploads by plan", () => {
   });
 
   const getImageSources = () => {
-    const sources: unknown[] = [];
+    const sources: Array<unknown> = [];
 
     useEditorStore.getState().editor?.state.doc.descendants((node) => {
-      if (node.type.name === "image") sources.push(node.attrs.src);
+      if (node.type.name === "image") {
+        sources.push(node.attrs.src);
+      }
     });
 
     return sources;
@@ -164,9 +168,13 @@ describe("image extension - uploads by plan", () => {
   const paste = (data: { file?: File; html?: string }) => {
     const clipboardData = new DataTransfer();
 
-    if (data.file) clipboardData.items.add(data.file);
+    if (data.file) {
+      clipboardData.items.add(data.file);
+    }
 
-    if (data.html) clipboardData.setData("text/html", data.html);
+    if (data.html) {
+      clipboardData.setData("text/html", data.html);
+    }
 
     useEditorStore.getState().editor?.view.dom.dispatchEvent(
       new ClipboardEvent("paste", {
@@ -303,5 +311,70 @@ describe("image extension - uploads by plan", () => {
       sources: getImageSources(),
       fetches: fetchMock.mock.calls.length,
     }).toStrictEqual({ sources: [gaiaImage], fetches: 0 });
+  });
+});
+
+describe("image extension - pending uploads", () => {
+  beforeEach(() => {
+    useEditorStore.setState({ editor: undefined });
+  });
+
+  const renderEditor = async () => {
+    render(
+      <EditorFormProvider post={defaultPost}>
+        <EditorTipTap canUploadImages />
+      </EditorFormProvider>,
+    );
+
+    await waitFor(() => {
+      expect(useEditorStore.getState().editor).toBeDefined();
+    });
+
+    const editor = useEditorStore.getState().editor;
+    expect(editor).toBeDefined();
+
+    return editor!;
+  };
+
+  it("leaves an uploading image out of the markdown", async () => {
+    vi.mocked(sigleApiClient.useMutation).mockReturnValue(
+      // SAFETY: the upload only calls `mutateAsync`, which never resolves so
+      // the image stays uploading.
+      { mutateAsync: () => Promise.withResolvers<never>().promise },
+    );
+
+    const editor = await renderEditor();
+
+    editor.commands.setImageFromFile({
+      file: new File(["x"], "a.png", { type: "image/png" }),
+    });
+
+    expect(editor.getMarkdown()).not.toContain("blob:");
+    expect(hasPendingImageUploads(editor.state.doc)).toBe(true);
+  });
+
+  it("has no pending upload once the upload resolves", async () => {
+    vi.mocked(sigleApiClient.useMutation).mockReturnValue(
+      // SAFETY: the upload only calls `mutateAsync`.
+      {
+        mutateAsync: vi.fn().mockResolvedValue({
+          url: "https://example.com/uploaded-image.png",
+        }),
+      },
+    );
+
+    const editor = await renderEditor();
+
+    editor.commands.setImageFromFile({
+      file: new File(["x"], "a.png", { type: "image/png" }),
+    });
+
+    await waitFor(() => {
+      expect(
+        editor.$nodes("image")?.map((node) => String(node.attributes.src)),
+      ).toStrictEqual(["https://example.com/uploaded-image.png"]);
+    });
+
+    expect(hasPendingImageUploads(editor.state.doc)).toBe(false);
   });
 });

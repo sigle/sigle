@@ -3,7 +3,6 @@ allowBuilds:
   # Downloads its binary on first run instead, only when a build uploads
   # source maps
   "@posthog/cli": false
-  "@prisma/engines": true
   "@reown/appkit": false
   "bigint-buffer": false
   "bufferutil": false
@@ -11,7 +10,6 @@ allowBuilds:
   "esbuild": false
   "keccak": false
   msw: false
-  "prisma": false
   "protobufjs": false
   "secp256k1": false
   "sharp": false

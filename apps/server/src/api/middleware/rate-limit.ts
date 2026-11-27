@@ -11,9 +11,10 @@ import { HttpEffect, HttpServerRequest, HttpServerResponse } from "effect/http";
 import { HttpApiMiddleware } from "effect/http-api";
 import { RateLimiter } from "effect/persistence";
 import { isIPv6 } from "node:net";
+import type { AppConfigValues } from "@/config";
 import { CurrentUser } from "@/api/middleware/auth-user";
 import { InternalServerError, TooManyRequests } from "@/api/schemas";
-import { AppConfig, type AppConfigValues } from "@/config";
+import { AppConfig } from "@/config";
 
 export class RateLimitMiddleware extends HttpApiMiddleware.Service<RateLimitMiddleware>()(
   "sigle/RateLimitMiddleware",
@@ -106,21 +107,27 @@ export class RateLimitPolicy extends Context.Service<
   RateLimitPolicyName
 >()("sigle/RateLimitPolicy") {}
 
+/**
+ * The 16-bit groups of one side of an IPv6 `::`, with an embedded IPv4 address
+ * as its two groups.
+ */
+const parseIpv6Part = (part: string) =>
+  part === ""
+    ? []
+    : part.split(":").flatMap((group) => {
+        if (!group.includes(".")) {
+          return [Number.parseInt(group, 16)];
+        }
+
+        const [a = 0, b = 0, c = 0, d = 0] = group.split(".").map(Number);
+
+        return [a * 256 + b, c * 256 + d];
+      });
+
 const ipv6Groups = (address: string): ReadonlyArray<number> => {
-  const parse = (part: string) =>
-    part === ""
-      ? []
-      : part.split(":").flatMap((group) => {
-          if (!group.includes(".")) return [Number.parseInt(group, 16)];
-
-          const [a = 0, b = 0, c = 0, d = 0] = group.split(".").map(Number);
-
-          return [a * 256 + b, c * 256 + d];
-        });
-
   const [head = "", tail] = address.split("::");
-  const start = parse(head);
-  const end = tail === undefined ? [] : parse(tail);
+  const start = parseIpv6Part(head);
+  const end = tail === undefined ? [] : parseIpv6Part(tail);
 
   return [
     ...start,
@@ -137,13 +144,15 @@ const ipv6Groups = (address: string): ReadonlyArray<number> => {
 const rateLimitAddress = (ip: string): string => {
   const address = ip.split("%")[0] ?? ip;
 
-  if (!isIPv6(address)) return ip;
+  if (!isIPv6(address)) {
+    return ip;
+  }
 
   const groups = ipv6Groups(address);
 
   if (
     groups.slice(0, 5).every((group) => group === 0) &&
-    groups[5] === 0xffff
+    groups[5] === 0xff_ff
   ) {
     const [high = 0, low = 0] = groups.slice(6);
 

@@ -1,20 +1,23 @@
+import type { Effect } from "effect";
 import type { RateLimiter } from "effect/persistence";
 import { NodeHttpServer } from "@effect/platform-node";
-import { type Effect, Layer, Schedule } from "effect";
+import { Layer, Schedule } from "effect";
 import { HttpRouter } from "effect/http";
-import { AppConfig, type AppConfigValues } from "@/config";
+import type { AppConfigValues } from "@/config";
+import type {
+  ArweaveUploadError,
+  ArweaveUploadOptions,
+  ArweaveUploadResult,
+} from "@/services/arweave";
+import type { PostHogEvent } from "@/services/posthog";
+import { AppConfig } from "@/config";
 import { makeQueuesTestLayer } from "@/jobs";
 import { ApiRoutesLayer, AuthLayer } from "@/main";
-import {
-  ArweaveService,
-  type ArweaveUploadError,
-  type ArweaveUploadOptions,
-  type ArweaveUploadResult,
-} from "@/services/arweave";
+import { ArweaveService } from "@/services/arweave";
 import { BnsService } from "@/services/bns";
 import { ImageProcessingService } from "@/services/image-processing";
 import { OpenTimestampsService } from "@/services/opentimestamps";
-import { PostHogService, type PostHogEvent } from "@/services/posthog";
+import { PostHogService } from "@/services/posthog";
 import { RateLimiterLive } from "@/services/rate-limiter";
 import { StorageService } from "@/services/storage";
 import { TestDatabaseLayer } from "@/test/layer";
@@ -32,6 +35,43 @@ export interface TestServerOptions {
   readonly rateLimiter?: Layer.Layer<RateLimiter.RateLimiter>;
 }
 
+/**
+ * Provides a served API with everything but its HTTP server: the job queues,
+ * a fresh in-memory database, and test layers for the services that call
+ * outside the process (Arweave, R2, BNS, OpenTimestamps and PostHog).
+ */
+export const provideTestServices =
+  (
+    overrides: Partial<AppConfigValues> = {},
+    posthogEvents: Array<PostHogEvent> = [],
+    options: TestServerOptions = {},
+  ) =>
+  <A, E, R>(served: Layer.Layer<A, E, R>) =>
+    served.pipe(
+      Layer.provideMerge(
+        makeQueuesTestLayer({
+          pollInterval: options.pollInterval ?? "15 millis",
+          retrySchedule: Schedule.spaced("0 millis"),
+          maxAttempts: 2,
+        }),
+      ),
+      Layer.provide(AuthLayer),
+      Layer.provide(options.rateLimiter ?? RateLimiterLive),
+      Layer.provideMerge(TestDatabaseLayer),
+      Layer.provideMerge(AppConfig.layerTest(overrides)),
+      Layer.provide(PostHogService.layerTest(posthogEvents)),
+      Layer.provide(
+        options.opentimestamps ?? OpenTimestampsService.layerTest(),
+      ),
+      Layer.provide(options.imageProcessing ?? ImageProcessingService.layer),
+      Layer.provide(
+        options.arweave ??
+          ArweaveService.layerTest([], options.arweaveUploadImpl),
+      ),
+      Layer.provide(options.storage ?? StorageService.layerTest()),
+      Layer.provide(options.bns ?? BnsService.layerTest()),
+    );
+
 export const makeTestServerLayer = (
   overrides: Partial<AppConfigValues> = {},
   posthogEvents: Array<PostHogEvent> = [],
@@ -42,24 +82,5 @@ export const makeTestServerLayer = (
     disableLogger: true,
   }).pipe(
     Layer.provideMerge(NodeHttpServer.layerTest),
-    Layer.provideMerge(
-      makeQueuesTestLayer({
-        pollInterval: options.pollInterval ?? "15 millis",
-        retrySchedule: Schedule.spaced("0 millis"),
-        maxAttempts: 2,
-      }),
-    ),
-    Layer.provide(AuthLayer),
-    Layer.provide(options.rateLimiter ?? RateLimiterLive),
-    Layer.provideMerge(TestDatabaseLayer),
-    Layer.provideMerge(AppConfig.layerTest(overrides)),
-    Layer.provide(PostHogService.layerTest(posthogEvents)),
-    Layer.provide(options.opentimestamps ?? OpenTimestampsService.layerTest()),
-    Layer.provide(options.imageProcessing ?? ImageProcessingService.layer),
-    Layer.provide(
-      options.arweave ??
-        ArweaveService.layerTest([], options.arweaveUploadImpl),
-    ),
-    Layer.provide(options.storage ?? StorageService.layerTest()),
-    Layer.provide(options.bns ?? BnsService.layerTest()),
+    provideTestServices(overrides, posthogEvents, options),
   );

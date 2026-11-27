@@ -1,4 +1,5 @@
-import { type JSONContent, Node, nodePasteRule } from "@tiptap/core";
+import type { JSONContent } from "@tiptap/core";
+import { Node, nodePasteRule } from "@tiptap/core";
 import { ReactNodeViewRenderer } from "@tiptap/react";
 import { EmbedComponent, globalPasteRegex, isValidUrl } from "./component";
 import { TWITTER_REGEX } from "./twitter";
@@ -13,9 +14,13 @@ declare module "@tiptap/core" {
 }
 
 function getEmbedType(url: string): "twitter" | "video" {
-  if (TWITTER_REGEX.test(url)) return "twitter";
+  if (TWITTER_REGEX.test(url)) {
+    return "twitter";
+  }
 
-  if (YOUTUBE_REGEX.test(url)) return "video";
+  if (YOUTUBE_REGEX.test(url)) {
+    return "video";
+  }
 
   return "twitter";
 }
@@ -135,14 +140,16 @@ const Embed = Node.create({
     return {
       type: "embed",
       attrs: {
-        url: token.url,
-        embedType: token.embedType ?? "twitter",
+        url: String(token.url),
+        embedType: String(token.embedType ?? "twitter"),
       },
     };
   },
 
   renderMarkdown(node) {
-    if (!node.attrs?.url) return "";
+    if (!node.attrs?.url) {
+      return "";
+    }
 
     return `[${node.attrs.url}](${node.attrs.url})`;
   },

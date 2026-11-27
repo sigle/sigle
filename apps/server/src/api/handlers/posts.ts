@@ -1,11 +1,10 @@
-import { and, count, desc, eq, inArray, isNull, type SQL } from "drizzle-orm";
+import type { SQL } from "drizzle-orm";
+import { and, count, desc, eq, inArray, isNull } from "drizzle-orm";
 import { DateTime, Effect } from "effect";
 import { HttpApiBuilder, HttpApiSchema } from "effect/http-api";
+import type { PostListQuery } from "@/api/groups/posts";
 import { SigleApi } from "@/api";
-import {
-  POST_LIST_DEFAULT_LIMIT,
-  type PostListQuery,
-} from "@/api/groups/posts";
+import { POST_LIST_DEFAULT_LIMIT } from "@/api/groups/posts";
 import { findExplorerAddresses, findProfiles } from "@/api/handlers/users";
 import { PUBLIC_CACHE_CONTROL } from "@/api/middleware/etag";
 import { NotFound } from "@/api/schemas";

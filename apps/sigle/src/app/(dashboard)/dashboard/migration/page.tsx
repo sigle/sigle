@@ -2,6 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
+import posthog from "posthog-js";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -10,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { Routes } from "@/lib/routes";
 import { sigleApiFetchClient } from "@/lib/sigle";
+import { readLegacyJson } from "./read-legacy-json";
 
 interface Story {
   /**
@@ -24,8 +26,7 @@ interface Story {
   /**
    * JSON representing the slate.js structure of the story
    */
-  // oxlint-disable-next-line typescript/no-explicit-any content is not typed
-  content: any;
+  content: unknown;
   /**
    * Version representing the format of the content
    * When the value is not set, we consider it as v1
@@ -92,15 +93,12 @@ export default function MigrationPage() {
 
   const [loadingPostId, setLoadingPostId] = useState<string | null>(null);
 
-  const fetchPosts = async (): Promise<SubsetStory[]> => {
-    const res = await fetch(`/api/migration/list?username=${username.value}`);
-    const data = await res.json();
+  const fetchPosts = async (): Promise<Array<SubsetStory>> => {
+    const res = await fetch(
+      `/api/migration/list?username=${encodeURIComponent(username.value)}`,
+    );
 
-    if (!res.ok) {
-      throw new Error(data.message);
-    }
-
-    return data;
+    return readLegacyJson<Array<SubsetStory>>(res, "Failed to load your posts");
   };
 
   const handleMigrate = async (id: string) => {
@@ -109,11 +107,17 @@ export default function MigrationPage() {
     try {
       // 1. Fetch the post from old API
       const res = await fetch(
-        `/api/migration/${id}?username=${username.value}`,
+        `/api/migration/${encodeURIComponent(id)}?username=${encodeURIComponent(username.value)}`,
       );
 
-      const data: Story = await res.json();
-      console.log("handleMigrate", data);
+      const data = await readLegacyJson<Story>(res, "Failed to load the post");
+
+      // Drafts hold their content as a string, which v1 (Slate JSON) is not.
+      if (typeof data.content !== "string") {
+        toast.error("This post uses a format that can't be migrated.");
+
+        return;
+      }
 
       // 2. Create a new draft
       const { data: newPost, error: newPostError } =
@@ -126,8 +130,6 @@ export default function MigrationPage() {
 
         return;
       }
-
-      console.log("newPost", newPost);
 
       // 3. Update the draft with the content from the old post
       const { data: updatePost, error: updatePostError } =
@@ -148,8 +150,6 @@ export default function MigrationPage() {
           },
         });
 
-      console.log("updatePost", updatePost);
-
       if (updatePostError) {
         toast.error(updatePostError.message);
 
@@ -168,7 +168,7 @@ export default function MigrationPage() {
         "_blank",
       );
     } catch (error) {
-      console.error(error);
+      posthog.captureException(error);
       toast.error(error instanceof Error ? error.message : String(error));
     } finally {
       setLoadingPostId(null);

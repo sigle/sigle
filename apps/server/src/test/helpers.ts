@@ -1,3 +1,4 @@
+import type { PostMetadataDetails } from "@sigle/sdk";
 import { PostMetadataSchemaId, postSignatureMessage } from "@sigle/sdk";
 import { hashMessage } from "@stacks/encryption";
 import {
@@ -77,7 +78,7 @@ export const createTestDraft = (options: {
   readonly arweaveTxId?: string | null;
   readonly txStatus?: (typeof draft.$inferInsert)["txStatus"];
   readonly publishSignature?: string | null;
-  readonly uploadClaimedAt?: Date | null;
+  readonly publishGeneration?: number;
   readonly createdAt?: Date;
   readonly updatedAt?: Date;
 }) =>
@@ -93,7 +94,7 @@ export const createTestDraft = (options: {
         arweaveTxId: options.arweaveTxId ?? null,
         txStatus: options.txStatus ?? null,
         publishSignature: options.publishSignature ?? null,
-        uploadClaimedAt: options.uploadClaimedAt ?? null,
+        publishGeneration: options.publishGeneration ?? 0,
         createdAt: options.createdAt,
         updatedAt: options.updatedAt,
         userId: options.userId,
@@ -289,23 +290,27 @@ export const signTestSiwsMessage = (
     privateKey,
   });
 
-export const createSignedTestPostMetadata = (options: {
+export const createSignedTestPostMetadata = ({
+  draftId,
+  privateKey,
+  publishedAt,
+  ...fields
+}: {
   readonly draftId: string;
   readonly privateKey: string;
-  readonly title?: string;
-  readonly content?: string;
-  readonly tags?: Array<string>;
   readonly publishedAt?: Date;
-}) => {
+} & Partial<Omit<PostMetadataDetails, "id" | "publishedAt">>) => {
+  // Signed over the canonical JSON, so the key order doesn't matter.
   const metadataWithoutSignature = {
     $schema: PostMetadataSchemaId.LATEST,
     content: {
-      id: options.draftId,
-      title: options.title ?? "Published Title",
-      content: options.content ?? "Hello **Arweave** world!",
+      id: draftId,
+      title: "Published Title",
+      content: "Hello **Arweave** world!",
       excerpt: "Hello Arweave world!",
-      publishedAt: (options.publishedAt ?? new Date()).toISOString(),
-      tags: options.tags ?? ["web3", "effect"],
+      tags: ["web3", "effect"],
+      ...fields,
+      publishedAt: (publishedAt ?? new Date()).toISOString(),
     },
   };
 
@@ -313,7 +318,7 @@ export const createSignedTestPostMetadata = (options: {
   // testnet the test server runs on.
   const signature = signStructuredData({
     ...postSignatureMessage(metadataWithoutSignature, "testnet"),
-    privateKey: options.privateKey,
+    privateKey,
   });
 
   return {
@@ -345,9 +350,13 @@ export const createAuthenticatedClient = (
 
     const overrides: Parameters<typeof createTestUser>[0] = {};
 
-    if (options.userId !== undefined) overrides.id = options.userId;
+    if (options.userId !== undefined) {
+      overrides.id = options.userId;
+    }
 
-    if (options.plan !== undefined) overrides.plan = options.plan;
+    if (options.plan !== undefined) {
+      overrides.plan = options.plan;
+    }
 
     const user = yield* createTestUser(overrides);
 

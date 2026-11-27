@@ -7,6 +7,7 @@ import {
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import type { Routes } from "@/lib/routes";
+import { profilePostsQueryOptions } from "@/lib/profile-posts";
 import { sigleApiClient, sigleApiFetchClient } from "@/lib/sigle";
 import { UserClientPage } from "./page-client";
 
@@ -50,14 +51,20 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 export default async function Home({ params }: Props) {
   // The client query throws on an unknown or invalid address, so check it here to show the 404 page.
   const { username } = await params;
-  const { data, response } = await getUser(username);
+  const queryClient = new QueryClient();
+
+  // The first page of posts is fetched with the user, not after it, and is
+  // handed to the feed so the browser doesn't fetch it again.
+  const [{ data, response }] = await Promise.all([
+    getUser(username),
+    queryClient.prefetchInfiniteQuery(profilePostsQueryOptions(username)),
+  ]);
 
   if (response.status === 400 || response.status === 404) {
     notFound();
   }
 
   // Hand the result to the client query, so the browser doesn't fetch it again.
-  const queryClient = new QueryClient();
   queryClient.setQueryData(
     sigleApiClient.queryOptions("get", "/api/users/{address}", {
       params: { path: { address: username } },

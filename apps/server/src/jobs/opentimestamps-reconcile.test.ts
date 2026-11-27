@@ -1,8 +1,9 @@
 import { describe, expect, it } from "@effect/vitest";
 import { Effect, Layer, Schedule } from "effect";
+import type { QueueStats } from "@/queue/admin";
 import { AppConfig } from "@/config";
 import { makeQueuesTestLayer } from "@/jobs";
-import { JobAdminService, type QueueStats } from "@/queue/admin";
+import { JobAdminService } from "@/queue/admin";
 import { ArweaveService } from "@/services/arweave";
 import { ImageProcessingService } from "@/services/image-processing";
 import { OpenTimestampsService } from "@/services/opentimestamps";

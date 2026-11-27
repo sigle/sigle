@@ -28,7 +28,9 @@ let browserQueryClient: QueryClient | undefined = undefined;
 // On the server, a client shared across requests would serve every visitor the
 // first render's data forever, so each render gets its own.
 const getQueryClient = () => {
-  if (isServer) return makeQueryClient();
+  if (isServer) {
+    return makeQueryClient();
+  }
   browserQueryClient ??= makeQueryClient();
 
   return browserQueryClient;

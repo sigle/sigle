@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { POST_METADATA_LIMITS, urlWithSchemes } from "./limits.js";
 
 export enum MediaImageMimeType {
   GIF = "image/gif",
@@ -19,7 +20,13 @@ export interface MediaImageMetadata {
 }
 
 export const MediaImageMetadataSchema = z.object({
-  url: z.url(),
+  // Readers resolve `ipfs://` and `ar://` URLs through a gateway.
+  url: urlWithSchemes(
+    ["http", "https", "ipfs", "ar"],
+    POST_METADATA_LIMITS.coverImage,
+  ).meta({
+    description: "An http(s), ipfs:// or ar:// URL of the image.",
+  }),
   type: z.enum(MediaImageMimeType).meta({
     description: "The MIME type of the image.",
   }),
@@ -29,7 +36,7 @@ export const MediaImageMetadataSchema = z.object({
   height: z.int().positive().meta({
     description: "The height of the image in pixels.",
   }),
-  alt: z.string().optional().meta({
+  alt: z.string().max(POST_METADATA_LIMITS.alt).optional().meta({
     description: "The alt tag of the image for accessibility.",
   }),
 });

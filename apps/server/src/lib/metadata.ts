@@ -16,3 +16,23 @@ export const PostMetadata = fromZod(
     description: "The signed post metadata to upload to Arweave.",
   },
 );
+
+/** The post columns a signed metadata fills in. */
+export const postFieldsFromMetadata = (metadata: typeof PostMetadata.Type) => {
+  const version = (metadata.$schema.split("/").at(-1) ?? "1.0.0").replace(
+    ".json",
+    "",
+  );
+
+  return {
+    title: metadata.content.title,
+    content: metadata.content.content,
+    excerpt: metadata.content.excerpt,
+    metaTitle: metadata.content.metaTitle ?? null,
+    metaDescription: metadata.content.metaDescription ?? null,
+    canonicalUri: metadata.content.canonicalUri ?? null,
+    coverImage: metadata.content.coverImage?.url ?? null,
+    tags: metadata.content.tags ?? [],
+    version,
+  };
+};

@@ -8,8 +8,8 @@ import {
   IconClockHour4,
   IconCopy,
 } from "@tabler/icons-react";
-import { format } from "date-fns";
 import { toast } from "sonner";
+import { LocalDate } from "@/components/Shared/LocalDate";
 import { env } from "@/env";
 import { cn } from "@/lib/cn";
 import { formatNumber } from "@/lib/utils";
@@ -26,7 +26,9 @@ interface PostProvenanceCardProps {
 }
 
 function truncateId(id: string, startChars = 8, endChars = 6): string {
-  if (id.length <= startChars + endChars + 3) return id;
+  if (id.length <= startChars + endChars + 3) {
+    return id;
+  }
 
   return `${id.slice(0, startChars)}…${id.slice(-endChars)}`;
 }
@@ -58,7 +60,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
           title="Stored on Arweave"
           isLast={!opentimestamps}
         >
-          {format(publishedAt, "MMM d, yyyy")}
+          <LocalDate date={publishedAt} />
           {post.arweaveBlockHeight === null
             ? null
             : ` · Block #${formatNumber(post.arweaveBlockHeight)}`}
@@ -67,7 +69,7 @@ export const PostProvenanceCard = ({ post }: PostProvenanceCardProps) => {
         {opentimestamps ? (
           bitcoinTimestamp && opentimestamps.bitcoinBlockHeight !== null ? (
             <ProvenanceStep state="done" title="Timestamped on Bitcoin" isLast>
-              {format(bitcoinTimestamp, "MMM d, yyyy, HH:mm")} · Block #
+              <LocalDate date={bitcoinTimestamp} withTime /> · Block #
               {formatNumber(opentimestamps.bitcoinBlockHeight)}
             </ProvenanceStep>
           ) : (
