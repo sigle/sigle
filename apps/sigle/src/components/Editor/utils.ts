@@ -12,7 +12,6 @@ import {
   PostMetadataSchemaId,
 } from "@sigle/sdk";
 import { fileTypeFromBuffer } from "file-type";
-import { env } from "@/env";
 import { CONTENT_WARNINGS } from "@/lib/content-warning";
 import { resolveImageUrl } from "@/lib/images";
 import type { EditorPostFormData } from "./EditorFormProvider";
@@ -98,13 +97,8 @@ export const generateSigleMetadataFromForm = async ({
     ? await getImageMediaMetadata(post.coverImage)
     : undefined;
 
-  const description = `${excerpt}...\n\nWritten on www.sigle.io`;
-
   const metadata = createPostMetadata({
     $schema: PostMetadataSchemaId.LATEST,
-    name: post.title,
-    description,
-    external_url: `${env.NEXT_PUBLIC_APP_URL}/p/${postId}`,
     content: {
       id: postId,
       title: post.title,

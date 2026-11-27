@@ -493,12 +493,6 @@ export interface components {
     };
     /** @description The signed post metadata to upload to Arweave. */
     PostMetadata: {
-      name?: string;
-      description?: string;
-      /** Format: uri */
-      external_url?: string;
-      /** Format: uri */
-      image?: string;
       /** @constant */
       $schema: "https://json-schemas.sigle.io/posts/1.0.0.json";
       content: {
@@ -510,7 +504,7 @@ export interface components {
         content: string;
         /** @description A short plain text summary of the content, shown in post lists. */
         excerpt: string;
-        /** @description List of attributes that can be used to store any additional information that is not supported by the standard */
+        /** @description List of attributes that can be used to store any additional information that is not supported by the standard. Sigle reads the `meta-title` (up to 100 characters), `meta-description` (up to 250 characters) and `canonical-uri` (an http(s) URL of up to 200 characters) keys, each at most once and as a String attribute. `PostMetadataSchema` in `@sigle/sdk` and the Sigle API check these key rules; this JSON Schema does not. */
         attributes?: (
           | {
               /** @constant */
@@ -561,7 +555,10 @@ export interface components {
         )[];
         /** @description The cover image. */
         coverImage?: {
-          /** Format: uri */
+          /**
+           * Format: uri
+           * @description An http(s), ipfs:// or ar:// URL of the image.
+           */
           url: string;
           /**
            * @description The MIME type of the image.

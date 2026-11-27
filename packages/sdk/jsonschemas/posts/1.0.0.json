@@ -2,22 +2,6 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
   "properties": {
-    "name": {
-      "type": "string",
-      "maxLength": 300
-    },
-    "description": {
-      "type": "string",
-      "maxLength": 1000
-    },
-    "external_url": {
-      "type": "string",
-      "format": "uri"
-    },
-    "image": {
-      "type": "string",
-      "format": "uri"
-    },
     "$schema": {
       "type": "string",
       "const": "https://json-schemas.sigle.io/posts/1.0.0.json"
@@ -63,6 +47,7 @@
                   },
                   "key": {
                     "type": "string",
+                    "maxLength": 100,
                     "description": "The attribute's unique identifier."
                   },
                   "value": {
@@ -83,6 +68,7 @@
                   },
                   "key": {
                     "type": "string",
+                    "maxLength": 100,
                     "description": "The attribute's unique identifier."
                   },
                   "value": {
@@ -105,6 +91,7 @@
                   },
                   "key": {
                     "type": "string",
+                    "maxLength": 100,
                     "description": "The attribute's unique identifier."
                   },
                   "value": {
@@ -125,6 +112,7 @@
                   },
                   "key": {
                     "type": "string",
+                    "maxLength": 100,
                     "description": "The attribute's unique identifier."
                   },
                   "value": {
@@ -145,6 +133,7 @@
                   },
                   "key": {
                     "type": "string",
+                    "maxLength": 100,
                     "description": "The attribute's unique identifier."
                   },
                   "value": {
@@ -177,7 +166,8 @@
             },
             "alt": {
               "description": "The alt tag of the image for accessibility.",
-              "type": "string"
+              "type": "string",
+              "maxLength": 1000
             }
           },
           "required": ["url", "type"],

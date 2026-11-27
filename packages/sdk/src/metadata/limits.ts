@@ -14,12 +14,13 @@ export const POST_METADATA_LIMITS = {
   metaDescription: 250,
   canonicalUri: 200,
   coverImage: 2048,
+  // The cover image's alt text.
+  alt: 1000,
   tags: 5,
   tag: 50,
   attributes: 20,
+  attributeKey: 100,
   attributeValue: 1000,
-  name: 300,
-  description: 1000,
 } as const;
 
 /**

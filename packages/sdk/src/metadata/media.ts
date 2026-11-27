@@ -27,7 +27,7 @@ export const MediaImageMetadataSchema = z.object({
   type: z.enum(MediaImageMimeType).meta({
     description: "The MIME type of the image.",
   }),
-  alt: z.string().optional().meta({
+  alt: z.string().max(POST_METADATA_LIMITS.alt).optional().meta({
     description: "The alt tag of the image for accessibility.",
   }),
 });
