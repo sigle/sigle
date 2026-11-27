@@ -10,6 +10,11 @@
     "test": {
       "dependsOn": ["^build"]
     },
+    "e2e": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "passThroughEnv": ["CI", "E2E_SKIP_BUILD", "PLAYWRIGHT_*"]
+    },
     "lint": {},
     "dev": {
       "dependsOn": ["^build"],

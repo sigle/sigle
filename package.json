@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
+    "e2e": "turbo e2e",
     "release": "pnpm changeset publish",
     "repos:sync": "./scripts/sync-repos.sh",
     "test": "turbo test",
