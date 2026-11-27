@@ -9,6 +9,7 @@
   "scripts": {
     "build": "next build --webpack",
     "dev": "next dev",
+    "e2e": "playwright test --config e2e/playwright.config.ts",
     "start": "next start",
     "test": "vp test"
   },
@@ -24,7 +25,6 @@
     "@opentelemetry/sdk-logs": "0.223.2",
     "@opentelemetry/sdk-metrics": "2.12.1",
     "@opentelemetry/sdk-trace-base": "2.12.1",
-    "@paralleldrive/cuid2": "3.3.0",
     "@sigle/sdk": "workspace:*",
     "@stacks/connect": "8.2.7",
     "@stacks/network": "7.7.0",
@@ -62,7 +62,6 @@
     "class-variance-authority": "0.7.1",
     "cn": "0.5.2",
     "date-fns": "4.4.0",
-    "embla-carousel-react": "8.6.0",
     "feed": "6.0.0",
     "file-type": "22.3.0",
     "lowlight": "3.3.0",
@@ -90,7 +89,10 @@
     "zustand": "5.1.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.65.1",
     "@posthog/nextjs-config": "1.12.2",
+    "@stacks/encryption": "7.7.0",
+    "@stacks/transactions": "7.7.0",
     "@tailwindcss/postcss": "4.3.5",
     "@tailwindcss/typography": "0.5.20",
     "@testing-library/jest-dom": "8.0.0",
