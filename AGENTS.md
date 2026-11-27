@@ -89,10 +89,9 @@ This project vendors external repositories under `repos/` (gitignored):
 ## PR Requirements
 
 1. Fork repository and branch from `main`
-2. Include changeset: run `pnpm changeset` to generate
-3. Pass checks: `pnpm vp check` (use `pnpm vp check --fix` to fix format and lint)
-4. Don't break tests - include tests for bug fixes
-5. Keep PRs isolated and focused
+2. Pass checks: `pnpm vp check` (use `pnpm vp check --fix` to fix format and lint)
+3. Don't break tests - include tests for bug fixes
+4. Keep PRs isolated and focused
 
 <!--VITE PLUS START-->
 

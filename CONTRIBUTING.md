@@ -17,7 +17,6 @@ For non-bug-fixes, please open an issue first and discuss your idea to make sure
 - Must not break the test suite. If you're fixing a bug, include a test that would fail without your fix (`pnpm test`).
 - Must pass the format, lint and type checks (`pnpm vp check`; `pnpm vp check --fix` fixes format and lint).
 - Must be **isolated**. Avoid grouping many, unrelated changes in a single PR.
-- Must contain a changeset file describing the changes and affected packages. Run `pnpm changeset` to generate one.
 
 ## Structure
 
