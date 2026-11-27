@@ -7,22 +7,4 @@ import { authClient } from "@/lib/auth-client";
  */
 const authHooks = createAuthHooks(authClient);
 
-export const {
-  useSession,
-  usePrefetchSession,
-  useToken,
-  useListAccounts,
-  useListSessions,
-  useListDeviceSessions,
-  useListPasskeys,
-  useUpdateUser,
-  useUnlinkAccount,
-  useRevokeOtherSessions,
-  useRevokeSession,
-  useRevokeSessions,
-  useSetActiveSession,
-  useRevokeDeviceSession,
-  useDeletePasskey,
-  useAuthQuery,
-  useAuthMutation,
-} = authHooks;
+export const { useSession } = authHooks;
