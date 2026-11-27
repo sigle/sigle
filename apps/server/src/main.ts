@@ -31,6 +31,7 @@ import { JobsLive } from "@/jobs";
 import { ArweaveService } from "@/services/arweave";
 import { AuthService } from "@/services/auth";
 import { BnsService } from "@/services/bns";
+import { ImageFetchClient } from "@/services/image-fetch";
 import { ImageProcessingService } from "@/services/image-processing";
 import { OpenTimestampsService } from "@/services/opentimestamps";
 import { PlanService } from "@/services/plan";
@@ -44,6 +45,7 @@ export const CoreServicesLayer = Layer.mergeAll(
   ArweaveService.layer,
   OpenTimestampsService.layer,
   ImageProcessingService.layer,
+  ImageFetchClient.layer,
   StorageService.layer,
   BnsService.layer,
 ).pipe(Layer.provideMerge(AppConfig.layer), Layer.provide(NodeServices.layer));

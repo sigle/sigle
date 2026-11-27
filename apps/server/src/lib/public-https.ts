@@ -1,7 +1,6 @@
 import type { LookupFunction } from "node:net";
 import { Data } from "effect";
 import { lookup as dnsLookup } from "node:dns";
-import { request } from "node:https";
 import { BlockList, isIPv4, isIPv6 } from "node:net";
 
 /** Loopback, link-local, private and reserved networks. */
@@ -87,7 +86,11 @@ export class BlockedAddressError extends Data.TaggedError(
  * blocked. The connection uses the address returned here, so a hostname
  * cannot pass this check and then resolve to another address.
  */
-const lookupPublicAddress: LookupFunction = (hostname, options, callback) => {
+export const lookupPublicAddress: LookupFunction = (
+  hostname,
+  options,
+  callback,
+) => {
   dnsLookup(hostname, { ...options, all: true }, (error, addresses) => {
     if (error !== null) {
       callback(error, "");
@@ -124,74 +127,4 @@ const lookupPublicAddress: LookupFunction = (hostname, options, callback) => {
       callback(null, first.address, first.family);
     }
   });
-};
-
-// Statuses whose response cannot have a body (Fetch standard).
-const nullBodyStatuses = new Set([204, 205, 304]);
-
-/**
- * GETs an https URL whose host resolves only to public addresses, else fails
- * with `BlockedAddressError`. Redirects are not followed: the caller sees the
- * redirect response, like `fetch` with `redirect: "manual"`.
- */
-export const fetchPublicHttps = (
-  url: URL,
-  init: { readonly signal: AbortSignal },
-): Promise<Response> => {
-  const { promise, resolve, reject } = Promise.withResolvers<Response>();
-
-  const outgoing = request(
-    url,
-    {
-      headers: { "user-agent": "Sigle" },
-      lookup: lookupPublicAddress,
-      signal: init.signal,
-    },
-    (incoming) => {
-      const status = incoming.statusCode ?? 502;
-      const headers = new Headers();
-
-      for (const [name, value] of Object.entries(incoming.headers)) {
-        for (const item of Array.isArray(value) ? value : [value]) {
-          if (item !== undefined) {
-            headers.append(name, item);
-          }
-        }
-      }
-
-      if (nullBodyStatuses.has(status)) {
-        incoming.resume();
-        resolve(new Response(null, { status, headers }));
-
-        return;
-      }
-
-      // Pulled chunk by chunk, so a reader that stops reading stops the
-      // download, and cancelling the stream destroys the response.
-      const chunks: AsyncIterator<Uint8Array> =
-        incoming[Symbol.asyncIterator]();
-
-      const body = new ReadableStream<Uint8Array>({
-        pull: async (controller) => {
-          const chunk = await chunks.next();
-
-          if (chunk.done === true) {
-            controller.close();
-          } else {
-            controller.enqueue(chunk.value);
-          }
-        },
-        cancel: async () => {
-          await chunks.return?.();
-        },
-      });
-
-      resolve(new Response(body, { status, headers }));
-    },
-  );
-
-  outgoing.on("error", reject);
-  outgoing.end();
-
-  return promise;
 };

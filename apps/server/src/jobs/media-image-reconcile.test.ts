@@ -5,6 +5,7 @@ import { AppConfig } from "@/config";
 import { makeQueuesTestLayer } from "@/jobs";
 import { JobAdminService } from "@/queue/admin";
 import { ArweaveService } from "@/services/arweave";
+import { ImageFetchClient } from "@/services/image-fetch";
 import { ImageProcessingService } from "@/services/image-processing";
 import { OpenTimestampsService } from "@/services/opentimestamps";
 import { PostHogService } from "@/services/posthog";
@@ -27,6 +28,7 @@ const makeReconcileTestLayer = () =>
     Layer.provideMerge(PostHogService.layerTest()),
     Layer.provideMerge(AppConfig.layerTest()),
     Layer.provideMerge(ImageProcessingService.layer),
+    Layer.provideMerge(ImageFetchClient.layerTest),
     Layer.provideMerge(TestDatabaseLayer),
   );
 

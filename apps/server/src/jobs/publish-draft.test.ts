@@ -28,6 +28,7 @@ import {
   ArweaveUploadError,
   ARWEAVE_TEST_UPLOAD,
 } from "@/services/arweave";
+import { ImageFetchClient } from "@/services/image-fetch";
 import { ImageProcessingService } from "@/services/image-processing";
 import { OpenTimestampsService } from "@/services/opentimestamps";
 import { PostHogService } from "@/services/posthog";
@@ -538,6 +539,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           OpenTimestampsService.layerTest(),
           AppConfig.layerTest(),
           ImageProcessingService.layer,
+          ImageFetchClient.layerTest,
           ErrorReporter.layer([reporter]),
         );
 
@@ -601,6 +603,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
         OpenTimestampsService.layerTest(),
         AppConfig.layerTest(),
         ImageProcessingService.layer,
+        ImageFetchClient.layerTest,
         ErrorReporter.layer([reporter]),
       );
 

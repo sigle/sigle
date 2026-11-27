@@ -1,6 +1,7 @@
 import { describe, expect, it } from "@effect/vitest";
 import { eq } from "drizzle-orm";
 import { Effect, Exit, Layer } from "effect";
+import { HttpClient, HttpClientError } from "effect/http";
 import sharp from "sharp";
 import { thumbHashToRGBA } from "thumbhash";
 import { afterEach, vi } from "vite-plus/test";
@@ -8,11 +9,11 @@ import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { mediaImage } from "@/db/schema";
 import { BlockedAddressError } from "@/lib/public-https";
+import { ImageFetchClient } from "@/services/image-fetch";
 import { ImageProcessingService } from "@/services/image-processing";
 import { createTestMediaImage } from "@/test/helpers";
 import { TestDatabaseLayer } from "@/test/layer";
 import {
-  ImageFetch,
   markImageThumbhashFailed,
   processGenerateImageThumbhashJob,
 } from "./generate-image-thumbhash";
@@ -23,9 +24,7 @@ const testLayer = Layer.mergeAll(
   TestDatabaseLayer,
   AppConfig.layerTest(),
   ImageProcessingService.layer,
-  Layer.succeed(ImageFetch, (url, init) =>
-    fetch(url, { ...init, redirect: "manual" }),
-  ),
+  ImageFetchClient.layerTest,
 );
 
 const makePngBuffer = (width = 40, height = 20) =>
@@ -217,13 +216,23 @@ describe("generate image thumbhash job", () => {
           imageId: "https://rebind.example.com/cover.png",
         }).pipe(
           Effect.flip,
-          Effect.provideService(ImageFetch, (url) =>
-            Promise.reject(
-              new BlockedAddressError({
-                hostname: url.hostname,
-                address: "10.0.0.1",
-                message: `${url.hostname} resolves to a blocked address: 10.0.0.1`,
-              }),
+          // How `ImageFetchClient.layer` fails once its lookup refuses an
+          // address.
+          Effect.provideService(
+            ImageFetchClient,
+            HttpClient.make((request) =>
+              Effect.fail(
+                new HttpClientError.HttpClientError({
+                  reason: new HttpClientError.TransportError({
+                    request,
+                    cause: new BlockedAddressError({
+                      hostname: new URL(request.url).hostname,
+                      address: "10.0.0.1",
+                      message: `${new URL(request.url).hostname} resolves to a blocked address: 10.0.0.1`,
+                    }),
+                  }),
+                }),
+              ),
             ),
           ),
         );

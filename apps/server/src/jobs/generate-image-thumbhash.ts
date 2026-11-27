@@ -1,13 +1,15 @@
+import type { HttpClientResponse } from "effect/http";
 import { eq } from "drizzle-orm";
 import {
-  Context,
   Data,
+  Duration,
   Effect,
   Layer,
   Option,
   Predicate,
   Schedule,
   Schema,
+  Stream,
 } from "effect";
 import type { ImageOptimizationError } from "@/lib/images";
 import type { TerminalJobError } from "@/queue/core";
@@ -23,12 +25,9 @@ import {
   mimeTypeForSharpFormat,
   resolveImageUrl,
 } from "@/lib/images";
-import {
-  fetchPublicHttps,
-  isBlockedAddress,
-  parseIpLiteral,
-} from "@/lib/public-https";
+import { isBlockedAddress, parseIpLiteral } from "@/lib/public-https";
 import { defineJob, terminal } from "@/queue/core";
+import { ImageFetchClient } from "@/services/image-fetch";
 import { ImageProcessingService } from "@/services/image-processing";
 
 export const GENERATE_IMAGE_THUMBHASH_QUEUE_NAME = "generate-image-thumbhash";
@@ -42,7 +41,7 @@ export const GENERATE_IMAGE_THUMBHASH_MAX_ATTEMPTS = 3;
  */
 export const GENERATE_IMAGE_THUMBHASH_MAX_BYTES = 10 * 1024 * 1024;
 
-const FETCH_TIMEOUT_MILLIS = 30_000;
+const FETCH_TIMEOUT = Duration.seconds(30);
 
 const MAX_IMAGE_REDIRECTS = 3;
 
@@ -56,7 +55,7 @@ const rejectUrl = (message: string) =>
 /**
  * Restricts remote fetches to https URLs whose host is not a loopback,
  * link-local, private or reserved address. A hostname is checked again when
- * connecting, against the addresses it resolves to (`fetchPublicHttps`).
+ * connecting, against the addresses it resolves to (`ImageFetchClient`).
  */
 const validateImageUrl = (
   rawUrl: string,
@@ -102,48 +101,51 @@ const validateImageUrl = (
   });
 
 /**
- * How the job downloads an image: `fetchPublicHttps`, which refuses a
- * hostname that resolves to a blocked address. Tests replace it.
- */
-export const ImageFetch = Context.Reference<
-  (url: URL, init: { readonly signal: AbortSignal }) => Promise<Response>
->("sigle/ImageFetch", { defaultValue: () => fetchPublicHttps });
-
-/**
  * Follows a bounded number of redirects manually so every hop is revalidated
  * by `validateImageUrl` instead of trusting the redirect of a gateway.
  */
 const fetchImageResponse = (
   initialUrl: string,
-): Effect.Effect<Response, ImageFetchError | TerminalJobError> =>
+): Effect.Effect<
+  HttpClientResponse.HttpClientResponse,
+  ImageFetchError | TerminalJobError,
+  ImageFetchClient
+> =>
   Effect.gen(function* () {
     let url = initialUrl;
-    let response: Response | null = null;
-    const imageFetch = yield* ImageFetch;
+    let response: HttpClientResponse.HttpClientResponse | null = null;
+    const client = yield* ImageFetchClient;
 
     for (let redirects = 0; redirects <= MAX_IMAGE_REDIRECTS; redirects++) {
       const target = yield* validateImageUrl(url);
 
-      const current = yield* Effect.tryPromise({
-        try: () =>
-          imageFetch(target, {
-            signal: AbortSignal.timeout(FETCH_TIMEOUT_MILLIS),
-          }),
-        catch: (cause) =>
-          Predicate.isTagged(cause, "BlockedAddressError")
+      const current = yield* client.get(target).pipe(
+        Effect.mapError((error) =>
+          Predicate.isTagged(error.cause, "BlockedAddressError")
             ? terminal(
                 new InvalidImageError({
-                  message: `Image host address is not allowed: ${describeCause(cause)}`,
+                  message: `Image host address is not allowed: ${describeCause(error.cause)}`,
                 }),
               )
             : new ImageFetchError({
-                cause,
-                message: `Failed to fetch image: ${describeCause(cause)}`,
+                cause: error,
+                message: `Failed to fetch image: ${describeCause(error)}`,
               }),
-      });
+        ),
+        Effect.timeoutOrElse({
+          duration: FETCH_TIMEOUT,
+          orElse: () =>
+            Effect.fail(
+              new ImageFetchError({
+                cause: null,
+                message: "Failed to fetch image: timed out",
+              }),
+            ),
+        }),
+      );
 
       const location = redirectStatuses.has(current.status)
-        ? current.headers.get("location")
+        ? (current.headers.location ?? null)
         : null;
 
       if (location === null) {
@@ -174,56 +176,64 @@ const fetchImageResponse = (
   });
 
 /**
- * Streams the response body, cancelling the reader as soon as the cumulative
+ * Streams the response body, stopping the download as soon as the cumulative
  * size exceeds `maxBytes` so an oversized or unbounded body is never fully
  * buffered.
  */
-const readBodyWithLimit = (response: Response, maxBytes: number) =>
-  Effect.tryPromise({
-    try: async () => {
-      const body = response.body;
+const readBodyWithLimit = (
+  response: HttpClientResponse.HttpClientResponse,
+  maxBytes: number,
+) =>
+  Effect.gen(function* () {
+    const chunks: Array<Uint8Array> = [];
+    let total = 0;
 
-      if (body === null) {
-        return { bytes: new Uint8Array(), tooLarge: false as const };
-      }
+    yield* response.stream.pipe(
+      Stream.runForEachWhile((chunk) =>
+        Effect.sync(() => {
+          total += chunk.byteLength;
 
-      const reader = body.getReader();
-      const chunks: Array<Uint8Array> = [];
-      let total = 0;
+          if (total > maxBytes) {
+            return false;
+          }
 
-      for (;;) {
-        const { done, value } = await reader.read();
+          chunks.push(chunk);
 
-        if (done) {
-          break;
-        }
-
-        total += value.byteLength;
-
-        if (total > maxBytes) {
-          await reader.cancel();
-
-          return { bytes: new Uint8Array(), tooLarge: true as const };
-        }
-
-        chunks.push(value);
-      }
-
-      const bytes = new Uint8Array(total);
-      let offset = 0;
-
-      for (const chunk of chunks) {
-        bytes.set(chunk, offset);
-        offset += chunk.byteLength;
-      }
-
-      return { bytes, tooLarge: false as const };
-    },
-    catch: (cause) =>
-      new ImageFetchError({
-        cause,
-        message: `Failed to read image body: ${describeCause(cause)}`,
+          return true;
+        }),
+      ),
+      Effect.mapError(
+        (cause) =>
+          new ImageFetchError({
+            cause,
+            message: `Failed to read image body: ${describeCause(cause)}`,
+          }),
+      ),
+      Effect.timeoutOrElse({
+        duration: FETCH_TIMEOUT,
+        orElse: () =>
+          Effect.fail(
+            new ImageFetchError({
+              cause: null,
+              message: "Failed to read image body: timed out",
+            }),
+          ),
       }),
+    );
+
+    if (total > maxBytes) {
+      return { bytes: new Uint8Array(), tooLarge: true as const };
+    }
+
+    const bytes = new Uint8Array(total);
+    let offset = 0;
+
+    for (const chunk of chunks) {
+      bytes.set(chunk, offset);
+      offset += chunk.byteLength;
+    }
+
+    return { bytes, tooLarge: false as const };
   });
 
 export const GenerateImageThumbhashJobSchema = Schema.Struct({
@@ -257,7 +267,7 @@ export const processGenerateImageThumbhashJob = (
   | ImageProcessingBusyError
   | ImageProcessingTimeoutError
   | TerminalJobError,
-  Database | AppConfig | ImageProcessingService
+  Database | AppConfig | ImageFetchClient | ImageProcessingService
 > =>
   Effect.gen(function* () {
     const db = yield* Database;
@@ -307,14 +317,14 @@ export const processGenerateImageThumbhashJob = (
       );
     }
 
-    if (!response.ok) {
+    if (response.status < 200 || response.status >= 300) {
       return yield* new ImageFetchError({
         cause: response,
         message: `Failed to fetch image: HTTP ${response.status}`,
       });
     }
 
-    const declaredSize = Number(response.headers.get("content-length") ?? "");
+    const declaredSize = Number(response.headers["content-length"] ?? "");
 
     if (
       Number.isFinite(declaredSize) &&
