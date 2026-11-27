@@ -1,3 +1,4 @@
+import type { Metadata } from "sharp";
 import { Data, Effect, Option } from "effect";
 import sharp from "sharp";
 import { rgbaToThumbHash } from "thumbhash";
@@ -50,10 +51,49 @@ export class ImageOptimizationError extends Data.TaggedError(
 }> {}
 
 /**
+ * The decoded input is over `MAX_DECODED_INPUT_BYTES`, so processing it would
+ * take more memory than one upload is allowed.
+ */
+export class ImageTooLargeError extends Data.TaggedError("ImageTooLargeError")<{
+  readonly decodedBytes: number;
+}> {}
+
+const toImageOptimizationError = (cause: unknown) =>
+  new ImageOptimizationError({
+    cause,
+    message: cause instanceof Error ? cause.message : String(cause),
+  });
+
+/**
  * Upper bound on the number of pixels sharp is allowed to decode, guarding
  * against decompression bombs.
  */
 export const MAX_INPUT_PIXELS = 50_000_000;
+
+/**
+ * Upper bound on the size of the decoded input: width x height x channels x
+ * bytes per sample.
+ *
+ * The pixel limit alone does not bound memory. Interlaced PNGs and progressive
+ * JPEGs cannot be streamed, so libvips holds the whole decoded image, at peak
+ * about twice this size, and a 16-bit RGBA image takes 8 bytes a pixel. This
+ * limit keeps one pipeline, encode included, under a quarter of the 1 GB
+ * production container, as two run at once.
+ */
+export const MAX_DECODED_INPUT_BYTES = 80 * 1024 * 1024;
+
+const bytesPerSample: Record<Metadata["depth"], number> = {
+  char: 1,
+  uchar: 1,
+  short: 2,
+  ushort: 2,
+  int: 4,
+  uint: 4,
+  float: 4,
+  complex: 8,
+  double: 8,
+  dpcomplex: 16,
+};
 
 /**
  * Time budget for a single sharp pipeline, applied natively by libvips so
@@ -162,47 +202,65 @@ export const generateThumbhash = ({
 
 export interface OptimizeImageOptions {
   readonly buffer: Uint8Array;
+  readonly height: number;
   readonly limitInputPixels?: number | undefined;
   readonly quality: number;
   readonly width: number;
 }
 
 /**
- * Re-encodes an image as WebP, resizing it to `width` without ever enlarging it.
+ * Re-encodes an image as WebP, resizing it to fit inside `width` x `height`
+ * without ever enlarging it.
  *
- * Mirrors the legacy server image pipeline so uploaded profile pictures keep
- * the same dimensions and quality.
+ * Both dimensions are bounded because the WebP encode costs about 24 bytes per
+ * output pixel: bounding only the width let a tall image keep up to 16383
+ * pixels of height. Inputs over `MAX_DECODED_INPUT_BYTES` are rejected with
+ * `ImageTooLargeError` before anything is decoded.
  */
 export const optimizeImage = ({
   buffer,
+  height,
   limitInputPixels = MAX_INPUT_PIXELS,
   quality,
   width,
 }: OptimizeImageOptions): Effect.Effect<
   OptimizedImage,
-  ImageOptimizationError
+  ImageOptimizationError | ImageTooLargeError
 > =>
-  Effect.tryPromise({
-    try: async () => {
-      const { data, info } = await sharp(buffer, {
-        limitInputPixels,
-        sequentialRead: true,
-      })
-        .timeout({ seconds: IMAGE_PROCESSING_TIMEOUT_SECONDS })
-        .rotate()
-        .resize(width, undefined, { withoutEnlargement: true })
-        .webp({ quality, effort: 6, smartSubsample: true })
-        .toBuffer({ resolveWithObject: true });
+  Effect.gen(function* () {
+    const image = sharp(buffer, { limitInputPixels, sequentialRead: true });
 
-      return {
-        buffer: new Uint8Array(data),
-        height: info.height,
-        width: info.width,
-      };
-    },
-    catch: (cause) =>
-      new ImageOptimizationError({
-        cause,
-        message: cause instanceof Error ? cause.message : String(cause),
-      }),
+    const metadata = yield* Effect.tryPromise({
+      try: () => image.metadata(),
+      catch: toImageOptimizationError,
+    });
+
+    const decodedBytes =
+      metadata.width *
+      metadata.height *
+      metadata.channels *
+      bytesPerSample[metadata.depth];
+
+    if (decodedBytes > MAX_DECODED_INPUT_BYTES) {
+      return yield* new ImageTooLargeError({ decodedBytes });
+    }
+
+    const { data, info } = yield* Effect.tryPromise({
+      try: () =>
+        image
+          .timeout({ seconds: IMAGE_PROCESSING_TIMEOUT_SECONDS })
+          .rotate()
+          .resize(width, height, { fit: "inside", withoutEnlargement: true })
+          // Effort 6 doubles the encode memory and takes several times as
+          // long.
+          .webp({ quality, effort: 4, smartSubsample: true })
+          .toBuffer({ resolveWithObject: true }),
+      catch: toImageOptimizationError,
+    });
+
+    return {
+      buffer: new Uint8Array(data),
+      height: info.height,
+      width: info.width,
+    };
   });

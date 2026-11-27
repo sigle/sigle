@@ -60,6 +60,7 @@ const readImageBody = (
   );
 
 export interface ImageUploadOptions {
+  readonly height: number;
   readonly maxMib: number;
   readonly quality: number;
   readonly width: number;
@@ -134,7 +135,12 @@ export const uploadImageFromRequest = (
     }
 
     const optimized = yield* images
-      .optimize({ buffer, quality: options.quality, width: options.width })
+      .optimize({
+        buffer,
+        height: options.height,
+        quality: options.quality,
+        width: options.width,
+      })
       .pipe(
         Effect.tapError((error) =>
           Effect.logWarning("Failed to optimize image", {
@@ -142,13 +148,24 @@ export const uploadImageFromRequest = (
             contentType,
           }),
         ),
-        Effect.mapError((error) =>
-          Predicate.isTagged(error, "ImageProcessingTimeoutError")
-            ? new InternalServerError({
+        Effect.catchTags({
+          ImageOptimizationError: () =>
+            Effect.fail(
+              new BadRequest({ message: "Failed to optimize image." }),
+            ),
+          ImageProcessingTimeoutError: () =>
+            Effect.fail(
+              new InternalServerError({
                 message: "Image processing timed out.",
-              })
-            : new BadRequest({ message: "Failed to optimize image." }),
-        ),
+              }),
+            ),
+          ImageTooLargeError: () =>
+            Effect.fail(
+              new PayloadTooLarge({
+                message: "Image dimensions are too large to process.",
+              }),
+            ),
+        }),
       );
 
     const version = sha256Hex(optimized.buffer);
