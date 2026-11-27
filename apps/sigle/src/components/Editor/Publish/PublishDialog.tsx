@@ -72,15 +72,17 @@ export const PublishDialog = ({
   const acceptedRef = useRef(false);
   const pollingRef = useRef<AbortController | null>(null);
   const resumedRef = useRef(false);
+  const mountedRef = useRef(false);
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
       pollingRef.current?.abort();
       // A remount (React strict mode) must resume the publish again.
       resumedRef.current = false;
-    },
-    [],
-  );
+    };
+  }, []);
 
   const hasError = steps.some((step) => step.status === "error");
 
@@ -260,6 +262,12 @@ export const PublishDialog = ({
           return;
         }
 
+        // The dialog closed while the request was pending: the publish runs on the
+        // server and reopening the draft resumes it, so don't poll or navigate from here.
+        if (!mountedRef.current) {
+          return;
+        }
+
         acceptedRef.current = true;
         await followPublish();
       },
@@ -283,12 +291,14 @@ export const PublishDialog = ({
 
   // Follow a publish already running on the server, see `isPublishInProgress`.
   useEffect(() => {
-    if (resumedRef.current || !isPublishInProgress) {
+    if (resumedRef.current || acceptedRef.current || !isPublishInProgress) {
       return;
     }
 
     resumedRef.current = true;
     acceptedRef.current = true;
+    // Sync a publish that started outside this dialog, reported by the draft query.
+    setPublishingLoading(true);
     setPublishOpen(true);
     start();
     completeStep("preparing");

@@ -211,4 +211,54 @@ describe("PublishDialog", () => {
     });
     expect(push).not.toHaveBeenCalled();
   });
+
+  it("does not follow or navigate when the dialog unmounts before the publish is accepted", async () => {
+    const user = userEvent.setup();
+    const { promise, resolve } = Promise.withResolvers<{
+      draftId: string;
+      status: string;
+    }>();
+    mutateAsync.mockReturnValue(promise);
+
+    const { unmount } = renderDialog();
+
+    await user.click(screen.getByRole("button", { name: "Publish now" }));
+    await waitFor(() => {
+      expect(mutateAsync).toHaveBeenCalled();
+    });
+    unmount();
+    resolve({ draftId: "d1", status: "pending" });
+    await new Promise((done) => {
+      setTimeout(done, 0);
+    });
+
+    expect(waitForCompletion).not.toHaveBeenCalled();
+    expect(push).not.toHaveBeenCalled();
+  });
+
+  it("shows the progress when the draft starts publishing after mount", async () => {
+    waitForCompletion.mockResolvedValue(
+      Result.ok({ postId: "tx3", arweaveTxId: "tx3" }),
+    );
+    const dialog = (publishStatus: "processing" | null) => (
+      <EditorFormProvider post={{ ...post, publishStatus }}>
+        <PublishDialog postId="d1" publishStatus={publishStatus} />
+      </EditorFormProvider>
+    );
+
+    const { rerender } = render(dialog(null));
+    rerender(dialog("processing"));
+
+    await waitFor(() => {
+      expect(waitForCompletion).toHaveBeenCalled();
+    });
+    expect(
+      screen.queryByRole("button", { name: "Publish now" }),
+    ).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(push).toHaveBeenCalledWith(expect.stringContaining("/p/tx3"));
+    }, NAVIGATION_TIMEOUT);
+    expect(request).not.toHaveBeenCalled();
+    expect(mutateAsync).not.toHaveBeenCalled();
+  });
 });
