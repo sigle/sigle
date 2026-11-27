@@ -7,7 +7,6 @@ import {
 } from "@/api/groups/posts";
 import { UserAuthMiddleware } from "@/api/middleware/auth-user";
 import {
-  GlobalRateLimitMiddleware,
   RateLimitMiddleware,
   RateLimitPolicy,
 } from "@/api/middleware/rate-limit";
@@ -136,5 +135,4 @@ export const MeGroup = HttpApiGroup.make("me")
   )
   .prefix("/api/me")
   .middleware(RateLimitMiddleware)
-  .middleware(UserAuthMiddleware)
-  .middleware(GlobalRateLimitMiddleware);
+  .middleware(UserAuthMiddleware);
