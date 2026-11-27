@@ -30,3 +30,18 @@ export const writeDraft = async (
   await expect(page.getByText("Saving…")).toBeVisible();
   await expect(page.getByText("Saved", { exact: true })).toBeVisible();
 };
+
+/**
+ * Publishes the open draft from the publish dialog: the wallet signs the
+ * post, the API uploads it, and the app lands on the public page of the post.
+ */
+export const publishDraft = async (page: Page): Promise<void> => {
+  await page.getByRole("button", { name: "Publish", exact: true }).click();
+
+  await page
+    .getByRole("dialog", { name: "Ready to publish?" })
+    .getByRole("button", { name: "Publish", exact: true })
+    .click();
+
+  await page.waitForURL(/\/p\/[^/]+\?published=true$/);
+};
