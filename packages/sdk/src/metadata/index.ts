@@ -2,6 +2,8 @@ export * from "./config.js";
 
 export * from "./errors.js";
 
+export { POST_METADATA_LIMITS } from "./limits.js";
+
 export * from "./media.js";
 
 export * from "./metadata-attribute.js";

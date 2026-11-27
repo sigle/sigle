@@ -3,10 +3,12 @@
   "type": "object",
   "properties": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 300
     },
     "description": {
-      "type": "string"
+      "type": "string",
+      "maxLength": 1000
     },
     "external_url": {
       "type": "string",
@@ -31,19 +33,22 @@
         "title": {
           "type": "string",
           "minLength": 1,
+          "maxLength": 300,
           "description": "Post title."
         },
         "content": {
           "type": "string",
           "minLength": 1,
+          "maxLength": 1000000,
           "description": "Markdown content."
         },
         "excerpt": {
           "type": "string",
+          "maxLength": 1000,
           "description": "A short plain text summary of the content, shown in post lists."
         },
         "attributes": {
-          "description": "List of attributes that can be used to store any additional information that is not supported by the standard",
+          "description": "List of attributes that can be used to store any additional information that is not supported by the standard. Sigle reads the `meta-title` (up to 100 characters), `meta-description` (up to 250 characters) and `canonical-uri` (an http(s) URL of up to 200 characters) keys, each at most once and as a String attribute.",
           "minItems": 1,
           "maxItems": 20,
           "type": "array",
@@ -83,7 +88,7 @@
                   "value": {
                     "type": "string",
                     "format": "date-time",
-                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
                     "description": "A valid ISO 8601 date string.  It's consumer responsibility to parse it."
                   }
                 },
@@ -103,6 +108,7 @@
                   },
                   "value": {
                     "type": "string",
+                    "maxLength": 1000,
                     "description": "A valid JS number serialized as string. It's consumer responsibility to parse it."
                   }
                 },
@@ -122,6 +128,7 @@
                   },
                   "value": {
                     "type": "string",
+                    "maxLength": 1000,
                     "description": "Any string value."
                   }
                 },
@@ -141,6 +148,7 @@
                   },
                   "value": {
                     "type": "string",
+                    "maxLength": 1000,
                     "description": "A JSON string. It's consumer responsibility to validate and parse it."
                   }
                 },
@@ -156,7 +164,9 @@
           "properties": {
             "url": {
               "type": "string",
-              "format": "uri"
+              "maxLength": 2048,
+              "pattern": "^(http|https|ipfs|ar):",
+              "description": "An http(s), ipfs:// or ar:// URL of the image."
             },
             "type": {
               "type": "string",

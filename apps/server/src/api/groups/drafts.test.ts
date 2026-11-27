@@ -1016,50 +1016,60 @@ describe("drafts", () => {
         });
         yield* createTestDraft({ id: "draft-limits", userId });
 
+        // The SDK schema holds the metadata to the limits, so the payload is
+        // rejected before the handler runs. Each case names its field.
         const invalidCases = [
-          { title: "a".repeat(301) },
+          { options: { title: "a".repeat(301) }, field: "content.title" },
           {
-            attributes: [
-              {
-                type: MetadataAttributeType.STRING,
-                key: "canonical-uri",
-                value: "ftp://example.com/post",
-              },
-            ],
-          },
-          {
-            attributes: [
-              {
-                type: MetadataAttributeType.STRING,
-                key: "meta-title",
-                value: "a".repeat(101),
-              },
-            ],
-          },
-          {
-            coverImage: {
-              url: "data:image/png;base64,AAAA",
-              type: MediaImageMimeType.PNG,
+            options: {
+              attributes: [
+                {
+                  type: MetadataAttributeType.STRING,
+                  key: "canonical-uri",
+                  value: "ftp://example.com/post",
+                },
+              ],
             },
+            field: "content.attributes[0].value",
+          },
+          {
+            options: {
+              attributes: [
+                {
+                  type: MetadataAttributeType.STRING,
+                  key: "meta-title",
+                  value: "a".repeat(101),
+                },
+              ],
+            },
+            field: "content.attributes[0].value",
+          },
+          {
+            options: {
+              coverImage: {
+                url: "data:image/png;base64,AAAA",
+                type: MediaImageMimeType.PNG,
+              },
+            },
+            field: "content.coverImage.url",
           },
         ];
 
-        for (const invalidCase of invalidCases) {
+        for (const { options, field } of invalidCases) {
           const response = yield* publishDraftRequest(client, "draft-limits", {
             metadata: createSignedTestPostMetadata({
               draftId: "draft-limits",
               privateKey: ownerWallet.privateKey,
-              ...invalidCase,
+              ...options,
             }),
           });
 
-          const body =
-            yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(response);
+          const body = JSON.stringify(yield* response.json);
 
           expect({
             status: response.status,
-            invalidMetadata: body.message.startsWith("Invalid post metadata"),
-          }).toStrictEqual({ status: 400, invalidMetadata: true });
+            rejectedField: body.includes(`at ${field}`),
+          }).toStrictEqual({ status: 400, rejectedField: true });
         }
 
         // The four rejected publishes used the per-minute publish limit.

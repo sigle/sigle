@@ -1,3 +1,4 @@
+import { POST_METADATA_LIMITS } from "@sigle/sdk";
 import { Schema } from "effect";
 import {
   HttpApiEndpoint,
@@ -73,20 +74,19 @@ const Clearable = <S extends Schema.Top>(schema: S) =>
   );
 
 /**
- * Draft field limits. The publish endpoint holds the signed post metadata to
- * the same limits (`PublishedPostFields`), so a post never stores what a draft
- * would refuse.
+ * Draft field limits, the ones of the signed post metadata (`@sigle/sdk`), so
+ * a draft that saves can be published.
  */
 export const DRAFT_LIMITS = {
-  title: 300,
+  title: POST_METADATA_LIMITS.title,
   // The editor stores Markdown; images are embedded by URL, not inline.
-  content: 1_000_000,
-  metaTitle: 100,
-  metaDescription: 250,
-  canonicalUri: 200,
-  coverImage: 2048,
-  tags: 5,
-  tag: 50,
+  content: POST_METADATA_LIMITS.content,
+  metaTitle: POST_METADATA_LIMITS.metaTitle,
+  metaDescription: POST_METADATA_LIMITS.metaDescription,
+  canonicalUri: POST_METADATA_LIMITS.canonicalUri,
+  coverImage: POST_METADATA_LIMITS.coverImage,
+  tags: POST_METADATA_LIMITS.tags,
+  tag: POST_METADATA_LIMITS.tag,
 } as const;
 
 const DraftTitle = Schema.String.check(Schema.isMaxLength(DRAFT_LIMITS.title));
@@ -127,23 +127,6 @@ const DraftTags = Schema.mutable(
     ),
   ).check(Schema.isMaxLength(DRAFT_LIMITS.tags)),
 );
-
-/**
- * The fields a published post takes from its signed metadata, held to the
- * draft limits: the SDK schema has none, and a post must not store what a
- * draft would refuse.
- */
-export const PublishedPostFields = Schema.Struct({
-  title: DraftTitle,
-  content: DraftContent,
-  // The editor sends the first 350 characters of the text.
-  excerpt: Schema.String.check(Schema.isMaxLength(1000)),
-  metaTitle: Schema.NullOr(DraftMetaTitle),
-  metaDescription: Schema.NullOr(DraftMetaDescription),
-  canonicalUri: Schema.NullOr(DraftCanonicalUri),
-  coverImage: Schema.NullOr(DraftCoverImage),
-  tags: DraftTags,
-});
 
 /**
  * Publish state of a draft: null until it is first published, `failed` once a
