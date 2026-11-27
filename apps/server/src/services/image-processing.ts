@@ -1,6 +1,7 @@
 import { Context, Data, Duration, Effect, Layer, Semaphore } from "effect";
 import type {
   ImageOptimizationError,
+  ImageTooLargeError,
   OptimizeImageOptions,
   OptimizedImage,
   ThumbhashResult,
@@ -26,7 +27,7 @@ export interface ImageProcessor {
     options: OptimizeImageOptions,
   ) => Effect.Effect<
     OptimizedImage,
-    ImageOptimizationError | ImageProcessingTimeoutError
+    ImageOptimizationError | ImageProcessingTimeoutError | ImageTooLargeError
   >;
   readonly generateThumbhash: (
     buffer: Uint8Array,

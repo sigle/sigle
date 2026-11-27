@@ -17,21 +17,26 @@ export const profileImageMaxMib = (kind: ProfileImageKind): number =>
   maxMibByKind[kind];
 
 export interface ProfileImageSettings {
+  readonly height: number;
   readonly quality: number;
   readonly width: number;
 }
 
+/**
+ * Avatars fit a square. Covers are shown cropped to about 4:1, so a 2:1 box
+ * keeps every visible pixel of a landscape photo.
+ */
 const settingsByStacksEnv: Record<
   AppConfigValues["STACKS_ENV"],
   Record<ProfileImageKind, ProfileImageSettings>
 > = {
   mainnet: {
-    avatar: { quality: 85, width: 1000 },
-    cover: { quality: 85, width: 3000 },
+    avatar: { height: 1000, quality: 85, width: 1000 },
+    cover: { height: 1500, quality: 85, width: 3000 },
   },
   testnet: {
-    avatar: { quality: 75, width: 600 },
-    cover: { quality: 75, width: 2000 },
+    avatar: { height: 600, quality: 75, width: 600 },
+    cover: { height: 1000, quality: 75, width: 2000 },
   },
 };
 
