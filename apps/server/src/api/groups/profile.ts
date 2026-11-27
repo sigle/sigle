@@ -3,7 +3,6 @@ import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/http-api";
 import { UserProfile } from "@/api/groups/users";
 import { UserAuthMiddleware } from "@/api/middleware/auth-user";
 import {
-  GlobalRateLimitMiddleware,
   RateLimitMiddleware,
   RateLimitPolicy,
 } from "@/api/middleware/rate-limit";
@@ -134,5 +133,4 @@ export const ProfileGroup = HttpApiGroup.make("profile")
   )
   .prefix("/api/me/profile")
   .middleware(RateLimitMiddleware)
-  .middleware(UserAuthMiddleware)
-  .middleware(GlobalRateLimitMiddleware);
+  .middleware(UserAuthMiddleware);

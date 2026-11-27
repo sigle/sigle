@@ -6,8 +6,15 @@ import {
   Layer,
   Option,
   Predicate,
+  Schema,
 } from "effect";
-import { HttpEffect, HttpServerRequest, HttpServerResponse } from "effect/http";
+import {
+  HttpEffect,
+  HttpMiddleware,
+  HttpRouter,
+  HttpServerRequest,
+  HttpServerResponse,
+} from "effect/http";
 import { HttpApiMiddleware } from "effect/http-api";
 import { RateLimiter } from "effect/persistence";
 import { isIPv6 } from "node:net";
@@ -18,16 +25,6 @@ import { AppConfig } from "@/config";
 
 export class RateLimitMiddleware extends HttpApiMiddleware.Service<RateLimitMiddleware>()(
   "sigle/RateLimitMiddleware",
-  { error: [TooManyRequests, InternalServerError] },
-) {}
-
-/**
- * The `global` limit of the client IP. Add it last on a group, so it runs
- * first, before the session check: anonymous requests to signed-in routes then
- * count too.
- */
-export class GlobalRateLimitMiddleware extends HttpApiMiddleware.Service<GlobalRateLimitMiddleware>()(
-  "sigle/GlobalRateLimitMiddleware",
   { error: [TooManyRequests, InternalServerError] },
 ) {}
 
@@ -317,19 +314,6 @@ export const consumeRateLimit = (
     yield* setRateLimitHeaders(observedAt, result);
   });
 
-/**
- * Consumes a point of the client IP's `global` limit. Call it before the
- * endpoint's own limit, so the response carries the endpoint's headers unless
- * the global limit is the one exceeded. Every request consumes one point:
- * through `GlobalRateLimitMiddleware` on the API, directly on `/api/auth/*`.
- */
-export const consumeGlobalRateLimit = (
-  limiter: RateLimiter.RateLimiter,
-  request: HttpServerRequest.HttpServerRequest,
-  config: AppConfigValues,
-) =>
-  consumeRateLimit(limiter, `global:${clientKey(request, config)}`, "global");
-
 export const RateLimitMiddlewareLayer: Layer.Layer<
   RateLimitMiddleware,
   never,
@@ -370,25 +354,56 @@ export const RateLimitMiddlewareLayer: Layer.Layer<
   }),
 );
 
-export const GlobalRateLimitMiddlewareLayer: Layer.Layer<
-  GlobalRateLimitMiddleware,
-  never,
-  RateLimiter.RateLimiter | AppConfig
-> = Layer.effect(
-  GlobalRateLimitMiddleware,
+/**
+ * The `global` limit of the client IP, on every route of the router but
+ * `/health`: the API, `/api/auth/*`, the OpenAPI document and reference, and
+ * unknown paths. It runs before any endpoint middleware, so anonymous requests
+ * to signed-in routes count too, and before the endpoint's own limit, so the
+ * response carries the endpoint's headers unless the global limit is the one
+ * exceeded.
+ */
+export const GlobalRateLimitLayer = Layer.unwrap(
   Effect.gen(function* () {
     const limiter = yield* RateLimiter.RateLimiter;
     const config = yield* AppConfig;
 
-    return (httpEffect) =>
+    const globalRateLimit = HttpMiddleware.make((app) =>
       Effect.gen(function* () {
         const request = yield* HttpServerRequest.HttpServerRequest;
+        const { pathname } = new URL(request.url, config.API_URL);
 
-        if (!isPrivateNetworkRead(request, config)) {
-          yield* consumeGlobalRateLimit(limiter, request, config);
+        if (pathname === "/health" || isPrivateNetworkRead(request, config)) {
+          return yield* app;
         }
 
-        return yield* httpEffect;
-      });
+        return yield* consumeRateLimit(
+          limiter,
+          `global:${clientKey(request, config)}`,
+          "global",
+        ).pipe(
+          Effect.matchEffect({
+            // The body of the API's own errors.
+            onFailure: (error) =>
+              Effect.succeed(
+                Schema.is(TooManyRequests)(error)
+                  ? HttpServerResponse.jsonUnsafe(
+                      {
+                        message: error.message,
+                        retryAfterMillis: error.retryAfterMillis,
+                      },
+                      { status: 429 },
+                    )
+                  : HttpServerResponse.jsonUnsafe(
+                      { message: error.message },
+                      { status: 500 },
+                    ),
+              ),
+            onSuccess: () => app,
+          }),
+        );
+      }),
+    );
+
+    return HttpRouter.middleware(globalRateLimit, { global: true });
   }),
 );

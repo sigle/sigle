@@ -387,11 +387,16 @@ describe("http server", () => {
     }).pipe(Effect.provide(serverLayer())),
   );
 
-  it.effect("GET /_scalar serves the API reference", () =>
+  it.effect("GET /_scalar serves a small API reference page", () =>
     Effect.gen(function* () {
       const response = yield* HttpClient.get("/_scalar");
+      const body = yield* response.text;
 
-      expect(response.status).toBe(200);
+      // The Scalar bundle is loaded by the browser, not inlined.
+      expect({
+        status: response.status,
+        small: Buffer.byteLength(body) < 256 * 1024,
+      }).toStrictEqual({ status: 200, small: true });
     }).pipe(Effect.provide(serverLayer())),
   );
 
@@ -609,6 +614,75 @@ describe("http server", () => {
       ),
       (effect) => TestClock.setTime(NOW_MILLIS).pipe(Effect.andThen(effect)),
     ),
+  );
+
+  it.effect(
+    "limits every route but /health once the global limit is used",
+    () =>
+      Effect.gen(function* () {
+        const ip = "203.0.113.9";
+        const headers = { "x-real-ip": ip, origin: "http://localhost:3000" };
+
+        // Unknown paths count too, and have no endpoint limit of their own.
+        yield* Effect.forEach(
+          Array.from({ length: RATE_LIMITS.global.points }),
+          () => HttpClient.get("/missing", { headers }),
+          { concurrency: 1 },
+        );
+
+        const statuses = yield* Effect.forEach(
+          [
+            "/_scalar",
+            "/_openapi.json",
+            "/api/auth/get-session",
+            "/api/posts",
+            "/missing",
+            "/health",
+          ],
+          (path) =>
+            HttpClient.get(path, { headers }).pipe(
+              Effect.map((response) => [path, response.status] as const),
+            ),
+          { concurrency: 1 },
+        );
+
+        const rejected = yield* HttpClient.get("/_scalar", { headers });
+
+        expect({
+          statuses: Object.fromEntries(statuses),
+          rejectedBody: yield* rejected.json,
+          // Without it, the app could not read the 429.
+          rejectedCors: Option.getOrUndefined(
+            Headers.get(rejected.headers, "access-control-allow-origin"),
+          ),
+          rejectedHeaders: rateLimitHeaders(rejected),
+        }).toStrictEqual({
+          statuses: {
+            "/_scalar": 429,
+            "/_openapi.json": 429,
+            "/api/auth/get-session": 429,
+            "/api/posts": 429,
+            "/missing": 429,
+            "/health": 200,
+          },
+          rejectedBody: {
+            message: "Rate limit exceeded",
+            retryAfterMillis: 60_000,
+          },
+          rejectedCors: "http://localhost:3000",
+          rejectedHeaders: {
+            "retry-after": "60",
+            "x-ratelimit-limit": "300",
+            "x-ratelimit-remaining": "0",
+            "x-ratelimit-reset": String(NOW_MILLIS / 1000 + 60),
+          },
+        });
+      }).pipe(
+        Effect.provide(
+          serverLayer({ CLIENT_IP_HEADER: Option.some("x-real-ip") }),
+        ),
+        (effect) => TestClock.setTime(NOW_MILLIS).pipe(Effect.andThen(effect)),
+      ),
   );
 
   it.effect("does not rate limit GET requests from the private network", () => {

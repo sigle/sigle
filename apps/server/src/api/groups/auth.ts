@@ -1,11 +1,7 @@
 import { ByteSize, Effect, Layer, Predicate, Schema } from "effect";
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/http";
 import { RateLimiter } from "effect/persistence";
-import {
-  clientKey,
-  consumeGlobalRateLimit,
-  consumeRateLimit,
-} from "@/api/middleware/rate-limit";
+import { clientKey, consumeRateLimit } from "@/api/middleware/rate-limit";
 import { BadRequest, PayloadTooLarge, TooManyRequests } from "@/api/schemas";
 import { AppConfig } from "@/config";
 import { AuthService } from "@/services/auth";
@@ -54,7 +50,8 @@ export const AuthRoutesLayer = Layer.unwrap(
       Effect.gen(function* () {
         // The routes are not part of `SigleApi`, so they are limited here
         // rather than by `RateLimitMiddleware`, always per IP as they run
-        // before the user is known. The bucket is the policy, not the path:
+        // before the user is known (`GlobalRateLimitLayer` adds the global
+        // limit). The bucket is the policy, not the path:
         // the wildcard matches any path, and a key per path would give each
         // made-up path a fresh limit and the store an unbounded set of keys.
         const { pathname } = new URL(request.url, config.API_URL);
@@ -62,8 +59,6 @@ export const AuthRoutesLayer = Layer.unwrap(
         const policy = pathname.startsWith("/api/auth/siws/")
           ? "signIn"
           : "default";
-
-        yield* consumeGlobalRateLimit(limiter, request, config);
 
         yield* consumeRateLimit(
           limiter,

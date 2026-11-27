@@ -21,7 +21,7 @@ import { UserAuthMiddlewareLayer } from "@/api/middleware/auth-user";
 import { BodyLimitLayer } from "@/api/middleware/body-limit";
 import { EtagLayer } from "@/api/middleware/etag";
 import {
-  GlobalRateLimitMiddlewareLayer,
+  GlobalRateLimitLayer,
   RateLimitMiddlewareLayer,
 } from "@/api/middleware/rate-limit";
 import { SchemaErrorMiddlewareLayer } from "@/api/middleware/schema-error";
@@ -59,7 +59,6 @@ export const ApiHandlersLayer = Layer.mergeAll(
 );
 
 export const ApiMiddlewareLayer = Layer.mergeAll(
-  GlobalRateLimitMiddlewareLayer,
   RateLimitMiddlewareLayer,
   UserAuthMiddlewareLayer,
   AdminMiddlewareLayer,
@@ -97,7 +96,9 @@ const ServedApiLayer = Layer.unwrap(
 
     return Layer.mergeAll(
       HttpApiBuilder.layer(api, { openapiPath: "/_openapi.json" }),
-      HttpApiScalar.layer(api, { path: "/_scalar" }),
+      // The page loads Scalar from jsDelivr, pinned to the version that
+      // Effect inlines, instead of inlining its 5 MB bundle in every response.
+      HttpApiScalar.layerCdn(api, { path: "/_scalar", version: "1.81.0" }),
     );
   }),
 );
@@ -105,7 +106,9 @@ const ServedApiLayer = Layer.unwrap(
 export const ApiRoutesLayer = Layer.mergeAll(
   ServedApiLayer,
   AuthRoutesLayer,
-  CorsLayer,
+  // CORS is registered first so it wraps the global limit, and its 429s
+  // carry the CORS headers the app needs to read them.
+  GlobalRateLimitLayer.pipe(Layer.provideMerge(CorsLayer)),
   EtagLayer,
   BodyLimitLayer,
 ).pipe(Layer.provide(ApiHandlersLayer), Layer.provide(ApiMiddlewareLayer));

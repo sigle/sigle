@@ -6,10 +6,7 @@ import {
   OpenApi,
 } from "effect/http-api";
 import { MediaImage, PublicUser } from "@/api/groups/users";
-import {
-  GlobalRateLimitMiddleware,
-  RateLimitMiddleware,
-} from "@/api/middleware/rate-limit";
+import { RateLimitMiddleware } from "@/api/middleware/rate-limit";
 import {
   BadRequest,
   ContentWarning,
@@ -133,5 +130,4 @@ export const PostsGroup = HttpApiGroup.make("posts")
       ),
   )
   .prefix("/api/posts")
-  .middleware(RateLimitMiddleware)
-  .middleware(GlobalRateLimitMiddleware);
+  .middleware(RateLimitMiddleware);
