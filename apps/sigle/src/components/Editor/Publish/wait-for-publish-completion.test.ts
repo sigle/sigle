@@ -7,6 +7,7 @@ const TIMINGS = { timeoutMillis: 200, pollIntervalMillis: 10 };
 // before importing the module graph afresh.
 const waitWith = async (
   respond: (request: Request) => Response | Promise<Response>,
+  signal?: AbortSignal,
 ) => {
   const fetchMock = vi.fn(respond);
   vi.stubGlobal("fetch", fetchMock);
@@ -15,7 +16,7 @@ const waitWith = async (
   const { waitForPublishCompletion } =
     await import("./wait-for-publish-completion");
 
-  const result = await waitForPublishCompletion("d1", TIMINGS);
+  const result = await waitForPublishCompletion("d1", { ...TIMINGS, signal });
 
   return { result, fetchMock };
 };
@@ -70,6 +71,7 @@ describe("waitForPublishCompletion", () => {
 
     expect(result.isErr()).toBe(true);
     expect(errorMessage(result)).toBe("Failed to publish post");
+    expect(result.isErr() && "failed" in result.error).toBe(true);
   });
 
   it("returns the API error message", async () => {
@@ -94,5 +96,19 @@ describe("waitForPublishCompletion", () => {
     const { result } = await waitWith(() => status("processing"));
 
     expect(errorMessage(result)).toBe("Publishing timed out, please try again");
+  });
+
+  it("stops polling once aborted", async () => {
+    const controller = new AbortController();
+
+    const { result, fetchMock } = await waitWith(() => {
+      controller.abort();
+
+      return status("processing");
+    }, controller.signal);
+
+    expect(result.isErr() && "cancelled" in result.error).toBe(true);
+    expect(errorMessage(result)).toBe("Publishing status check was cancelled");
+    expect(fetchMock.mock.calls.length).toBeLessThanOrEqual(2);
   });
 });
