@@ -23,7 +23,7 @@ export default defineConfig({
         {
           icon: "discord",
           label: "Discord",
-          href: "https://app.sigle.io/discord",
+          href: "https://discord.gg/X2Dbz3xbrs",
         },
       ],
       editLink: {

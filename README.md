@@ -26,9 +26,9 @@
     <br>
     <a href="https://www.sigle.io"><b>sigle.io</b></a>
     •
-    <a href="https://app.sigle.io/discord"><b>Discord</b></a>
+    <a href="https://discord.gg/X2Dbz3xbrs"><b>Discord</b></a>
     •
-    <a href="https://app.sigle.io/twitter"><b>Twitter</b></a>
+    <a href="https://x.com/sigleapp"><b>X</b></a>
 </div>
 
 ## About
