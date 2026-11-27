@@ -53,7 +53,7 @@ export interface paths {
     };
     /**
      * Get the signed-in user's limits
-     * @description Return the limits of the signed-in user's plan and how much of them is used, such as the posts they can still publish in the last 24 hours. Returns a 401 without a session.
+     * @description Return the limits of the signed-in user's plan and how much of them is used, such as the posts they can still publish in the last 24 hours and the largest post they can publish. Returns a 401 without a session.
      */
     get: operations["me.limits"];
     put?: never;
@@ -191,7 +191,7 @@ export interface paths {
     put?: never;
     /**
      * Publish a draft
-     * @description Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being published to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, 3 posts on Free and 20 on Pro, counting the publishes in flight. Also returns a 429 once all users of the plan together reached its global daily limit.
+     * @description Validate signed post metadata and enqueue an asynchronous publish job. Returns a 403 when the metadata JSON is larger than the plan allows, 256 KiB on Free and 1 MiB on Pro. Returns a 409 while the draft is being published to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, 3 posts on Free and 20 on Pro, counting the publishes in flight. Also returns a 429 once all users of the plan together reached its global daily limit.
      */
     post: operations["drafts.publish"];
     delete?: never;
@@ -686,6 +686,7 @@ export interface components {
     };
     UserLimitsResponse: {
       publish: components["schemas"]["DailyLimit"];
+      publishMaxBytes: number;
     };
     DailyLimit: {
       limit: number;
@@ -1478,6 +1479,15 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Forbidden */
+      403: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ForbiddenError"];
         };
       };
       /** @description Not Found */

@@ -1716,6 +1716,7 @@ describe("drafts", () => {
           ),
           retry: 202,
           limits: {
+            publishMaxBytes: 256 * 1024,
             publish: {
               limit: 3,
               used: 3,
@@ -1770,7 +1771,149 @@ describe("drafts", () => {
           publish: 202,
           limits: {
             publish: expect.objectContaining({ limit: 20 }),
+            publishMaxBytes: 1024 * 1024,
           },
+        });
+      }).pipe(Effect.provide(makeTestServerLayer()));
+    },
+  );
+
+  it.effect(
+    "POST /api/drafts/:draftId/publish enforces the size limit of each plan",
+    () => {
+      const freeWallet = createTestSiwsCredentials("testnet");
+      const proWallet = createTestSiwsCredentials("testnet");
+
+      // Signed metadata whose JSON takes exactly `bytes`: the signature has
+      // the same length whatever the content. The content is made of 2-byte
+      // characters, so the Pro limit is reached within the content length
+      // limit of a million characters.
+      const signedMetadataOfSize = (
+        draftId: string,
+        privateKey: string,
+        bytes: number,
+      ) => {
+        const emptySize = Buffer.byteLength(
+          JSON.stringify(
+            createSignedTestPostMetadata({ draftId, privateKey, content: "" }),
+          ),
+        );
+
+        const contentBytes = bytes - emptySize;
+
+        return createSignedTestPostMetadata({
+          draftId,
+          privateKey,
+          content:
+            "é".repeat(Math.floor(contentBytes / 2)) +
+            "a".repeat(contentBytes % 2),
+        });
+      };
+
+      const publishOfSize = (
+        client: HttpClient.HttpClient,
+        draftId: string,
+        privateKey: string,
+        bytes: number,
+      ) =>
+        Effect.gen(function* () {
+          const metadata = signedMetadataOfSize(draftId, privateKey, bytes);
+          const response = yield* publishDraftRequest(client, draftId, {
+            metadata,
+          });
+          const body: unknown = yield* response.json;
+
+          return {
+            bytes: Buffer.byteLength(JSON.stringify(metadata)),
+            status: response.status,
+            body,
+          };
+        });
+
+      return Effect.gen(function* () {
+        const db = yield* Database;
+
+        const free = yield* createAuthenticatedClient();
+        yield* createTestWalletAddress({
+          userId: free.userId,
+          address: freeWallet.address,
+        });
+        yield* createTestDraft({ id: "draft-free-at", userId: free.userId });
+        yield* createTestDraft({ id: "draft-free-over", userId: free.userId });
+
+        const pro = yield* createAuthenticatedClient({ plan: "pro" });
+        yield* createTestWalletAddress({
+          userId: pro.userId,
+          address: proWallet.address,
+        });
+        yield* createTestDraft({ id: "draft-pro-free", userId: pro.userId });
+        yield* createTestDraft({ id: "draft-pro-over", userId: pro.userId });
+
+        const freeAtLimit = yield* publishOfSize(
+          free.client,
+          "draft-free-at",
+          freeWallet.privateKey,
+          256 * 1024,
+        );
+        const freeOverLimit = yield* publishOfSize(
+          free.client,
+          "draft-free-over",
+          freeWallet.privateKey,
+          256 * 1024 + 1,
+        );
+        const proOverFreeLimit = yield* publishOfSize(
+          pro.client,
+          "draft-pro-free",
+          proWallet.privateKey,
+          256 * 1024 + 1,
+        );
+        const proOverLimit = yield* publishOfSize(
+          pro.client,
+          "draft-pro-over",
+          proWallet.privateKey,
+          1024 * 1024 + 1,
+        );
+
+        // A rejected publish leaves its draft untouched, nothing is queued.
+        const [rejectedDraft] = yield* db
+          .select({ txStatus: draft.txStatus })
+          .from(draft)
+          .where(eq(draft.id, "draft-free-over"));
+
+        expect({
+          freeAtLimit,
+          freeOverLimit,
+          proOverFreeLimit,
+          proOverLimit,
+          rejectedDraft,
+        }).toStrictEqual({
+          freeAtLimit: {
+            bytes: 262_144,
+            status: 202,
+            body: expect.objectContaining({ draftId: "draft-free-at" }),
+          },
+          freeOverLimit: {
+            bytes: 262_145,
+            status: 403,
+            body: {
+              message:
+                "This post is 257 KiB, over the 256 KiB limit of the Free plan. Shorten it, or upgrade to Pro to publish posts up to 1 MiB.",
+            },
+          },
+          proOverFreeLimit: {
+            bytes: 262_145,
+            status: 202,
+            body: expect.objectContaining({ draftId: "draft-pro-free" }),
+          },
+          proOverLimit: {
+            bytes: 1_048_577,
+            status: 403,
+            body: {
+              message:
+                "This post is 1.1 MiB, over the 1 MiB limit of the Pro plan. Shorten it to publish it.",
+            },
+          },
+          rejectedDraft: { txStatus: null },
         });
       }).pipe(Effect.provide(makeTestServerLayer()));
     },

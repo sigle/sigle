@@ -25,6 +25,30 @@ export const PUBLISH_LIMITS: Record<UserPlan, number> = {
   pro: 20,
 };
 
+const KIB = 1024;
+
+const MIB = 1024 * KIB;
+
+/**
+ * Largest post a user can publish, in UTF-8 bytes of the signed metadata JSON
+ * uploaded to Arweave. Sigle pays for every upload by the byte, so this bounds
+ * what a publish costs, with `PUBLISH_LIMITS` bounding how many. Far above a
+ * long post, which takes tens of KiB.
+ */
+export const PUBLISH_MAX_BYTES: Record<UserPlan, number> = {
+  free: 256 * KIB,
+  pro: 1 * MIB,
+};
+
+/**
+ * A size in bytes as KiB, or MiB from 1 MiB, rounded up so a size over a
+ * limit never reads as the limit: "256 KiB", "1.1 MiB".
+ */
+export const formatPublishSize = (bytes: number): string =>
+  bytes >= MIB
+    ? `${Math.ceil((bytes / MIB) * 10) / 10} MiB`
+    : `${Math.ceil(bytes / KIB)} KiB`;
+
 /**
  * Usage of a daily limit from the times of the counted actions: how many, and
  * when the oldest leaves the window (null when none).
