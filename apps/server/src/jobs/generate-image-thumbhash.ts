@@ -1,6 +1,14 @@
 import { eq } from "drizzle-orm";
-import { Data, Effect, Layer, Option, Schedule, Schema } from "effect";
-import { BlockList, isIPv4, isIPv6 } from "node:net";
+import {
+  Context,
+  Data,
+  Effect,
+  Layer,
+  Option,
+  Predicate,
+  Schedule,
+  Schema,
+} from "effect";
 import type { ImageOptimizationError } from "@/lib/images";
 import type { TerminalJobError } from "@/queue/core";
 import type {
@@ -15,6 +23,11 @@ import {
   mimeTypeForSharpFormat,
   resolveImageUrl,
 } from "@/lib/images";
+import {
+  fetchPublicHttps,
+  isBlockedAddress,
+  parseIpLiteral,
+} from "@/lib/public-https";
 import { defineJob, terminal } from "@/queue/core";
 import { ImageProcessingService } from "@/services/image-processing";
 
@@ -37,74 +50,13 @@ const redirectStatuses = new Set([301, 302, 303, 307, 308]);
 
 const privateHostnames = new Set(["localhost", "localhost.localdomain"]);
 
-const blockedAddresses = new BlockList();
-
-for (const [network, prefix] of [
-  ["0.0.0.0", 8],
-  ["10.0.0.0", 8],
-  ["100.64.0.0", 10],
-  ["127.0.0.0", 8],
-  ["169.254.0.0", 16],
-  ["172.16.0.0", 12],
-  ["192.0.0.0", 24],
-  ["192.0.2.0", 24],
-  ["192.168.0.0", 16],
-  ["198.18.0.0", 15],
-  ["198.51.100.0", 24],
-  ["203.0.113.0", 24],
-  ["224.0.0.0", 4],
-  ["240.0.0.0", 4],
-] as const) {
-  blockedAddresses.addSubnet(network, prefix, "ipv4");
-}
-
-for (const [network, prefix] of [
-  ["::", 96],
-  ["64:ff9b::", 96],
-  ["100::", 64],
-  ["2001:db8::", 32],
-  ["fc00::", 7],
-  ["fe80::", 10],
-  ["ff00::", 8],
-] as const) {
-  blockedAddresses.addSubnet(network, prefix, "ipv6");
-}
-
-interface IpLiteral {
-  readonly address: string;
-  readonly family: "ipv4" | "ipv6";
-}
-
-const parseIpLiteral = (hostname: string): IpLiteral | null => {
-  const address =
-    hostname.startsWith("[") && hostname.endsWith("]")
-      ? hostname.slice(1, -1)
-      : hostname;
-
-  if (isIPv4(address)) {
-    return { address, family: "ipv4" };
-  }
-
-  if (isIPv6(address)) {
-    const mapped = /^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/i.exec(address);
-
-    if (mapped?.[1] !== undefined && isIPv4(mapped[1])) {
-      return { address: mapped[1], family: "ipv4" };
-    }
-
-    return { address, family: "ipv6" };
-  }
-
-  return null;
-};
-
 const rejectUrl = (message: string) =>
   Effect.fail(terminal(new InvalidImageError({ message })));
 
 /**
  * Restricts remote fetches to https URLs whose host is not a loopback,
- * link-local, private or reserved address. Hostnames are not DNS-resolved
- * here; pinning resolved addresses would require a custom dispatcher.
+ * link-local, private or reserved address. A hostname is checked again when
+ * connecting, against the addresses it resolves to (`fetchPublicHttps`).
  */
 const validateImageUrl = (
   rawUrl: string,
@@ -129,7 +81,7 @@ const validateImageUrl = (
     const literal = parseIpLiteral(normalizedHostname);
 
     if (literal !== null) {
-      if (blockedAddresses.check(literal.address, literal.family)) {
+      if (isBlockedAddress(literal)) {
         return yield* rejectUrl(
           `Image host address is not allowed: ${hostname}`,
         );
@@ -150,6 +102,14 @@ const validateImageUrl = (
   });
 
 /**
+ * How the job downloads an image: `fetchPublicHttps`, which refuses a
+ * hostname that resolves to a blocked address. Tests replace it.
+ */
+export const ImageFetch = Context.Reference<
+  (url: URL, init: { readonly signal: AbortSignal }) => Promise<Response>
+>("sigle/ImageFetch", { defaultValue: () => fetchPublicHttps });
+
+/**
  * Follows a bounded number of redirects manually so every hop is revalidated
  * by `validateImageUrl` instead of trusting the redirect of a gateway.
  */
@@ -159,21 +119,27 @@ const fetchImageResponse = (
   Effect.gen(function* () {
     let url = initialUrl;
     let response: Response | null = null;
+    const imageFetch = yield* ImageFetch;
 
     for (let redirects = 0; redirects <= MAX_IMAGE_REDIRECTS; redirects++) {
       const target = yield* validateImageUrl(url);
 
       const current = yield* Effect.tryPromise({
         try: () =>
-          fetch(target, {
-            redirect: "manual",
+          imageFetch(target, {
             signal: AbortSignal.timeout(FETCH_TIMEOUT_MILLIS),
           }),
         catch: (cause) =>
-          new ImageFetchError({
-            cause,
-            message: `Failed to fetch image: ${describeCause(cause)}`,
-          }),
+          Predicate.isTagged(cause, "BlockedAddressError")
+            ? terminal(
+                new InvalidImageError({
+                  message: `Image host address is not allowed: ${describeCause(cause)}`,
+                }),
+              )
+            : new ImageFetchError({
+                cause,
+                message: `Failed to fetch image: ${describeCause(cause)}`,
+              }),
       });
 
       const location = redirectStatuses.has(current.status)

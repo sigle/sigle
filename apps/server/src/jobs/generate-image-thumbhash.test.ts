@@ -7,18 +7,25 @@ import { afterEach, vi } from "vite-plus/test";
 import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { mediaImage } from "@/db/schema";
+import { BlockedAddressError } from "@/lib/public-https";
 import { ImageProcessingService } from "@/services/image-processing";
 import { createTestMediaImage } from "@/test/helpers";
 import { TestDatabaseLayer } from "@/test/layer";
 import {
+  ImageFetch,
   markImageThumbhashFailed,
   processGenerateImageThumbhashJob,
 } from "./generate-image-thumbhash";
 
+// The stubbed global `fetch` stands in for the network, so the job's
+// downloads go through it instead of resolving real hostnames.
 const testLayer = Layer.mergeAll(
   TestDatabaseLayer,
   AppConfig.layerTest(),
   ImageProcessingService.layer,
+  Layer.succeed(ImageFetch, (url, init) =>
+    fetch(url, { ...init, redirect: "manual" }),
+  ),
 );
 
 const makePngBuffer = (width = 40, height = 20) =>
@@ -200,6 +207,35 @@ describe("generate image thumbhash job", () => {
       // Terminal failures are marked FAILED by the queue's onFinalFailure.
       expect(row.status).toBe("PENDING");
     }).pipe(Effect.provide(testLayer)),
+  );
+
+  it.effect(
+    "fails permanently when the host resolves to a blocked address",
+    () =>
+      Effect.gen(function* () {
+        const error = yield* processGenerateImageThumbhashJob({
+          imageId: "https://rebind.example.com/cover.png",
+        }).pipe(
+          Effect.flip,
+          Effect.provideService(ImageFetch, (url) =>
+            Promise.reject(
+              new BlockedAddressError({
+                hostname: url.hostname,
+                address: "10.0.0.1",
+                message: `${url.hostname} resolves to a blocked address: 10.0.0.1`,
+              }),
+            ),
+          ),
+        );
+
+        expect(error).toMatchObject({
+          _tag: "TerminalJobError",
+          cause: {
+            message:
+              "Image host address is not allowed: rebind.example.com resolves to a blocked address: 10.0.0.1",
+          },
+        });
+      }).pipe(Effect.provide(testLayer)),
   );
 
   it.effect("fails permanently on an SVG cover without rendering it", () =>
