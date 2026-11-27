@@ -25,6 +25,7 @@ import {
   NotFound,
   PayloadTooLarge,
   paginationQueryFields,
+  ServiceUnavailable,
   TooManyRequests,
   UnsupportedMediaType,
   UploadedImageResponse,
@@ -345,6 +346,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
         Forbidden,
         NotFound,
         PayloadTooLarge,
+        ServiceUnavailable,
         UnsupportedMediaType,
       ],
     })

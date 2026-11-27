@@ -185,6 +185,24 @@ export class InternalServerError extends Schema.Error<
 ) {}
 
 /**
+ * The server is too busy to handle the request now. It sets `Retry-After` to
+ * `retryAfterMillis` rounded up to whole seconds.
+ */
+export class ServiceUnavailable extends Schema.Error<
+  ServiceUnavailable,
+  { readonly brand: unique symbol }
+>("sigle/api/ServiceUnavailable")(
+  Schema.Struct({
+    message: Schema.String,
+    retryAfterMillis: NonNegativeInt,
+  }).annotate({ identifier: "ServiceUnavailableError" }),
+  {
+    description: "Service Unavailable",
+    httpApiStatus: 503,
+  },
+) {}
+
+/**
  * Date-time encoded as an ISO 8601 string.
  */
 export const DateTime = Schema.DateTimeUtcFromString.pipe(

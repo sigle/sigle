@@ -21,6 +21,10 @@ import { mediaImage, profile as profileTable } from "@/db/schema";
 import { sha256Hex } from "@/lib/hash";
 import { BnsLookupError, BnsService } from "@/services/bns";
 import {
+  ImageProcessingBusyError,
+  ImageProcessingService,
+} from "@/services/image-processing";
+import {
   makeStorageTestRecorder,
   StorageService,
   StorageUploadError,
@@ -599,6 +603,53 @@ describe("profile", () => {
         uploads: 0,
       });
     }).pipe(Effect.provide(imageServerLayer(recorder)));
+  });
+
+  it.effect("PUT /images answers 503 with Retry-After when busy", () => {
+    const recorder = makeStorageTestRecorder();
+
+    const busy = Effect.fail(
+      new ImageProcessingBusyError({ retryAfterMillis: 4500 }),
+    );
+
+    const imageProcessing = Layer.succeed(ImageProcessingService, {
+      optimize: () => busy,
+      generateThumbhash: () => busy,
+    });
+
+    return Effect.gen(function* () {
+      const { client } = yield* createAuthenticatedClient();
+      const png = yield* Effect.promise(() => makePngBuffer());
+
+      const response = yield* uploadImageRequest(client, "avatar", {
+        bytes: new Uint8Array(png),
+        contentType: "image/png",
+      });
+
+      const body = yield* response.json;
+
+      expect({
+        status: response.status,
+        retryAfter: response.headers["retry-after"],
+        body,
+        uploads: recorder.uploads.length,
+      }).toStrictEqual({
+        status: 503,
+        retryAfter: "5",
+        body: {
+          message: "Image processing is busy, try again in a few seconds.",
+          retryAfterMillis: 4500,
+        },
+        uploads: 0,
+      });
+    }).pipe(
+      Effect.provide(
+        makeTestServerLayer({}, [], {
+          storage: StorageService.layerTest(recorder),
+          imageProcessing,
+        }),
+      ),
+    );
   });
 
   it.effect(

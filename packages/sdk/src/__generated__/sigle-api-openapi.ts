@@ -438,6 +438,10 @@ export interface components {
     UnsupportedMediaTypeError: {
       message: string;
     };
+    ServiceUnavailableError: {
+      message: string;
+      retryAfterMillis: number;
+    };
     PayloadTooLargeError: {
       message: string;
     };
@@ -1613,6 +1617,15 @@ export interface operations {
           "application/json": components["schemas"]["InternalServerError"];
         };
       };
+      /** @description Service Unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ServiceUnavailableError"];
+        };
+      };
     };
   };
   "profile.update": {
@@ -1801,6 +1814,15 @@ export interface operations {
         };
         content: {
           "application/json": components["schemas"]["InternalServerError"];
+        };
+      };
+      /** @description Service Unavailable */
+      503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ServiceUnavailableError"];
         };
       };
     };
