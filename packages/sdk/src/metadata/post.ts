@@ -49,8 +49,8 @@ const postAttributeValueSchemas = new Map<string, z.ZodType<string>>([
 const PostAttributesSchema = MetadataAttributeSchema.array()
   .min(1)
   .max(POST_METADATA_LIMITS.attributes)
-  // The JSON Schema leaves this check out, as it can't tie a value to its key:
-  // the description of the field states it.
+  // `z.toJSONSchema` can't emit a refinement, so the published JSON Schema
+  // leaves these rules out: the description of the field states them.
   .superRefine((attributes, ctx) => {
     const seenKeys = new Set<string>();
 
@@ -143,7 +143,7 @@ export const PostMetadataDetailsSchema = z.object({
       "A short plain text summary of the content, shown in post lists.",
   }),
   attributes: PostAttributesSchema.optional().meta({
-    description: `List of attributes that can be used to store any additional information that is not supported by the standard. Sigle reads the \`${PostAttributeKey.META_TITLE}\` (up to ${POST_METADATA_LIMITS.metaTitle} characters), \`${PostAttributeKey.META_DESCRIPTION}\` (up to ${POST_METADATA_LIMITS.metaDescription} characters) and \`${PostAttributeKey.CANONICAL_URI}\` (an http(s) URL of up to ${POST_METADATA_LIMITS.canonicalUri} characters) keys, each at most once and as a String attribute.`,
+    description: `List of attributes that can be used to store any additional information that is not supported by the standard. Sigle reads the \`${PostAttributeKey.META_TITLE}\` (up to ${POST_METADATA_LIMITS.metaTitle} characters), \`${PostAttributeKey.META_DESCRIPTION}\` (up to ${POST_METADATA_LIMITS.metaDescription} characters) and \`${PostAttributeKey.CANONICAL_URI}\` (an http(s) URL of up to ${POST_METADATA_LIMITS.canonicalUri} characters) keys, each at most once and as a String attribute. \`PostMetadataSchema\` in \`@sigle/sdk\` and the Sigle API check these key rules; this JSON Schema does not.`,
   }),
   coverImage: MediaImageMetadataSchema.optional().meta({
     description: "The cover image.",

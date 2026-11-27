@@ -64,6 +64,26 @@ describe("PostMetadataSchema limits", () => {
     ).toStrictEqual([]);
   });
 
+  // Drafts accept them: their URL check reads the parsed, lowercase protocol.
+  it("accepts URL schemes in any case", () => {
+    expect(
+      issuePaths(
+        createMetadata(
+          {},
+          {
+            attributes: [
+              stringAttribute(
+                PostAttributeKey.CANONICAL_URI,
+                "HTTPS://example.com/original",
+              ),
+            ],
+            coverImage: { url: "Ar://cover", type: MediaImageMimeType.PNG },
+          },
+        ),
+      ),
+    ).toStrictEqual([]);
+  });
+
   it.each([
     {
       name: "a title over 300 characters",
@@ -173,6 +193,22 @@ describe("PostMetadataSchema limits", () => {
         },
       ),
       path: "content.coverImage.url",
+    },
+    {
+      name: "a Date attribute value over 1000 characters",
+      metadata: createMetadata(
+        {},
+        {
+          attributes: [
+            {
+              type: MetadataAttributeType.DATE,
+              key: "date",
+              value: `2026-01-01T00:00:00.${"1".repeat(1000)}Z`,
+            },
+          ],
+        },
+      ),
+      path: "content.attributes.0.value",
     },
   ])("rejects $name", ({ metadata, path }) => {
     expect(new Set(issuePaths(metadata))).toStrictEqual(new Set([path]));

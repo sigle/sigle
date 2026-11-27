@@ -23,16 +23,27 @@ export const POST_METADATA_LIMITS = {
 } as const;
 
 /**
- * A URL with one of the given schemes, such as `["http", "https"]`. The
- * scheme check is also written as a `pattern`, so the JSON Schema has it.
+ * A URL with one of the given schemes, such as `["http", "https"]`, in any
+ * case, as URL parsers accept `HTTPS://`. The scheme check is also written as
+ * a `pattern`, without flags as JSON Schema has none, and the `uri` format is
+ * kept, so the JSON Schema checks both.
  */
 export const urlWithSchemes = (schemes: Array<string>, maxLength: number) => {
-  const alternatives = schemes.join("|");
+  const anyCaseSchemes = schemes.map((scheme) =>
+    scheme.replaceAll(
+      /[a-z]/g,
+      (letter) => `[${letter}${letter.toUpperCase()}]`,
+    ),
+  );
 
-  return z
-    .url({ protocol: new RegExp(`^(${alternatives})$`) })
-    .regex(new RegExp(`^(${alternatives}):`), {
-      message: `Expected a ${schemes.map((scheme) => `${scheme}:`).join(", ")} URL`,
-    })
-    .max(maxLength);
+  return (
+    z
+      // The parsed protocol is lowercase.
+      .url({ protocol: new RegExp(`^(${schemes.join("|")})$`) })
+      .regex(new RegExp(`^(${anyCaseSchemes.join("|")}):`), {
+        message: `Expected a ${schemes.map((scheme) => `${scheme}:`).join(", ")} URL`,
+      })
+      .max(maxLength)
+      .meta({ format: "uri" })
+  );
 };

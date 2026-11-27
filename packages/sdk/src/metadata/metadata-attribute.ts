@@ -54,7 +54,7 @@ export interface DateAttribute {
 export const DateAttributeSchema = z.object({
   type: z.literal(MetadataAttributeType.DATE),
   key: z.string().meta({ description: "The attribute's unique identifier." }),
-  value: z.iso.datetime().meta({
+  value: z.iso.datetime().max(POST_METADATA_LIMITS.attributeValue).meta({
     description:
       "A valid ISO 8601 date string.  It's consumer responsibility to parse it.",
   }),
