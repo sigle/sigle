@@ -77,7 +77,7 @@ export const createTestDraft = (options: {
   readonly arweaveTxId?: string | null;
   readonly txStatus?: (typeof draft.$inferInsert)["txStatus"];
   readonly publishSignature?: string | null;
-  readonly uploadClaimedAt?: Date | null;
+  readonly publishGeneration?: number;
   readonly createdAt?: Date;
   readonly updatedAt?: Date;
 }) =>
@@ -93,7 +93,7 @@ export const createTestDraft = (options: {
         arweaveTxId: options.arweaveTxId ?? null,
         txStatus: options.txStatus ?? null,
         publishSignature: options.publishSignature ?? null,
-        uploadClaimedAt: options.uploadClaimedAt ?? null,
+        publishGeneration: options.publishGeneration ?? 0,
         createdAt: options.createdAt,
         updatedAt: options.updatedAt,
         userId: options.userId,

@@ -1,17 +1,7 @@
 import type { HttpServerRequest } from "effect/http";
 import { createId } from "@paralleldrive/cuid2";
 import { verifyMetadataSignature } from "@sigle/sdk";
-import {
-  and,
-  count,
-  desc,
-  eq,
-  isNull,
-  lt,
-  notInArray,
-  or,
-  sql,
-} from "drizzle-orm";
+import { and, count, desc, eq, isNull, notInArray, or, sql } from "drizzle-orm";
 import {
   Cause,
   Data,
@@ -49,8 +39,9 @@ import { AppConfig } from "@/config";
 import { Database } from "@/db";
 import { draft, post } from "@/db/schema";
 import {
-  PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS,
+  PUBLISH_DRAFT_STALE_MILLIS,
   publishDraftJob,
+  publishDraftJobId,
 } from "@/jobs/publish-draft";
 import {
   DRAFT_IMAGE_MAX_MIB,
@@ -467,6 +458,9 @@ const reportGlobalPublishLimitReached = ({
  */
 const publishLock = Semaphore.makeUnsafe(1);
 
+const publishInFlightMessage =
+  "This draft is being published to Arweave, it can be published again once that finishes.";
+
 export const publishDraft = (
   draftId: string,
   payload: typeof PublishDraftPayload.Type,
@@ -527,9 +521,9 @@ export const publishDraft = (
       });
     }
 
-    // Counting the limits and claiming the draft is one step, see
+    // Counting the limits and accepting the publish is one step, see
     // `publishLock`.
-    const acceptedDraft = yield* publishLock.withPermit(
+    const generation = yield* publishLock.withPermit(
       Effect.gen(function* () {
         const { plan } = user;
         const limit = PUBLISH_LIMITS[plan];
@@ -578,94 +572,88 @@ export const publishDraft = (
           );
         }
 
-        // Take ownership of the draft row: `publishSignature` identifies the signed
-        // payload being published, and the Arweave checkpoint/upload claim only
-        // survive while they belong to that payload. Workers whose job signature no
-        // longer matches the draft no-op, so the newest request wins without any
-        // queue reconciliation, which also recovers a draft stuck in flight. The
-        // CASE reads the current row, so a checkpoint or in-flight upload claim
-        // from the same signature is never clobbered. Another signature cannot
-        // take over while a worker holds the upload claim, or while a checkpointed
-        // upload waits for a worker to create the post, including after a retry
-        // of the same signature reset the status to PENDING: either way an
-        // Arweave upload paid for would be discarded. A FAILED publish has no
-        // worker left, and both checks expire after the claim lease, so a worker
-        // that crashed doesn't block the draft forever. Both run in the same
-        // statement as the write.
-        const leaseCutoff = new Date(
-          now.getTime() - PUBLISH_DRAFT_UPLOAD_CLAIM_LEASE_MILLIS,
-        );
+        const [current] = yield* db
+          .select({
+            txStatus: draft.txStatus,
+            publishSignature: draft.publishSignature,
+            publishGeneration: draft.publishGeneration,
+            arweaveTxId: draft.arweaveTxId,
+            updatedAt: draft.updatedAt,
+          })
+          .from(draft)
+          .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
+          .limit(1)
+          .pipe(Effect.orDie);
 
-        const [claimedDraft] = yield* db
+        if (!current) {
+          return yield* new NotFound({ message: "Draft not found" });
+        }
+
+        // A publish still in flight keeps its job: the same signature is a
+        // duplicate request (its offer below is deduplicated by the queue),
+        // another signature must wait. A publish in flight for longer than
+        // `PUBLISH_DRAFT_STALE_MILLIS` has no live job left and can be replaced.
+        const inFlight =
+          (current.txStatus === "PENDING" ||
+            current.txStatus === "PROCESSING") &&
+          current.updatedAt.getTime() >
+            now.getTime() - PUBLISH_DRAFT_STALE_MILLIS;
+
+        if (inFlight) {
+          if (current.publishSignature === signature) {
+            return current.publishGeneration;
+          }
+
+          return yield* new Conflict({ message: publishInFlightMessage });
+        }
+
+        // A new publish generation: a fresh queue job that no earlier job can
+        // block, while the earlier job's writes, fenced by generation, no-op.
+        // The same signed payload reuses its paid Arweave upload.
+        const nextGeneration = current.publishGeneration + 1;
+
+        const [accepted] = yield* db
           .update(draft)
           .set({
             txStatus: "PENDING",
             publishSignature: signature,
-            arweaveTxId: sql`CASE
-              WHEN ${draft.publishSignature} = ${signature} THEN ${draft.arweaveTxId}
-              ELSE NULL
-            END`,
-            uploadClaimedAt: sql`CASE
-              WHEN ${draft.publishSignature} = ${signature} THEN ${draft.uploadClaimedAt}
-              ELSE NULL
-            END`,
+            publishGeneration: nextGeneration,
+            arweaveTxId:
+              current.publishSignature === signature
+                ? current.arweaveTxId
+                : null,
             updatedAt: now,
           })
           .where(
             and(
               eq(draft.id, draftId),
               eq(draft.userId, user.id),
-              or(
-                eq(draft.publishSignature, signature),
-                and(
-                  or(
-                    isNull(draft.uploadClaimedAt),
-                    lt(draft.uploadClaimedAt, leaseCutoff),
-                  ),
-                  // The checkpoint write and every accepted publish set
-                  // `updatedAt`.
-                  or(
-                    isNull(draft.arweaveTxId),
-                    eq(draft.txStatus, "FAILED"),
-                    lt(draft.updatedAt, leaseCutoff),
-                  ),
-                ),
-              ),
+              eq(draft.publishGeneration, current.publishGeneration),
             ),
           )
           .returning({ id: draft.id })
           .pipe(Effect.orDie);
 
-        return claimedDraft;
+        if (!accepted) {
+          return yield* new Conflict({ message: publishInFlightMessage });
+        }
+
+        return nextGeneration;
       }),
     );
 
-    if (!acceptedDraft) {
-      const [currentDraft] = yield* db
-        .select({ id: draft.id })
-        .from(draft)
-        .where(and(eq(draft.id, draftId), eq(draft.userId, user.id)))
-        .limit(1)
-        .pipe(Effect.orDie);
-
-      if (!currentDraft) {
-        return yield* new NotFound({ message: "Draft not found" });
-      }
-
-      return yield* new Conflict({
-        message:
-          "This draft is being published to Arweave, it can be published again once that finishes.",
-      });
-    }
-
     yield* publishDraftJob
-      .offer({
-        draftId,
-        userId: user.id,
-        authorAddress: recoveredAddress,
-        signature,
-        metadataJson: JSON.stringify(metadata),
-      })
+      .offer(
+        {
+          draftId,
+          userId: user.id,
+          authorAddress: recoveredAddress,
+          signature,
+          metadataJson: JSON.stringify(metadata),
+          generation,
+        },
+        { id: publishDraftJobId(draftId, generation) },
+      )
       .pipe(Effect.orDie);
 
     return HttpApiSchema.withHeaders({
