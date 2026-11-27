@@ -320,6 +320,37 @@ describe("auth siws", () => {
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
 
+  it.effect(
+    "POST /api/auth/siws/verify rejects a sign-in for another network",
+    () =>
+      Effect.gen(function* () {
+        const client = yield* HttpClient.HttpClient;
+        const db = yield* Database;
+
+        // A valid mainnet signature, sent to the testnet test server.
+        const { address, privateKey, chainId } =
+          createTestSiwsCredentials("mainnet");
+
+        const { nonce } = yield* requestNonce(client);
+        const message = createTestSiwsMessage({ address, nonce, chainId });
+
+        const response = yield* requestVerify(client, {
+          message,
+          signature: signTestSiwsMessage(message, privateKey),
+        });
+
+        const wallets = yield* db
+          .select()
+          .from(walletAddress)
+          .where(eq(walletAddress.address, address));
+
+        expect({ status: response.status, wallets }).toStrictEqual({
+          status: 401,
+          wallets: [],
+        });
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
   it.effect("POST /api/auth/siws/verify consumes the nonce only once", () =>
     Effect.gen(function* () {
       const client = yield* HttpClient.HttpClient;
