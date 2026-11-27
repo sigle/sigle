@@ -307,7 +307,7 @@ describe("opentimestamps upgrade job", () => {
           completed: upgradeStats?.completed,
           failed: upgradeStats?.failed,
           uploads: uploads.length,
-        }).toStrictEqual({ completed: 1, failed: 0, uploads: 0 });
+        }).toStrictEqual({ completed: 0, failed: 1, uploads: 0 });
       }).pipe(
         Effect.provide(
           makeUpgradeTestLayer({
@@ -381,7 +381,7 @@ describe("opentimestamps upgrade job", () => {
         completed: upgradeStats?.completed,
         failed: upgradeStats?.failed,
         uploads: uploads.length,
-      }).toStrictEqual({ completed: 1, failed: 0, uploads: 0 });
+      }).toStrictEqual({ completed: 0, failed: 1, uploads: 0 });
     }).pipe(
       Effect.provide(
         makeUpgradeTestLayer({

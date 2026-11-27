@@ -64,8 +64,9 @@ export interface JobMeta {
 
 /**
  * Wraps an error to mark it as non-retryable. The worker reports it, runs
- * `onFinalFailure`, and completes the element immediately instead of consuming
- * the remaining attempts.
+ * `onFinalFailure`, and the element is marked failed immediately (a dead
+ * letter) instead of consuming the remaining attempts, so admins can list and
+ * retry it.
  */
 export class TerminalJobError extends Data.TaggedError("TerminalJobError")<{
   readonly cause: unknown;
@@ -73,6 +74,16 @@ export class TerminalJobError extends Data.TaggedError("TerminalJobError")<{
 
 export const terminal = <E>(error: E): TerminalJobError =>
   new TerminalJobError({ cause: error });
+
+/**
+ * Fails a take so the queue store marks the element failed at once, without
+ * retrying. `PersistedQueue` keeps its dead-letter class internal, and
+ * stores detect it by tag (`PersistedQueue.isDeadLetterCause`).
+ */
+const deadLetter = (cause: Cause.Cause<unknown>) => ({
+  _tag: "~effect/persistence/PersistedQueue/DeadLetter" as const,
+  cause,
+});
 
 const MAX_PAYLOAD_ATTRIBUTE_LENGTH = 1024;
 
@@ -416,7 +427,9 @@ export const defineJob = <
                 meta,
               );
 
-              return;
+              return yield* Effect.fail(
+                deadLetter(Cause.fail(terminalError.cause)),
+              );
             }
 
             if (meta.attempts >= workerMaxAttempts) {

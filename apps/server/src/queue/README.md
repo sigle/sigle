@@ -52,7 +52,8 @@ the workers.
 - Attempts are 1-based and consumed when the element is claimed; interruptions
   (deploys, shutdown) do not consume an attempt and the job is picked up again.
 - `terminal(error)` marks a failure as non-retryable: the job is reported,
-  `onFinalFailure` runs, and the element completes immediately.
+  `onFinalFailure` runs, and the element is marked failed at once, so it shows
+  in the admin failed list and can be retried from there.
 - Exhausted jobs stay in `effect_queue` as dead letters until deleted;
   completed rows are kept for 7 days (duplicate-id window). Use
   `JobAdminService.clearJob(queue, id)` to allow re-offering the same id.
