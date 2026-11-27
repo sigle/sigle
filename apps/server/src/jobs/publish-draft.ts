@@ -1,3 +1,4 @@
+import { ArweaveTags } from "@sigle/sdk";
 import { and, eq } from "drizzle-orm";
 import { Data, Effect, Layer, Schedule, Schema } from "effect";
 import type { TerminalJobError } from "@/queue/core";
@@ -141,7 +142,7 @@ export const processPublishDraftJob = (
         contentType: "application/json",
         tags: [
           {
-            name: "Author",
+            name: ArweaveTags.author,
             value: job.authorAddress,
           },
         ],

@@ -1,4 +1,5 @@
 import { TurboUpload } from "@ardrive/turbo-upload";
+import { ArweaveTags } from "@sigle/sdk";
 import { Context, Data, Effect, Layer, Redacted, Schema } from "effect";
 import {
   FetchHttpClient,
@@ -148,7 +149,7 @@ export const makeArweaveService = (uploader: ArweaveUploader) =>
 
           const arweaveTags: ReadonlyArray<ArweaveTag> = [
             { name: "Content-Type", value: contentType },
-            { name: "App-Name", value: config.APP_ID },
+            { name: ArweaveTags.appName, value: config.APP_ID },
             { name: "IPFS-CID", value: cid },
             ...tags,
           ];
