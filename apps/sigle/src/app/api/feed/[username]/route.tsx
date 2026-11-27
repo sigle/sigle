@@ -5,6 +5,15 @@ import { CONTENT_WARNINGS } from "@/lib/content-warning";
 import { resolveImageUrl } from "@/lib/images";
 import { sigleApiFetchClient } from "@/lib/sigle";
 
+/**
+ * `feed` writes item titles and descriptions as CDATA sections, and its XML
+ * writer (xml-js) escapes only the first `]]>` of each. Any further `]]>`
+ * would end the section early and turn the rest of the text into markup, so
+ * every one becomes text that cannot end a section.
+ */
+const escapeCdataEnd = (text: string): string =>
+  text.replaceAll("]]>", "]]&gt;");
+
 export async function GET(
   _: Request,
   { params }: { params: Promise<{ username: string }> },
@@ -62,13 +71,15 @@ export async function GET(
       : null;
 
     feed.addItem({
-      title: post.title,
+      title: escapeCdataEnd(post.title),
       id: postLink,
       link: postLink,
       // The list does not include the full content, the excerpt is the
       // summary readers see in their feed reader. Feed readers cannot hide a
       // post behind a warning, so the warning replaces the excerpt and cover.
-      description: warning ? `Content warning: ${warning.label}` : post.excerpt,
+      description: warning
+        ? `Content warning: ${warning.label}`
+        : escapeCdataEnd(post.excerpt),
       category: warning ? [{ name: warning.label }] : undefined,
       date: new Date(post.createdAt),
       image:
