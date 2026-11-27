@@ -18,12 +18,12 @@ export default defineConfig({
         {
           icon: "github",
           label: "GitHub",
-          href: "https://github.com/sigle/sigle",
+          href: "https://www.sigle.io/github",
         },
         {
           icon: "discord",
           label: "Discord",
-          href: "https://discord.gg/X2Dbz3xbrs",
+          href: "https://www.sigle.io/discord",
         },
       ],
       editLink: {
