@@ -1,57 +1,17 @@
 "use client";
 
-import {
-  connect,
-  disconnect,
-  getLocalStorage,
-  isConnected,
-  request,
-} from "@stacks/connect";
+import { connect, disconnect, request } from "@stacks/connect";
 import { usePostHog } from "posthog-js/react";
-import { useEffect } from "react";
 import { createSiwsMessage } from "sign-in-with-stacks";
 import { toast } from "sonner";
-import { create } from "zustand";
 import { env } from "@/env";
 import { authClient, signOut } from "@/lib/auth-client";
 import { useSession } from "@/lib/auth-hooks";
 import { stacksNetwork } from "@/lib/stacks";
 
-interface UserData {
-  stxAddress: string;
-}
-
-interface SessionState {
-  user?: UserData;
-  setUser: (user?: UserData) => void;
-}
-
-const useSessionStore = create<SessionState>()((set) => ({
-  user: undefined,
-  setUser: (user) => set({ user }),
-}));
-
 export const useStacksLogin = () => {
   const posthog = usePostHog();
-  const { user, setUser } = useSessionStore();
   const { refetch: refetchSession } = useSession();
-
-  useEffect(() => {
-    if (isConnected()) {
-      const data = getLocalStorage();
-      const stxAddress = data?.addresses.stx[0];
-
-      if (!stxAddress) {
-        return;
-      }
-
-      const user = {
-        stxAddress: stxAddress.address,
-      };
-
-      setUser(user);
-    }
-  }, [setUser]);
 
   const login = async () => {
     posthog.capture("user_login_start");
@@ -74,21 +34,16 @@ export const useStacksLogin = () => {
         throw new Error("No STX address found");
       }
 
-      const user = {
-        stxAddress: stxAddress.address,
-      };
-
       posthog.capture("user_login_wallet_success", {
-        stxAddress: user.stxAddress,
+        stxAddress: stxAddress.address,
       });
-      setUser(user);
-      void signMessage(user);
+      void signMessage(stxAddress.address);
     } catch {
       posthog.capture("user_login_cancel");
     }
   };
 
-  const signMessage = async (user: UserData) => {
+  const signMessage = async (address: string) => {
     posthog.capture("user_login_sign_message");
 
     const nonceData = await authClient.siws.nonce();
@@ -100,7 +55,7 @@ export const useStacksLogin = () => {
     }
 
     const message = createSiwsMessage({
-      address: user.stxAddress,
+      address,
       chainId: stacksNetwork.chainId,
       domain: window.location.host,
       statement: "Sign in to Sigle.",
@@ -156,7 +111,6 @@ export const useStacksLogin = () => {
   };
 
   return {
-    user,
     login,
     logout,
   };

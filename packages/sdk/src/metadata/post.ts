@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { MarketplaceMetadata } from "./marketplace.js";
 import type { MediaImageMetadata } from "./media.js";
 import type { MetadataAttribute } from "./metadata-attribute.js";
-import { SignatureSchema, Tagchema } from "./common.js";
+import { SignatureSchema, TagSchema } from "./common.js";
 import { PostMetadataSchemaId } from "./config.js";
 import { POST_METADATA_LIMITS, urlWithSchemes } from "./limits.js";
 import { MarketplaceMetadataSchema } from "./marketplace.js";
@@ -148,9 +148,13 @@ export const PostMetadataDetailsSchema = z.object({
   coverImage: MediaImageMetadataSchema.optional().meta({
     description: "The cover image.",
   }),
-  tags: Tagchema.array().min(1).max(POST_METADATA_LIMITS.tags).optional().meta({
-    description: "An arbitrary list of tags.",
-  }),
+  tags: TagSchema.array()
+    .min(1)
+    .max(POST_METADATA_LIMITS.tags)
+    .optional()
+    .meta({
+      description: "An arbitrary list of tags.",
+    }),
   contentWarning: ContentWarningSchema.optional(),
 });
 

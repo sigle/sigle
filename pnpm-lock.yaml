@@ -189,7 +189,7 @@ importers:
         version: 3.0.3
       '@cloudflare/oxlint-config':
         specifier: 0.2.0
-        version: 0.2.0(oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)))(tsrs@7.1.0-beta.tsrs4)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))
+        version: 0.2.0(oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)))(tsrs@7.1.0-beta.tsrs4)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))
       '@effect/tsgo':
         specifier: 0.73.4
         version: 0.73.4
@@ -213,7 +213,7 @@ importers:
         version: '@voidzero-dev/vite-plus-core@8.3.8001(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)'
       vite-plus:
         specifier: 'catalog:'
-        version: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)
+        version: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)
 
   apps/docs:
     dependencies:
@@ -253,9 +253,6 @@ importers:
       '@effect/platform-node':
         specifier: 4.1.5
         version: 4.1.5(bufferutil@4.1.0)(effect@4.1.5)(redis@6.2.1(@opentelemetry/api@1.9.1))(utf-8-validate@6.0.6)
-      '@effect/platform-node-shared':
-        specifier: 4.1.5
-        version: 4.1.5(bufferutil@4.1.0)(effect@4.1.5)(utf-8-validate@6.0.6)
       '@effect/sql-sqlite-node':
         specifier: 4.1.5
         version: 4.1.5(effect@4.1.5)
@@ -282,7 +279,7 @@ importers:
         version: 7.7.0
       better-auth:
         specifier: 1.7.27
-        version: 1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1)
+        version: 1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1)
       drizzle-orm:
         specifier: 1.0.0-rc.6
         version: 1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)
@@ -300,7 +297,7 @@ importers:
         version: 0.35.5(@types/node@26.6.6)
       sign-in-with-stacks:
         specifier: 0.4.1
-        version: 0.4.1(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1))(zod@4.6.7)
+        version: 0.4.1(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1))(zod@4.6.7)
       thumbhash:
         specifier: 0.1.1
         version: 0.1.1
@@ -328,7 +325,7 @@ importers:
         version: '@voidzero-dev/vite-plus-core@8.3.8001(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)'
       vite-plus:
         specifier: 'catalog:'
-        version: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)
+        version: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)
       vitest:
         specifier: 'catalog:'
         version: 5.1.1(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/browser-preview@5.1.1)(@vitest/ui@5.1.1)(@voidzero-dev/vite-plus-core@8.3.8001(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))
@@ -340,7 +337,7 @@ importers:
         version: 1.9.0(@types/react@19.3.0)(date-fns@4.4.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@daveyplate/better-auth-tanstack':
         specifier: 1.3.6
-        version: 1.3.6(@tanstack/query-core@5.108.3)(@tanstack/react-query@5.108.3(@types/react@19.3.0)(react@19.3.1))(better-auth@1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: 1.3.6(@tanstack/query-core@5.108.3)(@tanstack/react-query@5.108.3(@types/react@19.3.0)(react@19.3.1))(better-auth@1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@floating-ui/dom':
         specifier: 1.8.0
         version: 1.8.0
@@ -368,9 +365,6 @@ importers:
       '@opentelemetry/sdk-trace-base':
         specifier: 2.12.1
         version: 2.12.1(@opentelemetry/api@1.9.1)
-      '@paralleldrive/cuid2':
-        specifier: 3.3.0
-        version: 3.3.0
       '@sigle/sdk':
         specifier: workspace:*
         version: link:../../packages/sdk
@@ -469,7 +463,7 @@ importers:
         version: 2.3.0(@opentelemetry/api-logs@0.223.2)(@opentelemetry/api@1.9.1)(@opentelemetry/instrumentation@0.223.2(@opentelemetry/api@1.9.1)(supports-color@10.2.2))(@opentelemetry/resources@2.12.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-logs@0.223.2(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-metrics@2.12.1(@opentelemetry/api@1.9.1))(@opentelemetry/sdk-trace-base@2.12.1(@opentelemetry/api@1.9.1))
       better-auth:
         specifier: 1.7.27
-        version: 1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1)
+        version: 1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1)
       better-result:
         specifier: 3.0.1
         version: 3.0.1
@@ -482,9 +476,6 @@ importers:
       date-fns:
         specifier: 4.4.0
         version: 4.4.0
-      embla-carousel-react:
-        specifier: 8.6.0
-        version: 8.6.0(react@19.3.1)
       feed:
         specifier: 6.0.0
         version: 6.0.0
@@ -502,7 +493,7 @@ importers:
         version: 14.0.7
       next:
         specifier: 16.4.6
-        version: 16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+        version: 16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       next-themes:
         specifier: 0.4.6
         version: 0.4.6(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -547,7 +538,7 @@ importers:
         version: 4.23.0(supports-color@10.2.2)
       sign-in-with-stacks:
         specifier: 0.4.1
-        version: 0.4.1(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1))(zod@4.6.7)
+        version: 0.4.1(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1))(zod@4.6.7)
       sonner:
         specifier: 2.0.8
         version: 2.0.8(@types/react@19.3.0)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
@@ -561,9 +552,18 @@ importers:
         specifier: 5.1.0
         version: 5.1.0(@types/react@19.3.0)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))
     devDependencies:
+      '@playwright/test':
+        specifier: 1.65.1
+        version: 1.65.1
       '@posthog/nextjs-config':
         specifier: 1.12.2
-        version: 1.12.2(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(posthog-js@1.453.2(@types/react@19.3.0)(react@19.3.1))(webpack@5.105.4(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.33))
+        version: 1.12.2(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(posthog-js@1.453.2(@types/react@19.3.0)(react@19.3.1))(webpack@5.105.4(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.33))
+      '@stacks/encryption':
+        specifier: 7.7.0
+        version: 7.7.0
+      '@stacks/transactions':
+        specifier: 7.7.0
+        version: 7.7.0
       '@tailwindcss/postcss':
         specifier: 4.3.5
         version: 4.3.5
@@ -590,7 +590,7 @@ importers:
         version: 19.3.0(@types/react@19.3.0)
       eslint-plugin-better-tailwindcss:
         specifier: 4.11.0
-        version: 4.11.0(oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)))(tailwindcss@4.3.5)(typescript@7.0.2)
+        version: 4.11.0(oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)))(tailwindcss@4.3.5)(typescript@7.0.2)
       happy-dom:
         specifier: 21.0.4
         version: 21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
@@ -611,7 +611,7 @@ importers:
         version: '@voidzero-dev/vite-plus-core@8.3.8001(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)'
       vite-plus:
         specifier: 'catalog:'
-        version: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)
+        version: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)
 
   packages/sdk:
     dependencies:
@@ -651,7 +651,7 @@ importers:
         version: '@voidzero-dev/vite-plus-core@8.3.8001(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)'
       vite-plus:
         specifier: 'catalog:'
-        version: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)
+        version: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)
       zod:
         specifier: 4.6.7
         version: 4.6.7
@@ -2442,6 +2442,11 @@ packages:
   '@pkgr/core@0.3.6':
     resolution: {integrity: sha512-SEeaJLb3qBNF/OaXnaR1NmmBbFYk1zC0ZH/52fATcRPLFg/p791YrcyFFy44Bo9sLaGuSuLp5Q6axbb/O+v/RA==}
     engines: {node: ^14.18.0 || >=16.0.0}
+
+  '@playwright/test@1.65.1':
+    resolution: {integrity: sha512-y+NCIRm2LvY4slUVWvGh1nujJ8RF/hEisIsq2mtUPgdQC4L701bq5hZGMhrpeXjACvwvO9tj5dJqhvM6TP9lbw==}
+    engines: {node: '>=20'}
+    hasBin: true
 
   '@pnpm/deps.graph-sequencer@1100.0.1':
     resolution: {integrity: sha512-pOr5+q1fLYKwFN3LAJuGZEnfXDcQ73zqgDHMtGy+K+uIoUqyY+6MeDCWFwfu+4EFuq76I5EPFofoNAI+Bmmq4A==}
@@ -5120,19 +5125,6 @@ packages:
   elliptic@6.6.1:
     resolution: {integrity: sha512-RaddvvMatK2LJHqFJ+YA4WysVN5Ita9E35botqIYspQ4TkRAlCicdzKOjlyv/1Za5RyTNn7di//eEV0uTAfe3g==}
 
-  embla-carousel-react@8.6.0:
-    resolution: {integrity: sha512-0/PjqU7geVmo6F734pmPqpyHqiM99olvyecY7zdweCw+6tKEXnrE90pBiBbMMU8s5tICemzpQ3hi5EpxzGW+JA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.1 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
-
-  embla-carousel-reactive-utils@8.6.0:
-    resolution: {integrity: sha512-fMVUDUEx0/uIEDM0Mz3dHznDhfX+znCCDCeIophYb1QGVM7YThSWX+wz11zlYwWFOr74b4QLGg0hrGPJeG2s4A==}
-    peerDependencies:
-      embla-carousel: 8.6.0
-
-  embla-carousel@8.6.0:
-    resolution: {integrity: sha512-SjWyZBHJPbqxHOzckOfo8lHisEaJWmwd23XppYFYVh10bU66/Pn5tkVkbkCMZVdbUE5eTCI2nD8OyIP4Z+uwkA==}
-
   emoji-regex@10.6.0:
     resolution: {integrity: sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==}
 
@@ -6693,6 +6685,16 @@ packages:
 
   pino@7.11.0:
     resolution: {integrity: sha512-dMACeu63HtRLmCG8VKdy4cShCPKaYDR4youZqoSWLxl5Gu99HUw8bw75thbPv9Nip+H+QYX8o3ZJbTdVZZ2TVg==}
+    hasBin: true
+
+  playwright-core@1.65.1:
+    resolution: {integrity: sha512-hqPpz7blSMPxWVdoeE1yiBSzXsKiVOd2k+kjCvmUywD2GPO2Dd9HfcWnq9NN0GHbNZDFgZ9JfBFr+X5/BLo0qw==}
+    engines: {node: '>=20'}
+    hasBin: true
+
+  playwright@1.65.1:
+    resolution: {integrity: sha512-vJ1FuoOrNwOKHUIVEvSt3jT1L+wjjDpwhwIstKtfvTh8XIG4FG4bIFuvNdMxi81LGfAhUgUZleVFaOLY4RIUUw==}
+    engines: {node: '>=20'}
     hasBin: true
 
   pluralize@8.0.0:
@@ -8802,24 +8804,24 @@ snapshots:
       fast-wrap-ansi: 0.2.0
       sisteransi: 2.0.0
 
-  '@cloudflare/oxlint-config@0.2.0(oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)))(tsrs@7.1.0-beta.tsrs4)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))':
+  '@cloudflare/oxlint-config@0.2.0(oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)))(tsrs@7.1.0-beta.tsrs4)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))':
     dependencies:
-      '@nkzw/oxlint-config': 4.1.0(oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)))(tsrs@7.1.0-beta.tsrs4)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))
+      '@nkzw/oxlint-config': 4.1.0(oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)))(tsrs@7.1.0-beta.tsrs4)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))
     optionalDependencies:
-      oxlint: 1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))
+      oxlint: 1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))
       tsrs: 7.1.0-beta.tsrs4
-      vite-plus: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)
+      vite-plus: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)
     transitivePeerDependencies:
       - eslint
       - eslint-plugin-perfectionist
 
   '@ctrl/tinycolor@4.2.1': {}
 
-  '@daveyplate/better-auth-tanstack@1.3.6(@tanstack/query-core@5.108.3)(@tanstack/react-query@5.108.3(@types/react@19.3.0)(react@19.3.1))(better-auth@1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
+  '@daveyplate/better-auth-tanstack@1.3.6(@tanstack/query-core@5.108.3)(@tanstack/react-query@5.108.3(@types/react@19.3.0)(react@19.3.1))(better-auth@1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)':
     dependencies:
       '@tanstack/query-core': 5.108.3
       '@tanstack/react-query': 5.108.3(@types/react@19.3.0)(react@19.3.1)
-      better-auth: 1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1)
+      better-auth: 1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1)
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
 
@@ -9383,14 +9385,14 @@ snapshots:
 
   '@nkzw/eslint-plugin@3.0.0': {}
 
-  '@nkzw/oxlint-config@4.1.0(oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)))(tsrs@7.1.0-beta.tsrs4)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))':
+  '@nkzw/oxlint-config@4.1.0(oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)))(tsrs@7.1.0-beta.tsrs4)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))':
     dependencies:
       '@nkzw/eslint-plugin': 3.0.0
       eslint-plugin-no-only-tests: 3.4.0
     optionalDependencies:
-      oxlint: 1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))
+      oxlint: 1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))
       tsrs: 7.1.0-beta.tsrs4
-      vite-plus: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)
+      vite-plus: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)
     transitivePeerDependencies:
       - eslint
 
@@ -9671,6 +9673,10 @@ snapshots:
 
   '@pkgr/core@0.3.6': {}
 
+  '@playwright/test@1.65.1':
+    dependencies:
+      playwright: 1.65.1
+
   '@pnpm/deps.graph-sequencer@1100.0.1': {}
 
   '@polka/url@1.0.0-next.29': {}
@@ -9692,12 +9698,12 @@ snapshots:
     dependencies:
       '@posthog/types': 1.427.0
 
-  '@posthog/nextjs-config@1.12.2(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(posthog-js@1.453.2(@types/react@19.3.0)(react@19.3.1))(webpack@5.105.4(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.33))':
+  '@posthog/nextjs-config@1.12.2(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(posthog-js@1.453.2(@types/react@19.3.0)(react@19.3.1))(webpack@5.105.4(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.33))':
     dependencies:
       '@posthog/cli': 0.19.4
       '@posthog/plugin-utils': 2.0.1
       '@posthog/webpack-plugin': 1.8.1(webpack@5.105.4(csso@5.0.5)(esbuild@0.28.2)(lightningcss@1.33.0)(postcss@8.5.33))
-      next: 16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      next: 16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       posthog-js: 1.453.2(@types/react@19.3.0)(react@19.3.1)
       semver: 7.8.5
     transitivePeerDependencies:
@@ -11931,7 +11937,7 @@ snapshots:
   bech32@2.0.0:
     optional: true
 
-  better-auth@1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1):
+  better-auth@1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1):
     dependencies:
       '@better-auth/core': 1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4)
       '@better-auth/drizzle-adapter': 1.7.27(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@better-auth/utils@0.5.1)(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))
@@ -11953,7 +11959,7 @@ snapshots:
     optionalDependencies:
       drizzle-kit: 1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))
       drizzle-orm: 1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)
-      next: 16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
+      next: 16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
       vitest: 5.1.1(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/browser-preview@5.1.1)(@vitest/ui@5.1.1)(@voidzero-dev/vite-plus-core@8.3.8001(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))
@@ -12701,18 +12707,6 @@ snapshots:
       minimalistic-crypto-utils: 1.0.1
     optional: true
 
-  embla-carousel-react@8.6.0(react@19.3.1):
-    dependencies:
-      embla-carousel: 8.6.0
-      embla-carousel-reactive-utils: 8.6.0(embla-carousel@8.6.0)
-      react: 19.3.1
-
-  embla-carousel-reactive-utils@8.6.0(embla-carousel@8.6.0):
-    dependencies:
-      embla-carousel: 8.6.0
-
-  embla-carousel@8.6.0: {}
-
   emoji-regex@10.6.0: {}
 
   emoji-regex@8.0.0: {}
@@ -12792,7 +12786,7 @@ snapshots:
 
   escape-string-regexp@5.0.0: {}
 
-  eslint-plugin-better-tailwindcss@4.11.0(oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)))(tailwindcss@4.3.5)(typescript@7.0.2):
+  eslint-plugin-better-tailwindcss@4.11.0(oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)))(tailwindcss@4.3.5)(typescript@7.0.2):
     dependencies:
       '@eslint/css-tree': 4.0.5
       '@valibot/to-json-schema': 1.7.1(valibot@1.4.2(typescript@7.0.2))
@@ -12804,7 +12798,7 @@ snapshots:
       tsconfig-paths-webpack-plugin: 4.2.0
       valibot: 1.4.2(typescript@7.0.2)
     optionalDependencies:
-      oxlint: 1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1))
+      oxlint: 1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1))
     transitivePeerDependencies:
       - '@eslint/css'
       - typescript
@@ -14165,7 +14159,7 @@ snapshots:
       react: 19.3.1
       react-dom: 19.3.1(react@19.3.1)
 
-  next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
+  next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1):
     dependencies:
       '@next/env': 16.4.6
       '@swc/helpers': 0.5.23
@@ -14185,6 +14179,7 @@ snapshots:
       '@next/swc-win32-arm64-msvc': 16.4.6
       '@next/swc-win32-x64-msvc': 16.4.6
       '@opentelemetry/api': 1.9.1
+      '@playwright/test': 1.65.1
       sharp: 0.35.5(@types/node@26.6.6)
     transitivePeerDependencies:
       - '@babel/core'
@@ -14371,7 +14366,7 @@ snapshots:
       - zod
     optional: true
 
-  oxfmt@0.79.0(@astrojs/compiler-rs@0.5.3)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)):
+  oxfmt@0.79.0(@astrojs/compiler-rs@0.5.3)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)):
     dependencies:
       tinypool: 2.2.0
     optionalDependencies:
@@ -14395,9 +14390,9 @@ snapshots:
       '@oxfmt/binding-win32-arm64-msvc': 0.79.0
       '@oxfmt/binding-win32-ia32-msvc': 0.79.0
       '@oxfmt/binding-win32-x64-msvc': 0.79.0
-      vite-plus: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)
+      vite-plus: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)
 
-  oxfmt@0.79.0(@astrojs/compiler-rs@0.5.3)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)):
+  oxfmt@0.79.0(@astrojs/compiler-rs@0.5.3)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)):
     dependencies:
       tinypool: 2.2.0
     optionalDependencies:
@@ -14421,9 +14416,9 @@ snapshots:
       '@oxfmt/binding-win32-arm64-msvc': 0.79.0
       '@oxfmt/binding-win32-ia32-msvc': 0.79.0
       '@oxfmt/binding-win32-x64-msvc': 0.79.0
-      vite-plus: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)
+      vite-plus: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)
 
-  oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)):
+  oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)):
     optionalDependencies:
       '@oxlint/binding-android-arm-eabi': 1.94.0
       '@oxlint/binding-android-arm64': 1.94.0
@@ -14444,9 +14439,9 @@ snapshots:
       '@oxlint/binding-win32-arm64-msvc': 1.94.0
       '@oxlint/binding-win32-ia32-msvc': 1.94.0
       '@oxlint/binding-win32-x64-msvc': 1.94.0
-      vite-plus: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)
+      vite-plus: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1)
 
-  oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)):
+  oxlint@1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)):
     optionalDependencies:
       '@oxlint/binding-android-arm-eabi': 1.94.0
       '@oxlint/binding-android-arm64': 1.94.0
@@ -14467,7 +14462,7 @@ snapshots:
       '@oxlint/binding-win32-arm64-msvc': 1.94.0
       '@oxlint/binding-win32-ia32-msvc': 1.94.0
       '@oxlint/binding-win32-x64-msvc': 1.94.0
-      vite-plus: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)
+      vite-plus: 1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1)
 
   p-limit@2.3.0:
     dependencies:
@@ -14558,6 +14553,12 @@ snapshots:
       safe-stable-stringify: 2.5.0
       sonic-boom: 2.8.0
       thread-stream: 0.15.2
+
+  playwright-core@1.65.1: {}
+
+  playwright@1.65.1:
+    dependencies:
+      playwright-core: 1.65.1
 
   pluralize@8.0.0: {}
 
@@ -15262,7 +15263,7 @@ snapshots:
       '@shikijs/vscode-textmate': 10.1.0
       '@types/hast': 3.0.5
 
-  sign-in-with-stacks@0.4.1(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1))(zod@4.6.7):
+  sign-in-with-stacks@0.4.1(@better-auth/core@1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4))(@stacks/common@7.7.0)(@stacks/encryption@7.7.0)(@stacks/network@7.7.0)(@stacks/transactions@7.7.0)(better-auth@1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1))(zod@4.6.7):
     dependencies:
       '@stacks/common': 7.7.0
       '@stacks/encryption': 7.7.0
@@ -15270,7 +15271,7 @@ snapshots:
       '@stacks/transactions': 7.7.0
     optionalDependencies:
       '@better-auth/core': 1.7.27(@better-auth/utils@0.5.1)(@better-fetch/fetch@1.3.3)(@opentelemetry/api@1.9.1)(better-call@1.4.6(zod@4.6.7))(jose@6.2.12)(kysely@0.29.6)(nanostores@1.5.4)
-      better-auth: 1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1)
+      better-auth: 1.7.27(@opentelemetry/api@1.9.1)(drizzle-kit@1.0.0-rc.6(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7)))(drizzle-orm@1.0.0-rc.6(@effect/sql-sqlite-node@4.1.5(effect@4.1.5))(@opentelemetry/api@1.9.1)(effect@4.1.5)(valibot@1.4.2(typescript@7.0.2))(zod@4.6.7))(next@16.4.6(@babel/core@7.29.0(supports-color@10.2.2))(@opentelemetry/api@1.9.1)(@playwright/test@1.65.1)(@types/node@26.6.6)(react-dom@19.3.1(react@19.3.1))(react@19.3.1))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(vitest@5.1.1)
       zod: 4.6.7
 
   signal-exit@3.0.7: {}
@@ -15887,7 +15888,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1):
+  vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1):
     dependencies:
       '@oxc-project/runtime': 0.159.0
       '@oxc-project/types': 0.159.0
@@ -15899,8 +15900,8 @@ snapshots:
       '@vitest/snapshot': 5.1.1
       '@vitest/spy': 5.1.1
       '@vitest/utils': 5.1.1
-      oxfmt: 0.79.0(@astrojs/compiler-rs@0.5.3)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1))
-      oxlint: 1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1))
+      oxfmt: 0.79.0(@astrojs/compiler-rs@0.5.3)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1))
+      oxlint: 1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@5.0.10)(yaml@2.9.1))
       tsrs: 7.1.0-beta.tsrs4
       vite: '@voidzero-dev/vite-plus-core@8.3.8001(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)'
       vitest: 5.1.1(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/browser-preview@5.1.1)(@vitest/ui@5.1.1)(@voidzero-dev/vite-plus-core@8.3.8001(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@5.0.10))(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))
@@ -15913,6 +15914,7 @@ snapshots:
       '@voidzero-dev/vite-plus-linux-x64-musl': 1.8.0
       '@voidzero-dev/vite-plus-win32-arm64-msvc': 1.8.0
       '@voidzero-dev/vite-plus-win32-x64-msvc': 1.8.0
+      playwright: 1.65.1
     transitivePeerDependencies:
       - '@arethetypeswrong/core'
       - '@astrojs/compiler-rs'
@@ -15949,7 +15951,7 @@ snapshots:
       - vue-tsc
       - yaml
 
-  vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1):
+  vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1):
     dependencies:
       '@oxc-project/runtime': 0.159.0
       '@oxc-project/types': 0.159.0
@@ -15961,8 +15963,8 @@ snapshots:
       '@vitest/snapshot': 5.1.1
       '@vitest/spy': 5.1.1
       '@vitest/utils': 5.1.1
-      oxfmt: 0.79.0(@astrojs/compiler-rs@0.5.3)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))
-      oxlint: 1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))
+      oxfmt: 0.79.0(@astrojs/compiler-rs@0.5.3)(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))
+      oxlint: 1.94.0(vite-plus@1.8.0(@astrojs/compiler-rs@0.5.3)(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/ui@5.1.1)(bufferutil@4.1.0)(esbuild@0.28.2)(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(jiti@2.7.0)(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))(playwright@1.65.1)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(utf-8-validate@6.0.6)(yaml@2.9.1))
       tsrs: 7.1.0-beta.tsrs4
       vite: '@voidzero-dev/vite-plus-core@8.3.8001(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1)'
       vitest: 5.1.1(@opentelemetry/api@1.9.1)(@types/node@26.6.6)(@vitest/browser-preview@5.1.1)(@vitest/ui@5.1.1)(@voidzero-dev/vite-plus-core@8.3.8001(@types/node@26.6.6)(esbuild@0.28.2)(jiti@2.7.0)(terser@5.47.1)(tsx@4.23.15)(typescript@7.0.2)(yaml@2.9.1))(happy-dom@21.0.4(bufferutil@4.1.0)(utf-8-validate@6.0.6))(msw@2.13.6(@types/node@26.6.6)(typescript@7.0.2))
@@ -15975,6 +15977,7 @@ snapshots:
       '@voidzero-dev/vite-plus-linux-x64-musl': 1.8.0
       '@voidzero-dev/vite-plus-win32-arm64-msvc': 1.8.0
       '@voidzero-dev/vite-plus-win32-x64-msvc': 1.8.0
+      playwright: 1.65.1
     transitivePeerDependencies:
       - '@arethetypeswrong/core'
       - '@astrojs/compiler-rs'
