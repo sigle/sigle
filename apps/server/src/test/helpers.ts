@@ -1,3 +1,4 @@
+import type { MediaImageMimeType, MetadataAttributeType } from "@sigle/sdk";
 import { PostMetadataSchemaId } from "@sigle/sdk";
 import { hashMessage } from "@stacks/encryption";
 import {
@@ -288,22 +289,52 @@ export const signTestSiwsMessage = (
     privateKey,
   });
 
+interface TestPostMetadataContent {
+  id: string;
+  title: string;
+  content: string;
+  excerpt: string;
+  attributes?: Array<{
+    type: MetadataAttributeType;
+    key: string;
+    value: string;
+  }>;
+  coverImage?: { url: string; type: MediaImageMimeType };
+  tags?: Array<string>;
+}
+
 export const createSignedTestPostMetadata = (options: {
   readonly draftId: string;
   readonly privateKey: string;
   readonly title?: string;
   readonly content?: string;
   readonly tags?: Array<string>;
+  // Signed as given: pass attribute keys in schema order (type, key, value).
+  readonly attributes?: TestPostMetadataContent["attributes"];
+  readonly coverImage?: TestPostMetadataContent["coverImage"];
 }) => {
+  // Keys are added in schema order, as the server verifies the signature over
+  // the zod-parsed metadata.
+  const content: TestPostMetadataContent = {
+    id: options.draftId,
+    title: options.title ?? "Published Title",
+    content: options.content ?? "Hello **Arweave** world!",
+    excerpt: "Hello Arweave world!",
+  };
+
+  if (options.attributes) {
+    content.attributes = options.attributes;
+  }
+
+  if (options.coverImage) {
+    content.coverImage = options.coverImage;
+  }
+
+  content.tags = options.tags ?? ["web3", "effect"];
+
   const metadataWithoutSignature = {
     $schema: PostMetadataSchemaId.LATEST,
-    content: {
-      id: options.draftId,
-      title: options.title ?? "Published Title",
-      content: options.content ?? "Hello **Arweave** world!",
-      excerpt: "Hello Arweave world!",
-      tags: options.tags ?? ["web3", "effect"],
-    },
+    content,
   };
 
   const signature = signTestSiwsMessage(

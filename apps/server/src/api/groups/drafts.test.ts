@@ -1,5 +1,9 @@
 import { describe, expect, it } from "@effect/vitest";
-import { PostMetadataSchemaId } from "@sigle/sdk";
+import {
+  MediaImageMimeType,
+  MetadataAttributeType,
+  PostMetadataSchemaId,
+} from "@sigle/sdk";
 import { eq, inArray } from "drizzle-orm";
 import {
   Deferred,
@@ -926,7 +930,18 @@ describe("drafts", () => {
           },
         );
 
-        expect(mismatchedIdRes.status).toBe(400);
+        const mismatchedIdBody =
+          yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(
+            mismatchedIdRes,
+          );
+
+        expect({
+          status: mismatchedIdRes.status,
+          message: mismatchedIdBody.message,
+        }).toStrictEqual({
+          status: 400,
+          message: "Post metadata content id does not match the draft",
+        });
 
         // 4. Signed by wallet not belonging to user -> 400 Bad Request
         const wrongWalletRes = yield* publishDraftRequest(client, "draft-val", {
@@ -936,7 +951,19 @@ describe("drafts", () => {
           }),
         });
 
-        expect(wrongWalletRes.status).toBe(400);
+        const wrongWalletBody =
+          yield* HttpClientResponse.schemaBodyJson(ErrorResponse)(
+            wrongWalletRes,
+          );
+
+        expect({
+          status: wrongWalletRes.status,
+          message: wrongWalletBody.message,
+        }).toStrictEqual({
+          status: 400,
+          message:
+            "Invalid signature: Signature verification failed or address mismatch",
+        });
 
         // 5. Already published signature -> 400 Bad Request
         const validSigned = createSignedTestPostMetadata({
@@ -973,6 +1000,98 @@ describe("drafts", () => {
           status: 409,
           message: "Metadata signature has already been published",
         });
+      }).pipe(Effect.provide(makeTestServerLayer())),
+  );
+
+  it.effect(
+    "POST /api/drafts/:draftId/publish rejects metadata over the draft limits",
+    () =>
+      Effect.gen(function* () {
+        const { client, userId } = yield* createAuthenticatedClient();
+        const ownerWallet = createTestSiwsCredentials("testnet");
+
+        yield* createTestWalletAddress({
+          userId,
+          address: ownerWallet.address,
+        });
+        yield* createTestDraft({ id: "draft-limits", userId });
+
+        // The SDK schema holds the metadata to the limits, so the payload is
+        // rejected before the handler runs. Each case names its field.
+        const invalidCases = [
+          { options: { title: "a".repeat(301) }, field: "content.title" },
+          {
+            options: {
+              attributes: [
+                {
+                  type: MetadataAttributeType.STRING,
+                  key: "canonical-uri",
+                  value: "ftp://example.com/post",
+                },
+              ],
+            },
+            field: "content.attributes[0].value",
+          },
+          {
+            options: {
+              attributes: [
+                {
+                  type: MetadataAttributeType.STRING,
+                  key: "meta-title",
+                  value: "a".repeat(101),
+                },
+              ],
+            },
+            field: "content.attributes[0].value",
+          },
+          {
+            options: {
+              coverImage: {
+                url: "data:image/png;base64,AAAA",
+                type: MediaImageMimeType.PNG,
+              },
+            },
+            field: "content.coverImage.url",
+          },
+        ];
+
+        for (const { options, field } of invalidCases) {
+          const response = yield* publishDraftRequest(client, "draft-limits", {
+            metadata: createSignedTestPostMetadata({
+              draftId: "draft-limits",
+              privateKey: ownerWallet.privateKey,
+              ...options,
+            }),
+          });
+
+          const body = JSON.stringify(yield* response.json);
+
+          expect({
+            status: response.status,
+            rejectedField: body.includes(`at ${field}`),
+          }).toStrictEqual({ status: 400, rejectedField: true });
+        }
+
+        // The four rejected publishes used the per-minute publish limit.
+        yield* TestClock.adjust("1 minute");
+
+        // Signed in schema key order, metadata within the limits is accepted.
+        const validRes = yield* publishDraftRequest(client, "draft-limits", {
+          metadata: createSignedTestPostMetadata({
+            draftId: "draft-limits",
+            privateKey: ownerWallet.privateKey,
+            // Attribute keys in schema order too: type, key, value.
+            attributes: [
+              {
+                type: MetadataAttributeType.STRING,
+                key: "canonical-uri",
+                value: "https://example.com/post",
+              },
+            ],
+          }),
+        });
+
+        expect(validRes.status).toBe(202);
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
 

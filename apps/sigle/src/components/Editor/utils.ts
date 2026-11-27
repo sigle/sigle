@@ -8,6 +8,7 @@ import {
   createPostMetadata,
   MediaImageMimeType,
   MetadataAttributeType,
+  PostAttributeKey,
   PostMetadataSchemaId,
 } from "@sigle/sdk";
 import { fileTypeFromBuffer } from "file-type";
@@ -27,7 +28,7 @@ const generateMetadataAttributesFromForm = ({
     attributes.push({
       type: MetadataAttributeType.STRING,
       value: post.metaTitle,
-      key: "meta-title",
+      key: PostAttributeKey.META_TITLE,
     });
   }
 
@@ -35,7 +36,7 @@ const generateMetadataAttributesFromForm = ({
     attributes.push({
       type: MetadataAttributeType.STRING,
       value: post.metaDescription,
-      key: "meta-description",
+      key: PostAttributeKey.META_DESCRIPTION,
     });
   }
 
@@ -43,7 +44,7 @@ const generateMetadataAttributesFromForm = ({
     attributes.push({
       type: MetadataAttributeType.STRING,
       value: post.canonicalUri,
-      key: "canonical-uri",
+      key: PostAttributeKey.CANONICAL_URI,
     });
   }
 
