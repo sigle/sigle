@@ -38,7 +38,7 @@ describe("PostMetadataSchema limits", () => {
     expect(
       issuePaths(
         createMetadata(
-          { name: "a".repeat(300), description: "a".repeat(1000) },
+          {},
           {
             title: "a".repeat(300),
             excerpt: "a".repeat(1000),
@@ -94,16 +94,6 @@ describe("PostMetadataSchema limits", () => {
       name: "an excerpt over 1000 characters",
       metadata: createMetadata({}, { excerpt: "a".repeat(1001) }),
       path: "content.excerpt",
-    },
-    {
-      name: "a name over 300 characters",
-      metadata: createMetadata({ name: "a".repeat(301) }),
-      path: "name",
-    },
-    {
-      name: "a description over 1000 characters",
-      metadata: createMetadata({ description: "a".repeat(1001) }),
-      path: "description",
     },
     {
       name: "an attribute value over 1000 characters",

@@ -1,11 +1,9 @@
 import { z } from "zod";
-import type { MarketplaceMetadata } from "./marketplace.js";
 import type { MediaImageMetadata } from "./media.js";
 import type { MetadataAttribute } from "./metadata-attribute.js";
 import { SignatureSchema, TagSchema } from "./common.js";
 import { PostMetadataSchemaId } from "./config.js";
 import { POST_METADATA_LIMITS, urlWithSchemes } from "./limits.js";
-import { MarketplaceMetadataSchema } from "./marketplace.js";
 import { MediaImageMetadataSchema } from "./media.js";
 import {
   MetadataAttributeSchema,
@@ -158,7 +156,7 @@ export const PostMetadataDetailsSchema = z.object({
   contentWarning: ContentWarningSchema.optional(),
 });
 
-export type PostMetadata = MarketplaceMetadata & {
+export type PostMetadata = {
   /**
    * The schema id.
    */
@@ -175,7 +173,7 @@ export type PostMetadata = MarketplaceMetadata & {
   signature?: string;
 };
 
-export const PostMetadataSchema = MarketplaceMetadataSchema.extend({
+export const PostMetadataSchema = z.object({
   $schema: z.literal(PostMetadataSchemaId.LATEST),
   content: PostMetadataDetailsSchema,
   signature: SignatureSchema.optional(),

@@ -18,8 +18,6 @@ export const POST_METADATA_LIMITS = {
   tag: 50,
   attributes: 20,
   attributeValue: 1000,
-  name: 300,
-  description: 1000,
 } as const;
 
 /**
