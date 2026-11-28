@@ -266,8 +266,7 @@ describe("posts", () => {
       }).toStrictEqual({
         posts: {
           author: {
-            description:
-              "Filter posts by author Stacks address. Matches posts published from any wallet linked to that user.",
+            description: "Filter posts by author Stacks address.",
             schema: { type: "string" },
           },
           limit: {

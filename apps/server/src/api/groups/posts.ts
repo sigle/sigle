@@ -158,7 +158,7 @@ export const Post = Schema.Struct({
   }),
   arweaveBlockHeight: Schema.NullOr(NonNegativeInt).annotate({
     description:
-      "Arweave block height where the transaction was mined, or `null` while awaiting bundle confirmation.",
+      "Arweave block height where the transaction was confirmed, or `null` while pending.",
   }),
   createdAt: DateTime.pipe(
     Schema.annotateEncoded({
@@ -173,7 +173,7 @@ export const Post = Schema.Struct({
   author: PublicUser,
   opentimestamps: Schema.NullOr(PostOpenTimestamps).annotate({
     description:
-      "Bitcoin OpenTimestamps proof metadata, or `null` until the post is submitted for timestamping.",
+      "Bitcoin OpenTimestamps proof metadata, or `null` if not yet available.",
   }),
 }).annotate({
   identifier: "Post",
@@ -202,8 +202,7 @@ export const PostListResponse = Schema.Struct({
 export const PostListQuery = Schema.Struct({
   author: Schema.optionalKey(
     Schema.String.annotate({
-      description:
-        "Filter posts by author Stacks address. Matches posts published from any wallet linked to that user.",
+      description: "Filter posts by author Stacks address.",
     }),
   ),
   ...paginationQueryFields(POST_LIST_MAX_LIMIT),
@@ -224,7 +223,7 @@ export const PostsGroup = HttpApiGroup.make("posts")
       .annotate(OpenApi.Summary, "List posts")
       .annotate(
         OpenApi.Description,
-        "Returns publicly visible posts ordered newest first, omitting hidden posts. Pass `author` to restrict results to a single user (matching any linked Stacks wallet of that account). Publicly cacheable (`ETag`).",
+        "Returns publicly visible posts ordered newest first, excluding hidden posts. Optionally filter by author Stacks address.",
       )
       .annotate(
         OpenApi.Transform,
@@ -247,7 +246,7 @@ export const PostsGroup = HttpApiGroup.make("posts")
       .annotate(OpenApi.Summary, "Get post")
       .annotate(
         OpenApi.Description,
-        "Returns a published post with its full Markdown content, cover image placeholder, author profile, Arweave confirmation height, and OpenTimestamps proof status. Hidden posts return `404` for all callers, including the author. Publicly cacheable (`ETag`).",
+        "Returns a published post with its Markdown content, cover image metadata, author profile, and OpenTimestamps proof status. Hidden posts return `404`.",
       ),
   )
   .prefix("/api/posts")

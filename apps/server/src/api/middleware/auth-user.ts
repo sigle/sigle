@@ -6,11 +6,7 @@ import type { UserPlan } from "@/services/plan";
 import { Unauthorized } from "@/api/schemas";
 import { Database } from "@/db";
 import { user } from "@/db/schema";
-import {
-  AuthService,
-  SECURE_SESSION_COOKIE_NAME,
-  SESSION_COOKIE_NAME,
-} from "@/services/auth";
+import { AuthService, SECURE_SESSION_COOKIE_NAME } from "@/services/auth";
 import { findWalletAddresses } from "@/services/users";
 
 export interface AuthenticatedUser {
@@ -38,7 +34,7 @@ const sessionCookie = HttpApiSecurity.apiKey({
 }).pipe(
   HttpApiSecurity.annotate(
     OpenApi.Description,
-    `Session cookie issued by \`POST /api/auth/siws/verify\` after signing in with Stacks. Uses \`${SECURE_SESSION_COOKIE_NAME}\` over HTTPS and \`${SESSION_COOKIE_NAME}\` over plain HTTP (such as local development).`,
+    "Session cookie issued by `POST /api/auth/siws/verify` after signing in with Stacks.",
   ),
 );
 

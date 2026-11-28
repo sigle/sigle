@@ -3,8 +3,7 @@ import { HttpApiEndpoint, HttpApiGroup, OpenApi } from "effect/http-api";
 
 export const HealthResponse = Schema.Struct({
   success: Schema.Boolean.annotate({
-    description:
-      "Always `true` when the API process is ready to serve traffic.",
+    description: "Always `true` when the API is healthy.",
   }),
 }).annotate({
   identifier: "HealthResponse",
@@ -24,8 +23,5 @@ export const HealthGroup = HttpApiGroup.make("health")
       success: HealthResponse,
     })
       .annotate(OpenApi.Summary, "Health check")
-      .annotate(
-        OpenApi.Description,
-        "Lightweight liveness probe returning `200 OK` while the API is reachable. Exempt from rate limiting.",
-      ),
+      .annotate(OpenApi.Description, "Returns `200 OK` while the API is up."),
   );

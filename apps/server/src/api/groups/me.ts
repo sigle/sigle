@@ -40,12 +40,11 @@ export const UserLimitsResponse = Schema.Struct({
   publish: DailyLimit,
   publishMaxBytes: NonNegativeInt.annotate({
     description:
-      "Maximum signed post metadata JSON size the user can publish, in UTF-8 bytes.",
+      "Maximum signed post metadata size the user can publish, in UTF-8 bytes.",
   }),
 }).annotate({
   identifier: "UserLimitsResponse",
-  description:
-    "Current plan quotas and rolling usage for the authenticated user.",
+  description: "Current plan quotas and usage for the authenticated user.",
 });
 
 const UserPlan = Schema.Literals(["free", "pro"]).annotate({
@@ -54,11 +53,10 @@ const UserPlan = Schema.Literals(["free", "pro"]).annotate({
 
 export const CurrentUserResponse = Schema.Struct({
   id: Schema.String.annotate({
-    description: "Internal account ID of the authenticated user.",
+    description: "Unique account ID of the authenticated user.",
   }),
   address: Schema.String.annotate({
-    description:
-      "Primary Stacks address of the authenticated user, used for their public profile and published posts.",
+    description: "Primary Stacks address of the authenticated user.",
   }),
   plan: UserPlan,
 }).annotate({
@@ -155,7 +153,7 @@ export const MeGroup = HttpApiGroup.make("me")
       .annotate(OpenApi.Summary, "Get account limits")
       .annotate(
         OpenApi.Description,
-        "Returns the authenticated user's plan quotas and rolling 24-hour publish usage, including publishes currently in flight.",
+        "Returns the authenticated user's current plan quotas and publish usage.",
       ),
     HttpApiEndpoint.post("refreshPlan", "/plan/refresh", {
       success: UserPlanResponse,
@@ -163,7 +161,7 @@ export const MeGroup = HttpApiGroup.make("me")
       .annotate(OpenApi.Summary, "Refresh plan")
       .annotate(
         OpenApi.Description,
-        "Checks whether any linked Stacks wallet holds an Explorer Guild NFT, updates the stored plan (`free` or `pro`), and returns it. Calling this endpoint is required to activate Pro immediately; active Pro accounts are re-verified automatically twice a day. Returns `500` if the Stacks API is unreachable without modifying the stored plan.",
+        "Checks Explorer Guild NFT ownership for the authenticated user, updates their plan (`free` or `pro`), and returns the result.",
       )
       .annotate(RateLimitPolicy, "planRefresh"),
     HttpApiEndpoint.get("listPosts", "/posts", {
@@ -173,7 +171,7 @@ export const MeGroup = HttpApiGroup.make("me")
       .annotate(OpenApi.Summary, "List my posts")
       .annotate(
         OpenApi.Description,
-        "Returns a paginated list of all posts published by the authenticated user, newest first, including posts hidden on Sigle.",
+        "Returns a paginated list of posts published by the authenticated user, newest first, including hidden posts.",
       )
       .annotate(
         OpenApi.Transform,
@@ -195,7 +193,7 @@ export const MeGroup = HttpApiGroup.make("me")
       .annotate(OpenApi.Summary, "Set post visibility")
       .annotate(
         OpenApi.Description,
-        "Hides one of the authenticated user's published posts from Sigle or restores it. Hidden posts are omitted from post lists, profiles, and RSS feeds, and return `404` on `GET /api/posts/{postId}`, while the underlying signed metadata remains permanently on Arweave. Returns `404` if the post does not exist or belongs to another user.",
+        "Hides one of the authenticated user's published posts from Sigle or restores it. Hidden posts are omitted from public post lists, profiles, RSS feeds, and `GET /api/posts/{postId}`, while remaining on Arweave. Returns `404` if the post does not exist or belongs to another user.",
       ),
   )
   .prefix("/api/me")

@@ -13,7 +13,7 @@ export interface paths {
     };
     /**
      * List posts
-     * @description Returns publicly visible posts ordered newest first, omitting hidden posts. Pass `author` to restrict results to a single user (matching any linked Stacks wallet of that account). Publicly cacheable (`ETag`).
+     * @description Returns publicly visible posts ordered newest first, excluding hidden posts. Optionally filter by author Stacks address.
      */
     get: operations["posts.list"];
     put?: never;
@@ -33,7 +33,7 @@ export interface paths {
     };
     /**
      * Get post
-     * @description Returns a published post with its full Markdown content, cover image placeholder, author profile, Arweave confirmation height, and OpenTimestamps proof status. Hidden posts return `404` for all callers, including the author. Publicly cacheable (`ETag`).
+     * @description Returns a published post with its Markdown content, cover image metadata, author profile, and OpenTimestamps proof status. Hidden posts return `404`.
      */
     get: operations["posts.get"];
     put?: never;
@@ -53,7 +53,7 @@ export interface paths {
     };
     /**
      * Get user
-     * @description Returns a user's public profile and Explorer status by Stacks address. If the address has signed in on Sigle without saving a profile, `profile` is `null`. Returns `400` for a malformed Stacks address and `404` for an unknown address. Publicly cacheable (`ETag`).
+     * @description Returns a user's public profile and Explorer status for a Stacks address. `profile` is `null` if the user has not set one. Returns `400` for an invalid Stacks address and `404` if not found.
      */
     get: operations["users.get"];
     put?: never;
@@ -93,7 +93,7 @@ export interface paths {
     };
     /**
      * Get account limits
-     * @description Returns the authenticated user's plan quotas and rolling 24-hour publish usage, including publishes currently in flight.
+     * @description Returns the authenticated user's current plan quotas and publish usage.
      */
     get: operations["me.limits"];
     put?: never;
@@ -115,7 +115,7 @@ export interface paths {
     put?: never;
     /**
      * Refresh plan
-     * @description Checks whether any linked Stacks wallet holds an Explorer Guild NFT, updates the stored plan (`free` or `pro`), and returns it. Calling this endpoint is required to activate Pro immediately; active Pro accounts are re-verified automatically twice a day. Returns `500` if the Stacks API is unreachable without modifying the stored plan.
+     * @description Checks Explorer Guild NFT ownership for the authenticated user, updates their plan (`free` or `pro`), and returns the result.
      */
     post: operations["me.refreshPlan"];
     delete?: never;
@@ -133,7 +133,7 @@ export interface paths {
     };
     /**
      * List my posts
-     * @description Returns a paginated list of all posts published by the authenticated user, newest first, including posts hidden on Sigle.
+     * @description Returns a paginated list of posts published by the authenticated user, newest first, including hidden posts.
      */
     get: operations["me.listPosts"];
     put?: never;
@@ -154,7 +154,7 @@ export interface paths {
     get?: never;
     /**
      * Set post visibility
-     * @description Hides one of the authenticated user's published posts from Sigle or restores it. Hidden posts are omitted from post lists, profiles, and RSS feeds, and return `404` on `GET /api/posts/{postId}`, while the underlying signed metadata remains permanently on Arweave. Returns `404` if the post does not exist or belongs to another user.
+     * @description Hides one of the authenticated user's published posts from Sigle or restores it. Hidden posts are omitted from public post lists, profiles, RSS feeds, and `GET /api/posts/{postId}`, while remaining on Arweave. Returns `404` if the post does not exist or belongs to another user.
      */
     put: operations["me.updatePostVisibility"];
     post?: never;
@@ -174,7 +174,7 @@ export interface paths {
     get?: never;
     /**
      * Update profile
-     * @description Replaces all text fields on the profile of the authenticated user's primary Stacks address and returns the stored profile. Any omitted or `null` field is cleared. Avatar and cover images are preserved and managed via `PUT /api/me/profile/images/{kind}`.
+     * @description Replaces all text fields of the authenticated user's profile and returns the updated profile. Omitted or `null` fields are cleared. Avatar and cover images are managed separately via `PUT /api/me/profile/images/{kind}`.
      */
     put: operations["profile.update"];
     post?: never;
@@ -193,7 +193,7 @@ export interface paths {
     };
     /**
      * Preview BNS profile
-     * @description Looks up the primary BNS V2 name for the authenticated user's primary Stacks address and extracts importable fields from its JSON zonefile to prefill profile forms. Does not save any changes. Non-JSON zonefiles and zonefiles written for a previous owner are ignored. Returns `500` if the Stacks API is unreachable.
+     * @description Reads the authenticated user's primary BNS V2 name and any importable profile fields from its zonefile without saving changes.
      */
     get: operations["profile.bns"];
     put?: never;
@@ -214,7 +214,7 @@ export interface paths {
     get?: never;
     /**
      * Upload profile image
-     * @description Uploads a raw binary JPEG, PNG, or WebP image (up to 2 MiB for `avatar`, 5 MiB for `cover`), re-encodes it as an optimized WebP image, updates the profile immediately, and returns the stored profile. Previously uploaded Sigle-hosted images in the same slot are deleted on a best-effort basis.
+     * @description Replaces the authenticated user's profile `avatar` (up to 2 MiB) or `cover` (up to 5 MiB) image with a raw JPEG, PNG, or WebP binary payload and returns the updated profile.
      */
     put: operations["profile.uploadImage"];
     post?: never;
@@ -239,9 +239,7 @@ export interface paths {
     put?: never;
     /**
      * Create draft
-     * @description Creates a new draft for the authenticated user, optionally pre-populated with initial fields (send `{}` for an empty draft). Returns `201 Created` with a `Location` header pointing to the new draft.
-     *
-     *     Returns `403 Forbidden` if the user already has 100 drafts or if total draft content would exceed 10 MiB.
+     * @description Creates a new draft for the authenticated user, optionally pre-populated with initial fields (send `{}` for an empty draft). Returns `201 Created` with a `Location` header pointing to the created draft. Returns `403` if a draft quota is exceeded.
      */
     post: operations["drafts.create"];
     delete?: never;
@@ -266,17 +264,14 @@ export interface paths {
     post?: never;
     /**
      * Delete draft
-     * @description Permanently deletes a draft owned by the authenticated user. Returns `409 Conflict` while a publish job is in flight.
+     * @description Permanently deletes a draft owned by the authenticated user. Returns `409` while publishing.
      */
     delete: operations["drafts.delete"];
     options?: never;
     head?: never;
     /**
      * Update draft
-     * @description Partially updates a draft using JSON Merge Patch semantics: omitted fields stay unchanged, `null` clears nullable fields, and `[]` clears tags. An empty patch `{}` returns the draft without updating `updatedAt`.
-     *
-     *     - Returns `409 Conflict` while a publish job is in flight.
-     *     - Returns `403 Forbidden` if expanding `content` would push total draft content over 10 MiB.
+     * @description Partially updates a draft using JSON Merge Patch semantics: omitted fields stay unchanged, `null` clears nullable fields, and `[]` clears tags. Returns `409` while publishing and `403` if a draft quota is exceeded.
      */
     patch: operations["drafts.update"];
     trace?: never;
@@ -290,18 +285,17 @@ export interface paths {
     };
     /**
      * Get publish status
-     * @description Polls the asynchronous publish job for a draft. Once publishing succeeds, the draft is deleted and this endpoint continues returning `completed` with the resulting `postId` and `arweaveTxId`. Returns `404` if the draft does not exist or publishing has never been started.
+     * @description Returns the current status of a draft's publish job. After publishing completes, returns `completed` along with `postId` and `arweaveTxId`. Returns `404` if the draft does not exist or publishing has not been started.
      */
     get: operations["drafts.getPublishStatus"];
     put?: never;
     /**
      * Publish draft
-     * @description Validates the wallet-signed `PostMetadata` (matching `draftId` and signed by a wallet linked to the authenticated user) and queues an asynchronous Arweave publish job. Returns `202 Accepted` with a `Location` header to poll status.
+     * @description Validates wallet-signed `PostMetadata` for the draft and queues an asynchronous publish to Arweave. Returns `202 Accepted` with a `Location` header to poll publish status.
      *
-     *     - **Idempotency**: Re-submitting the exact same signature while a publish is already in flight reuses the active job.
-     *     - **`403 Forbidden`**: Signed metadata JSON exceeds the plan size limit (256 KiB on Free, 1 MiB on Pro).
-     *     - **`409 Conflict`**: Another signature is currently publishing for this draft, or the signature has already been published.
-     *     - **`429 Too Many Requests`**: Rolling 24-hour publish quota reached (3 posts on Free, 20 on Pro, counting in-flight publishes), or the plan's global daily publish cap is reached.
+     *     - **`403 Forbidden`**: Signed metadata exceeds the current plan's size limit (see `GET /api/me/limits`).
+     *     - **`409 Conflict`**: A publish is already in progress for this draft or the signature was already published.
+     *     - **`429 Too Many Requests`**: Publish quota or rate limit exceeded.
      */
     post: operations["drafts.publish"];
     delete?: never;
@@ -321,7 +315,7 @@ export interface paths {
     put?: never;
     /**
      * Upload draft image
-     * @description Uploads a raw binary JPEG, PNG, or WebP image (up to 5 MiB) to embed in a draft. Re-encodes the image as a content-addressed WebP served from the CDN and returns its URL, dimensions, byte size, and ThumbHash placeholder. Requires the **Pro** plan (`403 Forbidden` on Free; Free accounts can embed external image URLs instead).
+     * @description Uploads a raw JPEG, PNG, or WebP image (up to 5 MiB) for use in a draft and returns its public URL, dimensions, byte size, and ThumbHash placeholder. Requires the **Pro** plan (`403` on Free).
      */
     post: operations["drafts.uploadImage"];
     delete?: never;
@@ -339,7 +333,7 @@ export interface paths {
     };
     /**
      * Health check
-     * @description Lightweight liveness probe returning `200 OK` while the API is reachable. Exempt from rate limiting.
+     * @description Returns `200 OK` while the API is up.
      */
     get: operations["health.get"];
     put?: never;
@@ -361,7 +355,7 @@ export interface components {
     };
     /** @description Service liveness response. */
     HealthResponse: {
-      /** @description Always `true` when the API process is ready to serve traffic. */
+      /** @description Always `true` when the API is healthy. */
       success: boolean;
     };
     /** @description Authentication is required or the session is invalid. */
@@ -369,12 +363,12 @@ export interface components {
       /** @description Human-readable explanation of the error. */
       message: string;
     };
-    /** @description An unexpected server or upstream service error occurred. */
+    /** @description An unexpected server error occurred. */
     InternalServerError: {
       /** @description Human-readable explanation of the error. */
       message: string;
     };
-    /** @description Rate limit or rolling daily publish quota exceeded. */
+    /** @description Rate limit or publish quota exceeded. */
     TooManyRequestsError: {
       /** @description Human-readable explanation of the error. */
       message: string;
@@ -386,7 +380,7 @@ export interface components {
       /** @description Human-readable explanation of the error. */
       message: string;
     };
-    /** @description The server is temporarily busy processing other requests. Retry after the indicated delay. */
+    /** @description The service is temporarily unavailable. Retry after the indicated delay. */
     ServiceUnavailableError: {
       /** @description Human-readable explanation of the error. */
       message: string;
@@ -408,11 +402,11 @@ export interface components {
       /** @description Human-readable explanation of the error. */
       message: string;
     };
-    /** @description Metadata of an uploaded and optimized image. */
+    /** @description Metadata of an uploaded image. */
     UploadedImageResponse: {
-      /** @description Public CDN URL of the optimized WebP image. */
+      /** @description Public URL of the uploaded image. */
       url: string;
-      /** @description File size of the stored WebP image, in bytes. */
+      /** @description Size of the stored image, in bytes. */
       sizeBytes: number;
       /** @description Width of the stored image, in pixels. */
       width: number;
@@ -426,7 +420,7 @@ export interface components {
       status: components["schemas"]["PublishDraftStatus"];
       /** @description Published post ID once `status` is `completed`, otherwise `null`. */
       postId: string | null;
-      /** @description Arweave transaction ID once uploaded (available on `completed`, and on `processing`/`failed` after the upload step), otherwise `null`. */
+      /** @description Arweave transaction ID once assigned, otherwise `null`. */
       arweaveTxId: string | null;
     };
     /**
@@ -573,7 +567,7 @@ export interface components {
        */
       updatedAt: string;
     };
-    /** @description Current publishing state of a draft: `null` if never published, `pending` or `processing` while a publish job is active (draft is locked against edits and deletion), or `failed` if the last publish attempt failed. */
+    /** @description Current publishing state of a draft: `null` if never published, `pending` or `processing` while publishing (edits and deletion return `409`), or `failed` if the last publish attempt failed. */
     DraftPublishStatus: ("pending" | "processing" | "failed") | null;
     /** @description Partial draft update using JSON Merge Patch semantics: omit fields to leave unchanged, or pass `null` to clear nullable fields. */
     UpdateDraftPayload: {
@@ -660,7 +654,7 @@ export interface components {
       address: string;
       profile: components["schemas"]["UserProfile"];
     };
-    /** @description Public profile details stored on Sigle for a Stacks address. */
+    /** @description Public profile details for a Stacks address. */
     UserProfile: {
       /** @description Public display name, or `null` if unset. */
       displayName: string | null;
@@ -684,9 +678,9 @@ export interface components {
     MediaImage: {
       /** @description Public URL of the image. */
       url: string;
-      /** @description Image width in pixels, or `null` if placeholder metadata has not been computed yet. */
+      /** @description Image width in pixels, or `null` if unavailable. */
       width: number | null;
-      /** @description Image height in pixels, or `null` if placeholder metadata has not been computed yet. */
+      /** @description Image height in pixels, or `null` if unavailable. */
       height: number | null;
       /** @description Base64-encoded ThumbHash placeholder for progressive loading, or `null` if unavailable. */
       thumbhash: string | null;
@@ -788,7 +782,7 @@ export interface components {
     PublicUser: {
       /** @description Stacks address identifying the user. */
       address: string;
-      /** @description User's public profile, or `null` if the user has signed in without saving profile details. */
+      /** @description User's public profile, or `null` if not set. */
       profile: components["schemas"]["UserProfile"] | null;
       /** @description Whether the user holds the Pro plan (unlocked by an Explorer Guild NFT) and displays the Explorer Guild badge. */
       isExplorer: boolean;
@@ -801,10 +795,10 @@ export interface components {
        */
       plan: "free" | "pro";
     };
-    /** @description Current plan quotas and rolling usage for the authenticated user. */
+    /** @description Current plan quotas and usage for the authenticated user. */
     UserLimitsResponse: {
       publish: components["schemas"]["DailyLimit"];
-      /** @description Maximum signed post metadata JSON size the user can publish, in UTF-8 bytes. */
+      /** @description Maximum signed post metadata size the user can publish, in UTF-8 bytes. */
       publishMaxBytes: number;
     };
     /** @description Usage snapshot for a rolling 24-hour quota. */
@@ -818,9 +812,9 @@ export interface components {
     };
     /** @description Account identity and plan of the authenticated user. */
     CurrentUserResponse: {
-      /** @description Internal account ID of the authenticated user. */
+      /** @description Unique account ID of the authenticated user. */
       id: string;
-      /** @description Primary Stacks address of the authenticated user, used for their public profile and published posts. */
+      /** @description Primary Stacks address of the authenticated user. */
       address: string;
       /**
        * @description Subscription tier of the user (`free` or `pro`).
@@ -854,7 +848,7 @@ export interface components {
       metadataUri: string;
       /** @description Arweave transaction ID of the signed post metadata. */
       arweaveTxId: string;
-      /** @description Arweave block height where the transaction was mined, or `null` while awaiting bundle confirmation. */
+      /** @description Arweave block height where the transaction was confirmed, or `null` while pending. */
       arweaveBlockHeight: number | null;
       /**
        * Format: date-time
@@ -867,7 +861,7 @@ export interface components {
        */
       updatedAt: string;
       author: components["schemas"]["PublicUser"];
-      /** @description Bitcoin OpenTimestamps proof metadata, or `null` until the post is submitted for timestamping. */
+      /** @description Bitcoin OpenTimestamps proof metadata, or `null` if not yet available. */
       opentimestamps: components["schemas"]["PostOpenTimestamps"] | null;
     };
     /** @description Bitcoin OpenTimestamps proof status and attestation metadata for a published post. */
@@ -945,7 +939,7 @@ export interface operations {
   "posts.list": {
     parameters: {
       query?: {
-        /** @description Filter posts by author Stacks address. Matches posts published from any wallet linked to that user. */
+        /** @description Filter posts by author Stacks address. */
         author?: string;
         /** @description Maximum number of items to return (1–100, default 20). */
         limit?: number;
@@ -961,9 +955,9 @@ export interface operations {
       /** @description Paginated list of publicly visible published posts. */
       200: {
         headers: {
-          /** @description Public cache directive (`public, max-age=60`) allowing clients and proxies to cache the response for 60 seconds. */
+          /** @description HTTP cache directive for public read responses. */
           "cache-control": string;
-          /** @description Strong entity tag derived from the response body. Send in `If-None-Match` to receive `304 Not Modified` while unchanged. */
+          /** @description Entity tag for the response. Send in `If-None-Match` to receive `304 Not Modified` while unchanged. */
           etag?: string;
           [name: string]: unknown;
         };
@@ -980,7 +974,7 @@ export interface operations {
           "application/json": components["schemas"]["BadRequestError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -989,7 +983,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1015,9 +1009,9 @@ export interface operations {
       /** @description A published post with full Markdown content, author profile, and on-chain proofs. */
       200: {
         headers: {
-          /** @description Public cache directive (`public, max-age=60`) allowing clients and proxies to cache the response for 60 seconds. */
+          /** @description HTTP cache directive for public read responses. */
           "cache-control": string;
-          /** @description Strong entity tag derived from the response body. Send in `If-None-Match` to receive `304 Not Modified` while unchanged. */
+          /** @description Entity tag for the response. Send in `If-None-Match` to receive `304 Not Modified` while unchanged. */
           etag?: string;
           [name: string]: unknown;
         };
@@ -1043,7 +1037,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1052,7 +1046,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1078,9 +1072,9 @@ export interface operations {
       /** @description Publicly visible user representation returned for profiles and post authors. */
       200: {
         headers: {
-          /** @description Public cache directive (`public, max-age=60`) allowing clients and proxies to cache the response for 60 seconds. */
+          /** @description HTTP cache directive for public read responses. */
           "cache-control": string;
-          /** @description Strong entity tag derived from the response body. Send in `If-None-Match` to receive `304 Not Modified` while unchanged. */
+          /** @description Entity tag for the response. Send in `If-None-Match` to receive `304 Not Modified` while unchanged. */
           etag?: string;
           [name: string]: unknown;
         };
@@ -1106,7 +1100,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1115,7 +1109,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1153,7 +1147,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1162,7 +1156,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1182,7 +1176,7 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Current plan quotas and rolling usage for the authenticated user. */
+      /** @description Current plan quotas and usage for the authenticated user. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -1200,7 +1194,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1209,7 +1203,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1247,7 +1241,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1256,7 +1250,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1308,7 +1302,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1317,7 +1311,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1380,7 +1374,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1389,7 +1383,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1440,7 +1434,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1449,7 +1443,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1487,7 +1481,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1496,7 +1490,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1571,7 +1565,7 @@ export interface operations {
           "application/json": components["schemas"]["UnsupportedMediaTypeError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1580,7 +1574,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1589,7 +1583,7 @@ export interface operations {
           "application/json": components["schemas"]["InternalServerError"];
         };
       };
-      /** @description The server is temporarily busy processing other requests. Retry after the indicated delay. */
+      /** @description The service is temporarily unavailable. Retry after the indicated delay. */
       503: {
         headers: {
           [name: string]: unknown;
@@ -1641,7 +1635,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1650,7 +1644,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1712,7 +1706,7 @@ export interface operations {
           "application/json": components["schemas"]["ForbiddenError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1721,7 +1715,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1780,7 +1774,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1789,7 +1783,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1855,7 +1849,7 @@ export interface operations {
           "application/json": components["schemas"]["ConflictError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1864,7 +1858,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1945,7 +1939,7 @@ export interface operations {
           "application/json": components["schemas"]["ConflictError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1954,7 +1948,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -2013,7 +2007,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -2022,7 +2016,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -2105,7 +2099,7 @@ export interface operations {
           "application/json": components["schemas"]["ConflictError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -2114,7 +2108,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -2144,7 +2138,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Metadata of an uploaded and optimized image. */
+      /** @description Metadata of an uploaded image. */
       201: {
         headers: {
           [name: string]: unknown;
@@ -2207,7 +2201,7 @@ export interface operations {
           "application/json": components["schemas"]["UnsupportedMediaTypeError"];
         };
       };
-      /** @description Rate limit or rolling daily publish quota exceeded. */
+      /** @description Rate limit or publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -2216,7 +2210,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description An unexpected server or upstream service error occurred. */
+      /** @description An unexpected server error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -2225,7 +2219,7 @@ export interface operations {
           "application/json": components["schemas"]["InternalServerError"];
         };
       };
-      /** @description The server is temporarily busy processing other requests. Retry after the indicated delay. */
+      /** @description The service is temporarily unavailable. Retry after the indicated delay. */
       503: {
         headers: {
           [name: string]: unknown;

@@ -184,13 +184,12 @@ export const isUrlWithProtocol = (
  */
 export const PublicCacheHeaders = {
   "cache-control": Schema.String.annotate({
-    description:
-      "Public cache directive (`public, max-age=60`) allowing clients and proxies to cache the response for 60 seconds.",
+    description: "HTTP cache directive for public read responses.",
   }),
   etag: Schema.optionalKey(
     Schema.String.annotate({
       description:
-        "Strong entity tag derived from the response body. Send in `If-None-Match` to receive `304 Not Modified` while unchanged.",
+        "Entity tag for the response. Send in `If-None-Match` to receive `304 Not Modified` while unchanged.",
     }),
   ),
 };
@@ -204,10 +203,10 @@ export class TooManyRequests extends Schema.Error<
     retryAfterMillis: RetryAfterMillis,
   }).annotate({
     identifier: "TooManyRequestsError",
-    description: "Rate limit or rolling daily publish quota exceeded.",
+    description: "Rate limit or publish quota exceeded.",
   }),
   {
-    description: "Rate limit or rolling daily publish quota exceeded.",
+    description: "Rate limit or publish quota exceeded.",
     httpApiStatus: 429,
   },
 ) {
@@ -222,10 +221,10 @@ export class InternalServerError extends Schema.Error<
     message: ErrorMessage,
   }).annotate({
     identifier: "InternalServerError",
-    description: "An unexpected server or upstream service error occurred.",
+    description: "An unexpected server error occurred.",
   }),
   {
-    description: "An unexpected server or upstream service error occurred.",
+    description: "An unexpected server error occurred.",
     httpApiStatus: 500,
   },
 ) {}
@@ -244,11 +243,11 @@ export class ServiceUnavailable extends Schema.Error<
   }).annotate({
     identifier: "ServiceUnavailableError",
     description:
-      "The server is temporarily busy processing other requests. Retry after the indicated delay.",
+      "The service is temporarily unavailable. Retry after the indicated delay.",
   }),
   {
     description:
-      "The server is temporarily busy processing other requests. Retry after the indicated delay.",
+      "The service is temporarily unavailable. Retry after the indicated delay.",
     httpApiStatus: 503,
   },
 ) {}
@@ -278,10 +277,10 @@ export const ContentWarning = Schema.Literals(["nsfw", "sensitive", "spoiler"])
  */
 export const UploadedImageResponse = Schema.Struct({
   url: Schema.String.annotate({
-    description: "Public CDN URL of the optimized WebP image.",
+    description: "Public URL of the uploaded image.",
   }),
   sizeBytes: NonNegativeInt.annotate({
-    description: "File size of the stored WebP image, in bytes.",
+    description: "Size of the stored image, in bytes.",
   }),
   width: NonNegativeInt.annotate({
     description: "Width of the stored image, in pixels.",
@@ -295,7 +294,7 @@ export const UploadedImageResponse = Schema.Struct({
   }),
 }).annotate({
   identifier: "UploadedImageResponse",
-  description: "Metadata of an uploaded and optimized image.",
+  description: "Metadata of an uploaded image.",
 });
 
 /**

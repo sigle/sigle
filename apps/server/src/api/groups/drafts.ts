@@ -31,11 +31,6 @@ import {
 } from "@/api/schemas";
 import { DRAFT_IMAGE_MAX_MIB } from "@/lib/draft-images";
 import { PostMetadata } from "@/lib/metadata";
-import {
-  formatPublishSize,
-  PUBLISH_LIMITS,
-  PUBLISH_MAX_BYTES,
-} from "@/services/plan";
 
 export const DRAFT_LIST_DEFAULT_LIMIT = 20;
 
@@ -151,7 +146,7 @@ export const DraftPublishStatus = Schema.NullOr(
 ).annotate({
   identifier: "DraftPublishStatus",
   description:
-    "Current publishing state of a draft: `null` if never published, `pending` or `processing` while a publish job is active (draft is locked against edits and deletion), or `failed` if the last publish attempt failed.",
+    "Current publishing state of a draft: `null` if never published, `pending` or `processing` while publishing (edits and deletion return `409`), or `failed` if the last publish attempt failed.",
 });
 
 export const Draft = Schema.Struct({
@@ -398,8 +393,7 @@ export const PublishDraftStatusResponse = Schema.Struct({
       "Published post ID once `status` is `completed`, otherwise `null`.",
   }),
   arweaveTxId: Schema.NullOr(Schema.String).annotate({
-    description:
-      "Arweave transaction ID once uploaded (available on `completed`, and on `processing`/`failed` after the upload step), otherwise `null`.",
+    description: "Arweave transaction ID once assigned, otherwise `null`.",
   }),
 }).annotate({
   identifier: "PublishDraftStatusResponse",
@@ -427,7 +421,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       .annotate(OpenApi.Summary, "Create draft")
       .annotate(
         OpenApi.Description,
-        `Creates a new draft for the authenticated user, optionally pre-populated with initial fields (send \`{}\` for an empty draft). Returns \`201 Created\` with a \`Location\` header pointing to the new draft.\n\nReturns \`403 Forbidden\` if the user already has ${DRAFT_COUNT_LIMIT} drafts or if total draft content would exceed ${DRAFT_CONTENT_TOTAL_MAX_MIB} MiB.`,
+        "Creates a new draft for the authenticated user, optionally pre-populated with initial fields (send `{}` for an empty draft). Returns `201 Created` with a `Location` header pointing to the created draft. Returns `403` if a draft quota is exceeded.",
       ),
     HttpApiEndpoint.get("list", "/", {
       query: DraftListQuery,
@@ -468,7 +462,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       .annotate(OpenApi.Summary, "Update draft")
       .annotate(
         OpenApi.Description,
-        `Partially updates a draft using JSON Merge Patch semantics: omitted fields stay unchanged, \`null\` clears nullable fields, and \`[]\` clears tags. An empty patch \`{}\` returns the draft without updating \`updatedAt\`.\n\n- Returns \`409 Conflict\` while a publish job is in flight.\n- Returns \`403 Forbidden\` if expanding \`content\` would push total draft content over ${DRAFT_CONTENT_TOTAL_MAX_MIB} MiB.`,
+        "Partially updates a draft using JSON Merge Patch semantics: omitted fields stay unchanged, `null` clears nullable fields, and `[]` clears tags. Returns `409` while publishing and `403` if a draft quota is exceeded.",
       ),
     HttpApiEndpoint.delete("delete", "/:draftId", {
       params: {
@@ -482,7 +476,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       .annotate(OpenApi.Summary, "Delete draft")
       .annotate(
         OpenApi.Description,
-        "Permanently deletes a draft owned by the authenticated user. Returns `409 Conflict` while a publish job is in flight.",
+        "Permanently deletes a draft owned by the authenticated user. Returns `409` while publishing.",
       ),
     HttpApiEndpoint.post("publish", "/:draftId/publish", {
       params: {
@@ -507,7 +501,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       .annotate(OpenApi.Summary, "Publish draft")
       .annotate(
         OpenApi.Description,
-        `Validates the wallet-signed \`PostMetadata\` (matching \`draftId\` and signed by a wallet linked to the authenticated user) and queues an asynchronous Arweave publish job. Returns \`202 Accepted\` with a \`Location\` header to poll status.\n\n- **Idempotency**: Re-submitting the exact same signature while a publish is already in flight reuses the active job.\n- **\`403 Forbidden\`**: Signed metadata JSON exceeds the plan size limit (${formatPublishSize(PUBLISH_MAX_BYTES.free)} on Free, ${formatPublishSize(PUBLISH_MAX_BYTES.pro)} on Pro).\n- **\`409 Conflict\`**: Another signature is currently publishing for this draft, or the signature has already been published.\n- **\`429 Too Many Requests\`**: Rolling 24-hour publish quota reached (${PUBLISH_LIMITS.free} posts on Free, ${PUBLISH_LIMITS.pro} on Pro, counting in-flight publishes), or the plan's global daily publish cap is reached.`,
+        "Validates wallet-signed `PostMetadata` for the draft and queues an asynchronous publish to Arweave. Returns `202 Accepted` with a `Location` header to poll publish status.\n\n- **`403 Forbidden`**: Signed metadata exceeds the current plan's size limit (see `GET /api/me/limits`).\n- **`409 Conflict`**: A publish is already in progress for this draft or the signature was already published.\n- **`429 Too Many Requests`**: Publish quota or rate limit exceeded.",
       )
       .annotate(RateLimitPolicy, "draftPublish"),
     HttpApiEndpoint.get("getPublishStatus", "/:draftId/publish", {
@@ -520,7 +514,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       .annotate(OpenApi.Summary, "Get publish status")
       .annotate(
         OpenApi.Description,
-        "Polls the asynchronous publish job for a draft. Once publishing succeeds, the draft is deleted and this endpoint continues returning `completed` with the resulting `postId` and `arweaveTxId`. Returns `404` if the draft does not exist or publishing has never been started.",
+        "Returns the current status of a draft's publish job. After publishing completes, returns `completed` along with `postId` and `arweaveTxId`. Returns `404` if the draft does not exist or publishing has not been started.",
       ),
     HttpApiEndpoint.post("uploadImage", "/:draftId/images", {
       params: {
@@ -541,7 +535,7 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       .annotate(OpenApi.Summary, "Upload draft image")
       .annotate(
         OpenApi.Description,
-        `Uploads a raw binary JPEG, PNG, or WebP image (up to ${DRAFT_IMAGE_MAX_MIB} MiB) to embed in a draft. Re-encodes the image as a content-addressed WebP served from the CDN and returns its URL, dimensions, byte size, and ThumbHash placeholder. Requires the **Pro** plan (\`403 Forbidden\` on Free; Free accounts can embed external image URLs instead).`,
+        `Uploads a raw JPEG, PNG, or WebP image (up to ${DRAFT_IMAGE_MAX_MIB} MiB) for use in a draft and returns its public URL, dimensions, byte size, and ThumbHash placeholder. Requires the **Pro** plan (\`403\` on Free).`,
       )
       .annotate(OpenApi.Override, {
         requestBody: imageRequestBody(

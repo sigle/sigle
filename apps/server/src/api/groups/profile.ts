@@ -149,7 +149,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
       .annotate(OpenApi.Summary, "Update profile")
       .annotate(
         OpenApi.Description,
-        "Replaces all text fields on the profile of the authenticated user's primary Stacks address and returns the stored profile. Any omitted or `null` field is cleared. Avatar and cover images are preserved and managed via `PUT /api/me/profile/images/{kind}`.",
+        "Replaces all text fields of the authenticated user's profile and returns the updated profile. Omitted or `null` fields are cleared. Avatar and cover images are managed separately via `PUT /api/me/profile/images/{kind}`.",
       )
       .annotate(RateLimitPolicy, "profileUpdate"),
   )
@@ -160,7 +160,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
       .annotate(OpenApi.Summary, "Preview BNS profile")
       .annotate(
         OpenApi.Description,
-        "Looks up the primary BNS V2 name for the authenticated user's primary Stacks address and extracts importable fields from its JSON zonefile to prefill profile forms. Does not save any changes. Non-JSON zonefiles and zonefiles written for a previous owner are ignored. Returns `500` if the Stacks API is unreachable.",
+        "Reads the authenticated user's primary BNS V2 name and any importable profile fields from its zonefile without saving changes.",
       )
       .annotate(RateLimitPolicy, "bnsProfileImport"),
   )
@@ -180,7 +180,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
       .annotate(OpenApi.Summary, "Upload profile image")
       .annotate(
         OpenApi.Description,
-        `Uploads a raw binary JPEG, PNG, or WebP image (up to ${AVATAR_MAX_MIB} MiB for \`avatar\`, ${COVER_MAX_MIB} MiB for \`cover\`), re-encodes it as an optimized WebP image, updates the profile immediately, and returns the stored profile. Previously uploaded Sigle-hosted images in the same slot are deleted on a best-effort basis.`,
+        `Replaces the authenticated user's profile \`avatar\` (up to ${AVATAR_MAX_MIB} MiB) or \`cover\` (up to ${COVER_MAX_MIB} MiB) image with a raw JPEG, PNG, or WebP binary payload and returns the updated profile.`,
       )
       .annotate(OpenApi.Override, {
         requestBody: imageRequestBody(

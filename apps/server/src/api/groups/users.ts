@@ -19,12 +19,10 @@ export const MediaImage = Schema.Struct({
     description: "Public URL of the image.",
   }),
   width: Schema.NullOr(NonNegativeInt).annotate({
-    description:
-      "Image width in pixels, or `null` if placeholder metadata has not been computed yet.",
+    description: "Image width in pixels, or `null` if unavailable.",
   }),
   height: Schema.NullOr(NonNegativeInt).annotate({
-    description:
-      "Image height in pixels, or `null` if placeholder metadata has not been computed yet.",
+    description: "Image height in pixels, or `null` if unavailable.",
   }),
   thumbhash: Schema.NullOr(Schema.String).annotate({
     description:
@@ -63,7 +61,7 @@ export const UserProfile = Schema.Struct({
   ),
 }).annotate({
   identifier: "UserProfile",
-  description: "Public profile details stored on Sigle for a Stacks address.",
+  description: "Public profile details for a Stacks address.",
 });
 
 /**
@@ -75,8 +73,7 @@ export const PublicUser = Schema.Struct({
     description: "Stacks address identifying the user.",
   }),
   profile: Schema.NullOr(UserProfile).annotate({
-    description:
-      "User's public profile, or `null` if the user has signed in without saving profile details.",
+    description: "User's public profile, or `null` if not set.",
   }),
   isExplorer: Schema.Boolean.annotate({
     description:
@@ -112,7 +109,7 @@ export const UsersGroup = HttpApiGroup.make("users")
       .annotate(OpenApi.Summary, "Get user")
       .annotate(
         OpenApi.Description,
-        "Returns a user's public profile and Explorer status by Stacks address. If the address has signed in on Sigle without saving a profile, `profile` is `null`. Returns `400` for a malformed Stacks address and `404` for an unknown address. Publicly cacheable (`ETag`).",
+        "Returns a user's public profile and Explorer status for a Stacks address. `profile` is `null` if the user has not set one. Returns `400` for an invalid Stacks address and `404` if not found.",
       ),
   )
   .prefix("/api/users")
