@@ -120,7 +120,7 @@ jobs:
             dockerfile: apps/sigle/Dockerfile
             # Railway passes the name of the environment it deploys to.
             args: --build-arg RAILWAY_ENVIRONMENT_NAME=testnet
-            inputs: ^apps/sigle/(Dockerfile|package\.json|next\.config\.ts|\.env\.testnet)$
+            inputs: ^(\.gitignore|apps/sigle/(Dockerfile|package\.json|next\.config\.ts|\.env\.development|\.env\.testnet))$
     steps:
       - uses: actions/checkout@v7
         with:
