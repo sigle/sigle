@@ -22,12 +22,12 @@ export const MediaImageMetadataSchema = z.object({
     ["http", "https", "ipfs", "ar"],
     POST_METADATA_LIMITS.coverImage,
   ).meta({
-    description: "An http(s), ipfs:// or ar:// URL of the image.",
+    description: "Image URL (`http(s)://`, `ipfs://`, or `ar://`).",
   }),
   type: z.enum(MediaImageMimeType).meta({
-    description: "The MIME type of the image.",
+    description: "MIME type of the image.",
   }),
   alt: z.string().max(POST_METADATA_LIMITS.alt).optional().meta({
-    description: "The alt tag of the image for accessibility.",
+    description: "Alternative text for accessibility.",
   }),
 });

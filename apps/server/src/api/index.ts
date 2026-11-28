@@ -10,6 +10,7 @@ import { SchemaErrorMiddleware } from "@/api/middleware/schema-error";
 import {
   omitBadRequestWithoutInputs,
   promoteSchemaDescriptions,
+  withApiContact,
 } from "@/api/schemas";
 import { SECURE_SESSION_COOKIE_NAME } from "@/services/auth";
 import packageJson from "../../package.json" with { type: "json" };
@@ -65,6 +66,10 @@ export const SigleApi = HttpApi.make("sigle")
       // Changesets bumps the package version on each release.
       version: packageJson.version,
       description: API_DESCRIPTION,
+      license: {
+        name: "MIT",
+        url: "https://github.com/sigle/sigle/blob/main/LICENSE",
+      },
       override: {
         externalDocs: {
           description: "Sigle Documentation",
@@ -72,6 +77,9 @@ export const SigleApi = HttpApi.make("sigle")
         },
       },
       transform: (spec) =>
-        omitBadRequestWithoutInputs(promoteSchemaDescriptions(spec)),
+        withApiContact({
+          name: "Sigle",
+          url: "https://www.sigle.io",
+        })(omitBadRequestWithoutInputs(promoteSchemaDescriptions(spec))),
     }),
   );

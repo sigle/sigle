@@ -10,6 +10,11 @@ export const NonNegativeInt = Schema.Int.check(
   Schema.isGreaterThanOrEqualTo(0),
 );
 
+/**
+ * URI string annotated with OpenAPI `format: "uri"`.
+ */
+export const Uri = Schema.String.annotate({ format: "uri" });
+
 const ErrorMessage = Schema.String.annotate({
   description: "Human-readable explanation of the error.",
 });
@@ -74,12 +79,10 @@ export class Forbidden extends Schema.Error<
     message: ErrorMessage,
   }).annotate({
     identifier: "ForbiddenError",
-    description:
-      "The authenticated user does not have permission or exceeded a plan or storage quota.",
+    description: "Access denied or plan quota exceeded.",
   }),
   {
-    description:
-      "The authenticated user does not have permission or exceeded a plan or storage quota.",
+    description: "Access denied or plan quota exceeded.",
     httpApiStatus: 403,
   },
 ) {
@@ -203,10 +206,10 @@ export class TooManyRequests extends Schema.Error<
     retryAfterMillis: RetryAfterMillis,
   }).annotate({
     identifier: "TooManyRequestsError",
-    description: "Rate limit or publish quota exceeded.",
+    description: "Rate limit exceeded.",
   }),
   {
-    description: "Rate limit or publish quota exceeded.",
+    description: "Rate limit exceeded.",
     httpApiStatus: 429,
   },
 ) {
@@ -276,7 +279,7 @@ export const ContentWarning = Schema.Literals(["nsfw", "sensitive", "spoiler"])
  * Response of the draft and profile image uploads.
  */
 export const UploadedImageResponse = Schema.Struct({
-  url: Schema.String.annotate({
+  url: Uri.annotate({
     description: "Public URL of the uploaded image.",
   }),
   sizeBytes: NonNegativeInt.annotate({
@@ -492,10 +495,77 @@ export const omitBadRequestWithoutInputs: Parameters<
         operation.parameters.length === 0 &&
         operation.requestBody === undefined
       ) {
-        delete operation.responses["400"];
+        delete operation.responses[400];
       }
     }
   }
 
   return document;
 };
+
+/**
+ * Endpoint `OpenApi.Transform` removing the inherited `400` response on routes
+ * whose only input is an unconstrained string path parameter and whose handler
+ * never returns `BadRequest`.
+ */
+export const omitBadRequest: Parameters<typeof OpenApi.Transform.of>[0] = (
+  spec,
+) => {
+  // SAFETY: an endpoint `OpenApi.Transform` is applied to the operation
+  // object generated for that endpoint.
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+  const operation = spec as OpenApi.OpenAPISpecOperation;
+  delete operation.responses[400];
+  return operation;
+};
+
+/**
+ * Endpoint `OpenApi.Transform` setting an action-specific description on a
+ * response status without altering the shared component schema.
+ */
+export const describeResponse =
+  (
+    status: number,
+    description: string,
+  ): Parameters<typeof OpenApi.Transform.of>[0] =>
+  (spec) => {
+    // SAFETY: an endpoint `OpenApi.Transform` is applied to the operation
+    // object generated for that endpoint.
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+    const operation = spec as OpenApi.OpenAPISpecOperation;
+    const response = operation.responses[status];
+
+    if (response === undefined) {
+      return operation;
+    }
+
+    return {
+      ...operation,
+      responses: {
+        ...operation.responses,
+        [status]: { ...response, description },
+      },
+    };
+  };
+
+/**
+ * API `OpenApi.Transform` adding OpenAPI `info.contact` metadata.
+ */
+export const withApiContact =
+  (contact: {
+    readonly name: string;
+    readonly url: string;
+  }): Parameters<typeof OpenApi.Transform.of>[0] =>
+  (spec) => {
+    // SAFETY: an API `OpenApi.Transform` is applied to the whole document.
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+    const document = spec as OpenApi.OpenAPISpec;
+
+    return {
+      ...document,
+      info: {
+        ...document.info,
+        contact,
+      },
+    };
+  };

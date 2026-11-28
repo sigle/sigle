@@ -104,7 +104,16 @@ const ServedApiLayer = Layer.unwrap(
       HttpApiBuilder.layer(api, { openapiPath: "/_openapi.json" }),
       // The page loads Scalar from jsDelivr, pinned to the version that
       // Effect inlines, instead of inlining its 5 MB bundle in every response.
-      HttpApiScalar.layerCdn(api, { path: "/_scalar", version: "1.81.0" }),
+      HttpApiScalar.layerCdn(api, {
+        path: "/_scalar",
+        version: "1.81.0",
+        scalar: {
+          favicon: new URL("/favicon.ico", config.APP_URL).toString(),
+          defaultOpenAllTags: true,
+          authentication: { preferredSecurityScheme: "sessionCookie" },
+          agent: { disabled: true },
+        },
+      }),
     );
   }),
 );

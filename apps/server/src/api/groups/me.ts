@@ -12,6 +12,7 @@ import {
 } from "@/api/middleware/rate-limit";
 import {
   DateTime,
+  describeResponse,
   documentPaginationQuery,
   NonNegativeInt,
   NotFound,
@@ -142,6 +143,7 @@ export const MeGroup = HttpApiGroup.make("me")
     HttpApiEndpoint.get("get", "/", {
       success: CurrentUserResponse,
     })
+      .annotate(OpenApi.Identifier, "account.get")
       .annotate(OpenApi.Summary, "Get current user")
       .annotate(
         OpenApi.Description,
@@ -150,6 +152,7 @@ export const MeGroup = HttpApiGroup.make("me")
     HttpApiEndpoint.get("limits", "/limits", {
       success: UserLimitsResponse,
     })
+      .annotate(OpenApi.Identifier, "account.limits")
       .annotate(OpenApi.Summary, "Get account limits")
       .annotate(
         OpenApi.Description,
@@ -158,16 +161,19 @@ export const MeGroup = HttpApiGroup.make("me")
     HttpApiEndpoint.post("refreshPlan", "/plan/refresh", {
       success: UserPlanResponse,
     })
+      .annotate(OpenApi.Identifier, "account.refreshPlan")
       .annotate(OpenApi.Summary, "Refresh plan")
       .annotate(
         OpenApi.Description,
         "Checks Explorer Guild NFT ownership for the authenticated user, updates their plan (`free` or `pro`), and returns the result.",
       )
+      .annotate(OpenApi.Transform, describeResponse(200, "Plan refreshed."))
       .annotate(RateLimitPolicy, "planRefresh"),
     HttpApiEndpoint.get("listPosts", "/posts", {
       query: MyPostListQuery,
       success: MyPostListResponse,
     })
+      .annotate(OpenApi.Identifier, "account.listPosts")
       .annotate(OpenApi.Summary, "List my posts")
       .annotate(
         OpenApi.Description,
@@ -190,10 +196,15 @@ export const MeGroup = HttpApiGroup.make("me")
       success: PostVisibilityResponse,
       error: NotFound,
     })
+      .annotate(OpenApi.Identifier, "account.updatePostVisibility")
       .annotate(OpenApi.Summary, "Set post visibility")
       .annotate(
         OpenApi.Description,
         "Hides one of the authenticated user's published posts from Sigle or restores it. Hidden posts are omitted from public post lists, profiles, RSS feeds, and `GET /api/posts/{postId}`, while remaining on Arweave. Returns `404` if the post does not exist or belongs to another user.",
+      )
+      .annotate(
+        OpenApi.Transform,
+        describeResponse(200, "Post visibility updated."),
       ),
   )
   .prefix("/api/me")

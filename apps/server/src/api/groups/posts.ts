@@ -14,8 +14,10 @@ import {
   documentPaginationQuery,
   NonNegativeInt,
   NotFound,
+  omitBadRequest,
   paginationQueryFields,
   PublicCacheHeaders,
+  Uri,
 } from "@/api/schemas";
 import { postOtsStatuses } from "@/db/schema";
 
@@ -46,7 +48,7 @@ export const PostListItem = Schema.Struct({
   tags: Schema.Array(Schema.String).annotate({
     description: "List of topic tags attached to the post.",
   }),
-  canonicalUri: Schema.NullOr(Schema.String).annotate({
+  canonicalUri: Schema.NullOr(Uri).annotate({
     description:
       "Canonical URL of the original publication if syndicated, or `null`.",
   }),
@@ -139,7 +141,7 @@ export const Post = Schema.Struct({
   tags: Schema.Array(Schema.String).annotate({
     description: "List of topic tags attached to the post.",
   }),
-  canonicalUri: Schema.NullOr(Schema.String).annotate({
+  canonicalUri: Schema.NullOr(Uri).annotate({
     description:
       "Canonical URL of the original publication if syndicated, or `null`.",
   }),
@@ -149,7 +151,7 @@ export const Post = Schema.Struct({
         "Content warning label (`nsfw`, `sensitive`, `spoiler`), or `null`.",
     }),
   ),
-  metadataUri: Schema.String.annotate({
+  metadataUri: Uri.annotate({
     description:
       "URI pointing to the signed post metadata document on Arweave.",
   }),
@@ -247,7 +249,8 @@ export const PostsGroup = HttpApiGroup.make("posts")
       .annotate(
         OpenApi.Description,
         "Returns a published post with its Markdown content, cover image metadata, author profile, and OpenTimestamps proof status. Hidden posts return `404`.",
-      ),
+      )
+      .annotate(OpenApi.Transform, omitBadRequest),
   )
   .prefix("/api/posts")
   .middleware(RateLimitMiddleware);

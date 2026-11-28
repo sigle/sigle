@@ -75,7 +75,7 @@ export interface paths {
      * Get current user
      * @description Returns the authenticated user's account ID, primary Stacks address, and current plan.
      */
-    get: operations["me.get"];
+    get: operations["account.get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -95,7 +95,7 @@ export interface paths {
      * Get account limits
      * @description Returns the authenticated user's current plan quotas and publish usage.
      */
-    get: operations["me.limits"];
+    get: operations["account.limits"];
     put?: never;
     post?: never;
     delete?: never;
@@ -117,7 +117,7 @@ export interface paths {
      * Refresh plan
      * @description Checks Explorer Guild NFT ownership for the authenticated user, updates their plan (`free` or `pro`), and returns the result.
      */
-    post: operations["me.refreshPlan"];
+    post: operations["account.refreshPlan"];
     delete?: never;
     options?: never;
     head?: never;
@@ -135,7 +135,7 @@ export interface paths {
      * List my posts
      * @description Returns a paginated list of posts published by the authenticated user, newest first, including hidden posts.
      */
-    get: operations["me.listPosts"];
+    get: operations["account.listPosts"];
     put?: never;
     post?: never;
     delete?: never;
@@ -156,7 +156,7 @@ export interface paths {
      * Set post visibility
      * @description Hides one of the authenticated user's published posts from Sigle or restores it. Hidden posts are omitted from public post lists, profiles, RSS feeds, and `GET /api/posts/{postId}`, while remaining on Arweave. Returns `404` if the post does not exist or belongs to another user.
      */
-    put: operations["me.updatePostVisibility"];
+    put: operations["account.updatePostVisibility"];
     post?: never;
     delete?: never;
     options?: never;
@@ -368,7 +368,7 @@ export interface components {
       /** @description Human-readable explanation of the error. */
       message: string;
     };
-    /** @description Rate limit or publish quota exceeded. */
+    /** @description Rate limit exceeded. */
     TooManyRequestsError: {
       /** @description Human-readable explanation of the error. */
       message: string;
@@ -397,14 +397,17 @@ export interface components {
       /** @description Human-readable explanation of the error. */
       message: string;
     };
-    /** @description The authenticated user does not have permission or exceeded a plan or storage quota. */
+    /** @description Access denied or plan quota exceeded. */
     ForbiddenError: {
       /** @description Human-readable explanation of the error. */
       message: string;
     };
     /** @description Metadata of an uploaded image. */
     UploadedImageResponse: {
-      /** @description Public URL of the uploaded image. */
+      /**
+       * Format: uri
+       * @description Public URL of the uploaded image.
+       */
       url: string;
       /** @description Size of the stored image, in bytes. */
       sizeBytes: number;
@@ -447,20 +450,24 @@ export interface components {
     PublishDraftPayload: {
       metadata: components["schemas"]["PostMetadata"];
     };
-    /** @description The signed post metadata to upload to Arweave. */
+    /** @description Wallet-signed post metadata uploaded to Arweave. */
     PostMetadata: {
-      /** @constant */
+      /**
+       * @description JSON Schema URI identifying this post metadata version.
+       * @constant
+       */
       $schema: "https://json-schemas.sigle.io/posts/1.0.0.json";
+      /** @description Post content and metadata signed by the author. */
       content: {
-        /** @description Random id also used in the url. Have to be unique on sigle. */
+        /** @description Unique identifier of the post (matches the draft ID when publishing via the API). */
         id: string;
         /** @description Post title. */
         title: string;
-        /** @description Markdown content. */
+        /** @description Markdown body of the post. */
         content: string;
-        /** @description A short plain text summary of the content, shown in post lists. */
+        /** @description Short plain-text summary shown in post lists. */
         excerpt: string;
-        /** @description List of attributes that can be used to store any additional information that is not supported by the standard. Sigle reads the `meta-title` (up to 100 characters), `meta-description` (up to 250 characters) and `canonical-uri` (an http(s) URL of up to 200 characters) keys, each at most once and as a String attribute. `PostMetadataSchema` in `@sigle/sdk` and the Sigle API check these key rules; this JSON Schema does not. */
+        /** @description Optional key-value metadata attributes. Recognized `String` attribute keys: `meta-title` (up to 100 characters), `meta-description` (up to 250 characters), and `canonical-uri` (HTTP(S) URL up to 200 characters), each at most once. */
         attributes?: (
           | {
               /** @constant */
@@ -468,7 +475,7 @@ export interface components {
               /** @description The attribute's unique identifier. */
               key: string;
               /**
-               * @description A JS boolean value serialized as string. It's consumer responsibility to parse it.
+               * @description Boolean value serialized as `"true"` or `"false"`.
                * @enum {string}
                */
               value: "true" | "false";
@@ -480,7 +487,7 @@ export interface components {
               key: string;
               /**
                * Format: date-time
-               * @description A valid ISO 8601 date string.  It's consumer responsibility to parse it.
+               * @description ISO 8601 date-time string.
                */
               value: string;
             }
@@ -489,7 +496,7 @@ export interface components {
               type: "Number";
               /** @description The attribute's unique identifier. */
               key: string;
-              /** @description A valid JS number serialized as string. It's consumer responsibility to parse it. */
+              /** @description Numeric value serialized as a string. */
               value: string;
             }
           | {
@@ -497,7 +504,7 @@ export interface components {
               type: "String";
               /** @description The attribute's unique identifier. */
               key: string;
-              /** @description Any string value. */
+              /** @description String attribute value. */
               value: string;
             }
           | {
@@ -505,34 +512,34 @@ export interface components {
               type: "JSON";
               /** @description The attribute's unique identifier. */
               key: string;
-              /** @description A JSON string. It's consumer responsibility to validate and parse it. */
+              /** @description JSON-encoded string value. */
               value: string;
             }
         )[];
-        /** @description The cover image. */
+        /** @description Cover image metadata. */
         coverImage?: {
           /**
            * Format: uri
-           * @description An http(s), ipfs:// or ar:// URL of the image.
+           * @description Image URL (`http(s)://`, `ipfs://`, or `ar://`).
            */
           url: string;
           /**
-           * @description The MIME type of the image.
+           * @description MIME type of the image.
            * @enum {string}
            */
           type: "image/gif" | "image/jpeg" | "image/png" | "image/webp";
-          /** @description The alt tag of the image for accessibility. */
+          /** @description Alternative text for accessibility. */
           alt?: string;
         };
-        /** @description An arbitrary list of tags. */
+        /** @description List of topic tags. */
         tags?: string[];
         /**
-         * @description Specify a content warning.
+         * @description Optional content warning label (uppercase in signed metadata: `NSFW`, `SENSITIVE`, or `SPOILER`).
          * @enum {string}
          */
         contentWarning?: "NSFW" | "SENSITIVE" | "SPOILER";
       };
-      /** @description A cryptographic signature of the `content` data. */
+      /** @description Stacks wallet signature over the canonical JSON metadata payload. */
       signature: string;
     };
     /** @description Full draft belonging to the authenticated user, including Markdown content. */
@@ -676,7 +683,10 @@ export interface components {
     };
     /** @description Image URL paired with optional dimensions and ThumbHash placeholder metadata. */
     MediaImage: {
-      /** @description Public URL of the image. */
+      /**
+       * Format: uri
+       * @description Public URL of the image.
+       */
       url: string;
       /** @description Image width in pixels, or `null` if unavailable. */
       width: number | null;
@@ -844,7 +854,10 @@ export interface components {
       canonicalUri: string | null;
       /** @description Content warning label (`nsfw`, `sensitive`, `spoiler`), or `null`. */
       contentWarning: ("nsfw" | "sensitive" | "spoiler") | null;
-      /** @description URI pointing to the signed post metadata document on Arweave. */
+      /**
+       * Format: uri
+       * @description URI pointing to the signed post metadata document on Arweave.
+       */
       metadataUri: string;
       /** @description Arweave transaction ID of the signed post metadata. */
       arweaveTxId: string;
@@ -974,7 +987,7 @@ export interface operations {
           "application/json": components["schemas"]["BadRequestError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1019,15 +1032,6 @@ export interface operations {
           "application/json": components["schemas"]["Post"];
         };
       };
-      /** @description Invalid request parameters, headers, or payload. */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
       /** @description The requested resource does not exist or is not accessible. */
       404: {
         headers: {
@@ -1037,7 +1041,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1100,7 +1104,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1120,7 +1124,7 @@ export interface operations {
       };
     };
   };
-  "me.get": {
+  "account.get": {
     parameters: {
       query?: never;
       header?: never;
@@ -1147,7 +1151,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1167,7 +1171,7 @@ export interface operations {
       };
     };
   };
-  "me.limits": {
+  "account.limits": {
     parameters: {
       query?: never;
       header?: never;
@@ -1194,7 +1198,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1214,7 +1218,7 @@ export interface operations {
       };
     };
   };
-  "me.refreshPlan": {
+  "account.refreshPlan": {
     parameters: {
       query?: never;
       header?: never;
@@ -1223,7 +1227,7 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description Updated plan tier of the authenticated user. */
+      /** @description Plan refreshed. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -1241,7 +1245,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1261,7 +1265,7 @@ export interface operations {
       };
     };
   };
-  "me.listPosts": {
+  "account.listPosts": {
     parameters: {
       query?: {
         /** @description Maximum number of items to return (1–100, default 20). */
@@ -1302,7 +1306,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1322,7 +1326,7 @@ export interface operations {
       };
     };
   };
-  "me.updatePostVisibility": {
+  "account.updatePostVisibility": {
     parameters: {
       query?: never;
       header?: never;
@@ -1338,7 +1342,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Updated visibility state of a published post. */
+      /** @description Post visibility updated. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -1374,7 +1378,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1407,7 +1411,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Stored profile returned after updating fields or uploading an image. */
+      /** @description Profile updated. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -1434,7 +1438,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1481,7 +1485,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1520,7 +1524,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Stored profile returned after updating fields or uploading an image. */
+      /** @description Profile image uploaded. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -1565,7 +1569,7 @@ export interface operations {
           "application/json": components["schemas"]["UnsupportedMediaTypeError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1635,7 +1639,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1668,7 +1672,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Full draft belonging to the authenticated user, including Markdown content. */
+      /** @description Draft created. */
       201: {
         headers: {
           /** @description Relative URL of the created draft (`/api/drafts/{draftId}`). */
@@ -1697,7 +1701,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description The authenticated user does not have permission or exceeded a plan or storage quota. */
+      /** @description Access denied or plan quota exceeded. */
       403: {
         headers: {
           [name: string]: unknown;
@@ -1706,7 +1710,7 @@ export interface operations {
           "application/json": components["schemas"]["ForbiddenError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1747,15 +1751,6 @@ export interface operations {
           "application/json": components["schemas"]["Draft"];
         };
       };
-      /** @description Invalid request parameters, headers, or payload. */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
       /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
@@ -1774,7 +1769,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1813,15 +1808,6 @@ export interface operations {
         };
         content?: never;
       };
-      /** @description Invalid request parameters, headers, or payload. */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
       /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
@@ -1849,7 +1835,7 @@ export interface operations {
           "application/json": components["schemas"]["ConflictError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1885,7 +1871,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Full draft belonging to the authenticated user, including Markdown content. */
+      /** @description Draft updated. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -1912,7 +1898,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description The authenticated user does not have permission or exceeded a plan or storage quota. */
+      /** @description Access denied or plan quota exceeded. */
       403: {
         headers: {
           [name: string]: unknown;
@@ -1939,7 +1925,7 @@ export interface operations {
           "application/json": components["schemas"]["ConflictError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1980,15 +1966,6 @@ export interface operations {
           "application/json": components["schemas"]["PublishDraftStatusResponse"];
         };
       };
-      /** @description Invalid request parameters, headers, or payload. */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
       /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
@@ -2007,7 +1984,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -2043,7 +2020,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Acknowledgement that a draft publish job has been queued. */
+      /** @description Publish job queued. */
       202: {
         headers: {
           /** @description Relative URL to poll publish progress (`/api/drafts/{draftId}/publish`). */
@@ -2072,7 +2049,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description The authenticated user does not have permission or exceeded a plan or storage quota. */
+      /** @description Access denied or plan quota exceeded. */
       403: {
         headers: {
           [name: string]: unknown;
@@ -2099,7 +2076,7 @@ export interface operations {
           "application/json": components["schemas"]["ConflictError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -2138,7 +2115,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Metadata of an uploaded image. */
+      /** @description Image uploaded. */
       201: {
         headers: {
           [name: string]: unknown;
@@ -2165,7 +2142,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description The authenticated user does not have permission or exceeded a plan or storage quota. */
+      /** @description Access denied or plan quota exceeded. */
       403: {
         headers: {
           [name: string]: unknown;
@@ -2201,7 +2178,7 @@ export interface operations {
           "application/json": components["schemas"]["UnsupportedMediaTypeError"];
         };
       };
-      /** @description Rate limit or publish quota exceeded. */
+      /** @description Rate limit exceeded. */
       429: {
         headers: {
           [name: string]: unknown;

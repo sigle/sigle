@@ -43,6 +43,14 @@ const OpenApiResponse = Schema.Struct({
     title: Schema.String,
     summary: Schema.String,
     version: Schema.String,
+    contact: Schema.Struct({
+      name: Schema.String,
+      url: Schema.String,
+    }),
+    license: Schema.Struct({
+      name: Schema.String,
+      url: Schema.String,
+    }),
   }),
   servers: Schema.Array(
     Schema.Struct({
@@ -103,6 +111,7 @@ const OpenApiOperationsDocument = Schema.Struct({
     Schema.Record(
       Schema.String,
       Schema.Struct({
+        operationId: Schema.optionalKey(Schema.String),
         summary: Schema.optionalKey(Schema.String),
         description: Schema.optionalKey(Schema.String),
         parameters: Schema.Array(
@@ -261,6 +270,12 @@ describe("http server", () => {
         paths: Object.keys(body.paths),
         health: Object.keys(body.paths["/health"].get?.responses ?? {}).sort(),
         me: Object.keys(body.paths["/api/me"].get?.responses ?? {}).sort(),
+        getPost: Object.keys(
+          body.paths["/api/posts/{postId}"].get?.responses ?? {},
+        ).sort(),
+        getUser: Object.keys(
+          body.paths["/api/users/{address}"].get?.responses ?? {},
+        ).sort(),
         uploadImage: Object.keys(profileImagePath?.put?.responses ?? {}),
         requestBody: Object.keys(
           profileImagePath?.put?.requestBody?.content ?? {},
@@ -275,6 +290,14 @@ describe("http server", () => {
           summary:
             "Decentralized blogging API for Sigle on Stacks and Arweave.",
           version: packageJson.version,
+          contact: {
+            name: "Sigle",
+            url: "https://www.sigle.io",
+          },
+          license: {
+            name: "MIT",
+            url: "https://github.com/sigle/sigle/blob/main/LICENSE",
+          },
         },
         servers: [
           { url: "https://api.sigle.test", description: "Stacks testnet" },
@@ -291,11 +314,13 @@ describe("http server", () => {
           "/api/me/profile/images/{kind}",
           "/api/drafts/{draftId}/images",
         ]),
-        // Endpoints without inputs cannot fail schema validation, so they
-        // document no 400 response.
-        // Not rate limited either.
+        // Endpoints without inputs or with only an unconstrained string path
+        // param cannot fail schema validation, so they document no 400 response.
+        // Health is not rate limited either.
         health: ["200"],
         me: ["200", "401", "429", "500"],
+        getPost: ["200", "404", "429", "500"],
+        getUser: ["200", "400", "404", "429", "500"],
         uploadImage: expect.arrayContaining([
           "200",
           "400",
@@ -438,6 +463,9 @@ describe("http server", () => {
         negativeIntegers: json.includes("-9007199254740991"),
         // The rate limit middleware adds them, the endpoint no longer lists
         // them itself.
+        meOperationId: doc.paths["/api/me"]?.get?.operationId,
+        createDraft201:
+          doc.paths["/api/drafts"]?.post?.responses["201"]?.description,
         draftImageResponses: Object.keys(
           doc.paths["/api/drafts/{draftId}/images"]?.post?.responses ?? {},
         ),
@@ -450,6 +478,8 @@ describe("http server", () => {
         undescribedSchemas: [],
         duplicateSchemas: [],
         negativeIntegers: false,
+        meOperationId: "account.get",
+        createDraft201: "Draft created.",
         draftImageResponses: expect.arrayContaining(["429", "500"]),
       });
     }).pipe(Effect.provide(serverLayer())),

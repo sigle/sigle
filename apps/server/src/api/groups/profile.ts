@@ -8,11 +8,13 @@ import {
 } from "@/api/middleware/rate-limit";
 import {
   BadRequest,
+  describeResponse,
   imageRequestBody,
   isUrlWithProtocol,
   PayloadTooLarge,
   ServiceUnavailable,
   UnsupportedMediaType,
+  Uri,
 } from "@/api/schemas";
 import { profileImageKinds, profileImageMaxMib } from "@/lib/profile-images";
 
@@ -98,7 +100,7 @@ export const BnsProfile = Schema.Struct({
     description:
       "Bio extracted from the zonefile, or `null` if missing or invalid.",
   }),
-  website: Schema.NullOr(Schema.String).annotate({
+  website: Schema.NullOr(Uri).annotate({
     description:
       "Website URL extracted from the zonefile, or `null` if missing or invalid.",
   }),
@@ -151,6 +153,7 @@ export const ProfileGroup = HttpApiGroup.make("profile")
         OpenApi.Description,
         "Replaces all text fields of the authenticated user's profile and returns the updated profile. Omitted or `null` fields are cleared. Avatar and cover images are managed separately via `PUT /api/me/profile/images/{kind}`.",
       )
+      .annotate(OpenApi.Transform, describeResponse(200, "Profile updated."))
       .annotate(RateLimitPolicy, "profileUpdate"),
   )
   .add(
@@ -187,6 +190,10 @@ export const ProfileGroup = HttpApiGroup.make("profile")
           `Raw image binary in JPEG, PNG, or WebP format (max ${AVATAR_MAX_MIB} MiB for \`avatar\`, ${COVER_MAX_MIB} MiB for \`cover\`).`,
         ),
       })
+      .annotate(
+        OpenApi.Transform,
+        describeResponse(200, "Profile image uploaded."),
+      )
       .annotate(RateLimitPolicy, "profileImageUpload"),
   )
   .prefix("/api/me/profile")

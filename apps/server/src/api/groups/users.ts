@@ -12,10 +12,11 @@ import {
   NonNegativeInt,
   NotFound,
   PublicCacheHeaders,
+  Uri,
 } from "@/api/schemas";
 
 export const MediaImage = Schema.Struct({
-  url: Schema.String.annotate({
+  url: Uri.annotate({
     description: "Public URL of the image.",
   }),
   width: Schema.NullOr(NonNegativeInt).annotate({
@@ -41,7 +42,7 @@ export const UserProfile = Schema.Struct({
   description: Schema.NullOr(Schema.String).annotate({
     description: "Markdown biography, or `null` if unset.",
   }),
-  website: Schema.NullOr(Schema.String).annotate({
+  website: Schema.NullOr(Uri).annotate({
     description: "HTTP(S) website URL, or `null` if unset.",
   }),
   twitter: Schema.NullOr(Schema.String).annotate({
