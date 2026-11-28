@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "vp pack",
-    "codegen": "openapi-typescript http://localhost:3001/_openapi.json --output ./src/__generated__/sigle-api-openapi.ts",
+    "codegen": "spec=\"$(mktemp -d)/openapi.json\" && pnpm --silent --filter @sigle/server openapi > \"$spec\" && openapi-typescript \"$spec\" --output ./src/__generated__/sigle-api-openapi.ts && vp fmt ./src/__generated__",
     "test": "vp test"
   },
   "dependencies": {

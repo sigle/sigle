@@ -8,6 +8,7 @@
     "dev": "vpx --watch --env-file=.env.development --env-file-if-exists=.env.development.local src/main.ts",
     "e2e:server": "vpx src/test/e2e-server.ts",
     "start": "node dist/main.mjs",
+    "openapi": "vpx src/openapi.ts",
     "test": "vp test"
   },
   "dependencies": {

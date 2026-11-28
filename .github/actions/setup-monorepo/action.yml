@@ -1,12 +1,13 @@
 name: "Setup the monorepo"
-description: "Setup the monorepo"
+description: "Restore the turbo cache, install Node.js, pnpm and the dependencies. Runs after actions/checkout."
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v7
-
-    - name: Cache turbo build setup
-      uses: actions/cache@v6
+    # Saved by the Build and Test job on pushes to main only: one entry per
+    # main commit keeps the repository under its 10 GB cache quota, and pull
+    # requests restore the latest one from main.
+    - name: Restore the turbo cache
+      uses: actions/cache/restore@v6
       with:
         path: ${{ github.workspace }}/.turbo
         key: ${{ runner.os }}-turbo-${{ github.sha }}

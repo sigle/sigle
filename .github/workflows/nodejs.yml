@@ -1,7 +1,6 @@
 name: Node CI
 permissions:
   contents: read
-  pull-requests: read
 
 on:
   push:
@@ -9,14 +8,18 @@ on:
   pull_request:
     branches: [main]
 
+# A new commit on a pull request cancels the run of the previous one. Runs on
+# main are never cancelled: Railway deploys a commit once its checks pass, and
+# only main runs save the turbo cache.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  build:
-    name: Build and Test
+  check:
+    name: Check
     runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-monorepo
@@ -24,16 +27,54 @@ jobs:
       - name: Check dependencies consistency
         run: pnpm syncpack lint
 
+      # The type-aware lint and the SDK codegen read the SDK from its build.
+      - name: Build the SDK
+        run: pnpm build --filter=@sigle/sdk
+
+      - name: Check formatting, linting and type checks
+        run: pnpm vp check --deny-warnings
+
+      - name: Check the database migrations match the schema
+        run: |
+          pnpm --filter @sigle/server exec drizzle-kit generate --name schema-drift
+          if [ -n "$(git status --porcelain -- apps/server/drizzle)" ]; then
+            git status --porcelain -- apps/server/drizzle
+            echo "::error::apps/server/src/db/schema.ts has changes without a migration. Run 'pnpm drizzle-kit generate --name <migration-name>' in apps/server."
+            exit 1
+          fi
+
+      - name: Check the SDK API types match the API
+        run: |
+          pnpm --filter @sigle/sdk codegen
+          if ! git diff --exit-code -- packages/sdk/src/__generated__; then
+            echo "::error::The SDK API types are out of date. Run 'pnpm codegen' in packages/sdk."
+            exit 1
+          fi
+
+  build:
+    name: Build and Test
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-monorepo
+
       - name: Build
         run: |
           cp apps/sigle/.env.development apps/sigle/.env.production.local
           pnpm build
 
-      - name: Check formatting, linting and type checks.
-        run: pnpm vp check --deny-warnings
-
       - name: Test
         run: pnpm test
+
+      # Turbo stores only the tasks that succeeded, so the cache is saved
+      # after a failure too.
+      - name: Save the turbo cache
+        if: ${{ always() && github.event_name == 'push' }}
+        uses: actions/cache/save@v6
+        with:
+          path: ${{ github.workspace }}/.turbo
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
 
   e2e:
     name: End-to-end tests
@@ -58,3 +99,58 @@ jobs:
             apps/sigle/playwright-report/
             apps/sigle/test-results/
           retention-days: 7
+
+  # Railway builds these images on deploy, after the checks pass. Building
+  # them here catches a broken image before it blocks a deploy. Only when a
+  # file the image build reads beyond the source changes, so the job stays a
+  # no-op that passes otherwise.
+  docker:
+    name: Docker (${{ matrix.service }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: server
+            dockerfile: apps/server/Dockerfile
+            args: ""
+            inputs: ^apps/server/(Dockerfile|package\.json|start\.sh|litestream\.yml|\.env\.testnet)$
+          - service: web
+            dockerfile: apps/sigle/Dockerfile
+            # Railway passes the name of the environment it deploys to.
+            args: --build-arg RAILWAY_ENVIRONMENT_NAME=testnet
+            inputs: ^(\.gitignore|apps/sigle/(Dockerfile|package\.json|next\.config\.ts|\.env\.development|\.env\.testnet))$
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          # The merge commit of a pull request and its parent on main.
+          fetch-depth: 2
+
+      - name: Find whether the image inputs changed
+        id: changes
+        env:
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+          SHARED_INPUTS: ^(\.dockerignore|\.pnpmfile\.mjs|package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|turbo\.json|packages/sdk/package\.json|\.github/workflows/nodejs\.yml)$
+          INPUTS: ${{ matrix.inputs }}
+        run: |
+          if [ "$EVENT" = "pull_request" ]; then
+            changed=$(git diff --name-only HEAD^1 HEAD)
+          elif git fetch --quiet --depth=1 origin "$BEFORE" 2>/dev/null; then
+            changed=$(git diff --name-only "$BEFORE" HEAD)
+          else
+            # A new branch or an unknown previous commit: build.
+            echo "build=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if echo "$changed" | grep -qE -e "$SHARED_INPUTS" -e "$INPUTS"; then
+            echo "build=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "No image input changed, skipping the build."
+          fi
+
+      - name: Build the image
+        if: ${{ steps.changes.outputs.build == 'true' }}
+        run: docker build --file ${{ matrix.dockerfile }} ${{ matrix.args }} .
