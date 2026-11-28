@@ -55,6 +55,9 @@ cd apps/server && pnpm dev
 
 # Create a Drizzle migration after changing src/db/schema.ts
 cd apps/server && pnpm drizzle-kit generate --name <migration-name>
+
+# Regenerate the SDK's API types after changing an API schema (needs the SDK built)
+cd packages/sdk && pnpm codegen
 ```
 
 ## Vendored Repositories
