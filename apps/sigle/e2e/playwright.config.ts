@@ -1,21 +1,14 @@
 import { defineConfig, devices } from "@playwright/test";
+import { API_PORT, API_URL, APP_PORT, APP_URL, WEB_ENV } from "./env";
 
 const isCi = Boolean(process.env.CI);
-
-// Ports of their own, so the suite runs next to the development servers.
-const APP_PORT = 3100;
-
-const API_PORT = 3101;
-
-const APP_URL = `http://localhost:${APP_PORT}`;
-
-const API_URL = `http://localhost:${API_PORT}`;
 
 /**
  * End-to-end tests of the website against a production build of it and the
  * API of `apps/server/src/test/e2e-server.ts`. Playwright starts both for the
  * run and stops them after it: the API keeps its data in memory, so every run
- * starts from an empty database.
+ * starts from an empty database. The website is built beforehand by the
+ * `build:e2e` turbo task, which `pnpm e2e` at the root runs first.
  */
 export default defineConfig({
   fullyParallel: true,
@@ -52,22 +45,9 @@ export default defineConfig({
     },
     {
       name: "web",
-      // `E2E_SKIP_BUILD=1` serves the build of the previous run.
-      command: `${process.env.E2E_SKIP_BUILD ? "" : "pnpm build && "}pnpm start --port ${APP_PORT}`,
+      command: `pnpm start --port ${APP_PORT}`,
       url: `${APP_URL}/health`,
-      env: {
-        NEXT_PUBLIC_APP_URL: APP_URL,
-        NEXT_PUBLIC_API_URL: API_URL,
-        NEXT_PUBLIC_STACKS_ENV: "testnet",
-        // Server-side reads reach the API on its private domain, as on
-        // Railway, see the e2e server.
-        API_INTERNAL_URL: `http://127.0.0.1:${API_PORT}`,
-        // The API serves the files uploaded to its test storage.
-        CDN_URL: `${API_URL}/e2e/storage`,
-        // No analytics, whatever a local env file sets.
-        NEXT_PUBLIC_POSTHOG_KEY: "",
-      },
-      timeout: 300_000,
+      env: WEB_ENV,
       reuseExistingServer: false,
     },
   ],

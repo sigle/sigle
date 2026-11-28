@@ -50,8 +50,9 @@ cd apps/server && pnpm vp test run src/jobs/publish-draft.test.ts
 ### Server Development
 
 ```bash
-# Start the API server with hot reload, on SQLite (apps/server/.data/sigle.db)
-cd apps/server && pnpm dev
+# Start the API server and the website with hot reload, rebuilding the SDK on
+# change. The server uses SQLite (apps/server/.data/sigle.db)
+pnpm dev
 
 # Create a Drizzle migration after changing src/db/schema.ts
 cd apps/server && pnpm drizzle-kit generate --name <migration-name>

@@ -1,18 +1,22 @@
 name: "Setup the monorepo"
 description: "Restore the turbo cache, install Node.js, pnpm and the dependencies. Runs after actions/checkout."
+inputs:
+  turbo-cache:
+    description: "Name of the turbo cache to restore: `build` (Build and Test) or `e2e` (End-to-end tests)."
+    default: build
 runs:
   using: "composite"
   steps:
-    # Saved by the Build and Test job on pushes to main only: one entry per
-    # main commit keeps the repository under its 10 GB cache quota, and pull
-    # requests restore the latest one from main.
+    # Saved by the job that fills it, on pushes to main only: one entry per
+    # main commit and job keeps the repository under its 10 GB cache quota,
+    # and pull requests restore the latest one from main.
     - name: Restore the turbo cache
       uses: actions/cache/restore@v6
       with:
         path: ${{ github.workspace }}/.turbo
-        key: ${{ runner.os }}-turbo-${{ github.sha }}
+        key: ${{ runner.os }}-turbo-${{ inputs.turbo-cache }}-${{ github.sha }}
         restore-keys: |
-          ${{ runner.os }}-turbo-
+          ${{ runner.os }}-turbo-${{ inputs.turbo-cache }}-
 
     - name: Use Node.js and pnpm
       uses: pnpm/setup@v2

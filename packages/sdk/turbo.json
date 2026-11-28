@@ -1,0 +1,12 @@
+{
+  "$schema": "https://v2-11-2.turborepo.dev/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    // The apps start once `build` wrote dist: the watch build starts after it
+    // and does not clean dist (`--no-clean`), so they never read it half
+    // written.
+    "dev": {
+      "dependsOn": ["^build", "build"]
+    }
+  }
+}
