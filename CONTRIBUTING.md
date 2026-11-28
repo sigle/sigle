@@ -43,19 +43,15 @@ If you are using AI coding agents, sync the reference repositories (such as Effe
 pnpm repos:sync
 ```
 
-To start the API server (http://localhost:3001) in watch mode:
+To start the API server (http://localhost:3001) and the website (http://localhost:3000) in watch mode, from the root directory:
 
 ```sh
-cd apps/server && pnpm dev
+pnpm dev
 ```
 
-It stores its data in the SQLite database `apps/server/.data/sigle.db` and applies the migrations on startup. To start over, stop the server, delete the `apps/server/.data` directory and start the server again.
+It also rebuilds the SDK (`packages/sdk`) on change, so both apps pick up its changes. The API server stores its data in the SQLite database `apps/server/.data/sigle.db` and applies the migrations on startup. To start over, stop the server, delete the `apps/server/.data` directory and start the server again.
 
-To start the website (http://localhost:3000):
-
-```sh
-cd apps/sigle && pnpm dev
-```
+To start one of them only, run `pnpm dev` in `apps/server` or `apps/sigle`. Build the SDK first with `pnpm build --filter=@sigle/sdk`, and again after changing it.
 
 ### Create a database migration
 
@@ -81,12 +77,12 @@ Then run the suite from the root directory:
 pnpm e2e
 ```
 
-It builds the website, then starts it on http://localhost:3100 and the API on http://localhost:3101, so it runs next to the development servers. To run one file, or to reuse the build of the previous run:
+It builds the website with the URLs of the tests (the `build:e2e` task, which turbo caches until the website or the SDK changes), then starts it on http://localhost:3100 and the API on http://localhost:3101, so it runs next to the development servers. To run one file, build it the same way, then run Playwright in `apps/sigle` (arguments to `pnpm e2e` at the root would reach every task, the builds included):
 
 ```sh
 cd apps/sigle
+pnpm turbo build:e2e
 pnpm e2e auth.test.ts
-E2E_SKIP_BUILD=1 pnpm e2e
 ```
 
 A failed test leaves a trace in `apps/sigle/test-results`, open it with `pnpm exec playwright show-trace <trace.zip>`.

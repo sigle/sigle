@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "next build --webpack",
+    "build:e2e": "vpx e2e/build.ts",
     "dev": "next dev",
     "e2e": "playwright test --config e2e/playwright.config.ts",
     "start": "next start",

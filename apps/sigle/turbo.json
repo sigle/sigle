@@ -1,0 +1,22 @@
+{
+  "$schema": "https://v2-11-2.turborepo.dev/schema.json",
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      // Next.js reads the .env files, which git ignores and turbo then leaves
+      // out of the hash: a changed NEXT_PUBLIC_* value must rebuild.
+      "inputs": ["$TURBO_DEFAULT$", ".env*"]
+    },
+    // The website the end-to-end tests run against, with the URLs of
+    // e2e/env.ts. It writes to .next like `build`, so the two never run in the
+    // same turbo run.
+    "build:e2e": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**"]
+    },
+    "e2e": {
+      "dependsOn": ["^build", "build:e2e"]
+    }
+  }
+}
