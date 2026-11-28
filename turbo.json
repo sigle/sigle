@@ -1,7 +1,7 @@
 {
   "$schema": "https://v2-11-2.turborepo.dev/schema.json",
-  // Turbo never shrinks its local cache by default: a week of entries, up to
-  // 2 GB. CI caps it lower with TURBO_CACHE_MAX_SIZE.
+  // Turbo never evicts by default. CI caps the size lower with
+  // TURBO_CACHE_MAX_SIZE.
   "cacheMaxAge": "7d",
   "cacheMaxSize": "2GB",
   "tasks": {

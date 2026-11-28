@@ -7,9 +7,7 @@
       // out of the hash: a changed NEXT_PUBLIC_* value must rebuild.
       "inputs": ["$TURBO_DEFAULT$", ".env*"]
     },
-    // The website the end-to-end tests run against, with the URLs of
-    // e2e/env.ts. It writes to .next like `build`, so the two never run in the
-    // same turbo run.
+    // Writes to .next like `build`, so the two never run in the same turbo run.
     "build:e2e": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
