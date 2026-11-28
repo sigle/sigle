@@ -25,8 +25,8 @@ test.describe("publishing", () => {
 
     await expect(page.getByText(draft.content)).toBeVisible();
 
-    // Written by the wallet of the test, and stored under its Arweave
-    // transaction id, which is the id of the post.
+    // Written by the wallet of the test. The post keeps its draft id, and is
+    // stored under an Arweave transaction of its own.
     const postId = new URL(page.url()).pathname.split("/").at(-1) ?? "";
 
     const author = `${wallet.address.slice(0, 6)}...${wallet.address.slice(-4)}`;
@@ -37,7 +37,9 @@ test.describe("publishing", () => {
 
     await expect(page.getByText("Stored on Arweave")).toBeVisible();
     await page.getByRole("button", { name: "Verify it yourself" }).click();
-    await expect(page.getByTitle(postId)).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: "View on Arweave" }),
+    ).toHaveAttribute("href", /\/[\w-]{43}$/);
 
     // The page is public: a visitor without a session reads the same story.
     await context.clearCookies();

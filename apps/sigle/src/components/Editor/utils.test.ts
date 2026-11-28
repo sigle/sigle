@@ -1,10 +1,10 @@
-import { PostMetadataSchema } from "@sigle/sdk";
+import { hashPostMetadata, PostMetadataSchema } from "@sigle/sdk";
 import { describe, expect, it } from "vite-plus/test";
 import { generateSigleMetadataFromForm } from "./utils";
 
 // SAFETY: only getText is read
 // oxlint-disable-next-line typescript/no-unsafe-type-assertion
-const editor = { getText: () => "word ".repeat(200) } as never;
+const editor = { getText: () => "words".repeat(200) } as never;
 
 const post = {
   type: "draft" as const,
@@ -32,16 +32,18 @@ describe(generateSigleMetadataFromForm, () => {
     expect(result.content.id).toBe("draft-1");
   });
 
-  it("writes the attribute keys the server reads", async () => {
+  it("writes the SEO fields the server reads", async () => {
     const result = await build();
 
-    // These literals are read by the server's jobs/publish-draft.ts and are
-    // part of signed, permanent data.
-    expect(result.content.attributes?.map((a) => a.key)).toStrictEqual([
-      "meta-title",
-      "meta-description",
-      "canonical-uri",
-    ]);
+    expect({
+      metaTitle: result.content.metaTitle,
+      metaDescription: result.content.metaDescription,
+      canonicalUri: result.content.canonicalUri,
+    }).toStrictEqual({
+      metaTitle: "Meta title",
+      metaDescription: "Meta description",
+      canonicalUri: "https://example.com/original",
+    });
   });
 
   it("limits the excerpt to 350 characters", async () => {
@@ -50,25 +52,24 @@ describe(generateSigleMetadataFromForm, () => {
     expect(result.content.excerpt).toHaveLength(350);
   });
 
-  it("is already in the form the server verifies", async () => {
+  it("hashes the same once parsed by the server", async () => {
     const result = await build();
-    const { signature: _, ...unsigned } = result;
 
-    // The server verifies the zod-parsed object, so the bytes the wallet
-    // signs must survive a re-parse unchanged.
+    // The server parses the metadata it receives and checks the signature
+    // over its hash, so a re-parse must not change the signed hash.
     expect(
-      JSON.stringify(
+      hashPostMetadata(
         // oxlint-disable-next-line unicorn/prefer-structured-clone -- tests the JSON round trip
-        PostMetadataSchema.parse(JSON.parse(JSON.stringify(unsigned))),
+        PostMetadataSchema.parse(JSON.parse(JSON.stringify(result))),
       ),
-    ).toBe(JSON.stringify(unsigned));
+    ).toBe(hashPostMetadata(result));
   });
 
-  it("leaves attributes and tags out when empty", async () => {
+  it("leaves the SEO fields and tags out when empty", async () => {
     const result = await build({
-      metaTitle: undefined,
-      metaDescription: undefined,
-      canonicalUri: undefined,
+      metaTitle: "",
+      metaDescription: "",
+      canonicalUri: "",
       tags: [],
     });
 
@@ -76,9 +77,10 @@ describe(generateSigleMetadataFromForm, () => {
     // oxlint-disable-next-line unicorn/prefer-structured-clone -- tests the JSON round trip
     const signedContent = JSON.parse(JSON.stringify(result.content));
 
-    expect(result.content.attributes).toBeUndefined();
-    expect(result.content.tags).toBeUndefined();
-    expect("attributes" in signedContent).toBe(false);
-    expect("tags" in signedContent).toBe(false);
+    expect(
+      ["metaTitle", "metaDescription", "canonicalUri", "tags"].filter(
+        (key) => key in signedContent,
+      ),
+    ).toStrictEqual([]);
   });
 });

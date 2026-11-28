@@ -6,8 +6,8 @@ export { POST_METADATA_LIMITS } from "./limits.js";
 
 export * from "./media.js";
 
-export * from "./metadata-attribute.js";
-
 export * from "./post.js";
+
+export * from "./post-signature.js";
 
 export * from "./verify-metadata-signature.js";

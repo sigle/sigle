@@ -1,6 +1,7 @@
 "use client";
 
 import type { paths } from "@sigle/sdk";
+import { postSignatureMessage } from "@sigle/sdk";
 import { request } from "@stacks/connect";
 import { IconArrowLeft, IconRefresh } from "@tabler/icons-react";
 import { Result } from "better-result";
@@ -19,6 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { env } from "@/env";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { getErrorMessage } from "@/lib/utils";
@@ -212,12 +214,12 @@ export const PublishDialog = ({
         let signature: string;
 
         try {
-          const { signature: _, ...metadataToSign } = metadata;
-          const message = JSON.stringify(metadataToSign);
-
-          const response = await request("stx_signMessage", {
-            message,
-          });
+          // The wallet shows the post id, title and metadata hash instead
+          // of the whole post.
+          const response = await request(
+            "stx_signStructuredMessage",
+            postSignatureMessage(metadata, env.NEXT_PUBLIC_STACKS_ENV),
+          );
 
           signature = response.signature;
         } catch (error) {

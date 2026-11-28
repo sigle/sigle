@@ -21,6 +21,8 @@ export const POST_METADATA_LIMITS = {
   attributes: 20,
   attributeKey: 100,
   attributeValue: 1000,
+  // An Arweave transaction id is 43 characters.
+  previousVersion: 100,
 } as const;
 
 /**

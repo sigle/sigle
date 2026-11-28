@@ -1,5 +1,10 @@
 import { describe, expect, it } from "@effect/vitest";
-import { MetadataAttributeType, PostMetadataSchemaId } from "@sigle/sdk";
+import {
+  canonicalPostMetadataJson,
+  ContentWarning,
+  MediaImageMimeType,
+  PostMetadataSchemaId,
+} from "@sigle/sdk";
 import { eq } from "drizzle-orm";
 import {
   Deferred,
@@ -35,37 +40,25 @@ import { PostHogService } from "@/services/posthog";
 import { createTestDraft, createTestUser } from "@/test/helpers";
 import { TestDatabaseLayer } from "@/test/layer";
 
-const sampleMetadataJson = JSON.stringify({
+const sampleMetadataJson = canonicalPostMetadataJson({
   $schema: PostMetadataSchemaId.LATEST,
-  name: "Post Title",
   content: {
     id: "draft-1",
     title: "Post Title",
     content: "# Hello Sigle",
     excerpt: "Short summary",
+    publishedAt: "2026-11-24T10:00:00.000Z",
     tags: ["web3", "effect"],
-    contentWarning: "SENSITIVE",
+    contentWarning: ContentWarning.SENSITIVE,
     coverImage: {
       url: "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
-      type: "image/png",
+      type: MediaImageMimeType.PNG,
+      width: 1200,
+      height: 630,
     },
-    attributes: [
-      {
-        key: "meta-title",
-        value: "SEO Title",
-        type: MetadataAttributeType.STRING,
-      },
-      {
-        key: "meta-description",
-        value: "SEO Description",
-        type: MetadataAttributeType.STRING,
-      },
-      {
-        key: "canonical-uri",
-        value: "https://sigle.io/p/1",
-        type: MetadataAttributeType.STRING,
-      },
-    ],
+    metaTitle: "SEO Title",
+    metaDescription: "SEO Description",
+    canonicalUri: "https://example.com/original",
   },
   // Jobs carry signed metadata: the publish handler verified the signature.
   signature: "sample-metadata-signature",
@@ -154,7 +147,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           });
 
           expect(published).toStrictEqual({
-            postId: "arweave-tx-001",
+            postId: "draft-1",
             coverImage:
               "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
           });
@@ -169,12 +162,12 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           const [createdPost] = yield* db
             .select()
             .from(post)
-            .where(eq(post.id, "arweave-tx-001"));
+            .where(eq(post.id, "draft-1"));
 
           const [createdPostOts] = yield* db
             .select()
             .from(postOts)
-            .where(eq(postOts.postId, "arweave-tx-001"));
+            .where(eq(postOts.postId, "draft-1"));
 
           const [createdMediaImage] = yield* db
             .select()
@@ -209,7 +202,8 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             mediaStatus: createdMediaImage.status,
             mediaMimeType: createdMediaImage.mimeType,
           }).toStrictEqual({
-            id: "arweave-tx-001",
+            // The post keeps its draft id, its URL across revisions.
+            id: "draft-1",
             draftId: "draft-1",
             arweaveTxId: "arweave-tx-001",
             arweaveBlockHeight: null,
@@ -223,7 +217,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             coverImage:
               "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi",
             tags: ["web3", "effect"],
-            canonicalUri: "https://sigle.io/p/1",
+            canonicalUri: "https://example.com/original",
             contentWarning: "SENSITIVE",
             signature: "sig-001",
             userId: user.id,
@@ -252,7 +246,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
               event: "draft published",
               properties: {
                 draftId: "draft-1",
-                postId: "arweave-tx-001",
+                postId: "draft-1",
                 arweaveId: "arweave-tx-001",
               },
             },
@@ -299,7 +293,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           const [createdPost] = yield* db
             .select()
             .from(post)
-            .where(eq(post.id, "existing-arweave-tx"));
+            .where(eq(post.id, "draft-checkpointed"));
 
           expect(createdPost.draftId).toBe("draft-checkpointed");
           expect(createdPost.arweaveTxId).toBe("existing-arweave-tx");
@@ -493,7 +487,7 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
           const published = yield* processPublishDraftJob(job);
 
           const posts = yield* db
-            .select({ id: post.id })
+            .select({ id: post.id, arweaveTxId: post.arweaveTxId })
             .from(post)
             .where(eq(post.draftId, "draft-retaken"));
 
@@ -502,8 +496,8 @@ describe("publishDraftQueue & processPublishDraftJob", () => {
             posts,
             uploadCalls: calls,
           }).toStrictEqual({
-            published: "retaken-arweave-tx",
-            posts: [{ id: "retaken-arweave-tx" }],
+            published: "draft-retaken",
+            posts: [{ id: "draft-retaken", arweaveTxId: "retaken-arweave-tx" }],
             uploadCalls: 2,
           });
         }).pipe(Effect.provide(layer));

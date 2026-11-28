@@ -1,6 +1,6 @@
 import type { HttpServerRequest } from "effect/http";
 import { createId } from "@paralleldrive/cuid2";
-import { verifyMetadataSignature } from "@sigle/sdk";
+import { canonicalPostMetadataJson, verifyMetadataSignature } from "@sigle/sdk";
 import { and, count, desc, eq, isNull, notInArray, or, sql } from "drizzle-orm";
 import {
   Cause,
@@ -458,6 +458,9 @@ const reportGlobalPublishLimitReached = ({
  */
 const publishLock = Semaphore.makeUnsafe(1);
 
+/** How far `publishedAt` may be from the server time when publishing. */
+const PUBLISHED_AT_MAX_SKEW_MILLIS = 10 * 60 * 1000;
+
 const publishInFlightMessage =
   "This draft is being published to Arweave, it can be published again once that finishes.";
 
@@ -489,8 +492,18 @@ export const publishDraft = (
       });
     }
 
+    // The signed date is shown as the publish date, so it can't be backdated.
+    const publishedAt = new Date(metadata.content.publishedAt).getTime();
+
+    if (Math.abs(publishedAt - Date.now()) > PUBLISHED_AT_MAX_SKEW_MILLIS) {
+      return yield* new BadRequest({
+        message:
+          "Post metadata publishedAt must be the current time, check your device clock",
+      });
+    }
+
     const signatureResult = verifyMetadataSignature(metadata, {
-      network: config.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
+      network: config.STACKS_ENV,
     });
 
     if (signatureResult.isErr()) {
@@ -648,7 +661,9 @@ export const publishDraft = (
           userId: user.id,
           authorAddress: recoveredAddress,
           signature,
-          metadataJson: JSON.stringify(metadata),
+          // Canonical, so anyone can rebuild the uploaded bytes from the
+          // metadata.
+          metadataJson: canonicalPostMetadataJson(metadata),
           generation,
         },
         { id: publishDraftJobId(draftId, generation) },

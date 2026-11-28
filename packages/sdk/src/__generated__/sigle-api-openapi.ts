@@ -498,9 +498,9 @@ export interface components {
     /** @description The signed post metadata to upload to Arweave. */
     PostMetadata: {
       /** @constant */
-      $schema: "https://json-schemas.sigle.io/posts/1.0.0.json";
+      $schema: "https://docs.sigle.io/schemas/posts/1.0.0.json";
       content: {
-        /** @description Random id also used in the url. Have to be unique on sigle. */
+        /** @description The post id, the same for every revision of the post. Sigle uses it in the post URL. */
         id: string;
         /** @description Post title. */
         title: string;
@@ -508,55 +508,13 @@ export interface components {
         content: string;
         /** @description A short plain text summary of the content, shown in post lists. */
         excerpt: string;
-        /** @description List of attributes that can be used to store any additional information that is not supported by the standard. Sigle reads the `meta-title` (up to 100 characters), `meta-description` (up to 250 characters) and `canonical-uri` (an http(s) URL of up to 200 characters) keys, each at most once and as a String attribute. `PostMetadataSchema` in `@sigle/sdk` and the Sigle API check these key rules; this JSON Schema does not. */
-        attributes?: (
-          | {
-              /** @constant */
-              type: "Boolean";
-              /** @description The attribute's unique identifier. */
-              key: string;
-              /**
-               * @description A JS boolean value serialized as string. It's consumer responsibility to parse it.
-               * @enum {string}
-               */
-              value: "true" | "false";
-            }
-          | {
-              /** @constant */
-              type: "Date";
-              /** @description The attribute's unique identifier. */
-              key: string;
-              /**
-               * Format: date-time
-               * @description A valid ISO 8601 date string.  It's consumer responsibility to parse it.
-               */
-              value: string;
-            }
-          | {
-              /** @constant */
-              type: "Number";
-              /** @description The attribute's unique identifier. */
-              key: string;
-              /** @description A valid JS number serialized as string. It's consumer responsibility to parse it. */
-              value: string;
-            }
-          | {
-              /** @constant */
-              type: "String";
-              /** @description The attribute's unique identifier. */
-              key: string;
-              /** @description Any string value. */
-              value: string;
-            }
-          | {
-              /** @constant */
-              type: "JSON";
-              /** @description The attribute's unique identifier. */
-              key: string;
-              /** @description A JSON string. It's consumer responsibility to validate and parse it. */
-              value: string;
-            }
-        )[];
+        /**
+         * Format: date-time
+         * @description When the author published this revision, as an ISO 8601 date.
+         */
+        publishedAt: string;
+        /** @description The Arweave transaction id of the revision this one replaces. */
+        previousVersion?: string;
         /** @description The cover image. */
         coverImage?: {
           /**
@@ -569,16 +527,38 @@ export interface components {
            * @enum {string}
            */
           type: "image/gif" | "image/jpeg" | "image/png" | "image/webp";
+          /** @description The width of the image in pixels. */
+          width: number;
+          /** @description The height of the image in pixels. */
+          height: number;
           /** @description The alt tag of the image for accessibility. */
           alt?: string;
         };
         /** @description An arbitrary list of tags. */
         tags?: string[];
+        /** @description The language of the content, as a BCP 47 tag such as `en`. */
+        language?: string;
+        /** @description The title for search engines and link previews, the title when omitted. */
+        metaTitle?: string;
+        /** @description The description for search engines and link previews, the excerpt when omitted. */
+        metaDescription?: string;
+        /**
+         * Format: uri
+         * @description The http(s) URL of the original version of the post when it was first published elsewhere.
+         */
+        canonicalUri?: string;
         /**
          * @description Specify a content warning.
          * @enum {string}
          */
         contentWarning?: "NSFW" | "SENSITIVE" | "SPOILER";
+        /** @description Additional information that is not part of the standard. */
+        attributes?: {
+          /** @description The attribute's unique identifier. */
+          key: string;
+          /** @description The attribute's value. */
+          value: string;
+        }[];
       };
       /** @description A cryptographic signature of the `content` data. */
       signature: string;

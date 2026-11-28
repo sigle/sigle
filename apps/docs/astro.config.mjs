@@ -50,7 +50,8 @@ export default defineConfig({
         { slug: "links" },
       ],
     }),
-    sitemap(),
+    // The JSON Schemas aren't pages.
+    sitemap({ filter: (page) => !page.includes("/schemas/") }),
   ],
   vite: {
     build: {

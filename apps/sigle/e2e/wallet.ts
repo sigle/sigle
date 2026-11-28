@@ -1,10 +1,12 @@
 import type { BrowserContext } from "@playwright/test";
 import { hashMessage } from "@stacks/encryption";
 import {
+  Cl,
   compressPublicKey,
   getAddressFromPrivateKey,
   privateKeyToPublic,
   signMessageHashRsv,
+  signStructuredData,
 } from "@stacks/transactions";
 import { createHash } from "node:crypto";
 
@@ -44,6 +46,22 @@ export const signMessage = (wallet: TestWallet, message: string): string =>
     privateKey: wallet.privateKey,
   });
 
+/**
+ * Signs SIP-018 structured data the way a Stacks wallet answers
+ * `stx_signStructuredMessage`. Stacks Connect sends the message and domain as
+ * serialized Clarity values in hex.
+ */
+export const signStructuredMessage = (
+  wallet: TestWallet,
+  message: string,
+  domain: string,
+): string =>
+  signStructuredData({
+    message: Cl.deserialize(message),
+    domain: Cl.deserialize(domain),
+    privateKey: wallet.privateKey,
+  });
+
 interface WalletAccount {
   readonly address: string;
   readonly name: string;
@@ -52,6 +70,7 @@ interface WalletAccount {
 
 interface WalletRequestParams {
   readonly message?: string;
+  readonly domain?: string;
 }
 
 type WalletResult =
@@ -79,6 +98,10 @@ declare global {
       ) => Promise<WalletResponse>;
     };
     sigleE2ESignMessage?: (message: string) => Promise<string>;
+    sigleE2ESignStructuredMessage?: (
+      message: string,
+      domain: string,
+    ) => Promise<string>;
     wbip_providers?: Array<{ id: string; name: string; icon: string }>;
   }
 }
@@ -124,6 +147,25 @@ const registerWalletProvider = (account: WalletAccount) => {
         };
       }
 
+      if (
+        method === "stx_signStructuredMessage" &&
+        params?.message !== undefined &&
+        params.domain !== undefined &&
+        window.sigleE2ESignStructuredMessage
+      ) {
+        return {
+          id: crypto.randomUUID(),
+          jsonrpc: "2.0",
+          result: {
+            signature: await window.sigleE2ESignStructuredMessage(
+              params.message,
+              params.domain,
+            ),
+            publicKey: account.publicKey,
+          },
+        };
+      }
+
       throw new Error(`The e2e wallet does not support ${method}`);
     },
   };
@@ -148,6 +190,12 @@ export const installWallet = async (
 ): Promise<void> => {
   await context.exposeFunction("sigleE2ESignMessage", (message: string) =>
     signMessage(wallet, message),
+  );
+
+  await context.exposeFunction(
+    "sigleE2ESignStructuredMessage",
+    (message: string, domain: string) =>
+      signStructuredMessage(wallet, message, domain),
   );
 
   await context.addInitScript(registerWalletProvider, {

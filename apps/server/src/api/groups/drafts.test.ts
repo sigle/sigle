@@ -1,9 +1,5 @@
 import { describe, expect, it } from "@effect/vitest";
-import {
-  MediaImageMimeType,
-  MetadataAttributeType,
-  PostMetadataSchemaId,
-} from "@sigle/sdk";
+import { MediaImageMimeType, PostMetadataSchemaId } from "@sigle/sdk";
 import { eq } from "drizzle-orm";
 import {
   Deferred,
@@ -996,12 +992,26 @@ describe("drafts", () => {
             duplicateSigRes,
           );
 
+        // 6. Signed publish date an hour ago -> 400 Bad Request, the date
+        // shown on the post can't be backdated.
+        yield* TestClock.adjust("1 minute");
+
+        const backdatedRes = yield* publishDraftRequest(client, "draft-val", {
+          metadata: createSignedTestPostMetadata({
+            draftId: "draft-val",
+            privateKey: ownerWallet.privateKey,
+            publishedAt: new Date(Date.now() - 60 * 60 * 1000),
+          }),
+        });
+
         expect({
-          status: duplicateSigRes.status,
-          message: duplicateSigBody.message,
+          duplicateStatus: duplicateSigRes.status,
+          duplicateMessage: duplicateSigBody.message,
+          backdatedStatus: backdatedRes.status,
         }).toStrictEqual({
-          status: 409,
-          message: "Metadata signature has already been published",
+          duplicateStatus: 409,
+          duplicateMessage: "Metadata signature has already been published",
+          backdatedStatus: 400,
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
   );
@@ -1024,34 +1034,20 @@ describe("drafts", () => {
         const invalidCases = [
           { options: { title: "a".repeat(301) }, field: "content.title" },
           {
-            options: {
-              attributes: [
-                {
-                  type: MetadataAttributeType.STRING,
-                  key: "canonical-uri",
-                  value: "ftp://example.com/post",
-                },
-              ],
-            },
-            field: "content.attributes[0].value",
+            options: { canonicalUri: "ftp://example.com/post" },
+            field: "content.canonicalUri",
           },
           {
-            options: {
-              attributes: [
-                {
-                  type: MetadataAttributeType.STRING,
-                  key: "meta-title",
-                  value: "a".repeat(101),
-                },
-              ],
-            },
-            field: "content.attributes[0].value",
+            options: { metaTitle: "a".repeat(101) },
+            field: "content.metaTitle",
           },
           {
             options: {
               coverImage: {
                 url: "data:image/png;base64,AAAA",
                 type: MediaImageMimeType.PNG,
+                width: 1200,
+                height: 630,
               },
             },
             field: "content.coverImage.url",
@@ -1078,19 +1074,12 @@ describe("drafts", () => {
         // The four rejected publishes used the per-minute publish limit.
         yield* TestClock.adjust("1 minute");
 
-        // Signed in schema key order, metadata within the limits is accepted.
+        // Metadata within the limits is accepted.
         const validRes = yield* publishDraftRequest(client, "draft-limits", {
           metadata: createSignedTestPostMetadata({
             draftId: "draft-limits",
             privateKey: ownerWallet.privateKey,
-            // Attribute keys in schema order too: type, key, value.
-            attributes: [
-              {
-                type: MetadataAttributeType.STRING,
-                key: "canonical-uri",
-                value: "https://example.com/post",
-              },
-            ],
+            canonicalUri: "https://example.com/post",
           }),
         });
 
@@ -1099,7 +1088,7 @@ describe("drafts", () => {
   );
 
   it.effect(
-    "POST /api/drafts/:draftId/publish verifies the signature over the schema-ordered metadata",
+    "POST /api/drafts/:draftId/publish rejects metadata signed as a plain message",
     () =>
       Effect.gen(function* () {
         const { client, userId } = yield* createAuthenticatedClient();
@@ -1111,17 +1100,18 @@ describe("drafts", () => {
         });
         yield* createTestDraft({ id: "draft-order", userId });
 
-        // Clients must sign the metadata as `createPostMetadata` returns it
-        // (keys in schema order): the server verifies the zod-parsed object,
-        // not the raw bytes. This test pins that contract, and changing it
-        // changes what every client has to sign.
+        // Clients must sign the SIP-018 structured data of
+        // `postSignatureMessage`: a `stx_signMessage` signature of the
+        // metadata JSON recovers another address. This test pins that
+        // contract, and changing it changes what every client has to sign.
         const metadataWithoutSignature = {
           $schema: PostMetadataSchemaId.LATEST,
           content: {
-            title: "Published Title",
             id: "draft-order",
+            title: "Published Title",
             content: "Hello **Arweave** world!",
             excerpt: "Hello Arweave world!",
+            publishedAt: new Date().toISOString(),
             tags: ["web3"],
           },
         };
@@ -1203,7 +1193,7 @@ describe("drafts", () => {
 
         // Publishing schedules OpenTimestamps stamping and upgrading.
         const postOtsRow = yield* waitForPostOtsStatus(
-          ARWEAVE_TEST_UPLOAD_ID,
+          "draft-pub-1",
           "UPGRADED",
         );
 
@@ -1229,18 +1219,19 @@ describe("drafts", () => {
             draftId: "draft-pub-1",
             status: "pending",
           },
+          // The post keeps its draft id.
           currentStatus: {
             status: "COMPLETED",
-            postId: ARWEAVE_TEST_UPLOAD_ID,
+            postId: "draft-pub-1",
             arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
           },
           completedJson: {
             status: "completed",
-            postId: ARWEAVE_TEST_UPLOAD_ID,
+            postId: "draft-pub-1",
             arweaveTxId: ARWEAVE_TEST_UPLOAD_ID,
           },
           deletedDraft: undefined,
-          createdPostId: ARWEAVE_TEST_UPLOAD_ID,
+          createdPostId: "draft-pub-1",
           createdPostArweaveId: ARWEAVE_TEST_UPLOAD_ID,
           otsStatus: "UPGRADED",
           otsTxId: "arweave-test-upload-id",
@@ -1251,7 +1242,7 @@ describe("drafts", () => {
           event: "draft published",
           properties: {
             draftId: "draft-pub-1",
-            postId: ARWEAVE_TEST_UPLOAD_ID,
+            postId: "draft-pub-1",
             arweaveId: ARWEAVE_TEST_UPLOAD_ID,
           },
         });
@@ -1339,7 +1330,7 @@ describe("drafts", () => {
 
           expect(finalStatus).toStrictEqual({
             status: "COMPLETED",
-            postId: "recovered-arweave-tx",
+            postId: "draft-flaky",
             arweaveTxId: "recovered-arweave-tx",
           });
         }).pipe(Effect.provide(layer));
@@ -1607,7 +1598,7 @@ describe("drafts", () => {
         }).toStrictEqual({
           status: "COMPLETED",
           remainingDrafts: [],
-          posts: [{ id: ARWEAVE_TEST_UPLOAD_ID }],
+          posts: [{ id: "draft-settling" }],
         });
       }).pipe(Effect.provide(makeTestServerLayer())),
   );

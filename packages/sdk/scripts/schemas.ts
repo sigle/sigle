@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { join } from "node:path";
 import * as z from "zod";
-import { PostMetadataSchema } from "../src/index.js";
+import { PostMetadataSchema, SchemasRoot } from "../src/index.js";
 
 const outputDir = "jsonschemas";
 
@@ -14,9 +14,15 @@ const schemas = new Map<string, z.ZodSchema<unknown>>([
 for (const [path, Schema] of schemas) {
   const outputFile = join(outputDir, path);
 
-  const jsonSchema = z.toJSONSchema(Schema, {
+  const { $schema, ...jsonSchema } = z.toJSONSchema(Schema, {
     target: "draft-2020-12",
   });
 
-  fs.writeFileSync(outputFile, JSON.stringify(jsonSchema, null, 2), "utf8");
+  // The docs site serves the schemas from `SchemasRoot`, see
+  // `apps/docs/src/pages/schemas/[...path].ts`.
+  fs.writeFileSync(
+    outputFile,
+    `${JSON.stringify({ $schema, $id: `${SchemasRoot}/${path}`, ...jsonSchema }, null, 2)}\n`,
+    "utf8",
+  );
 }

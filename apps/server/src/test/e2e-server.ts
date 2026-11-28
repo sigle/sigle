@@ -46,8 +46,8 @@ const E2E_PRIVATE_DOMAIN = "127.0.0.1";
 const ARWEAVE_GATEWAY_URL = "https://turbo-gateway.com";
 
 /**
- * A post's id is its Arweave transaction id, so each upload needs its own,
- * shaped like a real one: 32 random bytes in base64url.
+ * Arweave transaction ids are unique across posts, so each upload needs its
+ * own, shaped like a real one: 32 random bytes in base64url.
  */
 const uploadWithUniqueId = Effect.sync((): ArweaveUploadResult => {
   const id = randomBytes(32).toString("base64url");

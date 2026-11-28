@@ -163,6 +163,10 @@ export const processPublishDraftJob = (
     }
 
     const fields = postFieldsFromMetadata(postData);
+    // The post keeps the id of its draft, which the publish handler checked is
+    // the `content.id` of its metadata, so its URL doesn't change when a new
+    // revision is published.
+    const postId = job.draftId;
 
     // Step 2: Atomically delete the draft and insert the published post.
     const finalized = yield* db
@@ -178,7 +182,7 @@ export const processPublishDraftJob = (
           }
 
           yield* tx.insert(post).values({
-            id: arweaveTxId,
+            id: postId,
             draftId: job.draftId,
             version: fields.version,
             arweaveTxId,
@@ -200,7 +204,7 @@ export const processPublishDraftJob = (
           // anchors, so the hash is captured in the same transaction as the
           // post itself.
           yield* tx.insert(postOts).values({
-            postId: arweaveTxId,
+            postId,
             status: "PENDING",
             contentHash: sha256Hex(Buffer.from(job.metadataJson)),
           });
@@ -232,12 +236,12 @@ export const processPublishDraftJob = (
       event: "draft published",
       properties: {
         draftId: job.draftId,
-        postId: arweaveTxId,
+        postId,
         arweaveId: arweaveTxId,
       },
     });
 
-    return { coverImage: fields.coverImage, postId: arweaveTxId };
+    return { coverImage: fields.coverImage, postId };
   });
 
 export const markDraftPublishFailed = (

@@ -9,9 +9,46 @@ description: Install and use the @sigle/sdk to create and verify post metadata.
 npm install @sigle/sdk
 ```
 
+## Post metadata
+
+Every published post is stored on Arweave as a JSON file with the post and its author's signature. Its format is described by a JSON Schema, which the `$schema` field links to:
+
+- [`https://docs.sigle.io/schemas/posts/1.0.0.json`](/schemas/posts/1.0.0.json)
+
+A published schema version never changes. A change to the format gets a new version.
+
+```json
+{
+  "$schema": "https://docs.sigle.io/schemas/posts/1.0.0.json",
+  "content": {
+    "id": "a1b2c3",
+    "title": "Notes on Digital Permanence",
+    "content": "Markdown content…",
+    "excerpt": "A short plain text summary…",
+    "publishedAt": "2026-11-24T10:00:00.000Z",
+    "tags": ["arweave"]
+  },
+  "signature": "…"
+}
+```
+
+- `content.id` is the post id, the same for every revision of the post. Sigle uses it in the post URL.
+- `content.previousVersion` is the Arweave transaction id of the revision a new revision replaces.
+
+The file is stored as canonical JSON ([RFC 8785](https://www.rfc-editor.org/rfc/rfc8785)): object keys sorted, no whitespace.
+
+## Signature
+
+The author signs the post with their Stacks wallet as [SIP-018](https://github.com/stacksgov/sips/blob/main/sips/sip-018/sip-018-signed-structured-data.md) structured data:
+
+- **Domain:** `{ name: "Sigle", version: "1.0.0", chain-id }`, with the chain id of the Stacks network.
+- **Message:** `{ action: "publish-post", id, title, metadata-hash }`, where `metadata-hash` is the SHA-256 of the canonical JSON of `$schema` and `content`, without the signature.
+
+`postSignatureMessage(metadata, network)` returns this domain and message, and `hashPostMetadata(metadata)` returns the metadata hash.
+
 ## Verify metadata signature
 
-To verify the cryptographic signature of post metadata, use the `verifyMetadataSignature` function. It returns a typed `Result` from `better-result` containing the recovered Stacks address, public key, and signature on success, or an `InvalidSignatureError` on failure.
+To verify the signature of post metadata, use the `verifyMetadataSignature` function. It returns a typed `Result` from `better-result` containing the recovered Stacks address, public key, and signature on success, or an `InvalidSignatureError` on failure.
 
 > **Important**: `verifyMetadataSignature` verifies that the metadata was signed and recovers the signer's Stacks address. You must always check that `recoveredAddress` matches the expected author's address to ensure the post was signed by the intended author.
 
@@ -19,7 +56,8 @@ To verify the cryptographic signature of post metadata, use the `verifyMetadataS
 import { verifyMetadataSignature } from "@sigle/sdk";
 
 const result = verifyMetadataSignature(postMetadata, {
-  // Optional: defaults to "mainnet". Can also be "testnet", "devnet", or "mocknet".
+  // Optional: defaults to "mainnet". The signature is only valid on the
+  // network it was made for.
   network: "mainnet",
 });
 
