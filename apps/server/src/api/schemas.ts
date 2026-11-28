@@ -11,6 +11,19 @@ export const NonNegativeInt = Schema.Int.check(
 );
 
 /**
+ * URI string annotated with OpenAPI `format: "uri"`.
+ */
+export const Uri = Schema.String.annotate({ format: "uri" });
+
+const ErrorMessage = Schema.String.annotate({
+  description: "Human-readable explanation of the error.",
+});
+
+const RetryAfterMillis = NonNegativeInt.annotate({
+  description: "Milliseconds to wait before retrying the request.",
+});
+
+/**
  * Shared HTTP API error schemas.
  *
  * Every error carries a human readable `message` and is annotated with the HTTP
@@ -27,10 +40,13 @@ export class BadRequest extends Schema.Error<
   { readonly brand: unique symbol }
 >("sigle/api/BadRequest")(
   Schema.Struct({
-    message: Schema.String,
-  }).annotate({ identifier: "BadRequestError" }),
+    message: ErrorMessage,
+  }).annotate({
+    identifier: "BadRequestError",
+    description: "Invalid request parameters, headers, or payload.",
+  }),
   {
-    description: "Bad Request",
+    description: "Invalid request parameters, headers, or payload.",
     httpApiStatus: 400,
   },
 ) {
@@ -42,10 +58,13 @@ export class Unauthorized extends Schema.Error<
   { readonly brand: unique symbol }
 >("sigle/api/Unauthorized")(
   Schema.Struct({
-    message: Schema.String,
-  }).annotate({ identifier: "UnauthorizedError" }),
+    message: ErrorMessage,
+  }).annotate({
+    identifier: "UnauthorizedError",
+    description: "Authentication is required or the session is invalid.",
+  }),
   {
-    description: "Unauthorized",
+    description: "Authentication is required or the session is invalid.",
     httpApiStatus: 401,
   },
 ) {
@@ -57,10 +76,13 @@ export class Forbidden extends Schema.Error<
   { readonly brand: unique symbol }
 >("sigle/api/Forbidden")(
   Schema.Struct({
-    message: Schema.String,
-  }).annotate({ identifier: "ForbiddenError" }),
+    message: ErrorMessage,
+  }).annotate({
+    identifier: "ForbiddenError",
+    description: "Access denied or plan quota exceeded.",
+  }),
   {
-    description: "Forbidden",
+    description: "Access denied or plan quota exceeded.",
     httpApiStatus: 403,
   },
 ) {
@@ -72,10 +94,13 @@ export class NotFound extends Schema.Error<
   { readonly brand: unique symbol }
 >("sigle/api/NotFound")(
   Schema.Struct({
-    message: Schema.String,
-  }).annotate({ identifier: "NotFoundError" }),
+    message: ErrorMessage,
+  }).annotate({
+    identifier: "NotFoundError",
+    description: "The requested resource does not exist or is not accessible.",
+  }),
   {
-    description: "Not Found",
+    description: "The requested resource does not exist or is not accessible.",
     httpApiStatus: 404,
   },
 ) {
@@ -87,10 +112,15 @@ export class Conflict extends Schema.Error<
   { readonly brand: unique symbol }
 >("sigle/api/Conflict")(
   Schema.Struct({
-    message: Schema.String,
-  }).annotate({ identifier: "ConflictError" }),
+    message: ErrorMessage,
+  }).annotate({
+    identifier: "ConflictError",
+    description:
+      "The request conflicts with the current state of the resource.",
+  }),
   {
-    description: "Conflict",
+    description:
+      "The request conflicts with the current state of the resource.",
     httpApiStatus: 409,
   },
 ) {
@@ -102,10 +132,15 @@ export class UnsupportedMediaType extends Schema.Error<
   { readonly brand: unique symbol }
 >("sigle/api/UnsupportedMediaType")(
   Schema.Struct({
-    message: Schema.String,
-  }).annotate({ identifier: "UnsupportedMediaTypeError" }),
+    message: ErrorMessage,
+  }).annotate({
+    identifier: "UnsupportedMediaTypeError",
+    description:
+      "The Content-Type or detected file format is not a supported image type.",
+  }),
   {
-    description: "Unsupported Media Type",
+    description:
+      "The Content-Type or detected file format is not a supported image type.",
     httpApiStatus: 415,
   },
 ) {
@@ -117,10 +152,15 @@ export class PayloadTooLarge extends Schema.Error<
   { readonly brand: unique symbol }
 >("sigle/api/PayloadTooLarge")(
   Schema.Struct({
-    message: Schema.String,
-  }).annotate({ identifier: "PayloadTooLargeError" }),
+    message: ErrorMessage,
+  }).annotate({
+    identifier: "PayloadTooLargeError",
+    description:
+      "The request body or image dimensions exceed the maximum allowed size.",
+  }),
   {
-    description: "Payload Too Large",
+    description:
+      "The request body or image dimensions exceed the maximum allowed size.",
     httpApiStatus: 413,
   },
 ) {
@@ -146,11 +186,13 @@ export const isUrlWithProtocol = (
  * handlers don't set it, and it is listed for the OpenAPI document.
  */
 export const PublicCacheHeaders = {
-  "cache-control": Schema.String,
+  "cache-control": Schema.String.annotate({
+    description: "HTTP cache directive for public read responses.",
+  }),
   etag: Schema.optionalKey(
     Schema.String.annotate({
       description:
-        "Hash of the body, send it back in `If-None-Match` to get a 304 while the resource is unchanged.",
+        "Entity tag for the response. Send in `If-None-Match` to receive `304 Not Modified` while unchanged.",
     }),
   ),
 };
@@ -160,11 +202,14 @@ export class TooManyRequests extends Schema.Error<
   { readonly brand: unique symbol }
 >("sigle/api/TooManyRequests")(
   Schema.Struct({
-    message: Schema.String,
-    retryAfterMillis: NonNegativeInt,
-  }).annotate({ identifier: "TooManyRequestsError" }),
+    message: ErrorMessage,
+    retryAfterMillis: RetryAfterMillis,
+  }).annotate({
+    identifier: "TooManyRequestsError",
+    description: "Rate limit exceeded.",
+  }),
   {
-    description: "Too Many Requests",
+    description: "Rate limit exceeded.",
     httpApiStatus: 429,
   },
 ) {
@@ -176,10 +221,13 @@ export class InternalServerError extends Schema.Error<
   { readonly brand: unique symbol }
 >("sigle/api/InternalServerError")(
   Schema.Struct({
-    message: Schema.String,
-  }).annotate({ identifier: "InternalServerError" }),
+    message: ErrorMessage,
+  }).annotate({
+    identifier: "InternalServerError",
+    description: "An unexpected server error occurred.",
+  }),
   {
-    description: "Internal Server Error",
+    description: "An unexpected server error occurred.",
     httpApiStatus: 500,
   },
 ) {}
@@ -193,11 +241,16 @@ export class ServiceUnavailable extends Schema.Error<
   { readonly brand: unique symbol }
 >("sigle/api/ServiceUnavailable")(
   Schema.Struct({
-    message: Schema.String,
-    retryAfterMillis: NonNegativeInt,
-  }).annotate({ identifier: "ServiceUnavailableError" }),
+    message: ErrorMessage,
+    retryAfterMillis: RetryAfterMillis,
+  }).annotate({
+    identifier: "ServiceUnavailableError",
+    description:
+      "The service is temporarily unavailable. Retry after the indicated delay.",
+  }),
   {
-    description: "Service Unavailable",
+    description:
+      "The service is temporarily unavailable. Retry after the indicated delay.",
     httpApiStatus: 503,
   },
 ) {}
@@ -214,24 +267,38 @@ export const DateTime = Schema.DateTimeUtcFromString.pipe(
  * lowercase on the wire and decodes to the uppercase database value, which is
  * also the `contentWarning` of the signed post metadata.
  */
-export const ContentWarning = Schema.Literals([
-  "nsfw",
-  "sensitive",
-  "spoiler",
-]).transform(contentWarnings);
+export const ContentWarning = Schema.Literals(["nsfw", "sensitive", "spoiler"])
+  .transform(contentWarnings)
+  .pipe(
+    Schema.annotateEncoded({
+      description: "Optional content warning label applied to a draft or post.",
+    }),
+  );
 
 /**
  * Response of the draft and profile image uploads.
  */
 export const UploadedImageResponse = Schema.Struct({
-  url: Schema.String,
-  // Size of the stored, optimized image.
-  sizeBytes: NonNegativeInt,
-  width: NonNegativeInt,
-  height: NonNegativeInt,
-  // Base64 ThumbHash placeholder for the optimized image.
-  thumbhash: Schema.String,
-}).annotate({ identifier: "UploadedImageResponse" });
+  url: Uri.annotate({
+    description: "Public URL of the uploaded image.",
+  }),
+  sizeBytes: NonNegativeInt.annotate({
+    description: "Size of the stored image, in bytes.",
+  }),
+  width: NonNegativeInt.annotate({
+    description: "Width of the stored image, in pixels.",
+  }),
+  height: NonNegativeInt.annotate({
+    description: "Height of the stored image, in pixels.",
+  }),
+  thumbhash: Schema.String.annotate({
+    description:
+      "Base64-encoded ThumbHash placeholder for progressive loading.",
+  }),
+}).annotate({
+  identifier: "UploadedImageResponse",
+  description: "Metadata of an uploaded image.",
+});
 
 /**
  * `limit` and `offset` query fields shared by the paginated list endpoints.
@@ -274,7 +341,7 @@ export const documentPaginationQuery =
         if (parameter.name === "limit") {
           return {
             ...parameter,
-            description: "Number of results to return.",
+            description: `Maximum number of items to return (1–${options.maxLimit}, default ${options.defaultLimit}).`,
             schema: {
               type: "integer",
               minimum: 1,
@@ -287,7 +354,7 @@ export const documentPaginationQuery =
         if (parameter.name === "offset") {
           return {
             ...parameter,
-            description: "Number of results to skip.",
+            description: "Number of items to skip from the start of the list.",
             schema: { type: "integer", minimum: 0, default: 0 },
           };
         }
@@ -302,7 +369,8 @@ export const documentPaginationQuery =
  * `uploadImageFromRequest`), so the binary request body is documented manually
  * in the OpenAPI specification.
  */
-export const imageRequestBody = {
+export const imageRequestBody = (description: string) => ({
+  description,
   required: true,
   content: Object.fromEntries(
     allowedImageFormats.map((contentType) => [
@@ -310,21 +378,7 @@ export const imageRequestBody = {
       { schema: { type: "string", format: "binary" } },
     ]),
   ),
-};
-
-/**
- * Description of each path and query parameter, by name. Parameters with the
- * same name mean the same thing on every endpoint.
- */
-const parameterDescriptions: ReadonlyMap<string, string> = new Map([
-  ["address", "Stacks address of the user."],
-  ["author", "Only list the posts of this Stacks address."],
-  ["draftId", "ID of the draft."],
-  ["postId", "ID of the post, its Arweave transaction ID."],
-  ["kind", "Which profile image to replace."],
-  ["queueName", "Name of the job queue."],
-  ["jobId", "ID of the failed job."],
-]);
+});
 
 const operationMethods: ReadonlyArray<OpenApi.OpenAPISpecMethodName> = [
   "get",
@@ -334,21 +388,83 @@ const operationMethods: ReadonlyArray<OpenApi.OpenAPISpecMethodName> = [
   "patch",
 ];
 
+const COMPONENT_SCHEMA_PREFIX = "#/components/schemas/";
+
+const isSchemaWithDescription = (
+  value: unknown,
+): value is { description?: string } =>
+  typeof value === "object" &&
+  value !== null &&
+  "description" in value &&
+  typeof value.description === "string";
+
+const isSchemaWithRef = (value: unknown): value is { readonly $ref: string } =>
+  typeof value === "object" &&
+  value !== null &&
+  "$ref" in value &&
+  typeof value.$ref === "string";
+
+const promoteDescription = (
+  target: OpenApi.OpenAPISpecParameter | OpenApi.OpenAPISpecHeader,
+  componentSchemas: OpenApi.OpenAPIComponents["schemas"],
+): void => {
+  if (target.description !== undefined) {
+    return;
+  }
+
+  if (isSchemaWithDescription(target.schema)) {
+    target.description = target.schema.description;
+    delete target.schema.description;
+    return;
+  }
+
+  if (
+    isSchemaWithRef(target.schema) &&
+    target.schema.$ref.startsWith(COMPONENT_SCHEMA_PREFIX)
+  ) {
+    const refTarget =
+      componentSchemas[
+        target.schema.$ref.slice(COMPONENT_SCHEMA_PREFIX.length)
+      ];
+
+    if (isSchemaWithDescription(refTarget)) {
+      target.description = refTarget.description;
+    }
+  }
+};
+
 /**
- * API `OpenApi.Transform` adding the descriptions of
- * {@link parameterDescriptions} to the parameters that have none.
+ * API `OpenApi.Transform` that promotes `schema.description` to `description`
+ * on parameters and response headers. Effect emits schema annotations inside
+ * `parameter.schema` / `header.schema`, whereas OpenAPI UIs such as Scalar
+ * display descriptions from the parameter and header objects directly. For
+ * `$ref` parameter schemas (such as named enum parameters), it copies the
+ * referenced component schema's description.
  */
-export const documentParameters: Parameters<typeof OpenApi.Transform.of>[0] = (
-  spec,
-) => {
+export const promoteSchemaDescriptions: Parameters<
+  typeof OpenApi.Transform.of
+>[0] = (spec) => {
   // SAFETY: an API `OpenApi.Transform` is applied to the whole document.
   // oxlint-disable-next-line typescript/no-unsafe-type-assertion
   const document = spec as OpenApi.OpenAPISpec;
+  const componentSchemas = document.components.schemas;
 
   for (const pathItem of Object.values(document.paths)) {
     for (const method of operationMethods) {
-      for (const parameter of pathItem[method]?.parameters ?? []) {
-        parameter.description ??= parameterDescriptions.get(parameter.name);
+      const operation = pathItem[method];
+
+      if (operation === undefined) {
+        continue;
+      }
+
+      for (const parameter of operation.parameters) {
+        promoteDescription(parameter, componentSchemas);
+      }
+
+      for (const response of Object.values(operation.responses)) {
+        for (const header of Object.values(response.headers ?? {})) {
+          promoteDescription(header, componentSchemas);
+        }
       }
     }
   }
@@ -379,10 +495,77 @@ export const omitBadRequestWithoutInputs: Parameters<
         operation.parameters.length === 0 &&
         operation.requestBody === undefined
       ) {
-        delete operation.responses["400"];
+        delete operation.responses[400];
       }
     }
   }
 
   return document;
 };
+
+/**
+ * Endpoint `OpenApi.Transform` removing the inherited `400` response on routes
+ * whose only input is an unconstrained string path parameter and whose handler
+ * never returns `BadRequest`.
+ */
+export const omitBadRequest: Parameters<typeof OpenApi.Transform.of>[0] = (
+  spec,
+) => {
+  // SAFETY: an endpoint `OpenApi.Transform` is applied to the operation
+  // object generated for that endpoint.
+  // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+  const operation = spec as OpenApi.OpenAPISpecOperation;
+  delete operation.responses[400];
+  return operation;
+};
+
+/**
+ * Endpoint `OpenApi.Transform` setting an action-specific description on a
+ * response status without altering the shared component schema.
+ */
+export const describeResponse =
+  (
+    status: number,
+    description: string,
+  ): Parameters<typeof OpenApi.Transform.of>[0] =>
+  (spec) => {
+    // SAFETY: an endpoint `OpenApi.Transform` is applied to the operation
+    // object generated for that endpoint.
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+    const operation = spec as OpenApi.OpenAPISpecOperation;
+    const response = operation.responses[status];
+
+    if (response === undefined) {
+      return operation;
+    }
+
+    return {
+      ...operation,
+      responses: {
+        ...operation.responses,
+        [status]: { ...response, description },
+      },
+    };
+  };
+
+/**
+ * API `OpenApi.Transform` adding OpenAPI `info.contact` metadata.
+ */
+export const withApiContact =
+  (contact: {
+    readonly name: string;
+    readonly url: string;
+  }): Parameters<typeof OpenApi.Transform.of>[0] =>
+  (spec) => {
+    // SAFETY: an API `OpenApi.Transform` is applied to the whole document.
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+    const document = spec as OpenApi.OpenAPISpec;
+
+    return {
+      ...document,
+      info: {
+        ...document.info,
+        contact,
+      },
+    };
+  };

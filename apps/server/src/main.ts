@@ -93,14 +93,27 @@ export const CorsLayer = Layer.unwrap(
 const ServedApiLayer = Layer.unwrap(
   Effect.map(AppConfig, (config) => {
     const api = SigleApi.annotate(OpenApi.Servers, [
-      { url: config.API_URL, description: config.STACKS_ENV },
+      {
+        url: config.API_URL,
+        description:
+          config.STACKS_ENV === "mainnet" ? "Stacks mainnet" : "Stacks testnet",
+      },
     ]);
 
     return Layer.mergeAll(
       HttpApiBuilder.layer(api, { openapiPath: "/_openapi.json" }),
       // The page loads Scalar from jsDelivr, pinned to the version that
       // Effect inlines, instead of inlining its 5 MB bundle in every response.
-      HttpApiScalar.layerCdn(api, { path: "/_scalar", version: "1.81.0" }),
+      HttpApiScalar.layerCdn(api, {
+        path: "/_scalar",
+        version: "1.81.0",
+        scalar: {
+          favicon: new URL("/favicon.ico", config.APP_URL).toString(),
+          defaultOpenAllTags: true,
+          authentication: { preferredSecurityScheme: "sessionCookie" },
+          agent: { disabled: true },
+        },
+      }),
     );
   }),
 );

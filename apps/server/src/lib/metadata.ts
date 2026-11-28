@@ -13,7 +13,7 @@ export const PostMetadata = fromZod(
   PostMetadataSchema.required({ signature: true }),
   {
     identifier: "PostMetadata",
-    description: "The signed post metadata to upload to Arweave.",
+    description: "Wallet-signed post metadata uploaded to Arweave.",
   },
 );
 

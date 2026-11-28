@@ -18,7 +18,8 @@ export enum ContentWarning {
 }
 
 export const ContentWarningSchema = z.enum(ContentWarning).meta({
-  description: "Specify a content warning.",
+  description:
+    "Optional content warning label (uppercase in signed metadata: `NSFW`, `SENSITIVE`, or `SPOILER`).",
 });
 
 /**
@@ -126,35 +127,39 @@ export interface PostMetadataDetails {
   contentWarning?: ContentWarning;
 }
 
-export const PostMetadataDetailsSchema = z.object({
-  id: z.string().min(1).meta({
-    description: "Random id also used in the url. Have to be unique on sigle.",
-  }),
-  title: z.string().min(1).max(POST_METADATA_LIMITS.title).meta({
-    description: "Post title.",
-  }),
-  content: z.string().min(1).max(POST_METADATA_LIMITS.content).meta({
-    description: "Markdown content.",
-  }),
-  excerpt: z.string().max(POST_METADATA_LIMITS.excerpt).meta({
-    description:
-      "A short plain text summary of the content, shown in post lists.",
-  }),
-  attributes: PostAttributesSchema.optional().meta({
-    description: `List of attributes that can be used to store any additional information that is not supported by the standard. Sigle reads the \`${PostAttributeKey.META_TITLE}\` (up to ${POST_METADATA_LIMITS.metaTitle} characters), \`${PostAttributeKey.META_DESCRIPTION}\` (up to ${POST_METADATA_LIMITS.metaDescription} characters) and \`${PostAttributeKey.CANONICAL_URI}\` (an http(s) URL of up to ${POST_METADATA_LIMITS.canonicalUri} characters) keys, each at most once and as a String attribute. \`PostMetadataSchema\` in \`@sigle/sdk\` and the Sigle API check these key rules; this JSON Schema does not.`,
-  }),
-  coverImage: MediaImageMetadataSchema.optional().meta({
-    description: "The cover image.",
-  }),
-  tags: TagSchema.array()
-    .min(1)
-    .max(POST_METADATA_LIMITS.tags)
-    .optional()
-    .meta({
-      description: "An arbitrary list of tags.",
+export const PostMetadataDetailsSchema = z
+  .object({
+    id: z.string().min(1).meta({
+      description:
+        "Unique identifier of the post (matches the draft ID when publishing via the API).",
     }),
-  contentWarning: ContentWarningSchema.optional(),
-});
+    title: z.string().min(1).max(POST_METADATA_LIMITS.title).meta({
+      description: "Post title.",
+    }),
+    content: z.string().min(1).max(POST_METADATA_LIMITS.content).meta({
+      description: "Markdown body of the post.",
+    }),
+    excerpt: z.string().max(POST_METADATA_LIMITS.excerpt).meta({
+      description: "Short plain-text summary shown in post lists.",
+    }),
+    attributes: PostAttributesSchema.optional().meta({
+      description: `Optional key-value metadata attributes. Recognized \`String\` attribute keys: \`${PostAttributeKey.META_TITLE}\` (up to ${POST_METADATA_LIMITS.metaTitle} characters), \`${PostAttributeKey.META_DESCRIPTION}\` (up to ${POST_METADATA_LIMITS.metaDescription} characters), and \`${PostAttributeKey.CANONICAL_URI}\` (HTTP(S) URL up to ${POST_METADATA_LIMITS.canonicalUri} characters), each at most once.`,
+    }),
+    coverImage: MediaImageMetadataSchema.optional().meta({
+      description: "Cover image metadata.",
+    }),
+    tags: TagSchema.array()
+      .min(1)
+      .max(POST_METADATA_LIMITS.tags)
+      .optional()
+      .meta({
+        description: "List of topic tags.",
+      }),
+    contentWarning: ContentWarningSchema.optional(),
+  })
+  .meta({
+    description: "Post content and metadata signed by the author.",
+  });
 
 export type PostMetadata = {
   /**
@@ -174,7 +179,9 @@ export type PostMetadata = {
 };
 
 export const PostMetadataSchema = z.object({
-  $schema: z.literal(PostMetadataSchemaId.LATEST),
+  $schema: z.literal(PostMetadataSchemaId.LATEST).meta({
+    description: "JSON Schema URI identifying this post metadata version.",
+  }),
   content: PostMetadataDetailsSchema,
   signature: SignatureSchema.optional(),
 });

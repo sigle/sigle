@@ -39,8 +39,25 @@ const OpenApiOperation = Schema.Struct({
 
 const OpenApiResponse = Schema.Struct({
   openapi: Schema.String,
-  info: Schema.Struct({ title: Schema.String, version: Schema.String }),
-  servers: Schema.Array(Schema.Struct({ url: Schema.String })),
+  info: Schema.Struct({
+    title: Schema.String,
+    summary: Schema.String,
+    version: Schema.String,
+    contact: Schema.Struct({
+      name: Schema.String,
+      url: Schema.String,
+    }),
+    license: Schema.Struct({
+      name: Schema.String,
+      url: Schema.String,
+    }),
+  }),
+  servers: Schema.Array(
+    Schema.Struct({
+      url: Schema.String,
+      description: Schema.optionalKey(Schema.String),
+    }),
+  ),
   tags: Schema.Array(
     Schema.Struct({
       name: Schema.String,
@@ -81,11 +98,20 @@ const OpenApiSecurityDocument = Schema.Struct({
 });
 
 const OpenApiOperationsDocument = Schema.Struct({
+  components: Schema.Struct({
+    schemas: Schema.Record(
+      Schema.String,
+      Schema.Struct({
+        description: Schema.optionalKey(Schema.String),
+      }),
+    ),
+  }),
   paths: Schema.Record(
     Schema.String,
     Schema.Record(
       Schema.String,
       Schema.Struct({
+        operationId: Schema.optionalKey(Schema.String),
         summary: Schema.optionalKey(Schema.String),
         description: Schema.optionalKey(Schema.String),
         parameters: Schema.Array(
@@ -94,7 +120,20 @@ const OpenApiOperationsDocument = Schema.Struct({
             description: Schema.optionalKey(Schema.String),
           }),
         ),
-        responses: Schema.Record(Schema.String, Schema.Unknown),
+        responses: Schema.Record(
+          Schema.String,
+          Schema.Struct({
+            description: Schema.String,
+            headers: Schema.optionalKey(
+              Schema.Record(
+                Schema.String,
+                Schema.Struct({
+                  description: Schema.optionalKey(Schema.String),
+                }),
+              ),
+            ),
+          }),
+        ),
       }),
     ),
   ),
@@ -223,13 +262,20 @@ describe("http server", () => {
         status: response.status,
         openapi: body.openapi.startsWith("3."),
         info: body.info,
-        servers: body.servers.map((server) => server.url),
+        servers: body.servers,
+        tagNames: body.tags.map((tag) => tag.name),
         undescribedTags: body.tags
           .filter((tag) => tag.description === undefined)
           .map((tag) => tag.name),
         paths: Object.keys(body.paths),
         health: Object.keys(body.paths["/health"].get?.responses ?? {}).sort(),
         me: Object.keys(body.paths["/api/me"].get?.responses ?? {}).sort(),
+        getPost: Object.keys(
+          body.paths["/api/posts/{postId}"].get?.responses ?? {},
+        ).sort(),
+        getUser: Object.keys(
+          body.paths["/api/users/{address}"].get?.responses ?? {},
+        ).sort(),
         uploadImage: Object.keys(profileImagePath?.put?.responses ?? {}),
         requestBody: Object.keys(
           profileImagePath?.put?.requestBody?.content ?? {},
@@ -239,8 +285,24 @@ describe("http server", () => {
       }).toStrictEqual({
         status: 200,
         openapi: true,
-        info: { title: "Sigle API", version: packageJson.version },
-        servers: ["https://api.sigle.test"],
+        info: {
+          title: "Sigle API",
+          summary:
+            "Decentralized blogging API for Sigle on Stacks and Arweave.",
+          version: packageJson.version,
+          contact: {
+            name: "Sigle",
+            url: "https://www.sigle.io",
+          },
+          license: {
+            name: "MIT",
+            url: "https://github.com/sigle/sigle/blob/main/LICENSE",
+          },
+        },
+        servers: [
+          { url: "https://api.sigle.test", description: "Stacks testnet" },
+        ],
+        tagNames: ["Posts", "Users", "Account", "Profile", "Drafts", "Health"],
         undescribedTags: [],
         paths: expect.arrayContaining([
           "/health",
@@ -252,11 +314,13 @@ describe("http server", () => {
           "/api/me/profile/images/{kind}",
           "/api/drafts/{draftId}/images",
         ]),
-        // Endpoints without inputs cannot fail schema validation, so they
-        // document no 400 response.
-        // Not rate limited either.
+        // Endpoints without inputs or with only an unconstrained string path
+        // param cannot fail schema validation, so they document no 400 response.
+        // Health is not rate limited either.
         health: ["200"],
         me: ["200", "401", "429", "500"],
+        getPost: ["200", "404", "429", "500"],
+        getUser: ["200", "400", "404", "429", "500"],
         uploadImage: expect.arrayContaining([
           "200",
           "400",
@@ -272,18 +336,18 @@ describe("http server", () => {
         ]),
         createDraft: expect.objectContaining({
           properties: expect.objectContaining({
-            coverImage: {
+            coverImage: expect.objectContaining({
               anyOf: [
                 { type: "string", format: "uri", maxLength: 2048 },
                 { type: "null" },
               ],
-            },
-            canonicalUri: {
+            }),
+            canonicalUri: expect.objectContaining({
               anyOf: [
                 { type: "string", format: "uri", maxLength: 200 },
                 { type: "null" },
               ],
-            },
+            }),
           }),
         }),
         // The signed post metadata schema is generated from the `@sigle/sdk`
@@ -327,7 +391,14 @@ describe("http server", () => {
         internalNames: [],
         errorSchema: {
           type: "object",
-          properties: { message: { type: "string" } },
+          description:
+            "The requested resource does not exist or is not accessible.",
+          properties: {
+            message: {
+              type: "string",
+              description: "Human-readable explanation of the error.",
+            },
+          },
           required: ["message"],
           additionalProperties: false,
         },
@@ -370,10 +441,31 @@ describe("http server", () => {
             .filter((parameter) => parameter.description === undefined)
             .map((parameter) => `${name} ${parameter.name}`),
         ),
+        undescribedHeaders: operations.flatMap(({ name, operation }) =>
+          Object.entries(operation.responses).flatMap(([status, resp]) =>
+            Object.entries(resp.headers ?? {})
+              .filter(([, header]) => header.description === undefined)
+              .map(([headerName]) => `${name} ${status} ${headerName}`),
+          ),
+        ),
+        placeholderResponses: operations.flatMap(({ name, operation }) =>
+          Object.entries(operation.responses)
+            .filter(([, resp]) => resp.description === "<No Content>")
+            .map(([status]) => `${name} ${status}`),
+        ),
+        undescribedSchemas: Object.entries(doc.components.schemas)
+          .filter(([, schema]) => schema.description === undefined)
+          .map(([schemaName]) => schemaName),
+        duplicateSchemas: Object.keys(doc.components.schemas).filter(
+          (schemaName) => /_\d+$/.test(schemaName),
+        ),
         // `Schema.Int` alone documents `minimum: -(2^53 - 1)`.
         negativeIntegers: json.includes("-9007199254740991"),
         // The rate limit middleware adds them, the endpoint no longer lists
         // them itself.
+        meOperationId: doc.paths["/api/me"]?.get?.operationId,
+        createDraft201:
+          doc.paths["/api/drafts"]?.post?.responses["201"]?.description,
         draftImageResponses: Object.keys(
           doc.paths["/api/drafts/{draftId}/images"]?.post?.responses ?? {},
         ),
@@ -381,7 +473,13 @@ describe("http server", () => {
         adminPaths: [],
         undocumented: [],
         undescribedParameters: [],
+        undescribedHeaders: [],
+        placeholderResponses: [],
+        undescribedSchemas: [],
+        duplicateSchemas: [],
         negativeIntegers: false,
+        meOperationId: "account.get",
+        createDraft201: "Draft created.",
         draftImageResponses: expect.arrayContaining(["429", "500"]),
       });
     }).pipe(Effect.provide(serverLayer())),

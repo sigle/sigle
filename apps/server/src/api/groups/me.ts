@@ -12,6 +12,7 @@ import {
 } from "@/api/middleware/rate-limit";
 import {
   DateTime,
+  describeResponse,
   documentPaginationQuery,
   NonNegativeInt,
   NotFound,
@@ -19,101 +20,164 @@ import {
 } from "@/api/schemas";
 
 export const DailyLimit = Schema.Struct({
-  // Actions allowed per rolling 24 hours.
-  limit: NonNegativeInt,
-  // Actions counted in the last 24 hours.
-  used: NonNegativeInt,
-  // When the oldest counted action stops counting, null when none.
-  resetsAt: Schema.NullOr(DateTime),
-}).annotate({ identifier: "DailyLimit" });
+  limit: NonNegativeInt.annotate({
+    description: "Maximum actions allowed per rolling 24-hour window.",
+  }),
+  used: NonNegativeInt.annotate({
+    description: "Actions consumed in the last 24 hours.",
+  }),
+  resetsAt: Schema.NullOr(DateTime).pipe(
+    Schema.annotateEncoded({
+      description:
+        "ISO 8601 timestamp when the oldest counted action ages out of the 24-hour window, or `null` when `used` is `0`.",
+    }),
+  ),
+}).annotate({
+  identifier: "DailyLimit",
+  description: "Usage snapshot for a rolling 24-hour quota.",
+});
 
 export const UserLimitsResponse = Schema.Struct({
-  // Posts published, and publishes in flight.
   publish: DailyLimit,
-  // Largest post the user can publish, in UTF-8 bytes of the signed metadata
-  // JSON.
-  publishMaxBytes: NonNegativeInt,
-}).annotate({ identifier: "UserLimitsResponse" });
+  publishMaxBytes: NonNegativeInt.annotate({
+    description:
+      "Maximum signed post metadata size the user can publish, in UTF-8 bytes.",
+  }),
+}).annotate({
+  identifier: "UserLimitsResponse",
+  description: "Current plan quotas and usage for the authenticated user.",
+});
 
-const UserPlan = Schema.Literals(["free", "pro"]);
+const UserPlan = Schema.Literals(["free", "pro"]).annotate({
+  description: "Subscription tier of the user (`free` or `pro`).",
+});
 
 export const CurrentUserResponse = Schema.Struct({
-  id: Schema.String,
-  // Primary Stacks address of the user, used to read their public profile and
-  // posts.
-  address: Schema.String,
+  id: Schema.String.annotate({
+    description: "Unique account ID of the authenticated user.",
+  }),
+  address: Schema.String.annotate({
+    description: "Primary Stacks address of the authenticated user.",
+  }),
   plan: UserPlan,
-}).annotate({ identifier: "CurrentUserResponse" });
+}).annotate({
+  identifier: "CurrentUserResponse",
+  description: "Account identity and plan of the authenticated user.",
+});
 
 export const UserPlanResponse = Schema.Struct({
   plan: UserPlan,
-}).annotate({ identifier: "UserPlanResponse" });
+}).annotate({
+  identifier: "UserPlanResponse",
+  description: "Updated plan tier of the authenticated user.",
+});
 
 export const MyPostListItem = Schema.Struct({
   ...PostListItem.fields,
-  // When the user hid the post from Sigle, null while it is shown.
-  hiddenAt: Schema.NullOr(DateTime),
-}).annotate({ identifier: "MyPostListItem" });
+  hiddenAt: Schema.NullOr(DateTime).pipe(
+    Schema.annotateEncoded({
+      description:
+        "ISO 8601 timestamp when the post was hidden from Sigle, or `null` while publicly visible.",
+    }),
+  ),
+}).annotate({
+  identifier: "MyPostListItem",
+  description:
+    "Summary of one of the authenticated user's published posts, including visibility status.",
+});
 
 export const MyPostListResponse = Schema.Struct({
-  results: Schema.Array(MyPostListItem),
-  limit: NonNegativeInt,
-  offset: NonNegativeInt,
-  total: NonNegativeInt,
-}).annotate({ identifier: "MyPostListResponse" });
+  results: Schema.Array(MyPostListItem).annotate({
+    description: "Published posts for the requested page, newest first.",
+  }),
+  limit: NonNegativeInt.annotate({
+    description: "Maximum number of posts requested per page.",
+  }),
+  offset: NonNegativeInt.annotate({
+    description: "Number of posts skipped from the start of the list.",
+  }),
+  total: NonNegativeInt.annotate({
+    description: "Total number of posts published by the authenticated user.",
+  }),
+}).annotate({
+  identifier: "MyPostListResponse",
+  description: "Paginated list of the authenticated user's published posts.",
+});
 
 export const MyPostListQuery = Schema.Struct({
   ...paginationQueryFields(POST_LIST_MAX_LIMIT),
 }).annotate({ identifier: "MyPostListQuery" });
 
 export const PostVisibilityPayload = Schema.Struct({
-  hidden: Schema.Boolean,
-}).annotate({ identifier: "PostVisibilityPayload" });
+  hidden: Schema.Boolean.annotate({
+    description:
+      "Set to `true` to hide the post on Sigle, or `false` to make it publicly visible again.",
+  }),
+}).annotate({
+  identifier: "PostVisibilityPayload",
+  description: "Desired visibility state for a published post.",
+});
 
 export const PostVisibilityResponse = Schema.Struct({
-  id: Schema.String,
-  hiddenAt: Schema.NullOr(DateTime),
-}).annotate({ identifier: "PostVisibilityResponse" });
+  id: Schema.String.annotate({
+    description: "ID of the updated post.",
+  }),
+  hiddenAt: Schema.NullOr(DateTime).pipe(
+    Schema.annotateEncoded({
+      description:
+        "ISO 8601 timestamp when the post was hidden, or `null` when publicly visible.",
+    }),
+  ),
+}).annotate({
+  identifier: "PostVisibilityResponse",
+  description: "Updated visibility state of a published post.",
+});
 
 export const MeGroup = HttpApiGroup.make("me")
+  .annotate(OpenApi.Title, "Account")
   .annotate(
     OpenApi.Description,
-    "The signed-in user, with their plan, limits, and published posts.",
+    "Manage the authenticated user's account, plan, publish quotas, and published post visibility.",
   )
   .add(
     HttpApiEndpoint.get("get", "/", {
       success: CurrentUserResponse,
     })
-      .annotate(OpenApi.Summary, "Get the signed-in user")
+      .annotate(OpenApi.Identifier, "account.get")
+      .annotate(OpenApi.Summary, "Get current user")
       .annotate(
         OpenApi.Description,
-        "Return the signed-in user's id, primary Stacks address, and plan. Returns a 401 without a session.",
+        "Returns the authenticated user's account ID, primary Stacks address, and current plan.",
       ),
     HttpApiEndpoint.get("limits", "/limits", {
       success: UserLimitsResponse,
     })
-      .annotate(OpenApi.Summary, "Get the signed-in user's limits")
+      .annotate(OpenApi.Identifier, "account.limits")
+      .annotate(OpenApi.Summary, "Get account limits")
       .annotate(
         OpenApi.Description,
-        "Return the limits of the signed-in user's plan and how much of them is used, such as the posts they can still publish in the last 24 hours and the largest post they can publish. Returns a 401 without a session.",
+        "Returns the authenticated user's current plan quotas and publish usage.",
       ),
     HttpApiEndpoint.post("refreshPlan", "/plan/refresh", {
       success: UserPlanResponse,
     })
-      .annotate(OpenApi.Summary, "Refresh the signed-in user's plan")
+      .annotate(OpenApi.Identifier, "account.refreshPlan")
+      .annotate(OpenApi.Summary, "Refresh plan")
       .annotate(
         OpenApi.Description,
-        "Activate Pro: check whether one of the signed-in user's wallets holds an Explorer Guild NFT, store the resulting plan, and return it. This is the only way to get Pro; Pro users are re-checked twice a day. Returns a 500 when the Stacks API cannot be reached, which keeps the stored plan, and a 401 without a session.",
+        "Checks Explorer Guild NFT ownership for the authenticated user, updates their plan (`free` or `pro`), and returns the result.",
       )
+      .annotate(OpenApi.Transform, describeResponse(200, "Plan refreshed."))
       .annotate(RateLimitPolicy, "planRefresh"),
     HttpApiEndpoint.get("listPosts", "/posts", {
       query: MyPostListQuery,
       success: MyPostListResponse,
     })
-      .annotate(OpenApi.Summary, "List the signed-in user's posts")
+      .annotate(OpenApi.Identifier, "account.listPosts")
+      .annotate(OpenApi.Summary, "List my posts")
       .annotate(
         OpenApi.Description,
-        "List the posts the signed-in user published, newest first, including the ones they hid. Returns a 401 without a session.",
+        "Returns a paginated list of posts published by the authenticated user, newest first, including hidden posts.",
       )
       .annotate(
         OpenApi.Transform,
@@ -124,16 +188,23 @@ export const MeGroup = HttpApiGroup.make("me")
       ),
     HttpApiEndpoint.put("updatePostVisibility", "/posts/:postId/visibility", {
       params: {
-        postId: Schema.String,
+        postId: Schema.String.annotate({
+          description: "Post ID (its Arweave transaction ID).",
+        }),
       },
       payload: PostVisibilityPayload,
       success: PostVisibilityResponse,
       error: NotFound,
     })
-      .annotate(OpenApi.Summary, "Hide or show a post")
+      .annotate(OpenApi.Identifier, "account.updatePostVisibility")
+      .annotate(OpenApi.Summary, "Set post visibility")
       .annotate(
         OpenApi.Description,
-        "Hide a post of the signed-in user from Sigle, or show it again. A hidden post is left out of the post list, its profile and RSS feed, and its page returns a 404, but it stays on Arweave. Returns a 404 for a post of another user, and a 401 without a session.",
+        "Hides one of the authenticated user's published posts from Sigle or restores it. Hidden posts are omitted from public post lists, profiles, RSS feeds, and `GET /api/posts/{postId}`, while remaining on Arweave. Returns `404` if the post does not exist or belongs to another user.",
+      )
+      .annotate(
+        OpenApi.Transform,
+        describeResponse(200, "Post visibility updated."),
       ),
   )
   .prefix("/api/me")
