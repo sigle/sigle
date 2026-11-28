@@ -51,7 +51,9 @@ import {
 import {
   findPlanPublishUsage,
   findUserPublishUsage,
+  formatPublishSize,
   PUBLISH_LIMITS,
+  PUBLISH_MAX_BYTES,
 } from "@/services/plan";
 import { PostHogService } from "@/services/posthog";
 
@@ -489,6 +491,22 @@ export const publishDraft = (
       });
     }
 
+    // The exact bytes the publish job uploads to Arweave.
+    const metadataJson = JSON.stringify(metadata);
+    const metadataBytes = Buffer.byteLength(metadataJson);
+    const maxBytes = PUBLISH_MAX_BYTES[user.plan];
+
+    if (metadataBytes > maxBytes) {
+      const overLimit = `This post is ${formatPublishSize(metadataBytes)}, over the ${formatPublishSize(maxBytes)} limit of the ${user.plan === "free" ? "Free" : "Pro"} plan.`;
+
+      return yield* new Forbidden({
+        message:
+          user.plan === "free"
+            ? `${overLimit} Shorten it, or upgrade to Pro to publish posts up to ${formatPublishSize(PUBLISH_MAX_BYTES.pro)}.`
+            : `${overLimit} Shorten it to publish it.`,
+      });
+    }
+
     const signatureResult = verifyMetadataSignature(metadata, {
       network: config.STACKS_ENV === "mainnet" ? "mainnet" : "testnet",
     });
@@ -648,7 +666,7 @@ export const publishDraft = (
           userId: user.id,
           authorAddress: recoveredAddress,
           signature,
-          metadataJson: JSON.stringify(metadata),
+          metadataJson,
           generation,
         },
         { id: publishDraftJobId(draftId, generation) },

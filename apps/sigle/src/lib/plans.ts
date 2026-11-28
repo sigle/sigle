@@ -8,6 +8,30 @@ export const PUBLISH_LIMITS = {
   pro: 20,
 };
 
+const KIB = 1024;
+
+const MIB = 1024 * KIB;
+
+/**
+ * Largest post a user can publish on each plan, in UTF-8 bytes of the signed
+ * metadata JSON. The server enforces `PUBLISH_MAX_BYTES` in
+ * `apps/server/src/services/plan.ts`, keep both in sync.
+ */
+export const PUBLISH_MAX_BYTES = {
+  free: 256 * KIB,
+  pro: 1 * MIB,
+};
+
+/**
+ * A size in bytes as KiB, or MiB from 1 MiB, rounded up so a size over a
+ * limit never reads as the limit: "256 KiB", "1.1 MiB". The server words its
+ * size errors the same way.
+ */
+export const formatPublishSize = (bytes: number): string =>
+  bytes >= MIB
+    ? `${Math.ceil((bytes / MIB) * 10) / 10} MiB`
+    : `${Math.ceil(bytes / KIB)} KiB`;
+
 export interface PlanFeature {
   label: string;
   /** Shown after the label in a monospace font, such as a URL. */

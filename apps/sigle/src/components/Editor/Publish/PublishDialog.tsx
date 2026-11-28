@@ -19,6 +19,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { formatPublishSize, PUBLISH_MAX_BYTES } from "@/lib/plans";
 import { Routes } from "@/lib/routes";
 import { sigleApiClient } from "@/lib/sigle";
 import { getErrorMessage } from "@/lib/utils";
@@ -57,6 +58,10 @@ export const PublishDialog = ({
     "post",
     "/api/drafts/{draftId}/publish",
   );
+
+  // Shared with `PublishReview`, which fetches them when the dialog opens.
+  const { data: limits } = sigleApiClient.useQuery("get", "/api/me/limits", {});
+  const { data: me } = sigleApiClient.useQuery("get", "/api/me", {});
 
   const { steps, start, completeStep, setStepLoading, setStepError, reset } =
     useMultiStep({
@@ -203,6 +208,33 @@ export const PublishDialog = ({
           });
 
           setStepError("preparing", errorMessage);
+
+          return;
+        }
+
+        // The server refuses a post over the size limit of the plan, checked
+        // here so the wallet doesn't sign a publish that would be refused. The
+        // size is the one of the JSON the server uploads, with an RSV
+        // signature of 130 hex characters.
+        const size = new TextEncoder().encode(
+          JSON.stringify({ ...metadata, signature: "0".repeat(130) }),
+        ).length;
+
+        if (limits !== undefined && size > limits.publishMaxBytes) {
+          posthog.capture("post_publish_size_limit_error", {
+            postId,
+            size,
+            limit: limits.publishMaxBytes,
+          });
+
+          setStepError(
+            "preparing",
+            `This post is ${formatPublishSize(size)}, over the ${formatPublishSize(limits.publishMaxBytes)} limit of your plan. ${
+              me?.plan === "free"
+                ? `Shorten it, or upgrade to Pro to publish posts up to ${formatPublishSize(PUBLISH_MAX_BYTES.pro)}.`
+                : "Shorten it to publish it."
+            }`,
+          );
 
           return;
         }

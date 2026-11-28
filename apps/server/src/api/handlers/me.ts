@@ -12,6 +12,7 @@ import {
   findUserPublishUsage,
   PlanService,
   PUBLISH_LIMITS,
+  PUBLISH_MAX_BYTES,
 } from "@/services/plan";
 import { PostHogService } from "@/services/posthog";
 
@@ -44,6 +45,7 @@ export const getLimits = Effect.gen(function* () {
 
   return {
     publish: toDailyLimit(PUBLISH_LIMITS[user.plan], publish),
+    publishMaxBytes: PUBLISH_MAX_BYTES[user.plan],
   };
 });
 

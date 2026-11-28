@@ -1,3 +1,4 @@
+import { PostMetadataSchemaId } from "@sigle/sdk";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Result } from "better-result";
@@ -12,13 +13,16 @@ import {
 import { useMultiStepToastStore } from "@/components/Shared/MultiStepToast";
 import { EditorFormProvider } from "../EditorFormProvider";
 import { useEditorStore } from "../store";
+import { generateSigleMetadataFromForm } from "../utils";
 import { PublishDialog } from "./PublishDialog";
 import { waitForPublishCompletion } from "./wait-for-publish-completion";
 
-const { mutateAsync, push, request } = vi.hoisted(() => ({
+const { mutateAsync, push, request, queryData } = vi.hoisted(() => ({
   mutateAsync: vi.fn(),
   push: vi.fn(),
   request: vi.fn(),
+  // Data of the `useQuery` calls by path, none loaded by default.
+  queryData: new Map<string, unknown>(),
 }));
 
 vi.mock(import("./PublishReview"), () => ({
@@ -51,6 +55,9 @@ vi.mock(import("@/lib/sigle"), async (importOriginal) => {
     sigleApiClient: {
       ...actual.sigleApiClient,
       useMutation: vi.fn().mockReturnValue({ mutateAsync }),
+      useQuery: vi.fn().mockImplementation((_method: string, path: string) => ({
+        data: queryData.get(path),
+      })),
     },
   };
 });
@@ -108,6 +115,7 @@ describe("PublishDialog", () => {
     waitForCompletion.mockReset();
     useEditorStore.getState().reset();
     useMultiStepToastStore.getState().reset();
+    queryData.clear();
   });
 
   it("Retry after an accepted publish follows it without signing again", async () => {
@@ -258,6 +266,37 @@ describe("PublishDialog", () => {
     await waitFor(() => {
       expect(push).toHaveBeenCalledWith(expect.stringContaining("/p/tx3"));
     }, NAVIGATION_TIMEOUT);
+    expect(request).not.toHaveBeenCalled();
+    expect(mutateAsync).not.toHaveBeenCalled();
+  });
+
+  it("stops before the signature when the post is over the plan's size limit", async () => {
+    const user = userEvent.setup();
+    // About 2.7 KB with the signature, over a 2 KiB limit.
+    vi.mocked(generateSigleMetadataFromForm).mockResolvedValueOnce({
+      $schema: PostMetadataSchemaId.LATEST,
+      content: {
+        id: "d1",
+        title: "A story title",
+        content: "a".repeat(2500),
+        excerpt: "",
+      },
+    });
+    queryData.set("/api/me/limits", {
+      publish: { limit: 3, used: 0, resetsAt: null },
+      publishMaxBytes: 2048,
+    });
+    queryData.set("/api/me", { id: "u1", address: "SP1", plan: "free" });
+
+    renderDialog();
+
+    await user.click(screen.getByRole("button", { name: "Publish now" }));
+
+    expect(
+      await screen.findByText(
+        "This post is 3 KiB, over the 2 KiB limit of your plan. Shorten it, or upgrade to Pro to publish posts up to 1 MiB.",
+      ),
+    ).toBeInTheDocument();
     expect(request).not.toHaveBeenCalled();
     expect(mutateAsync).not.toHaveBeenCalled();
   });

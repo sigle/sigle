@@ -31,7 +31,11 @@ import {
 } from "@/api/schemas";
 import { DRAFT_IMAGE_MAX_MIB } from "@/lib/draft-images";
 import { PostMetadata } from "@/lib/metadata";
-import { PUBLISH_LIMITS } from "@/services/plan";
+import {
+  formatPublishSize,
+  PUBLISH_LIMITS,
+  PUBLISH_MAX_BYTES,
+} from "@/services/plan";
 
 export const DRAFT_LIST_DEFAULT_LIMIT = 20;
 
@@ -311,14 +315,15 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
         // The publish status to poll.
         { location: Schema.String },
       ),
-      // The 429 is also returned once the daily publish limit of the user or
-      // the global one of their plan is reached.
-      error: [BadRequest, NotFound, Conflict, TooManyRequests],
+      // The 403 is returned for metadata over the size limit of the user's
+      // plan. The 429 is also returned once the daily publish limit of the
+      // user or the global one of their plan is reached.
+      error: [BadRequest, Forbidden, NotFound, Conflict, TooManyRequests],
     })
       .annotate(OpenApi.Summary, "Publish a draft")
       .annotate(
         OpenApi.Description,
-        `Validate signed post metadata and enqueue an asynchronous publish job. Returns a 409 while the draft is being published to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, ${PUBLISH_LIMITS.free} posts on Free and ${PUBLISH_LIMITS.pro} on Pro, counting the publishes in flight. Also returns a 429 once all users of the plan together reached its global daily limit.`,
+        `Validate signed post metadata and enqueue an asynchronous publish job. Returns a 403 when the metadata JSON is larger than the plan allows, ${formatPublishSize(PUBLISH_MAX_BYTES.free)} on Free and ${formatPublishSize(PUBLISH_MAX_BYTES.pro)} on Pro. Returns a 409 while the draft is being published to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, ${PUBLISH_LIMITS.free} posts on Free and ${PUBLISH_LIMITS.pro} on Pro, counting the publishes in flight. Also returns a 429 once all users of the plan together reached its global daily limit.`,
       )
       .annotate(RateLimitPolicy, "draftPublish"),
     HttpApiEndpoint.get("getPublishStatus", "/:draftId/publish", {

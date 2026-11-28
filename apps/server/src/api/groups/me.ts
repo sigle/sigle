@@ -30,6 +30,9 @@ export const DailyLimit = Schema.Struct({
 export const UserLimitsResponse = Schema.Struct({
   // Posts published, and publishes in flight.
   publish: DailyLimit,
+  // Largest post the user can publish, in UTF-8 bytes of the signed metadata
+  // JSON.
+  publishMaxBytes: NonNegativeInt,
 }).annotate({ identifier: "UserLimitsResponse" });
 
 const UserPlan = Schema.Literals(["free", "pro"]);
@@ -92,7 +95,7 @@ export const MeGroup = HttpApiGroup.make("me")
       .annotate(OpenApi.Summary, "Get the signed-in user's limits")
       .annotate(
         OpenApi.Description,
-        "Return the limits of the signed-in user's plan and how much of them is used, such as the posts they can still publish in the last 24 hours. Returns a 401 without a session.",
+        "Return the limits of the signed-in user's plan and how much of them is used, such as the posts they can still publish in the last 24 hours and the largest post they can publish. Returns a 401 without a session.",
       ),
     HttpApiEndpoint.post("refreshPlan", "/plan/refresh", {
       success: UserPlanResponse,
