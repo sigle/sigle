@@ -14,7 +14,7 @@
   "scripts": {
     "build": "vp pack",
     "codegen": "spec=\"$(mktemp -d)/openapi.json\" && pnpm --silent --filter @sigle/server openapi > \"$spec\" && openapi-typescript \"$spec\" --output ./src/__generated__/sigle-api-openapi.ts && vp fmt ./src/__generated__",
-    "dev": "vp pack --watch",
+    "dev": "vp pack --watch --no-clean",
     "test": "vp test"
   },
   "dependencies": {
