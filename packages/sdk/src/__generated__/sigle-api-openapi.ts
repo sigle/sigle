@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-  "/health": {
+  "/api/posts": {
     parameters: {
       query?: never;
       header?: never;
@@ -12,10 +12,50 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Check the API health
-     * @description Return `{ success: true }` while the API is up. Used by uptime monitoring.
+     * List posts
+     * @description Returns publicly visible posts ordered newest first, omitting hidden posts. Pass `author` to restrict results to a single user (matching any linked Stacks wallet of that account). Publicly cacheable (`ETag`).
      */
-    get: operations["health.get"];
+    get: operations["posts.list"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/posts/{postId}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get post
+     * @description Returns a published post with its full Markdown content, cover image placeholder, author profile, Arweave confirmation height, and OpenTimestamps proof status. Hidden posts return `404` for all callers, including the author. Publicly cacheable (`ETag`).
+     */
+    get: operations["posts.get"];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/api/users/{address}": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get user
+     * @description Returns a user's public profile and Explorer status by Stacks address. If the address has signed in on Sigle without saving a profile, `profile` is `null`. Returns `400` for a malformed Stacks address and `404` for an unknown address. Publicly cacheable (`ETag`).
+     */
+    get: operations["users.get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -32,8 +72,8 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Get the signed-in user
-     * @description Return the signed-in user's id, primary Stacks address, and plan. Returns a 401 without a session.
+     * Get current user
+     * @description Returns the authenticated user's account ID, primary Stacks address, and current plan.
      */
     get: operations["me.get"];
     put?: never;
@@ -52,8 +92,8 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Get the signed-in user's limits
-     * @description Return the limits of the signed-in user's plan and how much of them is used, such as the posts they can still publish in the last 24 hours and the largest post they can publish. Returns a 401 without a session.
+     * Get account limits
+     * @description Returns the authenticated user's plan quotas and rolling 24-hour publish usage, including publishes currently in flight.
      */
     get: operations["me.limits"];
     put?: never;
@@ -74,8 +114,8 @@ export interface paths {
     get?: never;
     put?: never;
     /**
-     * Refresh the signed-in user's plan
-     * @description Activate Pro: check whether one of the signed-in user's wallets holds an Explorer Guild NFT, store the resulting plan, and return it. This is the only way to get Pro; Pro users are re-checked twice a day. Returns a 500 when the Stacks API cannot be reached, which keeps the stored plan, and a 401 without a session.
+     * Refresh plan
+     * @description Checks whether any linked Stacks wallet holds an Explorer Guild NFT, updates the stored plan (`free` or `pro`), and returns it. Calling this endpoint is required to activate Pro immediately; active Pro accounts are re-verified automatically twice a day. Returns `500` if the Stacks API is unreachable without modifying the stored plan.
      */
     post: operations["me.refreshPlan"];
     delete?: never;
@@ -92,8 +132,8 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * List the signed-in user's posts
-     * @description List the posts the signed-in user published, newest first, including the ones they hid. Returns a 401 without a session.
+     * List my posts
+     * @description Returns a paginated list of all posts published by the authenticated user, newest first, including posts hidden on Sigle.
      */
     get: operations["me.listPosts"];
     put?: never;
@@ -113,107 +153,11 @@ export interface paths {
     };
     get?: never;
     /**
-     * Hide or show a post
-     * @description Hide a post of the signed-in user from Sigle, or show it again. A hidden post is left out of the post list, its profile and RSS feed, and its page returns a 404, but it stays on Arweave. Returns a 404 for a post of another user, and a 401 without a session.
+     * Set post visibility
+     * @description Hides one of the authenticated user's published posts from Sigle or restores it. Hidden posts are omitted from post lists, profiles, and RSS feeds, and return `404` on `GET /api/posts/{postId}`, while the underlying signed metadata remains permanently on Arweave. Returns `404` if the post does not exist or belongs to another user.
      */
     put: operations["me.updatePostVisibility"];
     post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/drafts": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * List drafts
-     * @description List the current user drafts, most recently updated first.
-     */
-    get: operations["drafts.list"];
-    put?: never;
-    /**
-     * Create a draft
-     * @description Create a new draft, optionally seeded with the provided fields. Every field is optional, send `{}` to create an empty draft. Returns a 403 once the user has 100 drafts, or when the content would take their drafts over 10 MiB in total.
-     */
-    post: operations["drafts.create"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/drafts/{draftId}": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get a draft
-     * @description Get a draft of the current user with its content and publish status.
-     */
-    get: operations["drafts.get"];
-    put?: never;
-    post?: never;
-    /**
-     * Delete a draft
-     * @description Permanently delete a draft of the current user. Returns a 409 while the draft is being published.
-     */
-    delete: operations["drafts.delete"];
-    options?: never;
-    head?: never;
-    /**
-     * Update a draft
-     * @description Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and `null` clears nullable fields. Returns a 409 while the draft is being published, and a 403 when a longer content would take the user's drafts over 10 MiB in total.
-     */
-    patch: operations["drafts.update"];
-    trace?: never;
-  };
-  "/api/drafts/{draftId}/publish": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    /**
-     * Get draft publish status
-     * @description Poll the asynchronous publishing status of a draft.
-     */
-    get: operations["drafts.getPublishStatus"];
-    put?: never;
-    /**
-     * Publish a draft
-     * @description Validate signed post metadata and enqueue an asynchronous publish job. Returns a 403 when the metadata JSON is larger than the plan allows, 256 KiB on Free and 1 MiB on Pro. Returns a 409 while the draft is being published to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, 3 posts on Free and 20 on Pro, counting the publishes in flight. Also returns a 429 once all users of the plan together reached its global daily limit.
-     */
-    post: operations["drafts.publish"];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  "/api/drafts/{draftId}/images": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    get?: never;
-    put?: never;
-    /**
-     * Upload a draft image
-     * @description Upload an image to embed in a draft as a raw binary body, up to 5 MiB. The image is re-encoded as WebP and served from the CDN. Pro plan only, free users get a 403 and can embed external image URLs instead.
-     */
-    post: operations["drafts.uploadImage"];
     delete?: never;
     options?: never;
     head?: never;
@@ -229,8 +173,8 @@ export interface paths {
     };
     get?: never;
     /**
-     * Update the profile
-     * @description Replace the text fields of the profile of the user's primary address, and return the stored profile. A field that is omitted or null is cleared. The avatar and cover are set by uploading them.
+     * Update profile
+     * @description Replaces all text fields on the profile of the authenticated user's primary Stacks address and returns the stored profile. Any omitted or `null` field is cleared. Avatar and cover images are preserved and managed via `PUT /api/me/profile/images/{kind}`.
      */
     put: operations["profile.update"];
     post?: never;
@@ -248,8 +192,8 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Read the profile of the user's BNS name
-     * @description Read the primary BNS V2 name of the user's primary address and the profile fields of its zonefile, to fill in the profile form. Nothing is saved. Only JSON zonefiles are read, and a zonefile written for another owner of the name is ignored. Returns a 500 when the Stacks API cannot be reached.
+     * Preview BNS profile
+     * @description Looks up the primary BNS V2 name for the authenticated user's primary Stacks address and extracts importable fields from its JSON zonefile to prefill profile forms. Does not save any changes. Non-JSON zonefiles and zonefiles written for a previous owner are ignored. Returns `500` if the Stacks API is unreachable.
      */
     get: operations["profile.bns"];
     put?: never;
@@ -269,8 +213,8 @@ export interface paths {
     };
     get?: never;
     /**
-     * Upload a profile image
-     * @description Upload a profile avatar or cover image as a raw binary body, set it on the profile of the user's primary address right away, and return the stored profile. The avatar or cover it replaces is then deleted when this endpoint stored it, on a best-effort basis: a failed delete doesn't fail the upload.
+     * Upload profile image
+     * @description Uploads a raw binary JPEG, PNG, or WebP image (up to 2 MiB for `avatar`, 5 MiB for `cover`), re-encodes it as an optimized WebP image, updates the profile immediately, and returns the stored profile. Previously uploaded Sigle-hosted images in the same slot are deleted on a best-effort basis.
      */
     put: operations["profile.uploadImage"];
     post?: never;
@@ -280,7 +224,7 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
-  "/api/users/{address}": {
+  "/api/drafts": {
     parameters: {
       query?: never;
       header?: never;
@@ -288,19 +232,25 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Get a user profile
-     * @description Get a public user by Stacks address with their profile. Responses are cacheable for a minute and carry an `ETag`, send it back in `If-None-Match` to get a 304 while the user is unchanged.
+     * List drafts
+     * @description Returns a paginated list of the authenticated user's drafts (without Markdown body content), ordered most recently updated first.
      */
-    get: operations["users.get"];
+    get: operations["drafts.list"];
     put?: never;
-    post?: never;
+    /**
+     * Create draft
+     * @description Creates a new draft for the authenticated user, optionally pre-populated with initial fields (send `{}` for an empty draft). Returns `201 Created` with a `Location` header pointing to the new draft.
+     *
+     *     Returns `403 Forbidden` if the user already has 100 drafts or if total draft content would exceed 10 MiB.
+     */
+    post: operations["drafts.create"];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/api/posts": {
+  "/api/drafts/{draftId}": {
     parameters: {
       query?: never;
       header?: never;
@@ -308,19 +258,79 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * List posts
-     * @description List published posts, newest first. Pass `author` (a Stacks address) to only list the posts of that author. Responses are cacheable for a minute and carry an `ETag` for `If-None-Match`.
+     * Get draft
+     * @description Returns a single draft owned by the authenticated user, including its Markdown content and current `publishStatus`.
      */
-    get: operations["posts.list"];
+    get: operations["drafts.get"];
     put?: never;
     post?: never;
+    /**
+     * Delete draft
+     * @description Permanently deletes a draft owned by the authenticated user. Returns `409 Conflict` while a publish job is in flight.
+     */
+    delete: operations["drafts.delete"];
+    options?: never;
+    head?: never;
+    /**
+     * Update draft
+     * @description Partially updates a draft using JSON Merge Patch semantics: omitted fields stay unchanged, `null` clears nullable fields, and `[]` clears tags. An empty patch `{}` returns the draft without updating `updatedAt`.
+     *
+     *     - Returns `409 Conflict` while a publish job is in flight.
+     *     - Returns `403 Forbidden` if expanding `content` would push total draft content over 10 MiB.
+     */
+    patch: operations["drafts.update"];
+    trace?: never;
+  };
+  "/api/drafts/{draftId}/publish": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /**
+     * Get publish status
+     * @description Polls the asynchronous publish job for a draft. Once publishing succeeds, the draft is deleted and this endpoint continues returning `completed` with the resulting `postId` and `arweaveTxId`. Returns `404` if the draft does not exist or publishing has never been started.
+     */
+    get: operations["drafts.getPublishStatus"];
+    put?: never;
+    /**
+     * Publish draft
+     * @description Validates the wallet-signed `PostMetadata` (matching `draftId` and signed by a wallet linked to the authenticated user) and queues an asynchronous Arweave publish job. Returns `202 Accepted` with a `Location` header to poll status.
+     *
+     *     - **Idempotency**: Re-submitting the exact same signature while a publish is already in flight reuses the active job.
+     *     - **`403 Forbidden`**: Signed metadata JSON exceeds the plan size limit (256 KiB on Free, 1 MiB on Pro).
+     *     - **`409 Conflict`**: Another signature is currently publishing for this draft, or the signature has already been published.
+     *     - **`429 Too Many Requests`**: Rolling 24-hour publish quota reached (3 posts on Free, 20 on Pro, counting in-flight publishes), or the plan's global daily publish cap is reached.
+     */
+    post: operations["drafts.publish"];
     delete?: never;
     options?: never;
     head?: never;
     patch?: never;
     trace?: never;
   };
-  "/api/posts/{postId}": {
+  "/api/drafts/{draftId}/images": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    /**
+     * Upload draft image
+     * @description Uploads a raw binary JPEG, PNG, or WebP image (up to 5 MiB) to embed in a draft. Re-encodes the image as a content-addressed WebP served from the CDN and returns its URL, dimensions, byte size, and ThumbHash placeholder. Requires the **Pro** plan (`403 Forbidden` on Free; Free accounts can embed external image URLs instead).
+     */
+    post: operations["drafts.uploadImage"];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  "/health": {
     parameters: {
       query?: never;
       header?: never;
@@ -328,10 +338,10 @@ export interface paths {
       cookie?: never;
     };
     /**
-     * Get a post
-     * @description Get a published post with its cover image placeholder, its author profile, and its OpenTimestamps proof status. Responses are cacheable for a minute and carry an `ETag` for `If-None-Match`.
+     * Health check
+     * @description Lightweight liveness probe returning `200 OK` while the API is reachable. Exempt from rate limiting.
      */
-    get: operations["posts.get"];
+    get: operations["health.get"];
     put?: never;
     post?: never;
     delete?: never;
@@ -344,154 +354,102 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
   schemas: {
+    /** @description Invalid request parameters, headers, or payload. */
     BadRequestError: {
+      /** @description Human-readable explanation of the error. */
       message: string;
     };
-    InternalServerError: {
-      message: string;
+    /** @description Service liveness response. */
+    HealthResponse: {
+      /** @description Always `true` when the API process is ready to serve traffic. */
+      success: boolean;
     };
-    TooManyRequestsError: {
-      message: string;
-      retryAfterMillis: number;
-    };
-    NotFoundError: {
-      message: string;
-    };
-    Post: {
-      id: string;
-      title: string;
-      content: string;
-      excerpt: string;
-      metaTitle: string | null;
-      metaDescription: string | null;
-      coverImage: components["schemas"]["MediaImage"] | null;
-      tags: string[];
-      canonicalUri: string | null;
-      contentWarning: ("nsfw" | "sensitive" | "spoiler") | null;
-      metadataUri: string;
-      arweaveTxId: string;
-      arweaveBlockHeight: number | null;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-      author: components["schemas"]["PublicUser"];
-      opentimestamps: components["schemas"]["PostOpenTimestamps"] | null;
-    };
-    PostOpenTimestamps: {
-      /** @enum {string} */
-      status: "pending" | "upgraded" | "failed";
-      contentHash: string;
-      otsTxId: string | null;
-      bitcoinBlockHeight: number | null;
-      bitcoinBlockHash: string | null;
-      bitcoinTimestamp: string | null;
-    };
-    PublicUser: {
-      address: string;
-      profile: components["schemas"]["UserProfile"] | null;
-      /** @description Whether the user is on Pro, unlocked by holding an Explorer Guild NFT, and gets the Explorer Guild badge. */
-      isExplorer: boolean;
-    };
-    UserProfile: {
-      displayName: string | null;
-      description: string | null;
-      website: string | null;
-      twitter: string | null;
-      picture: components["schemas"]["MediaImage"] | null;
-      coverPicture: components["schemas"]["MediaImage"] | null;
-      /** Format: date-time */
-      updatedAt: string;
-    };
-    MediaImage: {
-      url: string;
-      width: number | null;
-      height: number | null;
-      thumbhash: string | null;
-    };
-    PostListResponse: {
-      results: components["schemas"]["PostListItem"][];
-      limit: number;
-      offset: number;
-      total: number;
-    };
-    PostListItem: {
-      id: string;
-      title: string;
-      excerpt: string;
-      metaTitle: string | null;
-      metaDescription: string | null;
-      coverImage: components["schemas"]["MediaImage"] | null;
-      tags: string[];
-      canonicalUri: string | null;
-      contentWarning: ("nsfw" | "sensitive" | "spoiler") | null;
-      arweaveTxId: string;
-      /** Format: date-time */
-      createdAt: string;
-      /** Format: date-time */
-      updatedAt: string;
-      author: components["schemas"]["PublicUser"];
-    };
+    /** @description Authentication is required or the session is invalid. */
     UnauthorizedError: {
+      /** @description Human-readable explanation of the error. */
       message: string;
     };
-    UnsupportedMediaTypeError: {
+    /** @description An unexpected server or upstream service error occurred. */
+    InternalServerError: {
+      /** @description Human-readable explanation of the error. */
       message: string;
     };
-    ServiceUnavailableError: {
+    /** @description Rate limit or rolling daily publish quota exceeded. */
+    TooManyRequestsError: {
+      /** @description Human-readable explanation of the error. */
       message: string;
+      /** @description Milliseconds to wait before retrying the request. */
       retryAfterMillis: number;
     };
+    /** @description The Content-Type or detected file format is not a supported image type. */
+    UnsupportedMediaTypeError: {
+      /** @description Human-readable explanation of the error. */
+      message: string;
+    };
+    /** @description The server is temporarily busy processing other requests. Retry after the indicated delay. */
+    ServiceUnavailableError: {
+      /** @description Human-readable explanation of the error. */
+      message: string;
+      /** @description Milliseconds to wait before retrying the request. */
+      retryAfterMillis: number;
+    };
+    /** @description The request body or image dimensions exceed the maximum allowed size. */
     PayloadTooLargeError: {
+      /** @description Human-readable explanation of the error. */
       message: string;
     };
-    UpdateProfileResponse: {
-      address: string;
-      profile: components["schemas"]["UserProfile"];
+    /** @description The requested resource does not exist or is not accessible. */
+    NotFoundError: {
+      /** @description Human-readable explanation of the error. */
+      message: string;
     };
-    /** @enum {string} */
-    ProfileImageKind: "avatar" | "cover";
-    BnsProfileResponse: {
-      name: string | null;
-      profile: components["schemas"]["BnsProfile"] | null;
-    };
-    BnsProfile: {
-      displayName: string | null;
-      description: string | null;
-      website: string | null;
-      twitter: string | null;
-    };
-    UpdateProfilePayload: {
-      displayName?: string | null;
-      description?: string | null;
-      website?: string | null;
-      twitter?: string | null;
-    };
+    /** @description The authenticated user does not have permission or exceeded a plan or storage quota. */
     ForbiddenError: {
+      /** @description Human-readable explanation of the error. */
       message: string;
     };
+    /** @description Metadata of an uploaded and optimized image. */
     UploadedImageResponse: {
+      /** @description Public CDN URL of the optimized WebP image. */
       url: string;
+      /** @description File size of the stored WebP image, in bytes. */
       sizeBytes: number;
+      /** @description Width of the stored image, in pixels. */
       width: number;
+      /** @description Height of the stored image, in pixels. */
       height: number;
+      /** @description Base64-encoded ThumbHash placeholder for progressive loading. */
       thumbhash: string;
     };
+    /** @description Current state and resulting identifiers of a draft publish job. */
     PublishDraftStatusResponse: {
       status: components["schemas"]["PublishDraftStatus"];
+      /** @description Published post ID once `status` is `completed`, otherwise `null`. */
       postId: string | null;
+      /** @description Arweave transaction ID once uploaded (available on `completed`, and on `processing`/`failed` after the upload step), otherwise `null`. */
       arweaveTxId: string | null;
     };
-    /** @enum {string} */
+    /**
+     * @description Lifecycle state of an asynchronous publish job: `pending`, `processing`, `completed`, or `failed`.
+     * @enum {string}
+     */
     PublishDraftStatus: "pending" | "processing" | "completed" | "failed";
+    /** @description The request conflicts with the current state of the resource. */
     ConflictError: {
+      /** @description Human-readable explanation of the error. */
       message: string;
     };
+    /** @description Acknowledgement that a draft publish job has been queued. */
     PublishDraftAccepted: {
+      /** @description ID of the draft queued for publishing. */
       draftId: string;
-      /** @enum {string} */
+      /**
+       * @description Initial publish job state (`pending`).
+       * @enum {string}
+       */
       status: "pending";
     };
+    /** @description Signed post metadata payload submitted for publishing to Arweave. */
     PublishDraftPayload: {
       metadata: components["schemas"]["PostMetadata"];
     };
@@ -583,124 +541,397 @@ export interface components {
       /** @description A cryptographic signature of the `content` data. */
       signature: string;
     };
+    /** @description Full draft belonging to the authenticated user, including Markdown content. */
     Draft: {
+      /** @description Unique ID of the draft. */
       id: string;
+      /** @description Title of the draft. */
       title: string;
+      /** @description Markdown body of the draft. */
       content: string;
+      /** @description Optional SEO title override, or `null` if unset. */
       metaTitle: string | null;
+      /** @description Optional SEO meta description override, or `null` if unset. */
       metaDescription: string | null;
+      /** @description Cover image URL (`http(s)://`, `ipfs://`, or `ar://`), or `null`. */
       coverImage: string | null;
+      /** @description Topic tags attached to the draft. */
       tags: string[];
+      /** @description Canonical HTTP(S) URL of the original post if syndicated, or `null`. */
       canonicalUri: string | null;
+      /** @description Content warning label (`nsfw`, `sensitive`, `spoiler`), or `null`. */
       contentWarning: ("nsfw" | "sensitive" | "spoiler") | null;
       publishStatus: components["schemas"]["DraftPublishStatus"];
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description ISO 8601 timestamp when the draft was created.
+       */
       createdAt: string;
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description ISO 8601 timestamp when the draft was last modified.
+       */
       updatedAt: string;
     };
+    /** @description Current publishing state of a draft: `null` if never published, `pending` or `processing` while a publish job is active (draft is locked against edits and deletion), or `failed` if the last publish attempt failed. */
     DraftPublishStatus: ("pending" | "processing" | "failed") | null;
+    /** @description Partial draft update using JSON Merge Patch semantics: omit fields to leave unchanged, or pass `null` to clear nullable fields. */
     UpdateDraftPayload: {
-      /** @description Omit to keep the current value unchanged. */
+      /** @description Title (up to 300 characters). Omit to keep unchanged. */
       title?: string;
-      /** @description Omit to keep the current value unchanged. */
+      /** @description Markdown body (up to 1000000 characters). Omit to keep unchanged. */
       content?: string;
-      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      /** @description SEO title override (up to 100 characters). Omit to keep unchanged; set to `null` to clear. */
       metaTitle?: string | null;
-      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      /** @description SEO meta description override (up to 250 characters). Omit to keep unchanged; set to `null` to clear. */
       metaDescription?: string | null;
-      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      /** @description Cover image URL (`http(s)://`, `ipfs://`, or `ar://`, up to 2048 characters). Omit to keep unchanged; set to `null` to clear. */
       coverImage?: string | null;
-      /** @description Omit to keep the current value unchanged. */
+      /** @description Topic tags (up to 5 tags, each 1–50 characters). Pass `[]` to clear. Omit to keep unchanged. */
       tags?: string[];
-      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      /** @description Canonical HTTP(S) URL (up to 200 characters). Omit to keep unchanged; set to `null` to clear. */
       canonicalUri?: string | null;
-      /** @description Omit to keep the current value unchanged, set to null to clear it. */
+      /** @description Content warning label (`nsfw`, `sensitive`, or `spoiler`). Omit to keep unchanged; set to `null` to clear. */
       contentWarning?: ("nsfw" | "sensitive" | "spoiler") | null;
     };
+    /** @description Paginated list of the authenticated user's drafts. */
     DraftListResponse: {
+      /** @description Drafts for the requested page, most recently updated first. */
       results: components["schemas"]["DraftListItem"][];
+      /** @description Maximum number of drafts requested per page. */
       limit: number;
+      /** @description Number of drafts skipped from the start of the list. */
       offset: number;
+      /** @description Total number of drafts owned by the authenticated user. */
       total: number;
     };
+    /** @description Draft metadata returned in paginated draft lists (excludes Markdown content). */
     DraftListItem: {
+      /** @description Unique ID of the draft. */
       id: string;
+      /** @description Title of the draft. */
       title: string;
+      /** @description Optional SEO title override, or `null` if unset. */
       metaTitle: string | null;
+      /** @description Optional SEO meta description override, or `null` if unset. */
       metaDescription: string | null;
+      /** @description Cover image URL (`http(s)://`, `ipfs://`, or `ar://`), or `null`. */
       coverImage: string | null;
+      /** @description Topic tags attached to the draft. */
       tags: string[];
+      /** @description Canonical HTTP(S) URL of the original post if syndicated, or `null`. */
       canonicalUri: string | null;
+      /** @description Content warning label (`nsfw`, `sensitive`, `spoiler`), or `null`. */
       contentWarning: ("nsfw" | "sensitive" | "spoiler") | null;
       publishStatus: components["schemas"]["DraftPublishStatus"];
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description ISO 8601 timestamp when the draft was created.
+       */
       createdAt: string;
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description ISO 8601 timestamp when the draft was last modified.
+       */
       updatedAt: string;
     };
+    /** @description Optional initial fields for a new draft. Send `{}` to create an empty draft. */
     CreateDraftPayload: {
+      /** @description Initial title (up to 300 characters). Defaults to an empty string. */
       title?: string;
+      /** @description Initial Markdown body (up to 1000000 characters). Defaults to an empty string. */
       content?: string;
+      /** @description Optional SEO title override (up to 100 characters). */
       metaTitle?: string | null;
+      /** @description Optional SEO meta description override (up to 250 characters). */
       metaDescription?: string | null;
+      /** @description Optional cover image URL (`http(s)://`, `ipfs://`, or `ar://`, up to 2048 characters). */
       coverImage?: string | null;
+      /** @description Optional topic tags (up to 5 tags, each 1–50 characters). Defaults to `[]`. */
       tags?: string[];
+      /** @description Optional canonical HTTP(S) URL of the original post (up to 200 characters). */
       canonicalUri?: string | null;
+      /** @description Optional content warning label (`nsfw`, `sensitive`, or `spoiler`). */
       contentWarning?: ("nsfw" | "sensitive" | "spoiler") | null;
     };
+    /** @description Stored profile returned after updating fields or uploading an image. */
+    UpdateProfileResponse: {
+      /** @description Primary Stacks address under which the profile is stored. */
+      address: string;
+      profile: components["schemas"]["UserProfile"];
+    };
+    /** @description Public profile details stored on Sigle for a Stacks address. */
+    UserProfile: {
+      /** @description Public display name, or `null` if unset. */
+      displayName: string | null;
+      /** @description Markdown biography, or `null` if unset. */
+      description: string | null;
+      /** @description HTTP(S) website URL, or `null` if unset. */
+      website: string | null;
+      /** @description X (Twitter) handle without the leading `@`, or `null` if unset. */
+      twitter: string | null;
+      /** @description Profile avatar image metadata, or `null` if unset. */
+      picture: components["schemas"]["MediaImage"] | null;
+      /** @description Profile cover banner image metadata, or `null` if unset. */
+      coverPicture: components["schemas"]["MediaImage"] | null;
+      /**
+       * Format: date-time
+       * @description ISO 8601 timestamp when the profile was last updated.
+       */
+      updatedAt: string;
+    };
+    /** @description Image URL paired with optional dimensions and ThumbHash placeholder metadata. */
+    MediaImage: {
+      /** @description Public URL of the image. */
+      url: string;
+      /** @description Image width in pixels, or `null` if placeholder metadata has not been computed yet. */
+      width: number | null;
+      /** @description Image height in pixels, or `null` if placeholder metadata has not been computed yet. */
+      height: number | null;
+      /** @description Base64-encoded ThumbHash placeholder for progressive loading, or `null` if unavailable. */
+      thumbhash: string | null;
+    };
+    /**
+     * @description Profile image slot to replace (`avatar` or `cover`).
+     * @enum {string}
+     */
+    ProfileImageKind: "avatar" | "cover";
+    /** @description Primary BNS V2 name and importable profile preview. */
+    BnsProfileResponse: {
+      /** @description Primary BNS V2 name of the user's primary Stacks address (for example, `satoshi.btc`), or `null` if none. */
+      name: string | null;
+      /** @description Importable profile fields from the zonefile, or `null` when no valid profile data is present. */
+      profile: components["schemas"]["BnsProfile"] | null;
+    };
+    /** @description Importable profile fields parsed from a BNS V2 JSON zonefile. */
+    BnsProfile: {
+      /** @description Display name extracted from the zonefile, or `null` if missing or invalid. */
+      displayName: string | null;
+      /** @description Bio extracted from the zonefile, or `null` if missing or invalid. */
+      description: string | null;
+      /** @description Website URL extracted from the zonefile, or `null` if missing or invalid. */
+      website: string | null;
+      /** @description X (Twitter) handle extracted from the zonefile without `@`, or `null` if missing or invalid. */
+      twitter: string | null;
+    };
+    /** @description Full replacement payload for the profile's text fields. */
+    UpdateProfilePayload: {
+      /** @description Public display name (up to 100 characters). Omit or set to `null` to clear. */
+      displayName?: string | null;
+      /** @description Markdown biography (up to 2000 characters). Omit or set to `null` to clear. */
+      description?: string | null;
+      /** @description HTTP(S) website URL (up to 200 characters). Omit or set to `null` to clear. */
+      website?: string | null;
+      /** @description X (Twitter) handle without the leading `@` (1–15 word characters). Omit or set to `null` to clear. */
+      twitter?: string | null;
+    };
+    /** @description Updated visibility state of a published post. */
     PostVisibilityResponse: {
+      /** @description ID of the updated post. */
       id: string;
+      /** @description ISO 8601 timestamp when the post was hidden, or `null` when publicly visible. */
       hiddenAt: string | null;
     };
+    /** @description Desired visibility state for a published post. */
     PostVisibilityPayload: {
+      /** @description Set to `true` to hide the post on Sigle, or `false` to make it publicly visible again. */
       hidden: boolean;
     };
+    /** @description Paginated list of the authenticated user's published posts. */
     MyPostListResponse: {
+      /** @description Published posts for the requested page, newest first. */
       results: components["schemas"]["MyPostListItem"][];
+      /** @description Maximum number of posts requested per page. */
       limit: number;
+      /** @description Number of posts skipped from the start of the list. */
       offset: number;
+      /** @description Total number of posts published by the authenticated user. */
       total: number;
     };
+    /** @description Summary of one of the authenticated user's published posts, including visibility status. */
     MyPostListItem: {
+      /** @description Unique identifier of the post (its Arweave transaction ID). */
       id: string;
+      /** @description Title of the post. */
       title: string;
+      /** @description Plain-text summary of the post shown in lists and previews. */
       excerpt: string;
+      /** @description Optional SEO title override, or `null` if unset. */
       metaTitle: string | null;
+      /** @description Optional SEO meta description override, or `null` if unset. */
       metaDescription: string | null;
+      /** @description Cover image URL and placeholder metadata, or `null` if the post has no cover. */
       coverImage: components["schemas"]["MediaImage"] | null;
+      /** @description List of topic tags attached to the post. */
       tags: string[];
+      /** @description Canonical URL of the original publication if syndicated, or `null`. */
       canonicalUri: string | null;
+      /** @description Content warning label (`nsfw`, `sensitive`, `spoiler`), or `null`. */
       contentWarning: ("nsfw" | "sensitive" | "spoiler") | null;
+      /** @description Arweave transaction ID where the signed post metadata is stored. */
       arweaveTxId: string;
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description ISO 8601 timestamp when the post was published.
+       */
       createdAt: string;
-      /** Format: date-time */
+      /**
+       * Format: date-time
+       * @description ISO 8601 timestamp when the post record was last updated.
+       */
       updatedAt: string;
       author: components["schemas"]["PublicUser"];
+      /** @description ISO 8601 timestamp when the post was hidden from Sigle, or `null` while publicly visible. */
       hiddenAt: string | null;
     };
+    /** @description Publicly visible user representation returned for profiles and post authors. */
+    PublicUser: {
+      /** @description Stacks address identifying the user. */
+      address: string;
+      /** @description User's public profile, or `null` if the user has signed in without saving profile details. */
+      profile: components["schemas"]["UserProfile"] | null;
+      /** @description Whether the user holds the Pro plan (unlocked by an Explorer Guild NFT) and displays the Explorer Guild badge. */
+      isExplorer: boolean;
+    };
+    /** @description Updated plan tier of the authenticated user. */
     UserPlanResponse: {
-      /** @enum {string} */
+      /**
+       * @description Subscription tier of the user (`free` or `pro`).
+       * @enum {string}
+       */
       plan: "free" | "pro";
     };
+    /** @description Current plan quotas and rolling usage for the authenticated user. */
     UserLimitsResponse: {
       publish: components["schemas"]["DailyLimit"];
+      /** @description Maximum signed post metadata JSON size the user can publish, in UTF-8 bytes. */
       publishMaxBytes: number;
     };
+    /** @description Usage snapshot for a rolling 24-hour quota. */
     DailyLimit: {
+      /** @description Maximum actions allowed per rolling 24-hour window. */
       limit: number;
+      /** @description Actions consumed in the last 24 hours. */
       used: number;
+      /** @description ISO 8601 timestamp when the oldest counted action ages out of the 24-hour window, or `null` when `used` is `0`. */
       resetsAt: string | null;
     };
+    /** @description Account identity and plan of the authenticated user. */
     CurrentUserResponse: {
+      /** @description Internal account ID of the authenticated user. */
       id: string;
+      /** @description Primary Stacks address of the authenticated user, used for their public profile and published posts. */
       address: string;
-      /** @enum {string} */
+      /**
+       * @description Subscription tier of the user (`free` or `pro`).
+       * @enum {string}
+       */
       plan: "free" | "pro";
     };
-    HealthResponse: {
-      success: boolean;
+    /** @description A published post with full Markdown content, author profile, and on-chain proofs. */
+    Post: {
+      /** @description Unique identifier of the post (its Arweave transaction ID). */
+      id: string;
+      /** @description Title of the post. */
+      title: string;
+      /** @description Full Markdown body of the post. */
+      content: string;
+      /** @description Plain-text summary of the post. */
+      excerpt: string;
+      /** @description Optional SEO title override, or `null` if unset. */
+      metaTitle: string | null;
+      /** @description Optional SEO meta description override, or `null` if unset. */
+      metaDescription: string | null;
+      /** @description Cover image URL and placeholder metadata, or `null` if the post has no cover. */
+      coverImage: components["schemas"]["MediaImage"] | null;
+      /** @description List of topic tags attached to the post. */
+      tags: string[];
+      /** @description Canonical URL of the original publication if syndicated, or `null`. */
+      canonicalUri: string | null;
+      /** @description Content warning label (`nsfw`, `sensitive`, `spoiler`), or `null`. */
+      contentWarning: ("nsfw" | "sensitive" | "spoiler") | null;
+      /** @description URI pointing to the signed post metadata document on Arweave. */
+      metadataUri: string;
+      /** @description Arweave transaction ID of the signed post metadata. */
+      arweaveTxId: string;
+      /** @description Arweave block height where the transaction was mined, or `null` while awaiting bundle confirmation. */
+      arweaveBlockHeight: number | null;
+      /**
+       * Format: date-time
+       * @description ISO 8601 timestamp when the post was published.
+       */
+      createdAt: string;
+      /**
+       * Format: date-time
+       * @description ISO 8601 timestamp when the post record was last updated.
+       */
+      updatedAt: string;
+      author: components["schemas"]["PublicUser"];
+      /** @description Bitcoin OpenTimestamps proof metadata, or `null` until the post is submitted for timestamping. */
+      opentimestamps: components["schemas"]["PostOpenTimestamps"] | null;
+    };
+    /** @description Bitcoin OpenTimestamps proof status and attestation metadata for a published post. */
+    PostOpenTimestamps: {
+      /**
+       * @description OpenTimestamps anchoring state: `pending` while awaiting Bitcoin confirmation, `upgraded` once anchored in a Bitcoin block, or `failed` if stamping failed.
+       * @enum {string}
+       */
+      status: "pending" | "upgraded" | "failed";
+      /** @description Hex-encoded SHA-256 digest of the signed post metadata JSON anchored by the proof. */
+      contentHash: string;
+      /** @description Arweave transaction ID of the Bitcoin-anchored `.ots` proof file once `upgraded`, or `null`. */
+      otsTxId: string | null;
+      /** @description Bitcoin block height containing the timestamp attestation once `upgraded`, or `null`. */
+      bitcoinBlockHeight: number | null;
+      /** @description Bitcoin block hash containing the timestamp attestation once `upgraded`, or `null`. */
+      bitcoinBlockHash: string | null;
+      /** @description ISO 8601 timestamp of the attesting Bitcoin block once `upgraded`, or `null`. */
+      bitcoinTimestamp: string | null;
+    };
+    /** @description Paginated list of publicly visible published posts. */
+    PostListResponse: {
+      /** @description Published posts for the requested page, newest first. */
+      results: components["schemas"]["PostListItem"][];
+      /** @description Maximum number of posts requested per page. */
+      limit: number;
+      /** @description Number of posts skipped from the start of the list. */
+      offset: number;
+      /** @description Total number of matching published posts. */
+      total: number;
+    };
+    /** @description Summary of a published post returned in list endpoints. */
+    PostListItem: {
+      /** @description Unique identifier of the post (its Arweave transaction ID). */
+      id: string;
+      /** @description Title of the post. */
+      title: string;
+      /** @description Plain-text summary of the post shown in lists and previews. */
+      excerpt: string;
+      /** @description Optional SEO title override, or `null` if unset. */
+      metaTitle: string | null;
+      /** @description Optional SEO meta description override, or `null` if unset. */
+      metaDescription: string | null;
+      /** @description Cover image URL and placeholder metadata, or `null` if the post has no cover. */
+      coverImage: components["schemas"]["MediaImage"] | null;
+      /** @description List of topic tags attached to the post. */
+      tags: string[];
+      /** @description Canonical URL of the original publication if syndicated, or `null`. */
+      canonicalUri: string | null;
+      /** @description Content warning label (`nsfw`, `sensitive`, `spoiler`), or `null`. */
+      contentWarning: ("nsfw" | "sensitive" | "spoiler") | null;
+      /** @description Arweave transaction ID where the signed post metadata is stored. */
+      arweaveTxId: string;
+      /**
+       * Format: date-time
+       * @description ISO 8601 timestamp when the post was published.
+       */
+      createdAt: string;
+      /**
+       * Format: date-time
+       * @description ISO 8601 timestamp when the post record was last updated.
+       */
+      updatedAt: string;
+      author: components["schemas"]["PublicUser"];
     };
   };
   responses: never;
@@ -711,22 +942,186 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  "health.get": {
+  "posts.list": {
     parameters: {
-      query?: never;
+      query?: {
+        /** @description Filter posts by author Stacks address. Matches posts published from any wallet linked to that user. */
+        author?: string;
+        /** @description Maximum number of items to return (1–100, default 20). */
+        limit?: number;
+        /** @description Number of items to skip from the start of the list. */
+        offset?: number;
+      };
       header?: never;
       path?: never;
       cookie?: never;
     };
     requestBody?: never;
     responses: {
-      /** @description HealthResponse */
+      /** @description Paginated list of publicly visible published posts. */
       200: {
+        headers: {
+          /** @description Public cache directive (`public, max-age=60`) allowing clients and proxies to cache the response for 60 seconds. */
+          "cache-control": string;
+          /** @description Strong entity tag derived from the response body. Send in `If-None-Match` to receive `304 Not Modified` while unchanged. */
+          etag?: string;
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PostListResponse"];
+        };
+      };
+      /** @description Invalid request parameters, headers, or payload. */
+      400: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["HealthResponse"];
+          "application/json": components["schemas"]["BadRequestError"];
+        };
+      };
+      /** @description Rate limit or rolling daily publish quota exceeded. */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TooManyRequestsError"];
+        };
+      };
+      /** @description An unexpected server or upstream service error occurred. */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["InternalServerError"];
+        };
+      };
+    };
+  };
+  "posts.get": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Post ID (its Arweave transaction ID). */
+        postId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description A published post with full Markdown content, author profile, and on-chain proofs. */
+      200: {
+        headers: {
+          /** @description Public cache directive (`public, max-age=60`) allowing clients and proxies to cache the response for 60 seconds. */
+          "cache-control": string;
+          /** @description Strong entity tag derived from the response body. Send in `If-None-Match` to receive `304 Not Modified` while unchanged. */
+          etag?: string;
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["Post"];
+        };
+      };
+      /** @description Invalid request parameters, headers, or payload. */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BadRequestError"];
+        };
+      };
+      /** @description The requested resource does not exist or is not accessible. */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
+      /** @description Rate limit or rolling daily publish quota exceeded. */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TooManyRequestsError"];
+        };
+      };
+      /** @description An unexpected server or upstream service error occurred. */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["InternalServerError"];
+        };
+      };
+    };
+  };
+  "users.get": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Stacks address of the user. */
+        address: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Publicly visible user representation returned for profiles and post authors. */
+      200: {
+        headers: {
+          /** @description Public cache directive (`public, max-age=60`) allowing clients and proxies to cache the response for 60 seconds. */
+          "cache-control": string;
+          /** @description Strong entity tag derived from the response body. Send in `If-None-Match` to receive `304 Not Modified` while unchanged. */
+          etag?: string;
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PublicUser"];
+        };
+      };
+      /** @description Invalid request parameters, headers, or payload. */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BadRequestError"];
+        };
+      };
+      /** @description The requested resource does not exist or is not accessible. */
+      404: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["NotFoundError"];
+        };
+      };
+      /** @description Rate limit or rolling daily publish quota exceeded. */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TooManyRequestsError"];
+        };
+      };
+      /** @description An unexpected server or upstream service error occurred. */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["InternalServerError"];
         };
       };
     };
@@ -740,7 +1135,7 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description CurrentUserResponse */
+      /** @description Account identity and plan of the authenticated user. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -749,7 +1144,7 @@ export interface operations {
           "application/json": components["schemas"]["CurrentUserResponse"];
         };
       };
-      /** @description Unauthorized */
+      /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
           [name: string]: unknown;
@@ -758,7 +1153,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Too Many Requests */
+      /** @description Rate limit or rolling daily publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -767,7 +1162,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description Internal Server Error */
+      /** @description An unexpected server or upstream service error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -787,7 +1182,7 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description UserLimitsResponse */
+      /** @description Current plan quotas and rolling usage for the authenticated user. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -796,7 +1191,7 @@ export interface operations {
           "application/json": components["schemas"]["UserLimitsResponse"];
         };
       };
-      /** @description Unauthorized */
+      /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
           [name: string]: unknown;
@@ -805,7 +1200,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Too Many Requests */
+      /** @description Rate limit or rolling daily publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -814,7 +1209,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description Internal Server Error */
+      /** @description An unexpected server or upstream service error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -834,7 +1229,7 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description UserPlanResponse */
+      /** @description Updated plan tier of the authenticated user. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -843,7 +1238,7 @@ export interface operations {
           "application/json": components["schemas"]["UserPlanResponse"];
         };
       };
-      /** @description Unauthorized */
+      /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
           [name: string]: unknown;
@@ -852,7 +1247,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Too Many Requests */
+      /** @description Rate limit or rolling daily publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -861,7 +1256,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description Internal Server Error */
+      /** @description An unexpected server or upstream service error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -875,9 +1270,9 @@ export interface operations {
   "me.listPosts": {
     parameters: {
       query?: {
-        /** @description Number of results to return. */
+        /** @description Maximum number of items to return (1–100, default 20). */
         limit?: number;
-        /** @description Number of results to skip. */
+        /** @description Number of items to skip from the start of the list. */
         offset?: number;
       };
       header?: never;
@@ -886,7 +1281,7 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description MyPostListResponse */
+      /** @description Paginated list of the authenticated user's published posts. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -895,7 +1290,7 @@ export interface operations {
           "application/json": components["schemas"]["MyPostListResponse"];
         };
       };
-      /** @description Bad Request */
+      /** @description Invalid request parameters, headers, or payload. */
       400: {
         headers: {
           [name: string]: unknown;
@@ -904,7 +1299,7 @@ export interface operations {
           "application/json": components["schemas"]["BadRequestError"];
         };
       };
-      /** @description Unauthorized */
+      /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
           [name: string]: unknown;
@@ -913,7 +1308,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Too Many Requests */
+      /** @description Rate limit or rolling daily publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -922,7 +1317,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description Internal Server Error */
+      /** @description An unexpected server or upstream service error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -938,7 +1333,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
-        /** @description ID of the post, its Arweave transaction ID. */
+        /** @description Post ID (its Arweave transaction ID). */
         postId: string;
       };
       cookie?: never;
@@ -949,7 +1344,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description PostVisibilityResponse */
+      /** @description Updated visibility state of a published post. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -958,7 +1353,7 @@ export interface operations {
           "application/json": components["schemas"]["PostVisibilityResponse"];
         };
       };
-      /** @description Bad Request */
+      /** @description Invalid request parameters, headers, or payload. */
       400: {
         headers: {
           [name: string]: unknown;
@@ -967,7 +1362,7 @@ export interface operations {
           "application/json": components["schemas"]["BadRequestError"];
         };
       };
-      /** @description Unauthorized */
+      /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
           [name: string]: unknown;
@@ -976,7 +1371,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Not Found */
+      /** @description The requested resource does not exist or is not accessible. */
       404: {
         headers: {
           [name: string]: unknown;
@@ -985,7 +1380,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Too Many Requests */
+      /** @description Rate limit or rolling daily publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -994,7 +1389,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description Internal Server Error */
+      /** @description An unexpected server or upstream service error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1005,30 +1400,29 @@ export interface operations {
       };
     };
   };
-  "drafts.list": {
+  "profile.update": {
     parameters: {
-      query?: {
-        /** @description Number of results to return. */
-        limit?: number;
-        /** @description Number of results to skip. */
-        offset?: number;
-      };
+      query?: never;
       header?: never;
       path?: never;
       cookie?: never;
     };
-    requestBody?: never;
+    requestBody: {
+      content: {
+        "application/json": components["schemas"]["UpdateProfilePayload"];
+      };
+    };
     responses: {
-      /** @description DraftListResponse */
+      /** @description Stored profile returned after updating fields or uploading an image. */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["DraftListResponse"];
+          "application/json": components["schemas"]["UpdateProfileResponse"];
         };
       };
-      /** @description Bad Request */
+      /** @description Invalid request parameters, headers, or payload. */
       400: {
         headers: {
           [name: string]: unknown;
@@ -1037,7 +1431,7 @@ export interface operations {
           "application/json": components["schemas"]["BadRequestError"];
         };
       };
-      /** @description Unauthorized */
+      /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
           [name: string]: unknown;
@@ -1046,7 +1440,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Too Many Requests */
+      /** @description Rate limit or rolling daily publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1055,7 +1449,208 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description Internal Server Error */
+      /** @description An unexpected server or upstream service error occurred. */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["InternalServerError"];
+        };
+      };
+    };
+  };
+  "profile.bns": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Primary BNS V2 name and importable profile preview. */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BnsProfileResponse"];
+        };
+      };
+      /** @description Authentication is required or the session is invalid. */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Rate limit or rolling daily publish quota exceeded. */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TooManyRequestsError"];
+        };
+      };
+      /** @description An unexpected server or upstream service error occurred. */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["InternalServerError"];
+        };
+      };
+    };
+  };
+  "profile.uploadImage": {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        /** @description Profile image slot to replace (`avatar` or `cover`). */
+        kind: components["schemas"]["ProfileImageKind"];
+      };
+      cookie?: never;
+    };
+    /** @description Raw image binary in JPEG, PNG, or WebP format (max 2 MiB for `avatar`, 5 MiB for `cover`). */
+    requestBody: {
+      content: {
+        "image/webp": string;
+        "image/png": string;
+        "image/jpeg": string;
+      };
+    };
+    responses: {
+      /** @description Stored profile returned after updating fields or uploading an image. */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UpdateProfileResponse"];
+        };
+      };
+      /** @description Invalid request parameters, headers, or payload. */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BadRequestError"];
+        };
+      };
+      /** @description Authentication is required or the session is invalid. */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description The request body or image dimensions exceed the maximum allowed size. */
+      413: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["PayloadTooLargeError"];
+        };
+      };
+      /** @description The Content-Type or detected file format is not a supported image type. */
+      415: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UnsupportedMediaTypeError"];
+        };
+      };
+      /** @description Rate limit or rolling daily publish quota exceeded. */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TooManyRequestsError"];
+        };
+      };
+      /** @description An unexpected server or upstream service error occurred. */
+      500: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["InternalServerError"];
+        };
+      };
+      /** @description The server is temporarily busy processing other requests. Retry after the indicated delay. */
+      503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["ServiceUnavailableError"];
+        };
+      };
+    };
+  };
+  "drafts.list": {
+    parameters: {
+      query?: {
+        /** @description Maximum number of items to return (1–100, default 20). */
+        limit?: number;
+        /** @description Number of items to skip from the start of the list. */
+        offset?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Paginated list of the authenticated user's drafts. */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["DraftListResponse"];
+        };
+      };
+      /** @description Invalid request parameters, headers, or payload. */
+      400: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["BadRequestError"];
+        };
+      };
+      /** @description Authentication is required or the session is invalid. */
+      401: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["UnauthorizedError"];
+        };
+      };
+      /** @description Rate limit or rolling daily publish quota exceeded. */
+      429: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          "application/json": components["schemas"]["TooManyRequestsError"];
+        };
+      };
+      /** @description An unexpected server or upstream service error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1079,9 +1674,10 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Draft */
+      /** @description Full draft belonging to the authenticated user, including Markdown content. */
       201: {
         headers: {
+          /** @description Relative URL of the created draft (`/api/drafts/{draftId}`). */
           location: string;
           [name: string]: unknown;
         };
@@ -1089,7 +1685,7 @@ export interface operations {
           "application/json": components["schemas"]["Draft"];
         };
       };
-      /** @description Bad Request */
+      /** @description Invalid request parameters, headers, or payload. */
       400: {
         headers: {
           [name: string]: unknown;
@@ -1098,7 +1694,7 @@ export interface operations {
           "application/json": components["schemas"]["BadRequestError"];
         };
       };
-      /** @description Unauthorized */
+      /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
           [name: string]: unknown;
@@ -1107,7 +1703,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
+      /** @description The authenticated user does not have permission or exceeded a plan or storage quota. */
       403: {
         headers: {
           [name: string]: unknown;
@@ -1116,7 +1712,7 @@ export interface operations {
           "application/json": components["schemas"]["ForbiddenError"];
         };
       };
-      /** @description Too Many Requests */
+      /** @description Rate limit or rolling daily publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1125,7 +1721,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description Internal Server Error */
+      /** @description An unexpected server or upstream service error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1141,14 +1737,14 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
-        /** @description ID of the draft. */
+        /** @description Unique ID of the draft. */
         draftId: string;
       };
       cookie?: never;
     };
     requestBody?: never;
     responses: {
-      /** @description Draft */
+      /** @description Full draft belonging to the authenticated user, including Markdown content. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -1157,7 +1753,7 @@ export interface operations {
           "application/json": components["schemas"]["Draft"];
         };
       };
-      /** @description Bad Request */
+      /** @description Invalid request parameters, headers, or payload. */
       400: {
         headers: {
           [name: string]: unknown;
@@ -1166,7 +1762,7 @@ export interface operations {
           "application/json": components["schemas"]["BadRequestError"];
         };
       };
-      /** @description Unauthorized */
+      /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
           [name: string]: unknown;
@@ -1175,7 +1771,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Not Found */
+      /** @description The requested resource does not exist or is not accessible. */
       404: {
         headers: {
           [name: string]: unknown;
@@ -1184,7 +1780,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Too Many Requests */
+      /** @description Rate limit or rolling daily publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1193,7 +1789,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description Internal Server Error */
+      /** @description An unexpected server or upstream service error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1209,21 +1805,21 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
-        /** @description ID of the draft. */
+        /** @description Unique ID of the draft. */
         draftId: string;
       };
       cookie?: never;
     };
     requestBody?: never;
     responses: {
-      /** @description <No Content> */
+      /** @description Draft permanently deleted. */
       204: {
         headers: {
           [name: string]: unknown;
         };
         content?: never;
       };
-      /** @description Bad Request */
+      /** @description Invalid request parameters, headers, or payload. */
       400: {
         headers: {
           [name: string]: unknown;
@@ -1232,7 +1828,7 @@ export interface operations {
           "application/json": components["schemas"]["BadRequestError"];
         };
       };
-      /** @description Unauthorized */
+      /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
           [name: string]: unknown;
@@ -1241,7 +1837,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Not Found */
+      /** @description The requested resource does not exist or is not accessible. */
       404: {
         headers: {
           [name: string]: unknown;
@@ -1250,7 +1846,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Conflict */
+      /** @description The request conflicts with the current state of the resource. */
       409: {
         headers: {
           [name: string]: unknown;
@@ -1259,7 +1855,7 @@ export interface operations {
           "application/json": components["schemas"]["ConflictError"];
         };
       };
-      /** @description Too Many Requests */
+      /** @description Rate limit or rolling daily publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1268,7 +1864,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description Internal Server Error */
+      /** @description An unexpected server or upstream service error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1284,7 +1880,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
-        /** @description ID of the draft. */
+        /** @description Unique ID of the draft. */
         draftId: string;
       };
       cookie?: never;
@@ -1295,7 +1891,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description Draft */
+      /** @description Full draft belonging to the authenticated user, including Markdown content. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -1304,7 +1900,7 @@ export interface operations {
           "application/json": components["schemas"]["Draft"];
         };
       };
-      /** @description Bad Request */
+      /** @description Invalid request parameters, headers, or payload. */
       400: {
         headers: {
           [name: string]: unknown;
@@ -1313,7 +1909,7 @@ export interface operations {
           "application/json": components["schemas"]["BadRequestError"];
         };
       };
-      /** @description Unauthorized */
+      /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
           [name: string]: unknown;
@@ -1322,7 +1918,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
+      /** @description The authenticated user does not have permission or exceeded a plan or storage quota. */
       403: {
         headers: {
           [name: string]: unknown;
@@ -1331,7 +1927,7 @@ export interface operations {
           "application/json": components["schemas"]["ForbiddenError"];
         };
       };
-      /** @description Not Found */
+      /** @description The requested resource does not exist or is not accessible. */
       404: {
         headers: {
           [name: string]: unknown;
@@ -1340,7 +1936,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Conflict */
+      /** @description The request conflicts with the current state of the resource. */
       409: {
         headers: {
           [name: string]: unknown;
@@ -1349,7 +1945,7 @@ export interface operations {
           "application/json": components["schemas"]["ConflictError"];
         };
       };
-      /** @description Too Many Requests */
+      /** @description Rate limit or rolling daily publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1358,7 +1954,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description Internal Server Error */
+      /** @description An unexpected server or upstream service error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1374,14 +1970,14 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
-        /** @description ID of the draft. */
+        /** @description Unique ID of the draft. */
         draftId: string;
       };
       cookie?: never;
     };
     requestBody?: never;
     responses: {
-      /** @description PublishDraftStatusResponse */
+      /** @description Current state and resulting identifiers of a draft publish job. */
       200: {
         headers: {
           [name: string]: unknown;
@@ -1390,7 +1986,7 @@ export interface operations {
           "application/json": components["schemas"]["PublishDraftStatusResponse"];
         };
       };
-      /** @description Bad Request */
+      /** @description Invalid request parameters, headers, or payload. */
       400: {
         headers: {
           [name: string]: unknown;
@@ -1399,7 +1995,7 @@ export interface operations {
           "application/json": components["schemas"]["BadRequestError"];
         };
       };
-      /** @description Unauthorized */
+      /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
           [name: string]: unknown;
@@ -1408,7 +2004,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Not Found */
+      /** @description The requested resource does not exist or is not accessible. */
       404: {
         headers: {
           [name: string]: unknown;
@@ -1417,7 +2013,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Too Many Requests */
+      /** @description Rate limit or rolling daily publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1426,7 +2022,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description Internal Server Error */
+      /** @description An unexpected server or upstream service error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1442,7 +2038,7 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
-        /** @description ID of the draft. */
+        /** @description Unique ID of the draft. */
         draftId: string;
       };
       cookie?: never;
@@ -1453,9 +2049,10 @@ export interface operations {
       };
     };
     responses: {
-      /** @description PublishDraftAccepted */
+      /** @description Acknowledgement that a draft publish job has been queued. */
       202: {
         headers: {
+          /** @description Relative URL to poll publish progress (`/api/drafts/{draftId}/publish`). */
           location: string;
           [name: string]: unknown;
         };
@@ -1463,7 +2060,7 @@ export interface operations {
           "application/json": components["schemas"]["PublishDraftAccepted"];
         };
       };
-      /** @description Bad Request */
+      /** @description Invalid request parameters, headers, or payload. */
       400: {
         headers: {
           [name: string]: unknown;
@@ -1472,7 +2069,7 @@ export interface operations {
           "application/json": components["schemas"]["BadRequestError"];
         };
       };
-      /** @description Unauthorized */
+      /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
           [name: string]: unknown;
@@ -1481,7 +2078,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
+      /** @description The authenticated user does not have permission or exceeded a plan or storage quota. */
       403: {
         headers: {
           [name: string]: unknown;
@@ -1490,7 +2087,7 @@ export interface operations {
           "application/json": components["schemas"]["ForbiddenError"];
         };
       };
-      /** @description Not Found */
+      /** @description The requested resource does not exist or is not accessible. */
       404: {
         headers: {
           [name: string]: unknown;
@@ -1499,7 +2096,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Conflict */
+      /** @description The request conflicts with the current state of the resource. */
       409: {
         headers: {
           [name: string]: unknown;
@@ -1508,7 +2105,7 @@ export interface operations {
           "application/json": components["schemas"]["ConflictError"];
         };
       };
-      /** @description Too Many Requests */
+      /** @description Rate limit or rolling daily publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1517,7 +2114,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description Internal Server Error */
+      /** @description An unexpected server or upstream service error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1533,11 +2130,12 @@ export interface operations {
       query?: never;
       header?: never;
       path: {
-        /** @description ID of the draft. */
+        /** @description Unique ID of the draft. */
         draftId: string;
       };
       cookie?: never;
     };
+    /** @description Raw image binary in JPEG, PNG, or WebP format (max 5 MiB). */
     requestBody: {
       content: {
         "image/webp": string;
@@ -1546,7 +2144,7 @@ export interface operations {
       };
     };
     responses: {
-      /** @description UploadedImageResponse */
+      /** @description Metadata of an uploaded and optimized image. */
       201: {
         headers: {
           [name: string]: unknown;
@@ -1555,7 +2153,7 @@ export interface operations {
           "application/json": components["schemas"]["UploadedImageResponse"];
         };
       };
-      /** @description Bad Request */
+      /** @description Invalid request parameters, headers, or payload. */
       400: {
         headers: {
           [name: string]: unknown;
@@ -1564,7 +2162,7 @@ export interface operations {
           "application/json": components["schemas"]["BadRequestError"];
         };
       };
-      /** @description Unauthorized */
+      /** @description Authentication is required or the session is invalid. */
       401: {
         headers: {
           [name: string]: unknown;
@@ -1573,7 +2171,7 @@ export interface operations {
           "application/json": components["schemas"]["UnauthorizedError"];
         };
       };
-      /** @description Forbidden */
+      /** @description The authenticated user does not have permission or exceeded a plan or storage quota. */
       403: {
         headers: {
           [name: string]: unknown;
@@ -1582,7 +2180,7 @@ export interface operations {
           "application/json": components["schemas"]["ForbiddenError"];
         };
       };
-      /** @description Not Found */
+      /** @description The requested resource does not exist or is not accessible. */
       404: {
         headers: {
           [name: string]: unknown;
@@ -1591,7 +2189,7 @@ export interface operations {
           "application/json": components["schemas"]["NotFoundError"];
         };
       };
-      /** @description Payload Too Large */
+      /** @description The request body or image dimensions exceed the maximum allowed size. */
       413: {
         headers: {
           [name: string]: unknown;
@@ -1600,7 +2198,7 @@ export interface operations {
           "application/json": components["schemas"]["PayloadTooLargeError"];
         };
       };
-      /** @description Unsupported Media Type */
+      /** @description The Content-Type or detected file format is not a supported image type. */
       415: {
         headers: {
           [name: string]: unknown;
@@ -1609,7 +2207,7 @@ export interface operations {
           "application/json": components["schemas"]["UnsupportedMediaTypeError"];
         };
       };
-      /** @description Too Many Requests */
+      /** @description Rate limit or rolling daily publish quota exceeded. */
       429: {
         headers: {
           [name: string]: unknown;
@@ -1618,7 +2216,7 @@ export interface operations {
           "application/json": components["schemas"]["TooManyRequestsError"];
         };
       };
-      /** @description Internal Server Error */
+      /** @description An unexpected server or upstream service error occurred. */
       500: {
         headers: {
           [name: string]: unknown;
@@ -1627,7 +2225,7 @@ export interface operations {
           "application/json": components["schemas"]["InternalServerError"];
         };
       };
-      /** @description Service Unavailable */
+      /** @description The server is temporarily busy processing other requests. Retry after the indicated delay. */
       503: {
         headers: {
           [name: string]: unknown;
@@ -1638,67 +2236,7 @@ export interface operations {
       };
     };
   };
-  "profile.update": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "application/json": components["schemas"]["UpdateProfilePayload"];
-      };
-    };
-    responses: {
-      /** @description UpdateProfileResponse */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UpdateProfileResponse"];
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TooManyRequestsError"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InternalServerError"];
-        };
-      };
-    };
-  };
-  "profile.bns": {
+  "health.get": {
     parameters: {
       query?: never;
       header?: never;
@@ -1707,310 +2245,13 @@ export interface operations {
     };
     requestBody?: never;
     responses: {
-      /** @description BnsProfileResponse */
+      /** @description Service liveness response. */
       200: {
         headers: {
           [name: string]: unknown;
         };
         content: {
-          "application/json": components["schemas"]["BnsProfileResponse"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TooManyRequestsError"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InternalServerError"];
-        };
-      };
-    };
-  };
-  "profile.uploadImage": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Which profile image to replace. */
-        kind: components["schemas"]["ProfileImageKind"];
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        "image/webp": string;
-        "image/png": string;
-        "image/jpeg": string;
-      };
-    };
-    responses: {
-      /** @description UpdateProfileResponse */
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UpdateProfileResponse"];
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UnauthorizedError"];
-        };
-      };
-      /** @description Payload Too Large */
-      413: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PayloadTooLargeError"];
-        };
-      };
-      /** @description Unsupported Media Type */
-      415: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["UnsupportedMediaTypeError"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TooManyRequestsError"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InternalServerError"];
-        };
-      };
-      /** @description Service Unavailable */
-      503: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["ServiceUnavailableError"];
-        };
-      };
-    };
-  };
-  "users.get": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description Stacks address of the user. */
-        address: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description PublicUser */
-      200: {
-        headers: {
-          "cache-control": string;
-          etag?: string;
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PublicUser"];
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["NotFoundError"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TooManyRequestsError"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InternalServerError"];
-        };
-      };
-    };
-  };
-  "posts.list": {
-    parameters: {
-      query?: {
-        /** @description Only list the posts of this Stacks address. */
-        author?: string;
-        /** @description Number of results to return. */
-        limit?: number;
-        /** @description Number of results to skip. */
-        offset?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description PostListResponse */
-      200: {
-        headers: {
-          "cache-control": string;
-          etag?: string;
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["PostListResponse"];
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TooManyRequestsError"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InternalServerError"];
-        };
-      };
-    };
-  };
-  "posts.get": {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        /** @description ID of the post, its Arweave transaction ID. */
-        postId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Post */
-      200: {
-        headers: {
-          "cache-control": string;
-          etag?: string;
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["Post"];
-        };
-      };
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["BadRequestError"];
-        };
-      };
-      /** @description Not Found */
-      404: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["NotFoundError"];
-        };
-      };
-      /** @description Too Many Requests */
-      429: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["TooManyRequestsError"];
-        };
-      };
-      /** @description Internal Server Error */
-      500: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          "application/json": components["schemas"]["InternalServerError"];
+          "application/json": components["schemas"]["HealthResponse"];
         };
       };
     };

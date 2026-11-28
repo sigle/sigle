@@ -266,25 +266,28 @@ describe("posts", () => {
       }).toStrictEqual({
         posts: {
           author: {
-            description: "Only list the posts of this Stacks address.",
+            description:
+              "Filter posts by author Stacks address. Matches posts published from any wallet linked to that user.",
             schema: { type: "string" },
           },
           limit: {
-            description: "Number of results to return.",
+            description:
+              "Maximum number of items to return (1–100, default 20).",
             schema: { type: "integer", minimum: 1, maximum: 100, default: 20 },
           },
           offset: {
-            description: "Number of results to skip.",
+            description: "Number of items to skip from the start of the list.",
             schema: { type: "integer", minimum: 0, default: 0 },
           },
         },
         drafts: {
           limit: {
-            description: "Number of results to return.",
+            description:
+              "Maximum number of items to return (1–100, default 20).",
             schema: { type: "integer", minimum: 1, maximum: 100, default: 20 },
           },
           offset: {
-            description: "Number of results to skip.",
+            description: "Number of items to skip from the start of the list.",
             schema: { type: "integer", minimum: 0, default: 0 },
           },
         },

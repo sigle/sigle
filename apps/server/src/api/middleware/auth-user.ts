@@ -38,7 +38,7 @@ const sessionCookie = HttpApiSecurity.apiKey({
 }).pipe(
   HttpApiSecurity.annotate(
     OpenApi.Description,
-    `Session cookie set by signing in with Stacks. It is named \`${SESSION_COOKIE_NAME}\` when the API is served over plain HTTP, such as in local development.`,
+    `Session cookie issued by \`POST /api/auth/siws/verify\` after signing in with Stacks. Uses \`${SECURE_SESSION_COOKIE_NAME}\` over HTTPS and \`${SESSION_COOKIE_NAME}\` over plain HTTP (such as local development).`,
   ),
 );
 

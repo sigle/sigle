@@ -15,34 +15,78 @@ import {
 } from "@/api/schemas";
 
 export const MediaImage = Schema.Struct({
-  url: Schema.String,
-  width: Schema.NullOr(NonNegativeInt),
-  height: Schema.NullOr(NonNegativeInt),
-  thumbhash: Schema.NullOr(Schema.String),
-}).annotate({ identifier: "MediaImage" });
+  url: Schema.String.annotate({
+    description: "Public URL of the image.",
+  }),
+  width: Schema.NullOr(NonNegativeInt).annotate({
+    description:
+      "Image width in pixels, or `null` if placeholder metadata has not been computed yet.",
+  }),
+  height: Schema.NullOr(NonNegativeInt).annotate({
+    description:
+      "Image height in pixels, or `null` if placeholder metadata has not been computed yet.",
+  }),
+  thumbhash: Schema.NullOr(Schema.String).annotate({
+    description:
+      "Base64-encoded ThumbHash placeholder for progressive loading, or `null` if unavailable.",
+  }),
+}).annotate({
+  identifier: "MediaImage",
+  description:
+    "Image URL paired with optional dimensions and ThumbHash placeholder metadata.",
+});
 
 export const UserProfile = Schema.Struct({
-  displayName: Schema.NullOr(Schema.String),
-  description: Schema.NullOr(Schema.String),
-  website: Schema.NullOr(Schema.String),
-  twitter: Schema.NullOr(Schema.String),
-  picture: Schema.NullOr(MediaImage),
-  coverPicture: Schema.NullOr(MediaImage),
-  updatedAt: DateTime,
-}).annotate({ identifier: "UserProfile" });
+  displayName: Schema.NullOr(Schema.String).annotate({
+    description: "Public display name, or `null` if unset.",
+  }),
+  description: Schema.NullOr(Schema.String).annotate({
+    description: "Markdown biography, or `null` if unset.",
+  }),
+  website: Schema.NullOr(Schema.String).annotate({
+    description: "HTTP(S) website URL, or `null` if unset.",
+  }),
+  twitter: Schema.NullOr(Schema.String).annotate({
+    description:
+      "X (Twitter) handle without the leading `@`, or `null` if unset.",
+  }),
+  picture: Schema.NullOr(MediaImage).annotate({
+    description: "Profile avatar image metadata, or `null` if unset.",
+  }),
+  coverPicture: Schema.NullOr(MediaImage).annotate({
+    description: "Profile cover banner image metadata, or `null` if unset.",
+  }),
+  updatedAt: DateTime.pipe(
+    Schema.annotateEncoded({
+      description: "ISO 8601 timestamp when the profile was last updated.",
+    }),
+  ),
+}).annotate({
+  identifier: "UserProfile",
+  description: "Public profile details stored on Sigle for a Stacks address.",
+});
 
 /**
  * A user as anyone can see them: their primary Stacks address and its
  * profile, if any. Also the author of a post.
  */
 export const PublicUser = Schema.Struct({
-  address: Schema.String,
-  profile: Schema.NullOr(UserProfile),
+  address: Schema.String.annotate({
+    description: "Stacks address identifying the user.",
+  }),
+  profile: Schema.NullOr(UserProfile).annotate({
+    description:
+      "User's public profile, or `null` if the user has signed in without saving profile details.",
+  }),
   isExplorer: Schema.Boolean.annotate({
     description:
-      "Whether the user is on Pro, unlocked by holding an Explorer Guild NFT, and gets the Explorer Guild badge.",
+      "Whether the user holds the Pro plan (unlocked by an Explorer Guild NFT) and displays the Explorer Guild badge.",
   }),
-}).annotate({ identifier: "PublicUser" });
+}).annotate({
+  identifier: "PublicUser",
+  description:
+    "Publicly visible user representation returned for profiles and post authors.",
+});
 
 export const PublicUserWithHeaders = HttpApiSchema.WithHeaders(
   PublicUser,
@@ -50,19 +94,25 @@ export const PublicUserWithHeaders = HttpApiSchema.WithHeaders(
 );
 
 export const UsersGroup = HttpApiGroup.make("users")
-  .annotate(OpenApi.Description, "Public user profiles, by Stacks address.")
+  .annotate(OpenApi.Title, "Users")
+  .annotate(
+    OpenApi.Description,
+    "Look up public author profiles and Explorer status by Stacks address.",
+  )
   .add(
     HttpApiEndpoint.get("get", "/:address", {
       params: {
-        address: Schema.String,
+        address: Schema.String.annotate({
+          description: "Stacks address of the user.",
+        }),
       },
       success: PublicUserWithHeaders,
       error: [BadRequest, NotFound],
     })
-      .annotate(OpenApi.Summary, "Get a user profile")
+      .annotate(OpenApi.Summary, "Get user")
       .annotate(
         OpenApi.Description,
-        "Get a public user by Stacks address with their profile. Responses are cacheable for a minute and carry an `ETag`, send it back in `If-None-Match` to get a 304 while the user is unchanged.",
+        "Returns a user's public profile and Explorer status by Stacks address. If the address has signed in on Sigle without saving a profile, `profile` is `null`. Returns `400` for a malformed Stacks address and `404` for an unknown address. Publicly cacheable (`ETag`).",
       ),
   )
   .prefix("/api/users")

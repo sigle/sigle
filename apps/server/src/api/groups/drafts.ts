@@ -58,10 +58,10 @@ export const DRAFT_CONTENT_TOTAL_MAX_MIB = 10;
 /**
  * PATCH field: omit to leave the current value unchanged.
  */
-const Patch = <S extends Schema.Top>(schema: S) =>
+const Patch = <S extends Schema.Top>(schema: S, description: string) =>
   Schema.optionalKey(schema).pipe(
     Schema.annotateEncoded({
-      description: "Omit to keep the current value unchanged.",
+      description: `${description} Omit to keep unchanged.`,
     }),
   );
 
@@ -69,11 +69,10 @@ const Patch = <S extends Schema.Top>(schema: S) =>
  * PATCH field following JSON Merge Patch semantics: omit to keep the current
  * value unchanged, set to `null` to clear it.
  */
-const Clearable = <S extends Schema.Top>(schema: S) =>
+const Clearable = <S extends Schema.Top>(schema: S, description: string) =>
   Schema.optionalKey(Schema.NullOr(schema)).pipe(
     Schema.annotateEncoded({
-      description:
-        "Omit to keep the current value unchanged, set to null to clear it.",
+      description: `${description} Omit to keep unchanged; set to \`null\` to clear.`,
     }),
   );
 
@@ -132,6 +131,10 @@ const DraftTags = Schema.mutable(
   ).check(Schema.isMaxLength(DRAFT_LIMITS.tags)),
 );
 
+const DRAFT_ID_PARAM = Schema.String.annotate({
+  description: "Unique ID of the draft.",
+});
+
 /**
  * Publish state of a draft: null until it is first published, `failed` once a
  * publish gave up. A published draft is deleted, so `completed` never shows.
@@ -145,79 +148,235 @@ export const DraftPublishStatus = Schema.NullOr(
     "PROCESSING",
     "FAILED",
   ]),
-).annotate({ identifier: "DraftPublishStatus" });
+).annotate({
+  identifier: "DraftPublishStatus",
+  description:
+    "Current publishing state of a draft: `null` if never published, `pending` or `processing` while a publish job is active (draft is locked against edits and deletion), or `failed` if the last publish attempt failed.",
+});
 
 export const Draft = Schema.Struct({
-  id: Schema.String,
-  title: Schema.String,
-  content: Schema.String,
-  metaTitle: Schema.NullOr(Schema.String),
-  metaDescription: Schema.NullOr(Schema.String),
-  coverImage: Schema.NullOr(Schema.String),
-  tags: Schema.Array(Schema.String),
-  canonicalUri: Schema.NullOr(Schema.String),
-  contentWarning: Schema.NullOr(ContentWarning),
+  id: Schema.String.annotate({
+    description: "Unique ID of the draft.",
+  }),
+  title: Schema.String.annotate({
+    description: "Title of the draft.",
+  }),
+  content: Schema.String.annotate({
+    description: "Markdown body of the draft.",
+  }),
+  metaTitle: Schema.NullOr(Schema.String).annotate({
+    description: "Optional SEO title override, or `null` if unset.",
+  }),
+  metaDescription: Schema.NullOr(Schema.String).annotate({
+    description: "Optional SEO meta description override, or `null` if unset.",
+  }),
+  coverImage: Schema.NullOr(Schema.String).annotate({
+    description:
+      "Cover image URL (`http(s)://`, `ipfs://`, or `ar://`), or `null`.",
+  }),
+  tags: Schema.Array(Schema.String).annotate({
+    description: "Topic tags attached to the draft.",
+  }),
+  canonicalUri: Schema.NullOr(Schema.String).annotate({
+    description:
+      "Canonical HTTP(S) URL of the original post if syndicated, or `null`.",
+  }),
+  contentWarning: Schema.NullOr(ContentWarning).pipe(
+    Schema.annotateEncoded({
+      description:
+        "Content warning label (`nsfw`, `sensitive`, `spoiler`), or `null`.",
+    }),
+  ),
   publishStatus: DraftPublishStatus,
-  createdAt: DateTime,
-  updatedAt: DateTime,
-}).annotate({ identifier: "Draft" });
+  createdAt: DateTime.pipe(
+    Schema.annotateEncoded({
+      description: "ISO 8601 timestamp when the draft was created.",
+    }),
+  ),
+  updatedAt: DateTime.pipe(
+    Schema.annotateEncoded({
+      description: "ISO 8601 timestamp when the draft was last modified.",
+    }),
+  ),
+}).annotate({
+  identifier: "Draft",
+  description:
+    "Full draft belonging to the authenticated user, including Markdown content.",
+});
 
 export const DraftListItem = Schema.Struct({
-  id: Schema.String,
-  title: Schema.String,
-  metaTitle: Schema.NullOr(Schema.String),
-  metaDescription: Schema.NullOr(Schema.String),
-  coverImage: Schema.NullOr(Schema.String),
-  tags: Schema.Array(Schema.String),
-  canonicalUri: Schema.NullOr(Schema.String),
-  contentWarning: Schema.NullOr(ContentWarning),
+  id: Schema.String.annotate({
+    description: "Unique ID of the draft.",
+  }),
+  title: Schema.String.annotate({
+    description: "Title of the draft.",
+  }),
+  metaTitle: Schema.NullOr(Schema.String).annotate({
+    description: "Optional SEO title override, or `null` if unset.",
+  }),
+  metaDescription: Schema.NullOr(Schema.String).annotate({
+    description: "Optional SEO meta description override, or `null` if unset.",
+  }),
+  coverImage: Schema.NullOr(Schema.String).annotate({
+    description:
+      "Cover image URL (`http(s)://`, `ipfs://`, or `ar://`), or `null`.",
+  }),
+  tags: Schema.Array(Schema.String).annotate({
+    description: "Topic tags attached to the draft.",
+  }),
+  canonicalUri: Schema.NullOr(Schema.String).annotate({
+    description:
+      "Canonical HTTP(S) URL of the original post if syndicated, or `null`.",
+  }),
+  contentWarning: Schema.NullOr(ContentWarning).pipe(
+    Schema.annotateEncoded({
+      description:
+        "Content warning label (`nsfw`, `sensitive`, `spoiler`), or `null`.",
+    }),
+  ),
   publishStatus: DraftPublishStatus,
-  createdAt: DateTime,
-  updatedAt: DateTime,
-}).annotate({ identifier: "DraftListItem" });
+  createdAt: DateTime.pipe(
+    Schema.annotateEncoded({
+      description: "ISO 8601 timestamp when the draft was created.",
+    }),
+  ),
+  updatedAt: DateTime.pipe(
+    Schema.annotateEncoded({
+      description: "ISO 8601 timestamp when the draft was last modified.",
+    }),
+  ),
+}).annotate({
+  identifier: "DraftListItem",
+  description:
+    "Draft metadata returned in paginated draft lists (excludes Markdown content).",
+});
 
 export const DraftListResponse = Schema.Struct({
-  results: Schema.Array(DraftListItem),
-  limit: NonNegativeInt,
-  offset: NonNegativeInt,
-  total: NonNegativeInt,
-}).annotate({ identifier: "DraftListResponse" });
+  results: Schema.Array(DraftListItem).annotate({
+    description: "Drafts for the requested page, most recently updated first.",
+  }),
+  limit: NonNegativeInt.annotate({
+    description: "Maximum number of drafts requested per page.",
+  }),
+  offset: NonNegativeInt.annotate({
+    description: "Number of drafts skipped from the start of the list.",
+  }),
+  total: NonNegativeInt.annotate({
+    description: "Total number of drafts owned by the authenticated user.",
+  }),
+}).annotate({
+  identifier: "DraftListResponse",
+  description: "Paginated list of the authenticated user's drafts.",
+});
 
 export const DraftListQuery = Schema.Struct(
   paginationQueryFields(DRAFT_LIST_MAX_LIMIT),
 ).annotate({ identifier: "DraftListQuery" });
 
 export const CreateDraftPayload = Schema.Struct({
-  title: Schema.optionalKey(DraftTitle),
-  content: Schema.optionalKey(DraftContent),
-  metaTitle: Schema.optionalKey(Schema.NullOr(DraftMetaTitle)),
-  metaDescription: Schema.optionalKey(Schema.NullOr(DraftMetaDescription)),
-  coverImage: Schema.optionalKey(Schema.NullOr(DraftCoverImage)),
-  tags: Schema.optionalKey(DraftTags),
-  canonicalUri: Schema.optionalKey(Schema.NullOr(DraftCanonicalUri)),
-  contentWarning: Schema.optionalKey(Schema.NullOr(ContentWarning)),
-}).annotate({ identifier: "CreateDraftPayload" });
+  title: Schema.optionalKey(DraftTitle).pipe(
+    Schema.annotateEncoded({
+      description: `Initial title (up to ${DRAFT_LIMITS.title} characters). Defaults to an empty string.`,
+    }),
+  ),
+  content: Schema.optionalKey(DraftContent).pipe(
+    Schema.annotateEncoded({
+      description: `Initial Markdown body (up to ${DRAFT_LIMITS.content} characters). Defaults to an empty string.`,
+    }),
+  ),
+  metaTitle: Schema.optionalKey(Schema.NullOr(DraftMetaTitle)).pipe(
+    Schema.annotateEncoded({
+      description: `Optional SEO title override (up to ${DRAFT_LIMITS.metaTitle} characters).`,
+    }),
+  ),
+  metaDescription: Schema.optionalKey(Schema.NullOr(DraftMetaDescription)).pipe(
+    Schema.annotateEncoded({
+      description: `Optional SEO meta description override (up to ${DRAFT_LIMITS.metaDescription} characters).`,
+    }),
+  ),
+  coverImage: Schema.optionalKey(Schema.NullOr(DraftCoverImage)).pipe(
+    Schema.annotateEncoded({
+      description: `Optional cover image URL (\`http(s)://\`, \`ipfs://\`, or \`ar://\`, up to ${DRAFT_LIMITS.coverImage} characters).`,
+    }),
+  ),
+  tags: Schema.optionalKey(DraftTags).pipe(
+    Schema.annotateEncoded({
+      description: `Optional topic tags (up to ${DRAFT_LIMITS.tags} tags, each 1–${DRAFT_LIMITS.tag} characters). Defaults to \`[]\`.`,
+    }),
+  ),
+  canonicalUri: Schema.optionalKey(Schema.NullOr(DraftCanonicalUri)).pipe(
+    Schema.annotateEncoded({
+      description: `Optional canonical HTTP(S) URL of the original post (up to ${DRAFT_LIMITS.canonicalUri} characters).`,
+    }),
+  ),
+  contentWarning: Schema.optionalKey(Schema.NullOr(ContentWarning)).pipe(
+    Schema.annotateEncoded({
+      description:
+        "Optional content warning label (`nsfw`, `sensitive`, or `spoiler`).",
+    }),
+  ),
+}).annotate({
+  identifier: "CreateDraftPayload",
+  description:
+    "Optional initial fields for a new draft. Send `{}` to create an empty draft.",
+});
 
 export const UpdateDraftPayload = Schema.Struct({
-  title: Patch(DraftTitle),
-  content: Patch(DraftContent),
-  metaTitle: Clearable(DraftMetaTitle),
-  metaDescription: Clearable(DraftMetaDescription),
-  coverImage: Clearable(DraftCoverImage),
+  title: Patch(DraftTitle, `Title (up to ${DRAFT_LIMITS.title} characters).`),
+  content: Patch(
+    DraftContent,
+    `Markdown body (up to ${DRAFT_LIMITS.content} characters).`,
+  ),
+  metaTitle: Clearable(
+    DraftMetaTitle,
+    `SEO title override (up to ${DRAFT_LIMITS.metaTitle} characters).`,
+  ),
+  metaDescription: Clearable(
+    DraftMetaDescription,
+    `SEO meta description override (up to ${DRAFT_LIMITS.metaDescription} characters).`,
+  ),
+  coverImage: Clearable(
+    DraftCoverImage,
+    `Cover image URL (\`http(s)://\`, \`ipfs://\`, or \`ar://\`, up to ${DRAFT_LIMITS.coverImage} characters).`,
+  ),
   // Tags are never null in a draft, so they are cleared with `[]`.
-  tags: Patch(DraftTags),
-  canonicalUri: Clearable(DraftCanonicalUri),
-  contentWarning: Clearable(ContentWarning),
-}).annotate({ identifier: "UpdateDraftPayload" });
+  tags: Patch(
+    DraftTags,
+    `Topic tags (up to ${DRAFT_LIMITS.tags} tags, each 1–${DRAFT_LIMITS.tag} characters). Pass \`[]\` to clear.`,
+  ),
+  canonicalUri: Clearable(
+    DraftCanonicalUri,
+    `Canonical HTTP(S) URL (up to ${DRAFT_LIMITS.canonicalUri} characters).`,
+  ),
+  contentWarning: Clearable(
+    ContentWarning,
+    "Content warning label (`nsfw`, `sensitive`, or `spoiler`).",
+  ),
+}).annotate({
+  identifier: "UpdateDraftPayload",
+  description:
+    "Partial draft update using JSON Merge Patch semantics: omit fields to leave unchanged, or pass `null` to clear nullable fields.",
+});
 
 export const PublishDraftPayload = Schema.Struct({
   metadata: PostMetadata,
-}).annotate({ identifier: "PublishDraftPayload" });
+}).annotate({
+  identifier: "PublishDraftPayload",
+  description:
+    "Signed post metadata payload submitted for publishing to Arweave.",
+});
 
 export const PublishDraftAccepted = Schema.Struct({
-  draftId: Schema.String,
-  status: Schema.Literal("pending"),
-}).annotate({ identifier: "PublishDraftAccepted" });
+  draftId: Schema.String.annotate({
+    description: "ID of the draft queued for publishing.",
+  }),
+  status: Schema.Literal("pending").annotate({
+    description: "Initial publish job state (`pending`).",
+  }),
+}).annotate({
+  identifier: "PublishDraftAccepted",
+  description: "Acknowledgement that a draft publish job has been queued.",
+});
 
 export const PublishDraftStatus = Schema.Literals([
   "pending",
@@ -226,31 +385,49 @@ export const PublishDraftStatus = Schema.Literals([
   "failed",
 ])
   .transform(["PENDING", "PROCESSING", "COMPLETED", "FAILED"])
-  .annotate({ identifier: "PublishDraftStatus" });
+  .annotate({
+    identifier: "PublishDraftStatus",
+    description:
+      "Lifecycle state of an asynchronous publish job: `pending`, `processing`, `completed`, or `failed`.",
+  });
 
 export const PublishDraftStatusResponse = Schema.Struct({
   status: PublishDraftStatus,
-  postId: Schema.NullOr(Schema.String),
-  arweaveTxId: Schema.NullOr(Schema.String),
-}).annotate({ identifier: "PublishDraftStatusResponse" });
+  postId: Schema.NullOr(Schema.String).annotate({
+    description:
+      "Published post ID once `status` is `completed`, otherwise `null`.",
+  }),
+  arweaveTxId: Schema.NullOr(Schema.String).annotate({
+    description:
+      "Arweave transaction ID once uploaded (available on `completed`, and on `processing`/`failed` after the upload step), otherwise `null`.",
+  }),
+}).annotate({
+  identifier: "PublishDraftStatusResponse",
+  description:
+    "Current state and resulting identifiers of a draft publish job.",
+});
 
 export const DraftsGroup = HttpApiGroup.make("drafts")
+  .annotate(OpenApi.Title, "Drafts")
   .annotate(
     OpenApi.Description,
-    "The signed-in user's drafts: create, edit, delete, upload images, and publish them to Arweave.",
+    "Create, edit, delete, upload media to, and publish post drafts to Arweave.",
   )
   .add(
     HttpApiEndpoint.post("create", "/", {
       payload: CreateDraftPayload,
       success: HttpApiSchema.WithHeaders(HttpApiSchema.status(201)(Draft), {
-        location: Schema.String,
+        location: Schema.String.annotate({
+          description:
+            "Relative URL of the created draft (`/api/drafts/{draftId}`).",
+        }),
       }),
       error: Forbidden,
     })
-      .annotate(OpenApi.Summary, "Create a draft")
+      .annotate(OpenApi.Summary, "Create draft")
       .annotate(
         OpenApi.Description,
-        `Create a new draft, optionally seeded with the provided fields. Every field is optional, send \`{}\` to create an empty draft. Returns a 403 once the user has ${DRAFT_COUNT_LIMIT} drafts, or when the content would take their drafts over ${DRAFT_CONTENT_TOTAL_MAX_MIB} MiB in total.`,
+        `Creates a new draft for the authenticated user, optionally pre-populated with initial fields (send \`{}\` for an empty draft). Returns \`201 Created\` with a \`Location\` header pointing to the new draft.\n\nReturns \`403 Forbidden\` if the user already has ${DRAFT_COUNT_LIMIT} drafts or if total draft content would exceed ${DRAFT_CONTENT_TOTAL_MAX_MIB} MiB.`,
       ),
     HttpApiEndpoint.get("list", "/", {
       query: DraftListQuery,
@@ -266,81 +443,88 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
       )
       .annotate(
         OpenApi.Description,
-        "List the current user drafts, most recently updated first.",
+        "Returns a paginated list of the authenticated user's drafts (without Markdown body content), ordered most recently updated first.",
       ),
     HttpApiEndpoint.get("get", "/:draftId", {
       params: {
-        draftId: Schema.String,
+        draftId: DRAFT_ID_PARAM,
       },
       success: Draft,
       error: NotFound,
     })
-      .annotate(OpenApi.Summary, "Get a draft")
+      .annotate(OpenApi.Summary, "Get draft")
       .annotate(
         OpenApi.Description,
-        "Get a draft of the current user with its content and publish status.",
+        "Returns a single draft owned by the authenticated user, including its Markdown content and current `publishStatus`.",
       ),
     HttpApiEndpoint.patch("update", "/:draftId", {
       params: {
-        draftId: Schema.String,
+        draftId: DRAFT_ID_PARAM,
       },
       payload: UpdateDraftPayload,
       success: Draft,
       error: [NotFound, Conflict, Forbidden],
     })
-      .annotate(OpenApi.Summary, "Update a draft")
+      .annotate(OpenApi.Summary, "Update draft")
       .annotate(
         OpenApi.Description,
-        `Partially update a draft following JSON Merge Patch semantics: omitted fields are left unchanged and \`null\` clears nullable fields. Returns a 409 while the draft is being published, and a 403 when a longer content would take the user's drafts over ${DRAFT_CONTENT_TOTAL_MAX_MIB} MiB in total.`,
+        `Partially updates a draft using JSON Merge Patch semantics: omitted fields stay unchanged, \`null\` clears nullable fields, and \`[]\` clears tags. An empty patch \`{}\` returns the draft without updating \`updatedAt\`.\n\n- Returns \`409 Conflict\` while a publish job is in flight.\n- Returns \`403 Forbidden\` if expanding \`content\` would push total draft content over ${DRAFT_CONTENT_TOTAL_MAX_MIB} MiB.`,
       ),
     HttpApiEndpoint.delete("delete", "/:draftId", {
       params: {
-        draftId: Schema.String,
+        draftId: DRAFT_ID_PARAM,
       },
-      success: HttpApiSchema.NoContent,
+      success: HttpApiSchema.NoContent.annotate({
+        description: "Draft permanently deleted.",
+      }),
       error: [NotFound, Conflict],
     })
-      .annotate(OpenApi.Summary, "Delete a draft")
+      .annotate(OpenApi.Summary, "Delete draft")
       .annotate(
         OpenApi.Description,
-        "Permanently delete a draft of the current user. Returns a 409 while the draft is being published.",
+        "Permanently deletes a draft owned by the authenticated user. Returns `409 Conflict` while a publish job is in flight.",
       ),
     HttpApiEndpoint.post("publish", "/:draftId/publish", {
       params: {
-        draftId: Schema.String,
+        draftId: DRAFT_ID_PARAM,
       },
       payload: PublishDraftPayload,
       success: HttpApiSchema.WithHeaders(
         HttpApiSchema.status(202)(PublishDraftAccepted),
         // The publish status to poll.
-        { location: Schema.String },
+        {
+          location: Schema.String.annotate({
+            description:
+              "Relative URL to poll publish progress (`/api/drafts/{draftId}/publish`).",
+          }),
+        },
       ),
       // The 403 is returned for metadata over the size limit of the user's
       // plan. The 429 is also returned once the daily publish limit of the
       // user or the global one of their plan is reached.
       error: [BadRequest, Forbidden, NotFound, Conflict, TooManyRequests],
     })
-      .annotate(OpenApi.Summary, "Publish a draft")
+      .annotate(OpenApi.Summary, "Publish draft")
       .annotate(
         OpenApi.Description,
-        `Validate signed post metadata and enqueue an asynchronous publish job. Returns a 403 when the metadata JSON is larger than the plan allows, ${formatPublishSize(PUBLISH_MAX_BYTES.free)} on Free and ${formatPublishSize(PUBLISH_MAX_BYTES.pro)} on Pro. Returns a 409 while the draft is being published to Arweave for another signature. Returns a 429 once the user published the daily limit of their plan in the last 24 hours, ${PUBLISH_LIMITS.free} posts on Free and ${PUBLISH_LIMITS.pro} on Pro, counting the publishes in flight. Also returns a 429 once all users of the plan together reached its global daily limit.`,
+        `Validates the wallet-signed \`PostMetadata\` (matching \`draftId\` and signed by a wallet linked to the authenticated user) and queues an asynchronous Arweave publish job. Returns \`202 Accepted\` with a \`Location\` header to poll status.\n\n- **Idempotency**: Re-submitting the exact same signature while a publish is already in flight reuses the active job.\n- **\`403 Forbidden\`**: Signed metadata JSON exceeds the plan size limit (${formatPublishSize(PUBLISH_MAX_BYTES.free)} on Free, ${formatPublishSize(PUBLISH_MAX_BYTES.pro)} on Pro).\n- **\`409 Conflict\`**: Another signature is currently publishing for this draft, or the signature has already been published.\n- **\`429 Too Many Requests\`**: Rolling 24-hour publish quota reached (${PUBLISH_LIMITS.free} posts on Free, ${PUBLISH_LIMITS.pro} on Pro, counting in-flight publishes), or the plan's global daily publish cap is reached.`,
       )
       .annotate(RateLimitPolicy, "draftPublish"),
     HttpApiEndpoint.get("getPublishStatus", "/:draftId/publish", {
       params: {
-        draftId: Schema.String,
+        draftId: DRAFT_ID_PARAM,
       },
       success: PublishDraftStatusResponse,
       error: NotFound,
     })
-      .annotate(OpenApi.Summary, "Get draft publish status")
+      .annotate(OpenApi.Summary, "Get publish status")
       .annotate(
         OpenApi.Description,
-        "Poll the asynchronous publishing status of a draft.",
+        "Polls the asynchronous publish job for a draft. Once publishing succeeds, the draft is deleted and this endpoint continues returning `completed` with the resulting `postId` and `arweaveTxId`. Returns `404` if the draft does not exist or publishing has never been started.",
       ),
     HttpApiEndpoint.post("uploadImage", "/:draftId/images", {
       params: {
-        draftId: Schema.String,
+        draftId: DRAFT_ID_PARAM,
       },
       // Every upload creates a new content-addressed image.
       success: HttpApiSchema.status(201)(UploadedImageResponse),
@@ -354,12 +538,16 @@ export const DraftsGroup = HttpApiGroup.make("drafts")
         UnsupportedMediaType,
       ],
     })
-      .annotate(OpenApi.Summary, "Upload a draft image")
+      .annotate(OpenApi.Summary, "Upload draft image")
       .annotate(
         OpenApi.Description,
-        `Upload an image to embed in a draft as a raw binary body, up to ${DRAFT_IMAGE_MAX_MIB} MiB. The image is re-encoded as WebP and served from the CDN. Pro plan only, free users get a 403 and can embed external image URLs instead.`,
+        `Uploads a raw binary JPEG, PNG, or WebP image (up to ${DRAFT_IMAGE_MAX_MIB} MiB) to embed in a draft. Re-encodes the image as a content-addressed WebP served from the CDN and returns its URL, dimensions, byte size, and ThumbHash placeholder. Requires the **Pro** plan (\`403 Forbidden\` on Free; Free accounts can embed external image URLs instead).`,
       )
-      .annotate(OpenApi.Override, { requestBody: imageRequestBody })
+      .annotate(OpenApi.Override, {
+        requestBody: imageRequestBody(
+          `Raw image binary in JPEG, PNG, or WebP format (max ${DRAFT_IMAGE_MAX_MIB} MiB).`,
+        ),
+      })
       .annotate(RateLimitPolicy, "draftImageUpload"),
   )
   .prefix("/api/drafts")

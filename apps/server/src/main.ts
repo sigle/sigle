@@ -93,7 +93,11 @@ export const CorsLayer = Layer.unwrap(
 const ServedApiLayer = Layer.unwrap(
   Effect.map(AppConfig, (config) => {
     const api = SigleApi.annotate(OpenApi.Servers, [
-      { url: config.API_URL, description: config.STACKS_ENV },
+      {
+        url: config.API_URL,
+        description:
+          config.STACKS_ENV === "mainnet" ? "Stacks mainnet" : "Stacks testnet",
+      },
     ]);
 
     return Layer.mergeAll(

@@ -28,45 +28,101 @@ export const ADMIN_LIST_MAX_LIMIT = 100;
  */
 export const QueueNameParam = Schema.Literals(queueNames).annotate({
   identifier: "QueueName",
+  description: "Registered background job queue name.",
+});
+
+const JOB_ID_PARAM = Schema.String.annotate({
+  description: "ID of the dead-lettered job.",
 });
 
 export const QueueStatsItem = Schema.Struct({
-  queueName: Schema.String,
-  pending: NonNegativeInt,
-  active: NonNegativeInt,
-  completed: NonNegativeInt,
-  failed: NonNegativeInt,
-  oldestPendingAgeMillis: Schema.NullOr(NonNegativeInt),
-}).annotate({ identifier: "QueueStatsItem" });
+  queueName: Schema.String.annotate({
+    description: "Registered queue name.",
+  }),
+  pending: NonNegativeInt.annotate({
+    description: "Number of jobs waiting to be picked up.",
+  }),
+  active: NonNegativeInt.annotate({
+    description: "Number of jobs currently executing.",
+  }),
+  completed: NonNegativeInt.annotate({
+    description: "Number of jobs completed.",
+  }),
+  failed: NonNegativeInt.annotate({
+    description: "Number of dead-lettered jobs that exhausted retries.",
+  }),
+  oldestPendingAgeMillis: Schema.NullOr(NonNegativeInt).annotate({
+    description:
+      "Age of the oldest pending job in milliseconds, or `null` if no jobs are pending.",
+  }),
+}).annotate({
+  identifier: "QueueStatsItem",
+  description: "Job count metrics for a single background queue.",
+});
 
 export const AdminQueueListResponse = Schema.Struct({
-  results: Schema.Array(QueueStatsItem),
-}).annotate({ identifier: "AdminQueueListResponse" });
+  results: Schema.Array(QueueStatsItem).annotate({
+    description: "Statistics for every registered job queue.",
+  }),
+}).annotate({
+  identifier: "AdminQueueListResponse",
+  description: "Overview of all registered background job queues.",
+});
 
 export const FailedJobListItem = Schema.Struct({
-  id: Schema.String,
-  queueName: Schema.String,
-  payload: Schema.Json,
-  attempts: NonNegativeInt,
-  lastFailure: Schema.NullOr(Schema.String),
-  updatedAt: DateTime,
-}).annotate({ identifier: "FailedJobListItem" });
+  id: Schema.String.annotate({
+    description: "ID of the failed job.",
+  }),
+  queueName: Schema.String.annotate({
+    description: "Queue the job belongs to.",
+  }),
+  payload: Schema.Json.annotate({
+    description: "Original JSON payload passed to the job.",
+  }),
+  attempts: NonNegativeInt.annotate({
+    description: "Total execution attempts made before dead-lettering.",
+  }),
+  lastFailure: Schema.NullOr(Schema.String).annotate({
+    description: "Error message from the final failed attempt, or `null`.",
+  }),
+  updatedAt: DateTime.pipe(
+    Schema.annotateEncoded({
+      description: "ISO 8601 timestamp of the final failure.",
+    }),
+  ),
+}).annotate({
+  identifier: "FailedJobListItem",
+  description: "Metadata and failure details of a dead-lettered job.",
+});
 
 export const FailedJobListQuery = Schema.Struct(
   paginationQueryFields(ADMIN_LIST_MAX_LIMIT),
 ).annotate({ identifier: "FailedJobListQuery" });
 
 export const FailedJobListResponse = Schema.Struct({
-  results: Schema.Array(FailedJobListItem),
-  limit: NonNegativeInt,
-  offset: NonNegativeInt,
-  total: NonNegativeInt,
-}).annotate({ identifier: "FailedJobListResponse" });
+  results: Schema.Array(FailedJobListItem).annotate({
+    description:
+      "Dead-lettered jobs for the requested page, most recently failed first.",
+  }),
+  limit: NonNegativeInt.annotate({
+    description: "Maximum number of failed jobs requested per page.",
+  }),
+  offset: NonNegativeInt.annotate({
+    description: "Number of failed jobs skipped from the start of the list.",
+  }),
+  total: NonNegativeInt.annotate({
+    description: "Total number of dead-lettered jobs in the queue.",
+  }),
+}).annotate({
+  identifier: "FailedJobListResponse",
+  description: "Paginated list of dead-lettered jobs for a queue.",
+});
 
 export const AdminGroup = HttpApiGroup.make("admin")
+  .annotate(OpenApi.Title, "Admin")
   .annotate(
     OpenApi.Description,
-    "Background job queues, for admin wallets only.",
+    "Internal background job queue inspection and dead-letter recovery for admin wallets.",
   )
   // Internal routes, kept out of the public OpenAPI document and the SDK.
   .annotate(OpenApi.Exclude, true)
@@ -74,10 +130,10 @@ export const AdminGroup = HttpApiGroup.make("admin")
     HttpApiEndpoint.get("listQueues", "/queues", {
       success: AdminQueueListResponse,
     })
-      .annotate(OpenApi.Summary, "List queue statistics")
+      .annotate(OpenApi.Summary, "List queue stats")
       .annotate(
         OpenApi.Description,
-        "Return pending, active, completed, and failed job counts per queue, including registered queues without jobs.",
+        "Returns pending, active, completed, and failed job counts for every registered queue, including idle queues.",
       ),
     HttpApiEndpoint.get("listFailedJobs", "/queues/:queueName/failed", {
       params: {
@@ -97,7 +153,7 @@ export const AdminGroup = HttpApiGroup.make("admin")
       )
       .annotate(
         OpenApi.Description,
-        "List dead-lettered jobs of a queue, most recently failed first.",
+        "Returns dead-lettered jobs for a queue, ordered most recently failed first.",
       ),
     HttpApiEndpoint.post(
       "retryFailedJob",
@@ -105,16 +161,18 @@ export const AdminGroup = HttpApiGroup.make("admin")
       {
         params: {
           queueName: QueueNameParam,
-          jobId: Schema.String,
+          jobId: JOB_ID_PARAM,
         },
-        success: HttpApiSchema.NoContent,
+        success: HttpApiSchema.NoContent.annotate({
+          description: "Job re-queued for execution.",
+        }),
         error: [BadRequest, NotFound],
       },
     )
-      .annotate(OpenApi.Summary, "Retry a failed job")
+      .annotate(OpenApi.Summary, "Retry failed job")
       .annotate(
         OpenApi.Description,
-        "Reset a dead-lettered job so workers pick it up again. Returns a 204 once it is queued again.",
+        "Resets a dead-lettered job back to pending so workers pick it up again.",
       ),
     HttpApiEndpoint.delete(
       "deleteFailedJob",
@@ -122,16 +180,18 @@ export const AdminGroup = HttpApiGroup.make("admin")
       {
         params: {
           queueName: QueueNameParam,
-          jobId: Schema.String,
+          jobId: JOB_ID_PARAM,
         },
-        success: HttpApiSchema.NoContent,
+        success: HttpApiSchema.NoContent.annotate({
+          description: "Failed job permanently removed.",
+        }),
         error: [BadRequest, NotFound],
       },
     )
-      .annotate(OpenApi.Summary, "Delete a failed job")
+      .annotate(OpenApi.Summary, "Delete failed job")
       .annotate(
         OpenApi.Description,
-        "Permanently remove a dead-lettered job from the queue.",
+        "Permanently removes a dead-lettered job from the queue.",
       ),
   )
   .prefix("/api/admin")

@@ -39,8 +39,17 @@ const OpenApiOperation = Schema.Struct({
 
 const OpenApiResponse = Schema.Struct({
   openapi: Schema.String,
-  info: Schema.Struct({ title: Schema.String, version: Schema.String }),
-  servers: Schema.Array(Schema.Struct({ url: Schema.String })),
+  info: Schema.Struct({
+    title: Schema.String,
+    summary: Schema.String,
+    version: Schema.String,
+  }),
+  servers: Schema.Array(
+    Schema.Struct({
+      url: Schema.String,
+      description: Schema.optionalKey(Schema.String),
+    }),
+  ),
   tags: Schema.Array(
     Schema.Struct({
       name: Schema.String,
@@ -81,6 +90,14 @@ const OpenApiSecurityDocument = Schema.Struct({
 });
 
 const OpenApiOperationsDocument = Schema.Struct({
+  components: Schema.Struct({
+    schemas: Schema.Record(
+      Schema.String,
+      Schema.Struct({
+        description: Schema.optionalKey(Schema.String),
+      }),
+    ),
+  }),
   paths: Schema.Record(
     Schema.String,
     Schema.Record(
@@ -94,7 +111,20 @@ const OpenApiOperationsDocument = Schema.Struct({
             description: Schema.optionalKey(Schema.String),
           }),
         ),
-        responses: Schema.Record(Schema.String, Schema.Unknown),
+        responses: Schema.Record(
+          Schema.String,
+          Schema.Struct({
+            description: Schema.String,
+            headers: Schema.optionalKey(
+              Schema.Record(
+                Schema.String,
+                Schema.Struct({
+                  description: Schema.optionalKey(Schema.String),
+                }),
+              ),
+            ),
+          }),
+        ),
       }),
     ),
   ),
@@ -223,7 +253,8 @@ describe("http server", () => {
         status: response.status,
         openapi: body.openapi.startsWith("3."),
         info: body.info,
-        servers: body.servers.map((server) => server.url),
+        servers: body.servers,
+        tagNames: body.tags.map((tag) => tag.name),
         undescribedTags: body.tags
           .filter((tag) => tag.description === undefined)
           .map((tag) => tag.name),
@@ -239,8 +270,16 @@ describe("http server", () => {
       }).toStrictEqual({
         status: 200,
         openapi: true,
-        info: { title: "Sigle API", version: packageJson.version },
-        servers: ["https://api.sigle.test"],
+        info: {
+          title: "Sigle API",
+          summary:
+            "Decentralized blogging API for Sigle on Stacks and Arweave.",
+          version: packageJson.version,
+        },
+        servers: [
+          { url: "https://api.sigle.test", description: "Stacks testnet" },
+        ],
+        tagNames: ["Posts", "Users", "Account", "Profile", "Drafts", "Health"],
         undescribedTags: [],
         paths: expect.arrayContaining([
           "/health",
@@ -272,18 +311,18 @@ describe("http server", () => {
         ]),
         createDraft: expect.objectContaining({
           properties: expect.objectContaining({
-            coverImage: {
+            coverImage: expect.objectContaining({
               anyOf: [
                 { type: "string", format: "uri", maxLength: 2048 },
                 { type: "null" },
               ],
-            },
-            canonicalUri: {
+            }),
+            canonicalUri: expect.objectContaining({
               anyOf: [
                 { type: "string", format: "uri", maxLength: 200 },
                 { type: "null" },
               ],
-            },
+            }),
           }),
         }),
         // The signed post metadata schema is generated from the `@sigle/sdk`
@@ -327,7 +366,14 @@ describe("http server", () => {
         internalNames: [],
         errorSchema: {
           type: "object",
-          properties: { message: { type: "string" } },
+          description:
+            "The requested resource does not exist or is not accessible.",
+          properties: {
+            message: {
+              type: "string",
+              description: "Human-readable explanation of the error.",
+            },
+          },
           required: ["message"],
           additionalProperties: false,
         },
@@ -370,6 +416,24 @@ describe("http server", () => {
             .filter((parameter) => parameter.description === undefined)
             .map((parameter) => `${name} ${parameter.name}`),
         ),
+        undescribedHeaders: operations.flatMap(({ name, operation }) =>
+          Object.entries(operation.responses).flatMap(([status, resp]) =>
+            Object.entries(resp.headers ?? {})
+              .filter(([, header]) => header.description === undefined)
+              .map(([headerName]) => `${name} ${status} ${headerName}`),
+          ),
+        ),
+        placeholderResponses: operations.flatMap(({ name, operation }) =>
+          Object.entries(operation.responses)
+            .filter(([, resp]) => resp.description === "<No Content>")
+            .map(([status]) => `${name} ${status}`),
+        ),
+        undescribedSchemas: Object.entries(doc.components.schemas)
+          .filter(([, schema]) => schema.description === undefined)
+          .map(([schemaName]) => schemaName),
+        duplicateSchemas: Object.keys(doc.components.schemas).filter(
+          (schemaName) => /_\d+$/.test(schemaName),
+        ),
         // `Schema.Int` alone documents `minimum: -(2^53 - 1)`.
         negativeIntegers: json.includes("-9007199254740991"),
         // The rate limit middleware adds them, the endpoint no longer lists
@@ -381,6 +445,10 @@ describe("http server", () => {
         adminPaths: [],
         undocumented: [],
         undescribedParameters: [],
+        undescribedHeaders: [],
+        placeholderResponses: [],
+        undescribedSchemas: [],
+        duplicateSchemas: [],
         negativeIntegers: false,
         draftImageResponses: expect.arrayContaining(["429", "500"]),
       });
